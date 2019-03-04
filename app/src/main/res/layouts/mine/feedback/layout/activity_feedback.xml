@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:background="@color/content_bg"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -15,15 +15,15 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
         <TextView
-            android:id="@+id/header_text"
+            android:id="@+id/tv_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -33,184 +33,79 @@
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <EditText
+        android:id="@+id/et_feedback_content"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
-        android:gravity="center_horizontal"
-        android:weightSum="100" >
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_feedback_content"
+        android:gravity="top"
+        android:hint="@string/feed_back_content_hint"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="14dp"
+        android:textSize="16sp" />
 
-        <ScrollView
-            android:layout_width="0dp"
+    <EditText
+        android:id="@+id/et_feedback_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_feedback_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_feedback_content"
+        android:hint="@string/feed_back_contact_hint"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_feedback_contact"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/tv_anonymous"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="94" >
+            android:layout_centerVertical="true"
+            android:text="@string/feed_back_without_name"
+            android:textColor="#333333"
+            android:textSize="16sp" />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical" >
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_compat_anonymous"
+            android:layout_width="51dp"
+            android:layout_height="31dp"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@id/tv_anonymous" />
+    </RelativeLayout>
 
-                <LinearLayout
-                    android:layout_width="0px"
-                    android:layout_height="0px"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true" >
+    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+        android:id="@+id/bt_submit_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:elevation="1dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="@string/feed_back_submit"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:qmui_backgroundColor="#36A5F6"
+        app:qmui_borderWidth="0dp"
+        app:qmui_isRadiusAdjustBounds="true" />
 
-                    <requestFocus />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/bg_corner"
-                    android:orientation="vertical" >
-
-                    <RelativeLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="10dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="10dp" >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:text="@string/feed_back_advice"
-                            android:textColor="@color/text_black"
-                            android:textSize="@dimen/content_normal_textsize" />
-
-                        <TextView
-                            android:id="@+id/text_count_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:text="（0/200）"
-                            android:textColor="@color/text_grey"
-                            android:textSize="@dimen/content_normal_textsize" />
-                    </RelativeLayout>
-
-                     <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#FFCDCDCD" />
-                    <RelativeLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="10dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="10dp" >
-
-                        <EditText
-                            android:id="@+id/feedback_edit"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:gravity="top"
-                            android:hint="@string/feed_back_welcom"
-                            android:lines="6"
-                            android:textSize="@dimen/content_normal_textsize" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
-                    android:background="@drawable/bg_corner"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="10dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="10dp"
-                        android:text="@string/login_your_contact"
-                        android:textColor="@color/text_black"
-                        android:textSize="@dimen/content_normal_textsize" />
-
-                    <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#FFCDCDCD" />
-
-                    <com.inspur.emmcloud.widget.ClearEditText
-                        android:id="@+id/contact_edit"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:hint="@string/feed_back_input_phone"
-                        android:maxLength="70"
-                        android:paddingBottom="10dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="10dp"
-                        android:maxLines="1"
-                        android:textColor="@color/text_black"
-                        android:textSize="@dimen/content_normal_textsize" />
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/check_layout"
-                    android:onClick="onClick"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content" >
-
-                    <CheckBox
-                        android:id="@+id/checkbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="left"
-                        android:layout_toLeftOf="@+id/check_text"
-                        android:button="@drawable/feedback_checkbox_bg"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:focusableInTouchMode="false" />
-
-                    <TextView
-                        android:id="@+id/check_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="5dp"
-                        android:text="@string/feed_back_without_name"
-                        android:textSize="@dimen/content_normal_textsize" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="32dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:weightSum="100" >
-
-                    <Button
-                        android:id="@+id/submit_bt"
-                        android:layout_width="0dp"
-                        android:layout_height="45dp"
-                        android:layout_weight="90"
-                        android:background="@drawable/shape_login_btn_nor"
-                        android:onClick="onClick"
-                        android:text="@string/feed_back_upload"
-                        android:textColor="#ffffff"
-                        android:textSize="18sp" >
-                    </Button>
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
 
 </RelativeLayout>

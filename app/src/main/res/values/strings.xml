@@ -568,6 +568,9 @@
     <string name="feed_back_input_phone">输入电话或邮箱</string>
     <string name="feed_back_upload">提交</string>
     <string name="feed_back_without_name">匿名提交</string>
+    <string name="feed_back_content_hint">请输入建议和意见</string>
+    <string name="feed_back_contact_hint">在此输入联系方式</string>
+    <string name="feed_back_submit">提交反馈</string>
     <string name="invite_friend_invite_text">邀请好友使用</string>
     <string name="invite_friend_code">直接扫描二维码邀请好友安装Cloud</string>
     <string name="invite_friend_recommend">推荐【Cloud】给好友</string>
