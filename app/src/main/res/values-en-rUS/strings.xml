@@ -554,6 +554,9 @@
     <string name="feed_back_input_phone">Enter the phone or mail</string>
     <string name="feed_back_upload">Submit</string>
     <string name="feed_back_without_name">Anonymous</string>
+    <string name="feed_back_content_hint">Please enter suggestions and comments</string>
+    <string name="feed_back_contact_hint">Enter your contact information here</string>
+    <string name="feed_back_submit">Submit feedback</string>
     <string name="invite_friend_invite_text">Invite a friend</string>
     <string name="invite_friend_code">Scan QR code to install  Cloud+ directly</string>
     <string name="invite_friend_recommend">推荐【Cloud+】给好友</string>

@@ -557,6 +557,9 @@
     <string name="feed_back_input_phone">輸入電話或郵箱</string>
     <string name="feed_back_upload">提交</string>
     <string name="feed_back_without_name">匿名提交</string>
+    <string name="feed_back_content_hint">請輸入建議和意見</string>
+    <string name="feed_back_contact_hint">在此輸入聯繫方式</string>
+    <string name="feed_back_submit">提交反饋</string>
     <string name="invite_friend_invite_text">邀請好友使用</string>
     <string name="invite_friend_code">直接掃描二維碼邀請好友安裝Cloud</string>
     <string name="invite_friend_recommend">推薦【Cloud】給好友</string>
