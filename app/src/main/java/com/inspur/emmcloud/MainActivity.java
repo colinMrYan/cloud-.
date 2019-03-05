@@ -23,7 +23,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -83,8 +82,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             getWindow().setNavigationBarColor(ContextCompat.getColor(MyApplication.getInstance(),android.R.color.white));
         }
         skipImageBtn = findViewById(R.id.ibt_skip);
-       // checkNecessaryPermission();
-        IntentUtils.startActivity(MainActivity.this, FeedBackActivity.class,true);
+        checkNecessaryPermission();
     }
 
     private void checkNecessaryPermission() {

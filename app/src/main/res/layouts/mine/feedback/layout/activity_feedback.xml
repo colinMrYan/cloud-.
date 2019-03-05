@@ -84,7 +84,7 @@
             android:id="@+id/switch_compat_anonymous"
             android:layout_width="51dp"
             android:layout_height="31dp"
-            android:layout_marginLeft="14dp"
+            android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/tv_anonymous" />
     </RelativeLayout>
 
