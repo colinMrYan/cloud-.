@@ -54,7 +54,7 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="-3dp"
                     app:cardCornerRadius="8dp"
-                    app:cardElevation="1dp"
+                    app:cardElevation="1.5dp"
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true">
 

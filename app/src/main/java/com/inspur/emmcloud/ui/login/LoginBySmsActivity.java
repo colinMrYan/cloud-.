@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -18,7 +17,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
-import com.inspur.emmcloud.broadcastreceiver.SmsCaptchasReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.EditTextUtils;
@@ -70,7 +68,6 @@ public class LoginBySmsActivity extends BaseActivity {
     private TextView loginByAccountText;
     private Handler handler;
     private LoadingDialog loadingDlg;
-    private SmsCaptchasReceiver smsCaptchasReceiver;
     private String phone;
     private String captcha;
     private MyCountDownTimer myCountDownTimer;
@@ -86,6 +83,7 @@ public class LoginBySmsActivity extends BaseActivity {
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         EditWatcher watcher = new EditWatcher();
+        myCountDownTimer = new MyCountDownTimer(60000, 1000);
         phoneEdit.addTextChangedListener(watcher);
         captchaEdit.addTextChangedListener(watcher);
         mode = getIntent().getExtras().getInt(EXTRA_MODE, MODE_LOGIN);
@@ -143,22 +141,6 @@ public class LoginBySmsActivity extends BaseActivity {
         }
     }
 
-    private void registerSMSReceiver() {
-        // TODO Auto-generated method stub
-        SmsCaptchasReceiver receiver = new SmsCaptchasReceiver(
-                LoginBySmsActivity.this, handler);
-        // 注册短信变化监听
-        this.getContentResolver().registerContentObserver(
-                Uri.parse("content://sms/"), true, receiver);
-    }
-
-    private void unRegisterSMSReceiver() {
-        // TODO Auto-generated method stub
-        if (smsCaptchasReceiver != null) {
-            this.getContentResolver().unregisterContentObserver(smsCaptchasReceiver);
-            smsCaptchasReceiver = null;
-        }
-    }
 
     private void enterApp() {
         boolean isHasSetShortPassword = PreferencesUtils.getBoolean(LoginBySmsActivity.this, Constant.PREF_LOGIN_HAVE_SET_PASSWORD, false);
@@ -192,7 +174,6 @@ public class LoginBySmsActivity extends BaseActivity {
                         break;
                     case GET_SMS_CAPTCHA:
                         String captchas = (String) msg.obj;
-                        unRegisterSMSReceiver();
                         EditTextUtils.setText(captchaEdit, AppUtils.getDynamicPassword(captchas));
                         break;
                 }
@@ -211,7 +192,6 @@ public class LoginBySmsActivity extends BaseActivity {
             myCountDownTimer.cancel();
             myCountDownTimer = null;
         }
-        unRegisterSMSReceiver();
     }
 
     private void login() {
@@ -229,7 +209,6 @@ public class LoginBySmsActivity extends BaseActivity {
             LoginAPIService apiService = new LoginAPIService(LoginBySmsActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getLoginSMSCaptcha(phone);
-            registerSMSReceiver();
         }
     }
 
@@ -303,7 +282,6 @@ public class LoginBySmsActivity extends BaseActivity {
             } else {
                 WebServiceMiddleUtils.hand(LoginBySmsActivity.this, error, errorCode);
             }
-            unRegisterSMSReceiver();
         }
 
     }

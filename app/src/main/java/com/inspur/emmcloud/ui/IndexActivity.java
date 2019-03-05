@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -187,6 +188,9 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void setPreloadWebApp() {
         if (MyApplication.getInstance().getTanent().equals("inspur_esg")) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                webView.getSettings().setSafeBrowsingEnabled(false);
+            }
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setSavePassword(false);
             webView.setWebViewClient(new WebViewClient() {

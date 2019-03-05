@@ -61,6 +61,7 @@
                 android:paddingTop="7dp"
                 android:paddingBottom="17dp"
                 android:gravity="center_vertical"
+                android:numeric="integer"
                 android:hint="@string/login_please_input_captchas"
                 android:imeOptions="actionDone"
                 android:singleLine="true"
