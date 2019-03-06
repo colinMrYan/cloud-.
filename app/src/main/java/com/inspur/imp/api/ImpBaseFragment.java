@@ -63,6 +63,7 @@ public class ImpBaseFragment extends BaseFragment {
                         imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                         imageView.setOnClickListener(onClickListener);
                         imageView.setLayoutParams(params);
+                        imageView.setColorFilter(getContext().getResources().getColor(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color)));
                         ImageDisplayUtils.getInstance().displayImage(imageView, mainTabMenu.getIco());
                         webFunctionLayout.addView(imageView);
                     } else {
