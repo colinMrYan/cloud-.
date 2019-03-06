@@ -1,6 +1,7 @@
 package com.inspur.imp.plugin.barcode.decoder;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.media.AudioManager;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.imp.api.Res;
 
 import java.io.UnsupportedEncodingException;
@@ -76,6 +78,12 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         lampText = (TextView) findViewById(Res.getWidgetID("tv_lamp"));
 
     }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
+    }
+
 
     private void setRangeView() {
         DisplayMetrics displayMetrics = new DisplayMetrics();

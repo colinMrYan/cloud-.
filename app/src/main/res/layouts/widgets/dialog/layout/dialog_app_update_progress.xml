@@ -48,6 +48,6 @@
         android:padding="14dp"
         android:text="@string/cancel"
         android:textColor="@drawable/seclector_dialog_btn_text"
-        android:textSize="@dimen/header_textsize" />
+        android:textSize="@dimen/header_function_textsize" />
 
 </LinearLayout>

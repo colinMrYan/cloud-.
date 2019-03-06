@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +151,6 @@ public class FlowLayout extends ViewGroup {
 
         int left;
         int top = 0;
-        LogUtils.jasonDebug("numLines=" + numLines);
         for (int i = 0; i < numLines; i++) {
 
             lineHeight = mLineHeights.get(i);

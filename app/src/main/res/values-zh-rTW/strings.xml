@@ -230,6 +230,10 @@
     <string name="recover">重新獲取</string>
     <string name="more">更多</string>
     <string name="no_search_term">沒有更多的搜索結果</string>
+    <string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>
+    <string name="login_current_login_enterprise">當前系統：%1$s</string>
+    <string name="login_forget_password">忘記密碼？</string>
+
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">請輸入消息內容</string>
@@ -1062,7 +1066,7 @@
     <string name="create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
     <string name="create_gesture_confirm_correct">設置成功</string>
     <string name="create_gesture_reset">重新設置</string>
-    <string name="create_gesture_code">手勢密碼</string>
+    <string name="create_gesture_code">創建手勢密碼</string>
     <string name="create_gesture_guid">您可以創建一個雲+解鎖圖案，這樣他人在借用您的手機時，將無法可打開雲+</string>
     <string name="safe_center_enable">已啟用</string>
     <string name="safe_center_unenable">未啟用</string>
@@ -1078,7 +1082,6 @@
     <string name="login_more_scan_find_left">掃描到[</string>
     <string name="login_more_scan_find_right">]確定添加嗎？</string>
     <string name="cluster_default">默認</string>
-    <string name="current_system">當前系統</string>
 
     <string name="volume_read_write_permission">擁有上傳/查看許可權</string>
     <string name="volume_read_permission">擁有查看許可權</string>
@@ -1140,7 +1143,7 @@
     <string name="permission_necessary_permission">為了您能正常使用%1$s，需要以下許可權</string>
     <string name="permission_phone_permission">設備資訊</string>
     <string name="permission_storage_permission">存儲空間</string>
-        <string name="permission_next">下一步</string>
+    <string name="permission_next">下一步</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
@@ -1211,7 +1214,7 @@
         <item>三十</item>
     </string-array>
 
-    <string-array name="solar_festival" >
+    <string-array name="solar_festival">
         <item>0101元旦</item>
         <item>0214情人節</item>
         <item>0308婦女節</item>

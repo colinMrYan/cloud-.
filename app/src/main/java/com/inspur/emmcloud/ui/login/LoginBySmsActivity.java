@@ -89,7 +89,7 @@ public class LoginBySmsActivity extends BaseActivity {
         mode = getIntent().getExtras().getInt(EXTRA_MODE, MODE_LOGIN);
         loginBtn.setText((mode == MODE_LOGIN) ? R.string.login : R.string.next_step);
         titleText.setText((mode == MODE_LOGIN) ? R.string.login_code_login_text : R.string.login_find_password);
-        loginByAccountText.setVisibility((mode == MODE_LOGIN) ? View.VISIBLE : View.INVISIBLE);
+//        loginByAccountText.setVisibility((mode == MODE_LOGIN) ? View.VISIBLE : View.INVISIBLE);
         handMessage();
         if (getIntent().hasExtra(EXTRA_PHONE)) {
             phone = getIntent().getExtras().getString(EXTRA_PHONE, "");
@@ -110,6 +110,9 @@ public class LoginBySmsActivity extends BaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
             case R.id.ll_main:
                 InputMethodUtils.hide(LoginBySmsActivity.this);
                 break;
