@@ -36,7 +36,7 @@
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/group_message_search_content"
+                android:id="@+id/tv_group_message_search_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginRight="12dp"

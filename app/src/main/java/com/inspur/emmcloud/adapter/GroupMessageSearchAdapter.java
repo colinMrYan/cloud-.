@@ -116,7 +116,7 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
             super(itemView);
             headImg = itemView.findViewById(R.id.iv_group_message_search_head);
             groupMessageUserNameText = itemView.findViewById(R.id.tv_group_message_search_name);
-            groupMessageContentText = itemView.findViewById(R.id.group_message_search_content);
+            groupMessageContentText = itemView.findViewById(R.id.tv_group_message_search_content);
             groupMessageTimeText = itemView.findViewById(R.id.tv_group_message_search_time);
             groupMessageLayout = itemView.findViewById(R.id.rl_group_message_search);
         }
