@@ -227,7 +227,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 }
                 break;
             case R.id.rl_search_messages:
-                bundle.putString("cid", conversation.getId());
+                bundle.putString(EXTRA_CID, conversation.getId());
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,ConversationGroupMessageSearchActivity.class,bundle);
                 break;
             default:

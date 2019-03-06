@@ -187,9 +187,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                 }
             }
-        }
-
-        ;
+        };
     }
 
 
@@ -205,8 +203,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Override
     protected void initChannelMessage() {
         List<Message> cacheMessageList ;
-        UIMessage uiMessage = (UIMessage)getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
-        if(getIntent().hasExtra(EXTRA_UIMESSAGE) && (uiMessage != null)){
+        UIMessage uiMessage = null;
+        if(getIntent().hasExtra(EXTRA_UIMESSAGE)){
+            uiMessage = (UIMessage)getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
             cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null);
         }else{
             cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
@@ -230,7 +229,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if(uiMessage != null){
             int position = uiMessageList.indexOf(uiMessage);
             if(position != -1){
-                msgListView.smoothScrollToPosition(position);
+                msgListView.scrollToPosition(position);
             }
         }
     }
@@ -586,14 +585,14 @@ public class ConversationActivity extends ConversationBaseActivity {
             case "file/regular-file":
             case "media/image":
                 bundle.putString("mid", message.getId());
-                bundle.putString("cid", message.getChannel());
+                bundle.putString(EXTRA_CID, message.getChannel());
                 IntentUtils.startActivity(ConversationActivity.this,
                         ChannelMessageDetailActivity.class, bundle);
                 break;
             case "comment/text-plain":
                 String mid = message.getMsgContentComment().getMessage();
                 bundle.putString("mid", mid);
-                bundle.putString("cid", message.getChannel());
+                bundle.putString(EXTRA_CID, message.getChannel());
                 IntentUtils.startActivity(ConversationActivity.this,
                         ChannelMessageDetailActivity.class, bundle);
                 break;

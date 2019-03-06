@@ -47,7 +47,7 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity{
     }
 
     private void initViews() {
-        this.cid = getIntent().getStringExtra("cid");
+        this.cid = getIntent().getStringExtra(ConversationActivity.EXTRA_CID);
         final List<Message> messageList = MessageCacheUtil.getGroupMessageWithType(this,cid);
         final List<String> messageContentList = getMessageContentList(messageList);
         groupMessageSearchAdapter = new GroupMessageSearchAdapter(ConversationGroupMessageSearchActivity.this);
