@@ -80,7 +80,7 @@ public class ClearEditText extends EditText implements OnFocusChangeListener, Te
                 boolean touchable = event.getX() > (getWidth() - getTotalPaddingRight())
                         && (event.getX() < getWidth());
 
-                if (touchable) {
+                if (touchable && isEnabled()) {
                     this.setText("");
                 }
             }
