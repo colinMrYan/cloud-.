@@ -13,10 +13,9 @@
 
         <WebView
             android:id="@+id/preload_webview"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="1dp"></WebView>
-        <!-- android:fitsSystemWindows="true" -->
+            android:visibility="gone"
+            android:layout_height="1px"></WebView>
 
         <FrameLayout
             android:id="@+id/realtabcontent"

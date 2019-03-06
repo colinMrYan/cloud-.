@@ -42,7 +42,7 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 guestureSwitchView.setOpened(true);
-                IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, CreateGestureActivity.class);
+                IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, CreateGestureGuideActivity.class);
             }
 
             @Override

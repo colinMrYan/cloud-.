@@ -24,7 +24,7 @@
             android:layout_marginLeft="15dp"
             android:text="@string/work_schedule"
             android:textColor="?attr/header_text_color"
-            android:textSize="24sp" />
+            android:textSize="@dimen/header_textsize_big" />
 
         <ImageView
             android:id="@+id/iv_schedule_function_list"

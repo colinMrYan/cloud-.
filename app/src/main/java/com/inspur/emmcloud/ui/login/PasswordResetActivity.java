@@ -74,6 +74,9 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
                 }
                 resetPassword();
                 break;
+            case R.id.ibt_back:
+                finish();
+                break;
         }
     }
 

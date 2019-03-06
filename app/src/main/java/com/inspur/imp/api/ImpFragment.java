@@ -297,7 +297,7 @@ public class ImpFragment extends ImpBaseFragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     DropItemTitle dropItemTitle = dropItemTitleList.get(position);
-                    if (!dropItemTitle.isSelected()) {
+//                    if (!dropItemTitle.isSelected()) {
                         dropItemTitle.setSelected(true);
                         runJavaScript(JAVASCRIPT_PREFIX + dropItemTitle.getAction());
                         setTitle(dropItemTitle.getText());
@@ -306,7 +306,7 @@ public class ImpFragment extends ImpBaseFragment {
                                 dropItemTitleList.get(i).setSelected(false);
                             }
                         }
-                    }
+//                    }
                     dropTitlePopupWindow.dismiss();
                 }
             });

@@ -11,19 +11,16 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
-import org.xutils.x;
 
 /**
  * Created by yufuchang on 2017/9/7.
  */
-@ContentView(R.layout.activity_create_gesture_code_guid)
-public class CreateGestureCodeGuidActivity extends BaseActivity {
+@ContentView(R.layout.activity_create_gesture_guide)
+public class CreateGestureGuideActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
         EventBus.getDefault().register(this);
     }
 
@@ -32,26 +29,14 @@ public class CreateGestureCodeGuidActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
+            case R.id.bt_create_gesture:
+                Intent intent = new Intent();
+                intent.setClass(CreateGestureGuideActivity.this, CreateGestureActivity.class);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
-    }
-
-    /**
-     * 点击创建手势密码的动作
-     *
-     * @param view
-     */
-    @Event(R.id.create_gesture_code_btn)
-    private void startCreateGestureActivity(View view) {
-        switch (view.getId()) {
-            case R.id.create_gesture_code_btn:
-                Intent intent = new Intent();
-                intent.setClass(CreateGestureCodeGuidActivity.this, CreateGestureActivity.class);
-                startActivity(intent);
-                break;
-        }
-
     }
 
     /**

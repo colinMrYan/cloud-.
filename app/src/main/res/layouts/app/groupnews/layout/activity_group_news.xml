@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:text="@string/news_group_news"
             android:textColor="?attr/header_text_color"
-            android:textSize="20sp" />
+            android:textSize="@dimen/header_textsize_big" />
     </RelativeLayout>
 
     <RelativeLayout

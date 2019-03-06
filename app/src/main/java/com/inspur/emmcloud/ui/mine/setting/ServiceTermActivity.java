@@ -20,7 +20,7 @@ public class ServiceTermActivity extends BaseActivity {
         setContentView(R.layout.activity_service_term);
     }
 
-    public void onBack(View v) {
+    public void onClick(View v) {
         finish();
     }
 }

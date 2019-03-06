@@ -27,7 +27,7 @@
             android:layout_toRightOf="@id/ibt_back"
             android:text="@string/disk"
             android:textColor="?attr/header_text_color"
-            android:textSize="20sp" />
+            android:textSize="@dimen/header_textsize_big" />
 
         <ImageView
             android:id="@+id/option_img"

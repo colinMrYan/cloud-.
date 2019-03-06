@@ -19,6 +19,7 @@ import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.inspur.imp.plugin.photo.ImageGalleryActivity;
@@ -33,6 +34,7 @@ public class BaseActivity extends Activity {
 //            SchemeHandleActivity.class.getName(),
             LoginActivity.class.getName(),
             CaptureActivity.class.getName(),
+            PreviewDecodeActivity.class.getName(),
             FaceVerifyActivity.class.getName(),
             ReactNativeAppActivity.class.getName(),
             ScanQrCodeLoginGSActivity.class.getName(),
