@@ -246,7 +246,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.mine.setting.CreateGestureCodeGuidActivity"
+            android:name=".ui.mine.setting.CreateGestureGuideActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>

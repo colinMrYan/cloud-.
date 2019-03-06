@@ -236,10 +236,8 @@
     <string name="recover">重新获取</string>
     <string name="more">更多</string>
     <string name="no_search_term">没有更多的搜索结果</string>
-
     <string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>
     <string name="login_current_login_enterprise">当前系统：%1$s</string>
-    <string name="login_to_register">还没有账户？<Data><![CDATA[<font color=\'#36A5F6\'>注册</font>]]></Data></string>
     <string name="login_forget_password">忘记密码？</string>
 
     <!-- 消息部分 -->
@@ -621,8 +619,8 @@
     <string name="run_background">后台运行</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
     <string name="setting_join_experience_plan">加入升级体验计划</string>
-    <string name="setting_gesture_force_set">According to the enterprise security policy, you need to set a gesture password</string>
-    <string name="setting_gesture_force_open">You can\'t turn off the gesture password according to the enterprise security policy</string>
+    <string name="setting_gesture_force_set">根据企业安全性原则，需要您设置手势密码</string>
+    <string name="setting_gesture_force_open">根据企业安全性原则，您不可以关闭手势密码</string>
 
     <string name="contact">通讯录</string>
     <string name="web">web</string>
@@ -1101,7 +1099,7 @@
     <string name="create_gesture_confirm_error">与上一次绘制不一致，请重新绘制</string>
     <string name="create_gesture_confirm_correct">设置成功</string>
     <string name="create_gesture_reset">重新设置</string>
-    <string name="create_gesture_code">手势密码</string>
+    <string name="create_gesture_code">创建手势密码</string>
     <string name="create_gesture_guid">您可以创建一个云+解锁图案，这样他人在借用您的手机时，将无法打开云+</string>
     <string name="safe_center_enable">已启用</string>
     <string name="safe_center_unenable">未启用</string>
@@ -1138,7 +1136,6 @@
     <string name="login_more_scan_find_right">]确定添加吗？</string>
 
     <string name="cluster_default">默认</string>
-    <string name="current_system">当前系统</string>
 
     <string name="cluster_no_permission">当前功能缺少有效的授权信息。</string>
 
