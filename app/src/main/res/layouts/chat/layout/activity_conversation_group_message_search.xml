@@ -18,9 +18,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="57dp"
+            android:layout_marginRight="14dp"
             android:background="@drawable/bg_conversation_group_message_search"
-            android:layout_toLeftOf="@id/search_btn"
+            android:layout_toLeftOf="@id/tv_group_search_messages"
             android:padding="6dp">
 
             <ImageView

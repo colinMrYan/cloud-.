@@ -317,6 +317,7 @@
     <string name="meeting_cancel_confirm">Cancel Confirmation</string>
     <string name="meeting_cancel_reject">Cancel Rejection</string>
     <string name="chat_resend_message">Resend</string>
+    <string name="chat_group_message_search">Search History</string>
 
     <!-- 工作页面部分 -->
     <string name="work">Work</string>
@@ -1149,4 +1150,10 @@
     <string name="emm_secure_keyboard">Secure Keyboard</string>
 
     <string name="welcome_to">Welcome to </string>
+
+    <string name="phone_sms">SMS</string>
+    <string name="phone_email">Email</string>
+    <string name="current_month">This month</string>
+    <string name="user_office_phone">Fixed line</string>
+    <string name="group_qrcode">QR Code</string>
 </resources>

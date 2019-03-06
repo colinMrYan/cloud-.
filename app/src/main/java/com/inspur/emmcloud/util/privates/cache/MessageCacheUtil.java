@@ -6,7 +6,6 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.common.util.KeyValue;
@@ -229,6 +228,7 @@ public class MessageCacheUtil {
         return messageList;
     }
 
+
     public static List<Message> getHistoryMessageListByTime(Context context, String cid, Long startTime, Long endTime) {
         List<Message> messageList = null;
         try {
@@ -273,6 +273,44 @@ public class MessageCacheUtil {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
                         .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT)
                         .orderBy("creationDate", true).limit(num).findAll();
+            }
+            if (messageList != null && messageList.size() > 1) {
+                Collections.reverse(messageList);
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+
+    /**
+     * 获取历史消息列表，给ConversationActivity用，包含发送成功，发送失败，发送中三种状态，不包含编辑状态
+     *
+     * @param context
+     * @param cid
+     * @param targetMessageCreationDate
+     * @return
+     */
+    public static List<Message> getHistoryMessageList(Context context,
+                                                      String cid, Long targetMessageCreationDate) {
+        List<Message> messageList = null;
+        try {
+
+            if (targetMessageCreationDate == null) {
+                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
+                        .findAll();
+            } else {
+                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT)
+                        .orderBy("creationDate", true)
+                        .findAll();
             }
             if (messageList != null && messageList.size() > 1) {
                 Collections.reverse(messageList);
@@ -637,7 +675,7 @@ public class MessageCacheUtil {
      * @param cid
      * @return
      */
-    public static List<Message> getGroupMessageByKeyWords(Context context,String cid){
+    public static List<Message> getGroupMessageWithType(Context context, String cid){
         List<Message> messageList = new ArrayList<>();
         try {
             messageList = DbCacheUtils.getDb(context).selector(Message.class)
@@ -645,6 +683,7 @@ public class MessageCacheUtil {
                     .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
                             .or("type","=",Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
+                    .orderBy("creationDate",true)
                     .findAll();
         } catch (Exception e) {
             e.printStackTrace();
