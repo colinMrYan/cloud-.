@@ -207,7 +207,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         GroupFileActivity.class, bundle);
                 break;
-            case R.id.channel_name_layout:
+            case R.id.rl_channel_name:
                 bundle.putString("cid", conversation.getId());
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         ConversationNameModifyActivity.class, bundle);

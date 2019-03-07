@@ -214,7 +214,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupFileActivity.class, bundle);
                 break;
-            case R.id.channel_name_layout:
+            case R.id.rl_channel_name:
                 Intent intent = new Intent();
                 intent.setClass(ChannelInfoActivity.this,
                         ModifyChannelGroupNameActivity.class);
