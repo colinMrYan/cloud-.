@@ -26,10 +26,11 @@ public class CheckingNetStateUtils {
 
     private Context context;
 
-    private String[]  urls;
+    private String[] urls;
 
     /**
-     * 针对单个Url 检测通断的发送处理结果*/
+     * 针对单个Url 检测通断的发送处理结果
+     */
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -41,16 +42,17 @@ public class CheckingNetStateUtils {
     };
 
     /**
-     * 发送最终的网络异常状态*/
+     * 发送最终的网络异常状态
+     */
     private Handler handlerNetHint = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             PingUrlStateAction pingUrlStateAction = (PingUrlStateAction) msg.obj;
-            boolean ResultState=false;
-            if(StringUtils.isBlank(pingUrlStateAction.getUrl())){
-                ResultState=pingUrlStateAction.isPingState();
-            }else {
-                ResultState =  isPingConnectedNet(pingUrlStateAction.getUrl(),pingUrlStateAction.isPingState());
+            boolean ResultState = false;
+            if (StringUtils.isBlank(pingUrlStateAction.getUrl())) {
+                ResultState = pingUrlStateAction.isPingState();
+            } else {
+                ResultState = isPingConnectedNet(pingUrlStateAction.getUrl(), pingUrlStateAction.isPingState());
             }
             EventBus.getDefault().post(new SimpleEventMessage(pingUrlStateAction.getAction(), ResultState));
         }
@@ -69,12 +71,13 @@ public class CheckingNetStateUtils {
             PingUrlAndConnectState pingUrlAndConnectState = new PingUrlAndConnectState(Urls[i]);
             pingUrlAndConnectStates.add(pingUrlAndConnectState);
         }
-        this.urls=Urls;
+        this.urls = Urls;
     }
 
     /**
-     * 获取网络状态最终结果并显示于UI*/
-    public void getNetStateResult( final String Action,int timeout ){
+     * 获取网络状态最终结果并显示于UI
+     */
+    public void getNetStateResult(final String Action, int timeout) {
         Context context = MyApplication.getInstance();
         ConnectivityManager conMan = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -82,29 +85,28 @@ public class CheckingNetStateUtils {
                 ConnectivityManager.TYPE_MOBILE).getState();
         NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
                 .getState();
-        boolean isAppOnForeground = ((MyApplication)context.getApplicationContext()).getIsActive();
+        boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
         if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
             if (isAppOnForeground) {
-                PingUrlStateAction pingActionState=new PingUrlStateAction(Action,"",true);
+                PingUrlStateAction pingActionState = new PingUrlStateAction(Action, "", true);
                 Message message = new Message();
-                message.obj=pingActionState;
+                message.obj = pingActionState;
                 handlerNetHint.sendMessage(message);
             }
-        } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING)&&NetUtils.isVpnConnected()) {
+        } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && NetUtils.isVpnConnected()) {
             if (isAppOnForeground) {
-                PingUrlStateAction pingActionState=new PingUrlStateAction(Action,"",true);
+                PingUrlStateAction pingActionState = new PingUrlStateAction(Action, "", true);
                 Message message = new Message();
-                message.obj=pingActionState;
+                message.obj = pingActionState;
                 handlerNetHint.sendMessage(message);
             }
-        }else if((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING)&&!NetUtils.isVpnConnected()){
+        } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && !NetUtils.isVpnConnected()) {
             clearUrlsStates();
-            CheckNetPingThreadStartForHint(urls,timeout,Action,handlerNetHint);
-        }
-        else if (isAppOnForeground) {
-            PingUrlStateAction pingActionState=new PingUrlStateAction(Action,"",false);
+            CheckNetPingThreadStartForHint(urls, timeout, Action, handlerNetHint);
+        } else if (isAppOnForeground) {
+            PingUrlStateAction pingActionState = new PingUrlStateAction(Action, "", false);
             Message message = new Message();
-            message.obj=pingActionState;
+            message.obj = pingActionState;
             handlerNetHint.sendMessage(message);
         }
     }
@@ -137,7 +139,7 @@ public class CheckingNetStateUtils {
     /**
      * Ping  网络通断状态检测（用于显示网络状态异常框）
      */
-    public void CheckNetPingThreadStartForHint(final String[] StrUrl, final int WaiteTime, final String eventBusAction, final Handler handlerHint ) {
+    public void CheckNetPingThreadStartForHint(final String[] StrUrl, final int WaiteTime, final String eventBusAction, final Handler handlerHint) {
         for (int i = 0; i < StrUrl.length; i++) {
             final int finalI = i;
             new Thread(new Runnable() {
@@ -160,7 +162,8 @@ public class CheckingNetStateUtils {
     }
 
     /**
-     *通过Http 请求判断网络通断*/
+     * 通过Http 请求判断网络通断
+     */
     public void CheckNetHttpThreadStart(final String[] StrUrl) {
         for (int i = 0; i < StrUrl.length; i++) {
             AppAPIService apiService = new AppAPIService(context);
@@ -170,7 +173,8 @@ public class CheckingNetStateUtils {
     }
 
     /**
-     * 网络连接状态 如果GPRS连接或者Wifi&&VPN时返回true 否则返回false */
+     * 网络连接状态 如果GPRS连接或者Wifi&&VPN时返回true 否则返回false
+     */
     public boolean isConnectedNet() {
         if (NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(context)
                 || NetworkInfo.State.CONNECTING == NetUtils.getNetworkMobileState(context)
@@ -183,7 +187,7 @@ public class CheckingNetStateUtils {
 
     /**
      * 多个Url 有一个连接即返回true
-     * */
+     */
     public boolean isPingConnectedNet(String Url, boolean connectedState) {
         int isFalse = 0;
         for (int i = 0; i < pingUrlAndConnectStates.size(); i++) {
@@ -206,7 +210,7 @@ public class CheckingNetStateUtils {
 
     /**
      * 清除原有Url 的状态值
-     * */
+     */
     public void clearUrlsStates() {
         for (int i = 0; i < pingUrlAndConnectStates.size(); i++) {
             pingUrlAndConnectStates.get(i).clearState();
@@ -215,7 +219,7 @@ public class CheckingNetStateUtils {
 
     /**
      * Http 检测网路状态 回调
-     * */
+     */
     public class WebHttpService extends APIInterfaceInstance {
         @Override
         public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, final String url) {
@@ -243,7 +247,8 @@ public class CheckingNetStateUtils {
     }
 
     /**
-     * 包含Url  和该Url 的通断状态*/
+     * 包含Url  和该Url 的通断状态
+     */
     public class PingUrlAndConnectState {
         private String url = "";
         private int state = -1; //-1 未设置 0 为false 1为true
@@ -274,7 +279,8 @@ public class CheckingNetStateUtils {
     }
 
     /**
-     * 包含Url  、该Url 的通断状态、Action*/
+     * 包含Url  、该Url 的通断状态、Action
+     */
     public class PingUrlStateAction {
         private String url;
         private String action;

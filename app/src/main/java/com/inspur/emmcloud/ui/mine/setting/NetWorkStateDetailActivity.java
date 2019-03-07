@@ -27,7 +27,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Created by libaochao on 2018/11/8.
