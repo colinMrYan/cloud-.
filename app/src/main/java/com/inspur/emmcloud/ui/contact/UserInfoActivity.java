@@ -87,10 +87,10 @@ public class UserInfoActivity extends BaseActivity {
     private LinearLayout mobileEmailLayout;
     @ViewInject(R.id.rl_start_chat)
     private RelativeLayout mobileStartChatLayout;
-    @ViewInject(R.id.tv_user_position)
-    private TextView positionText;
-    @ViewInject(R.id.ll_user_position)
-    private LinearLayout mobilePositionLayout;
+//    @ViewInject(R.id.tv_user_position)
+//    private TextView positionText;
+//    @ViewInject(R.id.ll_user_position)
+//    private LinearLayout mobilePositionLayout;
     @ViewInject(R.id.rl_contact_way)
     private RelativeLayout userContactWayLayout;
 
@@ -177,13 +177,13 @@ public class UserInfoActivity extends BaseActivity {
         if (!StringUtils.isBlank(officeStr)) {
             dutyText.setVisibility(View.VISIBLE);
             dutyText.setText(officeStr);  //lbc
-            positionText.setText(officeStr);
+//            positionText.setText(officeStr);
         } else {
             dutyText.setVisibility(View.GONE);
         }
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
         startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid())?View.GONE:View.VISIBLE);
-        mobilePositionLayout.setVisibility(StringUtils.isBlank(officeStr)?View.GONE:View.VISIBLE);
+//        mobilePositionLayout.setVisibility(StringUtils.isBlank(officeStr)?View.GONE:View.VISIBLE);
         mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr))?View.GONE:View.VISIBLE);
         mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum)?View.GONE:View.VISIBLE);
         mobileEmailLayout.setVisibility(StringUtils.isBlank(mail)?View.GONE:View.VISIBLE);
