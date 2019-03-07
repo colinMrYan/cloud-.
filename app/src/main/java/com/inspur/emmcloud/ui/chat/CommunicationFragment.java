@@ -170,7 +170,7 @@ public class CommunicationFragment extends BaseFragment {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
+        checkingNetStateUtils=new CheckingNetStateUtils( getContext(),NetUtils.pingUrls );
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -184,11 +184,7 @@ public class CommunicationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (checkingNetStateUtils.isConnectedNet()) {
-            conversationAdapter.setNetExceptionView(true);
-        } else {
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-        }
+            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT,5);
     }
 
     private void initView() {
@@ -218,6 +214,7 @@ public class CommunicationFragment extends BaseFragment {
         IntentFilter intentFilter = new IntentFilter("message_notify");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, intentFilter);
     }
+
 
     /**
      * 初始化PullRefreshLayout
@@ -358,33 +355,15 @@ public class CommunicationFragment extends BaseFragment {
 
     /**
      * 沟通页网络异常提示框
-     *
-     * @param netState 通过Action获取操作类型
-     */
+     * @param netState  通过Action获取操作类型
+     * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
-        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)) {
-            if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK) && (!NetUtils.isVpnConnected())) {
-                checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
-                conversationAdapter.setNetExceptionView(false);
-            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
-                conversationAdapter.setNetExceptionView(true);
-            } else {
-                conversationAdapter.setNetExceptionView(true);
-            }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            Boolean pingConnectedResult = false;
-            if (!NetUtils.isNetworkConnected(getContext(), false)) {
-                conversationAdapter.setNetExceptionView(false);
-                pingConnectedResult = false;
-            } else {
-                List<Object> pingIdAndData = (List<Object>) netState.getMessageObj();
-                pingConnectedResult = checkingNetStateUtils.isPingConnectedNet((String) pingIdAndData.get(0), (boolean) pingIdAndData.get(1));
-                conversationAdapter.setNetExceptionView(pingConnectedResult);
-            }
-            if (pingConnectedResult) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
+            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT,5);
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT)) {   //网络异常提示
+            conversationAdapter.setNetExceptionView((boolean)netState.getMessageObj());
+            if ((Boolean)netState.getMessageObj()){
                 WebSocketPush.getInstance().startWebSocket();
             }
         }

@@ -70,7 +70,6 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
-import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -181,12 +180,7 @@ public class MyAppFragment extends BaseFragment {
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        if (checkingNetStateUtils.isConnectedNet()) {
-            DeleteHeaderView();
-        } else {
-            checkingNetStateUtils.clearUrlsStates();
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-        }
+        checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT,5);
     }
 
     /**
@@ -407,28 +401,16 @@ public class MyAppFragment extends BaseFragment {
 
     /**
      * app页网络异常提示框
-     *
-     * @param netState 通过Action获取操作类型
-     */
+     * @param netState  通过Action获取操作类型
+     * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)) {
-            if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK) && (!NetUtils.isVpnConnected())) {
-                checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
-                AddHeaderView();
-            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
+            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_APP_CENTER_EXCEPTION_HINT,5);
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_APP_CENTER_EXCEPTION_HINT)) {   //网络异常提示
+            if((boolean)netState.getMessageObj()){
                 DeleteHeaderView();
-            } else {
-                DeleteHeaderView();
-            }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            List<Object> pingIdAndData = (List<Object>) netState.getMessageObj();
-            Boolean pingConnectedResult = checkingNetStateUtils.isPingConnectedNet((String) pingIdAndData.get(0), (boolean) pingIdAndData.get(1));
-            if (pingConnectedResult) {
-                DeleteHeaderView();
-            } else {
+            }else{
                 AddHeaderView();
             }
         }

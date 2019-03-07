@@ -83,24 +83,24 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * 初始化View
      */
     void iniView() {
-        hardImageView = (ImageView) findViewById(R.id.iv_hard_state_log);
-        portalImageView = (ImageView) findViewById(R.id.iv_portal_state_log);
+        hardImageView = findViewById(R.id.iv_hard_state_log);
+        portalImageView = findViewById(R.id.iv_portal_state_log);
         drawableError = getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_error);
         drawableRightArrow = getBaseContext().getResources().getDrawable(R.drawable.ic_fix_left_arrow);
         drawableSuccess = getBaseContext().getResources().getDrawable(R.drawable.ic_netchecking_ok);
         drawableDomainError = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_error);
         drawableDomainSuccess = getBaseContext().getResources().getDrawable(R.drawable.ic_checking_domain_success);
-        qmulHardLoadingView = (QMUILoadingView) findViewById(R.id.qv_checking_hard_loading);
-        qmulWifiLoadingView = (QMUILoadingView) findViewById(R.id.qv_checking_portal_loading);
-        ping1UrlImageView = (ImageView) findViewById(R.id.iv_ping_baidu_state);
-        ping2UrlImageView = (ImageView) findViewById(R.id.iv_ping_inspur_state);
-        ping3UrlImageView = (ImageView) findViewById(R.id.iv_ping_ali_state);
-        ping1UrlQMUIView = (QMUILoadingView) findViewById(R.id.qv_ping_baidu_loading);
-        ping2UrlQMUIView = (QMUILoadingView) findViewById(R.id.qv_ping_inspur_loading);
-        ping3UrlQMUIView = (QMUILoadingView) findViewById(R.id.qv_ping_ali_loading);
-        checkPortalLayout = (RelativeLayout) findViewById(R.id.rl_checking_portal_state);
-        checkUrlsConnectionLayout = (RelativeLayout) findViewById(R.id.rl_checking_dns_state);
-        portalCheckTipLayout = (RelativeLayout) findViewById(R.id.rl_portal_tip);
+        qmulHardLoadingView = findViewById(R.id.qv_checking_hard_loading);
+        qmulWifiLoadingView = findViewById(R.id.qv_checking_portal_loading);
+        ping1UrlImageView = findViewById(R.id.iv_ping_baidu_state);
+        ping2UrlImageView = findViewById(R.id.iv_ping_inspur_state);
+        ping3UrlImageView = findViewById(R.id.iv_ping_ali_state);
+        ping1UrlQMUIView = findViewById(R.id.qv_ping_baidu_loading);
+        ping2UrlQMUIView = findViewById(R.id.qv_ping_inspur_loading);
+        ping3UrlQMUIView = findViewById(R.id.qv_ping_ali_loading);
+        checkPortalLayout = findViewById(R.id.rl_checking_portal_state);
+        checkUrlsConnectionLayout = findViewById(R.id.rl_checking_dns_state);
+        portalCheckTipLayout = findViewById(R.id.rl_portal_tip);
     }
 
     /**
@@ -181,7 +181,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     }
 
     /**
-     * 加载ViewGONE，改为状态view VISIABLE
+     * 加载View GONE，改为状态view VISIABLE
      *
      * @param iniState true 初始化时loading显示状态imageview消失，false 相反
      */
@@ -217,7 +217,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                     if (pingPortalState.isResult()) {
                         isConnected = true;
                     } else {
-                        if (wifiConnection == NetworkInfo.State.CONNECTED) {
+                        if (wifiConnection == NetworkInfo.State.CONNECTED && !NetUtils.isVpnConnected()) {
                             URL url = new URL(StrUrl);
                             httpURLConnection = (HttpURLConnection) url.openConnection();
                             httpURLConnection.setInstanceFollowRedirects(false);
@@ -234,6 +234,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                             } else {
                                 isConnected = false;
                             }
+                        } else {
+                            isConnected = true;
                         }
                     }
                 } catch (Exception e) {
@@ -283,14 +285,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void dealCheckingPingUrls(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_PING_CONNECTION)) {
-            List<Object> idAndData = (List<Object>) netState.getMessageObj();
-            if (((String) idAndData.get(0)).equals(subUrls[0])) {
-                ping1UrlImageView.setBackground((boolean) idAndData.get(1) ? drawableDomainSuccess : drawableDomainError);
+            CheckingNetStateUtils.PingUrlStateAction idAndData = (CheckingNetStateUtils.PingUrlStateAction) netState.getMessageObj();
+            if (idAndData.getUrl().equals(subUrls[0])) {
+                ping1UrlImageView.setBackground(idAndData.isPingState() ? drawableDomainSuccess : drawableDomainError);
                 ping1UrlImageView.setVisibility(View.VISIBLE);
                 ping1UrlQMUIView.setVisibility(View.GONE);
             }
-            if (((String) idAndData.get(0)).equals(subUrls[1])) {
-                ping3UrlImageView.setBackground((boolean) idAndData.get(1) ? drawableDomainSuccess : drawableDomainError);
+            if (idAndData.getUrl().equals(subUrls[1])) {
+                ping3UrlImageView.setBackground(idAndData.isPingState() ? drawableDomainSuccess : drawableDomainError);
                 ping3UrlImageView.setVisibility(View.VISIBLE);
                 ping3UrlQMUIView.setVisibility(View.GONE);
             }
@@ -312,9 +314,9 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                 }
             }
         } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION)) {
-            List<Object> idAndData = (List<Object>) netState.getMessageObj();
-            if (((String) idAndData.get(0)).equals(CheckHttpUrls[0])) {
-                ping2UrlImageView.setBackground((boolean) idAndData.get(1) ? drawableDomainSuccess : drawableDomainError);
+            CheckingNetStateUtils.PingUrlStateAction idAndData = (CheckingNetStateUtils.PingUrlStateAction) netState.getMessageObj();
+            if (idAndData.getUrl().equals(CheckHttpUrls[0])) {
+                ping2UrlImageView.setBackground(idAndData.isPingState() ? drawableDomainSuccess : drawableDomainError);
                 ping2UrlImageView.setVisibility(View.VISIBLE);
                 ping2UrlQMUIView.setVisibility(View.GONE);
             }
