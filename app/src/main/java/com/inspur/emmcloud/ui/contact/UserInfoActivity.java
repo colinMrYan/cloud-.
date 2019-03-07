@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.contact;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,6 +33,9 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -191,9 +195,9 @@ public class UserInfoActivity extends BaseActivity {
 
     public void onClick(View v) {
         final String phoneNum = contactUser.getMobile();
+        String mail = mailText.getText().toString();
         switch (v.getId()) {
             case R.id.ll_mobile_email:
-                String mail = mailText.getText().toString();
                 AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.ll_mobile_phone:
@@ -223,9 +227,37 @@ public class UserInfoActivity extends BaseActivity {
                 bundle.putString(USER_UID, parentUid);
                 IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle);
                 break;
+            case R.id.rl_user_contact:
+                showCallUserDialog(contactUser.getMobile());
+                break;
+            case R.id.ll_user_telephone:
+                showCallUserDialog(contactUser.getTel());
+                break;
+            case R.id.ll_user_mail:
+                AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
+                break;
             default:
                 break;
         }
+    }
+
+    private void showCallUserDialog(final String mobile) {
+        new MyQMUIDialog.MessageDialogBuilder(UserInfoActivity.this)
+                .setMessage(mobile)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.user_call, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
+                    }
+                })
+                .show();
     }
 
     private void showCallPhoneDialog() {
@@ -233,6 +265,9 @@ public class UserInfoActivity extends BaseActivity {
         final String officePhoneNum = contactUser.getTel();
         new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
                 .setTitle(getString(R.string.user_call) + contactUser.getName())
+                .setTitleColor(Color.parseColor("#888888"))
+                .setItemColor(Color.parseColor("#36A5F6"))
+                .setCancelColor(Color.parseColor("#333333"))
                 .addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum)
                 .addItem(getString(R.string.user_office_phone) + ":" + officePhoneNum)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
