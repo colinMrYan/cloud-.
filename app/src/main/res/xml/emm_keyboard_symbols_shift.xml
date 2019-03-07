@@ -73,6 +73,10 @@
             android:keyLabel="]" />
     </Row>
     <Row>
+        <Key
+            android:codes="-7"
+            android:keyLabel="123"
+            android:keyWidth="12.5%p"/>
         <!--  <Key android:keyWidth="14.999998%p" android:codes="-102" android:keyEdgeFlags="left" android:keyIcon="@drawable/sym_keyboard_shift" /> -->
         <Key
             android:codes="58"
@@ -92,6 +96,45 @@
         <Key
             android:codes="39"
             android:keyLabel="'" />
+        <!--<Key-->
+            <!--android:codes="60"-->
+            <!--android:keyLabel="&lt;" />-->
+        <!--<Key-->
+            <!--android:codes="62"-->
+            <!--android:keyLabel=">" />-->
+        <!--<Key-->
+            <!--android:codes="44"-->
+            <!--android:keyLabel="," />-->
+        <!--<Key-->
+            <!--android:codes="46"-->
+            <!--android:keyLabel="." />-->
+        <Key
+            android:codes="63"
+            android:keyLabel="\?" />
+        <Key
+            android:codes="-5"
+            android:isRepeatable="true"
+            android:keyEdgeFlags="right"
+            android:keyIcon="@drawable/icon_keyboard_delete"
+            android:keyWidth="14%p" />
+    </Row>
+    <Row android:rowEdgeFlags="bottom">
+        <!--<Key android:keyWidth="20.000004%p" android:codes="-2" android:keyIcon="@drawable/sym_keyboard_shift" /> -->
+        <!--<Key-->
+            <!--android:codes="63"-->
+            <!--android:keyLabel="\?" />-->
+        <Key
+            android:codes="-8"
+            android:keyLabel="ABC"
+            android:keyWidth="14%p"/>
+        <Key
+            android:codes="47"
+            android:keyLabel="/" />
+        <!--<Key-->
+            <!--android:codes="-7"-->
+            <!--android:keyLabel="123"-->
+            <!--android:keyWidth="18%p"/>-->
+
         <Key
             android:codes="60"
             android:keyLabel="&lt;" />
@@ -107,36 +150,16 @@
         <!--<Key-->
             <!--android:codes="-5"-->
             <!--android:isRepeatable="true"-->
-            <!--android:keyEdgeFlags="right"-->
-            <!--android:keyIcon="@drawable/icon_keyboard_delete"-->
-            <!--android:keyWidth="20.209998%p" />-->
-    </Row>
-    <Row android:rowEdgeFlags="bottom">
-        <!--<Key android:keyWidth="20.000004%p" android:codes="-2" android:keyIcon="@drawable/sym_keyboard_shift" /> -->
+            <!--android:keyWidth="18%p"-->
+            <!--android:keyIcon="@drawable/icon_keyboard_delete" />-->
         <Key
-            android:codes="63"
-            android:keyLabel="\?" />
-        <Key
-            android:codes="47"
-            android:keyLabel="/" />
-        <Key
-            android:codes="-7"
-            android:keyLabel="123"
-            android:keyWidth="18%p"/>
-        <Key
-            android:codes="-8"
-            android:keyLabel="ABC"
-            android:keyWidth="18%p"/>
-        <Key
-            android:codes="-5"
-            android:isRepeatable="true"
-            android:keyWidth="18%p"
-            android:keyLabel="@string/delete"
-            android:keyIcon="@drawable/icon_keyboard_delete" />
+            android:codes="32"
+            android:keyLabel="@string/emm_keyboard_space"
+            android:keyWidth="14.5%p" />
         <Key
             android:codes="-3"
             android:keyEdgeFlags="right"
-            android:keyLabel="@string/finish"
-            android:keyWidth="18%p" />
+            android:keyLabel="@string/ok"
+            android:keyWidth="16%p" />
     </Row>
 </Keyboard>

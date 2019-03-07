@@ -1203,9 +1203,10 @@
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
     <string name="emm_keyboard_zero2nine">1234567890</string>
     <string name="emm_keyboard_number">数字</string>
-    <string name="emm_keyboard_symbol">符号</string>
+    <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">字母</string>
     <string name="emm_secure_keyboard">安全键盘</string>
+    <string name="emm_keyboard_space">空格</string>
 
 
     <string name="phone_sms">短信</string>
