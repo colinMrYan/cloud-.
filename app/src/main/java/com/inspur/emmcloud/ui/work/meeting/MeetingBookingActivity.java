@@ -277,7 +277,7 @@ public class MeetingBookingActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingBookingActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert,
+                MeetingBookingActivity.this, DatePickerDialog.THEME_HOLO_LIGHT,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year,

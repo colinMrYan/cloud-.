@@ -392,7 +392,7 @@ public class MoreFragment extends BaseFragment {
 
         private String getIconUrl(String icon) {
             if (!icon.startsWith("http")) {
-                switch (icon) {
+                switch (icon.toLowerCase()) {
                     case "personcenter_setting":
                         icon = "drawable://" + R.drawable.ic_mine_setting;
                         break;

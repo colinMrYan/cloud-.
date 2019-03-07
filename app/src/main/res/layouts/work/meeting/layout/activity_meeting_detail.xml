@@ -15,7 +15,7 @@
         android:background="?attr/header_bg">
 
         <TextView
-            android:id="@+id/meetting_bookingcirform_text"
+            android:id="@+id/bt_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

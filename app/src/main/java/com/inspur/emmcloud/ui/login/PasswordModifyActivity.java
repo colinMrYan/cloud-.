@@ -84,6 +84,9 @@ public class PasswordModifyActivity extends Activity implements View.OnTouchList
                 }
                 modifyPassword();
                 break;
+            case R.id.ibt_back:
+                finish();
+                break;
         }
     }
 
