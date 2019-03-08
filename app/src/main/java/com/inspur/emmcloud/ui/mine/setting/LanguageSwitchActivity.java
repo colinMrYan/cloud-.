@@ -12,6 +12,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Space;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -211,12 +212,14 @@ public class LanguageSwitchActivity extends BaseActivity {
                 convertView = inflater.inflate(
                         R.layout.mine_setting_language_list_item, null);
                 holder = new ViewHolder();
-                holder.nameText = (TextView) convertView
+                holder.nameText = convertView
                         .findViewById(R.id.tv_language_name);
-                holder.selectImg = (ImageView) convertView
+                holder.selectImg = convertView
                         .findViewById(R.id.iv_select);
-                holder.flagImg = (ImageView) convertView
+                holder.flagImg = convertView
                         .findViewById(R.id.iv_language_flag);
+                holder.space = convertView
+                        .findViewById(R.id.space);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -233,12 +236,16 @@ public class LanguageSwitchActivity extends BaseActivity {
                 } else {
                     holder.selectImg.setVisibility(View.INVISIBLE);
                 }
+                holder.space.setVisibility(View.VISIBLE);
             } else {
                 String iso = commonLanguageList.get(position).getIso();
                 iso = iso.replace("-", "_");
                 iso = iso.toLowerCase();
-                int id = getResources().getIdentifier(iso, "drawable",
+                Integer id = getResources().getIdentifier(iso, "drawable",
                         getApplicationContext().getPackageName());
+                if (id == null){
+                    id = R.drawable.zh_cn;
+                }
                 holder.flagImg.setVisibility(View.VISIBLE);
                 holder.flagImg.setImageResource(id);
                 holder.nameText.setText(language.getLabel());
@@ -247,6 +254,7 @@ public class LanguageSwitchActivity extends BaseActivity {
                 } else {
                     holder.selectImg.setVisibility(View.INVISIBLE);
                 }
+                holder.space.setVisibility(View.GONE);
             }
 
             if (position == 0) {
@@ -265,7 +273,7 @@ public class LanguageSwitchActivity extends BaseActivity {
         }
 
         class ViewHolder {
-
+            Space space;
             TextView nameText;
             ImageView selectImg;
             ImageView flagImg;
