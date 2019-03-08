@@ -28,6 +28,7 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -156,6 +157,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         initView();
     }
+
 
     /**
      * 数据取出后显示ui

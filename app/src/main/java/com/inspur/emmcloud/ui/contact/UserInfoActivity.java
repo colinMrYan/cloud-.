@@ -263,29 +263,42 @@ public class UserInfoActivity extends BaseActivity {
     private void showCallPhoneDialog() {
         final String phoneNum = contactUser.getMobile();
         final String officePhoneNum = contactUser.getTel();
-        new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
+        ActionSheetDialog.ActionListSheetBuilder builder = new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
                 .setTitle(getString(R.string.user_call) + contactUser.getName())
                 .setTitleColor(Color.parseColor("#888888"))
                 .setItemColor(Color.parseColor("#36A5F6"))
-                .setCancelColor(Color.parseColor("#333333"))
-                .addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum)
-                .addItem(getString(R.string.user_office_phone) + ":" + officePhoneNum)
-                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                    @Override
-                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                        dialog.dismiss();
-                        switch (position) {
-                            case 0:
-                                AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
-                                break;
-                            case 1:
-                                AppUtils.call(UserInfoActivity.this, officePhoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
-                                break;
-                        }
+                .setCancelColor(Color.parseColor("#333333"));
+        if(!StringUtils.isBlank(phoneNum)){
+            builder.addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum);
+        }
+        if(!StringUtils.isBlank(officePhoneNum)){
+            builder.addItem(getString(R.string.user_office_phone) + ":" + officePhoneNum);
+        }
+        if(!StringUtils.isBlank(phoneNum) && !StringUtils.isBlank(officePhoneNum)){
+            builder.setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                    dialog.dismiss();
+                    switch (position) {
+                        case 0:
+                            AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                            break;
+                        case 1:
+                            AppUtils.call(UserInfoActivity.this, officePhoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                            break;
                     }
-                })
-                .build()
-                .show();
+                }
+            }).build().show();
+        }else if(!StringUtils.isBlank(phoneNum) || !StringUtils.isBlank(officePhoneNum)){
+            builder.setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                    dialog.dismiss();
+                    String mobileNum = StringUtils.isBlank(phoneNum)?officePhoneNum:phoneNum;
+                    AppUtils.call(UserInfoActivity.this, mobileNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                }
+            }).build().show();
+        }
     }
 
     private void createDirectChannel() {
