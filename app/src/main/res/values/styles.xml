@@ -58,6 +58,12 @@
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
         <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
         <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
+        <item name="mine_my_info_card_name_color">@android:color/black</item>
+        <item name="mine_my_info_card_enterprise_color">#666666</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
+        <item name="mine_my_info_menu_tint_color">@android:color/black</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+
     </style>
 
     <style name="AppTheme_1"  parent="AppTheme">
@@ -88,6 +94,11 @@
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
         <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
         <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
+        <item name="mine_my_info_card_name_color">@android:color/black</item>
+        <item name="mine_my_info_card_enterprise_color">#666666</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
+        <item name="mine_my_info_menu_tint_color">@android:color/black</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
     </style>
 
     <style name="AppTheme_2"  parent="AppTheme">
@@ -118,6 +129,11 @@
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
         <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
         <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
+        <item name="mine_my_info_card_name_color">@android:color/white</item>
+        <item name="mine_my_info_card_enterprise_color">@android:color/white</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
+        <item name="mine_my_info_menu_tint_color">@android:color/white</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_blue</item>
     </style>
 
 

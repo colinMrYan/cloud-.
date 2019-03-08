@@ -186,7 +186,10 @@ public class SettingActivity extends BaseActivity {
             String iso = language.getIso();
             iso = iso.replace("-", "_");
             iso = iso.toLowerCase();
-            int id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
+            Integer id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
+            if (id == null){
+                id = R.drawable.zh_cn;
+            }
             //设置语言国旗标志
             languageFlagImg.setImageResource(id);
         } else {

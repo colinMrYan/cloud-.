@@ -29,6 +29,11 @@
     <attr name="ic_appcenter_search" format="reference"/>
     <attr name="plugin_ic_header_title_drop_down" format="reference"/>
     <attr name="plugin_ic_header_title_drop_up" format="reference"/>
+    <attr name="mine_my_info_card_name_color" format="reference|color"/>
+    <attr name="mine_my_info_card_enterprise_color" format="reference|color"/>
+    <attr name="mine_my_info_card_bg" format="reference"/>
+    <attr name="mine_my_info_menu_tint_color" format="reference|color"/>
+    <attr name="mine_my_info_switch_enterprise" format="reference"/>
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
