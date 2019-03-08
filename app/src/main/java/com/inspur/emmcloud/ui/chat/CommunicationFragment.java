@@ -215,7 +215,6 @@ public class CommunicationFragment extends BaseFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, intentFilter);
     }
 
-
     /**
      * 初始化PullRefreshLayout
      */
