@@ -145,7 +145,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true,0.2f).init();
         String cid = getIntent().getExtras().getString(EXTRA_CID);
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
         if(conversation == null){
@@ -225,7 +225,10 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 } else {
                     showQuitGroupWarningDlg();
                 }
-
+                break;
+            case R.id.rl_search_messages:
+                bundle.putString(EXTRA_CID, conversation.getId());
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this,ConversationGroupMessageSearchActivity.class,bundle);
                 break;
             default:
                 break;

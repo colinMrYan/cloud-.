@@ -682,7 +682,7 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
         TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-                MeetingDetailActivity.this, TimePickerDialog.THEME_HOLO_LIGHT, new OnTimeSetListener() {
+                MeetingDetailActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert, new OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,
                                   int minute) {

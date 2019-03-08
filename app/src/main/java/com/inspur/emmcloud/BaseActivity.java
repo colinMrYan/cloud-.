@@ -93,7 +93,7 @@ public class BaseActivity extends Activity {
         if (!isContain) {
             int statusBarColor = ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
             boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true).statusBarDarkFont(isStatusBarDarkFont).init();
+            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true).statusBarDarkFont(isStatusBarDarkFont,0.2f).init();
         }else {
             ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true).init();
         }

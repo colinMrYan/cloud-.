@@ -321,6 +321,7 @@
     <string name="meeting_refused">委婉拒絕</string>
     <string name="meeting_cancel_confirm">取消確認</string>
     <string name="meeting_cancel_reject">取消拒絕</string>
+    <string name="chat_group_message_search">查找聊天記錄</string>
 
     <string name="chat_resend_message">重新發送</string>
 
@@ -1366,4 +1367,10 @@
         <item>申</item>
     </string-array>
     <!--日历字符串资源结束-->
+
+    <string name="phone_sms">簡訊</string>
+    <string name="phone_email">郵件</string>
+    <string name="current_month">本月</string>
+    <string name="user_office_phone">固話</string>
+    <string name="group_qrcode">群二維碼</string>
 </resources>
