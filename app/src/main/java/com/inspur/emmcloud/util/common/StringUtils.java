@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.util.common;
 
+import android.text.Html;
+import android.text.Spanned;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -419,6 +422,20 @@ public class StringUtils {
             offset += array.length;
         }
         return result;
+    }
+
+    /**
+     * 传入文本内容，关键词颜色和关键词，把内容里所有关键词变成keyWordsColor
+     * 返回Spanned可以直接用setText方法
+     * @param content
+     * @param keyWordsColor
+     * @param keyWords
+     * @return
+     */
+    public static Spanned getHtmlString(String content, String keyWordsColor, String keyWords){
+        String htmlKeyWords = "<font color='"+keyWordsColor+"'>"+keyWords+"</font>";
+        content = content.replaceAll(keyWords,htmlKeyWords);
+        return Html.fromHtml(String.format(content));
     }
 
 

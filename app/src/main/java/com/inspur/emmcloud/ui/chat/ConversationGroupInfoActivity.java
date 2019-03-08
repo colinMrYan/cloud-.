@@ -225,7 +225,10 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 } else {
                     showQuitGroupWarningDlg();
                 }
-
+                break;
+            case R.id.rl_search_messages:
+                bundle.putString(EXTRA_CID, conversation.getId());
+                IntentUtils.startActivity(ConversationGroupInfoActivity.this,ConversationGroupMessageSearchActivity.class,bundle);
                 break;
             default:
                 break;

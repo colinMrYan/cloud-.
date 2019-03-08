@@ -187,9 +187,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                 }
             }
-        }
-
-        ;
+        };
     }
 
 
@@ -204,7 +202,17 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void initChannelMessage() {
-        List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+        List<Message> cacheMessageList ;
+        UIMessage uiMessage = null;
+        if(getIntent().hasExtra(EXTRA_UIMESSAGE)){
+            uiMessage = (UIMessage)getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
+            cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null);
+        }else{
+            cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+        }
+        if(cacheMessageList == null){
+            cacheMessageList = new ArrayList<>();
+        }
         List<Message> messageSendingList = new ArrayList<>();
         for (int i = 0; i < cacheMessageList.size(); i++) {
             if (cacheMessageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - cacheMessageList.get(i).getCreationDate()) > 16 * 1000)) {
@@ -218,6 +226,12 @@ public class ConversationActivity extends ConversationBaseActivity {
             getNewMessageOfChannel();
         }
         initViews();
+        if(uiMessage != null){
+            int position = uiMessageList.indexOf(uiMessage);
+            if(position != -1){
+                msgListView.scrollToPosition(position);
+            }
+        }
     }
 
     /**
@@ -571,14 +585,14 @@ public class ConversationActivity extends ConversationBaseActivity {
             case "file/regular-file":
             case "media/image":
                 bundle.putString("mid", message.getId());
-                bundle.putString("cid", message.getChannel());
+                bundle.putString(EXTRA_CID, message.getChannel());
                 IntentUtils.startActivity(ConversationActivity.this,
                         ChannelMessageDetailActivity.class, bundle);
                 break;
             case "comment/text-plain":
                 String mid = message.getMsgContentComment().getMessage();
                 bundle.putString("mid", mid);
-                bundle.putString("cid", message.getChannel());
+                bundle.putString(EXTRA_CID, message.getChannel());
                 IntentUtils.startActivity(ConversationActivity.this,
                         ChannelMessageDetailActivity.class, bundle);
                 break;
