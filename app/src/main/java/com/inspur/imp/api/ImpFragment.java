@@ -296,17 +296,7 @@ public class ImpFragment extends ImpBaseFragment {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    DropItemTitle dropItemTitle = dropItemTitleList.get(position);
-//                    if (!dropItemTitle.isSelected()) {
-                        dropItemTitle.setSelected(true);
-                        runJavaScript(JAVASCRIPT_PREFIX + dropItemTitle.getAction());
-                        setTitle(dropItemTitle.getText());
-                        for (int i = 0; i < dropItemTitleList.size(); i++) {
-                            if (i != position) {
-                                dropItemTitleList.get(i).setSelected(false);
-                            }
-                        }
-//                    }
+                    setDropItemTitleSelect(position);
                     dropTitlePopupWindow.dismiss();
                 }
             });
@@ -317,6 +307,29 @@ public class ImpFragment extends ImpBaseFragment {
                 R.drawable.pop_window_view_tran));
         AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
         dropTitlePopupWindow.showAsDropDown(headerLayout);
+    }
+
+    private void setDropItemTitleSelect(int position){
+        if (dropItemTitleList != null && position <dropItemTitleList.size()){
+            if (position == -1){
+                for (int i=0;i<dropItemTitleList.size();i++){
+                    if (dropItemTitleList.get(i).isSelected()){
+                        position = i;
+                        break;
+                    }
+                }
+            }
+            DropItemTitle dropItemTitle = dropItemTitleList.get(position);
+            dropItemTitle.setSelected(true);
+            runJavaScript(JAVASCRIPT_PREFIX + dropItemTitle.getAction());
+            setTitle(dropItemTitle.getText());
+            for (int i = 0; i < dropItemTitleList.size(); i++) {
+                if (i != position) {
+                    dropItemTitleList.get(i).setSelected(false);
+                }
+            }
+        }
+
     }
 
     /**
@@ -393,6 +406,7 @@ public class ImpFragment extends ImpBaseFragment {
         Drawable drawable = ContextCompat.getDrawable(MyApplication.getInstance(), isDropTitlePopShow ? dropUpRes : dropDownRes);
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         headerText.setCompoundDrawables(null, null, drawable, null);
+        setDropItemTitleSelect(-1);
     }
 
     /**
@@ -589,15 +603,6 @@ public class ImpFragment extends ImpBaseFragment {
      * 弹出提示框
      */
     public void showImpDialog() {
-//        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.dismiss();
-//            }
-//        };
-//        EasyDialog.showDialog(getActivity(), getString(R.string.prompt),
-//                getString(R.string.imp_function_error),
-//                getString(R.string.ok), listener, false);
         ToastUtils.show(getActivity(), R.string.imp_function_error);
     }
 

@@ -885,7 +885,7 @@
     <string name="mession_delete_blue">Blue</string>
     <string name="mession_delete_purple">Purple</string>
     <string name="mession_delete_exist">Tag already existed</string>
-    <string name="mession_delete_no_empty">No tags to be deleted</string>
+    <string name="mession_delete_no_empty">Please input the title</string>
     <string name="mession_add_tag">Tag</string>
     <string name="mession_full_tag">Enter tag title</string>
     <string name="mession_color_tag">Color</string>

@@ -37,7 +37,7 @@
         android:layout_below="@id/rl_header"
          >
 
-        <com.inspur.emmcloud.widget.PagerSlidingTabStrip
+        <com.gxz.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:visibility="gone"
             android:layout_width="match_parent"

@@ -83,6 +83,11 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         }
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
+        //        AlertDialog alertDialog = null;
+//        AlertDialog.Builder builder= new AlertDialog.Builder(this,R.style.Theme_AppCompat_Light_Dialog_Alert);
+//        builder.setTitle("我是title").setMessage("我是message").setPositiveButton("确定",null).setNegativeButton("取消",null).setNeutralButton("其他",null);
+//        alertDialog =  builder.create();
+//        alertDialog.show();
     }
 
     private void checkNecessaryPermission() {
