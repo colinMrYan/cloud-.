@@ -15,6 +15,7 @@ import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.util.Arrays;
 
@@ -22,6 +23,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     private static final String[] classNames = {
             ImagePagerV0Activity.class.getName(),
             ImagePagerActivity.class.getName(),
+            MyCameraActivity.class.getName(),
     };
 
     @Override

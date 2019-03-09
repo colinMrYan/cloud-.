@@ -542,7 +542,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
             TextView textView = new TextView(MyCameraActivity.this);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 10), DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 10));
+            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this, 20), 0, DensityUtil.dip2px(MyCameraActivity.this, 20), 0);
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ViewHolder viewHolder = new ViewHolder(textView);
             viewHolder.textView = textView;

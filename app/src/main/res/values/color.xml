@@ -14,8 +14,8 @@
     <color name="footer_bg_grey">#f8f8f8</color>
 
     <color name="header_text">#ffffff</color>
-    <color name="header_text_black">#222222</color>
-    <color name="header_text_grey">#222222</color>
+    <color name="header_text_black">#333333</color>
+    <color name="header_text_grey">#333333</color>
 
 
     <color name="footer_tab_text_nor_white">#979EA3</color>
