@@ -202,6 +202,7 @@ public class ImpBaseFragment extends BaseFragment {
                 iconImg.setVisibility(View.GONE);
             } else {
                 iconImg.setVisibility(View.VISIBLE);
+                iconImg.setColorFilter(getContext().getResources().getColor(R.color.header_text_black));
                 ImageDisplayUtils.getInstance().displayImage(iconImg, optionMenu.getIco());
             }
             textView.setText(optionMenu.getText());

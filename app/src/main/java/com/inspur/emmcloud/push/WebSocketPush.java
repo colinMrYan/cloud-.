@@ -161,7 +161,7 @@ public class WebSocketPush {
             String url = APIUri.getWebsocketConnectUrl();
             String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                     "/chat/socket/handshake";
-            sendWebSocketStatusBroadcast("socket_connecting");
+            sendWebSocketStatusBroadcast(Socket.EVENT_CONNECTING);
             IO.Options opts = new IO.Options();
             opts.reconnectionAttempts = 5; // 设置websocket重连次数
             opts.forceNew = true;

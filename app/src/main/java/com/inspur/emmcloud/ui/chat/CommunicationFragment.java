@@ -63,7 +63,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -585,7 +584,7 @@ public class CommunicationFragment extends BaseFragment {
      * @param socketStatus
      */
     private void showSocketStatusInTitle(String socketStatus) {
-        if (socketStatus.equals("socket_connecting")) {
+        if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
@@ -947,7 +946,7 @@ public class CommunicationFragment extends BaseFragment {
     /**
      * 隐藏频道
      *
-     * @param id
+     * @param uiConversation
      */
     private void setConversationHide(final UIConversation uiConversation) {
         new Thread(new Runnable() {

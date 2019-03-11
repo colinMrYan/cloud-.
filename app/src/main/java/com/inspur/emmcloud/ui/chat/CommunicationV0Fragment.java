@@ -855,7 +855,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     }
 
     private void showSocketStatusInTitle(String socketStatus) {
-        if (socketStatus.equals("socket_connecting")) {
+        if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
