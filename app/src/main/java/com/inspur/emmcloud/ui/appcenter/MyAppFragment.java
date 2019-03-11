@@ -180,7 +180,7 @@ public class MyAppFragment extends BaseFragment {
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT,5);
+        checkingNetStateUtils.getNetStateResult(5);
     }
 
     /**
@@ -405,9 +405,7 @@ public class MyAppFragment extends BaseFragment {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
-            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_APP_CENTER_EXCEPTION_HINT,5);
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_APP_CENTER_EXCEPTION_HINT)) {   //网络异常提示
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
             if((boolean)netState.getMessageObj()){
                 DeleteHeaderView();
             }else{
