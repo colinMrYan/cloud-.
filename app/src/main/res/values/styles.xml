@@ -61,7 +61,7 @@
         <item name="mine_my_info_card_name_color">@android:color/black</item>
         <item name="mine_my_info_card_enterprise_color">#666666</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
-        <item name="mine_my_info_menu_tint_color">@android:color/black</item>
+        <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
         <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
 
     </style>
@@ -97,7 +97,7 @@
         <item name="mine_my_info_card_name_color">@android:color/black</item>
         <item name="mine_my_info_card_enterprise_color">#666666</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
-        <item name="mine_my_info_menu_tint_color">@android:color/black</item>
+        <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
         <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
     </style>
 
