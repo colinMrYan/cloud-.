@@ -358,8 +358,7 @@ public class CommunicationFragment extends BaseFragment {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
             conversationAdapter.setNetExceptionView((boolean)netState.getMessageObj());
             if ((Boolean)netState.getMessageObj()){
                 WebSocketPush.getInstance().startWebSocket();
