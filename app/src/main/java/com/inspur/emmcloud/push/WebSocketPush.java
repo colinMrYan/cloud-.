@@ -303,6 +303,7 @@ public class WebSocketPush {
     private void removeListeners() {
         mSocket.off("message");
         mSocket.off("com.inspur.ecm.chat");
+        mSocket.off("status");
         mSocket.off(Socket.EVENT_CONNECT_ERROR);
         mSocket.off(Socket.EVENT_CONNECT);
         mSocket.off(Socket.EVENT_DISCONNECT);
