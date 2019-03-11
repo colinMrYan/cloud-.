@@ -46,9 +46,9 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
     private ChatInputEdit inputEdit;
 
 
-    @ViewInject(R.id.send_msg_btn)
+    @ViewInject(R.id.bt_send)
     private Button sendMsgBtn;
-    @ViewInject(R.id.add_menu_layout)
+    @ViewInject(R.id.rl_add_menu)
     private RelativeLayout addMenuLayout;
 
     private boolean canMentions = false;
@@ -87,7 +87,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
                 sendMsgBtn.setEnabled(!isContentBlank);
-                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
+//                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -178,10 +178,10 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
         }
     }
 
-    @Event({R.id.send_msg_btn})
+    @Event({R.id.bt_send,R.id.bt_cancel})
     private void onClick(View view) {
         switch (view.getId()) {
-            case R.id.send_msg_btn:
+            case R.id.bt_send:
                 if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList = null;
                     String content = inputEdit.getRichContent(isMessageV0);
@@ -194,6 +194,11 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
 
                     inputEdit.setText("");
+                }
+                break;
+            case R.id.bt_cancel:
+                if (chatInputMenuListener != null) {
+                    chatInputMenuListener.hideChatInputMenu();
                 }
                 break;
             default:
@@ -236,6 +241,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
 
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
+        void hideChatInputMenu();
     }
 
 

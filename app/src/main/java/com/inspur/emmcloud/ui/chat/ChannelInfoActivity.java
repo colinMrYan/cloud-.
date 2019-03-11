@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -23,9 +25,11 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
@@ -47,6 +51,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +76,11 @@ public class ChannelInfoActivity extends BaseActivity {
     private Adapter adapter;
     private TextView channelMemberNumText;
     private boolean isNoInterruption = false;
+    private CircleTextImageView groupPhotoImg;
+    private TextView groupMembersText;
+    private TextView groupMemberSizeText;
+    private TextView nameText;
+    private RelativeLayout groupMessageSearchLayout;
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
 
         @Override
@@ -136,8 +146,15 @@ public class ChannelInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         setContentView(R.layout.activity_conversation_group_info);
-        channelMemberNumText = (TextView) findViewById(R.id.tv_member);
+        channelMemberNumText =  findViewById(R.id.tv_member);
+        groupMembersText = findViewById(R.id.tv_group_member_size);
+        groupMessageSearchLayout = findViewById(R.id.rl_search_messages);
+        groupMessageSearchLayout.setVisibility(View.GONE);
+        groupMemberSizeText = findViewById(R.id.tv_group_members);
+        groupPhotoImg = findViewById(R.id.iv_group_photo);
+        nameText = findViewById(R.id.tv_name);
         apiService = new ChatAPIService(ChannelInfoActivity.this);
         apiService.setAPIInterface(new WebService());
         cid = getIntent().getExtras().getString("cid");
@@ -166,21 +183,42 @@ public class ChannelInfoActivity extends BaseActivity {
      * 数据取出后显示ui
      */
     private void displayUI() {
-        channelMemberNumText.setText(getString(R.string.all_group_member, ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size()));
-        memberGrid = (NoScrollGridView) findViewById(R.id.gv_member);
-        ((TextView) findViewById(R.id.tv_name)).setText(channelGroup.getChannelName());
+        int memberSize = ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size();
+        channelMemberNumText.setText(getString(R.string.all_group_member, memberSize));
+        setChannelIcon();
+        groupMemberSizeText.setText(channelGroup.getChannelName() + getString(R.string.bracket_with_word, (memberSize + "")));
+        groupMembersText.setText(getString(R.string.people_num, memberSize));
+        memberGrid = findViewById(R.id.gv_member);
+        nameText.setText(channelGroup.getChannelName());
         adapter = new Adapter();
         memberGrid.setAdapter(adapter);
         memberGrid.setOnItemClickListener(onItemClickListener);
-        setTopSwitch = (SwitchView) findViewById(R.id.sv_stick);
-        msgInterruptionSwitch = (SwitchView) findViewById(R.id.sv_dnd);
+        setTopSwitch = findViewById(R.id.sv_stick);
+        msgInterruptionSwitch = findViewById(R.id.sv_dnd);
         msgInterruptionSwitch.setOpened(ChannelCacheUtils.isChannelNotDisturb(
                 ChannelInfoActivity.this, cid));
         msgInterruptionSwitch.setOnStateChangedListener(onStateChangedListener);
-        boolean isSetTop = ChannelOperationCacheUtils.isChannelSetTop(
-                this, cid);
-        setTopSwitch.setOpened(isSetTop);
+        setTopSwitch.setOpened(ChannelOperationCacheUtils.isChannelSetTop(
+                this, cid));
         setTopSwitch.setOnStateChangedListener(onStateChangedListener);
+    }
+
+    /**
+     * 设置Channel的Icon
+     *
+     */
+    private void setChannelIcon() {
+        // TODO Auto-generated method stub
+        if (channelGroup.getType().equals("GROUP")) {
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                    MyApplication.getInstance().getTanent() + channelGroup.getCid() + "_100.png1");
+            groupPhotoImg.setTag("");
+            if (file.exists()) {
+                groupPhotoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
+            } else {
+                groupPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
+            }
+        }
     }
 
     /**
@@ -214,7 +252,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupFileActivity.class, bundle);
                 break;
-            case R.id.channel_name_layout:
+            case R.id.rl_channel_name:
                 Intent intent = new Intent();
                 intent.setClass(ChannelInfoActivity.this,
                         ModifyChannelGroupNameActivity.class);
@@ -291,7 +329,7 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void ModifyChannelGroupName(Intent data) {
         String name = data.getStringExtra("name");
-        ((TextView) findViewById(R.id.tv_name)).setText(name);
+        nameText.setText(name);
         String pyFull = PinyinUtils.getPingYin(name);
         String pyShort = PinyinUtils.getPinYinHeadChar(name);
         channelGroup.setChannelName(name);

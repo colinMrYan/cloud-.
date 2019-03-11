@@ -225,7 +225,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file),
-                    "@", getContext().getString(R.string.voice_call)};
+                    getContext().getString(R.string.mention), getContext().getString(R.string.voice_call)};
             String[] functionActionArray = {"gallery", "camera", "file", "mention", "voice_call"};
             String binaryString = "-1";
             if (!StringUtils.isBlank(inputs)) {

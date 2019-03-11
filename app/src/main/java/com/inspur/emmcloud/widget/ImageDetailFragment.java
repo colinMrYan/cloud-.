@@ -129,6 +129,7 @@ public class ImageDetailFragment extends Fragment {
                 return false;
             }
         });
+        mAttacher.setMaximumScale(5);
         progressBar = (ProgressBar) v.findViewById(R.id.loading);
         return v;
     }

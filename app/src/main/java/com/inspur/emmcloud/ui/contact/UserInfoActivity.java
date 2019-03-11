@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.contact;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,6 +33,9 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -83,10 +87,10 @@ public class UserInfoActivity extends BaseActivity {
     private LinearLayout mobileEmailLayout;
     @ViewInject(R.id.rl_start_chat)
     private RelativeLayout mobileStartChatLayout;
-    @ViewInject(R.id.tv_user_position)
-    private TextView positionText;
-    @ViewInject(R.id.ll_user_position)
-    private LinearLayout mobilePositionLayout;
+//    @ViewInject(R.id.tv_user_position)
+//    private TextView positionText;
+//    @ViewInject(R.id.ll_user_position)
+//    private LinearLayout mobilePositionLayout;
     @ViewInject(R.id.rl_contact_way)
     private RelativeLayout userContactWayLayout;
 
@@ -173,13 +177,13 @@ public class UserInfoActivity extends BaseActivity {
         if (!StringUtils.isBlank(officeStr)) {
             dutyText.setVisibility(View.VISIBLE);
             dutyText.setText(officeStr);  //lbc
-            positionText.setText(officeStr);
+//            positionText.setText(officeStr);
         } else {
             dutyText.setVisibility(View.GONE);
         }
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
         startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid())?View.GONE:View.VISIBLE);
-        mobilePositionLayout.setVisibility(StringUtils.isBlank(officeStr)?View.GONE:View.VISIBLE);
+//        mobilePositionLayout.setVisibility(StringUtils.isBlank(officeStr)?View.GONE:View.VISIBLE);
         mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr))?View.GONE:View.VISIBLE);
         mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum)?View.GONE:View.VISIBLE);
         mobileEmailLayout.setVisibility(StringUtils.isBlank(mail)?View.GONE:View.VISIBLE);
@@ -191,9 +195,9 @@ public class UserInfoActivity extends BaseActivity {
 
     public void onClick(View v) {
         final String phoneNum = contactUser.getMobile();
+        String mail = mailText.getText().toString();
         switch (v.getId()) {
             case R.id.ll_mobile_email:
-                String mail = mailText.getText().toString();
                 AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
                 break;
             case R.id.ll_mobile_phone:
@@ -223,34 +227,78 @@ public class UserInfoActivity extends BaseActivity {
                 bundle.putString(USER_UID, parentUid);
                 IntentUtils.startActivity(UserInfoActivity.this, ContactOrgStructureActivity.class, bundle);
                 break;
+            case R.id.rl_user_contact:
+                showCallUserDialog(contactUser.getMobile());
+                break;
+            case R.id.ll_user_telephone:
+                showCallUserDialog(contactUser.getTel());
+                break;
+            case R.id.ll_user_mail:
+                AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
+                break;
             default:
                 break;
         }
     }
 
+    private void showCallUserDialog(final String mobile) {
+        new MyQMUIDialog.MessageDialogBuilder(UserInfoActivity.this)
+                .setMessage(mobile)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.user_call, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
+                    }
+                })
+                .show();
+    }
+
     private void showCallPhoneDialog() {
         final String phoneNum = contactUser.getMobile();
         final String officePhoneNum = contactUser.getTel();
-        new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
+        ActionSheetDialog.ActionListSheetBuilder builder = new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
                 .setTitle(getString(R.string.user_call) + contactUser.getName())
-                .addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum)
-                .addItem(getString(R.string.user_office_phone) + ":" + officePhoneNum)
-                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                    @Override
-                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                        dialog.dismiss();
-                        switch (position) {
-                            case 0:
-                                AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
-                                break;
-                            case 1:
-                                AppUtils.call(UserInfoActivity.this, officePhoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
-                                break;
-                        }
+                .setTitleColor(Color.parseColor("#888888"))
+                .setItemColor(Color.parseColor("#36A5F6"))
+                .setCancelColor(Color.parseColor("#333333"));
+        if(!StringUtils.isBlank(phoneNum)){
+            builder.addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum);
+        }
+        if(!StringUtils.isBlank(officePhoneNum)){
+            builder.addItem(getString(R.string.user_office_phone) + ":" + officePhoneNum);
+        }
+        if(!StringUtils.isBlank(phoneNum) && !StringUtils.isBlank(officePhoneNum)){
+            builder.setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                    dialog.dismiss();
+                    switch (position) {
+                        case 0:
+                            AppUtils.call(UserInfoActivity.this, phoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                            break;
+                        case 1:
+                            AppUtils.call(UserInfoActivity.this, officePhoneNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                            break;
                     }
-                })
-                .build()
-                .show();
+                }
+            }).build().show();
+        }else if(!StringUtils.isBlank(phoneNum) || !StringUtils.isBlank(officePhoneNum)){
+            builder.setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                    dialog.dismiss();
+                    String mobileNum = StringUtils.isBlank(phoneNum)?officePhoneNum:phoneNum;
+                    AppUtils.call(UserInfoActivity.this, mobileNum, USER_INFO_ACTIVITY_REQUEST_CODE);
+                }
+            }).build().show();
+        }
     }
 
     private void createDirectChannel() {

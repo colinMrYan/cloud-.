@@ -101,7 +101,7 @@
             android:paddingBottom="38dp"
             android:background="@color/white"
             android:orientation="vertical"
-            android:paddingLeft="20dp">
+            android:paddingLeft="32dp">
 
             <LinearLayout
                 android:id="@+id/ll_user_department"
@@ -115,21 +115,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/iv_user_depart"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignTop="@id/tv_department"
-                        android:layout_marginRight="19.3dp"
-                        android:layout_marginTop="3dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/icon_organizational_structure" />
 
                     <TextView
                         android:id="@+id/tv_department"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/iv_user_depart"
                         android:text="@string/user_depart"
                         android:textColor="#999999"
                         android:textSize="@dimen/content_small_textsize" />
@@ -139,7 +129,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_department"
-                        android:layout_toRightOf="@id/iv_user_depart"
                         android:paddingBottom="7dp"
                         android:textColor="#333333"
                         android:textIsSelectable="true"
@@ -159,7 +148,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
                         android:layout_below="@id/tv_user_department"
-                        android:layout_toRightOf="@id/iv_user_depart"
                         android:background="@color/color_list_divider" />
                 </RelativeLayout>
             </LinearLayout>
@@ -177,22 +165,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/iv_user_position"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginRight="19.3dp"
-                        android:layout_marginTop="13dp"
-                        android:onClick="onClick"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_user_position" />
 
                     <TextView
                         android:id="@+id/tv_position"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:layout_toRightOf="@id/iv_user_position"
                         android:text="@string/user_info_title"
                         android:textColor="#999999"
                         android:textSize="@dimen/content_normal_textsize" />
@@ -202,7 +180,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_position"
-                        android:layout_toRightOf="@id/iv_user_position"
                         android:paddingBottom="7dp"
                         android:paddingRight="24dp"
                         android:singleLine="true"
@@ -215,7 +192,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
                         android:layout_below="@id/tv_user_position"
-                        android:layout_toRightOf="@id/iv_user_position"
                         android:background="@color/color_list_divider" />
                 </RelativeLayout>
             </LinearLayout>
@@ -224,6 +200,7 @@
                 android:id="@+id/ll_user_mail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="onClick"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -231,22 +208,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/iv_user_mail"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginRight="19.3dp"
-                        android:layout_marginTop="13dp"
-                        android:onClick="onClick"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/icon_user_email" />
 
                     <TextView
                         android:id="@+id/tv_mail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:layout_toRightOf="@id/iv_user_mail"
                         android:text="@string/mail"
                         android:textColor="#999999"
                         android:textSize="@dimen/content_normal_textsize" />
@@ -256,17 +223,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_mail"
-                        android:layout_toRightOf="@id/iv_user_mail"
                         android:paddingBottom="7dp"
-                        android:textColor="#333333"
-                        android:textIsSelectable="true"
+                        android:textColor="@color/app_font_color"
                         android:textSize="@dimen/content_title_textsize" />
 
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
                         android:layout_below="@id/tv_user_mail"
-                        android:layout_toRightOf="@id/iv_user_mail"
                         android:background="@color/color_list_divider" />
                 </RelativeLayout>
             </LinearLayout>
@@ -276,24 +240,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:onClick="onClick"
                 android:visibility="gone">
 
-                <ImageView
-                    android:id="@+id/iv_mobile_phone"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="19.3dp"
-                    android:layout_marginTop="15dp"
-                    android:onClick="onClick"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_user_phone_num" />
 
                 <TextView
                     android:id="@+id/tv_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:layout_toRightOf="@id/iv_mobile_phone"
                     android:text="@string/user_info_phone_number"
                     android:textColor="#999999"
                     android:textSize="@dimen/content_normal_textsize" />
@@ -303,17 +258,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_phone"
-                    android:layout_toRightOf="@id/iv_mobile_phone"
                     android:paddingBottom="7dp"
-                    android:textColor="#333333"
-                    android:textIsSelectable="true"
+                    android:textColor="@color/app_font_color"
                     android:textSize="@dimen/content_title_textsize" />
 
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/tv_user_phone_num"
-                    android:layout_toRightOf="@id/iv_mobile_phone"
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
 
@@ -322,6 +274,7 @@
                 android:id="@+id/ll_user_telephone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="onClick"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -329,22 +282,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/iv_user_telephone"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginRight="19.3dp"
-                        android:layout_marginTop="15dp"
-                        android:onClick="onClick"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/icon_landline" />
+
 
                     <TextView
                         android:id="@+id/tv_telephone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:layout_toRightOf="@id/iv_user_telephone"
                         android:text="@string/user_telephone"
                         android:textColor="#999999"
                         android:textSize="@dimen/content_normal_textsize" />
@@ -354,17 +298,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_telephone"
-                        android:layout_toRightOf="@id/iv_user_telephone"
                         android:paddingBottom="7dp"
-                        android:textColor="#333333"
-                        android:textIsSelectable="true"
+                        android:textColor="@color/app_font_color"
                         android:textSize="@dimen/content_title_textsize" />
 
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
                         android:layout_below="@id/tv_user_telephone"
-                        android:layout_toRightOf="@id/iv_user_telephone"
                         android:background="@color/color_list_divider" />
                 </RelativeLayout>
             </LinearLayout>
@@ -408,9 +349,8 @@
             android:layout_alignParentBottom="true"
             android:gravity="bottom"
             android:orientation="horizontal">
-
             <LinearLayout
-                android:id="@+id/ll_mobile_email"
+                android:id="@+id/ll_mobile_chat"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -422,12 +362,39 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/icon_user_phone_email" />
+                    android:src="@drawable/ic_send_message" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/phone_email"
+                    android:text="@string/user_send_message"
+                    android:layout_marginTop="2dp"
+                    android:textColor="#36A5F6"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:id="@+id/ll_mobile_phone"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center|bottom"
+                android:paddingBottom="14dp"
+                android:onClick="onClick"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_user_phone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone_number"
                     android:layout_marginTop="2dp"
                     android:textColor="#36A5F6"
                     android:textSize="14sp" />
@@ -457,8 +424,9 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
+
             <LinearLayout
-                android:id="@+id/ll_mobile_phone"
+                android:id="@+id/ll_mobile_email"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -470,35 +438,12 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/icon_user_phone" />
+                    android:src="@drawable/icon_user_phone_email" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/phone_number"
-                    android:layout_marginTop="2dp"
-                    android:textColor="#36A5F6"
-                    android:textSize="14sp" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ll_mobile_chat"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|bottom"
-                android:paddingBottom="14dp"
-                android:onClick="onClick"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_send_message" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_send_message"
+                    android:text="@string/phone_email"
                     android:layout_marginTop="2dp"
                     android:textColor="#36A5F6"
                     android:textSize="14sp" />
