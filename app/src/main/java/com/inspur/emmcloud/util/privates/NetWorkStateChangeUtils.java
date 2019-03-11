@@ -5,12 +5,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-
-import org.greenrobot.eventbus.EventBus;
+import com.inspur.emmcloud.util.common.NetUtils;
 
 /**
  * Created by yufuchang on 2019/1/2.
@@ -18,10 +17,9 @@ import org.greenrobot.eventbus.EventBus;
 
 public class NetWorkStateChangeUtils {
 
-    public static final String NET_GPRS_STATE_OK = "net_gprs_state_ok";
-    public static final String NET_WIFI_STATE_OK = "net_wifi_state_ok";
-    public static final String NET_STATE_ERROR = "net_state_error";
+
     private static NetWorkStateChangeUtils netWorkStateChangeUtils;
+    private CheckingNetStateUtils checkingNetStateUtils=new CheckingNetStateUtils( MyApplication.getInstance(), NetUtils.pingUrls );;
 
     private NetWorkStateChangeUtils() {
 
@@ -51,21 +49,18 @@ public class NetWorkStateChangeUtils {
             boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
             if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
                 if (isAppOnForeground) {
-                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_STATE_CHANGE, NET_GPRS_STATE_OK));
-//                    ToastUtils.show(context, R.string.Network_Mobile);
                     getBadgeFromServer(context);
                 }
                 WebSocketPush.getInstance().startWebSocket();
             } else if (wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) {
                 if (isAppOnForeground) {
-                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_STATE_CHANGE, NET_WIFI_STATE_OK));
-//                    ToastUtils.show(context, R.string.Network_WIFI);
                     getBadgeFromServer(context);
                 }
                 WebSocketPush.getInstance().startWebSocket();
             } else if (isAppOnForeground) {
-                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_STATE_CHANGE, NET_STATE_ERROR));
-//                ToastUtils.show(context, R.string.network_exception);
+            }
+            if(isAppOnForeground){
+                checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT,5);
             }
         } catch (Exception e) {
             LogUtils.debug("NetWorkStateChangeUtils", e.getMessage());
