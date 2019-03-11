@@ -180,7 +180,7 @@ public class MyAppFragment extends BaseFragment {
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT,5);
+        checkingNetStateUtils.getNetStateResult(5);
     }
 
     /**

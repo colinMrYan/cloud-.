@@ -213,7 +213,7 @@ public class CommunicationV0Fragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT,5);
+        checkingNetStateUtils.getNetStateResult(5);
         super.onResume();
     }
 

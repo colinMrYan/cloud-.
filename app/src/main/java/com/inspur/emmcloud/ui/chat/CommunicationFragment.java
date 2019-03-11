@@ -184,7 +184,7 @@ public class CommunicationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT,5);
+            checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {

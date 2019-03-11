@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -60,7 +59,7 @@ public class NetWorkStateChangeUtils {
             } else if (isAppOnForeground) {
             }
             if(isAppOnForeground){
-                checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT,5);
+                checkingNetStateUtils.getNetStateResult(5);
             }
         } catch (Exception e) {
             LogUtils.debug("NetWorkStateChangeUtils", e.getMessage());
