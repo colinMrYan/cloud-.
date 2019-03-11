@@ -341,6 +341,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 key.codes[0] = Integer.valueOf(textArray[0], KEYBOARD_RADIX);
                 temNumList.remove(number);
             }
+
         }
     }
 

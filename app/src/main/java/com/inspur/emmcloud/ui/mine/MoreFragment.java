@@ -317,7 +317,6 @@ public class MoreFragment extends BaseFragment {
         public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
                                  View convertView, ViewGroup parent) {
             MineLayoutItem layoutItem = (MineLayoutItem) getChild(groupPosition, childPosition);
-            LogUtils.jasonDebug("getChildView--------------------");
             if (layoutItem.getId().equals("my_personalInfo_function")) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine_my_info_card, null);
                 ImageView photoImg = convertView.findViewById(R.id.iv_photo);

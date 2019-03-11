@@ -28,6 +28,7 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -157,6 +158,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         initView();
     }
 
+
     /**
      * 数据取出后显示ui
      */
@@ -207,7 +209,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         GroupFileActivity.class, bundle);
                 break;
-            case R.id.channel_name_layout:
+            case R.id.rl_channel_name:
                 bundle.putString("cid", conversation.getId());
                 IntentUtils.startActivity(ConversationGroupInfoActivity.this,
                         ConversationNameModifyActivity.class, bundle);
