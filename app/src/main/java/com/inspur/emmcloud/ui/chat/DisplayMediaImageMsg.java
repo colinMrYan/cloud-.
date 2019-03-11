@@ -15,6 +15,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -143,7 +144,7 @@ public class DisplayMediaImageMsg {
                 longImgText.setVisibility(View.VISIBLE);
                 params.height = maxH;
             }
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             params.width = maxW;
             params.height = (int) (maxW * 1.0 * h / w);
@@ -151,7 +152,7 @@ public class DisplayMediaImageMsg {
                 params.height = minH;
                 longImgText.setVisibility(View.VISIBLE);
             }
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         imageView.setLayoutParams(params);
         return true;
