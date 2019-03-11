@@ -79,13 +79,13 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
             case R.id.ibt_setting:
                 openMenu();
                 break;
-            case R.id.rl_back:
+            case R.id.ibt_menu_back:
                 closeMenu();
                 break;
-            case R.id.bt_mail_setting:
+            case R.id.ibt_mail_setting:
                 IntentUtils.startActivity(this, MailSettingActivity.class);
                 break;
-            case R.id.bt_mail_add:
+            case R.id.ibt_mail_add:
                 Bundle bundle = new Bundle();
                 bundle.putString(MailSendActivity.EXTRA_MAIL_MODE, MailSendActivity.MODE_NEW);
                 IntentUtils.startActivity(this, MailSendActivity.class, bundle);
