@@ -68,7 +68,6 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelLis
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -214,12 +213,7 @@ public class CommunicationV0Fragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        if (checkingNetStateUtils.isConnectedNet()) {
-            DeleteHeaderView();
-        } else {
-            checkingNetStateUtils.clearUrlsStates();
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-        }
+        checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V0_EXCEPTION_HINT,5);
         super.onResume();
     }
 
@@ -386,33 +380,16 @@ public class CommunicationV0Fragment extends BaseFragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)) {
-            if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK) && (!NetUtils.isVpnConnected())) {
-                checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
-                AddHeaderView();
-            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
-                DeleteHeaderView();
-            } else {
-                DeleteHeaderView();
-            }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            if (!NetUtils.isNetworkConnected(getContext(), false)) {
-                AddHeaderView();
-            } else {
-                List<Object> pingIdAndData = (List<Object>) netState.getMessageObj();
-                Boolean pingConnectedResult = checkingNetStateUtils.isPingConnectedNet((String) pingIdAndData.get(0), (boolean) pingIdAndData.get(1));
-                if (pingConnectedResult) {
+        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
+            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V0_EXCEPTION_HINT,5);
+        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_V0_EXCEPTION_HINT)) {   //网络异常提示
+                if((boolean)netState.getMessageObj()){
                     DeleteHeaderView();
-                } else {
+                    WebSocketPush.getInstance().startWebSocket();
+                }else{
                     AddHeaderView();
                 }
             }
-            if ((Boolean) netState.getMessageObj()) {
-                WebSocketPush.getInstance().startWebSocket();
-            }
-        }
     }
 
 
