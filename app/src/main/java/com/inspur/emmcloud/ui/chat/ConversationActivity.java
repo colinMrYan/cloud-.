@@ -1252,13 +1252,14 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     //接收到websocket发过来的消息，推送消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePushMessage(EventMessage eventMessage) {
+    public void onReceiveNewMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
                 new CacheMessageListThread(newMessageList, null, REFRESH_PUSH_MESSAGE).start();
+                WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             }
         }
     }
@@ -1292,6 +1293,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onReceiveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
         }
     }

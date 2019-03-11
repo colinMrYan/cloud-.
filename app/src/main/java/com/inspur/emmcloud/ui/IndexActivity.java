@@ -113,7 +113,6 @@ public class IndexActivity extends IndexBaseActivity {
         updateReactNative();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
     }
-
     /**
      * 获取我的应用推荐小部件数据,如果到了更新时间才请求
      */
@@ -260,9 +259,9 @@ public class IndexActivity extends IndexBaseActivity {
                             MyApplication.getInstance()
                                     .setIsContactReady(true);
                             notifySyncAllBaseDataSuccess();
-                            WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                             getContactOrg();
                         }
+                        WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                         batteryWhiteListRemind(IndexActivity.this);
                         break;
                     case RELOAD_WEB:
