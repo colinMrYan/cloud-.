@@ -31,6 +31,7 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -198,9 +199,8 @@ public class ChannelInfoActivity extends BaseActivity {
         msgInterruptionSwitch.setOpened(ChannelCacheUtils.isChannelNotDisturb(
                 ChannelInfoActivity.this, cid));
         msgInterruptionSwitch.setOnStateChangedListener(onStateChangedListener);
-        boolean isSetTop = ChannelOperationCacheUtils.isChannelSetTop(
-                this, cid);
-        setTopSwitch.setOpened(isSetTop);
+        setTopSwitch.setOpened(ChannelOperationCacheUtils.isChannelSetTop(
+                this, cid));
         setTopSwitch.setOnStateChangedListener(onStateChangedListener);
     }
 
