@@ -136,7 +136,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
            messageDialogBuilder.setTitle(title);
        }
         if (!StringUtils.isBlank(content)){
-            messageDialogBuilder.setMessage(title);
+            messageDialogBuilder.setMessage(content);
         }
         JSONArray array = JSONUtils.getJSONArray(buttonJson,new JSONArray());
         for (int i=0;i<array.length();i++){
