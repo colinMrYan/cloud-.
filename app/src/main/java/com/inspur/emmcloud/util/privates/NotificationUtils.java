@@ -25,14 +25,15 @@ public class NotificationUtils {
     private String NotificationChannelId = "NotificationChannelId";
     private String NotificationChannelName = "NotificationChannelName";
 
-    public NotificationUtils(Context context,int id) {
+    public NotificationUtils(Context context, int id) {
         this.context = context;
-        notificationId=id;
+        notificationId = id;
         initNotification();
     }
 
     /**
-     * 初始化更新*/
+     * 初始化更新
+     */
     public void initNotification() {
         notificationManager = (NotificationManager) context.getSystemService
                 (context.NOTIFICATION_SERVICE);
@@ -60,7 +61,7 @@ public class NotificationUtils {
 
     /**
      * 更新通知栏信息
-     * */
+     */
     public void updateNotification(String appSizeData) {
         builder.setContentText(appSizeData);
         notificationManager.notify(notificationId, builder.build());
@@ -68,7 +69,7 @@ public class NotificationUtils {
 
     /**
      * 删除通知栏信息
-     * */
+     */
     public void delectNotification() {
         notificationManager.cancel(notificationId);
     }
