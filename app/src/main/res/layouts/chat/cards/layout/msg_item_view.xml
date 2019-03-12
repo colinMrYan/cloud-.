@@ -116,9 +116,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.5px"
         android:layout_below="@id/msg_img"
         android:layout_marginLeft="50dp"
-        android:background="#DDDDDD" />
+        android:background="@color/color_list_divider" />
 
 </RelativeLayout>
