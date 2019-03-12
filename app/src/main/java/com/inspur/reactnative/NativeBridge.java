@@ -2,6 +2,7 @@ package com.inspur.reactnative;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Promise;
@@ -23,6 +24,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.reactnative.bean.AlertButton;
@@ -134,7 +136,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
            messageDialogBuilder.setTitle(title);
        }
         if (!StringUtils.isBlank(content)){
-            messageDialogBuilder.setMessage(title);
+            messageDialogBuilder.setMessage(content);
         }
         JSONArray array = JSONUtils.getJSONArray(buttonJson,new JSONArray());
         for (int i=0;i<array.length();i++){
@@ -154,6 +156,12 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         messageDialogBuilder.show();
 
     }
+
+    @ReactMethod
+    public void showToast(String content,Promise promise){
+        ToastUtils.show(MyApplication.getInstance(),content, Toast.LENGTH_LONG);
+    }
+
 
     /**
      * 通讯录选人

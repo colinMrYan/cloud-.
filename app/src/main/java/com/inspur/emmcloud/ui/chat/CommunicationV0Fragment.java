@@ -213,7 +213,7 @@ public class CommunicationV0Fragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V0_EXCEPTION_HINT,5);
+        checkingNetStateUtils.getNetStateResult(5);
         super.onResume();
     }
 
@@ -380,9 +380,7 @@ public class CommunicationV0Fragment extends BaseFragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
-            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V0_EXCEPTION_HINT,5);
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_V0_EXCEPTION_HINT)) {   //网络异常提示
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
                 if((boolean)netState.getMessageObj()){
                     DeleteHeaderView();
                     WebSocketPush.getInstance().startWebSocket();
@@ -857,7 +855,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     }
 
     private void showSocketStatusInTitle(String socketStatus) {
-        if (socketStatus.equals("socket_connecting")) {
+        if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息

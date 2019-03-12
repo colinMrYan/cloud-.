@@ -94,9 +94,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE = "tag_current_channel_offline_message";
     public static final String EVENTBUS_TAG_NET_STATE_CHANGE = "tag_net_state_change";
-    public static final String EVENTBUS_TAG_NET_V1_EXCEPTION_HINT = "tag_net_v1_exception_hint";
-    public static final String EVENTBUS_TAG_NET_V0_EXCEPTION_HINT = "tag_net_v0_exception_hint";
-    public static final String EVENTBUS_TAG_NET_APP_CENTER_EXCEPTION_HINT = "tag_net_app_center_exception_hint";
+    public static final String EVENTBUS_TAG_NET_EXCEPTION_HINT = "tag_net_exception_hint";
     public static final String EVENTBUS_TAG_NET_PING_CONNECTION = "tag_net_ping_connection";
     public static final String EVENTBUS_TAG_NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
     public static final String EVENTBUS_TAG_NET_HTTP_POST_CONNECTION = "tag_net_http_post_connection";

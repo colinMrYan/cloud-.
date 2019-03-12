@@ -63,7 +63,7 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bt_save:
+            case R.id.bt_ok:
                 if (!passwordNew.equals(passwordConfirm)) {
                     ToastUtils.show(PasswordResetActivity.this, R.string.modify_not_same);
                     return;

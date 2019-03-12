@@ -63,7 +63,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -170,12 +169,12 @@ public class CommunicationFragment extends BaseFragment {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        checkingNetStateUtils=new CheckingNetStateUtils( getContext(),NetUtils.pingUrls );
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
     }
 
     /**
@@ -184,7 +183,7 @@ public class CommunicationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT,5);
+            checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {
@@ -358,9 +357,7 @@ public class CommunicationFragment extends BaseFragment {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
-            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT,5);
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT)) {   //网络异常提示
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
             conversationAdapter.setNetExceptionView((boolean)netState.getMessageObj());
             if ((Boolean)netState.getMessageObj()){
                 WebSocketPush.getInstance().startWebSocket();
@@ -587,7 +584,7 @@ public class CommunicationFragment extends BaseFragment {
      * @param socketStatus
      */
     private void showSocketStatusInTitle(String socketStatus) {
-        if (socketStatus.equals("socket_connecting")) {
+        if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
@@ -949,7 +946,7 @@ public class CommunicationFragment extends BaseFragment {
     /**
      * 隐藏频道
      *
-     * @param id
+     * @param uiConversation
      */
     private void setConversationHide(final UIConversation uiConversation) {
         new Thread(new Runnable() {

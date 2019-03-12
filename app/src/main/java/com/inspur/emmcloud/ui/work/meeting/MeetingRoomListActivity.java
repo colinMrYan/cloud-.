@@ -306,7 +306,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                 handleReset();
                 break;
             case R.id.filte_img:
-                filteImg.setImageResource(R.drawable.icon_in_filte);
                 showPopupWindow(headLayout);
                 break;
             case R.id.ok_text:
@@ -332,7 +331,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         this.endCalendar = Calendar.getInstance();
         if (isAfterFilte) {
             isHasModifyTime = false;
-            filteImg.setImageResource(R.drawable.icon_in_filte);
+            filteImg.setImageResource(R.drawable.icon_before_filte);
         }
         isAfterFilte = false;
         isFirstTime = true;
