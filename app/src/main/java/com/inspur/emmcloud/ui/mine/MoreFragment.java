@@ -40,7 +40,6 @@ import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
@@ -376,7 +375,6 @@ public class MoreFragment extends BaseFragment {
                 menuImgBtn.setLayoutParams(layoutParams);
                 menuImgBtn.setPadding(paddingLeft, paddingTop, paddingLeft, 0);
                 int tintColor= ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_menu_tint_color);
-                LogUtils.jasonDebug("tintColor="+tintColor);
                 menuImgBtn.setColorFilter(getContext().getResources().getColor(tintColor));
                 menuImgBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
