@@ -148,7 +148,7 @@ public class ChannelInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
         setContentView(R.layout.activity_conversation_group_info);
-        channelMemberNumText =  findViewById(R.id.tv_member);
+        channelMemberNumText = findViewById(R.id.tv_member);
         groupMembersText = findViewById(R.id.tv_group_member_size);
         groupMessageSearchLayout = findViewById(R.id.rl_search_messages);
         groupMessageSearchLayout.setVisibility(View.GONE);
@@ -195,17 +195,20 @@ public class ChannelInfoActivity extends BaseActivity {
         memberGrid.setOnItemClickListener(onItemClickListener);
         setTopSwitch = findViewById(R.id.sv_stick);
         msgInterruptionSwitch = findViewById(R.id.sv_dnd);
-        msgInterruptionSwitch.setOpened(ChannelCacheUtils.isChannelNotDisturb(
-                ChannelInfoActivity.this, cid));
+        boolean isChannelNotDisturb = ChannelCacheUtils.isChannelNotDisturb(ChannelInfoActivity.this, cid);
+        if (msgInterruptionSwitch.isOpened() != isChannelNotDisturb) {
+            msgInterruptionSwitch.setOpened(isChannelNotDisturb);
+        }
         msgInterruptionSwitch.setOnStateChangedListener(onStateChangedListener);
-        setTopSwitch.setOpened(ChannelOperationCacheUtils.isChannelSetTop(
-                this, cid));
+        boolean isChannelSetTop = ChannelOperationCacheUtils.isChannelSetTop(this, cid);
+        if (setTopSwitch.isOpened() != isChannelSetTop){
+            setTopSwitch.setOpened(isChannelSetTop);
+        }
         setTopSwitch.setOnStateChangedListener(onStateChangedListener);
     }
 
     /**
      * 设置Channel的Icon
-     *
      */
     private void setChannelIcon() {
         // TODO Auto-generated method stub

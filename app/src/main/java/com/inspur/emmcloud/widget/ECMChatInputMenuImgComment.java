@@ -77,6 +77,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_comment, this, true);
         x.view().inject(view);
         initInputEdit();
+        sendBtn.setEnabled(false);
     }
 
     private void initInputEdit() {

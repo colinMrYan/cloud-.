@@ -81,11 +81,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         }
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
-        //        AlertDialog alertDialog = null;
-//        AlertDialog.Builder builder= new AlertDialog.Builder(this,R.style.Theme_AppCompat_Light_Dialog_Alert);
-//        builder.setTitle("我是title").setMessage("我是message").setPositiveButton("确定",null).setNegativeButton("取消",null).setNeutralButton("其他",null);
-//        alertDialog =  builder.create();
-//        alertDialog.show();
     }
 
     private void checkNecessaryPermission() {
@@ -96,8 +91,8 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
             boolean isHasStoragePermission = PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE);
-            boolean isHasPhoneStatePermission = PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE);
-            boolean isHasCallPhonePermission = PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE);
+            boolean isHasPhoneStatePermission = PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE);
+            boolean isHasCallPhonePermission = PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.CALL_PHONE);
             permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!isHasStoragePermission ? View.VISIBLE : View.GONE);
             if(AppUtils.getIsHuaWei() && (android.os.Build.VERSION.SDK_INT == 28)){
                 permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!isHasPhoneStatePermission ? View.VISIBLE : View.GONE);
