@@ -116,8 +116,14 @@ public class DragAdapter extends BaseAdapter {
                 deleteImg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deletePosition = position;
-                        removeApp(app);
+                        if (isCommonlyUseGroup){
+                            AppCacheUtils.deleteAppCommonlyByAppID(context,app.getAppID());
+                            commonlyUseListener.onNotifyCommonlyUseApp(app);
+                        }else {
+                            deletePosition = position;
+                            removeApp(app);
+                        }
+
                     }
                 });
             }

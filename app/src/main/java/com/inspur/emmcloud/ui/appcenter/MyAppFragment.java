@@ -552,12 +552,15 @@ public class MyAppFragment extends BaseFragment {
      *
      * @param appAdapterList
      */
-    private void handCommonlyUseAppChange(List<AppGroupBean> appAdapterList,
-                                          App app) {
+    private void deleteCommonlyUseApp(List<AppGroupBean> appAdapterList,
+                                      App app) {
         List<App> commonlyAppItemList = appAdapterList.get(0)
                 .getAppItemList();
         if (getNeedCommonlyUseApp() && (commonlyAppItemList.indexOf(app) != -1)) {
             commonlyAppItemList.remove(app);
+            List<App> appList = AppCacheUtils.getCommonlyUseNeedShowList(getActivity());
+            appAdapterList.get(0)
+                    .setAppItemList(appList.size()>8?appList.subList(0,8):appList);
         }
         Iterator<AppGroupBean> appGroupBeanList = appAdapterList.iterator();
         while (appGroupBeanList.hasNext()) {
@@ -1013,7 +1016,7 @@ public class MyAppFragment extends BaseFragment {
                     .setNotifyCommonlyUseListener(new DragAdapter.NotifyCommonlyUseListener() {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
-                            handCommonlyUseAppChange(appAdapterList, app);
+                            deleteCommonlyUseApp(appAdapterList, app);
                             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
