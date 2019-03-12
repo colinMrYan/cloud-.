@@ -1142,6 +1142,7 @@
     <string name="permission_open_cloud_plus">Open %1$s</string>
     <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>
     <string name="permission_phone_permission">Phone</string>
+    <string name="permission_call_phone_permission">Call Phone</string>
     <string name="permission_storage_permission">Storage</string>
     <string name="permission_next">Next</string>
 

@@ -97,7 +97,9 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             permissionDialog.setCanceledOnTouchOutside(false);
             permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE) ? View.VISIBLE : View.GONE);
             permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION) ? View.VISIBLE : View.GONE);
-            permissionDialog.findViewById(R.id.ll_permission_call_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.CALL_PHONE) ? View.VISIBLE : View.GONE);
+            if(AppUtils.getIsHuaWei() && (android.os.Build.VERSION.SDK_INT == 28)){
+                permissionDialog.findViewById(R.id.ll_permission_call_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.CALL_PHONE) ? View.VISIBLE : View.GONE);
+            }
 //            if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
 //                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION)) {
 //                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
