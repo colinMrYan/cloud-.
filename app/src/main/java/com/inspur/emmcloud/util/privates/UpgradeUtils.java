@@ -71,6 +71,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
     private ProgressBar downloadProgressBar;
     private TextView percentText;
 
+    private NotificationUtils notificationUtils;
+
     //isManualCheck 是否在关于中手动检查更新
     public UpgradeUtils(Context context, Handler handler, boolean isManualCheck) {
         this.context = context;
@@ -320,6 +322,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         public void onError(Throwable arg0, boolean arg1) {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(DOWNLOAD_FAIL);
+                            if (null != notificationUtils) {
+                                notificationUtils.updateNotification(context.getResources().getString(R.string.app_update_error));
+                            }
                         }
 
                         @Override
@@ -332,6 +337,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         public void onSuccess(File arg0) {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(DOWNLOAD_FINISH);
+                            if (null != notificationUtils) {
+                                notificationUtils.delectNotification();
+                            }
                         }
 
                         @Override
@@ -345,12 +353,20 @@ public class UpgradeUtils extends APIInterfaceInstance {
                                     && progressDownloadDialog.isShowing()) {
                                 upgradeHandler.sendEmptyMessage(DOWNLOAD);
                             }
+                            if (null != notificationUtils) {
+                                String data = context.getResources().getString(R.string.app_update_loaded) +
+                                        FileUtils.formatFileSize(downloadSize) + "/" + FileUtils.formatFileSize(totalSize);
+                                notificationUtils.updateNotification(data);
+                            }
                         }
 
                         @Override
                         public void onStarted() {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(SHOW_PEOGRESS_LAODING_DLG);
+                            if (null == notificationUtils) {
+                                notificationUtils = new NotificationUtils(context, 10000);
+                            }
                         }
 
                         @Override
