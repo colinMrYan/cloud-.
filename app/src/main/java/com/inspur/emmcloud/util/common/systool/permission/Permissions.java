@@ -70,7 +70,10 @@ public final class Permissions {
             Permissions.READ_EXTERNAL_STORAGE,
             Permissions.WRITE_EXTERNAL_STORAGE};
     public static final String[] PHONE_PERMISSION = new String[]{
-            Permissions.READ_PHONE_STATE};
+            Permissions.READ_PHONE_STATE,
+            Permissions.CALL_PHONE
+    };
+
 
     public static final class Group {
         public static final String[] CALENDAR = new String[]{

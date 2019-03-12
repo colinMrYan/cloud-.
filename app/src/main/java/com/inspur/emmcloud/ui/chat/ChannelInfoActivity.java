@@ -330,6 +330,8 @@ public class ChannelInfoActivity extends BaseActivity {
     private void ModifyChannelGroupName(Intent data) {
         String name = data.getStringExtra("name");
         nameText.setText(name);
+        int memberSize = ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size();
+        groupMemberSizeText.setText(name + getString(R.string.bracket_with_word, (memberSize + "")));
         String pyFull = PinyinUtils.getPingYin(name);
         String pyShort = PinyinUtils.getPinYinHeadChar(name);
         channelGroup.setChannelName(name);

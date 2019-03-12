@@ -949,6 +949,7 @@ public class MyAppFragment extends BaseFragment {
                     listPosition).getAppItemList();
             final DragAdapter dragGridViewAdapter = new DragAdapter(
                     getActivity(), appGroupItemList, listPosition, appStoreBadgeMap);
+            dragGridViewAdapter.setCommonlyUseGroup(getIsCommonlyUseGroupInList(listPosition));
             dragGridView.setCanScroll(false);
             dragGridView.setPosition(listPosition);
             dragGridView.setPullRefreshLayout(swipeRefreshLayout);
@@ -976,7 +977,7 @@ public class MyAppFragment extends BaseFragment {
                                 intent.putExtra("appGroupList", (Serializable) app.getSubAppList());
                                 startActivity(intent);
                             } else {
-                                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                                if (getIsCommonlyUseGroupInList(listPosition)) {
                                     UriUtils.openApp(getActivity(), app, "commonapplications");
                                 } else {
                                     UriUtils.openApp(getActivity(), app, "application");
@@ -1020,14 +1021,15 @@ public class MyAppFragment extends BaseFragment {
                         }
                     });
             if (canEdit) {
-                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
-                    //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
-                    dragGridViewAdapter.setCanEdit(false);
-                } else {
+                //控制常用应用是否可以晃动删除
+//                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+//                    //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
+//                    dragGridViewAdapter.setCanEdit(false);
+//                } else {
                     //如果应用列表可以编辑，不是常用应用分组
                     dragGridViewAdapter.setCanEdit(true);
                     dragGridView.setCanEdit(true);
-                }
+//                }
             } else {
                 //如果不能编辑则把adapter和View的属性都设置为false
                 dragGridViewAdapter.setCanEdit(false);
@@ -1067,6 +1069,15 @@ public class MyAppFragment extends BaseFragment {
         public void setCanEdit(boolean canDelete) {
             this.canEdit = canDelete;
         }
+    }
+
+    /**
+     * 在应用ListView中获取当前分组是否是常用应用分组，传入参数为当前分组的位置，返回是否常用应用分组
+     * @param listPosition
+     * @return
+     */
+    private boolean getIsCommonlyUseGroupInList(int listPosition) {
+        return  (listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0;
     }
 
     /**

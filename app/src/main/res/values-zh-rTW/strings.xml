@@ -1146,6 +1146,7 @@
     <string name="permission_open_cloud_plus">開啟%1$s</string>
     <string name="permission_necessary_permission">為了您能正常使用%1$s，需要以下許可權</string>
     <string name="permission_phone_permission">設備資訊</string>
+    <string name="permission_call_phone_permission">撥打電話</string>
     <string name="permission_storage_permission">存儲空間</string>
     <string name="permission_next">下一步</string>
 
