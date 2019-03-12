@@ -54,6 +54,7 @@
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
                 android:layout_marginRight="4dp"
+                android:tint="?attr/header_text_color"
                 android:src="@drawable/icon_my_common_office_order" />
 
             <ImageView
@@ -68,6 +69,7 @@
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
                 android:layout_marginRight="4dp"
+                android:tint="?attr/header_text_color"
                 android:src="@drawable/ic_add" />
         </LinearLayout>
         
@@ -86,8 +88,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingRight="14dp"
-                android:textColor="#FFFFFF"
-                android:textSize="17sp"
+                android:textColor="?attr/header_text_color"
+                android:textSize="@dimen/header_function_textsize"
                 android:text="@string/confirm"/>
             </LinearLayout>
     </RelativeLayout>
