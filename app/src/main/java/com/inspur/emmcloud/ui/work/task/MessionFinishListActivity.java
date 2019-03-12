@@ -33,46 +33,46 @@ import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import java.util.ArrayList;
 
 public class MessionFinishListActivity extends BaseActivity implements
-		MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
+        MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
 
-	private static final int OPEN_DETAIL = 0;
-	private static final int CAN_NOT_CHANGE = 2;
-	private MessionListAdapter adapter;
-	private WorkAPIService apiService;
-	private LoadingDialog loadingDialog;
-	private ArrayList<TaskResult> taskList;
-	private MySwipeRefreshLayout swipeRefreshLayout;
-	private int page = 0;
-	private boolean isPullup = false;
+    private static final int OPEN_DETAIL = 0;
+    private static final int CAN_NOT_CHANGE = 2;
+    private MessionListAdapter adapter;
+    private WorkAPIService apiService;
+    private LoadingDialog loadingDialog;
+    private ArrayList<TaskResult> taskList;
+    private MySwipeRefreshLayout swipeRefreshLayout;
+    private int page = 0;
+    private boolean isPullup = false;
 
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_messionfinish_list);
-		initViews();
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_messionfinish_list);
+        initViews();
+    }
 
-	/**
-	 * 初始化
-	 */
-	private void initViews() {
-		taskList = new ArrayList<>();
-		swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.refresh_layout);
-		swipeRefreshLayout
-				.setOnRefreshListener(MessionFinishListActivity.this);
-		loadingDialog = new LoadingDialog(MessionFinishListActivity.this);
-		apiService = new WorkAPIService(MessionFinishListActivity.this);
-		apiService.setAPIInterface(new WebService());
-		getAllTasks();
-		ListView messionListView = (ListView) findViewById(R.id.mession_list);
-		messionListView
-				.setOnItemLongClickListener(new MessionLongClickListener());
-		messionListView.setVerticalScrollBarEnabled(false);
-		messionListView.setOnItemClickListener(new OnMessionClickListener());
-		adapter = new MessionListAdapter();
-		messionListView.setAdapter(adapter);
-	}
+    /**
+     * 初始化
+     */
+    private void initViews() {
+        taskList = new ArrayList<>();
+        swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        swipeRefreshLayout
+                .setOnRefreshListener(MessionFinishListActivity.this);
+        loadingDialog = new LoadingDialog(MessionFinishListActivity.this);
+        apiService = new WorkAPIService(MessionFinishListActivity.this);
+        apiService.setAPIInterface(new WebService());
+        getAllTasks();
+        ListView messionListView = (ListView) findViewById(R.id.mession_list);
+        messionListView
+                .setOnItemLongClickListener(new MessionLongClickListener());
+        messionListView.setVerticalScrollBarEnabled(false);
+        messionListView.setOnItemClickListener(new OnMessionClickListener());
+        adapter = new MessionListAdapter();
+        messionListView.setAdapter(adapter);
+    }
 
     /**
      * 获取所有任务
@@ -86,7 +86,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 setResult(RESULT_OK);
                 finish();
                 break;
@@ -100,141 +100,21 @@ public class MessionFinishListActivity extends BaseActivity implements
         Intent mIntent = new Intent(Constant.ACTION_TASK);
         mIntent.putExtra("refreshTask", "refreshTask");
         // 发送广播
-		LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
         setResult(RESULT_OK);
         finish();
     }
 
-	class MessionListAdapter extends BaseAdapter {
-		@Override
-		public int getCount() {
-			return (taskList != null && taskList.size() > 0)?taskList.size():0;
-		}
-
-        @Override
-        public Object getItem(int position) {
-            return null;
+    /**
+     * 更新任务状态
+     *
+     * @param taskResult
+     */
+    protected void updateTask(TaskResult taskResult, int position) {
+        if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
+            loadingDialog.show();
+            apiService.updateTask(JSONUtils.toJSONString(taskResult), position);
         }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			convertView = LayoutInflater.from(MessionFinishListActivity.this)
-					.inflate(R.layout.meession_list_item, null);
-			((TextView) convertView.findViewById(R.id.mession_text))
-					.setText(taskList.get(position).getTitle());
-			if (taskList.get(position).getTags().size() > 0) {
-				MessionTagColorUtils.setTagColorImg((ImageView) convertView
-						.findViewById(R.id.mession_color),
-						taskList.get(position).getTags().get(0).getColor());
-			}
-			if (taskList.get(position).getPriority() == 2) {
-				(convertView.findViewById(R.id.mession_state_img))
-						.setVisibility(View.VISIBLE);
-			}
-			return convertView;
-		}
-
-    }
-
-	class MessionLongClickListener implements OnItemLongClickListener {
-		@Override
-		public boolean onItemLongClick(AdapterView<?> parent, View view,
-				final int position, long id) {
-			DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					if (which == -2) {
-					} else {
-						TaskResult taskResult = taskList.get(position);
-						taskResult.setState("ACTIVED");
-//						deletePosition = position;
-						updateTask(taskResult,position);
-					}
-				}
-
-			};
-			EasyDialog.showDialog(MessionFinishListActivity.this,
-					getString(R.string.prompt),
-					getString(R.string.mession_finish_recover),
-					getString(R.string.ok), getString(R.string.cancel),
-					listener, false);
-			return true;
-		}
-
-    }
-
-	/**
-	 * 更新任务状态
-	 * 
-	 * @param taskResult
-	 */
-	protected void updateTask(TaskResult taskResult,int position) {
-		if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
-			loadingDialog.show();
-			apiService.updateTask(JSONUtils.toJSONString(taskResult),position);
-		}
-	}
-
-    class OnMessionClickListener implements OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            Intent intent = new Intent();
-            intent.putExtra("task", taskList.get(position));
-            intent.putExtra("tabIndex", CAN_NOT_CHANGE);
-            intent.setClass(MessionFinishListActivity.this,
-                    MessionDetailActivity.class);
-            startActivityForResult(intent, OPEN_DETAIL);
-        }
-    }
-
-	class WebService extends APIInterfaceInstance {
-		@Override
-		public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
-			super.returnRecentTasksSuccess(getTaskListResult);
-			if (loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			swipeRefreshLayout.setLoading(false);
-			if (isPullup) {
-				taskList.addAll(getTaskListResult.getTaskList());
-			} else {
-				taskList = getTaskListResult.getTaskList();
-			}
-			adapter.notifyDataSetChanged();
-		}
-
-		@Override
-		public void returnRecentTasksFail(String error,int errorCode) {
-			if (loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			swipeRefreshLayout.setLoading(false);
-			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error,errorCode);
-		}
-
-		@Override
-		public void returnUpdateTaskSuccess(int position) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			taskList.remove(position);
-			adapter.notifyDataSetChanged();
-		}
-
-		@Override
-		public void returnUpdateTaskFail(String error,int errorCode,int position) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error,errorCode);
-		}
-
     }
 
     @Override
@@ -254,8 +134,128 @@ public class MessionFinishListActivity extends BaseActivity implements
             page = page + 1;
             apiService.getAllTasks(page, 12, "REMOVED");
             isPullup = true;
-        }else {
-			swipeRefreshLayout.setLoading(false);
-		}
+        } else {
+            swipeRefreshLayout.setLoading(false);
+        }
+    }
+
+    class MessionListAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return (taskList != null && taskList.size() > 0) ? taskList.size() : 0;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(MessionFinishListActivity.this)
+                    .inflate(R.layout.meession_list_item, null);
+            ((TextView) convertView.findViewById(R.id.mession_text))
+                    .setText(taskList.get(position).getTitle());
+            if (taskList.get(position).getTags().size() > 0) {
+                MessionTagColorUtils.setTagColorImg((ImageView) convertView
+                                .findViewById(R.id.mession_color),
+                        taskList.get(position).getTags().get(0).getColor());
+            }
+            if (taskList.get(position).getPriority() == 2) {
+                (convertView.findViewById(R.id.mession_state_img))
+                        .setVisibility(View.VISIBLE);
+            }
+            return convertView;
+        }
+
+    }
+
+    class MessionLongClickListener implements OnItemLongClickListener {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                       final int position, long id) {
+            DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == -2) {
+                    } else {
+                        TaskResult taskResult = taskList.get(position);
+                        taskResult.setState("ACTIVED");
+//						deletePosition = position;
+                        updateTask(taskResult, position);
+                    }
+                }
+
+            };
+            EasyDialog.showDialog(MessionFinishListActivity.this,
+                    getString(R.string.prompt),
+                    getString(R.string.mession_finish_recover),
+                    getString(R.string.ok), getString(R.string.cancel),
+                    listener, false);
+            return true;
+        }
+
+    }
+
+    class OnMessionClickListener implements OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            Intent intent = new Intent();
+            intent.putExtra("task", taskList.get(position));
+            intent.putExtra("tabIndex", CAN_NOT_CHANGE);
+            intent.setClass(MessionFinishListActivity.this,
+                    MessionDetailActivity.class);
+            startActivityForResult(intent, OPEN_DETAIL);
+        }
+    }
+
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
+            super.returnRecentTasksSuccess(getTaskListResult);
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+            swipeRefreshLayout.setLoading(false);
+            if (isPullup) {
+                taskList.addAll(getTaskListResult.getTaskList());
+            } else {
+                taskList = getTaskListResult.getTaskList();
+            }
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void returnRecentTasksFail(String error, int errorCode) {
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+            swipeRefreshLayout.setLoading(false);
+            WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error, errorCode);
+        }
+
+        @Override
+        public void returnUpdateTaskSuccess(int position) {
+            if (loadingDialog != null && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+            taskList.remove(position);
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void returnUpdateTaskFail(String error, int errorCode, int position) {
+            if (loadingDialog != null && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error, errorCode);
+        }
+
     }
 }

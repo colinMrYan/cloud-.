@@ -98,7 +98,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         String selectCommonOfficeIds = PreferencesUtils.getString(
                 MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent() + userId
                         + "selectCommonOfficeIds");
-        selectOfficeIdList = JSONUtils.JSONArray2List(selectCommonOfficeIds,new ArrayList<String>());
+        selectOfficeIdList = JSONUtils.JSONArray2List(selectCommonOfficeIds, new ArrayList<String>());
     }
 
     /**
@@ -118,7 +118,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
      */
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 backActivity();
                 break;
             case R.id.meeting_common_office_create_img:
@@ -174,7 +174,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
      */
     private void releaseOrder() {
         isOfficeChange = true;
-        ( findViewById(R.id.meeting_common_office_create_layout)).setVisibility(View.VISIBLE);
+        (findViewById(R.id.meeting_common_office_create_layout)).setVisibility(View.VISIBLE);
         (findViewById(R.id.meeting_common_office_confirm_layout)).setVisibility(View.GONE);
         originCommonOfficeList = commonOfficeList;
         saveAllOfficeIds(false);
@@ -235,6 +235,112 @@ public class MyCommonOfficeActivity extends BaseActivity implements
 
     @Override
     public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+    }
+
+    /**
+     * 显示把手
+     *
+     * @param imageView
+     */
+    public void renderHandleImg(ImageView imageView) {
+        if (isOrdering) {
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
+    }
+
+    public void setOfficeList(ArrayList<Office> officeListNet) {
+        String localOfficeIds = PreferencesUtils.getString(
+                MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent() + userId
+                        + "allCommonOfficeIds");
+        LogUtils.debug("jason", "localOfficeIds=" + localOfficeIds);
+        if (StringUtils.isBlank(localOfficeIds)) {
+            originCommonOfficeList = officeListNet;
+        } else {
+            List<String> allOfficeIdList = JSONUtils.JSONArray2List(localOfficeIds, new ArrayList<String>());
+            List<Office> allOfficeList = new ArrayList<Office>();
+            for (int i = 0; i < allOfficeIdList.size(); i++) {
+                String officeId = allOfficeIdList.get(i);
+                LogUtils.debug("jason", "officeId=" + officeId);
+                Iterator<Office> iter = officeListNet.iterator();
+                while (iter.hasNext()) {
+                    Office office = iter.next();
+                    if (office.getOfficeId().equals(officeId)) {
+                        allOfficeList.add(office);
+                        iter.remove();
+                    }
+                }
+            }
+            allOfficeList.addAll(allOfficeList.size(), officeListNet);
+            originCommonOfficeList = allOfficeList;
+        }
+        commonOfficeList = originCommonOfficeList;
+        saveAllOfficeIds(true);
+    }
+
+    /**
+     * 处理点击事件，点击后如果id已选择则移除id， 没有选择则添加id，同时记录结果
+     *
+     * @param position
+     */
+    public void handleClickEvent(int position) {
+        String officeId = commonOfficeList.get(position).getOfficeId();
+        if (!selectOfficeIdList.contains(officeId)) {
+            selectOfficeIdList.add(officeId);
+            List<String> newSelectOfficeIdList = new ArrayList<String>();
+            for (int i = 0; i < originCommonOfficeList.size(); i++) {
+                String id = originCommonOfficeList.get(i).getOfficeId();
+                if (selectOfficeIdList.contains(id)) {
+                    newSelectOfficeIdList.add(id);
+                }
+            }
+            selectOfficeIdList = newSelectOfficeIdList;
+        } else {
+            selectOfficeIdList.remove(officeId);
+        }
+        isOfficeChange = true;
+        myCommonOfficeAdapter.notifyDataSetChanged();
+        PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
+                        + userId + "selectCommonOfficeIds",
+                JSONUtils.toJSONString(selectOfficeIdList));
+    }
+
+    /**
+     * 显示对号
+     *
+     * @param imageView
+     * @param position
+     */
+    public void renderSelectImg(ImageView imageView, int position) {
+        for (int i = 0; i < selectOfficeIdList.size(); i++) {
+            LogUtils.debug("jason", "selectOfficeIdList" + i + "=" + selectOfficeIdList.get(i));
+        }
+        LogUtils.debug("jason", "id=" + commonOfficeList.get(position)
+                .getOfficeId());
+        if (isOrdering) {
+
+            imageView.setVisibility(View.GONE);
+        } else if (selectOfficeIdList.contains(commonOfficeList.get(position)
+                .getOfficeId())) {
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 创建DragSortController，并设置其属性
+     *
+     * @param dslv
+     * @return
+     */
+    public DragSortController buildController(DragSortListView dslv) {
+        DragSortController controller = new DragSortController(dslv);
+        controller.setDragHandleId(R.id.my_common_office_handle);
+        controller.setSortEnabled(true);
+        controller.setDragInitMode(0);
+        return controller;
     }
 
     /**
@@ -338,98 +444,6 @@ public class MyCommonOfficeActivity extends BaseActivity implements
     }
 
     /**
-     * 显示把手
-     *
-     * @param imageView
-     */
-    public void renderHandleImg(ImageView imageView) {
-        if (isOrdering) {
-            imageView.setVisibility(View.VISIBLE);
-        } else {
-            imageView.setVisibility(View.GONE);
-        }
-    }
-
-    public void setOfficeList(ArrayList<Office> officeListNet) {
-        String localOfficeIds = PreferencesUtils.getString(
-                MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent() + userId
-                        + "allCommonOfficeIds");
-        LogUtils.debug("jason", "localOfficeIds=" + localOfficeIds);
-        if (StringUtils.isBlank(localOfficeIds)) {
-            originCommonOfficeList = officeListNet;
-        } else {
-            List<String> allOfficeIdList = JSONUtils.JSONArray2List(localOfficeIds,new ArrayList<String>());
-            List<Office> allOfficeList = new ArrayList<Office>();
-            for (int i = 0; i < allOfficeIdList.size(); i++) {
-                String officeId = allOfficeIdList.get(i);
-                LogUtils.debug("jason", "officeId=" + officeId);
-                Iterator<Office> iter = officeListNet.iterator();
-                while (iter.hasNext()) {
-                    Office office = iter.next();
-                    if (office.getOfficeId().equals(officeId)) {
-                        allOfficeList.add(office);
-                        iter.remove();
-                    }
-                }
-            }
-            allOfficeList.addAll(allOfficeList.size(), officeListNet);
-            originCommonOfficeList = allOfficeList;
-        }
-        commonOfficeList = originCommonOfficeList;
-        saveAllOfficeIds(true);
-    }
-
-    /**
-     * 处理点击事件，点击后如果id已选择则移除id， 没有选择则添加id，同时记录结果
-     *
-     * @param position
-     */
-    public void handleClickEvent(int position) {
-        String officeId = commonOfficeList.get(position).getOfficeId();
-        if (!selectOfficeIdList.contains(officeId)) {
-            selectOfficeIdList.add(officeId);
-            List<String> newSelectOfficeIdList = new ArrayList<String>();
-            for (int i = 0; i < originCommonOfficeList.size(); i++) {
-                String id = originCommonOfficeList.get(i).getOfficeId();
-                if (selectOfficeIdList.contains(id)) {
-                    newSelectOfficeIdList.add(id);
-                }
-            }
-            selectOfficeIdList = newSelectOfficeIdList;
-        } else {
-            selectOfficeIdList.remove(officeId);
-        }
-        isOfficeChange = true;
-        myCommonOfficeAdapter.notifyDataSetChanged();
-        PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
-                        + userId + "selectCommonOfficeIds",
-                JSONUtils.toJSONString(selectOfficeIdList));
-    }
-
-    /**
-     * 显示对号
-     *
-     * @param imageView
-     * @param position
-     */
-    public void renderSelectImg(ImageView imageView, int position) {
-        for (int i = 0; i < selectOfficeIdList.size(); i++) {
-            LogUtils.debug("jason", "selectOfficeIdList" + i + "=" + selectOfficeIdList.get(i));
-        }
-        LogUtils.debug("jason", "id=" + commonOfficeList.get(position)
-                .getOfficeId());
-        if (isOrdering) {
-
-            imageView.setVisibility(View.GONE);
-        } else if (selectOfficeIdList.contains(commonOfficeList.get(position)
-                .getOfficeId())) {
-            imageView.setVisibility(View.VISIBLE);
-        } else {
-            imageView.setVisibility(View.GONE);
-        }
-    }
-
-    /**
      * 长按事件处理
      */
     class OnMyOfficeLongClickListener implements OnItemLongClickListener {
@@ -466,24 +480,10 @@ public class MyCommonOfficeActivity extends BaseActivity implements
             if (NetUtils.isNetworkConnected(MyCommonOfficeActivity.this)) {
                 loadingDialog.show();
                 apiService.deleteOffice(originCommonOfficeList.get(position)
-                        .getOfficeId(),position);
+                        .getOfficeId(), position);
             }
         }
 
-    }
-
-    /**
-     * 创建DragSortController，并设置其属性
-     *
-     * @param dslv
-     * @return
-     */
-    public DragSortController buildController(DragSortListView dslv) {
-        DragSortController controller = new DragSortController(dslv);
-        controller.setDragHandleId(R.id.my_common_office_handle);
-        controller.setSortEnabled(true);
-        controller.setDragInitMode(0);
-        return controller;
     }
 
 }

@@ -9,12 +9,12 @@ import org.json.JSONObject;
  */
 
 public class RectScale {
-    private String name="";
-    private String rectScale ="";
+    private String name = "";
+    private String rectScale = "";
 
-    public RectScale(JSONObject obj){
-        name = JSONUtils.getString(obj,"name","");
-        rectScale = JSONUtils.getString(obj,"rectScale","");
+    public RectScale(JSONObject obj) {
+        name = JSONUtils.getString(obj, "name", "");
+        rectScale = JSONUtils.getString(obj, "rectScale", "");
     }
 
     public String getName() {

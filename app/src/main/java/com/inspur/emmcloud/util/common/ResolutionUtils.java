@@ -16,6 +16,7 @@ import android.view.ViewConfiguration;
 import android.view.WindowInsets;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -80,50 +81,13 @@ public class ResolutionUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             notchHeight = ResolutionUtils.getStatusBarHeightAboutAndroidP(context);
         } else {
-            //判断手机厂商，目前8.0只有华为、小米、oppo、vivo适配了刘海屏
-            String phoneManufacturer = android.os.Build.BRAND.toLowerCase();
-            if ("huawei".equals(phoneManufacturer)) {
-                //huawei,长度为length,单位px
-                boolean haveInScreenEMUI = hasNotchInScreenEMUI(context);
-                if (haveInScreenEMUI) {
-                    int[] screenSize = {0};
-                    int length = 0;
-                    screenSize = getNotchSizeEMUI(context);
-                    notchHeight = screenSize[1];
-                    //下面注释的是单独测试时的弹出消息
-                    //Toast.makeText(context, "haveInScreen:" + haveInScreenEMUI + ",screenSize:" + length, Toast.LENGTH_LONG).show();
-                }
-            } else if ("xiaomi".equals(phoneManufacturer)) {
-                //xiaomi,单位px
-                boolean haveInScreenMIUI = getNotchMIUI("ro.miui.notch", 0) == 1;
-                if (haveInScreenMIUI) {
-                    int resourceId = context.getResources().getIdentifier("notch_height", "dimen", "android");
-                    int result = 0;
-                    if (resourceId > 0) {
-                        result = context.getResources().getDimensionPixelSize(resourceId);
-                    }
-                    notchHeight = result;
-                    //下面注释的是单独测试时的弹出消息
-                    //Toast.makeText(context, "haveInScreen:" + haveInScreenMIUI + ",screenSize" + result, Toast.LENGTH_LONG).show();
-                }
-            } else if ("vivo".equals(phoneManufacturer)) {
-                //vivo,单位dp，高度27dp
-                boolean haveInScreenVIVO = hasNotchAtVivo(context);
-                if (haveInScreenVIVO) {
-                    //下面注释的是单独测试时的弹出消息
-                    //Toast.makeText(context, "haveInScreenVIVO:" + haveInScreenVIVO, Toast.LENGTH_LONG).show();
-                    notchHeight = DensityUtil.dip2px(context, 27);
-                }
-            } else if ("oppo".equals(phoneManufacturer)) {
-                //oppo
-                boolean haveInScreenOPPO = context.getPackageManager().hasSystemFeature("com.oppo.feature.screen.heteromorphism");
-                if (haveInScreenOPPO) {
-                    //下面注释的是单独测试时的弹出消息
-                    //Toast.makeText(context, "haveInScreenOPPO:" + haveInScreenOPPO, Toast.LENGTH_LONG).show();
-                    notchHeight = 80;
+            if (AppUtils.getIsHuaWei()) {
+                if (hasNotchInScreenHuaWei(context)) {
+                    notchHeight = getNotchSizeHuaWei(context)[1];
                 }
             }
         }
+
         return notchHeight;
     }
 
@@ -176,7 +140,7 @@ public class ResolutionUtils {
         }
     }
 
-    public static boolean hasNotchInScreenEMUI(Context context) {
+    public static boolean hasNotchInScreenHuaWei(Context context) {
         boolean ret = false;
         try {
             ClassLoader cl = context.getClassLoader();
@@ -194,7 +158,7 @@ public class ResolutionUtils {
         }
     }
 
-    public static int[] getNotchSizeEMUI(Context context) {
+    public static int[] getNotchSizeHuaWei(Context context) {
         int[] ret = new int[]{0, 0};
         try {
             ClassLoader cl = context.getClassLoader();
@@ -213,39 +177,6 @@ public class ResolutionUtils {
             return ret;
         }
     }
-
-    public static int getNotchMIUI(final String key, final int def) {
-        Method getIntMethod = null;
-        try {
-            if (getIntMethod == null) {
-                getIntMethod = Class.forName("android.os.SystemProperties")
-                        .getMethod("getInt", String.class, int.class);
-            }
-            return ((Integer) getIntMethod.invoke(null, key, def)).intValue();
-        } catch (Exception e) {
-            Log.e("MainActivity", "Platform error: " + e.toString());
-            return def;
-        }
-    }
-
-    public static boolean hasNotchAtVivo(Context context) {
-        boolean ret = false;
-        try {
-            ClassLoader classLoader = context.getClassLoader();
-            Class FtFeature = classLoader.loadClass("android.util.FtFeature");
-            Method method = FtFeature.getMethod("isFeatureSupport", int.class);
-            ret = (boolean) method.invoke(FtFeature, 0x00000020);
-        } catch (ClassNotFoundException e) {
-            Log.e("Notch", "hasNotchAtVivo ClassNotFoundException");
-        } catch (NoSuchMethodException e) {
-            Log.e("Notch", "hasNotchAtVivo NoSuchMethodException");
-        } catch (Exception e) {
-            Log.e("Notch", "hasNotchAtVivo Exception");
-        } finally {
-            return ret;
-        }
-    }
-
 
     @TargetApi(28)
     private static boolean hasNotchInScreenAboutAndroidP(Activity context) {

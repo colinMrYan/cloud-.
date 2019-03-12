@@ -11,8 +11,6 @@ import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.service.SyncCommonAppService;
@@ -28,7 +26,6 @@ import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.yanzhenjie.permission.PermissionActivity;
 
@@ -193,9 +190,10 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
 
     private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
-            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, uploadMDMInfoResult.getDoubleValidation());
-        }
+
+//        @Override
+//        public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
+//            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, uploadMDMInfoResult.getDoubleValidation());
+//        }
     }
 }

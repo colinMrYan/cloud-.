@@ -160,6 +160,19 @@ public class MessageCacheUtil {
         return unreadCount;
     }
 
+    public static List<Message> getAllUnReadMessage(Context context, String cid) {
+        List<Message> unReadMessageList = new ArrayList<>();
+        try {
+            Message lastReadMessage = DbCacheUtils.getDb(context).selector(Message.class).where("read", "=", 1)
+                    .and("channel", "=", cid).orderBy("creationDate", true).findFirst();
+            unReadMessageList.addAll(DbCacheUtils.getDb(context).selector(Message.class).
+                    where("creationDate", ">", lastReadMessage.getCreationDate()).and("channel", "=", cid).findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return unReadMessageList;
+    }
+
     /**
      * 设置消息已读
      *
@@ -168,7 +181,7 @@ public class MessageCacheUtil {
      */
     public static void setMessageStateRead(Context context, List<String> messageIdList) {
         try {
-            if (messageIdList == null || messageIdList.size()==0){
+            if (messageIdList == null || messageIdList.size() == 0) {
                 return;
             }
             DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "in", messageIdList), new KeyValue("read", 1));
@@ -215,6 +228,7 @@ public class MessageCacheUtil {
         return messageList;
     }
 
+
     public static List<Message> getHistoryMessageListByTime(Context context, String cid, Long startTime, Long endTime) {
         List<Message> messageList = null;
         try {
@@ -259,6 +273,44 @@ public class MessageCacheUtil {
                 messageList = DbCacheUtils.getDb(context).selector(Message.class)
                         .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT)
                         .orderBy("creationDate", true).limit(num).findAll();
+            }
+            if (messageList != null && messageList.size() > 1) {
+                Collections.reverse(messageList);
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (messageList == null) {
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+
+    /**
+     * 获取历史消息列表，给ConversationActivity用，包含发送成功，发送失败，发送中三种状态，不包含编辑状态
+     *
+     * @param context
+     * @param cid
+     * @param targetMessageCreationDate
+     * @return
+     */
+    public static List<Message> getHistoryMessageList(Context context,
+                                                      String cid, Long targetMessageCreationDate) {
+        List<Message> messageList = null;
+        try {
+
+            if (targetMessageCreationDate == null) {
+                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT).orderBy("creationDate", true)
+                        .findAll();
+            } else {
+                messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("creationDate", "<", targetMessageCreationDate).and("channel", "=", cid).and("sendStatus", "!=", Message.MESSAGE_SEND_EDIT)
+                        .orderBy("creationDate", true)
+                        .findAll();
             }
             if (messageList != null && messageList.size() > 1) {
                 Collections.reverse(messageList);
@@ -572,7 +624,7 @@ public class MessageCacheUtil {
             //更新本地假消息，把id改成真消息的id，并把发送状态改为发送成功，creationDate保持假消息的时间即可
             try {
                 DbCacheUtils.getDb(context).update(Message.class, WhereBuilder.b("id", "=", message.getTmpId())
-                        , new KeyValue("id", message.getId()), new KeyValue("sendStatus", Message.MESSAGE_SEND_SUCCESS),new KeyValue("creationDate",message.getCreationDate()));
+                        , new KeyValue("id", message.getId()), new KeyValue("sendStatus", Message.MESSAGE_SEND_SUCCESS), new KeyValue("creationDate", message.getCreationDate()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -616,4 +668,31 @@ public class MessageCacheUtil {
             }
         }
     }
+
+    /**
+     * 查找所有文本类型的消息
+     * @param context
+     * @param cid
+     * @return
+     */
+    public static List<Message> getGroupMessageWithType(Context context, String cid){
+        List<Message> messageList = new ArrayList<>();
+        try {
+            messageList = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("channel", "=", cid)
+                    .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
+                            .or("type","=",Message.MESSAGE_TYPE_TEXT_MARKDOWN)
+                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
+                    .orderBy("creationDate",true)
+                    .findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(messageList == null){
+            messageList = new ArrayList<>();
+        }
+        return messageList;
+    }
+
+
 }

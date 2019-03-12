@@ -31,6 +31,10 @@ class RichTextPool {
         instances = new WeakHashMap<>();
     }
 
+    public static RichTextPool getPool() {
+        return RichTextPoolHolder.RICH_TEXT_POOL;
+    }
+
     void cache(String source, SpannableStringBuilder ssb) {
         ssb = new SpannableStringBuilder(ssb);
         ssb.setSpan(new CachedSpannedParser.Cached(), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -68,17 +72,12 @@ class RichTextPool {
         richTexts.add(new WeakReference<>(richText));
     }
 
+    public void recycle() {
+        richCache.evictAll();
+    }
 
     private static class RichTextPoolHolder {
         private static final RichTextPool RICH_TEXT_POOL = new RichTextPool();
-    }
-
-    public static RichTextPool getPool() {
-        return RichTextPoolHolder.RICH_TEXT_POOL;
-    }
-
-    public void recycle() {
-        richCache.evictAll();
     }
 
 }

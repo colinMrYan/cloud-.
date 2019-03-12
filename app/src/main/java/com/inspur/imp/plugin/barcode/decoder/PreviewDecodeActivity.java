@@ -1,11 +1,14 @@
 package com.inspur.imp.plugin.barcode.decoder;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -16,12 +19,14 @@ import android.widget.TextView;
 import com.funcode.decoder.inspuremmcloud.FunDecode;
 import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
 import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.common.systool.permission.Permissions;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.imp.api.Res;
 
 import java.io.UnsupportedEncodingException;
@@ -47,7 +52,17 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            //全屏显示
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            getWindow().setAttributes(lp);
+        }
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setNavigationBarColor(ContextCompat.getColor(MyApplication.getInstance(),android.R.color.black));
+        }
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
@@ -57,7 +72,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                ToastUtils.show(PreviewDecodeActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(PreviewDecodeActivity.this,permissions));
+                ToastUtils.show(PreviewDecodeActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(PreviewDecodeActivity.this, permissions));
                 finish();
             }
 
@@ -77,12 +92,18 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
 
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
+    }
+
+
     private void setRangeView() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
         int screenHeight = displayMetrics.heightPixels;
-        int screenLittleSize = screenWidth<screenHeight?screenWidth:screenHeight;
+        int screenLittleSize = screenWidth < screenHeight ? screenWidth : screenHeight;
         int frameRectWidth = (int) (screenLittleSize * 0.6);
 //        //长和宽必须是4的倍数
 //        frameRectWidth = frameRectWidth - frameRectWidth % 4;
@@ -119,10 +140,10 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_SYSTEM, ToneGenerator.MAX_VOLUME);
         toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP);
         Intent intent = new Intent();
-        if (StringUtils.isBlank(result)){
+        if (StringUtils.isBlank(result)) {
             result = getString(Res.getStringID("can_not_recognize"));
             intent.putExtra("isDecodeSuccess", false);
-        }else {
+        } else {
             intent.putExtra("isDecodeSuccess", true);
         }
         intent.putExtra("msg", result);
@@ -136,7 +157,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         //mDecode.setFlash("torch");
         mDecode.setZoomLevel(0.1);
         mDecodeView.startScan();
-        mDecodeView.setRange(new Rect(0,0,0,0));
+        mDecodeView.setRange(new Rect(0, 0, 0, 0));
         //Set Zoom Component visible/invisible. 1: visible, 0: invisible
         //mDecode.ZoomShow(0);
 

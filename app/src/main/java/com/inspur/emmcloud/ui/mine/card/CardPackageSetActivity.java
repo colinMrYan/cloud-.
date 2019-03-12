@@ -24,6 +24,7 @@ public class CardPackageSetActivity extends BaseActivity {
     @ViewInject(R.id.recyclerview_card_package)
     private RecyclerView cardPackageRecyclerView;
     private CardPackageAdapter cardPackageAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,15 +43,15 @@ public class CardPackageSetActivity extends BaseActivity {
         cardPackageAdapter.setOnCardPackageClickListener(new OnCardPackageClickListener() {
             @Override
             public void onCardPackageClick(CardPackageBean cardPackageBean) {
-                CardPackageCacheUtils.saveCardPackage(CardPackageSetActivity.this,cardPackageBean);
+                CardPackageCacheUtils.saveCardPackage(CardPackageSetActivity.this, cardPackageBean);
             }
         });
         cardPackageAdapter.setAndRefreshCardPackageAdapter(CardPackageCacheUtils.getCardPackageList(this));
     }
 
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.back_layout:
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ibt_back:
                 setResult(RESULT_OK);
                 finish();
                 break;

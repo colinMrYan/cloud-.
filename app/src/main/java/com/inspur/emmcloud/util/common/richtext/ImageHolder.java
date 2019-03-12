@@ -19,6 +19,237 @@ public class ImageHolder {
 
     public static final int WRAP_CONTENT = Integer.MIN_VALUE;
     public static final int MATCH_PARENT = Integer.MAX_VALUE;
+    private final int position; // 图片在在某个富文本中的位置
+    private String source; // 图片URL
+    private String key;
+    private int width, height; // 和scale属性共同决定holder宽高，开发者设置，内部获取值然后进行相应的设置
+    @ScaleType
+    private int scaleType;
+    @ImageState
+    private int imageState; // 图片加载的状态
+    private boolean autoFix;
+    private boolean autoPlay;
+    private boolean show;
+    private boolean isGif;
+    private BorderHolder borderHolder;
+    private int configHashCode = 0;
+    public ImageHolder(String source, int position, RichTextConfig config) {
+        this(source, position);
+        this.autoPlay = config.autoPlay;
+        if (config.autoFix) {
+            width = MATCH_PARENT;
+            height = WRAP_CONTENT;
+            scaleType = ScaleType.FIT_AUTO;
+        } else {
+            scaleType = config.scaleType;
+            width = config.width;
+            height = config.height;
+        }
+        this.show = !config.noImage;
+        setShowBorder(config.borderHolder.showBorder);
+        setBorderColor(config.borderHolder.borderColor);
+        setBorderSize(config.borderHolder.borderSize);
+        setBorderRadius(config.borderHolder.radius);
+        configHashCode = config.hashCode();
+        generateKey();
+    }
+    private ImageHolder(String source, int position) {
+        this.source = source;
+        this.position = position;
+        width = WRAP_CONTENT;
+        height = WRAP_CONTENT;
+        scaleType = ScaleType.NONE;
+        autoPlay = false;
+        show = true;
+        this.isGif = false;
+        this.borderHolder = new BorderHolder();
+        generateKey();
+    }
+
+    private void generateKey() {
+        this.key = MD5.generate(configHashCode + source);
+    }
+
+    public boolean success() {
+        return imageState == ImageState.READY;
+    }
+
+    public boolean failed() {
+        return imageState == ImageState.FAILED;
+    }
+
+    public void setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        if (imageState != ImageState.INIT) {
+            throw new ResetImageSourceException();
+        }
+        this.source = source;
+        generateKey();
+    }
+
+    public boolean isAutoFix() {
+        return autoFix;
+    }
+
+    public void setAutoFix(boolean autoFix) {
+        this.autoFix = autoFix;
+        if (autoFix) {
+            width = MATCH_PARENT;
+            height = WRAP_CONTENT;
+            scaleType = ScaleType.FIT_AUTO;
+        }
+    }
+
+    @ScaleType
+    public int getScaleType() {
+        return scaleType;
+    }
+
+    public void setScaleType(@ScaleType int scaleType) {
+        this.scaleType = scaleType;
+    }
+
+    public boolean isGif() {
+        return isGif;
+    }
+
+    public void setIsGif(boolean isGif) {
+        this.isGif = isGif;
+    }
+
+    public boolean isAutoPlay() {
+        return autoPlay;
+    }
+
+    public void setAutoPlay(boolean autoPlay) {
+        this.autoPlay = autoPlay;
+    }
+
+    public boolean isShow() {
+        return show;
+    }
+
+    public void setShow(boolean show) {
+        this.show = show;
+    }
+
+    @ImageState
+    public int getImageState() {
+        return imageState;
+    }
+
+    public void setImageState(@ImageState int imageState) {
+        this.imageState = imageState;
+    }
+
+    public boolean isInvalidateSize() {
+        return width > 0 && height > 0;
+    }
+
+    public BorderHolder getBorderHolder() {
+        return borderHolder;
+    }
+
+    public void setShowBorder(boolean showBorder) {
+        this.borderHolder.showBorder = showBorder;
+    }
+
+    public void setBorderSize(float borderSize) {
+        this.borderHolder.borderSize = borderSize;
+    }
+
+    public void setBorderColor(@ColorInt int borderColor) {
+        this.borderHolder.borderColor = borderColor;
+    }
+
+    public void setBorderRadius(float radius) {
+        this.borderHolder.radius = radius;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ImageHolder)) return false;
+
+        ImageHolder that = (ImageHolder) o;
+
+        if (width != that.width) return false;
+        if (height != that.height) return false;
+        if (scaleType != that.scaleType) return false;
+        if (autoFix != that.autoFix) return false;
+        if (autoPlay != that.autoPlay) return false;
+        if (show != that.show) return false;
+        if (isGif != that.isGif) return false;
+        if (!source.equals(that.source)) return false;
+        if (!borderHolder.equals(that.borderHolder)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = source.hashCode();
+        result = 31 * result + width;
+        result = 31 * result + height;
+        result = 31 * result + scaleType;
+        result = 31 * result + (autoFix ? 1 : 0);
+        result = 31 * result + (autoPlay ? 1 : 0);
+        result = 31 * result + (show ? 1 : 0);
+        result = 31 * result + (isGif ? 1 : 0);
+        result = 31 * result + borderHolder.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ImageHolder{" +
+                "source='" + source + '\'' +
+                ", key='" + key + '\'' +
+                ", position=" + position +
+                ", width=" + width +
+                ", height=" + height +
+                ", scaleType=" + scaleType +
+                ", imageState=" + imageState +
+                ", autoFix=" + autoFix +
+                ", autoPlay=" + autoPlay +
+                ", show=" + show +
+                ", isGif=" + isGif +
+                ", borderHolder=" + borderHolder +
+                ", configHashCode=" + configHashCode +
+                '}';
+    }
 
     /**
      * ScaleType
@@ -168,239 +399,5 @@ public class ImageHolder {
             result = 31 * result + (radius != +0.0f ? Float.floatToIntBits(radius) : 0);
             return result;
         }
-    }
-
-    private String source; // 图片URL
-    private String key;
-    private final int position; // 图片在在某个富文本中的位置
-    private int width, height; // 和scale属性共同决定holder宽高，开发者设置，内部获取值然后进行相应的设置
-    @ScaleType
-    private int scaleType;
-    @ImageState
-    private int imageState; // 图片加载的状态
-    private boolean autoFix;
-    private boolean autoPlay;
-    private boolean show;
-    private boolean isGif;
-    private BorderHolder borderHolder;
-    private int configHashCode = 0;
-
-    public ImageHolder(String source, int position, RichTextConfig config) {
-        this(source, position);
-        this.autoPlay = config.autoPlay;
-        if (config.autoFix) {
-            width = MATCH_PARENT;
-            height = WRAP_CONTENT;
-            scaleType = ScaleType.FIT_AUTO;
-        } else {
-            scaleType = config.scaleType;
-            width = config.width;
-            height = config.height;
-        }
-        this.show = !config.noImage;
-        setShowBorder(config.borderHolder.showBorder);
-        setBorderColor(config.borderHolder.borderColor);
-        setBorderSize(config.borderHolder.borderSize);
-        setBorderRadius(config.borderHolder.radius);
-        configHashCode = config.hashCode();
-        generateKey();
-    }
-
-    private ImageHolder(String source, int position) {
-        this.source = source;
-        this.position = position;
-        width = WRAP_CONTENT;
-        height = WRAP_CONTENT;
-        scaleType = ScaleType.NONE;
-        autoPlay = false;
-        show = true;
-        this.isGif = false;
-        this.borderHolder = new BorderHolder();
-        generateKey();
-    }
-
-    private void generateKey() {
-        this.key = MD5.generate(configHashCode + source);
-    }
-
-    public void setSource(String source) {
-        if (imageState != ImageState.INIT) {
-            throw new ResetImageSourceException();
-        }
-        this.source = source;
-        generateKey();
-    }
-
-    public boolean success() {
-        return imageState == ImageState.READY;
-    }
-
-    public boolean failed() {
-        return imageState == ImageState.FAILED;
-    }
-
-    public void setSize(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public boolean isAutoFix() {
-        return autoFix;
-    }
-
-    public void setAutoFix(boolean autoFix) {
-        this.autoFix = autoFix;
-        if (autoFix) {
-            width = MATCH_PARENT;
-            height = WRAP_CONTENT;
-            scaleType = ScaleType.FIT_AUTO;
-        }
-    }
-
-    @ScaleType
-    public int getScaleType() {
-        return scaleType;
-    }
-
-    public void setScaleType(@ScaleType int scaleType) {
-        this.scaleType = scaleType;
-    }
-
-    public boolean isGif() {
-        return isGif;
-    }
-
-    public void setIsGif(boolean isGif) {
-        this.isGif = isGif;
-    }
-
-    public boolean isAutoPlay() {
-        return autoPlay;
-    }
-
-    public void setAutoPlay(boolean autoPlay) {
-        this.autoPlay = autoPlay;
-    }
-
-    public boolean isShow() {
-        return show;
-    }
-
-    public void setShow(boolean show) {
-        this.show = show;
-    }
-
-    @ImageState
-    public int getImageState() {
-        return imageState;
-    }
-
-    public void setImageState(@ImageState int imageState) {
-        this.imageState = imageState;
-    }
-
-    public boolean isInvalidateSize() {
-        return width > 0 && height > 0;
-    }
-
-    public BorderHolder getBorderHolder() {
-        return borderHolder;
-    }
-
-    public void setShowBorder(boolean showBorder) {
-        this.borderHolder.showBorder = showBorder;
-    }
-
-    public void setBorderSize(float borderSize) {
-        this.borderHolder.borderSize = borderSize;
-    }
-
-    public void setBorderColor(@ColorInt int borderColor) {
-        this.borderHolder.borderColor = borderColor;
-    }
-
-    public void setBorderRadius(float radius) {
-        this.borderHolder.radius = radius;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ImageHolder)) return false;
-
-        ImageHolder that = (ImageHolder) o;
-
-        if (width != that.width) return false;
-        if (height != that.height) return false;
-        if (scaleType != that.scaleType) return false;
-        if (autoFix != that.autoFix) return false;
-        if (autoPlay != that.autoPlay) return false;
-        if (show != that.show) return false;
-        if (isGif != that.isGif) return false;
-        if (!source.equals(that.source)) return false;
-        if (!borderHolder.equals(that.borderHolder)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = source.hashCode();
-        result = 31 * result + width;
-        result = 31 * result + height;
-        result = 31 * result + scaleType;
-        result = 31 * result + (autoFix ? 1 : 0);
-        result = 31 * result + (autoPlay ? 1 : 0);
-        result = 31 * result + (show ? 1 : 0);
-        result = 31 * result + (isGif ? 1 : 0);
-        result = 31 * result + borderHolder.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "ImageHolder{" +
-                "source='" + source + '\'' +
-                ", key='" + key + '\'' +
-                ", position=" + position +
-                ", width=" + width +
-                ", height=" + height +
-                ", scaleType=" + scaleType +
-                ", imageState=" + imageState +
-                ", autoFix=" + autoFix +
-                ", autoPlay=" + autoPlay +
-                ", show=" + show +
-                ", isGif=" + isGif +
-                ", borderHolder=" + borderHolder +
-                ", configHashCode=" + configHashCode +
-                '}';
     }
 }

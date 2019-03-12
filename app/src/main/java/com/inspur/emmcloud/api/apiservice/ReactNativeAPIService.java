@@ -28,25 +28,28 @@ import java.io.File;
 public class ReactNativeAPIService {
     private Context context;
     private APIInterface apiInterface;
-    public ReactNativeAPIService(Context context){
+
+    public ReactNativeAPIService(Context context) {
         this.context = context;
     }
+
     public void setAPIInterface(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
     }
 
     /**
      * 获取ClientId
+     *
      * @param deviceId
      * @param deviceName
      */
-    public void getClientId(final String deviceId, final String deviceName){
+    public void getClientId(final String deviceId, final String deviceName) {
         final String completeUrl = APIUri.getClientId();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("deviceId",deviceId);
-        params.addParameter("deviceName",deviceName);
-        HttpUtils.request(context, CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
+        params.addParameter("deviceId", deviceId);
+        params.addParameter("deviceName", deviceName);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(new String(arg0)));
@@ -54,7 +57,7 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetClientIdResultFail(error,responseCode);
+                apiInterface.returnGetClientIdResultFail(error, responseCode);
             }
 
             @Override
@@ -62,7 +65,7 @@ public class ReactNativeAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getClientId(deviceId,deviceName);
+                        getClientId(deviceId, deviceName);
                     }
 
                     @Override
@@ -79,14 +82,15 @@ public class ReactNativeAPIService {
 
     /**
      * 获取地址
+     *
      * @param uri
      */
-    public void getReactNativeInstallUrl(final String uri){
+    public void getReactNativeInstallUrl(final String uri) {
         final String completeUrl = APIUri.getReactNativeInstallUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("uri",uri);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
+        params.addParameter("uri", uri);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetReactNativeInstallUrlSuccess(new ReactNativeInstallUriBean(new String(arg0)));
@@ -94,7 +98,7 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetReactNativeInstallUrlFail(error,responseCode);
+                apiInterface.returnGetReactNativeInstallUrlFail(error, responseCode);
             }
 
             @Override
@@ -119,18 +123,19 @@ public class ReactNativeAPIService {
 
     /**
      * 写回版本变更情况
+     *
      * @param preVersion
      * @param currentVersion
      * @param clientId
      * @param command
      * @param appId
      */
-    public void writeBackVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command, final String appId){
-        final String completeUrl = APIUri.getReactNativeWriteBackUrl(appId)+"?preVersion="+preVersion+"&currentVersion="+currentVersion+"&clientId="+clientId+
-                "&command="+command;
+    public void writeBackVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command, final String appId) {
+        final String completeUrl = APIUri.getReactNativeWriteBackUrl(appId) + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + "&clientId=" + clientId +
+                "&command=" + command;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 LogUtils.YfcDebug("写回成功，不需要后续处理");
@@ -146,7 +151,7 @@ public class ReactNativeAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        writeBackVersionChange(preVersion,currentVersion,clientId, command,appId);
+                        writeBackVersionChange(preVersion, currentVersion, clientId, command, appId);
                     }
 
                     @Override
@@ -164,17 +169,18 @@ public class ReactNativeAPIService {
 
     /**
      * 获取ReactNative应用的下地址
+     *
      * @param context
      * @param findDownloadUrl
      * @param clientId
      * @param currentVersion
      */
     public void getDownLoadUrl(final Context context, final String findDownloadUrl,
-                               final String clientId, final String currentVersion){
-        final String completeUrl = findDownloadUrl+"?version="+currentVersion+"&clientId="+clientId;
+                               final String clientId, final String currentVersion) {
+        final String completeUrl = findDownloadUrl + "?version=" + currentVersion + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetDownloadReactNativeUrlSuccess(new ReactNativeDownloadUrlBean(new String(arg0)));
@@ -182,7 +188,7 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetDownloadReactNativeUrlFail(error,responseCode);
+                apiInterface.returnGetDownloadReactNativeUrlFail(error, responseCode);
             }
 
             @Override
@@ -190,7 +196,7 @@ public class ReactNativeAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getDownLoadUrl(context,findDownloadUrl,clientId,currentVersion);
+                        getDownLoadUrl(context, findDownloadUrl, clientId, currentVersion);
                     }
 
                     @Override
@@ -207,28 +213,30 @@ public class ReactNativeAPIService {
 
     /**
      * 下载reactnative更新包
+     *
      * @param fromUri
      * @param filePath
      * @param progressCallback
      */
-    public void downloadReactNativeModuleZipPackage(String fromUri,String filePath,Callback.ProgressCallback<File> progressCallback){
+    public void downloadReactNativeModuleZipPackage(String fromUri, String filePath, Callback.ProgressCallback<File> progressCallback) {
         DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
-        downLoaderUtils.startDownLoad(fromUri,filePath,progressCallback);
+        downLoaderUtils.startDownLoad(fromUri, filePath, progressCallback);
     }
 
     /**
      * 写回闪屏日志
+     *
      * @param preVersion
      * @param currentVersion
      * @param clientId
      * @param command
      */
-    public void writeBackSplashPageVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command){
-        final String completeUrl = APIUri.getUploadSplashPageWriteBackLogUrl()+"?preVersion="+preVersion+"&currentVersion="+currentVersion+"&clientId="+clientId+
-                "&command="+command;
+    public void writeBackSplashPageVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command) {
+        final String completeUrl = APIUri.getUploadSplashPageWriteBackLogUrl() + "?preVersion=" + preVersion + "&currentVersion=" + currentVersion + "&clientId=" + clientId +
+                "&command=" + command;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 LogUtils.YfcDebug("闪屏写回成功，不需要后续处理");
@@ -236,7 +244,7 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("闪屏写回失败，不需要后续处理"+error+responseCode);
+                LogUtils.YfcDebug("闪屏写回失败，不需要后续处理" + error + responseCode);
             }
 
             @Override
@@ -244,7 +252,7 @@ public class ReactNativeAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        writeBackSplashPageVersionChange(preVersion,currentVersion,clientId, command);
+                        writeBackSplashPageVersionChange(preVersion, currentVersion, clientId, command);
                     }
 
                     @Override

@@ -92,13 +92,13 @@ public class ProfileUtils {
                 }
             });
             dialog.show();
-        }else {
+        } else {
             callback();
         }
     }
 
-    private void callback(){
-        PreferencesUtils.putString(MyApplication.getInstance(), "previousVersion", AppUtils.getVersion(MyApplication.getInstance()));
+    private void callback() {
+        PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(MyApplication.getInstance()));
         if (commonCallBack != null) {
             commonCallBack.execute();
         }
@@ -137,7 +137,7 @@ public class ProfileUtils {
                 ClusterBean chatClusterBeanNew = MutilClusterUtils.getClusterBean(MutilClusterUtils.ECM_CHAT);
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER, saveConfigVersion);
                 String appVersion = AppUtils.getVersion(activity);
-                PreferencesUtils.putString(activity, "previousVersion",
+                PreferencesUtils.putString(activity, Constant.PREF_APP_PREVIOUS_VERSION,
                         appVersion);
                 if (commonCallBack != null) {
                     commonCallBack.execute();
@@ -156,10 +156,10 @@ public class ProfileUtils {
 
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
-            if (retry == 0){
-                retry = retry+1;
+            if (retry == 0) {
+                retry = retry + 1;
                 getUserProfile(false);
-            }else {
+            } else {
                 LoadingDialog.dimissDlg(loadingDialog);
                 //当统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
                 showPromptDialog();

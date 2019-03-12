@@ -25,10 +25,10 @@ public class CommonContactCacheUtils {
      * @param searchModel
      */
     public static void saveCommonContact(final Context context, final SearchModel searchModel) {
-        if (!searchModel.getType().equals(SearchModel.TYPE_USER)){
+        if (!searchModel.getType().equals(SearchModel.TYPE_USER)) {
             return;
         }
-        if (!searchModel.getId().equals(MyApplication.getInstance().getUid())){
+        if (!searchModel.getId().equals(MyApplication.getInstance().getUid())) {
             Runnable runnable = new Runnable() {
 
                 @Override
@@ -78,7 +78,7 @@ public class CommonContactCacheUtils {
                     String noInSql = "()";
                     noInSql = getNoInSql(noInSql, excludeContactList);
                     commonContactList = DbCacheUtils.getDb(context).selector
-                        (SearchModel.class).where("type", "=", "USER")
+                            (SearchModel.class).where("type", "=", "USER")
                             .and(WhereBuilder.b().expr("id not in" + noInSql))
                             .orderBy("heat", true).limit(num).findAll();
                 default:
@@ -95,21 +95,20 @@ public class CommonContactCacheUtils {
     }
 
 
-
     /**
-     *删除单个常用联系人(只删除组)
+     * 删除单个常用联系人(只删除组)
      * lbc 2018/09/13
+     *
      * @param context
      * @param searchModel 删除联系人groupID
-     * **/
-    public static void delectCommonContact(Context context,SearchModel searchModel) {
+     **/
+    public static void delectCommonContact(Context context, SearchModel searchModel) {
         try {
-                DbCacheUtils.getDb(context).delete(searchModel);
+            DbCacheUtils.getDb(context).delete(searchModel);
         } catch (DbException e) {
             e.printStackTrace();
         }
     }
-
 
 
     /**

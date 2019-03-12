@@ -24,9 +24,9 @@ public class StuffInformationService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        LogUtils.jasonDebug("paramsObject="+paramsObject);
+        LogUtils.jasonDebug("paramsObject=" + paramsObject);
         successCb = JSONUtils.getString(paramsObject, "success", "");
-        LogUtils.jasonDebug("successCb="+successCb);
+        LogUtils.jasonDebug("successCb=" + successCb);
         failCb = JSONUtils.getString(paramsObject, "fail", "");
         if (action.equals("view")) {
             viewContact(JSONUtils.getString(JSONUtils.getJSONObject(paramsObject, "options", new JSONObject()), "inspurId", ""));
@@ -44,13 +44,13 @@ public class StuffInformationService extends ImpPlugin {
         return "";
     }
 
-    private void returnUserInfo(){
+    private void returnUserInfo() {
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid());
         JSONObject object = null;
         try {
-            if (contactUser != null){
+            if (contactUser != null) {
                 object = contactUser.contact2JSONObject(getFragmentContext());
-            }else {
+            } else {
                 String myInfo = PreferencesUtils.getString(getFragmentContext(), "myInfo", "");
                 GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
                 object.put("id", getMyInfoResult.getID());
@@ -61,9 +61,9 @@ public class StuffInformationService extends ImpPlugin {
                 object.put("email", getMyInfoResult.getMail());
                 object.put("head", APIUri.getChannelImgUrl4Imp(getMyInfoResult.getID()));
             }
-            object.put("tenantId",MyApplication.getInstance().getCurrentEnterprise().getId());
+            object.put("tenantId", MyApplication.getInstance().getCurrentEnterprise().getId());
             this.jsCallback(successCb, object.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             this.jsCallback(failCb, "error");
         }

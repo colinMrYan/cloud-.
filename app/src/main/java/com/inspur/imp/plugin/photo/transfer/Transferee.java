@@ -57,6 +57,13 @@ public class Transferee implements DialogInterface.OnShowListener,
         return new Transferee(context);
     }
 
+    /**
+     * 清除 transferee 缓存
+     */
+    public static void clear(ImageLoaderCommon imageLoader) {
+        imageLoader.clearCache();
+    }
+
     private void creatLayout() {
         transLayout = new TransferLayout(context);
         transLayout.setOnLayoutResetListener(this);
@@ -111,7 +118,6 @@ public class Transferee implements DialogInterface.OnShowListener,
                 ? UniversalImageLoader.with(context.getApplicationContext())
                 : transConfig.getImageLoader());
     }
-
 
     /**
      * 配置 transferee 参数对象
@@ -170,13 +176,6 @@ public class Transferee implements DialogInterface.OnShowListener,
         if (!shown) return;
         transLayout.dismiss(transConfig.getNowThumbnailIndex());
         shown = false;
-    }
-
-    /**
-     * 清除 transferee 缓存
-     */
-    public static void clear(ImageLoaderCommon imageLoader) {
-        imageLoader.clearCache();
     }
 
     @Override

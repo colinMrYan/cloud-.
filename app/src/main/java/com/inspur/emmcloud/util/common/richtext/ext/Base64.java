@@ -66,38 +66,11 @@ public class Base64 {
     //  --------------------------------------------------------
     //  shared code
     //  --------------------------------------------------------
-
-    private static abstract class Coder {
-        public byte[] output;
-        public int op;
-
-        /**
-         * Encode/decode another block of input data.  this.output is
-         * provided by the caller, and must be big enough to hold all
-         * the coded data.  On exit, this.opwill be set to the length
-         * of the coded data.
-         *
-         * @param finish true if this is the final call to process for
-         *               this object.  Will finalize the coder state and
-         *               include any final bytes in the output.
-         * @return true if the input so far is good; false if some
-         * error has been detected in the input stream..
-         */
-        public abstract boolean process(byte[] input, int offset, int len, boolean finish);
-
-        /**
-         * @return the maximum number of bytes a call to process()
-         * could produce for the given number of input bytes.  This may
-         * be an overestimate.
-         */
-        public abstract int maxOutputSize(int len);
-    }
+    private static final Pattern rex_base_64 = Pattern.compile("^data:image/\\w+?;.*?base64,(.*)");
 
     //  --------------------------------------------------------
     //  decoding
     //  --------------------------------------------------------
-
-    private static final Pattern rex_base_64 = Pattern.compile("^data:image/\\w+?;.*?base64,(.*)");
 
     public static boolean isBase64(String src) {
         Matcher matcher = rex_base_64.matcher(src);
@@ -187,6 +160,32 @@ public class Base64 {
         return temp;
     }
 
+    private static abstract class Coder {
+        public byte[] output;
+        public int op;
+
+        /**
+         * Encode/decode another block of input data.  this.output is
+         * provided by the caller, and must be big enough to hold all
+         * the coded data.  On exit, this.opwill be set to the length
+         * of the coded data.
+         *
+         * @param finish true if this is the final call to process for
+         *               this object.  Will finalize the coder state and
+         *               include any final bytes in the output.
+         * @return true if the input so far is good; false if some
+         * error has been detected in the input stream..
+         */
+        public abstract boolean process(byte[] input, int offset, int len, boolean finish);
+
+        /**
+         * @return the maximum number of bytes a call to process()
+         * could produce for the given number of input bytes.  This may
+         * be an overestimate.
+         */
+        public abstract int maxOutputSize(int len);
+    }
+
     /* package */ static class Decoder extends Coder {
         /**
          * Lookup table for turning bytes into their position in the
@@ -239,7 +238,7 @@ public class Base64 {
          */
         private static final int SKIP = -1;
         private static final int EQUALS = -2;
-
+        final private int[] alphabet;
         /**
          * States 0-3 are reading through the next input tuple.
          * State 4 is having read one '=' and expecting exactly
@@ -251,8 +250,6 @@ public class Base64 {
          */
         private int state;   // state number (0 to 6)
         private int value;
-
-        final private int[] alphabet;
 
         public Decoder(int flags, byte[] output) {
             this.output = output;

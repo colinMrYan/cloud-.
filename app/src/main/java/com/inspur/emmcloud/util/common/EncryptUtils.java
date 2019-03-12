@@ -28,26 +28,26 @@ public class EncryptUtils {
 
     /**
      * Encodes a String in AES-256 with a given key
+     *
      * @param stringToEncode
      * @return
      * @throws Exception
      */
     public static String encode(String stringToEncode) throws Exception {
         String defaltKeyString = "inspurIMPCloud968842022285d325h9";
-        return encode(stringToEncode, defaltKeyString,null,Base64.DEFAULT);
+        return encode(stringToEncode, defaltKeyString, null, Base64.DEFAULT);
     }
 
 
     /**
-     *
      * @param stringToEncode
      * @param keyString
-     * @param offset  偏移量
+     * @param offset         偏移量
      * @return
      * @throws Exception
      */
-    public static String encode(String stringToEncode, String keyString, String offset,int base64Flag) throws Exception {
-        if ( keyString == null || keyString.length() == 0) {
+    public static String encode(String stringToEncode, String keyString, String offset, int base64Flag) throws Exception {
+        if (keyString == null || keyString.length() == 0) {
             throw new NullPointerException("Please give Password");
         }
 
@@ -95,15 +95,14 @@ public class EncryptUtils {
 
 
     /**
-     *
      * @param stringToEncode
      * @param keyString
-     * @param offset  偏移量
+     * @param offset         偏移量
      * @return
      * @throws Exception
      */
     public static byte[] encodeNoBase64(String stringToEncode, String keyString, String offset) throws Exception {
-        if ( keyString == null || keyString.length() == 0) {
+        if (keyString == null || keyString.length() == 0) {
             throw new NullPointerException("Please give Password");
         }
 
@@ -151,12 +150,11 @@ public class EncryptUtils {
 
     public static String decode(String text) throws NullPointerException {
         String defaltKeyString = "inspurIMPCloud968842022285d325h9";
-        return decode(text, defaltKeyString,null,Base64.DEFAULT);
+        return decode(text, defaltKeyString, null, Base64.DEFAULT);
     }
 
 
     /**
-     *
      * @param text
      * @param keyString
      * @param offset
@@ -164,10 +162,10 @@ public class EncryptUtils {
      * @return
      * @throws NullPointerException
      */
-    public static String decode(String text, String keyString,String offset,int base64Flag) throws NullPointerException {
+    public static String decode(String text, String keyString, String offset, int base64Flag) throws NullPointerException {
 
 
-        if ( text == null || text.length() == 0 ) {
+        if (text == null || text.length() == 0) {
             throw new NullPointerException("Please give text");
         }
 
@@ -216,8 +214,8 @@ public class EncryptUtils {
     }
 
 
-    public static byte[] decode(byte[] encrypedPwdBytes,String keyString,String offset) throws NullPointerException {
-        if ( encrypedPwdBytes == null || encrypedPwdBytes.length == 0 ) {
+    public static byte[] decode(byte[] encrypedPwdBytes, String keyString, String offset) throws NullPointerException {
+        if (encrypedPwdBytes == null || encrypedPwdBytes.length == 0) {
             throw new NullPointerException("Please give text");
         }
 

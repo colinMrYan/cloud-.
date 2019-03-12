@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -33,7 +34,6 @@ import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -132,16 +132,6 @@ public class IndexActivity extends IndexBaseActivity {
         startLocationService();
     }
 
-    @Override
-    public void onTabChanged(String tabId) {
-        super.onTabChanged( tabId );
-        if(tabId.equals("ecc-app-react-native://discover")) {
-            StateBarUtils.SetStateBarColor(this);
-        } else {
-            StateBarUtils.translucent(this);
-        }
-    }
-
     /***
      * 打开app应用行为分析上传的Service;
      */
@@ -197,6 +187,9 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void setPreloadWebApp() {
         if (MyApplication.getInstance().getTanent().equals("inspur_esg")) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                webView.getSettings().setSafeBrowsingEnabled(false);
+            }
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setSavePassword(false);
             webView.setWebViewClient(new WebViewClient() {
@@ -243,7 +236,7 @@ public class IndexActivity extends IndexBaseActivity {
                     apiService.setAPIInterface(new WebService());
                     String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
-                    apiService.getAppNewTabs(version,clientId,mainTabSaveConfigVersion);
+                    apiService.getAppNewTabs(version, clientId, mainTabSaveConfigVersion);
                 }
 
                 @Override
@@ -262,7 +255,7 @@ public class IndexActivity extends IndexBaseActivity {
                 switch (msg.what) {
                     case SYNC_ALL_BASE_DATA_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);
-                        if (!MyApplication.getInstance().getIsContactReady()){
+                        if (!MyApplication.getInstance().getIsContactReady()) {
                             MyApplication.getInstance()
                                     .setIsContactReady(true);
                             notifySyncAllBaseDataSuccess();
@@ -319,12 +312,12 @@ public class IndexActivity extends IndexBaseActivity {
         if (isRouterUpdate) {
             new ProfileUtils(IndexActivity.this, null).initProfile(false);
         }
-        if (isContactUserUpdate){
+        if (isContactUserUpdate) {
             getContactUser();
-        }else if (handler != null) {
+        } else if (handler != null) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
-        if (isContactOrgUpdate){
+        if (isContactOrgUpdate) {
             getContactOrg();
         }
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
@@ -347,12 +340,73 @@ public class IndexActivity extends IndexBaseActivity {
 
     }
 
+    /**
+     * 获取所有的群组信息
+     */
+    private void getAllChannelGroup() {
+        // TODO Auto-generated method stub
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+            ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.getAllGroupChannelList();
+        }
+    }
+
+    /**
+     * 获取通讯录人员信息
+     */
+    private void getContactUser() {
+        // TODO Auto-generated method stub
+        ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
+        apiService.setAPIInterface(new WebService());
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+            String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER);
+            long contactUserLastQuetyTime = ContactUserCacheUtils.getLastQueryTime();
+            if (contactUserLastQuetyTime == 0) {
+                apiService.getContactUserList(saveConfigVersion);
+            } else {
+                apiService.getContactUserListUpdate(contactUserLastQuetyTime, saveConfigVersion);
+            }
+        } else if (handler != null) {
+            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+        }
+    }
+
+    /**
+     * 获取通讯录人员信息
+     */
+    private void getContactOrg() {
+        // TODO Auto-generated method stub
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+            ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
+            apiService.setAPIInterface(new WebService());
+            String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG);
+            long contactOrgLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
+            if (contactOrgLastQuetyTime == 0) {
+                apiService.getContactOrgList(saveConfigVersion);
+            } else {
+                apiService.getContactOrgListUpdate(contactOrgLastQuetyTime, saveConfigVersion);
+            }
+
+        }
+    }
+
+    /**
+     * 获取所有的Robot
+     */
+    private void getAllRobotInfo() {
+        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterBot()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+            ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.getAllRobotInfo();
+        }
+    }
 
     class CacheContactUserThread extends Thread {
         private byte[] result;
         private String saveConfigVersion;
 
-        public CacheContactUserThread(byte[] result,String saveConfigVersion) {
+        public CacheContactUserThread(byte[] result, String saveConfigVersion) {
             this.result = result;
             this.saveConfigVersion = saveConfigVersion;
         }
@@ -365,7 +419,7 @@ public class IndexActivity extends IndexBaseActivity {
                 List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList, users.getLastQueryTime());
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
                 ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
-                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER,saveConfigVersion);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER, saveConfigVersion);
                 if (handler != null) {
                     handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
                 }
@@ -379,7 +433,7 @@ public class IndexActivity extends IndexBaseActivity {
         private GetContactUserListUpateResult getContactUserListUpateResult;
         private String saveConfigVersion;
 
-        public CacheContactUserUpdateThread(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
+        public CacheContactUserUpdateThread(GetContactUserListUpateResult getContactUserListUpateResult, String saveConfigVersion) {
             this.getContactUserListUpateResult = getContactUserListUpateResult;
             this.saveConfigVersion = saveConfigVersion;
         }
@@ -392,7 +446,7 @@ public class IndexActivity extends IndexBaseActivity {
                 ContactUserCacheUtils.saveContactUserList(contactUserChangedList);
                 ContactUserCacheUtils.deleteContactUserList(contactUserIdDeleteList);
                 ContactUserCacheUtils.setLastQueryTime(getContactUserListUpateResult.getLastQueryTime());
-                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER,saveConfigVersion);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER, saveConfigVersion);
                 if (handler != null) {
                     handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
                 }
@@ -406,7 +460,7 @@ public class IndexActivity extends IndexBaseActivity {
         private byte[] result;
         private String saveConfigVersion;
 
-        public CacheContactOrgThread(byte[] result,String saveConfigVersion) {
+        public CacheContactOrgThread(byte[] result, String saveConfigVersion) {
             this.result = result;
             this.saveConfigVersion = saveConfigVersion;
         }
@@ -420,21 +474,20 @@ public class IndexActivity extends IndexBaseActivity {
                 ContactOrgCacheUtils.saveContactOrgList(contactOrgList);
                 ContactOrgCacheUtils.setContactOrgRootId(orgs.getRootID());
                 ContactOrgCacheUtils.setLastQueryTime(orgs.getLastQueryTime());
-                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG,saveConfigVersion);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG, saveConfigVersion);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-
     class CacheContactOrgUpdateThread extends Thread {
         private GetContactOrgListUpateResult getContactOrgListUpateResult;
         private String saveConfigVersion;
 
-        public CacheContactOrgUpdateThread(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
+        public CacheContactOrgUpdateThread(GetContactOrgListUpateResult getContactOrgListUpateResult, String saveConfigVersion) {
             this.getContactOrgListUpateResult = getContactOrgListUpateResult;
-            this.saveConfigVersion=saveConfigVersion;
+            this.saveConfigVersion = saveConfigVersion;
         }
 
         @Override
@@ -449,13 +502,12 @@ public class IndexActivity extends IndexBaseActivity {
                     ContactOrgCacheUtils.setContactOrgRootId(getContactOrgListUpateResult.getRootID());
                 }
                 ContactOrgCacheUtils.setLastQueryTime(getContactOrgListUpateResult.getLastQueryTime());
-                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG,saveConfigVersion);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG, saveConfigVersion);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     class CacheChannelGroupThread extends Thread {
         private GetSearchChannelGroupResult getSearchChannelGroupResult;
@@ -491,73 +543,10 @@ public class IndexActivity extends IndexBaseActivity {
         }
     }
 
-    /**
-     * 获取所有的群组信息
-     */
-    private void getAllChannelGroup() {
-        // TODO Auto-generated method stub
-        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
-            apiService.setAPIInterface(new WebService());
-            apiService.getAllGroupChannelList();
-        }
-    }
-
-    /**
-     * 获取通讯录人员信息
-     */
-    private void getContactUser() {
-        // TODO Auto-generated method stub
-        ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
-        apiService.setAPIInterface(new WebService());
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER);
-            long contactUserLastQuetyTime = ContactUserCacheUtils.getLastQueryTime();
-            if (contactUserLastQuetyTime == 0) {
-                apiService.getContactUserList(saveConfigVersion);
-            } else {
-                apiService.getContactUserListUpdate(contactUserLastQuetyTime,saveConfigVersion);
-            }
-        } else if (handler != null) {
-            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
-        }
-    }
-
-    /**
-     * 获取通讯录人员信息
-     */
-    private void getContactOrg() {
-        // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
-            apiService.setAPIInterface(new WebService());
-            String saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG);
-            long contactOrgLastQuetyTime = ContactOrgCacheUtils.getLastQueryTime();
-            if (contactOrgLastQuetyTime == 0) {
-                apiService.getContactOrgList(saveConfigVersion);
-            } else {
-                apiService.getContactOrgListUpdate(contactOrgLastQuetyTime,saveConfigVersion);
-            }
-
-        }
-    }
-
-
-    /**
-     * 获取所有的Robot
-     */
-    private void getAllRobotInfo() {
-        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterBot()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
-            apiService.setAPIInterface(new WebService());
-            apiService.getAllRobotInfo();
-        }
-    }
-
     public class WebService extends APIInterfaceInstance {
         @Override
-        public void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion) {
-            new CacheContactUserThread(bytes,saveConfigVersion).start();
+        public void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion) {
+            new CacheContactUserThread(bytes, saveConfigVersion).start();
         }
 
         @Override
@@ -569,8 +558,8 @@ public class IndexActivity extends IndexBaseActivity {
         }
 
         @Override
-        public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
-            new CacheContactUserUpdateThread(getContactUserListUpateResult,saveConfigVersion).start();
+        public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult, String saveConfigVersion) {
+            new CacheContactUserUpdateThread(getContactUserListUpateResult, saveConfigVersion).start();
         }
 
         @Override
@@ -583,8 +572,8 @@ public class IndexActivity extends IndexBaseActivity {
 
 
         @Override
-        public void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion) {
-            new CacheContactOrgThread(bytes,saveConfigVersion).start();
+        public void returnContactOrgListSuccess(byte[] bytes, String saveConfigVersion) {
+            new CacheContactOrgThread(bytes, saveConfigVersion).start();
         }
 
         @Override
@@ -593,8 +582,8 @@ public class IndexActivity extends IndexBaseActivity {
         }
 
         @Override
-        public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
-            new CacheContactOrgUpdateThread(getContactOrgListUpateResult,saveConfigVersion).start();
+        public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult, String saveConfigVersion) {
+            new CacheContactOrgUpdateThread(getContactOrgListUpateResult, saveConfigVersion).start();
         }
 
         @Override

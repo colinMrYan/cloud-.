@@ -93,8 +93,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         String minStr = getString(R.string.min);
         String hoursStr = getString(R.string.hours);
         String minsStr = getString(R.string.mins);
-        durationHourItems = new String[]{"0"+hourStr, "1"+hourStr, "2"+hoursStr, "3"+hoursStr, "4"+hoursStr, "5"+hoursStr, "6"+hoursStr, "7"+hoursStr, "8"+hoursStr, "9"+hoursStr, "10"+hoursStr, "11"+hoursStr, "12"+hoursStr, "18"+hoursStr, "24"+hoursStr};
-        durationMinItems = new String[]{"0"+minStr, "10"+minsStr, "20"+minsStr, "30"+minsStr, "40"+minsStr,"50"+minsStr};
+        durationHourItems = new String[]{"0" + hourStr, "1" + hourStr, "2" + hoursStr, "3" + hoursStr, "4" + hoursStr, "5" + hoursStr, "6" + hoursStr, "7" + hoursStr, "8" + hoursStr, "9" + hoursStr, "10" + hoursStr, "11" + hoursStr, "12" + hoursStr, "18" + hoursStr, "24" + hoursStr};
+        durationMinItems = new String[]{"0" + minStr, "10" + minsStr, "20" + minsStr, "30" + minsStr, "40" + minsStr, "50" + minsStr};
         startCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
         startDateText.setText(TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_MONTH_DAY));
         startTimeText.setText(TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE));
@@ -107,7 +107,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         apiService.setAPIInterface(new Webservice());
         loadingDlg = new LoadingDialog(this);
         String password = AppUtils.getRandomStr(6);
-        EditTextUtils.setText(passwordEdit, password );
+        EditTextUtils.setText(passwordEdit, password);
     }
 
 
@@ -192,12 +192,12 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                     ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_enter_meeting_password);
                     return;
                 }
-                if (meetingPassword.length()<6 || meetingPassword.length()>10){
+                if (meetingPassword.length() < 6 || meetingPassword.length() > 10) {
                     ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_length_error);
                     return;
                 }
 
-                if (!FomatUtils.isLetterOrDigits(meetingPassword)){
+                if (!FomatUtils.isLetterOrDigits(meetingPassword)) {
                     ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_invalid);
                     return;
                 }
@@ -219,7 +219,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                 webexMeeting.setStartDateCalendar(startCalendar);
                 scheduleMeeting();
                 break;
-            case R.id.rl_back:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.tv_start_date:
@@ -236,7 +236,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                 break;
             case R.id.rl_invite:
                 Intent intent = new Intent(WebexScheduleMeetingActivity.this, WebexAddAttendeesActivity.class);
-                intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable)webexAttendeesList);
+                intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
                 startActivityForResult(intent, REQUEST_ADD_ATTENDEES);
                 break;
             case R.id.iv_password_visible:
@@ -270,7 +270,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (RESULT_OK == resultCode) {
             if (requestCode == REQUEST_ADD_ATTENDEES) {
-                webexAttendeesList = (List<WebexAttendees>)data.getSerializableExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST);
+                webexAttendeesList = (List<WebexAttendees>) data.getSerializableExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST);
                 inviteText.setText(webexAttendeesList.size() == 0 ? getString(R.string.none) : webexAttendeesList.size() + "");
             }
         }

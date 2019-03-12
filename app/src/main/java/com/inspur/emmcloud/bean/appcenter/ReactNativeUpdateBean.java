@@ -18,23 +18,21 @@ public class ReactNativeUpdateBean {
      */
 
 
-
-
     private BundleBean bundle;
     private String command;
 
-    public ReactNativeUpdateBean(String reactNativeUpdate){
+    public ReactNativeUpdateBean(String reactNativeUpdate) {
         try {
             JSONObject jsonReactNative = new JSONObject(reactNativeUpdate);
-            if(jsonReactNative.has("bundle")){
+            if (jsonReactNative.has("bundle")) {
                 String bundleString = jsonReactNative.getString("bundle");
-                if(StringUtils.isBlank(bundleString) || bundleString.equals("null")){
+                if (StringUtils.isBlank(bundleString) || bundleString.equals("null")) {
                     this.bundle = new BundleBean();
-                }else{
+                } else {
                     this.bundle = new BundleBean(bundleString);
                 }
             }
-            if(jsonReactNative.has("command")){
+            if (jsonReactNative.has("command")) {
                 this.command = jsonReactNative.getString("command");
             }
         } catch (JSONException e) {
@@ -81,37 +79,38 @@ public class ReactNativeUpdateBean {
         private IdBean id;
         private long creationDate;
 
-        public BundleBean(){}
+        public BundleBean() {
+        }
 
-        public BundleBean(String bundle){
+        public BundleBean(String bundle) {
             try {
                 JSONObject jsonBundle = new JSONObject(bundle);
-                if(jsonBundle.has("androidUri")){
+                if (jsonBundle.has("androidUri")) {
                     this.androidUri = jsonBundle.getString("androidUri");
                 }
-                if(jsonBundle.has("iosUri")){
+                if (jsonBundle.has("iosUri")) {
                     this.iosUri = jsonBundle.getString("iosUri");
                 }
-                if(jsonBundle.has("webUri")){
+                if (jsonBundle.has("webUri")) {
                     this.webUri = jsonBundle.getString("webUri");
                 }
-                if(jsonBundle.has("androidHash")){
+                if (jsonBundle.has("androidHash")) {
                     this.androidHash = jsonBundle.getString("androidHash").split(":")[1];
                 }
-                if(jsonBundle.has("iosHash")){
+                if (jsonBundle.has("iosHash")) {
                     this.iosHash = jsonBundle.getString("iosHash");
                 }
-                if(jsonBundle.has("webHash")){
+                if (jsonBundle.has("webHash")) {
                     this.webHash = jsonBundle.getString("webHash");
                 }
-                if(jsonBundle.has("compressedFormat")){
+                if (jsonBundle.has("compressedFormat")) {
                     this.compressedFormat = jsonBundle.getString("compressedFormat");
                 }
-                if(jsonBundle.has("id")){
+                if (jsonBundle.has("id")) {
 //                    this.id = jsonBundle.getString("id");
                     this.id = new IdBean(jsonBundle.getString("id"));
                 }
-                if(jsonBundle.has("creationDate")){
+                if (jsonBundle.has("creationDate")) {
                     this.creationDate = jsonBundle.getLong("creationDate");
                 }
             } catch (JSONException e) {
@@ -200,13 +199,13 @@ public class ReactNativeUpdateBean {
             private String domain;
             private String version;
 
-            public IdBean(String idBean){
+            public IdBean(String idBean) {
                 try {
                     JSONObject jsonIdBean = new JSONObject(idBean);
-                    if(jsonIdBean.has("domain")){
+                    if (jsonIdBean.has("domain")) {
                         this.domain = jsonIdBean.getString("domain");
                     }
-                    if(jsonIdBean.has("version")){
+                    if (jsonIdBean.has("version")) {
                         this.version = jsonIdBean.getString("version");
                     }
                 } catch (JSONException e) {

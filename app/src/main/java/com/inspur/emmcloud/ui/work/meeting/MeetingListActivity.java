@@ -91,7 +91,7 @@ public class MeetingListActivity extends BaseActivity implements
         if (NetUtils.isNetworkConnected(MeetingListActivity.this)) {
             loadingDlg.show(isShowDlg);
             apiService.getMeetings(7);
-        }else {
+        } else {
             swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -124,7 +124,7 @@ public class MeetingListActivity extends BaseActivity implements
 
         loadingDlg = new LoadingDialog(MeetingListActivity.this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(MeetingListActivity.this);
         relNullLayout = (LinearLayout) findViewById(R.id.meeting_list_out_layout);
         expandListView = (ExpandableListView) findViewById(R.id.expandable_list);
@@ -208,7 +208,7 @@ public class MeetingListActivity extends BaseActivity implements
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 onBackPressed();
                 break;
             case R.id.meeting_list_add_img:
@@ -255,147 +255,6 @@ public class MeetingListActivity extends BaseActivity implements
     }
 
     /**
-     * expandableListView适配器
-     */
-    public class MyAdapter extends BaseExpandableListAdapter {
-        @Override
-        public int getGroupCount() {
-            return meetingGroupList.size();
-        }
-
-        @Override
-        public int getChildrenCount(int groupPosition) {
-            if (meetingMap != null && meetingMap.get(meetingGroupList.get(groupPosition)) != null) {
-                return meetingMap.get(meetingGroupList.get(groupPosition))
-                        .size();
-            } else {
-                return 0;
-            }
-
-        }
-
-        @Override
-        public Object getGroup(int groupPosition) {
-            return null;
-        }
-
-        @Override
-        public Object getChild(int groupPosition, int childPosition) {
-            return null;
-        }
-
-        @Override
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
-
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return false;
-        }
-
-        @Override
-        public View getGroupView(final int groupPosition, boolean isExpanded,
-                                 View convertView, ViewGroup parent) {
-            ExpandableListView expandableListView = (ExpandableListView) parent;
-            expandableListView.expandGroup(groupPosition);
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(MeetingListActivity.this)
-                        .inflate(R.layout.meeting_list_group_item, null);
-                holder = new ViewHolder();
-                holder.dateText = (TextView) convertView
-                        .findViewById(R.id.date_text);
-                holder.weekText = (TextView) convertView
-                        .findViewById(R.id.week_text);
-                holder.todayText = (TextView) convertView
-                        .findViewById(R.id.today_text);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-            if(meetingMap != null) {
-                String from = meetingMap.get(meetingGroupList.get(groupPosition))
-                        .get(0).getFrom();
-                String week = getWeekDay(from);
-                Calendar calendar = TimeUtils.timeString2Calendar(from);
-                String date = TimeUtils.calendar2FormatString(
-                        MeetingListActivity.this, calendar,
-                        TimeUtils.FORMAT_YEAR_MONTH_DAY);
-                holder.dateText.setText(date);
-                holder.weekText.setText(week);
-                if (TimeUtils.isCalendarToday(TimeUtils.timeString2Calendar(from))) {
-                    holder.todayText.setText("(" + getString(R.string.today) + ")");
-                } else {
-                    holder.todayText.setText("");
-                }
-            }
-            return convertView;
-        }
-
-        @Override
-        public View getChildView(final int groupPosition,
-                                 final int childPosition, boolean isLastChild, View convertView,
-                                 ViewGroup parent) {
-            ExpandViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(MeetingListActivity.this)
-                        .inflate(R.layout.meeting_list_item, null);
-                holder = new ExpandViewHolder();
-                holder.meetingTopicText = (TextView) convertView
-                        .findViewById(R.id.meeting_list_topic_text);
-                holder.meetingNoticeText = (TextView) convertView
-                        .findViewById(R.id.meeting_list_notice_text);
-                holder.meetingDuration = (TextView) convertView
-                        .findViewById(R.id.meeting_list_duration_text);
-                holder.meetingRoom = (TextView) convertView
-                        .findViewById(R.id.meeting_list_room_text);
-                holder.meetingCardLineView = convertView
-                        .findViewById(R.id.meeting_card_line);
-                convertView.setTag(holder);
-            } else {
-                holder = (ExpandViewHolder) convertView.getTag();
-            }
-            Meeting meeting = meetingMap.get(
-                    meetingGroupList.get(groupPosition)).get(childPosition);
-            Room room = meeting.getRooms().get(0);
-            String meetingTime = "";
-            meetingTime = getTimeFormat(meeting);
-            holder.meetingTopicText.setText(meeting.getTopic());
-            holder.meetingDuration.setText(meetingTime);
-            holder.meetingRoom.setText(room.getRoomName() + " "
-                    + room.getName());
-            holder.meetingNoticeText.setText(meeting.getNotice());
-            convertView.setTag(R.id.meeting_list_date_img, childPosition);
-            convertView.setTag(R.id.meeting_list_duration_text, groupPosition);
-            return convertView;
-        }
-
-        class ViewHolder {
-            TextView dateText, weekText, todayText;
-        }
-
-        class ExpandViewHolder {
-            TextView meetingTopicText;
-            TextView meetingDuration;
-            TextView meetingRoom;
-            TextView meetingNoticeText;
-            View meetingCardLineView;
-        }
-
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
-        }
-
-    }
-
-    /**
      * 初始化数据
      *
      * @param getMeetingsResult
@@ -408,7 +267,7 @@ public class MeetingListActivity extends BaseActivity implements
             relNullLayout.setVisibility(View.GONE);
             meetingGroupList = new ArrayList<>(meetingMap.keySet());
             Collections.sort(meetingGroupList, new SortClass());
-        }else {
+        } else {
             relNullLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -509,9 +368,149 @@ public class MeetingListActivity extends BaseActivity implements
 
     @Override
     public void onRefresh() {
-            getMeetings(false);
+        getMeetings(false);
     }
 
+    /**
+     * expandableListView适配器
+     */
+    public class MyAdapter extends BaseExpandableListAdapter {
+        @Override
+        public int getGroupCount() {
+            return meetingGroupList.size();
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            if (meetingMap != null && meetingMap.get(meetingGroupList.get(groupPosition)) != null) {
+                return meetingMap.get(meetingGroupList.get(groupPosition))
+                        .size();
+            } else {
+                return 0;
+            }
+
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return null;
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            return null;
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(final int groupPosition, boolean isExpanded,
+                                 View convertView, ViewGroup parent) {
+            ExpandableListView expandableListView = (ExpandableListView) parent;
+            expandableListView.expandGroup(groupPosition);
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(MeetingListActivity.this)
+                        .inflate(R.layout.meeting_list_group_item, null);
+                holder = new ViewHolder();
+                holder.dateText = (TextView) convertView
+                        .findViewById(R.id.date_text);
+                holder.weekText = (TextView) convertView
+                        .findViewById(R.id.week_text);
+                holder.todayText = (TextView) convertView
+                        .findViewById(R.id.today_text);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            if (meetingMap != null) {
+                String from = meetingMap.get(meetingGroupList.get(groupPosition))
+                        .get(0).getFrom();
+                String week = getWeekDay(from);
+                Calendar calendar = TimeUtils.timeString2Calendar(from);
+                String date = TimeUtils.calendar2FormatString(
+                        MeetingListActivity.this, calendar,
+                        TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                holder.dateText.setText(date);
+                holder.weekText.setText(week);
+                if (TimeUtils.isCalendarToday(TimeUtils.timeString2Calendar(from))) {
+                    holder.todayText.setText("(" + getString(R.string.today) + ")");
+                } else {
+                    holder.todayText.setText("");
+                }
+            }
+            return convertView;
+        }
+
+        @Override
+        public View getChildView(final int groupPosition,
+                                 final int childPosition, boolean isLastChild, View convertView,
+                                 ViewGroup parent) {
+            ExpandViewHolder holder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(MeetingListActivity.this)
+                        .inflate(R.layout.meeting_list_item, null);
+                holder = new ExpandViewHolder();
+                holder.meetingTopicText = (TextView) convertView
+                        .findViewById(R.id.meeting_list_topic_text);
+                holder.meetingNoticeText = (TextView) convertView
+                        .findViewById(R.id.meeting_list_notice_text);
+                holder.meetingDuration = (TextView) convertView
+                        .findViewById(R.id.meeting_list_duration_text);
+                holder.meetingRoom = (TextView) convertView
+                        .findViewById(R.id.meeting_list_room_text);
+                holder.meetingCardLineView = convertView
+                        .findViewById(R.id.meeting_card_line);
+                convertView.setTag(holder);
+            } else {
+                holder = (ExpandViewHolder) convertView.getTag();
+            }
+            Meeting meeting = meetingMap.get(
+                    meetingGroupList.get(groupPosition)).get(childPosition);
+            Room room = meeting.getRooms().get(0);
+            String meetingTime = "";
+            meetingTime = getTimeFormat(meeting);
+            holder.meetingTopicText.setText(meeting.getTopic());
+            holder.meetingDuration.setText(meetingTime);
+            holder.meetingRoom.setText(room.getRoomName() + " "
+                    + room.getName());
+            holder.meetingNoticeText.setText(meeting.getNotice());
+            convertView.setTag(R.id.meeting_list_date_img, childPosition);
+            convertView.setTag(R.id.meeting_list_duration_text, groupPosition);
+            return convertView;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+
+        class ViewHolder {
+            TextView dateText, weekText, todayText;
+        }
+
+        class ExpandViewHolder {
+            TextView meetingTopicText;
+            TextView meetingDuration;
+            TextView meetingRoom;
+            TextView meetingNoticeText;
+            View meetingCardLineView;
+        }
+
+    }
 
     class WebService extends APIInterfaceInstance {
         @Override

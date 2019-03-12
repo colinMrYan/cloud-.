@@ -17,7 +17,7 @@ public class OCRService extends ImpPlugin {
     public void execute(String action, JSONObject paramsObject) {
         if ("startPhotoOCR".equals(action)) {
             startPhotoOCR(paramsObject);
-        }else{
+        } else {
             showCallIMPMethodErrorDlg();
         }
     }

@@ -90,6 +90,91 @@ public class AppDetailActivity extends BaseActivity {
     }
 
     /**
+     * 根据id获取app详情
+     */
+    private void getAppInfoById(String appId) {
+        if (NetUtils.isNetworkConnected(AppDetailActivity.this)) {
+            apiService.getAppInfo(appId);
+        }
+    }
+
+    /**
+     * 显示app状态的按钮
+     */
+    private void showAppStatusBtn(App app) {
+        if (app.getUseStatus() == 1) {
+            statusBtn.setText(getString(R.string.open));
+        } else if (app.getUseStatus() == 0) {
+            statusBtn.setText(getString(R.string.add));
+        } else {
+            statusBtn.setText(getString(R.string.update));
+        }
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
+            case R.id.app_status_btn:
+                if (!isFastDoubleClick()) {
+                    if (app.getUseStatus() == 0) {
+                        addApp(statusBtn, app.getAppID());
+                    } else if (app.getUseStatus() == 1) {
+                        if (app.getAppType() == 2) {
+                            new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
+                        } else {
+                            UriUtils.openApp(AppDetailActivity.this, app, "appcenter");
+                        }
+                        //发送到MyAPPFragment.updateCommonlyUseAppList
+                        EventBus.getDefault().post(app);
+                    }
+                }
+                break;
+
+        }
+    }
+
+    /**
+     * 判断是否连点
+     *
+     * @return
+     */
+    private boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        long timeD = time - lastOnItemClickTime;
+        if (0 < timeD && timeD < 800) {
+            return true;
+        }
+        lastOnItemClickTime = time;
+        return false;
+
+    }
+
+    /**
+     * 封装网络请求的方法
+     *
+     * @param statusBtn
+     * @param appID
+     */
+    private void addApp(Button statusBtn, String appID) {
+        if (NetUtils.isNetworkConnected(AppDetailActivity.this)) {
+            statusBtn.setText(getString(R.string.adding));
+            loadingDlg.show();
+            apiService.addApp(appID);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public interface OnAppDetailImageItemClickListener {
+        void onAppDetailImageItemClick(View view, int position);
+    }
+
+    /**
      * 推荐应用的Adapter
      */
     public class AppDetailImageAdapter extends RecyclerView.Adapter<AppDetailImageAdapter.AppDetailImageViewHolder> {
@@ -139,86 +224,6 @@ public class AppDetailActivity extends BaseActivity {
                 super(itemView);
             }
         }
-    }
-
-    public interface OnAppDetailImageItemClickListener {
-        void onAppDetailImageItemClick(View view, int position);
-    }
-
-    /**
-     * 根据id获取app详情
-     */
-    private void getAppInfoById(String appId) {
-        if (NetUtils.isNetworkConnected(AppDetailActivity.this)) {
-            apiService.getAppInfo(appId);
-        }
-    }
-
-    /**
-     * 显示app状态的按钮
-     */
-    private void showAppStatusBtn(App app) {
-        if (app.getUseStatus() == 1) {
-            statusBtn.setText(getString(R.string.open));
-        } else if (app.getUseStatus() == 0) {
-            statusBtn.setText(getString(R.string.add));
-        } else {
-            statusBtn.setText(getString(R.string.update));
-        }
-    }
-
-    public void onClick(View v) {
-        if (!isFastDoubleClick()){
-            if (app.getUseStatus() == 0) {
-                addApp(statusBtn, app.getAppID());
-            } else if (app.getUseStatus() == 1) {
-                if (app.getAppType() == 2) {
-                    new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
-                } else {
-                    UriUtils.openApp(AppDetailActivity.this, app,"appcenter");
-                }
-                //发送到MyAPPFragment.updateCommonlyUseAppList
-                EventBus.getDefault().post(app);
-            }
-        }
-    }
-
-    /**
-     * 判断是否连点
-     * @return
-     */
-    private boolean isFastDoubleClick() {
-        long time = System.currentTimeMillis();
-        long timeD = time - lastOnItemClickTime;
-        if (0 < timeD && timeD < 800) {
-            return true;
-        }
-        lastOnItemClickTime = time;
-        return false;
-
-    }
-
-    /**
-     * 封装网络请求的方法
-     *
-     * @param statusBtn
-     * @param appID
-     */
-    private void addApp(Button statusBtn, String appID) {
-        if (NetUtils.isNetworkConnected(AppDetailActivity.this)) {
-            statusBtn.setText(getString(R.string.adding));
-            loadingDlg.show();
-            apiService.addApp(appID);
-        }
-    }
-
-    public void onBack(View v) {
-        finish();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public class WebService extends APIInterfaceInstance {

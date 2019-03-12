@@ -8,8 +8,9 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 
 public class UploadMDMInfoResult {
     private int doubleValidation = -1;
-    public UploadMDMInfoResult(String response){
-        doubleValidation = JSONUtils.getInt(response,"doubleValidation",-1);
+
+    public UploadMDMInfoResult(String response) {
+        doubleValidation = JSONUtils.getInt(response, "doubleValidation", -1);
     }
 
     public int getDoubleValidation() {

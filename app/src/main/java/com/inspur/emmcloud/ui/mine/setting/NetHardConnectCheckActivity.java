@@ -20,9 +20,9 @@ public class NetHardConnectCheckActivity extends BaseActivity {
         setContentView(R.layout.activity_net_hard_connect_check);
     }
 
-    public void onClick(View v){
+    public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_back_net_detail:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.tv_show_system_hard_setting:

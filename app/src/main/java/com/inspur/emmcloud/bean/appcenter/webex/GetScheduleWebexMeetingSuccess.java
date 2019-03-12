@@ -5,7 +5,7 @@ package com.inspur.emmcloud.bean.appcenter.webex;
  */
 
 public class GetScheduleWebexMeetingSuccess {
-    public GetScheduleWebexMeetingSuccess(String response){
+    public GetScheduleWebexMeetingSuccess(String response) {
 
     }
 }

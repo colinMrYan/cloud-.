@@ -26,7 +26,7 @@ public class UriUtils {
             case 1:
                 try {
                     Intent intent = Intent.parseUri(uri, Intent.URI_INTENT_SCHEME);
-                    intent.putExtra("installUri",app.getInstallUri());
+                    intent.putExtra("installUri", app.getInstallUri());
                     intent.setComponent(null);
                     activity.startActivity(intent);
                 } catch (Exception e) {
@@ -41,9 +41,9 @@ public class UriUtils {
             case 3:
             case 4:
             case 6:
-                if(app.getAppID().equals("456166a362436750d74bfeaef997693d")){
-                    new AppCenterApprovalUtils().openApprovalApp(activity,app);
-                } else if(app.getIsSSO() == 1){
+                if (app.getAppID().equals("456166a362436750d74bfeaef997693d")) {
+                    new AppCenterApprovalUtils().openApprovalApp(activity, app);
+                } else if (app.getIsSSO() == 1) {
                     String url = APIUri.getAppRealUrl(app.getAppID());
                     if (NetUtils.isNetworkConnected(activity)) {
                         new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
@@ -59,7 +59,7 @@ public class UriUtils {
                         }).getWebAppRealUrl(url);
                     }
 
-                }else {
+                } else {
                     openWebApp(activity, uri, app);
                 }
                 break;
@@ -74,16 +74,17 @@ public class UriUtils {
                         R.string.app_not_support_app_type);
                 break;
         }
-        saveAPPPVCollect(activity, app,appCollectType);
+        saveAPPPVCollect(activity, app, appCollectType);
     }
 
     /**
      * 应用pv收集
+     *
      * @param activity
      * @param app
      */
-    private static void saveAPPPVCollect(Activity activity, App app,String appCollectType) {
-        String appID = (app.getAppID().equals("inspur_news_esg"))?"news":app.getAppID();  //新闻应用跟普通应用区分开
+    private static void saveAPPPVCollect(Activity activity, App app, String appCollectType) {
+        String appID = (app.getAppID().equals("inspur_news_esg")) ? "news" : app.getAppID();  //新闻应用跟普通应用区分开
         PVCollectModel pvCollectModel = new PVCollectModel(appID, appCollectType);
         PVCollectModelCacheUtils.saveCollectModel(activity, pvCollectModel);
     }
@@ -99,7 +100,7 @@ public class UriUtils {
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra(Constant.APP_WEB_URI, uri);
-        intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER,(app.getAppType() == 3 || (app.getAppType() == 6 && app.getUserHeader() == 1))?true:false);
+        intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, (app.getAppType() == 3 || (app.getAppType() == 6 && app.getUserHeader() == 1)) ? true : false);
         intent.putExtra(Constant.WEB_FRAGMENT_APP_NAME, app.getAppName());
         intent.putExtra("is_zoomable", app.getIsZoomable());
         intent.putExtra("help_url", app.getHelpUrl());
@@ -115,7 +116,7 @@ public class UriUtils {
      * @param uri
      */
     public static void openUrl(Activity context, String uri) {
-        openUrl(context,uri,"  ");
+        openUrl(context, uri, "  ");
     }
 
     /**
@@ -124,7 +125,7 @@ public class UriUtils {
      * @param context
      * @param uri
      */
-    public static void openUrl(Activity context, String uri,String appName) {
+    public static void openUrl(Activity context, String uri, String appName) {
         Bundle bundle = new Bundle();
         bundle.putString("uri", uri);
         bundle.putString("appName", appName);

@@ -18,8 +18,8 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIConversation;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
@@ -33,7 +33,7 @@ import java.util.List;
  */
 
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ViewHolder> {
-    private  List<UIConversation> uiConversationList;
+    private List<UIConversation> uiConversationList;
     private AdapterListener adapterListener;
     private Context context;
 
@@ -42,19 +42,20 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     //Type
     private int TYPE_NORMAL = 1000;
     private int TYPE_HEADER = 1001;
-    public ConversationAdapter(Context context,List<UIConversation> uiConversationList){
+
+    public ConversationAdapter(Context context, List<UIConversation> uiConversationList) {
         this.uiConversationList = uiConversationList;
         this.context = context;
-        if (adapterListener != null){
+        if (adapterListener != null) {
             adapterListener.onDataChange();
         }
     }
 
-    public void setData(List<UIConversation> uiConversationList){
-        synchronized (this){
+    public void setData(List<UIConversation> uiConversationList) {
+        synchronized (this) {
             this.uiConversationList.clear();
             this.uiConversationList.addAll(uiConversationList);
-            if (adapterListener != null){
+            if (adapterListener != null) {
                 adapterListener.onDataChange();
             }
         }
@@ -63,8 +64,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-         if (viewType==TYPE_HEADER) {
-            return  new ViewHolder(VIEW_HEADER,adapterListener);
+        if (viewType == TYPE_HEADER) {
+            return new ViewHolder(VIEW_HEADER, adapterListener);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.msg_item_view, parent, false);
             ViewHolder holder = new ViewHolder(view, adapterListener);
@@ -82,44 +83,46 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     /**
      * 网络异常提示
-     * @param NetState  当前网络状态
-     * */
-    public void setNetExceptionView(Boolean NetState){
-        if(false==NetState&&!haveHeaderView()){
-           addHeaderView(LayoutInflater.from(context).inflate(R.layout.recycleview_header_item,null));
-        }else if(true==NetState&&haveHeaderView()){
+     *
+     * @param NetState 当前网络状态
+     */
+    public void setNetExceptionView(Boolean NetState) {
+        if (false == NetState && !haveHeaderView()) {
+            addHeaderView(LayoutInflater.from(context).inflate(R.layout.recycleview_header_item, null));
+        } else if (true == NetState && haveHeaderView()) {
             deleteHeaderView();
         }
     }
 
     /**
      * 添加异常headerView
-     * @param headerView  要添加的View
-     * */
+     *
+     * @param headerView 要添加的View
+     */
     private void addHeaderView(View headerView) {
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            headerView.setLayoutParams(params);
-            VIEW_HEADER = headerView;
-            notifyItemInserted(0);
-            mRecyclerView.getLayoutManager().scrollToPosition(0);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        headerView.setLayoutParams(params);
+        VIEW_HEADER = headerView;
+        notifyItemInserted(0);
+        mRecyclerView.getLayoutManager().scrollToPosition(0);
     }
 
     /**
      * 删除HeaderView
-     * */
+     */
     public void deleteHeaderView() {
-        if(haveHeaderView()){
+        if (haveHeaderView()) {
             notifyItemRemoved(0);
-            VIEW_HEADER=null;
+            VIEW_HEADER = null;
         }
     }
 
     /**
      * 更新单个列表数据
-     * */
-    public void notifyRealItemChanged(int position){
-        if(haveHeaderView()) {
-            this.notifyItemChanged(position+1);
+     */
+    public void notifyRealItemChanged(int position) {
+        if (haveHeaderView()) {
+            this.notifyItemChanged(position + 1);
         } else {
             this.notifyItemChanged(position);
         }
@@ -127,10 +130,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     /**
      * 删除单个列表数据
-     * */
+     */
     public void notifyRealItemRemoved(int position) {
-        if(haveHeaderView()){
-            this.notifyItemRemoved(position+1);
+        if (haveHeaderView()) {
+            this.notifyItemRemoved(position + 1);
         } else {
             this.notifyItemRemoved(position);
         }
@@ -166,32 +169,33 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             holder.dndImg.setVisibility(uiConversation.getConversation().isDnd() ? View.VISIBLE : View.GONE);
             holder.mainLayout.setBackgroundResource(uiConversation.getConversation().isStick() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
             boolean isConversationTypeGroup = uiConversation.getConversation().getType().equals(Conversation.TYPE_GROUP);
-            if (isConversationTypeGroup){
+            if (isConversationTypeGroup) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH + "/" + MyApplication.getInstance().getTanent() + uiConversation.getId() + "_100.png1");
                 holder.photoImg.setTag("");
                 if (file.exists()) {
                     holder.photoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
-                }else {
+                } else {
                     holder.photoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
-            }else {
-                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup?R.drawable.icon_channel_group_default:R.drawable.icon_person_default);
+            } else {
+                ImageDisplayUtils.getInstance().displayImageByTag(holder.photoImg, uiConversation.getIcon(), isConversationTypeGroup ? R.drawable.icon_channel_group_default : R.drawable.icon_person_default);
             }
-            setConversationLastMessageSendStatus(holder,uiConversation);
-            setConversationContent(holder,uiConversation);
-            setConversationUnreadState(holder,uiConversation);
+            setConversationLastMessageSendStatus(holder, uiConversation);
+            setConversationContent(holder, uiConversation);
+            setConversationUnreadState(holder, uiConversation);
         }
     }
 
     /**
      * 设置频道中最后一条消息的消息状态
+     *
      * @param holder
      * @param uiConversation
      */
     private void setConversationLastMessageSendStatus(ViewHolder holder, UIConversation uiConversation) {
         List<Message> messageList = uiConversation.getMessageList();
-        if(messageList != null && messageList.size() > 0){
-            switch (messageList.get(messageList.size() - 1).getSendStatus()){
+        if (messageList != null && messageList.size() > 0) {
+            switch (messageList.get(messageList.size() - 1).getSendStatus()) {
                 case Message.MESSAGE_SEND_ING:
                     holder.sendStatusImg.setVisibility(View.VISIBLE);
                     holder.sendStatusImg.setImageResource(R.drawable.icon_message_sending);
@@ -203,45 +207,47 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 default:
                     holder.sendStatusImg.setVisibility(View.GONE);
             }
-        }else{
+        } else {
             holder.sendStatusImg.setVisibility(View.GONE);
         }
     }
 
     /**
      * 设置会话内容
+     *
      * @param holder
      * @param uiConversation
      */
-    private void setConversationContent(ViewHolder holder, UIConversation uiConversation){
+    private void setConversationContent(ViewHolder holder, UIConversation uiConversation) {
         String chatDrafts = uiConversation.getConversation().getDraft();
-        if (!StringUtils.isBlank(chatDrafts)){
-            String content = "<font color='#FF0000'>"+context.getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
-            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
-                holder.contentText.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY, null, null));
-            }else {
+        if (!StringUtils.isBlank(chatDrafts)) {
+            String content = "<font color='#FF0000'>" + context.getString(R.string.message_type_drafts) + "</font>" + chatDrafts;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.contentText.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY, null, null));
+            } else {
                 holder.contentText.setText(Html.fromHtml(content));
             }
-        }else {
+        } else {
             holder.contentText.setText(uiConversation.getContent());
         }
-        TransHtmlToTextUtils.stripUnderlines(holder.contentText,R.color.msg_content_color);
+        TransHtmlToTextUtils.stripUnderlines(holder.contentText, R.color.msg_content_color);
     }
 
 
     /**
      * 设置会话已读未读状态
+     *
      * @param holder
      * @param uiConversation
      */
-    private void setConversationUnreadState(ViewHolder holder, UIConversation uiConversation){
-        holder.unreadLayout.setVisibility(uiConversation.getUnReadCount()>0 ? View.VISIBLE : View.INVISIBLE);
-        if (uiConversation.getUnReadCount()>0) {
+    private void setConversationUnreadState(ViewHolder holder, UIConversation uiConversation) {
+        holder.unreadLayout.setVisibility(uiConversation.getUnReadCount() > 0 ? View.VISIBLE : View.INVISIBLE);
+        if (uiConversation.getUnReadCount() > 0) {
             holder.unreadText.setText(uiConversation.getUnReadCount() > 99 ? "99+" : "" + uiConversation.getUnReadCount());
         }
     }
 
-    public void setAdapterListener(AdapterListener adapterListener){
+    public void setAdapterListener(AdapterListener adapterListener) {
         this.adapterListener = adapterListener;
 
     }
@@ -255,7 +261,20 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         return count;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
+    /**
+     * 创建一个回调接口
+     */
+    public interface AdapterListener {
+        void onItemClick(View view, int position);
+
+        boolean onItemLongClick(View view, int position);
+
+        void onDataChange();
+
+        void onNetExceptionWightClick();
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private RelativeLayout mainLayout;
         private CircleTextImageView photoImg;
         private ImageView sendStatusImg;
@@ -266,9 +285,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private TextView unreadText;
         private ImageView dndImg;
         private AdapterListener adapterListener;
-        public ViewHolder(View convertView,AdapterListener adapterListener) {
+
+        public ViewHolder(View convertView, AdapterListener adapterListener) {
             super(convertView);
-            this.adapterListener=adapterListener;
+            this.adapterListener = adapterListener;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
             mainLayout = (RelativeLayout) convertView
@@ -292,50 +312,39 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
 
 
-
         @Override
         public void onClick(View v) {
-            if (adapterListener != null){
-                if(haveHeaderView()) {
-                    if(0==getAdapterPosition()) {
-                    adapterListener.onNetExceptionWightClick();   //点击进入新的Activity
-                    }else {
-                        adapterListener.onItemClick(v,getAdapterPosition()-1);
+            if (adapterListener != null) {
+                if (haveHeaderView()) {
+                    if (0 == getAdapterPosition()) {
+                        adapterListener.onNetExceptionWightClick();   //点击进入新的Activity
+                    } else {
+                        adapterListener.onItemClick(v, getAdapterPosition() - 1);
                     }
                 } else {
-                    adapterListener.onItemClick(v,getAdapterPosition());
+                    adapterListener.onItemClick(v, getAdapterPosition());
                 }
             }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            if (adapterListener != null){
-                if(haveHeaderView()) {
-                    if(0==getAdapterPosition()) {
+            if (adapterListener != null) {
+                if (haveHeaderView()) {
+                    if (0 == getAdapterPosition()) {
                         LogUtils.LbcDebug("onLongClick");
                         return true;
                     } else {
                         //网络异常状态
-                        return adapterListener.onItemLongClick(v,getAdapterPosition()-1);
+                        return adapterListener.onItemLongClick(v, getAdapterPosition() - 1);
                     }
                 } else {
-                    return adapterListener.onItemLongClick(v,getAdapterPosition());
+                    return adapterListener.onItemLongClick(v, getAdapterPosition());
                 }
 
             }
             return false;
         }
-    }
-
-    /**
-     * 创建一个回调接口
-     */
-    public interface AdapterListener {
-        void onItemClick(View view, int position);
-        boolean onItemLongClick(View view, int position);
-        void onDataChange();
-        void onNetExceptionWightClick();
     }
 
 }

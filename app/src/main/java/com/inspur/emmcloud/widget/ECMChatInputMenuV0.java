@@ -65,7 +65,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     private static final int CHOOSE_FILE = 4;
     private static final int MENTIONS_RESULT = 5;
     private static final int TOPDELY_TIMES = 17;
-    private static final long MENTIONS_BASE_TIME= 1515513600000L;
+    private static final long MENTIONS_BASE_TIME = 1515513600000L;
 
     @ViewInject(R.id.input_edit)
     private ChatInputEdit inputEdit;
@@ -102,6 +102,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private int lastVolumeLevel = 0;
     private int delayTimes = 0;
+
     public ECMChatInputMenuV0(Context context) {
         this(context, null);
         // TODO Auto-generated constructor stub
@@ -144,7 +145,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
-                if (isContentBlank){
+                if (isContentBlank) {
                     chatInputMenuListener.onChatDraftsClear();
                 }
                 sendMsgBtn.setVisibility(isContentBlank ? (inputs.equals("1")) ? VISIBLE : GONE : VISIBLE);
@@ -193,7 +194,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
             InsertModel insertModel;
-            insertModel= new InsertModel("@", uid, name);
+            insertModel = new InsertModel("@", uid, name);
             inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
     }
@@ -220,12 +221,12 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
-                    R.drawable.ic_chat_input_add_mention,R.drawable.ic_chat_input_add_voice_call};
+                    R.drawable.ic_chat_input_add_mention, R.drawable.ic_chat_input_add_voice_call};
             String[] functionNameArray = {getContext().getString(R.string.album),
                     getContext().getString(R.string.take_photo),
                     getContext().getString(R.string.file),
-                    "@",getContext().getString(R.string.voice_call)};
-            String[] functionActionArray = {"gallery", "camera", "file", "mention","voice_call"};
+                    getContext().getString(R.string.mention), getContext().getString(R.string.voice_call)};
+            String[] functionActionArray = {"gallery", "camera", "file", "mention", "voice_call"};
             String binaryString = "-1";
             if (!StringUtils.isBlank(inputs)) {
                 try {
@@ -292,7 +293,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                             break;
                         case "voice_call":
                             //语音通话
-                            if(NetUtils.isNetworkConnected(MyApplication.getInstance())){
+                            if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                                 PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getContext(), Permissions.RECORD_AUDIO, new PermissionRequestCallback() {
                                     @Override
                                     public void onPermissionRequestSuccess(List<String> permissions) {
@@ -301,7 +302,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
                                     @Override
                                     public void onPermissionRequestFail(List<String> permissions) {
-                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(),permissions));
+                                        ToastUtils.show(getContext(), PermissionRequestManagerUtils.getInstance().getPermissionToast(getContext(), permissions));
                                     }
                                 });
                             }
@@ -317,14 +318,14 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 
     private void startVoiceCall() {
         //语音通话
-        if(!canMentions){
+        if (!canMentions) {
             chatInputMenuListener.onVoiceCommucaiton();
-        }else{
-            AppUtils.openChannelMemeberSelect((Activity)getContext(),cid,6);
+        } else {
+            AppUtils.openChannelMemeberSelect((Activity) getContext(), cid, 6);
         }
     }
 
-    public void setChatDrafts(String drafts){
+    public void setChatDrafts(String drafts) {
         inputEdit.setText(drafts);
     }
 
@@ -356,7 +357,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         waterWaveProgress.setShowNumerical(false);
         waterWaveProgress.setWaveSpeed(0.02F);
         waterWaveProgress.setAmplitude(5.0F);
-        lastVolumeLevel=0;
+        lastVolumeLevel = 0;
         voiceImgBtn.setImageResource(R.drawable.ic_chat_input_voice_v0);
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
@@ -374,7 +375,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                 if (!StringUtils.isBlank(results)) {
                     if (isSpecialUser) {
                         inputEdit.clearInsertModelList();
-                        chatInputMenuListener.onSendMsg(results, null, null,null);
+                        chatInputMenuListener.onSendMsg(results, null, null, null);
                     } else {
                         int index = inputEdit.getSelectionStart();
                         Editable editable = inputEdit.getText();
@@ -398,8 +399,8 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             @Override
             public void onVoiceResultError(VoiceResult errorResult) {
                 stopVoiceInput();
-                if(errorResult.getXunFeiPermissionError() == Voice2StringMessageUtils.MSG_XUNFEI_PERMISSION_ERROR){
-                    ToastUtils.show(MyApplication.getInstance(),getContext().getString(R.string.voice_audio_record_unavailiable));
+                if (errorResult.getXunFeiPermissionError() == Voice2StringMessageUtils.MSG_XUNFEI_PERMISSION_ERROR) {
+                    ToastUtils.show(MyApplication.getInstance(), getContext().getString(R.string.voice_audio_record_unavailiable));
                 }
             }
         });
@@ -421,7 +422,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                 } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
                     InputMethodUtils.hide((Activity) getContext());
                 }
-                lastVolumeLevel=0;
+                lastVolumeLevel = 0;
                 waterWaveProgress.setProgress(0);
                 mediaPlayerUtils.playVoiceOn();
                 voice2StringMessageUtils.startVoiceListening();
@@ -436,11 +437,11 @@ public class ECMChatInputMenuV0 extends LinearLayout {
                 break;
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    List<String> urlList= null;
+                    List<String> urlList = null;
                     String content = inputEdit.getRichContent(true);
-                    Map<String,String> mentionsMap = null;
+                    Map<String, String> mentionsMap = null;
                     urlList = getContentUrlList(inputEdit.getText().toString());
-                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
+                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
                     inputEdit.clearInsertModelList();
                     inputEdit.setText("");
                 }
@@ -542,6 +543,19 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         }
     }
 
+    public void showSoftInput(boolean isShow) {
+        if (isShow) {
+            InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
+        } else {
+            InputMethodUtils.hide((Activity) getContext());
+        }
+
+    }
+
+    public boolean isAddMenuLayoutShow() {
+        return addMenuLayout.isShown();
+    }
+
     public void setAddMenuLayoutShow(boolean isShow) {
         if (isShow) {
             int softInputHeight = InputMethodUtils.getSupportSoftInputHeight((Activity) getContext());
@@ -558,20 +572,6 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         }
 
     }
-
-    public void showSoftInput(boolean isShow) {
-        if (isShow) {
-            InputMethodUtils.display((Activity) getContext(), inputEdit, 0);
-        } else {
-            InputMethodUtils.hide((Activity) getContext());
-        }
-
-    }
-
-    public boolean isAddMenuLayoutShow() {
-        return addMenuLayout.isShown();
-    }
-
 
     public void hideAddMenuLayout() {
         addMenuLayout.setVisibility(View.GONE);
@@ -593,32 +593,33 @@ public class ECMChatInputMenuV0 extends LinearLayout {
      * 功能描述：采用十级，新采样数据比当前数据小时，
      * 延迟预定周期以一定速度下降，
      * 下降过程中新采样数据大于下降当前值时继续上升
+     *
      * @param volume
      */
     public void setVoiceImageViewLevel(int volume) {
 
         int currentLevel = 0;
-        if(0==volume) {
-            currentLevel=0;
+        if (0 == volume) {
+            currentLevel = 0;
         } else {
-            currentLevel = volume/3+1;
+            currentLevel = volume / 3 + 1;
         }
-        int showLevel=(currentLevel+lastVolumeLevel)/2;
-        if(currentLevel>=lastVolumeLevel) {
-                delayTimes=TOPDELY_TIMES ;
-            if((showLevel<4)&&(showLevel>0)) {
+        int showLevel = (currentLevel + lastVolumeLevel) / 2;
+        if (currentLevel >= lastVolumeLevel) {
+            delayTimes = TOPDELY_TIMES;
+            if ((showLevel < 4) && (showLevel > 0)) {
                 waterWaveProgress.setProgress(4);
             }
             waterWaveProgress.setProgress(showLevel);
-            lastVolumeLevel=currentLevel;
+            lastVolumeLevel = currentLevel;
         } else {
             //判断延时时间
-            if (delayTimes>0) {
-                delayTimes=delayTimes-1;
+            if (delayTimes > 0) {
+                delayTimes = delayTimes - 1;
             } else {
-                lastVolumeLevel = lastVolumeLevel-1;
+                lastVolumeLevel = lastVolumeLevel - 1;
             }
-            waterWaveProgress.setProgress( lastVolumeLevel);
+            waterWaveProgress.setProgress(lastVolumeLevel);
         }
     }
 
@@ -631,7 +632,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         mediaPlayerUtils.playVoiceOff();
     }
 
-    public String getInputContent(){
+    public String getInputContent() {
         return inputEdit.getText().toString().trim();
     }
 

@@ -20,13 +20,14 @@ import java.util.List;
  * Created by yufuchang on 2018/8/8.
  */
 
-public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGroupHolder>{
+public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGroupHolder> {
 
     private Context context;
     private LayoutInflater inflater;
     private List<App> appList = new ArrayList<>();
     private AppGroupActivity.GroupAppListClickListener listener;
-    public AppGroupAdapter(Context context,List<App> appList){
+
+    public AppGroupAdapter(Context context, List<App> appList) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.appList = appList;
@@ -34,7 +35,7 @@ public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGro
 
     @Override
     public AppGroupHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.my_app_group_item,null);
+        View view = inflater.inflate(R.layout.my_app_group_item, null);
         AppGroupHolder holder = new AppGroupHolder(view);
         holder.imageView = (ImageView) view
                 .findViewById(R.id.img_group_icon);
@@ -44,7 +45,7 @@ public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGro
 
     @Override
     public void onBindViewHolder(AppGroupHolder holder, final int position) {
-        ImageDisplayUtils.getInstance().displayImage(holder.imageView,appList.get(position).getAppIcon(),R.drawable.ic_app_default);
+        ImageDisplayUtils.getInstance().displayImage(holder.imageView, appList.get(position).getAppIcon(), R.drawable.ic_app_default);
         holder.textView.setText(appList.get(position).getAppName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,9 +57,10 @@ public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGro
 
     /**
      * 设置监听器
+     *
      * @param l
      */
-    public void setGroupListener(AppGroupActivity.GroupAppListClickListener l){
+    public void setGroupListener(AppGroupActivity.GroupAppListClickListener l) {
         this.listener = l;
     }
 
@@ -67,10 +69,11 @@ public class AppGroupAdapter extends RecyclerView.Adapter<AppGroupAdapter.AppGro
         return appList.size();
     }
 
-    class AppGroupHolder extends RecyclerView.ViewHolder{
+    class AppGroupHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
         private TextView textView;
         private View itemView;
+
         public AppGroupHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;

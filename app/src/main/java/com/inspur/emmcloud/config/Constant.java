@@ -48,9 +48,18 @@ public class Constant {
 
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
-    public static final String PREF_APP_THEME = "app_theme_v1";
+    public static final String PREF_APP_THEME = "app_theme_num_v1";
+    public static final String PREF_LOGIN_USERNAME = "userName";
+    public static final String PREF_LOGIN_PASSWORD = "password";
+    public static final String PREF_CLOUD_IDM = "cloud_idm";
+
+    public static final String PREF_APP_PREVIOUS_VERSION = "previousVersion";
+    public static final String PREF_LOGIN_ENTERPRISE_NAME = "login_enterprise_name";
+    public static final String PREF_LOGIN_HAVE_SET_PASSWORD = "hasPassword";
     public static final String PREF_MAIL_ACCOUNT = "mail_account";
     public static final String PREF_MAIL_PASSWORD = "mail_password";
+    public static final String PREF_MY_INFO_SHOW_CONFIG = "user_profiles";
+    public static final String PREF_MINE_USER_MENUS = "mine_user_menus";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -84,11 +93,11 @@ public class Constant {
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS = "tag_update_channel_focus";
     public static final String EVENTBUS_TAG_UPDATE_CHANNEL_DND = "tag_update_channel_dnd";
     public static final String EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE = "tag_current_channel_offline_message";
-    public static final String EVENTBUS_TAG__NET_STATE_CHANGE = "tag_net_state_change";
-    public static final String EVENTBUS_TAG__NET_EXCEPTION_HINT = "tag_net_exception_hint";
-    public static final String EVENTBUS_TAG__NET_PING_CONNECTION = "tag_net_ping_connection";
-    public static final String EVENTBUS_TAG__NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
-    public static final String EVENTBUS_TAG__NET_HTTP_POST_CONNECTION = "tag_net_http_post_connection";
+    public static final String EVENTBUS_TAG_NET_STATE_CHANGE = "tag_net_state_change";
+    public static final String EVENTBUS_TAG_NET_EXCEPTION_HINT = "tag_net_exception_hint";
+    public static final String EVENTBUS_TAG_NET_PING_CONNECTION = "tag_net_ping_connection";
+    public static final String EVENTBUS_TAG_NET_PORTAL_HTTP_POST = "tag_net_portal_http_post";
+    public static final String EVENTBUS_TAG_NET_HTTP_POST_CONNECTION = "tag_net_http_post_connection";
     public static final String EVENTBUS_TAG_COMMENT_MESSAGE = "tag_comment_message";
     public static final String EVENTBUS_TAG_GET_MAIL_BY_FOLDER = "tag_get_mail_by_folder";
     public static final String EVENTBUS_TAG_MAIL_ACCOUNT_DELETE = "tag_mail_account_delelte";
@@ -132,7 +141,7 @@ public class Constant {
     public static final String INSPUR_HOST_URL = ".inspur.com";
     public static final String INSPURONLINE_HOST_URL = ".inspuronline.com";
 
-    public static final String BATTERY_WHITE_LIST_STATE="battery_white_list_state";
+    public static final String BATTERY_WHITE_LIST_STATE = "battery_white_list_state";
 
     //推送相关配置
     public static final String PUSH_FLAG = "pushFlag";
@@ -149,7 +158,7 @@ public class Constant {
     public static final int APP_EXCEPTION_LEVEL = 4;
 
     //邮箱
-    public static final String MAIL_ENCRYPT_IV="inspurcloud+2019";
+    public static final String MAIL_ENCRYPT_IV = "inspurcloud+2019";
 
     public static final String SF_OPEN_URL = "open-url";
 

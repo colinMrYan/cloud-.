@@ -86,16 +86,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
-    private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     protected Volume volume;
-    private MyAppAPIService apiServiceBase;
     protected String currentDirAbsolutePath;//当前文件夹路径
-    private Dialog fileRenameDlg, createFolderDlg;
     protected String sortType = "sort_by_name_up";
     protected String fileFilterType = "";  //显示的文件类型
     protected boolean isShowFileUploading = false;  //是否显示正在上传的文件
     protected GetVolumeFileListResult getVolumeFileListResult;
     protected String title = "";
+    private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
+    private MyAppAPIService apiServiceBase;
+    private Dialog fileRenameDlg, createFolderDlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +122,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 初始化RecyclerView
      */
     private void initRecycleView() {
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg), ContextCompat.getColor(getApplicationContext(), R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue), ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(this);
         fileRecycleView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new VolumeFileAdapter(this, volumeFileList);
@@ -145,8 +145,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(getString(R.string.rename), isVolumeFileWriteable)
                 .addItem(getString(R.string.move_to), isVolumeFileWriteable)
                 .addItem(getString(R.string.copy))
-                .addItem(getString(R.string.clouddriver_file_permission_manager),isVolumeFileWriteable)
-               // .addItem("分享", !isVolumeFileDirectory)
+                .addItem(getString(R.string.clouddriver_file_permission_manager), isVolumeFileWriteable)
+                // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
@@ -188,9 +188,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     private void startVolumeFilePermissionManager(VolumeFile volumeFile) {
         Bundle bundle = new Bundle();
-        bundle.putString("volume",volumeFile.getVolume());
-        bundle.putString("currentDirAbsolutePath",currentDirAbsolutePath+volumeFile.getName());
-        IntentUtils.startActivity(VolumeFileBaseActivity.this,VolumeFilePermissionManagerActivity.class,bundle);
+        bundle.putString("volume", volumeFile.getVolume());
+        bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
+        IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFilePermissionManagerActivity.class, bundle);
     }
 
 

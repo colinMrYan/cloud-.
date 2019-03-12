@@ -1,8 +1,10 @@
 package com.inspur.emmcloud.widget.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
@@ -114,6 +116,9 @@ public class ActionSheetDialog extends Dialog {
         private TextView mTitleTv;
         private OnSheetItemClickListener mOnSheetItemClickListener;
         private DialogInterface.OnDismissListener mOnActionSheetDlgDismissListener;
+        private int titleColor = Color.parseColor("#333333");
+        private int itemColor = Color.parseColor("#333333");
+        private int cancelColor = Color.parseColor("#36A5F6");
 
         public ActionListSheetBuilder(Context context) {
             mContext = context;
@@ -125,7 +130,6 @@ public class ActionSheetDialog extends Dialog {
         /**
          * 设置要被选中的 Item 的下标。
          * <p>
-         * 注意:仅当 {@link #mNeedRightMark} 为 true 时才有效。
          */
         public ActionListSheetBuilder setCheckedIndex(int checkedIndex) {
             mCheckedIndex = checkedIndex;
@@ -140,8 +144,8 @@ public class ActionSheetDialog extends Dialog {
             return this;
         }
 
-        public ActionListSheetBuilder addItem(String textAndTag,boolean isShow){
-                mItems.add(new ActionSheetListItemData(textAndTag, textAndTag,isShow));
+        public ActionListSheetBuilder addItem(String textAndTag, boolean isShow) {
+            mItems.add(new ActionSheetListItemData(textAndTag, textAndTag, isShow));
             return this;
         }
 
@@ -172,6 +176,33 @@ public class ActionSheetDialog extends Dialog {
             return this;
         }
 
+        /**
+         * 设置标题颜色
+         * @param titleColor
+         */
+        public ActionListSheetBuilder setTitleColor(int titleColor){
+            this.titleColor = titleColor;
+            return this;
+        }
+
+        /**
+         * 设置条目颜色
+         * @param itemColor
+         */
+        public ActionListSheetBuilder setItemColor(int itemColor){
+            this.itemColor = itemColor;
+            return this;
+        }
+
+        /**
+         * 设置取消键颜色
+         * @param cancelColor
+         */
+        public ActionListSheetBuilder setCancelColor(int cancelColor){
+            this.cancelColor = cancelColor;
+            return this;
+        }
+
         public ActionSheetDialog build() {
             mDialog = new ActionSheetDialog(mContext);
             View contentView = buildViews();
@@ -183,9 +214,11 @@ public class ActionSheetDialog extends Dialog {
             return mDialog;
         }
 
+        @SuppressLint("ResourceAsColor")
         private View buildViews() {
             View wrapperView = View.inflate(mContext, R.layout.widget_actionsheet, null);
             mTitleTv = (TextView) wrapperView.findViewById(R.id.title);
+            mTitleTv.setTextColor(titleColor);
             mContainerView = (ListView) wrapperView.findViewById(R.id.sheetList);
             if (mTitle != null && mTitle.length() != 0) {
                 (wrapperView.findViewById(R.id.title_layout)).setVisibility(View.VISIBLE);
@@ -207,6 +240,7 @@ public class ActionSheetDialog extends Dialog {
                     mDialog.dismiss();
                 }
             });
+            ((TextView)wrapperView.findViewById(R.id.cancel)).setTextColor(cancelColor);
             return wrapperView;
         }
 
@@ -233,7 +267,7 @@ public class ActionSheetDialog extends Dialog {
                 this.tag = tag;
             }
 
-            public ActionSheetListItemData(String text, String tag,boolean isShow) {
+            public ActionSheetListItemData(String text, String tag, boolean isShow) {
                 this.text = text;
                 this.tag = tag;
                 this.isShow = isShow;
@@ -258,13 +292,15 @@ public class ActionSheetDialog extends Dialog {
                 return 0;
             }
 
+            @SuppressLint("ResourceAsColor")
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
                 final ActionSheetListItemData data = getItem(position);
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.widget_actionsheet_item_view, parent, false);
                 TextView textView = (TextView) convertView.findViewById(R.id.content);
+                textView.setTextColor(itemColor);
                 textView.setText(data.text);
-                convertView.findViewById(R.id.layout).setVisibility(data.isShow?View.VISIBLE:View.GONE);
+                convertView.findViewById(R.id.layout).setVisibility(data.isShow ? View.VISIBLE : View.GONE);
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

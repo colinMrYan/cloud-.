@@ -56,7 +56,7 @@ public class RomInfoUtils {
                 romNameInfo = EXPERIENCE;
                 break;
             default:
-                romNameInfo = StringUtils.isBlank(manufacturer)?UNKNOW:manufacturer;
+                romNameInfo = StringUtils.isBlank(manufacturer) ? UNKNOW : manufacturer;
                 break;
         }
         return romNameInfo;

@@ -41,7 +41,6 @@ import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -65,14 +64,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRefreshLayout.OnLoadListener {
+    public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
+    public static final String EXTRA_LIMIT = "select_limit";
     private static final int SEARCH_ALL = 0;
     private static final int SEARCH_CONTACT = 2;
     private static final int SEARCH_CHANNELGROUP = 1;
     private static final int SEARCH_RECENT = 3;
     private static final int SEARCH_NOTHIING = 4;
     private static final int REFRESH_CONTACT_DATA = 5;
-    public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
-    public static final String EXTRA_LIMIT = "select_limit";
     private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<>(); // 通讯录搜索结果
     private List<Channel> searchRecentList = new ArrayList<>();// 常用联系人搜索结果
@@ -158,7 +157,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                     LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
                     getApplicationContext(), LayoutParams.WRAP_CONTENT));
             params.topMargin = DensityUtil.dip2px(getApplicationContext(), 2);
-            params.bottomMargin =  params.topMargin;
+            params.bottomMargin = params.topMargin;
             int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
             int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 10);
             searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
@@ -206,7 +205,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             default:
                 break;
         }
-        if (getIntent().hasExtra(EXTRA_EXCLUDE_SELECT)){
+        if (getIntent().hasExtra(EXTRA_EXCLUDE_SELECT)) {
             List<String> excludeContactUidList = (List<String>) getIntent().getExtras().getSerializable(EXTRA_EXCLUDE_SELECT);
             excludeContactList = Contact.contactUserList2ContactList(ContactUserCacheUtils.getContactUserListById(excludeContactUidList));
         }
@@ -307,7 +306,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat()? ChannelV0Activity.class:ConversationActivity.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -318,15 +317,15 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.ok_text:
                 returnSelectData();
                 break;
             case R.id.layout:
-                if (searchEdit != null){
-                    InputMethodUtils.display(ContactSearchMoreActivity.this,searchEdit);
+                if (searchEdit != null) {
+                    InputMethodUtils.display(ContactSearchMoreActivity.this, searchEdit);
                 }
                 break;
             default:
@@ -342,6 +341,123 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         intent.putExtra("selectMemList", (Serializable) selectMemList);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void handMessage() {
+        handler = new Handler() {
+
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case REFRESH_CONTACT_DATA:
+                        swipeRefreshLayout.setCanLoadMore((searchContactList.size() == 25));
+                        adapter.notifyDataSetChanged();
+                        break;
+                }
+            }
+
+
+        };
+    }
+
+    /**
+     * 统一显示图片
+     *
+     * @param searchModel
+     * @param photoImg
+     */
+    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
+        Integer defaultIcon = null; // 默认显示图标
+        String icon = null;
+        String type = searchModel.getType();
+        if (type.equals(SearchModel.TYPE_GROUP)) {
+            defaultIcon = R.drawable.icon_channel_group_default;
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                    MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
+            if (file.exists()) {
+                icon = "file://" + file.getAbsolutePath();
+                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
+                return;
+            }
+        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
+            defaultIcon = R.drawable.icon_channel_group_default;
+        } else {
+            defaultIcon = R.drawable.icon_person_default;
+            if (!searchModel.getId().equals("null")) {
+                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(), searchModel.getId());
+            }
+        }
+        ImageDisplayUtils.getInstance().displayImage(
+                photoImg, icon, defaultIcon);
+
+
+    }
+
+    @Override
+    public void onLoadMore() {
+        // TODO Auto-generated method stub
+        List<Contact> excludeSearchContactList = new ArrayList<>();
+        excludeSearchContactList.addAll(searchContactList);
+        excludeSearchContactList.addAll(excludeContactList);
+        List<Contact> moreContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeSearchContactList, 25);
+        swipeRefreshLayout.setLoading(false);
+        swipeRefreshLayout.setCanLoadMore((moreContactList.size() == 25));
+        if (moreContactList.size() != 0) {
+            searchContactList.addAll(searchContactList.size(), moreContactList);
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP:
+            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
+                if (searchChannelGroupList.size() > 0) {
+                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (handler != null) {
+            handler = null;
+        }
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public static class ViewHolder {
+        TextView nameText;
+        CircleTextImageView photoImg;
+        ImageView selectedImg;
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements
+            OnClickListener {
+        TextView titleText;
+        ImageView titleImg;
+
+        public MyViewHolder(View view) {
+            super(view);
+            titleText = (TextView) view.findViewById(R.id.tv_name_tips);
+            titleImg = (ImageView) view.findViewById(R.id.title_img);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+
+        }
+
     }
 
     private class MyTextWatcher implements TextWatcher {
@@ -389,7 +505,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                             public void run() {
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText,
                                         excludeContactList, 25);
-                                if (handler !=null){
+                                if (handler != null) {
                                     handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
                                 }
                             }
@@ -405,24 +521,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             }
         }
 
-    }
-
-
-    private void handMessage() {
-        handler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case REFRESH_CONTACT_DATA:
-                        swipeRefreshLayout.setCanLoadMore((searchContactList.size() == 25));
-                        adapter.notifyDataSetChanged();
-                        break;
-                }
-            }
-
-
-        };
     }
 
     private class Adapter extends BaseAdapter {
@@ -494,46 +592,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     }
 
     /**
-     * 统一显示图片
-     *
-     * @param searchModel
-     * @param photoImg
-     */
-    private void displayImg(SearchModel searchModel, CircleTextImageView photoImg) {
-        Integer defaultIcon = null; // 默认显示图标
-        String icon = null;
-        String type = searchModel.getType();
-        if (type.equals(SearchModel.TYPE_GROUP)) {
-            defaultIcon = R.drawable.icon_channel_group_default;
-            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
-                    MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
-            if (file.exists()) {
-                icon = "file://" + file.getAbsolutePath();
-                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
-                return;
-            }
-        } else if (type.equals(SearchModel.TYPE_STRUCT)) {
-            defaultIcon = R.drawable.icon_channel_group_default;
-        } else {
-            defaultIcon = R.drawable.icon_person_default;
-            if (!searchModel.getId().equals("null")) {
-                icon = APIUri.getChannelImgUrl(MyApplication.getInstance(),searchModel.getId());
-            }
-        }
-        ImageDisplayUtils.getInstance().displayImage(
-                photoImg, icon, defaultIcon);
-
-
-    }
-
-
-    public static class ViewHolder {
-        TextView nameText;
-        CircleTextImageView photoImg;
-        ImageView selectedImg;
-    }
-
-    /**
      * 第一个group title中list的adapter
      *
      * @author Administrator
@@ -579,70 +637,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             MyViewHolder viewHolder = new MyViewHolder(view);
             return viewHolder;
         }
-    }
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements
-            OnClickListener {
-        TextView titleText;
-        ImageView titleImg;
-
-        public MyViewHolder(View view) {
-            super(view);
-            titleText = (TextView) view.findViewById(R.id.tv_name_tips);
-            titleImg = (ImageView) view.findViewById(R.id.title_img);
-
-        }
-
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-
-        }
-
-    }
-
-
-    @Override
-    public void onLoadMore() {
-        // TODO Auto-generated method stub
-        List<Contact> excludeSearchContactList = new ArrayList<>();
-        excludeSearchContactList.addAll(searchContactList);
-        excludeSearchContactList.addAll(excludeContactList);
-        List<Contact> moreContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeSearchContactList, 25);
-        swipeRefreshLayout.setLoading(false);
-        swipeRefreshLayout.setCanLoadMore((moreContactList.size() == 25));
-        if (moreContactList.size() != 0) {
-            searchContactList.addAll(searchContactList.size(), moreContactList);
-            adapter.notifyDataSetChanged();
-        }
-
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
-        switch (eventMessage.getAction()) {
-            case Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP:
-            case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
-                if (searchChannelGroupList.size() > 0) {
-                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-                    if (adapter != null){
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-
-                break;
-        }
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        if (handler != null) {
-            handler = null;
-        }
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
 }

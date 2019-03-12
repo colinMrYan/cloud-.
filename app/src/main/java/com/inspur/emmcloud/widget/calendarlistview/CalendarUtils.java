@@ -27,9 +27,8 @@ package com.inspur.emmcloud.widget.calendarlistview;
 import java.util.Calendar;
 
 
-public class CalendarUtils
-{
-	public static int getDaysInMonth(int month, int year) {
+public class CalendarUtils {
+    public static int getDaysInMonth(int month, int year) {
         switch (month) {
             case Calendar.JANUARY:
             case Calendar.MARCH:
@@ -49,5 +48,5 @@ public class CalendarUtils
             default:
                 throw new IllegalArgumentException("Invalid Month");
         }
-	}
+    }
 }

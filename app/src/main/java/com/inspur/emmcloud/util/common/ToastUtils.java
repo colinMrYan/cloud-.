@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 /**
  * ToastUtils
- * 
+ *
  * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2013-12-9
  */
 public class ToastUtils {

@@ -36,6 +36,46 @@ import cn.jpush.android.api.JPushInterface;
 public class JpushReceiver extends BroadcastReceiver {
     private static final String TAG = "JPush";
 
+    /**
+     * 打印所有的 intent extra 数据
+     *
+     * @param bundle
+     * @return
+     */
+    private static String printBundle(Bundle bundle) {
+        StringBuilder sb = new StringBuilder();
+        for (String key : bundle.keySet()) {
+            if (key.equals(JPushInterface.EXTRA_NOTIFICATION_ID)) {
+                sb.append("\nkey:" + key + ", value:" + bundle.getInt(key));
+            } else if (key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)) {
+                sb.append("\nkey:" + key + ", value:" + bundle.getBoolean(key));
+            } else if (key.equals(JPushInterface.EXTRA_EXTRA)) {
+                if (bundle.getString(JPushInterface.EXTRA_EXTRA).isEmpty()) {
+                    Log.i(TAG, "This message has no Extra data");
+                    continue;
+                }
+
+                try {
+                    JSONObject json = new JSONObject(
+                            bundle.getString(JPushInterface.EXTRA_EXTRA));
+                    Iterator<String> it = json.keys();
+
+                    while (it.hasNext()) {
+                        String myKey = it.next().toString();
+                        sb.append("\nkey:" + key + ", value: [" + myKey + " - "
+                                + json.optString(myKey) + "]");
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Get message extra JSON error!");
+                }
+
+            } else {
+                sb.append("\nkey:" + key + ", value:" + bundle.getString(key));
+            }
+        }
+        return sb.toString();
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -45,14 +85,14 @@ public class JpushReceiver extends BroadcastReceiver {
             String regId = bundle
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-            AppUtils.setPushFlag(context,Constant.JPUSH_FLAG);
+            AppUtils.setPushFlag(context, Constant.JPUSH_FLAG);
             PreferencesUtils.putString(context, Constant.JPUSH_REG_ID, regId);
             new PushIdManagerUtils(context).registerPushId2Emm();
             new ClientIDUtils(context).upload();
             WebSocketPush.getInstance().startWebSocket();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
-            ECMTransparentUtils.handleTransparentMsg(context,bundle.getString(JPushInterface.EXTRA_MESSAGE));
+            ECMTransparentUtils.handleTransparentMsg(context, bundle.getString(JPushInterface.EXTRA_MESSAGE));
             LogUtils.debug(TAG,
                     "[MyReceiver] 接收到推送下来的自定义消息: "
                             + bundle.getString(JPushInterface.EXTRA_MESSAGE));
@@ -64,8 +104,8 @@ public class JpushReceiver extends BroadcastReceiver {
                     .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
             String extraMessage = bundle.getString(JPushInterface.EXTRA_EXTRA);
-            if(!AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG) && JSONUtils.isJsonObjStringHasKey(extraMessage,"badge")){
-                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(extraMessage,"badge",0));
+            if (!AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG) && JSONUtils.isJsonObjStringHasKey(extraMessage, "badge")) {
+                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context, JSONUtils.getInt(extraMessage, "badge", 0));
             }
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent
                 .getAction())) {
@@ -128,23 +168,23 @@ public class JpushReceiver extends BroadcastReceiver {
                 if (extraObj.has("calEvent")) {
                     String json = extraObj.getString("calEvent");
                     JSONObject actionObj = new JSONObject();
-                    actionObj.put("url","ecc-calendar-jpush://");
-                    actionObj.put("type","open-url");
-                    actionObj.put("content",json);
+                    actionObj.put("url", "ecc-calendar-jpush://");
+                    actionObj.put("type", "open-url");
+                    actionObj.put("content", json);
                     JSONObject obj = new JSONObject();
-                    obj.put("action",actionObj);
+                    obj.put("action", actionObj);
                     openScheme(context, obj);
 
                 } else if (extraObj.has("action")) {//用scheme打开相应的页面
                     openScheme(context, extraObj);
                 } else if (extraObj.has("channel")) {
                     String cid = JSONUtils.getString(extraObj, "channel", "");
-                    if (!StringUtils.isBlank(cid)){
+                    if (!StringUtils.isBlank(cid)) {
                         JSONObject actionObj = new JSONObject();
-                        actionObj.put("url","ecc-channel://"+cid);
-                        actionObj.put("type","open-url");
+                        actionObj.put("url", "ecc-channel://" + cid);
+                        actionObj.put("type", "open-url");
                         JSONObject obj = new JSONObject();
-                        obj.put("action",actionObj);
+                        obj.put("action", actionObj);
                         openScheme(context, obj);
                     }
                 }
@@ -170,9 +210,9 @@ public class JpushReceiver extends BroadcastReceiver {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(scheme));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                if (extraObj.has("content")){
+                if (extraObj.has("content")) {
                     String content = extraObj.getString("content");
-                    intent.putExtra("content",content);
+                    intent.putExtra("content", content);
                 }
                 MyApplication.getInstance().setOpenNotification(true);
                 context.startActivity(intent);
@@ -180,46 +220,6 @@ public class JpushReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 打印所有的 intent extra 数据
-     *
-     * @param bundle
-     * @return
-     */
-    private static String printBundle(Bundle bundle) {
-        StringBuilder sb = new StringBuilder();
-        for (String key : bundle.keySet()) {
-            if (key.equals(JPushInterface.EXTRA_NOTIFICATION_ID)) {
-                sb.append("\nkey:" + key + ", value:" + bundle.getInt(key));
-            } else if (key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)) {
-                sb.append("\nkey:" + key + ", value:" + bundle.getBoolean(key));
-            } else if (key.equals(JPushInterface.EXTRA_EXTRA)) {
-                if (bundle.getString(JPushInterface.EXTRA_EXTRA).isEmpty()) {
-                    Log.i(TAG, "This message has no Extra data");
-                    continue;
-                }
-
-                try {
-                    JSONObject json = new JSONObject(
-                            bundle.getString(JPushInterface.EXTRA_EXTRA));
-                    Iterator<String> it = json.keys();
-
-                    while (it.hasNext()) {
-                        String myKey = it.next().toString();
-                        sb.append("\nkey:" + key + ", value: [" + myKey + " - "
-                                + json.optString(myKey) + "]");
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "Get message extra JSON error!");
-                }
-
-            } else {
-                sb.append("\nkey:" + key + ", value:" + bundle.getString(key));
-            }
-        }
-        return sb.toString();
     }
 
 }

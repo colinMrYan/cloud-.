@@ -39,7 +39,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 
-
 /**
  * Created by zhou on 2016/12/8.
  * RichText默认使用的图片加载器
@@ -61,6 +60,14 @@ public class DefaultImageGetter implements ImageGetter, ImageLoadNotify {
         lock = new Object();
         tasks = new HashSet<>();
         taskMap = new WeakHashMap<>();
+    }
+
+    private static OkHttpClient getClient() {
+        return OkHttpClientHolder.CLIENT;
+    }
+
+    private static ExecutorService getExecutorService() {
+        return ExecutorServiceHolder.EXECUTOR_SERVICE;
     }
 
     private void checkTarget(TextView textView) {
@@ -217,7 +224,6 @@ public class DefaultImageGetter implements ImageGetter, ImageLoadNotify {
         }
     }
 
-
     @Override
     public void done(Object from) {
         if (from instanceof AbstractImageLoader) {
@@ -234,14 +240,6 @@ public class DefaultImageGetter implements ImageGetter, ImageLoadNotify {
                 notify.done(loadedCount);
             }
         }
-    }
-
-    private static OkHttpClient getClient() {
-        return OkHttpClientHolder.CLIENT;
-    }
-
-    private static ExecutorService getExecutorService() {
-        return ExecutorServiceHolder.EXECUTOR_SERVICE;
     }
 
     private static class OkHttpClientHolder {

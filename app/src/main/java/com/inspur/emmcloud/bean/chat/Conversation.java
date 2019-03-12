@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  */
 
 @Table(name = "Conversation")
-public class Conversation implements Serializable{
+public class Conversation implements Serializable {
     public static final String TYPE_DIRECT = "DIRECT";
     public static final String TYPE_GROUP = "GROUP";
     public static final String TYPE_CAST = "CAST";
@@ -50,10 +51,12 @@ public class Conversation implements Serializable{
     private String action = "";
     @Column(name = "avatar")
     private String avatar = "";
+    @Column(name = "pyFull")
+    private String pyFull = "";
 
     private String draft = "";
 
-    public Conversation(){
+    public Conversation() {
 
     }
 
@@ -62,23 +65,24 @@ public class Conversation implements Serializable{
     }
 
     public Conversation(JSONObject obj) {
-        this.id = JSONUtils.getString(obj,"id","");
-        this.enterprise = JSONUtils.getString(obj,"enterprise","");
-        this.name = JSONUtils.getString(obj,"name","");
-        this.owner = JSONUtils.getString(obj,"owner","");
-        this.avatar = JSONUtils.getString(obj,"avatar","");
-        this.type = JSONUtils.getString(obj,"type","");
-        this.state = JSONUtils.getString(obj,"state","");
+        this.id = JSONUtils.getString(obj, "id", "");
+        this.enterprise = JSONUtils.getString(obj, "enterprise", "");
+        this.name = JSONUtils.getString(obj, "name", "");
+        this.owner = JSONUtils.getString(obj, "owner", "");
+        this.avatar = JSONUtils.getString(obj, "avatar", "");
+        this.type = JSONUtils.getString(obj, "type", "");
+        this.state = JSONUtils.getString(obj, "state", "");
         String UTCCreationDate = JSONUtils.getString(obj, "creationDate", "");
         this.creationDate = TimeUtils.UTCString2Long(UTCCreationDate);
         String UTCLastUpdate = JSONUtils.getString(obj, "lastUpdate", "");
         this.lastUpdate = TimeUtils.UTCString2Long(UTCLastUpdate);
-        this.members = JSONUtils.getString(obj,"members","");
-        this.input = JSONUtils.getString(obj,"input","");
-        this.dnd = JSONUtils.getBoolean(obj,"dnd",false);
-        this.stick = JSONUtils.getBoolean(obj,"stick",false);
-        this.hide = JSONUtils.getBoolean(obj,"hide",false);
-        this.action = JSONUtils.getString(obj,"action","");
+        this.members = JSONUtils.getString(obj, "members", "");
+        this.input = JSONUtils.getString(obj, "input", "");
+        this.dnd = JSONUtils.getBoolean(obj, "dnd", false);
+        this.stick = JSONUtils.getBoolean(obj, "stick", false);
+        this.hide = false;
+        this.action = JSONUtils.getString(obj, "action", "");
+        this.pyFull = PinyinUtils.getPingYin(name);
     }
 
     public String getId() {
@@ -156,12 +160,14 @@ public class Conversation implements Serializable{
     public String getMembers() {
         return members;
     }
-    public ArrayList<String> getMemberList() {
-        ArrayList<String> memberList = JSONUtils.JSONArray2List(members,new ArrayList<String>());
-        return memberList;
-    }
+
     public void setMembers(String members) {
         this.members = members;
+    }
+
+    public ArrayList<String> getMemberList() {
+        ArrayList<String> memberList = JSONUtils.JSONArray2List(members, new ArrayList<String>());
+        return memberList;
     }
 
     public String getInput() {
@@ -211,6 +217,16 @@ public class Conversation implements Serializable{
     public void setAction(String action) {
         this.action = action;
     }
+
+    public String getPyFull() {
+        return pyFull;
+    }
+
+    public void setPyFull(String pyFull) {
+        this.pyFull = pyFull;
+    }
+
+
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 

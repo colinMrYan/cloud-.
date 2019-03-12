@@ -33,7 +33,6 @@ public class TagHandlerImpl implements TagHandler {
     private static final Pattern patternH6 = Pattern.compile("^\\s*#{6} \\s*([^#]*)(\\s*#)?");
 
 
-
     private static final Pattern patternQuota = Pattern.compile("^\\s{0,3}>\\s(.*)");
     private static final Pattern patternUl = Pattern.compile("^\\s*[*+-]\\s+(.*)");
     private static final Pattern patternOl = Pattern.compile("^\\s*\\d+\\.\\s+(.*)");

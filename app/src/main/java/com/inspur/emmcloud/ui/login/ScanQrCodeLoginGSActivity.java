@@ -26,7 +26,7 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
-        loadingDlg =new LoadingDialog(this);
+        loadingDlg = new LoadingDialog(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
     }
 
@@ -48,15 +48,15 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
         }
     }
 
-    private void faceLogin(){
-        if (NetUtils.isNetworkConnected(getApplicationContext())){
+    private void faceLogin() {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
             Bitmap bitmap = ImageUtils.getBitmap(getApplicationContext(), "face_unlock.png");
             String bitmapBase64 = ImageUtils.bitmapToBase64(bitmap);
             String token = getIntent().getStringExtra("token");
             LoginAPIService apiService = new LoginAPIService(ScanQrCodeLoginGSActivity.this);
             apiService.setAPIInterface(new WebService());
-            apiService.faceLoginGS(bitmapBase64,token);
+            apiService.faceLoginGS(bitmapBase64, token);
         }
     }
 
@@ -65,14 +65,14 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
         @Override
         public void returnFaceLoginGSSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            ToastUtils.show(getApplicationContext(),"GS客户端登录成功");
+            ToastUtils.show(getApplicationContext(), "GS客户端登录成功");
             finish();
         }
 
         @Override
         public void returnFaceLoginGSFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(ScanQrCodeLoginGSActivity.this, error,errorCode);
+            WebServiceMiddleUtils.hand(ScanQrCodeLoginGSActivity.this, error, errorCode);
         }
     }
 }

@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -23,9 +25,11 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
@@ -47,6 +51,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,76 +76,11 @@ public class ChannelInfoActivity extends BaseActivity {
     private Adapter adapter;
     private TextView channelMemberNumText;
     private boolean isNoInterruption = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation_group_info);
-        channelMemberNumText = (TextView) findViewById(R.id.tv_member);
-        apiService = new ChatAPIService(ChannelInfoActivity.this);
-        apiService.setAPIInterface(new WebService());
-        cid = getIntent().getExtras().getString("cid");
-        loadingDlg = new LoadingDialog(ChannelInfoActivity.this);
-        getChannelInfo();
-    }
-
-
-    /**
-     * 获取频道信息
-     */
-    private void getChannelInfo() {
-        // TODO Auto-generated method stub
-        channelGroup = ChannelGroupCacheUtils
-                .getChannelGroupById(getApplicationContext(), cid);
-        if (channelGroup != null) {
-            filterMemberData(channelGroup.getMemberList());
-            displayUI();
-        }
-        if (NetUtils.isNetworkConnected(getApplicationContext(),(channelGroup == null))) {
-            apiService.getChannelInfo(cid);
-        }
-
-    }
-
-
-    /**
-     * 数据取出后显示ui
-     */
-    private void displayUI() {
-        channelMemberNumText.setText(getString(R.string.all_group_member,ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size()));
-        memberGrid = (NoScrollGridView) findViewById(R.id.gv_member);
-        ((TextView) findViewById(R.id.tv_name)).setText(channelGroup.getChannelName());
-        adapter = new Adapter();
-        memberGrid.setAdapter(adapter);
-        memberGrid.setOnItemClickListener(onItemClickListener);
-        setTopSwitch = (SwitchView) findViewById(R.id.sv_stick);
-        msgInterruptionSwitch = (SwitchView) findViewById(R.id.sv_dnd);
-        msgInterruptionSwitch.setOpened(ChannelCacheUtils.isChannelNotDisturb(
-                ChannelInfoActivity.this, cid));
-        msgInterruptionSwitch.setOnStateChangedListener(onStateChangedListener);
-        boolean isSetTop = ChannelOperationCacheUtils.isChannelSetTop(
-                this, cid);
-        setTopSwitch.setOpened(isSetTop);
-        setTopSwitch.setOnStateChangedListener(onStateChangedListener);
-
-    }
-
-    /**
-     * 是否将频道置顶
-     *
-     * @param isSetIop
-     */
-    private void setChannelTop(boolean isSetIop) {
-        setTopSwitch.toggleSwitch(isSetIop);
-        ChannelOperationCacheUtils.setChannelTop(ChannelInfoActivity.this, cid,
-                isSetIop);
-        // 通知消息页面重新创建群组头像
-        Intent intent = new Intent("message_notify");
-        intent.putExtra("command", "sort_session_list");
-        sendBroadcast(intent);
-    }
-
+    private CircleTextImageView groupPhotoImg;
+    private TextView groupMembersText;
+    private TextView groupMemberSizeText;
+    private TextView nameText;
+    private RelativeLayout groupMessageSearchLayout;
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
 
         @Override
@@ -155,7 +95,7 @@ public class ChannelInfoActivity extends BaseActivity {
                         ChannelMembersDelActivity.class);
                 startActivityForResult(intent, QEQUEST_DEL_MEMBER);
 
-            } else if (((position == adapter.getCount() - 2) &&isOwner)
+            } else if (((position == adapter.getCount() - 2) && isOwner)
                     || ((position == adapter.getCount() - 1) && !isOwner)) {
                 intent.putExtra("select_content", 2);
                 intent.putExtra("isMulti_select", true);
@@ -179,7 +119,6 @@ public class ChannelInfoActivity extends BaseActivity {
             }
         }
     };
-
     private OnStateChangedListener onStateChangedListener = new OnStateChangedListener() {
 
         @Override
@@ -203,23 +142,120 @@ public class ChannelInfoActivity extends BaseActivity {
         }
     };
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
+        setContentView(R.layout.activity_conversation_group_info);
+        channelMemberNumText = findViewById(R.id.tv_member);
+        groupMembersText = findViewById(R.id.tv_group_member_size);
+        groupMessageSearchLayout = findViewById(R.id.rl_search_messages);
+        groupMessageSearchLayout.setVisibility(View.GONE);
+        groupMemberSizeText = findViewById(R.id.tv_group_members);
+        groupPhotoImg = findViewById(R.id.iv_group_photo);
+        nameText = findViewById(R.id.tv_name);
+        apiService = new ChatAPIService(ChannelInfoActivity.this);
+        apiService.setAPIInterface(new WebService());
+        cid = getIntent().getExtras().getString("cid");
+        loadingDlg = new LoadingDialog(ChannelInfoActivity.this);
+        getChannelInfo();
+    }
+
+    /**
+     * 获取频道信息
+     */
+    private void getChannelInfo() {
+        // TODO Auto-generated method stub
+        channelGroup = ChannelGroupCacheUtils
+                .getChannelGroupById(getApplicationContext(), cid);
+        if (channelGroup != null) {
+            filterMemberData(channelGroup.getMemberList());
+            displayUI();
+        }
+        if (NetUtils.isNetworkConnected(getApplicationContext(), (channelGroup == null))) {
+            apiService.getChannelInfo(cid);
+        }
+
+    }
+
+    /**
+     * 数据取出后显示ui
+     */
+    private void displayUI() {
+        int memberSize = ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size();
+        channelMemberNumText.setText(getString(R.string.all_group_member, memberSize));
+        setChannelIcon();
+        groupMemberSizeText.setText(channelGroup.getChannelName() + getString(R.string.bracket_with_word, (memberSize + "")));
+        groupMembersText.setText(getString(R.string.people_num, memberSize));
+        memberGrid = findViewById(R.id.gv_member);
+        nameText.setText(channelGroup.getChannelName());
+        adapter = new Adapter();
+        memberGrid.setAdapter(adapter);
+        memberGrid.setOnItemClickListener(onItemClickListener);
+        setTopSwitch = findViewById(R.id.sv_stick);
+        msgInterruptionSwitch = findViewById(R.id.sv_dnd);
+        boolean isChannelNotDisturb = ChannelCacheUtils.isChannelNotDisturb(ChannelInfoActivity.this, cid);
+        if (msgInterruptionSwitch.isOpened() != isChannelNotDisturb) {
+            msgInterruptionSwitch.setOpened(isChannelNotDisturb);
+        }
+        msgInterruptionSwitch.setOnStateChangedListener(onStateChangedListener);
+        boolean isChannelSetTop = ChannelOperationCacheUtils.isChannelSetTop(this, cid);
+        if (setTopSwitch.isOpened() != isChannelSetTop){
+            setTopSwitch.setOpened(isChannelSetTop);
+        }
+        setTopSwitch.setOnStateChangedListener(onStateChangedListener);
+    }
+
+    /**
+     * 设置Channel的Icon
+     */
+    private void setChannelIcon() {
+        // TODO Auto-generated method stub
+        if (channelGroup.getType().equals("GROUP")) {
+            File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                    MyApplication.getInstance().getTanent() + channelGroup.getCid() + "_100.png1");
+            groupPhotoImg.setTag("");
+            if (file.exists()) {
+                groupPhotoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
+            } else {
+                groupPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
+            }
+        }
+    }
+
+    /**
+     * 是否将频道置顶
+     *
+     * @param isSetIop
+     */
+    private void setChannelTop(boolean isSetIop) {
+        setTopSwitch.toggleSwitch(isSetIop);
+        ChannelOperationCacheUtils.setChannelTop(ChannelInfoActivity.this, cid,
+                isSetIop);
+        // 通知消息页面重新创建群组头像
+        Intent intent = new Intent("message_notify");
+        intent.putExtra("command", "sort_session_list");
+        sendBroadcast(intent);
+    }
+
     public void onClick(View v) {
         Bundle bundle = new Bundle();
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.rl_chat_imgs:
+            case R.id.ll_group_image:
                 bundle.putString("cid", cid);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupAlbumActivity.class, bundle);
                 break;
-            case R.id.rl_chat_files:
+            case R.id.ll_group_file:
                 bundle.putString("cid", cid);
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         GroupFileActivity.class, bundle);
                 break;
-            case R.id.channel_name_layout:
+            case R.id.rl_channel_name:
                 Intent intent = new Intent();
                 intent.setClass(ChannelInfoActivity.this,
                         ModifyChannelGroupNameActivity.class);
@@ -229,8 +265,8 @@ public class ChannelInfoActivity extends BaseActivity {
                 break;
             case R.id.rl_member:
                 bundle.putString("title", getString(R.string.group_member));
-                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
-                bundle.putStringArrayList("uidList",channelGroup.getMemberList());
+                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
+                bundle.putStringArrayList("uidList", channelGroup.getMemberList());
                 IntentUtils.startActivity(ChannelInfoActivity.this,
                         MembersActivity.class, bundle);
                 break;
@@ -242,7 +278,7 @@ public class ChannelInfoActivity extends BaseActivity {
         }
     }
 
-    private void showQuitGroupWarningDlg(){
+    private void showQuitGroupWarningDlg() {
         new MyQMUIDialog.MessageDialogBuilder(ChannelInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
@@ -296,13 +332,93 @@ public class ChannelInfoActivity extends BaseActivity {
      */
     private void ModifyChannelGroupName(Intent data) {
         String name = data.getStringExtra("name");
-        ((TextView) findViewById(R.id.tv_name)).setText(name);
+        nameText.setText(name);
+        int memberSize = ContactUserCacheUtils.getContactUserListById(channelGroup.getMemberList()).size();
+        groupMemberSizeText.setText(name + getString(R.string.bracket_with_word, (memberSize + "")));
         String pyFull = PinyinUtils.getPingYin(name);
         String pyShort = PinyinUtils.getPinYinHeadChar(name);
         channelGroup.setChannelName(name);
         channelGroup.setPyFull(pyFull);
         channelGroup.setPyShort(pyShort);
-        ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
+        ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(), channelGroup);
+    }
+
+    /**
+     * 过滤不存在的群成员算法
+     */
+    private void filterMemberData(List<String> memberList) {
+        //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
+        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList, channelGroup.getOwner().equals(MyApplication.getInstance().getUid()) ? 5 : 6);
+        ArrayList<String> contactUserIdList = new ArrayList<>();
+        for (int i = 0; i < contactUserList.size(); i++) {
+            contactUserIdList.add(contactUserList.get(i).getId());
+        }
+        uiMemberList.clear();
+        uiMemberList.addAll(contactUserIdList);
+    }
+
+    /**
+     * 发送广播
+     */
+    private void sendBroadCast() {
+        Intent mIntent = new Intent("message_notify");
+        mIntent.putExtra("command", "refresh_session_list");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+    }
+
+    /**
+     * 更改是否频道消息免打扰
+     *
+     * @param isNoInterruption
+     */
+    private void updateIsNoInterruption(boolean isNoInterruption) {
+        // TODO Auto-generated method stub
+        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
+            loadingDlg.show();
+            this.isNoInterruption = isNoInterruption;
+            apiService.updateDnd(cid, isNoInterruption);
+        } else {
+            msgInterruptionSwitch.setOpened(this.isNoInterruption);
+        }
+    }
+
+    /**
+     * 添加群组成员
+     *
+     * @param uidList
+     */
+    private void addChannelGroupMember(ArrayList<String> uidList) {
+        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
+            loadingDlg.show();
+            apiService.addGroupMembers(uidList, cid);
+        }
+    }
+
+    /**
+     * 删除群成员
+     *
+     * @param uidList
+     */
+    public void delChannelGroupMember(ArrayList<String> uidList) {
+        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
+            loadingDlg.show();
+            apiService.deleteGroupMembers(uidList, cid);
+        }
+    }
+
+    /**
+     * 退出群聊
+     */
+    public void quitChannelGroup() {
+        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
+            loadingDlg.show();
+            apiService.quitChannelGroup(cid);
+        }
+    }
+
+    public static class ViewHolder {
+        CircleTextImageView memberHeadImg;
+        TextView nameText;
     }
 
     private class Adapter extends BaseAdapter {
@@ -361,93 +477,11 @@ public class ChannelInfoActivity extends BaseActivity {
             } else {
                 String uid = uiMemberList.get(position);
                 userName = ContactUserCacheUtils.getUserName(uid);
-                userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(),uid);
+                userPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
             }
             viewHolder.nameText.setText(userName);
             ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg, userPhotoUrl, R.drawable.icon_photo_default);
             return convertView;
-        }
-    }
-
-    public static class ViewHolder {
-        CircleTextImageView memberHeadImg;
-        TextView nameText;
-    }
-
-
-    /**
-     * 过滤不存在的群成员算法
-     */
-    private void filterMemberData(List<String> memberList) {
-        //查三十人，如果不满三十人则查实际人数保证查到的人都是存在的群成员
-        List<ContactUser> contactUserList = ContactUserCacheUtils.getContactUserListByIdListOrderBy(memberList,9);
-        ArrayList<String> contactUserIdList = new ArrayList<>();
-        for (int i = 0; i < contactUserList.size(); i++) {
-            contactUserIdList.add(contactUserList.get(i).getId());
-        }
-        uiMemberList.clear();
-        uiMemberList.addAll(contactUserIdList);
-    }
-
-
-    /**
-     * 发送广播
-     */
-    private void sendBroadCast() {
-        Intent mIntent = new Intent("message_notify");
-        mIntent.putExtra("command", "refresh_session_list");
-        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
-    }
-
-
-    /**
-     * 更改是否频道消息免打扰
-     *
-     * @param isNoInterruption
-     */
-    private void updateIsNoInterruption(boolean isNoInterruption) {
-        // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
-            loadingDlg.show();
-            this.isNoInterruption = isNoInterruption;
-            apiService.updateDnd(cid, isNoInterruption);
-        } else {
-            msgInterruptionSwitch.setOpened(this.isNoInterruption);
-        }
-    }
-
-    /**
-     * 添加群组成员
-     *
-     * @param uidList
-     */
-    private void addChannelGroupMember(ArrayList<String> uidList) {
-        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
-            loadingDlg.show();
-            apiService.addGroupMembers(uidList, cid);
-        }
-    }
-
-    /**
-     * 删除群成员
-     *
-     * @param uidList
-     */
-    public void delChannelGroupMember(ArrayList<String> uidList) {
-        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
-            loadingDlg.show();
-            apiService.deleteGroupMembers(uidList, cid);
-        }
-    }
-
-
-    /**
-     * 退出群聊
-     */
-    public void quitChannelGroup(){
-        if (NetUtils.isNetworkConnected(ChannelInfoActivity.this)) {
-            loadingDlg.show();
-            apiService.quitChannelGroup(cid);
         }
     }
 
@@ -460,7 +494,7 @@ public class ChannelInfoActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             ChannelInfoActivity.this.channelGroup = channelGroup;
             // 同步缓存
-            ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
+            ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(), channelGroup);
             filterMemberData(channelGroup.getMemberList());
             displayUI();
         }
@@ -469,7 +503,7 @@ public class ChannelInfoActivity extends BaseActivity {
         public void returnChannelInfoFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
-            if (channelGroup == null){
+            if (channelGroup == null) {
                 WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
             }
         }
@@ -516,7 +550,7 @@ public class ChannelInfoActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             ChannelInfoActivity.this.channelGroup = channelGroup;
             // 同步缓存
-            ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),channelGroup);
+            ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(), channelGroup);
             filterMemberData(channelGroup.getMemberList());
             displayUI();
             adapter.notifyDataSetChanged();

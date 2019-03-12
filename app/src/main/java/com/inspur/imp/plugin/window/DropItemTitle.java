@@ -9,16 +9,16 @@ import org.json.JSONObject;
  */
 
 public class DropItemTitle {
-    private String ico="";
-    private String text="";
-    private String action="";
+    private String ico = "";
+    private String text = "";
+    private String action = "";
     private boolean selected = false;
 
-    public DropItemTitle(JSONObject object){
-        ico = JSONUtils.getString(object,"ico","");
-        text = JSONUtils.getString(object,"text","");
-        action = JSONUtils.getString(object,"action","");
-        selected = JSONUtils.getBoolean(object,"selected",false);
+    public DropItemTitle(JSONObject object) {
+        ico = JSONUtils.getString(object, "ico", "");
+        text = JSONUtils.getString(object, "text", "");
+        action = JSONUtils.getString(object, "action", "");
+        selected = JSONUtils.getBoolean(object, "selected", false);
     }
 
     public String getIco() {

@@ -59,6 +59,8 @@
     <string name="login_code_login_text">验证码登录</string>
     <string name="invite_friends_text">把雲+推薦給朋友</string>
     <string name="tab_not_support_tips">%1$s功能已改版，請<Data><![CDATA[<font color=\'#0F7BCA\'>陞級到最新版本</font>]]></Data></string>
+    <string name="choose">選擇</string>
+    <string name="file_type">檔案類型</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -193,6 +195,8 @@
     <string name="login_direct">直接登錄</string>
     <string name="login_change_phone_num">更換號碼</string>
     <string name="login_captchas_login">短信登錄 </string>
+    <string name="login_by_account">帳號密碼登錄</string>
+    <string name="login_find_password">找回密碼</string>
     <string name="login_get_captchas_code">獲取驗證碼</string>
     <string name="login_get_captchas">通過短信修改密碼</string>
     <string name="login_send_captchas">發送驗證碼 </string>
@@ -226,6 +230,10 @@
     <string name="recover">重新獲取</string>
     <string name="more">更多</string>
     <string name="no_search_term">沒有更多的搜索結果</string>
+    <string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>
+    <string name="login_current_login_enterprise">當前系統：%1$s</string>
+    <string name="login_forget_password">忘記密碼？</string>
+
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">請輸入消息內容</string>
@@ -257,7 +265,7 @@
     <string name="chanel_cancel_top"> 取消置頂</string>
     <string name="creat_group">創建群組</string>
     <string name="creat_group_fail">群組創建失敗</string>
-    <string name="all_group_member">全部群成員(%1$d)</string>
+    <string name="all_group_member">群成員(%1$d)</string>
     <string name="add_group_member">添加群成員 </string>
     <string name="channel_group">群組</string>
     <string name="group_member">群成員列表 </string>
@@ -282,6 +290,7 @@
     <string name="hold_to_talk">按住 說話</string>
     <string name="release_to_send">鬆開 結束</string>
     <string name="release_to_cancel">鬆開手指，取消發送</string>
+    <string name="release_to_cancel_dialog">鬆開手指，取消發送</string>
     <string name="slide_up_to_cancel">手指上滑，取消發送</string>
     <string name="recording_too_short">錄音時間過短</string>
     <string name="play_fail">播放失败</string>
@@ -298,6 +307,8 @@
     <string name="chat_remove_from_top">取消置頂</string>
     <string name="no_chat_content">暫無聊天內容</string>
     <string name="msg_key_search_member">請輸入關鍵字</string>
+    <string name="chat_file_open_fail_tip">沒有找到對應的程式</string>
+    <string name="chat_conversation_unread_count">%1$d條新消息</string>
 
 
     <!-- 會議卡片 -->
@@ -310,6 +321,9 @@
     <string name="meeting_refused">委婉拒絕</string>
     <string name="meeting_cancel_confirm">取消確認</string>
     <string name="meeting_cancel_reject">取消拒絕</string>
+    <string name="chat_group_message_search">查找聊天記錄</string>
+
+    <string name="chat_resend_message">重新發送</string>
 
     <!-- 工作頁面部分 -->
     <string name="work">工作</string>
@@ -370,7 +384,8 @@
     <string name="app_center">應用中心</string>
     <string name="detail">詳情</string>
     <string name="search">請輸入關鍵字</string>
-    <string name="app_commonly_use">常用應用</string>
+    <string name="app_commonly_use">開啟常用模式</string>
+    <string name="app_commonly_use_close">結束常用模式</string>
     <string name="app_center_more_apps">更多應用</string>
     <string name="app_input_mail_password">請輸入公司郵箱密碼</string>
     <string name="app_need_input_mail_password">第一次使用或密碼修改後需要輸入</string>
@@ -384,6 +399,7 @@
     <string name="no_app">當前沒有添加應用</string>
     <string name="app_new_function">新功能</string>
     <string name="app_update_function">当前版本不支持此功能请立即升级到最新版本</string>
+    <string name="app_sort_order">調整順序</string>
 
 
     <!--云盘 -->
@@ -546,6 +562,9 @@
     <string name="feed_back_input_phone">輸入電話或郵箱</string>
     <string name="feed_back_upload">提交</string>
     <string name="feed_back_without_name">匿名提交</string>
+    <string name="feed_back_content_hint">請輸入建議和意見</string>
+    <string name="feed_back_contact_hint">在此輸入聯繫方式</string>
+    <string name="feed_back_submit">提交反饋</string>
     <string name="invite_friend_invite_text">邀請好友使用</string>
     <string name="invite_friend_code">直接掃描二維碼邀請好友安裝Cloud</string>
     <string name="invite_friend_recommend">推薦【Cloud】給好友</string>
@@ -590,7 +609,7 @@
     <string name="switch_enterprise">切換企業</string>
     <string name="current_enterprise">當前企業</string>
     <string name="auto_select_enterprise">下次自動幫我選擇</string>
-    <string name="close_auto_select_enterprise">關閉自動選擇登入企業</string>
+    <string name="close_auto_select_enterprise">下次登入默認使用該企業</string>
     <string name="turn_off_success">關閉成功</string>
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
     <string name="run_background">後臺運行</string>
@@ -599,8 +618,13 @@
     <string name="setting_gesture_force_set">根據企業安全性原則，需要您設置手勢密碼</string>
     <string name="setting_gesture_force_open">根據企業安全性原則，您不可以關閉手勢密碼</string>
 
+
     <string name="contact">通訊錄</string>
     <string name="web">web</string>
+    <string name="mine_theme_switch">換膚</string>
+    <string name="mine_theme_white">清新白</string>
+    <string name="mine_theme_grey">優雅灰</string>
+    <string name="mine_theme_blue">商務藍</string>
 
 
     <!-- 修改密碼部分 -->
@@ -633,7 +657,7 @@
     <string name="user_info_name">姓名</string>
     <string name="user_depart">部門</string>
     <string name="user_depart_info_text">部門資訊</string>
-    <string name="user_telephone">辦公電話</string>
+    <string name="user_telephone">座機</string>
     <string name="user_info_sex">性別</string>
     <string name="user_qr_code">我的二維碼</string>
     <string name="user_function_introduction">功能簡介 </string>
@@ -646,10 +670,12 @@
     <string name="user_info_my_info">個人資訊</string>
     <string name="user_info_organ">浪潮國際</string>
     <string name="user_info_phone_number">手機</string>
+    <string name="user_info_title">職位</string>
     <string name="user_no_storage">沒有存放裝置</string>
     <string name="user_employee_num">員工編號</string>
     <string name="user_worker_num">工號</string>
-    <string name="user_new_chat">發消息</string>
+    <string name="user_new_chat">發起會話</string>
+    <string name="user_send_message">發消息</string>
 
     <!-- 集團新聞 部分 -->
     <string name="news_group_news">集團新聞</string>
@@ -896,7 +922,7 @@
     <string name="net_ping_url_cloud">雲＋</string>
 
     <!--电源白名单-->
-    <string name="battery_tip_content">為了您能及時接收消息和通知，請將雲+加入到系統白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
+    <string name="battery_tip_content">系統已對雲+開啟省電優化，可能導致消息延遲或丟失，請將雲+加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
     <string name="battery_tip_ishide">不再提醒</string>
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去設置</string>
@@ -968,7 +994,6 @@
     <string name="assemble_json_exception">組裝Json物件出現異常！</string>
     <string name="inputpwd">請輸入手勢密碼</string>
     <string name="forgetpwd">忘記密碼</string>
-    <string name="forgetpwd_error">載入忘記密碼介面出錯 </string>
     <string name="download_fail">下載失敗</string>
     <string name="download_success">下載成功</string>
     <string name="file_downloading">文件下載中，請稍候...</string>
@@ -1008,6 +1033,8 @@
 
 
     <!--安全中心-->
+    <string name="setting_safe_gesture_face">面容ID、手勢密碼</string>
+    <string name="setting_safe_gesture_face_setting">面容ID、手勢密碼設定</string>
     <string name="setting_safe_center">帳號、設備安全</string>
     <string name="safe_center_gesture">手勢密碼</string>
     <string name="safe_center_finger_print">指紋</string>
@@ -1043,7 +1070,7 @@
     <string name="create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
     <string name="create_gesture_confirm_correct">設置成功</string>
     <string name="create_gesture_reset">重新設置</string>
-    <string name="create_gesture_code">手勢密碼</string>
+    <string name="create_gesture_code">創建手勢密碼</string>
     <string name="create_gesture_guid">您可以創建一個雲+解鎖圖案，這樣他人在借用您的手機時，將無法可打開雲+</string>
     <string name="safe_center_enable">已啟用</string>
     <string name="safe_center_unenable">未啟用</string>
@@ -1059,7 +1086,6 @@
     <string name="login_more_scan_find_left">掃描到[</string>
     <string name="login_more_scan_find_right">]確定添加嗎？</string>
     <string name="cluster_default">默認</string>
-    <string name="current_system">當前系統</string>
 
     <string name="volume_read_write_permission">擁有上傳/查看許可權</string>
     <string name="volume_read_permission">擁有查看許可權</string>
@@ -1120,18 +1146,235 @@
     <string name="permission_open_cloud_plus">開啟%1$s</string>
     <string name="permission_necessary_permission">為了您能正常使用%1$s，需要以下許可權</string>
     <string name="permission_phone_permission">設備資訊</string>
+    <string name="permission_call_phone_permission">撥打電話</string>
     <string name="permission_storage_permission">存儲空間</string>
-        <string name="permission_next">下一步</string>
+    <string name="permission_next">下一步</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
     <string name="emm_keyboard_zero2nine">1234567890</string>
     <string name="emm_keyboard_number">數位</string>
-    <string name="emm_keyboard_symbol">符號</string>
+    <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">字母</string>
     <string name="emm_secure_keyboard">安全鍵盤</string>
+    <string name="emm_keyboard_space">空格</string>
 
     <string name="welcome_to">歡迎使用</string>
 
-    <string name="cloud_plus_update">%1$s更新</string>
+    <string name="user_call">呼叫</string>
+
+    <!--日历字符串资源开始-->
+    <string-array name="lunar_first_of_month">
+        <item>春節</item>
+        <item>二月</item>
+        <item>三月</item>
+        <item>四月</item>
+        <item>五月</item>
+        <item>六月</item>
+        <item>七月</item>
+        <item>八月</item>
+        <item>九月</item>
+        <item>十月</item>
+        <item>冬月</item>
+        <item>臘月</item>
+    </string-array>
+
+    <string-array name="tradition_festival">
+        <item>除夕</item>
+        <item>0101春節</item>
+        <item>0115元宵</item>
+        <item>0505端午</item>
+        <item>0707七夕</item>
+        <item>0815中秋</item>
+        <item>0909重陽</item>
+    </string-array>
+
+    <string-array name="lunar_str">
+        <item>初一</item>
+        <item>初二</item>
+        <item>初三</item>
+        <item>初四</item>
+        <item>初五</item>
+        <item>初六</item>
+        <item>初七</item>
+        <item>初八</item>
+        <item>初九</item>
+        <item>初十</item>
+        <item>十一</item>
+        <item>十二</item>
+        <item>十三</item>
+        <item>十四</item>
+        <item>十五</item>
+        <item>十六</item>
+        <item>十七</item>
+        <item>十八</item>
+        <item>十九</item>
+        <item>二十</item>
+        <item>廿一</item>
+        <item>廿二</item>
+        <item>廿三</item>
+        <item>廿四</item>
+        <item>廿五</item>
+        <item>廿六</item>
+        <item>廿七</item>
+        <item>廿八</item>
+        <item>廿九</item>
+        <item>三十</item>
+    </string-array>
+
+    <string-array name="solar_festival">
+        <item>0101元旦</item>
+        <item>0214情人節</item>
+        <item>0308婦女節</item>
+        <item>0312植樹節</item>
+        <item>0315消權日</item>
+        <item>0401愚人節</item>
+        <item>0404兒童節</item>
+        <item>0422地球日</item>
+        <item>0501勞動節</item>
+        <item>0903軍人節</item>
+        <item>0928教師節</item>
+        <item>0501勞動節</item>
+        <item>0504青年節</item>
+        <item>0601兒童節</item>
+        <item>0701建黨節</item>
+        <item>0801建軍節</item>
+        <item>0928教師節</item>
+        <item>1001國慶節</item>
+        <item>1031萬聖節</item>
+        <item>1111光棍節</item>
+        <item>1224平安夜</item>
+        <item>1225聖誕節</item>
+    </string-array>
+
+    <string-array name="solar_term">
+        <item>春分</item>
+        <item>清明</item>
+        <item>穀雨</item>
+        <item>立夏</item>
+        <item>小滿</item>
+        <item>芒種</item>
+        <item>夏至</item>
+        <item>小暑</item>
+        <item>大暑</item>
+        <item>立秋</item>
+        <item>處暑</item>
+        <item>白露</item>
+        <item>秋分</item>
+        <item>寒露</item>
+        <item>霜降</item>
+        <item>立冬</item>
+        <item>小雪</item>
+        <item>大雪</item>
+        <item>冬至</item>
+        <item>小寒</item>
+        <item>大寒</item>
+        <item>立春</item>
+        <item>雨水</item>
+        <item>驚蟄</item>
+    </string-array>
+
+    <string-array name="special_festivals">
+        <item>母親節</item>
+        <item>父親節</item>
+        <item>感恩節</item>
+    </string-array>
+
+    <string name="sun">日</string>
+    <string name="mon">一</string>
+    <string name="tue">二</string>
+    <string name="wed">三</string>
+    <string name="thu">四</string>
+    <string name="fri">五</string>
+    <string name="sat">六</string>
+
+
+    <string-array name="week_string_array">
+        <item>日</item>
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+        <item>四</item>
+        <item>五</item>
+        <item>六</item>
+    </string-array>
+
+    <string-array name="month_string_array">
+        <item>1月</item>
+        <item>2月</item>
+        <item>3月</item>
+        <item>4月</item>
+        <item>5月</item>
+        <item>6月</item>
+        <item>7月</item>
+        <item>8月</item>
+        <item>9月</item>
+        <item>10月</item>
+        <item>11月</item>
+        <item>12月</item>
+    </string-array>
+
+    <integer-array name="trunk_integer_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+
+    </integer-array>
+
+    <string-array name="trunk_string_array">
+        <item>辛</item>
+        <item>壬</item>
+        <item>癸</item>
+        <item>甲</item>
+        <item>乙</item>
+        <item>丙</item>
+        <item>丁</item>
+        <item>戊</item>
+        <item>己</item>
+        <item>庚</item>
+    </string-array>
+
+    <integer-array name="branch_integer_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </integer-array>
+
+    <string-array name="branch_string_array">
+        <item>酉</item>
+        <item>戌</item>
+        <item>亥</item>
+        <item>子</item>
+        <item>丑</item>
+        <item>寅</item>
+        <item>卯</item>
+        <item>辰</item>
+        <item>巳</item>
+        <item>午</item>
+        <item>未</item>
+        <item>申</item>
+    </string-array>
+    <!--日历字符串资源结束-->
+
+    <string name="phone_sms">簡訊</string>
+    <string name="phone_email">郵件</string>
+    <string name="current_month">本月</string>
+    <string name="user_office_phone">固話</string>
+    <string name="group_qrcode">群二維碼</string>
 </resources>

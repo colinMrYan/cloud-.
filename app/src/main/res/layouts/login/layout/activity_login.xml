@@ -1,251 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_layout"
+    android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login_page"
+    android:background="#ffffff"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="65dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:weightSum="100">
-
-        <com.inspur.emmcloud.widget.SquareLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="22">
-
-            <ImageView
-                android:id="@+id/img_photo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_login_logo"
-                app:border_color="#d2e6f0"
-                app:border_width="0dp"/>
-        </com.inspur.emmcloud.widget.SquareLayout>
-
-    </LinearLayout>
+    android:onClick="onClick">
 
     <TextView
-        android:id="@+id/login_current_enterprise"
+        android:id="@+id/tv_current_login_enterprise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="31dp"
+        android:paddingRight="30dp"
+        android:paddingTop="15dp"
+        android:textColor="#999999"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_welcome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#6FBDE1"
-        android:textSize="13dp"
-        android:layout_below="@id/img_photo"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:visibility="invisible"
-        />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="#d9dddf" />
-
-    <LinearLayout
-        android:id="@+id/ll_login_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="46dp">
-
-            <ImageView
-                android:id="@+id/username_img"
-                android:layout_width="36dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:layout_centerVertical="true"
-                android:paddingLeft="15dp"
-                android:src="@drawable/icon_username" />
-
-            <com.inspur.emmcloud.widget.ClearEditText
-                android:id="@+id/username_edit"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/username_img"
-                android:background="@null"
-                android:hint="@string/login_hint_text"
-                android:paddingBottom="13dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="13dp"
-                android:singleLine="true"
-                android:textColor="@color/text_black"
-                android:textSize="@dimen/content_normal_textsize" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1px"
-            android:background="#d9dddf" />
-
-        <RelativeLayout
-            android:id="@+id/rl_login_password"
-            android:layout_width="fill_parent"
-            android:layout_height="46dp">
-
-            <ImageView
-                android:id="@+id/password_img"
-                android:layout_width="36dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:adjustViewBounds="true"
-                android:paddingLeft="17dp"
-                android:paddingRight="2dp"
-                android:src="@drawable/icon_password" />
-
-            <com.inspur.emmcloud.widget.ClearEditText
-                android:id="@+id/password_edit"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/see_pw_img"
-                android:layout_toRightOf="@id/password_img"
-                android:background="@null"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:paddingBottom="13dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="5dp"
-                android:paddingTop="13dp"
-                android:singleLine="true"
-                android:textColor="@color/text_black"
-                android:textSize="@dimen/content_normal_textsize" />
-
-            <ImageView
-                android:id="@+id/see_pw_img"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@id/password_edit"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@id/password_edit"
-                android:layout_centerVertical="true"
-                android:adjustViewBounds="true"
-                android:paddingBottom="4dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
-                android:paddingTop="4dp"
-                android:src="@drawable/icon_no_see_pw" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="#c8d3dc" />
+        android:layout_marginTop="50dp"
+        android:paddingLeft="27dp"
+        android:paddingRight="30dp"
+        android:textColor="#FF333333"
+        android:textSize="26sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="155dp"
         android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:weightSum="100">
+        android:orientation="vertical"
+        android:paddingLeft="27dp"
+        android:paddingRight="30dp">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_weight="90">
 
-            <Button
-                android:id="@+id/login_btn"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@drawable/bg_login_btn_unable"
-                android:enabled="false"
-                android:onClick="onClick"
-                android:text="@string/login"
-                android:textColor="#ffffff"
-                android:textSize="18sp"/>
-        </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:weightSum="100">
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="90">
-
-            <!-- 隐藏用户注册 -->
-            <TextView
-                android:id="@+id/forget_pwd_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-
-                android:onClick="onClick"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/forgetpwd"
-                android:textColor="#38a4f0"
-                android:textSize="@dimen/content_normal_textsize"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/register_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/forgetpwd"
-                android:textColor="#38a4f0"
-                android:textSize="@dimen/content_normal_textsize"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/captchas_login_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/login_sms"
-                android:textColor="#38a4f0"
-                android:textSize="@dimen/content_normal_textsize" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-            android:id="@+id/login_more_btn"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            app:errorEnabled="false">
+
+            <com.inspur.emmcloud.widget.ClearEditText
+                android:id="@+id/et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/app_edittext_clear"
+                android:hint="@string/login_hint_text"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="17dp"
+                android:paddingRight="13dp"
+                android:paddingTop="17dp"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:theme="@style/MyEditText" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:hint="@string/password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:paddingBottom="17dp"
+                android:paddingTop="17dp"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:theme="@style/MyEditText" />
+
+
+        </android.support.design.widget.TextInputLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_login_via_sms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:paddingBottom="15dp"
+                android:paddingLeft="4dp"
+                android:paddingTop="10dp"
+                android:text="@string/login_sms"
+                android:textColor="#36A5F6"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_forget_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:paddingBottom="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/login_forget_password"
+                android:textColor="#36A5F6"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bg_login_btn_unable"
+            android:enabled="false"
+            android:gravity="center"
             android:onClick="onClick"
-            android:textSize="13sp"
-            android:paddingTop="20dp"
-            android:paddingBottom="16dp"
-            android:textColor="#6FBDE1"
-            android:layout_alignParentBottom="true"
-            android:text="@string/more"/>
-    </RelativeLayout>
-</LinearLayout>
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="27dp"
+        android:layout_marginRight="30dp"
+        android:background="@null"
+        android:onClick="onClick"
+        android:padding="10dp"
+        android:text="@string/more"
+        android:textColor="#FF36A5F6"
+        android:textSize="13sp" />
+</RelativeLayout>
+
+

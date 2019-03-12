@@ -25,7 +25,7 @@ import java.util.List;
  * Created by yufuchang on 2018/8/8.
  */
 @ContentView(R.layout.activity_group_app)
-public class AppGroupActivity extends BaseActivity{
+public class AppGroupActivity extends BaseActivity {
 
     @ViewInject(R.id.recyclerview_group_app)
     private RecyclerView appGroupRecyclerView;
@@ -47,7 +47,7 @@ public class AppGroupActivity extends BaseActivity{
         appGroupRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(MyApplication.getInstance(), 11)));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MyApplication.getInstance(), 4);
         appGroupRecyclerView.setLayoutManager(gridLayoutManager);
-        AppGroupAdapter appGroupAdapter = new AppGroupAdapter(this,appList);
+        AppGroupAdapter appGroupAdapter = new AppGroupAdapter(this, appList);
         appGroupRecyclerView.setAdapter(appGroupAdapter);
         appGroupAdapter.setGroupListener(new GroupAppListClickListener() {
             @Override
@@ -56,18 +56,18 @@ public class AppGroupActivity extends BaseActivity{
             }
         });
         String categoryName = getIntent().getStringExtra("categoryName");
-        textView.setText(categoryName == null? "":categoryName);
+        textView.setText(categoryName == null ? "" : categoryName);
     }
 
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.back_layout:
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ibt_back:
                 finish();
                 break;
         }
     }
 
-    public interface GroupAppListClickListener{
+    public interface GroupAppListClickListener {
         void onGroupAppClick(App app);
     }
 }

@@ -19,38 +19,56 @@ import com.inspur.emmcloud.widget.LoadingDialog;
  * Created by chenmch on 2018/10/8.
  */
 
-public class ConversationBaseActivity extends MediaPlayBaseActivity{
-    public static final String EXTRA_CID= "cid";
-    public static final String EXTRA_CONVERSATION= "conversation";
+public class ConversationBaseActivity extends MediaPlayBaseActivity {
+    public static final String EXTRA_CID = "cid";
+    public static final String EXTRA_CONVERSATION = "conversation";
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";
+    public static final String EXTRA_UNREAD_MESSAGE = "unread_count";
+    public static final String EXTRA_UIMESSAGE = "uimessage";
+
     protected String cid;
     protected LoadingDialog loadingDlg;
     protected Conversation conversation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadingDlg = new LoadingDialog(this);
         initConversationInfo();
         recordUserClickChannel();
+        setConversationUnHide();
     }
 
     protected void initConversationInfo() {
-        if (getIntent().hasExtra(EXTRA_CONVERSATION)){
+        if (getIntent().hasExtra(EXTRA_CONVERSATION)) {
             conversation = (Conversation) getIntent().getExtras().getSerializable(EXTRA_CONVERSATION);
             cid = conversation.getId();
-        }else {
+        } else {
             cid = getIntent().getExtras().getString(EXTRA_CID);
-            conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(),cid);
+            conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
         }
-        if (conversation == null){
+        if (conversation == null) {
             getConversationInfo();
-        }else {
+        } else {
             initChannelMessage();
         }
 
     }
 
-    protected void initChannelMessage(){
+    protected void initChannelMessage() {
+
+    }
+
+    /**
+     * 当进入这个聊天时将取消这个聊天的隐藏状态
+     */
+    private void setConversationUnHide(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(),cid,false);
+            }
+        }).start();
 
     }
 
@@ -73,29 +91,31 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String from = getIntent().getExtras().getString("from", "");
-                if (!from.equals("customer")) {
-                    PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
-                    PVCollectModelCacheUtils.saveCollectModel(MyApplication.getInstance(), pvCollectModel);
+                if(getIntent() != null && getIntent().hasExtra("from")){
+                    String from = getIntent().getExtras().getString("from", "");
+                    if (!from.equals("customer")) {
+                        PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
+                        PVCollectModelCacheUtils.saveCollectModel(MyApplication.getInstance(), pvCollectModel);
+                    }
                 }
             }
         }).start();
     }
 
-    private void getConversationInfo(){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void getConversationInfo() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new Webservice());
             apiService.getConversationInfo(cid);
-        }else {
+        } else {
             finish();
         }
 
     }
 
 
-    private class Webservice extends APIInterfaceInstance{
+    private class Webservice extends APIInterfaceInstance {
         @Override
         public void returnConversationInfoSuccess(Conversation conversation) {
             LoadingDialog.dimissDlg(loadingDlg);
@@ -106,7 +126,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity{
         @Override
         public void returnConversationInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
             finish();
         }
 

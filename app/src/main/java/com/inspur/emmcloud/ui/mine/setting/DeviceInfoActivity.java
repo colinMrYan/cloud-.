@@ -18,10 +18,10 @@ import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.BindingDevice;
 import com.inspur.emmcloud.bean.mine.BindingDeviceLog;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
@@ -53,25 +53,21 @@ public class DeviceInfoActivity extends BaseActivity {
         String deviceLastUserTime = TimeUtils.getTime(bindingDevice.getDeviceLastUserTime(), TimeUtils.getFormat(DeviceInfoActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         ((TextView) findViewById(R.id.device_last_use_time_text)).setText(deviceLastUserTime);
         if (getIntent().getBooleanExtra("isCurrentBind", false)) {
-            findViewById(R.id.device_unbound_btn).setVisibility(View.VISIBLE);
+            findViewById(R.id.bt_device_unbound).setVisibility(View.VISIBLE);
         }
         deviceLogListView = (ScrollViewWithListView) findViewById(R.id.device_log_list);
         apiService = new MineAPIService(this);
         apiService.setAPIInterface(new WebService());
         getDeviceLog();
-
-
-
-
     }
 
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.device_unbound_btn:
+            case R.id.bt_device_unbound:
                 showUnbindDevicePromptDlg();
                 break;
             case R.id.device_id_text:
@@ -107,6 +103,23 @@ public class DeviceInfoActivity extends BaseActivity {
                 .show();
     }
 
+    private void getDeviceLog() {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDialog.show();
+            apiService.getDeviceLogList(bindingDevice.getDeviceId());
+        }
+    }
+
+    /**
+     * 解绑设备
+     */
+    private void unbindDevice() {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDialog.show();
+            apiService.unBindDevice(bindingDevice.getDeviceId());
+        }
+    }
+
     private class Adapter extends BaseAdapter {
         private List<BindingDeviceLog> bindingDeviceLogList;
 
@@ -140,23 +153,6 @@ public class DeviceInfoActivity extends BaseActivity {
         }
     }
 
-    private void getDeviceLog(){
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDialog.show();
-            apiService.getDeviceLogList(bindingDevice.getDeviceId());
-        }
-    }
-
-    /**
-     *解绑设备
-     */
-    private void unbindDevice() {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDialog.show();
-            apiService.unBindDevice(bindingDevice.getDeviceId());
-        }
-    }
-
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnUnBindDeviceSuccess() {
@@ -165,7 +161,7 @@ public class DeviceInfoActivity extends BaseActivity {
             }
             ToastUtils.show(getApplicationContext(), R.string.device_unbind_sucess);
             if (bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
-                ((MyApplication)getApplication()).signout();
+                ((MyApplication) getApplication()).signout();
             } else {
                 setResult(RESULT_OK, getIntent());
             }
@@ -186,9 +182,9 @@ public class DeviceInfoActivity extends BaseActivity {
                 loadingDialog.dismiss();
             }
             List<BindingDeviceLog> bindingDeviceLogList = getDeviceLogResult.getBindingDeviceLogList();
-        if (bindingDeviceLogList.size() > 0) {
-            (findViewById(R.id.history_text)).setVisibility(View.VISIBLE);
-        }
+            if (bindingDeviceLogList.size() > 0) {
+                (findViewById(R.id.history_text)).setVisibility(View.VISIBLE);
+            }
 
             deviceLogListView.setAdapter(new Adapter(bindingDeviceLogList));
         }

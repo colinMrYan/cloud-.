@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.common;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.TypedValue;
 
 import java.io.BufferedReader;
@@ -137,13 +138,22 @@ public class ResourceUtils {
 
     /**
      * 获取attr中的值,等同于//?attr/xxx
+     *
      * @param activity
      * @param attr
      * @return
      */
-    public static int getValueOfColorAttr(Activity activity, int attr) {
+    public static int getResValueOfAttr(Activity activity, int attr) {
         TypedValue tv = new TypedValue();
         activity.getTheme().resolveAttribute(attr, tv, true);
         return tv.resourceId;
+    }
+
+    public static  boolean getBoolenOfAttr(Activity activity, int attr){
+        int[] attrs = new int[] {attr};
+        TypedArray typedArray = activity.obtainStyledAttributes(attrs);
+        Boolean value = typedArray.getBoolean(0,true);
+        typedArray.recycle();
+        return value;
     }
 }

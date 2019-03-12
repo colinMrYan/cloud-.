@@ -10,8 +10,9 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 public class TransparentBean {
 
     private int badgeNumber = 0;
-    public TransparentBean(String transparentMsg){
-        this.badgeNumber = JSONUtils.getInt(transparentMsg,"badge",0);
+
+    public TransparentBean(String transparentMsg) {
+        this.badgeNumber = JSONUtils.getInt(transparentMsg, "badge", 0);
     }
 
     public int getBadgeNumber() {

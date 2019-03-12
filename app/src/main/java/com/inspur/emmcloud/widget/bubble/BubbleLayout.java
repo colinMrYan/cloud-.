@@ -62,6 +62,11 @@ public class BubbleLayout extends FrameLayout {
         initPadding();
     }
 
+    static float convertDpToPixel(float dp, Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return dp * (metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
@@ -78,18 +83,25 @@ public class BubbleLayout extends FrameLayout {
         if (right < left || bottom < top) return;
 
         RectF rectF = new RectF(left, top, right, bottom);
-        switch(mArrowDirection) {
+        float realArrowPosition = mArrowPosition;
+        switch (mArrowDirection) {
             case LEFT_CENTER:
             case RIGHT_CENTER:
                 mArrowPosition = (bottom - top) / 2 - mArrowHeight / 2;
+                realArrowPosition = mArrowPosition;
                 break;
             case TOP_CENTER:
             case BOTTOM_CENTER:
                 mArrowPosition = (right - left) / 2 - mArrowWidth / 2;
+                realArrowPosition = mArrowPosition;
+                break;
+            case TOP_RIGHT:
+                realArrowPosition = right - left - mArrowPosition;
+                break;
             default:
                 break;
         }
-        mBubble = new Bubble(rectF, mArrowWidth, mCornersRadius, mArrowHeight, mArrowPosition,
+        mBubble = new Bubble(rectF, mArrowWidth, mCornersRadius, mArrowHeight, realArrowPosition,
                 mStrokeWidth, mStrokeColor, mBubbleColor, mArrowDirection);
     }
 
@@ -109,6 +121,7 @@ public class BubbleLayout extends FrameLayout {
                 break;
             case TOP:
             case TOP_CENTER:
+            case TOP_RIGHT:
                 paddingTop += mArrowHeight;
                 break;
             case BOTTOM:
@@ -141,6 +154,7 @@ public class BubbleLayout extends FrameLayout {
                 break;
             case TOP:
             case TOP_CENTER:
+            case TOP_RIGHT:
                 paddingTop -= mArrowHeight;
                 break;
             case BOTTOM:
@@ -157,9 +171,8 @@ public class BubbleLayout extends FrameLayout {
         setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
     }
 
-    static float convertDpToPixel(float dp, Context context) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return dp * (metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    public ArrowDirection getArrowDirection() {
+        return mArrowDirection;
     }
 
     public BubbleLayout setArrowDirection(ArrowDirection arrowDirection) {
@@ -169,6 +182,10 @@ public class BubbleLayout extends FrameLayout {
         return this;
     }
 
+    public float getArrowWidth() {
+        return mArrowWidth;
+    }
+
     public BubbleLayout setArrowWidth(float arrowWidth) {
         resetPadding();
         mArrowWidth = arrowWidth;
@@ -176,10 +193,18 @@ public class BubbleLayout extends FrameLayout {
         return this;
     }
 
+    public float getCornersRadius() {
+        return mCornersRadius;
+    }
+
     public BubbleLayout setCornersRadius(float cornersRadius) {
         mCornersRadius = cornersRadius;
         requestLayout();
         return this;
+    }
+
+    public float getArrowHeight() {
+        return mArrowHeight;
     }
 
     public BubbleLayout setArrowHeight(float arrowHeight) {
@@ -189,6 +214,10 @@ public class BubbleLayout extends FrameLayout {
         return this;
     }
 
+    public float getArrowPosition() {
+        return mArrowPosition;
+    }
+
     public BubbleLayout setArrowPosition(float arrowPosition) {
         resetPadding();
         mArrowPosition = arrowPosition;
@@ -196,10 +225,18 @@ public class BubbleLayout extends FrameLayout {
         return this;
     }
 
+    public int getBubbleColor() {
+        return mBubbleColor;
+    }
+
     public BubbleLayout setBubbleColor(int bubbleColor) {
         mBubbleColor = bubbleColor;
         requestLayout();
         return this;
+    }
+
+    public float getStrokeWidth() {
+        return mStrokeWidth;
     }
 
     public BubbleLayout setStrokeWidth(float strokeWidth) {
@@ -209,41 +246,13 @@ public class BubbleLayout extends FrameLayout {
         return this;
     }
 
+    public int getStrokeColor() {
+        return mStrokeColor;
+    }
+
     public BubbleLayout setStrokeColor(int strokeColor) {
         mStrokeColor = strokeColor;
         requestLayout();
         return this;
-    }
-
-    public ArrowDirection getArrowDirection() {
-        return mArrowDirection;
-    }
-
-    public float getArrowWidth() {
-        return mArrowWidth;
-    }
-
-    public float getCornersRadius() {
-        return mCornersRadius;
-    }
-
-    public float getArrowHeight() {
-        return mArrowHeight;
-    }
-
-    public float getArrowPosition() {
-        return mArrowPosition;
-    }
-
-    public int getBubbleColor() {
-        return mBubbleColor;
-    }
-
-    public float getStrokeWidth() {
-        return mStrokeWidth;
-    }
-
-    public int getStrokeColor() {
-        return mStrokeColor;
     }
 }

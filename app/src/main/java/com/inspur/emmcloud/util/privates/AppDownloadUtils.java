@@ -26,17 +26,52 @@ import java.io.File;
  */
 
 public class AppDownloadUtils {
-    private Activity activity;
     private static final int SHOW_PEOGRESS_LAODING_DLG = 0;
     private static final int DOWNLOAD = 3;
     private static final int DOWNLOAD_FINISH = 4;
     private static final int DOWNLOAD_FAIL = 5;
+    private Activity activity;
     private long totalSize;
     private long downloadSize;
     private int progressSize;
     private MyDialog downloadingDialog;
     private TextView progressTv;
+    Handler downloadWeBexHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case DOWNLOAD:
+                    if (progressTv != null) {
+                        progressTv.setText(progressSize + "%," + "  " + AppUtils.getKBOrMBFormatString(downloadSize) + "/"
+                                + AppUtils.getKBOrMBFormatString(totalSize));
+                    }
+                    break;
+                case DOWNLOAD_FINISH:
+                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
+                        downloadingDialog.dismiss();
+                    }
+//                    AppUtils.installApk(MyApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH, "webex.apk");
+                    FileUtils.openFile(MyApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH + "webex.apk");
+                    break;
+                case DOWNLOAD_FAIL:
+                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
+                        downloadingDialog.dismiss();
+                    }
+                    ToastUtils.show(MyApplication.getInstance(), activity.getString(R.string.download_fail));
+                    break;
+                case SHOW_PEOGRESS_LAODING_DLG:
+                    if (downloadingDialog != null && !downloadingDialog.isShowing()) {
+                        downloadingDialog.show();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     private Callback.Cancelable cancelableDownloadRequest;
+
     /**
      * 展示下载Dialog
      *
@@ -62,41 +97,6 @@ public class AppDownloadUtils {
         // 下载apk文件
         downloadWeBexApk(appUrl);
     }
-
-    Handler downloadWeBexHandler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case DOWNLOAD:
-                    if (progressTv != null) {
-                        progressTv.setText(progressSize + "%," + "  " + AppUtils.getKBOrMBFormatString(downloadSize) + "/"
-                                + AppUtils.getKBOrMBFormatString(totalSize));
-                    }
-                    break;
-                case DOWNLOAD_FINISH:
-                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
-                        downloadingDialog.dismiss();
-                    }
-//                    AppUtils.installApk(MyApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH, "webex.apk");
-                    FileUtils.openFile(MyApplication.getInstance(),MyAppConfig.LOCAL_DOWNLOAD_PATH + "webex.apk");
-                    break;
-                case DOWNLOAD_FAIL:
-                    if (downloadingDialog != null && downloadingDialog.isShowing()) {
-                        downloadingDialog.dismiss();
-                    }
-                    ToastUtils.show(MyApplication.getInstance(), activity.getString(R.string.download_fail));
-                    break;
-                case SHOW_PEOGRESS_LAODING_DLG:
-                    if (downloadingDialog != null && !downloadingDialog.isShowing()) {
-                        downloadingDialog.show();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     /**
      * 下载安装包

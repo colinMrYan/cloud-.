@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.system;
 
 public class GetBoolenResult {
-	public GetBoolenResult(String response){
-		
-	}
+    public GetBoolenResult(String response) {
+
+    }
 }

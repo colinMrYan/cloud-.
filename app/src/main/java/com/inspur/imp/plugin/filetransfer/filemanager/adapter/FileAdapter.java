@@ -30,7 +30,7 @@ public class FileAdapter extends RecyclerViewAdapter {
     private List<FileBean> selectFileBeanList = new ArrayList<>();
     private int maximum;
 
-    public FileAdapter(Context context, List<FileBean> list, List<FileBean> selectFileBeanList,int maximum) {
+    public FileAdapter(Context context, List<FileBean> list, List<FileBean> selectFileBeanList, int maximum) {
         this.context = context;
         this.list = list;
         this.maximum = maximum;
@@ -54,7 +54,7 @@ public class FileAdapter extends RecyclerViewAdapter {
         if (fileType == FileType.directory) {
             fileHolder.dir_enter_image.setVisibility(View.VISIBLE);
             fileHolder.fileChildCount.setVisibility(View.VISIBLE);
-            fileHolder.fileChildCount.setText(context.getString(R.string.file)+": "+fileBean.getChildCount());
+            fileHolder.fileChildCount.setText(context.getString(R.string.file) + ": " + fileBean.getChildCount());
 
             fileHolder.fileSize.setVisibility(View.GONE);
             fileHolder.dir_enter_image.setImageResource(R.drawable.icon_arrow_right);
@@ -63,9 +63,9 @@ public class FileAdapter extends RecyclerViewAdapter {
             fileHolder.fileChildCount.setVisibility(View.GONE);
             fileHolder.fileSize.setVisibility(View.VISIBLE);
             fileHolder.fileSize.setText(FileUtil.sizeToChange(fileBean.getSize()));
-            fileHolder.dir_enter_image.setVisibility(maximum == 1?View.INVISIBLE:View.VISIBLE);
+            fileHolder.dir_enter_image.setVisibility(maximum == 1 ? View.INVISIBLE : View.VISIBLE);
             boolean isSelected = selectFileBeanList.contains(fileBean);
-            fileHolder.dir_enter_image.setImageResource(isSelected?R.drawable.ic_volume_file_select_yes :R.drawable.ic_volume_file_select_no);
+            fileHolder.dir_enter_image.setImageResource(isSelected ? R.drawable.ic_volume_file_select_yes : R.drawable.ic_volume_file_select_no);
         }
 
         //设置图标

@@ -21,40 +21,40 @@ public class WaterMarkBgSingleLine extends Drawable {
     private Paint mPaint = new Paint();
     private String mLabels;
     private Context mContext;
-    private int mAngle=-20;//角度
-    private int mFontSize=30;//字体大小 单位sp
-    private String mPaintColor ="#dfE7E7E7";
-    private Boolean mTextBoldState =true;
-    private int  mLeftBadingDp =0;
-    private int  mTopBadingDp  =0;
-    private int  mLevelInterval =50;
-    private int  mVerticalInterval =50;
+    private int mAngle = -20;//角度
+    private int mFontSize = 30;//字体大小 单位sp
+    private String mPaintColor = "#dfE7E7E7";
+    private Boolean mTextBoldState = true;
+    private int mLeftBadingDp = 0;
+    private int mTopBadingDp = 0;
+    private int mLevelInterval = 50;
+    private int mVerticalInterval = 50;
 
-    public WaterMarkBgSingleLine(Context context, int Angle , int  FontSize, String  PaintColor , Boolean TextBoldState, int LeftBadingDp, int TopBadingDp, int Level, int vertical, String Lable){
-        mAngle  = Angle;
-        mFontSize =FontSize;
-        mPaintColor =PaintColor;
-        mTextBoldState =TextBoldState;
-        mLeftBadingDp  = DensityUtil.dip2px(context,LeftBadingDp);
-        mTopBadingDp  =  DensityUtil.dip2px(context,TopBadingDp) ;
-        mLevelInterval = DensityUtil.dip2px(context,Level);
-        mVerticalInterval = DensityUtil.dip2px(context,vertical);
+    public WaterMarkBgSingleLine(Context context, int Angle, int FontSize, String PaintColor, Boolean TextBoldState, int LeftBadingDp, int TopBadingDp, int Level, int vertical, String Lable) {
+        mAngle = Angle;
+        mFontSize = FontSize;
+        mPaintColor = PaintColor;
+        mTextBoldState = TextBoldState;
+        mLeftBadingDp = DensityUtil.dip2px(context, LeftBadingDp);
+        mTopBadingDp = DensityUtil.dip2px(context, TopBadingDp);
+        mLevelInterval = DensityUtil.dip2px(context, Level);
+        mVerticalInterval = DensityUtil.dip2px(context, vertical);
         mLabels = Lable;
-        mContext =context;
+        mContext = context;
     }
 
 
-    public WaterMarkBgSingleLine(Context context,String Lable){
+    public WaterMarkBgSingleLine(Context context, String Lable) {
         mLabels = Lable;
-        mContext =context;
-        mAngle  = -20;
-        mFontSize =30;
-        mPaintColor ="#dfE7E7E7";
-        mTextBoldState =true;
-        mLeftBadingDp  = DensityUtil.dip2px(context,36);
-        mTopBadingDp  =  DensityUtil.dip2px(context,73) ;
-        mLevelInterval = DensityUtil.dip2px(context,244);
-        mVerticalInterval = DensityUtil.dip2px(context,116);
+        mContext = context;
+        mAngle = -20;
+        mFontSize = 30;
+        mPaintColor = "#dfE7E7E7";
+        mTextBoldState = true;
+        mLeftBadingDp = DensityUtil.dip2px(context, 36);
+        mTopBadingDp = DensityUtil.dip2px(context, 73);
+        mLevelInterval = DensityUtil.dip2px(context, 244);
+        mVerticalInterval = DensityUtil.dip2px(context, 116);
     }
 
     @Override
@@ -70,9 +70,9 @@ public class WaterMarkBgSingleLine extends Drawable {
         for (int positionY = mTopBadingDp; positionY <= height; positionY += mVerticalInterval) {
 
             for (float positionX = mLeftBadingDp; positionX < width; positionX += mLevelInterval) {
-                    canvas.rotate(mAngle,positionX,positionY);
-                    canvas.drawText(mLabels,positionX, positionY, mPaint);
-                    canvas.rotate(-1*mAngle,positionX,positionY);
+                canvas.rotate(mAngle, positionX, positionY);
+                canvas.drawText(mLabels, positionX, positionY, mPaint);
+                canvas.rotate(-1 * mAngle, positionX, positionY);
             }
         }
         canvas.restore();
@@ -94,7 +94,7 @@ public class WaterMarkBgSingleLine extends Drawable {
     }
 
 
-    public  int sp2px(Context context, float spValue) {
+    public int sp2px(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
     }

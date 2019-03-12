@@ -8,7 +8,7 @@ import android.view.View;
  * Created by yufuchang on 2017/4/7.
  */
 
-public class ECMSpaceItemDecoration extends RecyclerView.ItemDecoration{
+public class ECMSpaceItemDecoration extends RecyclerView.ItemDecoration {
 
     private int space;
 
@@ -18,7 +18,7 @@ public class ECMSpaceItemDecoration extends RecyclerView.ItemDecoration{
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        if(parent.getChildPosition(view) >= 0){
+        if (parent.getChildPosition(view) >= 0) {
             outRect.left = space;
             outRect.right = space;
         }

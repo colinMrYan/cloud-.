@@ -115,7 +115,7 @@ public class MutilClusterUtils {
         ClusterBean clusterBean = clusterBeanNew;
         if (StringUtils.isBlank(differentUrlByType)) {
             Enterprise enterpriseOld = getOldEnterprise();
-            if(enterpriseOld != null){
+            if (enterpriseOld != null) {
                 List<ClusterBean> clusterBeanListOld = enterpriseOld.getClusterBeanList();
                 ClusterBean clusterBeanIndex = new ClusterBean();
                 clusterBeanIndex.setServiceName(serviceName);
@@ -134,7 +134,7 @@ public class MutilClusterUtils {
             MyApplication.getInstance().setClusterChatVersion(clusterBean.getServiceVersion());
             MyApplication.getInstance().setClusterChatSocket(chatUrl);
         }
-        if(serviceName.equals(ECM_SCHEDULE)){
+        if (serviceName.equals(ECM_SCHEDULE)) {
             MyApplication.getInstance().setClusterScheduleVersion(clusterBean.getServiceVersion());
         }
         return differentUrlByType;
@@ -166,14 +166,15 @@ public class MutilClusterUtils {
 
     /**
      * 获取ClusterBean
+     *
      * @param serviceName
      * @return
      */
-    public static ClusterBean getClusterBean(String serviceName){
+    public static ClusterBean getClusterBean(String serviceName) {
         ArrayList<ClusterBean> clusterBeanArrayListOld = MyApplication.getInstance().getCurrentEnterprise().getClusterBeanList();
         int index = clusterBeanArrayListOld.indexOf(new ClusterBean(serviceName));
         ClusterBean clusterBean = null;
-        if (index != -1){
+        if (index != -1) {
             clusterBean = clusterBeanArrayListOld.get(index);
         }
         return clusterBean;

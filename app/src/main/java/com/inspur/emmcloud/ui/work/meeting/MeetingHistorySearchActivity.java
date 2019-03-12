@@ -28,8 +28,8 @@ import com.inspur.emmcloud.util.common.GroupUtils.GroupBy;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CustomEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -63,72 +63,6 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
     private int page = 0;
     private CustomEditText searchEdit;
     private String keyword = "";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_history_search);
-        initViews();
-    }
-
-
-    /**
-     * 初始化Views
-     */
-    private void initViews() {
-        apiService = new WorkAPIService(MeetingHistorySearchActivity.this);
-        apiService.setAPIInterface(new WebService());
-
-        loadingDlg = new LoadingDialog(MeetingHistorySearchActivity.this);
-        swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setOnLoadListener(this);
-        swipeRefreshLayout.setEnabled(false);
-        searchEdit = (CustomEditText) findViewById(R.id.search_edit);
-        searchEdit.setOnEditorActionListener(this);
-        searchEdit.addTextChangedListener(watcher);
-        noMeetingLayout = (RelativeLayout) findViewById(R.id.meeting_history_search_null_layout);
-        expandListView = (ExpandableListView) findViewById(R.id.expandable_list);
-        expandListView.setGroupIndicator(null);
-        expandListView.setVerticalScrollBarEnabled(false);
-        expandListView.setHeaderDividersEnabled(false);
-        expandListView.setOnChildClickListener(new MeetingListListener());
-    }
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.back_layout:
-                finish();
-                break;
-            default:
-                break;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * android.widget.TextView.OnEditorActionListener#onEditorAction(android
-     * .widget.TextView, int, android.view.KeyEvent)
-     */
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        // TODO Auto-generated method stub
-        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            String searchContent = searchEdit.getText().toString();
-            if (StringUtils.isBlank(searchContent)){
-                ToastUtils.show(getApplicationContext(),R.string.app_input_search_key);
-                return true;
-            }
-            if (!searchContent.equals(keyword)) {
-                keyword = searchContent;
-                page = 0;
-                getSearchMeetings(true, false);
-            }
-        }
-        return false;
-    }
-
     private TextWatcher watcher = new TextWatcher() {
 
         @Override
@@ -160,6 +94,70 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
         }
     };
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_history_search);
+        initViews();
+    }
+
+    /**
+     * 初始化Views
+     */
+    private void initViews() {
+        apiService = new WorkAPIService(MeetingHistorySearchActivity.this);
+        apiService.setAPIInterface(new WebService());
+
+        loadingDlg = new LoadingDialog(MeetingHistorySearchActivity.this);
+        swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setOnLoadListener(this);
+        swipeRefreshLayout.setEnabled(false);
+        searchEdit = (CustomEditText) findViewById(R.id.search_edit);
+        searchEdit.setOnEditorActionListener(this);
+        searchEdit.addTextChangedListener(watcher);
+        noMeetingLayout = (RelativeLayout) findViewById(R.id.meeting_history_search_null_layout);
+        expandListView = (ExpandableListView) findViewById(R.id.expandable_list);
+        expandListView.setGroupIndicator(null);
+        expandListView.setVerticalScrollBarEnabled(false);
+        expandListView.setHeaderDividersEnabled(false);
+        expandListView.setOnChildClickListener(new MeetingListListener());
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * android.widget.TextView.OnEditorActionListener#onEditorAction(android
+     * .widget.TextView, int, android.view.KeyEvent)
+     */
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            String searchContent = searchEdit.getText().toString();
+            if (StringUtils.isBlank(searchContent)) {
+                ToastUtils.show(getApplicationContext(), R.string.app_input_search_key);
+                return true;
+            }
+            if (!searchContent.equals(keyword)) {
+                keyword = searchContent;
+                page = 0;
+                getSearchMeetings(true, false);
+            }
+        }
+        return false;
+    }
+
     /**
      * 更新Adapter数据
      */
@@ -169,6 +167,96 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
             expandListView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 初始化数据
+     */
+    private void initAndDisplayData() {
+        MeetingGroupByDayMap = new ArrayMap<String, List<Meeting>>();
+        meetingDayList = new ArrayList<String>();
+        if (allMeetingList.size() == 0) {
+            noMeetingLayout.setVisibility(View.VISIBLE);
+        } else {
+            noMeetingLayout.setVisibility(View.GONE);
+            MeetingGroupByDayMap = GroupUtils.group(allMeetingList,
+                    new MeetingGroupByDay());
+            meetingDayList = new ArrayList<String>(
+                    MeetingGroupByDayMap.keySet());
+            Collections.sort(meetingDayList, new SortClass());
+
+        }
+        if (adapter == null) {
+            adapter = new MyAdapter();
+            expandListView.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+    /**
+     * 得到格式化的时间如06:00-07:30
+     *
+     * @param meeting
+     * @return
+     */
+    public String getTimeDuration(Meeting meeting) {
+        String from = meeting.getFrom();
+        String to = meeting.getTo();
+        String dateFromTime = "", dateToTime = "";
+        dateFromTime = getFromTime(from);
+        dateToTime = getToTime(to);
+        String meetingTime = dateFromTime + "-" + dateToTime;
+        return meetingTime;
+    }
+
+    /**
+     * 获取结束时间
+     *
+     * @return
+     */
+    private String getToTime(String to) {
+        // TODO Auto-generated method stub
+        Calendar calendarTo = TimeUtils.timeString2Calendar(to);
+        String dateToTime = TimeUtils.calendar2FormatString(
+                MeetingHistorySearchActivity.this, calendarTo,
+                TimeUtils.DATE_FORMAT_HOUR_MINUTE);
+        return dateToTime;
+    }
+
+    /**
+     * @param from
+     * @return
+     */
+    private String getFromTime(String from) {
+        // TODO Auto-generated method stub
+        Calendar calendFrom = TimeUtils.timeString2Calendar(from);
+        String dateFromTime = TimeUtils.calendar2FormatString(
+                MeetingHistorySearchActivity.this, calendFrom,
+                TimeUtils.DATE_FORMAT_HOUR_MINUTE);
+        return dateFromTime;
+    }
+
+    @Override
+    public void onLoadMore() {
+        getSearchMeetings(false, true);
+    }
+
+    /**
+     * 获取会议列表
+     *
+     * @param isShowDlg
+     * @param isLoadMore
+     */
+    private void getSearchMeetings(boolean isShowDlg, boolean isLoadMore) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show(isShowDlg);
+            int requestPage = isLoadMore ? page + 1 : 0;
+            apiService.getHistoryMeetingList(keyword, requestPage, LIMIT, isLoadMore);
+        } else {
+            swipeRefreshLayout.setLoading(false);
         }
     }
 
@@ -295,6 +383,11 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
             return convertView;
         }
 
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return true;
+        }
+
         class ViewHolder {
             TextView dateText;
             TextView weekText;
@@ -307,37 +400,6 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
             TextView meetingRoom;
             TextView meetingNoticeText;
             View meetingCardLineView;
-        }
-
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
-        }
-
-    }
-
-    /**
-     * 初始化数据
-     */
-    private void initAndDisplayData() {
-        MeetingGroupByDayMap = new ArrayMap<String, List<Meeting>>();
-        meetingDayList = new ArrayList<String>();
-        if (allMeetingList.size() == 0) {
-            noMeetingLayout.setVisibility(View.VISIBLE);
-        } else {
-            noMeetingLayout.setVisibility(View.GONE);
-            MeetingGroupByDayMap = GroupUtils.group(allMeetingList,
-                    new MeetingGroupByDay());
-            meetingDayList = new ArrayList<String>(
-                    MeetingGroupByDayMap.keySet());
-            Collections.sort(meetingDayList, new SortClass());
-
-        }
-        if (adapter == null) {
-            adapter = new MyAdapter();
-            expandListView.setAdapter(adapter);
-        } else {
-            adapter.notifyDataSetChanged();
         }
 
     }
@@ -362,49 +424,6 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
             return false;
         }
 
-    }
-
-    /**
-     * 得到格式化的时间如06:00-07:30
-     *
-     * @param meeting
-     * @return
-     */
-    public String getTimeDuration(Meeting meeting) {
-        String from = meeting.getFrom();
-        String to = meeting.getTo();
-        String dateFromTime = "", dateToTime = "";
-        dateFromTime = getFromTime(from);
-        dateToTime = getToTime(to);
-        String meetingTime = dateFromTime + "-" + dateToTime;
-        return meetingTime;
-    }
-
-    /**
-     * 获取结束时间
-     *
-     * @return
-     */
-    private String getToTime(String to) {
-        // TODO Auto-generated method stub
-        Calendar calendarTo = TimeUtils.timeString2Calendar(to);
-        String dateToTime = TimeUtils.calendar2FormatString(
-                MeetingHistorySearchActivity.this, calendarTo,
-                TimeUtils.DATE_FORMAT_HOUR_MINUTE);
-        return dateToTime;
-    }
-
-    /**
-     * @param from
-     * @return
-     */
-    private String getFromTime(String from) {
-        // TODO Auto-generated method stub
-        Calendar calendFrom = TimeUtils.timeString2Calendar(from);
-        String dateFromTime = TimeUtils.calendar2FormatString(
-                MeetingHistorySearchActivity.this, calendFrom,
-                TimeUtils.DATE_FORMAT_HOUR_MINUTE);
-        return dateFromTime;
     }
 
     class MeetingGroupByDay implements GroupBy<String> {
@@ -441,28 +460,6 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
             } else {
                 return 0;
             }
-        }
-    }
-
-
-    @Override
-    public void onLoadMore() {
-        getSearchMeetings(false, true);
-    }
-
-    /**
-     * 获取会议列表
-     *
-     * @param isShowDlg
-     * @param isLoadMore
-     */
-    private void getSearchMeetings(boolean isShowDlg, boolean isLoadMore) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show(isShowDlg);
-            int requestPage = isLoadMore ? page + 1 : 0;
-            apiService.getHistoryMeetingList(keyword, requestPage, LIMIT, isLoadMore);
-        } else {
-            swipeRefreshLayout.setLoading(false);
         }
     }
 

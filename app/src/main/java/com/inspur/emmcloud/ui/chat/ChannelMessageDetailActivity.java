@@ -197,7 +197,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             fileSize = FileUtils.formatFileSize(msgContentMediaImage.getRawSize());
             final String imgPath = APIUri.getChatFileResouceUrl(message.getChannel(), msgContentMediaImage.getRawMedia());
             ImageDisplayUtils.getInstance().displayImage(msgContentImg,
-                    imgPath, R.drawable.icon_photo_default);
+                    imgPath, R.drawable.default_image);
             msgContentImg.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -272,7 +272,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      **/
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 onBackPressed();
                 break;
             default:
@@ -335,6 +335,83 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         EventBus.getDefault().post(simpleEventMessage);
     }
 
+    /**
+     * 打开个人信息
+     *
+     * @param uid
+     */
+    private void openUserInfo(String uid) {
+        Bundle bundle = new Bundle();
+        bundle.putString("uid", uid);
+        //机器人进群修改处
+        if (uid.startsWith("BOT")) {
+            IntentUtils.startActivity(ChannelMessageDetailActivity.this, RobotInfoActivity.class, bundle);
+        } else {
+            IntentUtils.startActivity(ChannelMessageDetailActivity.this,
+                    UserInfoActivity.class, bundle);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        getComment();
+    }
+
+    /**
+     * 获取消息的评论
+     */
+    private void getComment() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            WSAPIService.getInstance().getMessageComment(mid);
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessageComment(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT)) {
+            if (eventMessage.getStatus() == 200) {
+                String content = eventMessage.getContent();
+                GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
+                commentList = getMessageCommentResult.getCommentList();
+                if (commentList != null && commentList.size() > 0) {
+                    commentAdapter = new CommentAdapter();
+                    commentListView.setAdapter(commentAdapter);
+                    commentAdapter.notifyDataSetChanged();
+                }
+            } else {
+//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+            }
+        }
+    }
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessageById(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
+            if (eventMessage.getStatus() == 200) {
+                String content = eventMessage.getContent();
+                JSONObject contentobj = JSONUtils.getJSONObject(content);
+                Message message = new Message(contentobj);
+                if (message.getId().equals(mid)) {
+                    handMsgData();
+                }
+            } else {
+//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+            }
+
+        }
+
+    }
 
     class CommentAdapter extends BaseAdapter {
         @Override
@@ -385,85 +462,5 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             });
             return convertView;
         }
-    }
-
-    /**
-     * 打开个人信息
-     *
-     * @param uid
-     */
-    private void openUserInfo(String uid) {
-        Bundle bundle = new Bundle();
-        bundle.putString("uid", uid);
-        //机器人进群修改处
-        if (uid.startsWith("BOT")) {
-            IntentUtils.startActivity(ChannelMessageDetailActivity.this, RobotInfoActivity.class, bundle);
-        } else {
-            IntentUtils.startActivity(ChannelMessageDetailActivity.this,
-                    UserInfoActivity.class, bundle);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-
-    @Override
-    public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
-        getComment();
-    }
-
-
-    /**
-     * 获取消息的评论
-     */
-    private void getComment() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            WSAPIService.getInstance().getMessageComment(mid);
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
-    //接收到websocket发过来的消息
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessageComment(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT)) {
-            if (eventMessage.getStatus() == 200) {
-                String content = eventMessage.getContent();
-                GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
-                commentList = getMessageCommentResult.getCommentList();
-                if (commentList != null && commentList.size() > 0) {
-                    commentAdapter = new CommentAdapter();
-                    commentListView.setAdapter(commentAdapter);
-                    commentAdapter.notifyDataSetChanged();
-                }
-            } else {
-//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
-            }
-        }
-    }
-
-    //接收到websocket发过来的消息
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onGetMessageById(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
-            if (eventMessage.getStatus() == 200) {
-                String content = eventMessage.getContent();
-                JSONObject contentobj = JSONUtils.getJSONObject(content);
-                Message message = new Message(contentobj);
-                if (message.getId().equals(mid)) {
-                    handMsgData();
-                }
-            } else {
-//                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
-            }
-
-        }
-
     }
 }

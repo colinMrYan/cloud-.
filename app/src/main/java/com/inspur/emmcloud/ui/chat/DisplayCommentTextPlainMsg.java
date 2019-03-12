@@ -33,6 +33,7 @@ public class DisplayCommentTextPlainMsg {
 
     /**
      * 评论卡片
+     *
      * @param context
      * @param childView
      * @param msg
@@ -44,10 +45,10 @@ public class DisplayCommentTextPlainMsg {
         boolean isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
         final TextViewWithSpan commentContentText = (TextViewWithSpan) cardContentView
                 .findViewById(R.id.comment_text);
-        BubbleLayout cardLayout = (BubbleLayout)cardContentView.findViewById(R.id.bl_card);
-        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
-        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
+        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
+        cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         TextView commentTitleText = (TextView) cardContentView
                 .findViewById(R.id.comment_title_text);
         MsgContentComment msgContentComment = message.getMsgContentComment();
@@ -59,13 +60,13 @@ public class DisplayCommentTextPlainMsg {
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
         commentContentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
-                commentContentText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
-                        : R.color.header_bg));
+                commentContentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
+                        : R.color.header_bg_blue));
 
-        Message commentedMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),msgContentComment.getMessage());
-        if (commentedMessage != null){
-            commentTitleText.setText(getCommentTitle(context,commentedMessage,isMyMsg));
-        }else {
+        Message commentedMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), msgContentComment.getMessage());
+        if (commentedMessage != null) {
+            commentTitleText.setText(getCommentTitle(context, commentedMessage, isMyMsg));
+        } else {
             WSAPIService.getInstance().getMessageById(msgContentComment.getMessage());
         }
 
@@ -73,23 +74,22 @@ public class DisplayCommentTextPlainMsg {
     }
 
 
-    private static SpannableStringBuilder getCommentTitle(Context context,Message commentedMessage,boolean isMyMsg){
+    private static SpannableStringBuilder getCommentTitle(Context context, Message commentedMessage, boolean isMyMsg) {
         String commentMsgSenderName = ContactUserCacheUtils.getUserName(commentedMessage.getFromUser());
-        String commentedMessageTime = TimeUtils.getDisplayTime(context,commentedMessage.getCreationDate());
+        String commentedMessageTime = TimeUtils.getDisplayTime(context, commentedMessage.getCreationDate());
         String commentTitle = context
                 .getString(R.string.comment_hallcomment_text)
                 + " "
                 + commentMsgSenderName
-                + " "
-                ;
+                + " ";
         String commentedMessageType = commentedMessage.getType();
-        if (commentedMessageType.equals("file/regular-file")){
+        if (commentedMessageType.equals("file/regular-file")) {
             commentTitle = commentTitle
                     + context.getString(R.string.comment_filetype);
-        }else if(commentedMessageType.equals("media/image")){
+        } else if (commentedMessageType.equals("media/image")) {
             commentTitle = commentTitle
                     + context.getString(R.string.comment_type);
-        }else {
+        } else {
             commentTitle = commentTitle
                     + context.getString(R.string.comment_other_type);
         }
@@ -100,11 +100,10 @@ public class DisplayCommentTextPlainMsg {
         builder.setSpan(
                 new ForegroundColorSpan(context.getResources().getColor(
                         isMyMsg ? R.color.hightlight_in_blue_bg
-                                : R.color.header_bg)), fstart, fend,
+                                : R.color.header_bg_blue)), fstart, fend,
                 Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         return builder;
     }
-
 
 
 }

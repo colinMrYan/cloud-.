@@ -8,8 +8,9 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 
 public class GetExperienceUpgradeFlagResult {
     private int status = 0;
-    public GetExperienceUpgradeFlagResult(String response){
-        status = JSONUtils.getInt(response,"state",0);
+
+    public GetExperienceUpgradeFlagResult(String response) {
+        status = JSONUtils.getInt(response, "state", 0);
     }
 
     public int getStatus() {

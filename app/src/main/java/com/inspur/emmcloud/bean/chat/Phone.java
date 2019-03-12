@@ -17,7 +17,7 @@ public class Phone {
         number = JSONUtils.getString(obj, "number", "");
     }
 
-    public Phone(String category,String number){
+    public Phone(String category, String number) {
         this.category = category;
         this.number = number;
     }
@@ -37,12 +37,13 @@ public class Phone {
     public void setNumber(String number) {
         this.number = number;
     }
-    public JSONObject toJSONObject(){
+
+    public JSONObject toJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("category",category);
-            obj.put("number",number);
-        }catch (Exception e){
+            obj.put("category", category);
+            obj.put("number", number);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return obj;

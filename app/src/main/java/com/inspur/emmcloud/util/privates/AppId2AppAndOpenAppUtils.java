@@ -22,7 +22,7 @@ public class AppId2AppAndOpenAppUtils {
     private OnFinishActivityListener onFinishActivityListener;
     private LoadingDialog loadingDialog;
 
-    public AppId2AppAndOpenAppUtils(Activity activity){
+    public AppId2AppAndOpenAppUtils(Activity activity) {
         this.activity = activity;
         loadingDialog = new LoadingDialog(activity);
     }
@@ -30,15 +30,15 @@ public class AppId2AppAndOpenAppUtils {
     /**
      * 根据id获取app详情
      */
-    public  void getAppInfoById(Uri uri) {
+    public void getAppInfoById(Uri uri) {
         String appId = uri.getHost();
-        this.uri = (uri == null) ? "":uri.toString();
+        this.uri = (uri == null) ? "" : uri.toString();
         if (NetUtils.isNetworkConnected(activity) && !StringUtils.isBlank(appId)) {
             loadingDialog.show();
             MyAppAPIService apiService = new MyAppAPIService(activity);
             apiService.setAPIInterface(new WebService());
             apiService.getAppInfo(appId);
-        }else{
+        } else {
             finishActivty();
         }
     }
@@ -47,48 +47,34 @@ public class AppId2AppAndOpenAppUtils {
      * 结束Activity
      */
     private void finishActivty() {
-        if(onFinishActivityListener != null){
+        if (onFinishActivityListener != null) {
             onFinishActivityListener.onFinishActivity();
         }
     }
 
     /**
      * 设置回调函数
+     *
      * @param l
      */
-    public void setOnFinishActivityListener(OnFinishActivityListener l){
+    public void setOnFinishActivityListener(OnFinishActivityListener l) {
         this.onFinishActivityListener = l;
-    }
-
-    class WebService extends APIInterfaceInstance{
-        @Override
-        public void returnAppInfoSuccess(App app) {
-            dismissLoadingDialog();
-            handleAppAction(app);
-            finishActivty();
-        }
-
-        @Override
-        public void returnAppInfoFail(String error, int errorCode) {
-            dismissLoadingDialog();
-            WebServiceMiddleUtils.hand(activity, error, errorCode);
-            finishActivty();
-        }
     }
 
     /**
      * 根据app打开app
+     *
      * @param app
      */
     private void handleAppAction(App app) {
-        if(!StringUtils.isBlank(app.getAppID())){
+        if (!StringUtils.isBlank(app.getAppID())) {
             //特殊处理，不走UriUtils.openApp的逻辑，直接打开appUri，appUri是最终打开地址。
-            if(app.getIsSSO() == 1){
-                UriUtils.openWebApp(activity,app.getUri(),app);
-            }else{
-                UriUtils.openApp(activity,app,"application");
+            if (app.getIsSSO() == 1) {
+                UriUtils.openWebApp(activity, app.getUri(), app);
+            } else {
+                UriUtils.openApp(activity, app, "application");
             }
-        } else{
+        } else {
             showUnKnownMsg(uri);
         }
     }
@@ -108,8 +94,8 @@ public class AppId2AppAndOpenAppUtils {
     /**
      * 取消dialog
      */
-    private void dismissLoadingDialog(){
-        if(loadingDialog.isShowing()){
+    private void dismissLoadingDialog() {
+        if (loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
     }
@@ -117,7 +103,23 @@ public class AppId2AppAndOpenAppUtils {
     /**
      * 结束Activity的接口
      */
-    public interface OnFinishActivityListener{
+    public interface OnFinishActivityListener {
         void onFinishActivity();
+    }
+
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnAppInfoSuccess(App app) {
+            dismissLoadingDialog();
+            handleAppAction(app);
+            finishActivty();
+        }
+
+        @Override
+        public void returnAppInfoFail(String error, int errorCode) {
+            dismissLoadingDialog();
+            WebServiceMiddleUtils.hand(activity, error, errorCode);
+            finishActivty();
+        }
     }
 }

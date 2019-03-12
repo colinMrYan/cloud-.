@@ -39,6 +39,12 @@ import java.lang.reflect.Method;
 
 public class SystemBarTintManager {
 
+    /**
+     * The default system bar tint color value.
+     */
+    public static final int DEFAULT_TINT_COLOR = 0x99000000;
+    private static String sNavBarOverride;
+
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             try {
@@ -51,13 +57,6 @@ public class SystemBarTintManager {
             }
         }
     }
-
-    /**
-     * The default system bar tint color value.
-     */
-    public static final int DEFAULT_TINT_COLOR = 0x99000000;
-
-    private static String sNavBarOverride;
 
     private final SystemBarConfig mConfig;
     private boolean mStatusBarAvailable;
@@ -117,21 +116,6 @@ public class SystemBarTintManager {
             setupNavBarView(activity, decorViewGroup);
         }
 
-    }
-
-    /**
-     * Enable tinting of the system status bar.
-     * If the platform is running Jelly Bean or earlier, or translucent system
-     * UI modes have not been enabled in either the theme or via window flags,
-     * then this method does nothing.
-     *
-     * @param enabled True to enable tinting, false to disable it (default).
-     */
-    public void setStatusBarTintEnabled(boolean enabled) {
-        mStatusBarTintEnabled = enabled;
-        if (mStatusBarAvailable) {
-            mStatusBarTintView.setVisibility(enabled ? View.VISIBLE : View.GONE);
-        }
     }
 
     /**
@@ -297,6 +281,21 @@ public class SystemBarTintManager {
      */
     public boolean isStatusBarTintEnabled() {
         return mStatusBarTintEnabled;
+    }
+
+    /**
+     * Enable tinting of the system status bar.
+     * If the platform is running Jelly Bean or earlier, or translucent system
+     * UI modes have not been enabled in either the theme or via window flags,
+     * then this method does nothing.
+     *
+     * @param enabled True to enable tinting, false to disable it (default).
+     */
+    public void setStatusBarTintEnabled(boolean enabled) {
+        mStatusBarTintEnabled = enabled;
+        if (mStatusBarAvailable) {
+            mStatusBarTintView.setVisibility(enabled ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**

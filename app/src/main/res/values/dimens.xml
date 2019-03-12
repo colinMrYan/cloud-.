@@ -7,8 +7,9 @@
 
     <dimen name="header_padding_top_bottom">18dp</dimen>
 
-
+    <dimen name="header_textsize_big">20sp</dimen>
     <dimen name="header_textsize">18sp</dimen>
+    <dimen name="header_function_textsize">16sp</dimen>
     <dimen name="content_title_textsize">17sp</dimen>
     <dimen name="content_normal_textsize">15sp</dimen>
     <dimen name="content_small_textsize">14sp</dimen>

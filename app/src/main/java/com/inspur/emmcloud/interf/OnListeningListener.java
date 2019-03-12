@@ -6,5 +6,6 @@ package com.inspur.emmcloud.interf;
 
 public interface OnListeningListener {
     void onStartListening();
+
     void onStopListening();
 }

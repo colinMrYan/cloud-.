@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Window;
 
-import com.inspur.emmcloud.BaseActivity;
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -44,7 +44,8 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
@@ -70,16 +71,14 @@ import java.util.regex.Pattern;
  * scheme统一处理类
  */
 
-public class SchemeHandleActivity extends BaseActivity {
+public class SchemeHandleActivity extends Activity {
     private BroadcastReceiver unlockReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-        StateBarUtils.translucent(this,getResources().getColor(R.color.transparent));
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-        if(isLackNecessaryPermission()){
+        setTheme();
+        if (isLackNecessaryPermission()) {
             return;
         }
         new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
@@ -102,18 +101,37 @@ public class SchemeHandleActivity extends BaseActivity {
                 openScheme();
             }
         }).initProfile();
+//        ImmersionBar.with(this) .hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
+//        setTransparentStatus();
+    }
+
+    protected void setTheme() {
+        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        switch (currentThemeNo) {
+            case 1:
+                setTheme(R.style.AppTheme_Transparent_1);
+                break;
+            case 2:
+                setTheme(R.style.AppTheme_Transparent_2);
+                break;
+            default:
+                setTheme(R.style.AppTheme_Transparent_0);
+                break;
+        }
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
+        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont,0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true).init();
     }
 
     private boolean isLackNecessaryPermission() {
         //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE,Permissions.PHONE_PERMISSION);
-        if(!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)){
-                Intent intent = new Intent(SchemeHandleActivity.this,MainActivity.class);
-                startActivity(intent);
-                MyApplication.getInstance().closeOtherActivity(MainActivity.class.getSimpleName());
-                return true;
+        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, Permissions.PHONE_PERMISSION);
+        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
+            Intent intent = new Intent(SchemeHandleActivity.this, MainActivity.class);
+            startActivity(intent);
+            MyApplication.getInstance().closeOtherActivity(MainActivity.class.getSimpleName());
+            return true;
         }
-        return  false;
+        return false;
     }
 
 
@@ -122,7 +140,7 @@ public class SchemeHandleActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        if(isLackNecessaryPermission()){
+        if (isLackNecessaryPermission()) {
             return;
         }
         new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
@@ -266,14 +284,14 @@ public class SchemeHandleActivity extends BaseActivity {
                                 EventBus.getDefault().post(new ChangeTabBean(Constant.APP_TAB_BAR_APPLICATION));
                                 break;
                             case "emm":
-                                if (host.equals("news")){
-                                    IntentUtils.startActivity(SchemeHandleActivity.this, GroupNewsActivity.class,true);
-                                }else if(host.equals("volume")){
-                                    IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class,true);
+                                if (host.equals("news")) {
+                                    IntentUtils.startActivity(SchemeHandleActivity.this, GroupNewsActivity.class, true);
+                                } else if (host.equals("volume")) {
+                                    IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class, true);
                                 }
                                 break;
                             case "inspur-ecc-native":
-                                openNativeSchemeByHost(host,getIntent());
+                                openNativeSchemeByHost(host, getIntent());
                                 break;
                             default:
                                 finish();
@@ -296,10 +314,10 @@ public class SchemeHandleActivity extends BaseActivity {
         List<String> uriList = new ArrayList<>();
         if (Intent.ACTION_SEND.equals(action)) {
             Uri uri = FileUtils.getShareFileUri(getIntent());
-            if(isLinkShare()){
+            if (isLinkShare()) {
                 handleLinkShare(getShareLinkContent());
                 return;
-            }else if(uri != null){
+            } else if (uri != null) {
                 uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
@@ -310,8 +328,8 @@ public class SchemeHandleActivity extends BaseActivity {
         }
         if (uriList.size() > 0) {
             startVolumeShareActivity(uriList);
-        }else{
-            ToastUtils.show(SchemeHandleActivity.this,getString(R.string.share_not_support));
+        } else {
+            ToastUtils.show(SchemeHandleActivity.this, getString(R.string.share_not_support));
             finish();
         }
     }
@@ -327,22 +345,22 @@ public class SchemeHandleActivity extends BaseActivity {
         String titleStr = "";
         String digest = "";
         HashMap<String, String> shareLinkMap = new HashMap<>();
-        if(intent != null){
+        if (intent != null) {
             String text = intent.getExtras().getString(Intent.EXTRA_TEXT);
             String subject = intent.getExtras().getString(Intent.EXTRA_SUBJECT);
             if (text != null && subject != null) {
                 urlStr = getShareUrl(text);
                 titleStr = subject;
-                digest = text.replace(getShareUrl(text),"");
+                digest = text.replace(getShareUrl(text), "");
             } else if (text != null && subject == null) {
                 urlStr = getShareUrl(text);
                 titleStr = text.replace(urlStr, "");
             } else if (text == null && subject == null) {
                 return shareLinkMap;
             }
-            shareLinkMap.put("title", StringUtils.isBlank(titleStr)?getString(R.string.share_default_title):titleStr);
+            shareLinkMap.put("title", StringUtils.isBlank(titleStr) ? getString(R.string.share_default_title) : titleStr);
             shareLinkMap.put("url", urlStr);
-            shareLinkMap.put("digest",digest);
+            shareLinkMap.put("digest", digest);
         }
         return shareLinkMap;
     }
@@ -352,7 +370,7 @@ public class SchemeHandleActivity extends BaseActivity {
      *
      * @param text
      */
-    private  String getShareUrl(String text) {
+    private String getShareUrl(String text) {
 //        Pattern p = Pattern.compile("((http|ftp|https)://)(([a-zA-Z0-9\\._-]+\\.[a-zA-Z]{2,6})|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\\&%_\\./-~-]*)?", Pattern.CASE_INSENSITIVE);
         Pattern p = Pattern.compile(Constant.PATTERN_URL, Pattern.CASE_INSENSITIVE);
         Matcher matcher = p.matcher(text);
@@ -362,6 +380,7 @@ public class SchemeHandleActivity extends BaseActivity {
 
     /**
      * 是一个链接分享
+     *
      * @return
      */
     private boolean isLinkShare() {
@@ -372,7 +391,7 @@ public class SchemeHandleActivity extends BaseActivity {
     /**
      * 处理分享url
      */
-    private void handleLinkShare(HashMap<String,String> shareLinkContentMap) {
+    private void handleLinkShare(HashMap<String, String> shareLinkContentMap) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("url", shareLinkContentMap.get("url"));
@@ -424,7 +443,7 @@ public class SchemeHandleActivity extends BaseActivity {
                 boolean isUriHasTitle = (openMode != null && openMode.equals("1"));
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", webAppUrl);
-                bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,isUriHasTitle);
+                bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isUriHasTitle);
                 IntentUtils.startActivity(SchemeHandleActivity.this, ImpActivity.class, bundle, true);
             }
 
@@ -452,22 +471,22 @@ public class SchemeHandleActivity extends BaseActivity {
         }
     }
 
-    private void openNativeSchemeByHost(String host,Intent intent){
-        switch (host){
+    private void openNativeSchemeByHost(String host, Intent intent) {
+        switch (host) {
             case "calendar":
-                IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class,true);
+                IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class, true);
                 break;
             case "to-do":
-                IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class,true);
+                IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class, true);
                 break;
             case "meeting":
-                IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class,true);
+                IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class, true);
                 break;
             case "webex":
-                String installUri = intent.getExtras().getString("installUri","");
+                String installUri = intent.getExtras().getString("installUri", "");
                 Bundle bundle = new Bundle();
-                bundle.putString("installUri",installUri);
-                IntentUtils.startActivity(SchemeHandleActivity.this, WebexMyMeetingActivity.class,bundle,true);
+                bundle.putString("installUri", installUri);
+                IntentUtils.startActivity(SchemeHandleActivity.this, WebexMyMeetingActivity.class, bundle, true);
                 break;
             case "mail":
                 new MailLoginUtils().loginMail(this);

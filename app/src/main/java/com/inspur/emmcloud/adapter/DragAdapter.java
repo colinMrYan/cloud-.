@@ -37,9 +37,10 @@ public class DragAdapter extends BaseAdapter {
     private int groupPosition = -1;
     private NotifyCommonlyUseListener commonlyUseListener;
     private boolean canEdit = false;//表示排序和删除两个状态
+    private boolean isCommonlyUseGroup = false;
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
-    private Map<String,Integer> appStoreBadgeMap;
+    private Map<String, Integer> appStoreBadgeMap;
 
     public DragAdapter(Context context, List<App> appList, int position, Map<String, Integer> appStoreBadgeMap) {
         this.context = context;
@@ -110,13 +111,19 @@ public class DragAdapter extends BaseAdapter {
         ImageView deleteImg = (ImageView) convertView
                 .findViewById(R.id.delete_markview_text);
         if (canEdit) {
-            if (!app.getIsMustHave()) {
+            if (!app.getIsMustHave() || isCommonlyUseGroup) {
                 deleteImg.setVisibility(View.VISIBLE);
                 deleteImg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deletePosition = position;
-                        removeApp(app);
+                        if (isCommonlyUseGroup){
+                            AppCacheUtils.deleteAppCommonlyByAppID(context,app.getAppID());
+                            commonlyUseListener.onNotifyCommonlyUseApp(app);
+                        }else {
+                            deletePosition = position;
+                            removeApp(app);
+                        }
+
                     }
                 });
             }
@@ -199,6 +206,14 @@ public class DragAdapter extends BaseAdapter {
         convertView.startAnimation(animation);
     }
 
+    public boolean isCommonlyUseGroup() {
+        return isCommonlyUseGroup;
+    }
+
+    public void setCommonlyUseGroup(boolean commonlyUseGroup) {
+        isCommonlyUseGroup = commonlyUseGroup;
+    }
+
     /**
      * 设置可编辑状态
      *
@@ -241,19 +256,19 @@ public class DragAdapter extends BaseAdapter {
     }
 
     /**
-     * 刷新常用的接口
-     */
-    public interface NotifyCommonlyUseListener {
-        void onNotifyCommonlyUseApp(App app);
-    }
-
-    /**
      * 设置刷新常用的接口
      *
      * @param l
      */
     public void setNotifyCommonlyUseListener(NotifyCommonlyUseListener l) {
         this.commonlyUseListener = l;
+    }
+
+    /**
+     * 刷新常用的接口
+     */
+    public interface NotifyCommonlyUseListener {
+        void onNotifyCommonlyUseApp(App app);
     }
 
     class WebService extends APIInterfaceInstance {

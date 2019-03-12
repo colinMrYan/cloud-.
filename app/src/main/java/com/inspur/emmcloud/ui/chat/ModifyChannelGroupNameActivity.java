@@ -20,88 +20,88 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 
 /**
  * 修改群组名称
- * @author Administrator
  *
+ * @author Administrator
  */
 public class ModifyChannelGroupNameActivity extends BaseActivity {
-	
-	private ClearEditText editText;
-	private String cid; 
-	private LoadingDialog loadingDlg;
-	private String name;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_conversation_name_modify);
-		editText = (ClearEditText)findViewById(R.id.edit);
-		String name = getIntent().getStringExtra("name");
-		cid = getIntent().getStringExtra("cid");
-		EditTextUtils.setText(editText, name);
-		loadingDlg= new LoadingDialog(ModifyChannelGroupNameActivity.this);
-	}
-	
-	public void onClick(View v){
-		switch (v.getId()) {
-		case R.id.back_layout:
-			finish();
-			break;
-		case R.id.save_text:
-			name = editText.getText().toString().trim();
-			if (StringUtils.isBlank(name)) {
-				ToastUtils.show(getApplicationContext(), R.string.group_name_cannot_null);
-				return;
-			}
-			if (name.length()>40){
-				ToastUtils.show(getApplicationContext(), R.string.group_name_longth_valid);
-				return;
-			}
-			if (NetUtils.isNetworkConnected(getApplicationContext())) {
-				loadingDlg.show();
-				ChatAPIService apiService = new ChatAPIService(ModifyChannelGroupNameActivity.this);
-				apiService.setAPIInterface(new WebService());
-				apiService.updateChannelGroupName(cid, name);
-			}
-			break;
+    private ClearEditText editText;
+    private String cid;
+    private LoadingDialog loadingDlg;
+    private String name;
 
-		default:
-			break;
-		}
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_conversation_name_modify);
+        editText = (ClearEditText) findViewById(R.id.edit);
+        String name = getIntent().getStringExtra("name");
+        cid = getIntent().getStringExtra("cid");
+        EditTextUtils.setText(editText, name);
+        loadingDlg = new LoadingDialog(ModifyChannelGroupNameActivity.this);
+    }
 
-	private class WebService extends APIInterfaceInstance{
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
+            case R.id.save_text:
+                name = editText.getText().toString().trim();
+                if (StringUtils.isBlank(name)) {
+                    ToastUtils.show(getApplicationContext(), R.string.group_name_cannot_null);
+                    return;
+                }
+                if (name.length() > 40) {
+                    ToastUtils.show(getApplicationContext(), R.string.group_name_longth_valid);
+                    return;
+                }
+                if (NetUtils.isNetworkConnected(getApplicationContext())) {
+                    loadingDlg.show();
+                    ChatAPIService apiService = new ChatAPIService(ModifyChannelGroupNameActivity.this);
+                    apiService.setAPIInterface(new WebService());
+                    apiService.updateChannelGroupName(cid, name);
+                }
+                break;
 
-		@Override
-		public void returnUpdateChannelGroupNameSuccess(
-				GetBoolenResult getBoolenResult) {
-			// TODO Auto-generated method stub
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			
-			Intent intent = new Intent("message_notify");
-			intent.putExtra("command", "refresh_session_list");
-			LocalBroadcastManager.getInstance(ModifyChannelGroupNameActivity.this).sendBroadcast(intent);
+            default:
+                break;
+        }
+    }
 
-			Intent intentChannel = new Intent("update_channel_name");
-			intentChannel.putExtra("name", name);
-			LocalBroadcastManager.getInstance(ModifyChannelGroupNameActivity.this).sendBroadcast(intentChannel);
-			
-			Intent intentChannelInfo = new Intent();
-			intentChannelInfo.putExtra("name", name);
-			ModifyChannelGroupNameActivity.this.setResult(RESULT_OK, intentChannelInfo);
-			finish();
-		}
+    private class WebService extends APIInterfaceInstance {
 
-		@Override
-		public void returnUpdateChannelGroupNameFail(String error,int errorCode) {
-			// TODO Auto-generated method stub
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(ModifyChannelGroupNameActivity.this, error,errorCode);
-		}
-		
-	}
+        @Override
+        public void returnUpdateChannelGroupNameSuccess(
+                GetBoolenResult getBoolenResult) {
+            // TODO Auto-generated method stub
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+
+            Intent intent = new Intent("message_notify");
+            intent.putExtra("command", "refresh_session_list");
+            LocalBroadcastManager.getInstance(ModifyChannelGroupNameActivity.this).sendBroadcast(intent);
+
+            Intent intentChannel = new Intent("update_channel_name");
+            intentChannel.putExtra("name", name);
+            LocalBroadcastManager.getInstance(ModifyChannelGroupNameActivity.this).sendBroadcast(intentChannel);
+
+            Intent intentChannelInfo = new Intent();
+            intentChannelInfo.putExtra("name", name);
+            ModifyChannelGroupNameActivity.this.setResult(RESULT_OK, intentChannelInfo);
+            finish();
+        }
+
+        @Override
+        public void returnUpdateChannelGroupNameFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(ModifyChannelGroupNameActivity.this, error, errorCode);
+        }
+
+    }
 }

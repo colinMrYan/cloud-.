@@ -47,7 +47,7 @@ public class ConversationCreateUtils {
         this.onCreateGroupConversationListener = onCreateGroupConversationListener;
         JSONArray uidArray = new JSONArray();
         JSONArray nameArray = new JSONArray();
-        LogUtils.jasonDebug("peopleArray="+peopleArray.length());
+        LogUtils.jasonDebug("peopleArray=" + peopleArray.length());
         for (int i = 0; i < peopleArray.length(); i++) {
             try {
                 uidArray.put(i, peopleArray.getJSONObject(i).getString("pid"));
@@ -113,7 +113,7 @@ public class ConversationCreateUtils {
 
         @Override
         public void returnCreateDirectConversationSuccess(Conversation conversation) {
-            ConversationCacheUtils.saveConversation(MyApplication.getInstance(),conversation);
+            ConversationCacheUtils.saveConversation(MyApplication.getInstance(), conversation);
             LoadingDialog.dimissDlg(loadingDlg);
             if (onCreateDirectConversationListener != null) {
                 onCreateDirectConversationListener.createDirectConversationSuccess(conversation);
@@ -131,7 +131,7 @@ public class ConversationCreateUtils {
 
         @Override
         public void returnCreateGroupConversationSuccess(Conversation conversation) {
-            ConversationCacheUtils.saveConversation(MyApplication.getInstance(),conversation);
+            ConversationCacheUtils.saveConversation(MyApplication.getInstance(), conversation);
             LoadingDialog.dimissDlg(loadingDlg);
             if (onCreateGroupConversationListener != null) {
                 onCreateGroupConversationListener.createGroupConversationSuccess(conversation);

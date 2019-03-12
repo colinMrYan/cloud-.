@@ -112,14 +112,14 @@ public class ChannelAdapter extends BaseAdapter {
             channelPhotoImg.setTag("");
             if (file.exists()) {
                 channelPhotoImg.setImageBitmap(ImageUtils.getBitmapByFile(file));
-            }else {
+            } else {
                 channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
-        } else if(channel.getType().equals("DIRECT") ||channel.getType().equals("SERVICE")){
+        } else if (channel.getType().equals("DIRECT") || channel.getType().equals("SERVICE")) {
             ImageDisplayUtils.getInstance().displayImageByTag(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_person_default);
-        }else if(channel.getType().equals("LINK")){
+        } else if (channel.getType().equals("LINK")) {
             ImageDisplayUtils.getInstance().displayImage(channelPhotoImg, channel.getShowIcon(), R.drawable.icon_channel_group_default);
-        }else {
+        } else {
             channelPhotoImg.setTag("");
             channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
         }
@@ -137,16 +137,15 @@ public class ChannelAdapter extends BaseAdapter {
         long unReadCount = channel.getUnReadCount();
         holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                 context, channel.getMsgLastUpdate()));
-
-        String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()),null);
-        if (chatDrafts != null){
-            String content = "<font color='#FF0000'>"+context.getString(R.string.message_type_drafts)+"</font>"+chatDrafts;
-            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
-                holder.channelContentText.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY, null, null));
-            }else {
+        String chatDrafts = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), MyAppConfig.getChannelDrafsPreKey(channel.getCid()), null);
+        if (chatDrafts != null) {
+            String content = "<font color='#FF0000'>" + context.getString(R.string.message_type_drafts) + "</font>" + chatDrafts;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.channelContentText.setText(Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY, null, null));
+            } else {
                 holder.channelContentText.setText(Html.fromHtml(content));
             }
-        }else {
+        } else {
             holder.channelContentText.setText(channel
                     .getNewMsgContent());
         }

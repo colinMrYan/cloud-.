@@ -53,7 +53,7 @@ public class DisplayTxtRichMsg {
                 isMyMsg ? R.color.white : R.color.black));
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         String msgBody = msg.getBody();
         String source = JSONUtils.getString(msgBody, "source", "");
@@ -66,7 +66,7 @@ public class DisplayTxtRichMsg {
                             holder.setUnderLine(false);
                             holder.setColor(context.getResources().getColor(
                                     isMyMsg ? R.color.hightlight_in_blue_bg
-                                            : R.color.header_bg));
+                                            : R.color.header_bg_blue));
                         }
                     })
                     .urlClick(new OnUrlClickListener() {
@@ -99,7 +99,7 @@ public class DisplayTxtRichMsg {
                     contentText,
                     context.getResources().getColor(
                             isMyMsg ? R.color.hightlight_in_blue_bg
-                                    : R.color.header_bg));
+                                    : R.color.header_bg_blue));
 
         }
         contentText.setOnLongClickListener(new View.OnLongClickListener() {

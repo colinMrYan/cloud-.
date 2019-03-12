@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -26,77 +27,79 @@ import org.xutils.view.annotation.ViewInject;
 
 /**
  * 修改群组名称
- * @author Administrator
  *
+ * @author Administrator
  */
 @ContentView(R.layout.activity_conversation_name_modify)
 public class ConversationNameModifyActivity extends BaseActivity {
 
-	@ViewInject(R.id.edit)
-	private ClearEditText editText;
-	private Conversation conversation;
-	private LoadingDialog loadingDlg;
-	private String name;
+    @ViewInject(R.id.edit)
+    private ClearEditText editText;
+    private Conversation conversation;
+    private LoadingDialog loadingDlg;
+    private String name;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		String id = getIntent().getStringExtra("cid");
-		conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(),id);
-		name = conversation.getName();
-		EditTextUtils.setText(editText, name);
-		loadingDlg= new LoadingDialog(ConversationNameModifyActivity.this);
-	}
-	
-	public void onClick(View v){
-		switch (v.getId()) {
-		case R.id.back_layout:
-			finish();
-			break;
-		case R.id.save_text:
-			name = editText.getText().toString().trim();
-			if (StringUtils.isBlank(name)) {
-				ToastUtils.show(getApplicationContext(), R.string.group_name_cannot_null);
-				return;
-			}
-			if (name.length()>40){
-				ToastUtils.show(getApplicationContext(), R.string.group_name_longth_valid);
-				return;
-			}
-			modifyConversationName(name);
-			break;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        String id = getIntent().getStringExtra("cid");
+        conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), id);
+        name = conversation.getName();
+        EditTextUtils.setText(editText, name);
+        loadingDlg = new LoadingDialog(ConversationNameModifyActivity.this);
+    }
 
-		default:
-			break;
-		}
-	}
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
+            case R.id.save_text:
+                name = editText.getText().toString().trim();
+                if (StringUtils.isBlank(name)) {
+                    ToastUtils.show(getApplicationContext(), R.string.group_name_cannot_null);
+                    return;
+                }
+                if (name.length() > 40) {
+                    ToastUtils.show(getApplicationContext(), R.string.group_name_longth_valid);
+                    return;
+                }
+                modifyConversationName(name);
+                break;
 
-	private void modifyConversationName(String name){
-		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			loadingDlg.show();
-			ChatAPIService apiService = new ChatAPIService(ConversationNameModifyActivity.this);
-			apiService.setAPIInterface(new WebService());
-			apiService.updateConversationName(conversation.getId(), name);
-		}
-	}
+            default:
+                break;
+        }
+    }
+
+    private void modifyConversationName(String name) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            ChatAPIService apiService = new ChatAPIService(ConversationNameModifyActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.updateConversationName(conversation.getId(), name);
+        }
+    }
 
 
-	private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
 
-		@Override
-		public void returnUpdateConversationNameSuccess() {
-			LoadingDialog.dimissDlg(loadingDlg);
-			conversation.setName(name);
-			ConversationCacheUtils.updateConversationName(MyApplication.getInstance(),conversation.getId(),name);
-			EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME,conversation));
-			finish();
-		}
+        @Override
+        public void returnUpdateConversationNameSuccess() {
+            LoadingDialog.dimissDlg(loadingDlg);
+            conversation.setName(name);
+            ConversationCacheUtils.updateConversationName(MyApplication.getInstance(), conversation.getId(), name);
+            String pinYin = PinyinUtils.getPingYin(name);
+            ConversationCacheUtils.updateConversationPyFull(MyApplication.getInstance(), conversation.getId(), pinYin);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME, conversation));
+            finish();
+        }
 
-		@Override
-		public void returnUpdateConversationNameFail(String error, int errorCode) {
-			LoadingDialog.dimissDlg(loadingDlg);
-			WebServiceMiddleUtils.hand(ConversationNameModifyActivity.this, error,errorCode);
-		}
-	}
+        @Override
+        public void returnUpdateConversationNameFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(ConversationNameModifyActivity.this, error, errorCode);
+        }
+    }
 }

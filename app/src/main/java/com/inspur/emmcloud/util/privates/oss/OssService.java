@@ -52,7 +52,7 @@ public class OssService implements VolumeFileUploadService {
     /**
      * 初始化osss
      */
-    private void initOss(){
+    private void initOss() {
         OSSCredentialProvider credentialProvider = new STSGetter(getVolumeFileUploadTokenResult);
         ClientConfiguration conf = new ClientConfiguration();
         conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
@@ -62,7 +62,7 @@ public class OssService implements VolumeFileUploadService {
         try {
             //此语句根据阿里云api文档需要放进主线程，此处应该是一个线程
             oss = new OSSClient(MyApplication.getInstance(), getVolumeFileUploadTokenResult.getEndpoint(), credentialProvider, conf);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -98,7 +98,7 @@ public class OssService implements VolumeFileUploadService {
                         break;
                     case PROGRESS:
                         if (progressCallback != null) {
-                            int progress =(int) msg.obj;
+                            int progress = (int) msg.obj;
                             progressCallback.onLoading(progress);
                         }
                         break;

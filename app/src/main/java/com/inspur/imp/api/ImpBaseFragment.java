@@ -1,6 +1,5 @@
 package com.inspur.imp.api;
 
-import android.support.v4.app.Fragment;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,12 +15,15 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
 import java.util.List;
@@ -30,16 +32,16 @@ import java.util.List;
  * Created by chenmch on 2018/11/27.
  */
 
-public class ImpBaseFragment extends Fragment {
+public class ImpBaseFragment extends BaseFragment {
+    protected static final String JAVASCRIPT_PREFIX = "javascript:";
     protected RelativeLayout functionLayout;
     protected LinearLayout webFunctionLayout;
     protected List<MainTabMenu> optionMenuList;
     protected TextView headerText;
-    protected static final String JAVASCRIPT_PREFIX = "javascript:";
     private int functionLayoutWidth = -1;
     private int webFunctionLayoutWidth = -1;
 
-    protected void initHeaderOptionMenu(){
+    protected void initHeaderOptionMenu() {
         if (optionMenuList != null && optionMenuList.size() != 0) {
             webFunctionLayout.removeAllViews();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -56,23 +58,25 @@ public class ImpBaseFragment extends Fragment {
                         ImageView imageView = new ImageView(getContext());
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         imageView.setAdjustViewBounds(true);
-                        int paddingLeft = DensityUtil.dip2px(getContext(), 13);
+                        int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                         int paddingTop = DensityUtil.dip2px(getContext(), 17);
                         imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                         imageView.setOnClickListener(onClickListener);
                         imageView.setLayoutParams(params);
+                        imageView.setColorFilter(getContext().getResources().getColor(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color)));
                         ImageDisplayUtils.getInstance().displayImage(imageView, mainTabMenu.getIco());
                         webFunctionLayout.addView(imageView);
                     } else {
                         TextView textView = new TextView(getContext());
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                        int paddingLeft = DensityUtil.dip2px(getContext(), 12);
+                        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.header_function_textsize));
+                        int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                         textView.setMinWidth(DensityUtil.dip2px(MyApplication.getInstance(), 48));
                         textView.setPadding(paddingLeft, 0, paddingLeft, 0);
                         textView.setText(mainTabMenu.getText());
                         textView.setOnClickListener(onClickListener);
                         textView.setLayoutParams(params);
-                        textView.setTextColor(getContext().getResources().getColor(R.color.white));
+                        int textColor = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color);
+                        textView.setTextColor(getContext().getResources().getColor(textColor));
                         textView.setGravity(Gravity.CENTER_VERTICAL);
                         webFunctionLayout.addView(textView);
                     }
@@ -81,7 +85,7 @@ public class ImpBaseFragment extends Fragment {
                 final ImageView imageView = new ImageView(getContext());
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 imageView.setAdjustViewBounds(true);
-                int paddingLeft = DensityUtil.dip2px(getContext(), 13);
+                int paddingLeft = DensityUtil.dip2px(getContext(), 16);
                 int paddingTop = DensityUtil.dip2px(getContext(), 17);
                 imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                 imageView.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +95,9 @@ public class ImpBaseFragment extends Fragment {
                     }
                 });
                 imageView.setLayoutParams(params);
-                ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + R.drawable.ic_header_option);
+                int drawableResId = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.ic_header_option);
+                imageView.setImageResource(drawableResId);
+                //ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + drawableResId);
                 webFunctionLayout.addView(imageView);
             }
             setHeaderTextWidth();
@@ -130,9 +136,9 @@ public class ImpBaseFragment extends Fragment {
 
     private void showOptionMenu(View view) {
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu, null);
-        int width = StringUtils.isBlank(optionMenuList.get(0).getIco())?DensityUtil.dip2px(MyApplication.getInstance(),130):DensityUtil.dip2px(MyApplication.getInstance(),160);
-       final PopupWindow optionMenuPop = new PopupWindow(contentView,width,RelativeLayout.LayoutParams.WRAP_CONTENT, true);
-        ListView menuListView = (ListView)contentView.findViewById(R.id.lv_menu);
+        int width = StringUtils.isBlank(optionMenuList.get(0).getIco()) ? DensityUtil.dip2px(MyApplication.getInstance(), 130) : DensityUtil.dip2px(MyApplication.getInstance(), 160);
+        final PopupWindow optionMenuPop = new PopupWindow(contentView, width, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
+        ListView menuListView = (ListView) contentView.findViewById(R.id.lv_menu);
         menuListView.setAdapter(new MenuAdapter());
         menuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -148,14 +154,29 @@ public class ImpBaseFragment extends Fragment {
                 return false;
             }
         });
+        optionMenuPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
+            }
+        });
         optionMenuPop.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
+        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
         // 设置好参数之后再show
         optionMenuPop.showAsDropDown(view);
     }
 
+    /**
+     * 执行JS脚本
+     *
+     * @param script
+     */
+    protected void runJavaScript(String script) {
 
-    private class MenuAdapter extends BaseAdapter{
+    }
+
+    private class MenuAdapter extends BaseAdapter {
         @Override
         public int getCount() {
             return optionMenuList.size();
@@ -174,27 +195,19 @@ public class ImpBaseFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             MainTabMenu optionMenu = optionMenuList.get(position);
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu_item_view,null);
-            ImageView iconImg = (ImageView)convertView.findViewById(R.id.iv_icon);
-            TextView textView = (TextView)convertView.findViewById(R.id.tv_text);
-            if (StringUtils.isBlank(optionMenu.getIco())){
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu_item_view, null);
+            ImageView iconImg = (ImageView) convertView.findViewById(R.id.iv_icon);
+            TextView textView = (TextView) convertView.findViewById(R.id.tv_text);
+            if (StringUtils.isBlank(optionMenu.getIco())) {
                 iconImg.setVisibility(View.GONE);
-            }else {
+            } else {
                 iconImg.setVisibility(View.VISIBLE);
-                ImageDisplayUtils.getInstance().displayImage(iconImg,optionMenu.getIco());
+                iconImg.setColorFilter(getContext().getResources().getColor(R.color.header_text_black));
+                ImageDisplayUtils.getInstance().displayImage(iconImg, optionMenu.getIco());
             }
             textView.setText(optionMenu.getText());
             return convertView;
         }
-    }
-
-    /**
-     * 执行JS脚本
-     *
-     * @param script
-     */
-    protected void runJavaScript(String script) {
-
     }
 
 }

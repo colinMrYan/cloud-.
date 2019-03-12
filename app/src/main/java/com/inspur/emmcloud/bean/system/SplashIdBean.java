@@ -6,7 +6,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
  * Created by yufuchang on 2018/4/2.
  */
 
-public  class SplashIdBean {
+public class SplashIdBean {
     /**
      * namespace : com.inspur.ecc.core.preferences
      * domain : launch-screen
@@ -16,10 +16,10 @@ public  class SplashIdBean {
     private String domain = "";
     private String version = "";
 
-    public SplashIdBean(String response){
-        this.namespace = JSONUtils.getString(response,"namespace","");
-        this.domain = JSONUtils.getString(response,"domain","");
-        this.version = JSONUtils.getString(response,"version","");
+    public SplashIdBean(String response) {
+        this.namespace = JSONUtils.getString(response, "namespace", "");
+        this.domain = JSONUtils.getString(response, "domain", "");
+        this.version = JSONUtils.getString(response, "version", "");
 
     }
 

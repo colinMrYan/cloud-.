@@ -37,7 +37,8 @@ public class ImagePicker {
     public static final String EXTRA_RESULT_ITEMS = "extra_result_items";
     public static final String EXTRA_SELECTED_IMAGE_POSITION = "selected_image_position";
     public static final String EXTRA_IMAGE_ITEMS = "extra_image_items";
-
+    private static ImagePicker mInstance;
+    public Bitmap cropBitmap;
     private boolean multiMode = true;    //图片选择模式
     private int selectLimit = 9;         //最大选择图片数量
     private boolean crop = true;         //裁剪
@@ -52,14 +53,10 @@ public class ImagePicker {
     private CropImageView.Style style = CropImageView.Style.RECTANGLE; //裁剪框的形状
     private File cropCacheFolder;
     private File takeImageFile;
-    public Bitmap cropBitmap;
-
     private ArrayList<ImageItem> mSelectedImages = new ArrayList<ImageItem>();   //选中的图片集合
     private List<ImageFolder> mImageFolders;      //所有的图片文件夹
     private int mCurrentImageFolderPosition = 0;  //当前选中的文件夹位置 0表示所有图片
     private List<OnImageSelectedListener> mImageSelectedListeners;          // 图片选中的监听回调
-
-    private static ImagePicker mInstance;
 
     private ImagePicker() {
     }
@@ -73,6 +70,26 @@ public class ImagePicker {
             }
         }
         return mInstance;
+    }
+
+    /**
+     * 根据系统时间、前缀、后缀产生一个文件
+     */
+    public static File createFile(File folder, String prefix, String suffix) {
+        if (!folder.exists() || !folder.isDirectory()) folder.mkdirs();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA);
+        String filename = prefix + dateFormat.format(new Date(System.currentTimeMillis())) + suffix;
+        return new File(folder, filename);
+    }
+
+    /**
+     * 扫描图片
+     */
+    public static void galleryAddPic(Context context, File file) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri contentUri = Uri.fromFile(file);
+        mediaScanIntent.setData(contentUri);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(mediaScanIntent);
     }
 
     public boolean isMultiMode() {
@@ -95,16 +112,16 @@ public class ImagePicker {
         return crop;
     }
 
+    public void setCrop(boolean crop) {
+        this.crop = crop;
+    }
+
     public boolean getNeedUpload() {
         return isNeedUpload;
     }
 
     public void setNeedUpload(boolean isNeedUpload) {
         this.isNeedUpload = isNeedUpload;
-    }
-
-    public void setCrop(boolean crop) {
-        this.crop = crop;
     }
 
     public boolean isShowCamera() {
@@ -264,35 +281,6 @@ public class ImagePicker {
         activity.startActivityForResult(intent, requestCode);
     }
 
-    /**
-     * 根据系统时间、前缀、后缀产生一个文件
-     */
-    public static File createFile(File folder, String prefix, String suffix) {
-        if (!folder.exists() || !folder.isDirectory()) folder.mkdirs();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA);
-        String filename = prefix + dateFormat.format(new Date(System.currentTimeMillis())) + suffix;
-        return new File(folder, filename);
-    }
-
-    /**
-     * 扫描图片
-     */
-    public static void galleryAddPic(Context context, File file) {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentUri = Uri.fromFile(file);
-        mediaScanIntent.setData(contentUri);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(mediaScanIntent);
-    }
-
-    /**
-     * 图片选中的监听
-     */
-    public interface OnImageSelectedListener {
-        void onImageSelected(int position, ImageItem item, boolean isAdd);
-
-        void onImageSelectedRelace(int position, ImageItem item);
-    }
-
     public void addOnImageSelectedListener(OnImageSelectedListener l) {
         if (mImageSelectedListeners == null)
             mImageSelectedListeners = new ArrayList<OnImageSelectedListener>();
@@ -328,5 +316,14 @@ public class ImagePicker {
         for (OnImageSelectedListener l : mImageSelectedListeners) {
             l.onImageSelectedRelace(position, item);
         }
+    }
+
+    /**
+     * 图片选中的监听
+     */
+    public interface OnImageSelectedListener {
+        void onImageSelected(int position, ImageItem item, boolean isAdd);
+
+        void onImageSelectedRelace(int position, ImageItem item);
     }
 }

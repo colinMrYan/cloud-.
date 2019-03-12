@@ -43,7 +43,7 @@
                 android:layout_toLeftOf="@+id/commentdetail_time_text"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/header_bg"
+                android:textColor="@color/header_bg_blue"
                 android:textSize="@dimen/content_normal_textsize" />
         </RelativeLayout>
 

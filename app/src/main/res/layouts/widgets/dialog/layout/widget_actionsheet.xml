@@ -26,9 +26,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.6dp"
+                android:layout_height="0.5px"
                 android:layout_below="@id/title"
-                android:background="#7c7c7c"></View>
+                android:background="@color/color_list_divider"/>
         </RelativeLayout>
 
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:divider="@color/color_list_divider"
-            android:dividerHeight="0.5dp"></ListView>
+            android:dividerHeight="0.5px"/>
     </LinearLayout>
 
 

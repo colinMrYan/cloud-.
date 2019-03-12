@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 版本返回解析类
  */
-public class GetUpgradeResult implements Serializable{
+public class GetUpgradeResult implements Serializable {
 
     private static final String TAG = "GetVersionUpdateResult";
     private String resultText = "";

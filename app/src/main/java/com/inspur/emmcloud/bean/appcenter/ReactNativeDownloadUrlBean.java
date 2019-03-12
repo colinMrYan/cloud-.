@@ -21,23 +21,23 @@ public class ReactNativeDownloadUrlBean {
     private String uri;
     private String hash;
 
-    public ReactNativeDownloadUrlBean(String response){
+    public ReactNativeDownloadUrlBean(String response) {
 
         try {
             JSONObject jsonObject = new JSONObject(response);
-            if(jsonObject.has("id")){
+            if (jsonObject.has("id")) {
                 this.id = new IdBean(jsonObject.getString("id"));
             }
-            if(jsonObject.has("command")){
+            if (jsonObject.has("command")) {
                 this.command = jsonObject.getString("command");
             }
-            if(jsonObject.has("uri")){
+            if (jsonObject.has("uri")) {
                 this.uri = jsonObject.getString("uri");
             }
-            if(jsonObject.has("hash")){
-                if(jsonObject.getString("hash").startsWith("sha256") || jsonObject.getString("hash").startsWith("sha1")){
+            if (jsonObject.has("hash")) {
+                if (jsonObject.getString("hash").startsWith("sha256") || jsonObject.getString("hash").startsWith("sha1")) {
                     this.hash = jsonObject.getString("hash").split(":")[1];
-                }else{
+                } else {
                     this.hash = jsonObject.getString("hash");
                 }
             }
@@ -91,16 +91,16 @@ public class ReactNativeDownloadUrlBean {
         private String domain;
         private String version;
 
-        public IdBean(String idResponse){
+        public IdBean(String idResponse) {
             try {
                 JSONObject jsonObject = new JSONObject(idResponse);
-                if(jsonObject.has("namespace")){
+                if (jsonObject.has("namespace")) {
                     this.namespace = jsonObject.getString("namespace");
                 }
-                if(jsonObject.has("domain")){
+                if (jsonObject.has("domain")) {
                     this.domain = jsonObject.getString("domain");
                 }
-                if(jsonObject.has("version")){
+                if (jsonObject.has("version")) {
                     this.version = jsonObject.getString("version");
                 }
             } catch (JSONException e) {

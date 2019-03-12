@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
@@ -29,6 +28,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -68,7 +68,6 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelLis
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -111,7 +110,7 @@ import static android.app.Activity.RESULT_OK;
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
-public class CommunicationV0Fragment extends Fragment {
+public class CommunicationV0Fragment extends BaseFragment {
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -120,7 +119,7 @@ public class CommunicationV0Fragment extends Fragment {
     private static final int SORT_CHANNEL = 4;
     private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
     private static final int CREAT_CHANNEL_GROUP_ICON = 6;
-    private static final int CACHE_CHANNEL_SUCCESS= 7;
+    private static final int CACHE_CHANNEL_SUCCESS = 7;
     private View rootView;
     private ListView msgListView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -134,9 +133,33 @@ public class CommunicationV0Fragment extends Fragment {
     private boolean isHaveCreatGroupIcon = false;
     private PopupWindow popupWindow;
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
-    private boolean haveHeader=false;
-    private View    netExceptionView;
+    private boolean haveHeader = false;
+    private View netExceptionView;
     private CheckingNetStateUtils checkingNetStateUtils;
+    private OnClickListener onViewClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            switch (v.getId()) {
+                case R.id.more_function_list_img:
+                    showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
+                    break;
+                case R.id.contact_img:
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("select_content", 4);
+                    bundle.putBoolean("isMulti_select", false);
+                    bundle.putString("title",
+                            getActivity().getString(R.string.adress_list));
+                    IntentUtils.startActivity(getActivity(),
+                            ContactSearchActivity.class, bundle);
+                    recordUserClickContact();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     /**
      * 记录用户点击的频道
@@ -149,7 +172,7 @@ public class CommunicationV0Fragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB,null));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB, null));
     }
 
     @Override
@@ -163,6 +186,7 @@ public class CommunicationV0Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setFragmentStatusBarCommon();
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_message, container,
                     false);
@@ -178,7 +202,7 @@ public class CommunicationV0Fragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(),NetUtils.pingUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
         initView();
         sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -189,12 +213,7 @@ public class CommunicationV0Fragment extends Fragment {
 
     @Override
     public void onResume() {
-        if(checkingNetStateUtils.isConnectedNet()){
-            DeleteHeaderView();
-        }else{
-            checkingNetStateUtils.clearUrlsStates();
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
-        }
+        checkingNetStateUtils.getNetStateResult(5);
         super.onResume();
     }
 
@@ -235,7 +254,7 @@ public class CommunicationV0Fragment extends Fragment {
 
     private void initView() {
         // TODO Auto-generated method stub
-        netExceptionView  = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item,null);
+        netExceptionView = LayoutInflater.from(getContext()).inflate(R.layout.recycleview_header_item, null);
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,7 +280,7 @@ public class CommunicationV0Fragment extends Fragment {
     private void initPullRefreshLayout() {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView
                 .findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -290,13 +309,13 @@ public class CommunicationV0Fragment extends Fragment {
                 if (channelType.equals("GROUP") || channelType.equals("DIRECT") || channelType.equals("SERVICE")) {
                     IntentUtils.startActivity(getActivity(),
                             ChannelV0Activity.class, bundle);
-                } else if(channelType.equals("LINK")){
+                } else if (channelType.equals("LINK")) {
                     EmmAction emmAction = new EmmAction(channel.getAction());
-                    if(emmAction.getCanOpenAction()){
-                        if(emmAction.getUrl().startsWith("http")){
-                            UriUtils.openUrl(getActivity(),emmAction.getUrl());
-                        }else{
-                            IntentUtils.startActivity(getActivity(),emmAction.getUrl());
+                    if (emmAction.getCanOpenAction()) {
+                        if (emmAction.getUrl().startsWith("http")) {
+                            UriUtils.openUrl(getActivity(), emmAction.getUrl());
+                        } else {
+                            IntentUtils.startActivity(getActivity(), emmAction.getUrl());
                         }
                     }
                 } else {
@@ -333,91 +352,42 @@ public class CommunicationV0Fragment extends Fragment {
         showCreateGroupOrFindContact(getAppMainTabResult);
     }
 
-    private OnClickListener onViewClickListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            switch (v.getId()) {
-                case R.id.more_function_list_img:
-                    showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
-                    break;
-                case R.id.contact_img:
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("select_content", 4);
-                    bundle.putBoolean("isMulti_select", false);
-                    bundle.putString("title",
-                            getActivity().getString(R.string.adress_list));
-                    IntentUtils.startActivity(getActivity(),
-                            ContactSearchActivity.class, bundle);
-                    recordUserClickContact();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
     /**
      * 添加LIstView 的HeaderView
-     * */
+     */
     private void AddHeaderView() {
-        if(!haveHeader){
+        if (!haveHeader) {
             msgListView.addHeaderView(netExceptionView);
-            haveHeader=true;
+            haveHeader = true;
         }
     }
 
     /**
      * 删除ListView 的HeaderView
-     * */
+     */
     private void DeleteHeaderView() {
-        if(haveHeader){
+        if (haveHeader) {
             msgListView.removeHeaderView(netExceptionView);
-            haveHeader=false;
+            haveHeader = false;
         }
     }
 
 
-
     /**
      * app页网络异常提示框
-     * @param netState  通过Action获取操作类型
-     * */
+     *
+     * @param netState 通过Action获取操作类型
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals( NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
-                checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
-            } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
-                AddHeaderView();
-            } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
-                DeleteHeaderView();
-            }else {
-                DeleteHeaderView();
-            }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
-//               if(!(Boolean)netState.getMessageObj()||(!NetUtils.isNetworkConnected(getContext(),false))) {
-//                   AddHeaderView();
-//               } else {
-//                   DeleteHeaderView();
-//               }
-            if(!NetUtils.isNetworkConnected(getContext(),false)) {
-                AddHeaderView();
-            } else {
-                List<Object> pingIdAndData = (List<Object>)netState.getMessageObj();
-                Boolean pingConnectedResult=checkingNetStateUtils.isPingConnectedNet( (String)pingIdAndData.get( 0 ),(boolean)pingIdAndData.get( 1 ) );
-                if(pingConnectedResult){
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
+                if((boolean)netState.getMessageObj()){
                     DeleteHeaderView();
+                    WebSocketPush.getInstance().startWebSocket();
                 }else{
                     AddHeaderView();
                 }
             }
-            if ((Boolean)netState.getMessageObj()){
-                WebSocketPush.getInstance().startWebSocket();
-            }
-        }
     }
 
 
@@ -476,7 +446,7 @@ public class CommunicationV0Fragment extends Fragment {
 //                intent.setClass(getActivity(), PreviewDecodeActivity.class);
 //                intent.putExtra("from", "CommunicationFragment");
 //                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
-                AppUtils.openScanCode(CommunicationV0Fragment.this,SCAN_LOGIN_QRCODE_RESULT);
+                AppUtils.openScanCode(CommunicationV0Fragment.this, SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
             }
         });
@@ -534,10 +504,10 @@ public class CommunicationV0Fragment extends Fragment {
      */
     private void createGroupIcon(List<Channel> channelList) {
         if (MyApplication.getInstance().getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            if (channelList != null && channelList.size() == 0){
+            if (channelList != null && channelList.size() == 0) {
                 return;
             }
-            isHaveCreatGroupIcon = new ChannelGroupIconUtils().create(MyApplication.getInstance(), channelList,handler);
+            isHaveCreatGroupIcon = new ChannelGroupIconUtils().create(MyApplication.getInstance(), channelList, handler);
         }
     }
 
@@ -570,7 +540,7 @@ public class CommunicationV0Fragment extends Fragment {
                                 channel.setShowIcon(DirectChannelUtils.getDirectChannelIcon(MyApplication.getInstance(), channel.getTitle()));
                             } else if (channel.getType().equals("SERVICE")) {
                                 channel.setShowIcon(DirectChannelUtils.getRobotIcon(MyApplication.getInstance(), channel.getTitle()));
-                            }else if(channel.getType().equals("LINK")){
+                            } else if (channel.getType().equals("LINK")) {
                                 channel.setShowIcon(channel.getAvatar());
                             }
                         }
@@ -884,6 +854,270 @@ public class CommunicationV0Fragment extends Fragment {
         EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, unReadCount));
     }
 
+    private void showSocketStatusInTitle(String socketStatus) {
+        if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
+            titleText.setText(R.string.socket_connecting);
+        } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
+            //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
+            if (!isFirstConnectWebsockt) {
+                getChannelList();
+            }
+            isFirstConnectWebsockt = false;
+            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+            if (!StringUtils.isBlank(appTabs)) {
+                titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
+            } else {
+                titleText.setText(R.string.communicate);
+            }
+        } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
+            titleText.setText(R.string.socket_close);
+        }
+    }
+
+    /**
+     * 将所有频道的消息置为已读
+     */
+    private void setAllChannelMsgRead() {
+        // TODO Auto-generated method stub
+        List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
+        for (Channel channel : displayChannelList) {
+            MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), channel.getMsgLastUpdate()));
+            channel.setUnReadCount(0);
+        }
+        MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
+        displayData();
+    }
+
+//    class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {
+//        private List<Channel> allchannelList = new ArrayList<>();
+//
+//        @Override
+//        protected void onPostExecute(List<Channel> addchannelList) {
+//            getChannelMsg();
+//            LogUtils.jasonDebug("isHaveCreatGroupIcon=");
+//            if (!isHaveCreatGroupIcon) {
+//                createGroupIcon(allchannelList);
+//            } else {
+//                createGroupIcon(addchannelList);
+//            }
+//            getChannelInfoResult(allchannelList);
+//        }
+//
+//        @Override
+//        protected List<Channel> doInBackground(GetChannelListResult... params) {
+//            List<Channel> allchannelList = params[0].getChannelList();
+//            this.allchannelList = allchannelList;
+//            List<Channel> cacheChannelList = ChannelCacheUtils
+//                    .getCacheChannelList(getActivity());
+//            List<Channel> addchannelList = new ArrayList<>();
+//            addchannelList.addAll(allchannelList);
+//            addchannelList.removeAll(cacheChannelList);
+//            ChannelCacheUtils.clearChannel(getActivity());
+//            ChannelCacheUtils.saveChannelList(getActivity(), allchannelList);
+//            firstEnterToSetAllChannelMsgRead(allchannelList);
+//            return addchannelList;
+//        }
+//    }
+
+    /**
+     * 初始进入时将所有消息置为已读
+     *
+     * @param channelList
+     */
+    private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList) {
+        if (!DbCacheUtils.tableIsExist(null, "MessageReadCreationDate")) {
+            List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
+            for (Channel channel : channelList) {
+                MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), System.currentTimeMillis()));
+            }
+            MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
+        }
+    }
+
+    /**
+     * 将单个频道消息置为已读
+     *
+     * @param cid
+     */
+    private void setChannelMsgRead(String cid, Long messageCreationDate) {
+        MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(), cid,
+                messageCreationDate);
+        for (int i = 0; i < displayChannelList.size(); i++) {
+            Channel channel = displayChannelList.get(i);
+            if (channel.getCid().equals(cid)) {
+                channel.setUnReadCount(0);
+                break;
+            }
+        }
+        updateMessageUnReadCount();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 更新Channel的input信息
+     *
+     * @param searchChannelGroupList
+     */
+    public void saveChannelInfo(final List<ChannelGroup> searchChannelGroupList) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Channel> channelList = ChannelCacheUtils
+                        .getCacheChannelList(getActivity());
+                List<ChannelGroup> channelGroupList = new ArrayList<>();
+                for (int i = 0; i < searchChannelGroupList.size(); i++) {
+                    ChannelGroup channelGroup = searchChannelGroupList.get(i);
+                    if (channelGroup.getType().equals("GROUP")) {
+                        channelGroupList.add(channelGroup);
+                    } else if (channelGroup.getType().equals("SERVICE")) {
+                        int index = channelList.indexOf(new Channel(channelGroup.getCid()));
+                        if (index != -1) {
+                            channelList.get(index).setInputs(channelGroup.getInputs());
+                        }
+
+                    } else if (channelGroup.getType().equals("LINK")) {
+                        int index = channelList.indexOf(new Channel(channelGroup.getCid()));
+                        if (index != -1) {
+                            channelList.get(index).setAction(channelGroup.getAction());
+                            channelList.get(index).setAvatar(channelGroup.getAvatar());
+                        }
+                    }
+                }
+                ChannelGroupCacheUtils.saveChannelGroupList(MyApplication.getInstance(), channelGroupList);
+                ChannelCacheUtils.saveChannelList(MyApplication.getInstance(), channelList);
+                sortChannelList();
+            }
+        }).start();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
+
+        if (msgReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(msgReceiver);
+            msgReceiver = null;
+        }
+        if (messageFragmentReceiver != null) {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageFragmentReceiver);
+            messageFragmentReceiver = null;
+        }
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK
+                && requestCode == CREAT_CHANNEL_GROUP) {
+            // 创建群组
+            String searchResult = data.getExtras().getString("searchResult");
+            try {
+                JSONObject searchResultObj = new JSONObject(searchResult);
+                JSONArray peopleArray = searchResultObj.getJSONArray("people");
+
+                if (peopleArray.length() > 0
+                        && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                    creatGroupChannel(peopleArray);
+                }
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                ToastUtils.show(getActivity(),
+                        getActivity().getString(R.string.creat_group_fail));
+            }
+        } else if ((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)) {
+            if (data.hasExtra("isDecodeSuccess")) {
+                boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
+                if (isDecodeSuccess) {
+                    String msg = data.getStringExtra("msg");
+                    ScanQrCodeUtils.getScanQrCodeUtilsInstance(getActivity()).handleActionWithMsg(msg);
+                } else {
+                    ToastUtils.show(getActivity(), getString(R.string.qr_code_analysis_fail));
+                }
+            }
+        }
+    }
+
+    /**
+     * 创建群组
+     *
+     * @param peopleArray
+     */
+    private void creatGroupChannel(JSONArray peopleArray) {
+        // TODO Auto-generated method stub
+        new ChatCreateUtils().createGroupChannel(getActivity(), peopleArray,
+                new OnCreateGroupChannelListener() {
+
+                    @Override
+                    public void createGroupChannelSuccess(
+                            ChannelGroup channelGroup) {
+                        // TODO Auto-generated method stub
+                        Bundle bundle = new Bundle();
+                        bundle.putString("cid", channelGroup.getCid());
+                        bundle.putString("channelType", channelGroup.getType());
+                        bundle.putString("title", channelGroup.getChannelName());
+                        IntentUtils.startActivity(getActivity(),
+                                ChannelV0Activity.class, bundle);
+                        ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),
+                                channelGroup);
+                        getChannelList();
+                    }
+
+                    @Override
+                    public void createGroupChannelFail() {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+    }
+
+    /**
+     * 获取消息会话列表
+     */
+    private void getChannelList() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), true)) {
+            apiService.getChannelList();
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    /**
+     * 获取频道消息
+     */
+    private void getChannelMsg() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            apiService.getNewMsgs();
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    /**
+     * 根据cid数组获取Channel信息
+     *
+     * @param serviceCidList
+     */
+    public void getServieChannelInputs(List<String> serviceCidList) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            if (serviceCidList.size() > 0) {
+                String[] cidArray = serviceCidList.toArray(new String[serviceCidList.size()]);
+                apiService.getChannelGroupList(cidArray);
+            }
+
+        }
+
+    }
+
     static class ViewHolder {
         RelativeLayout mainLayout;
         CircleTextImageView channelPhotoImg;
@@ -894,7 +1128,6 @@ public class CommunicationV0Fragment extends Fragment {
         TextView channelNotReadCountText;
         ImageView dndImg;
     }
-
 
     private class Adapter extends BaseAdapter {
         private List<Channel> dataList = new ArrayList<>();
@@ -1029,40 +1262,10 @@ public class CommunicationV0Fragment extends Fragment {
         }
     }
 
-//    class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {
-//        private List<Channel> allchannelList = new ArrayList<>();
-//
-//        @Override
-//        protected void onPostExecute(List<Channel> addchannelList) {
-//            getChannelMsg();
-//            LogUtils.jasonDebug("isHaveCreatGroupIcon=");
-//            if (!isHaveCreatGroupIcon) {
-//                createGroupIcon(allchannelList);
-//            } else {
-//                createGroupIcon(addchannelList);
-//            }
-//            getChannelInfoResult(allchannelList);
-//        }
-//
-//        @Override
-//        protected List<Channel> doInBackground(GetChannelListResult... params) {
-//            List<Channel> allchannelList = params[0].getChannelList();
-//            this.allchannelList = allchannelList;
-//            List<Channel> cacheChannelList = ChannelCacheUtils
-//                    .getCacheChannelList(getActivity());
-//            List<Channel> addchannelList = new ArrayList<>();
-//            addchannelList.addAll(allchannelList);
-//            addchannelList.removeAll(cacheChannelList);
-//            ChannelCacheUtils.clearChannel(getActivity());
-//            ChannelCacheUtils.saveChannelList(getActivity(), allchannelList);
-//            firstEnterToSetAllChannelMsgRead(allchannelList);
-//            return addchannelList;
-//        }
-//    }
-
-    class CacheChannelThread extends Thread{
+    class CacheChannelThread extends Thread {
         private GetChannelListResult getChannelListResult;
-        private CacheChannelThread(GetChannelListResult getChannelListResult){
+
+        private CacheChannelThread(GetChannelListResult getChannelListResult) {
             this.getChannelListResult = getChannelListResult;
         }
 
@@ -1072,10 +1275,10 @@ public class CommunicationV0Fragment extends Fragment {
                 List<String> serviceCidList = new ArrayList<>();
                 List<Channel> allchannelList = getChannelListResult.getChannelList();
                 List<Channel> cacheChannelList = ChannelCacheUtils.getCacheChannelList(MyApplication.getInstance());
-                for (Channel channel:allchannelList){
-                    if (channel.getType().equals("SERVICE") || channel.getType().equals("LINK")){
+                for (Channel channel : allchannelList) {
+                    if (channel.getType().equals("SERVICE") || channel.getType().equals("LINK")) {
                         int position = cacheChannelList.indexOf(cacheChannelList);
-                        if (position != -1){
+                        if (position != -1) {
                             channel.setInputs(cacheChannelList.get(position).getInputs());
                             channel.setShowIcon(cacheChannelList.get(position).getAvatar());
                             channel.setAction(cacheChannelList.get(position).getAction());
@@ -1088,26 +1291,27 @@ public class CommunicationV0Fragment extends Fragment {
                 intersectionConversationList.addAll(allchannelList);
                 intersectionConversationList.retainAll(cacheChannelList);
                 cacheChannelList.removeAll(intersectionConversationList);
-                ChannelCacheUtils.deleteChannelList(MyApplication.getInstance(),cacheChannelList);
-                if (handler != null){
+                ChannelCacheUtils.deleteChannelList(MyApplication.getInstance(), cacheChannelList);
+                if (handler != null) {
                     android.os.Message message = handler.obtainMessage(CACHE_CHANNEL_SUCCESS, serviceCidList);
                     message.sendToTarget();
-                    if (isHaveCreatGroupIcon){
+                    if (isHaveCreatGroupIcon) {
                         allchannelList.removeAll(intersectionConversationList);
                     }
                     android.os.Message createChannelIconMessage = handler.obtainMessage(CREAT_CHANNEL_GROUP_ICON, allchannelList);
                     createChannelIconMessage.sendToTarget();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
     }
 
-    class CacheMessageThread extends Thread{
+    class CacheMessageThread extends Thread {
         private GetNewMsgsResult getNewMsgsResult;
-        public CacheMessageThread(GetNewMsgsResult getNewMsgsResult){
+
+        public CacheMessageThread(GetNewMsgsResult getNewMsgsResult) {
             this.getNewMsgsResult = getNewMsgsResult;
         }
 
@@ -1135,13 +1339,12 @@ public class CommunicationV0Fragment extends Fragment {
                         message.sendToTarget();
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
     }
-
 
     /**
      * 接受创建群组头像的icon
@@ -1192,114 +1395,6 @@ public class CommunicationV0Fragment extends Fragment {
         }
     }
 
-    private void showSocketStatusInTitle(String socketStatus) {
-        if (socketStatus.equals("socket_connecting")) {
-            titleText.setText(R.string.socket_connecting);
-        } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
-            //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
-            if (!isFirstConnectWebsockt) {
-                getChannelList();
-            }
-            isFirstConnectWebsockt = false;
-            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-            if (!StringUtils.isBlank(appTabs)) {
-                titleText.setText(AppTabUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
-            } else {
-                titleText.setText(R.string.communicate);
-            }
-        } else if (socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)) {
-            titleText.setText(R.string.socket_close);
-        }
-    }
-
-    /**
-     * 将所有频道的消息置为已读
-     */
-    private void setAllChannelMsgRead() {
-        // TODO Auto-generated method stub
-        List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
-        for (Channel channel : displayChannelList) {
-            MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), channel.getMsgLastUpdate()));
-            channel.setUnReadCount(0);
-        }
-        MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
-        displayData();
-    }
-
-    /**
-     * 初始进入时将所有消息置为已读
-     *
-     * @param channelList
-     */
-    private void firstEnterToSetAllChannelMsgRead(List<Channel> channelList) {
-        if (!DbCacheUtils.tableIsExist(null, "MessageReadCreationDate")) {
-            List<MessageReadCreationDate> MessageReadCreationDateList = new ArrayList<>();
-            for (Channel channel : channelList) {
-                MessageReadCreationDateList.add(new MessageReadCreationDate(channel.getCid(), System.currentTimeMillis()));
-            }
-            MsgReadCreationDateCacheUtils.saveMessageReadCreationDateList(MyApplication.getInstance(), MessageReadCreationDateList);
-        }
-    }
-
-    /**
-     * 将单个频道消息置为已读
-     *
-     * @param cid
-     */
-    private void setChannelMsgRead(String cid, Long messageCreationDate) {
-        MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(), cid,
-                messageCreationDate);
-        for (int i = 0; i < displayChannelList.size(); i++) {
-            Channel channel = displayChannelList.get(i);
-            if (channel.getCid().equals(cid)) {
-                channel.setUnReadCount(0);
-                break;
-            }
-        }
-        updateMessageUnReadCount();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * 更新Channel的input信息
-     *
-     * @param searchChannelGroupList
-     */
-    public void saveChannelInfo(final List<ChannelGroup> searchChannelGroupList) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<Channel> channelList = ChannelCacheUtils
-                        .getCacheChannelList(getActivity());
-                List<ChannelGroup> channelGroupList = new ArrayList<>();
-                for (int i = 0; i < searchChannelGroupList.size(); i++) {
-                    ChannelGroup channelGroup = searchChannelGroupList.get(i);
-                    if (channelGroup.getType().equals("GROUP")) {
-                        channelGroupList.add(channelGroup);
-                    } else if (channelGroup.getType().equals("SERVICE")) {
-                        int index = channelList.indexOf(new Channel(channelGroup.getCid()));
-                        if (index != -1) {
-                            channelList.get(index).setInputs(channelGroup.getInputs());
-                        }
-
-                    }else if(channelGroup.getType().equals("LINK")){
-                        int index = channelList.indexOf(new Channel(channelGroup.getCid()));
-                        if (index != -1) {
-                            channelList.get(index).setAction(channelGroup.getAction());
-                            channelList.get(index).setAvatar(channelGroup.getAvatar());
-                        }
-                    }
-                }
-                ChannelGroupCacheUtils.saveChannelGroupList(MyApplication.getInstance(), channelGroupList);
-                ChannelCacheUtils.saveChannelList(MyApplication.getInstance(), channelList);
-                sortChannelList();
-            }
-        }).start();
-
-    }
-
     private class SortComparator implements Comparator {
 
         @Override
@@ -1316,133 +1411,6 @@ public class CommunicationV0Fragment extends Fragment {
                 return 1;
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
-        if (handler != null) {
-            handler = null;
-        }
-
-        if (msgReceiver != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(msgReceiver);
-            msgReceiver = null;
-        }
-        if (messageFragmentReceiver != null) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageFragmentReceiver);
-            messageFragmentReceiver = null;
-        }
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK
-                && requestCode == CREAT_CHANNEL_GROUP) {
-            // 创建群组
-            String searchResult = data.getExtras().getString("searchResult");
-            try {
-                JSONObject searchResultObj = new JSONObject(searchResult);
-                JSONArray peopleArray = searchResultObj.getJSONArray("people");
-
-                if (peopleArray.length() > 0
-                        && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                    creatGroupChannel(peopleArray);
-                }
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                ToastUtils.show(getActivity(),
-                        getActivity().getString(R.string.creat_group_fail));
-            }
-        } else if ((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)) {
-            if (data.hasExtra("isDecodeSuccess")) {
-                boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
-                if (isDecodeSuccess) {
-                    String msg = data.getStringExtra("msg");
-                    ScanQrCodeUtils.getScanQrCodeUtilsInstance(getActivity()).handleActionWithMsg(msg);
-                } else {
-                    ToastUtils.show(getActivity(), getString(R.string.qr_code_analysis_fail));
-                }
-            }
-        }
-    }
-
-    /**
-     * 创建群组
-     *
-     * @param peopleArray
-     */
-    private void creatGroupChannel(JSONArray peopleArray) {
-        // TODO Auto-generated method stub
-        new ChatCreateUtils().createGroupChannel(getActivity(), peopleArray,
-                new OnCreateGroupChannelListener() {
-
-                    @Override
-                    public void createGroupChannelSuccess(
-                            ChannelGroup channelGroup) {
-                        // TODO Auto-generated method stub
-                        Bundle bundle = new Bundle();
-                        bundle.putString("cid", channelGroup.getCid());
-                        bundle.putString("channelType", channelGroup.getType());
-                        bundle.putString("title", channelGroup.getChannelName());
-                        IntentUtils.startActivity(getActivity(),
-                                ChannelV0Activity.class, bundle);
-                        ChannelGroupCacheUtils.saveChannelGroup(MyApplication.getInstance(),
-                                channelGroup);
-                        getChannelList();
-                    }
-
-                    @Override
-                    public void createGroupChannelFail() {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-    }
-
-
-    /**
-     * 获取消息会话列表
-     */
-    private void getChannelList() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), true)) {
-            apiService.getChannelList();
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
-    /**
-     * 获取频道消息
-     */
-    private void getChannelMsg() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            apiService.getNewMsgs();
-        }else{
-            swipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
-
-    /**
-     * 根据cid数组获取Channel信息
-     *
-     * @param serviceCidList
-     */
-    public void getServieChannelInputs(List<String> serviceCidList) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            if (serviceCidList.size() > 0) {
-                String[] cidArray = serviceCidList.toArray(new String[serviceCidList.size()]);
-                apiService.getChannelGroupList(cidArray);
-            }
-
-        }
-
     }
 
     class WebService extends APIInterfaceInstance {
@@ -1472,7 +1440,7 @@ public class CommunicationV0Fragment extends Fragment {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
                 swipeRefreshLayout.setRefreshing(false);
-               new CacheMessageThread(getNewMsgsResult).start();
+                new CacheMessageThread(getNewMsgsResult).start();
 
             }
 

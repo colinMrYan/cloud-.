@@ -45,7 +45,7 @@ public class SelectStaffService extends ImpPlugin {
      * 打开联系人详情页面
      */
     private void openContact() {
-        String id = JSONUtils.getString(paramsObject,"uid","");
+        String id = JSONUtils.getString(paramsObject, "uid", "");
         Intent intent = new Intent();
         intent.putExtra("uid", id);
         intent.setClass(getActivity(), UserInfoActivity.class);
@@ -84,7 +84,7 @@ public class SelectStaffService extends ImpPlugin {
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, multiSelection != 0);
         intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getActivity().getString(R.string.adress_list));
-        if (getImpCallBackInterface() != null){
+        if (getImpCallBackInterface() != null) {
             getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.SELECT_STAFF_SERVICE_REQUEST);
         }
     }
@@ -98,7 +98,7 @@ public class SelectStaffService extends ImpPlugin {
             selectFromContact();
         } else if ("viewContact".equals(action)) {
             viewContact();
-        } else if("openContact".equals(action)){
+        } else if ("openContact".equals(action)) {
             openContact();
         } else {
             showCallIMPMethodErrorDlg();
@@ -122,9 +122,9 @@ public class SelectStaffService extends ImpPlugin {
                 }
             }
             List<ContactUser> contactList = ContactUserCacheUtils.getSoreUserList(uidList);
-            if(multiSelection == 0 && contactList.size() == 1){
-                this.jsCallback(successCb,contactList.get(0).contact2JSONObject(getActivity()).toString());
-            }else{
+            if (multiSelection == 0 && contactList.size() == 1) {
+                this.jsCallback(successCb, contactList.get(0).contact2JSONObject(getActivity()).toString());
+            } else {
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < contactList.size(); i++) {
                     jsonArray.put(contactList.get(i).contact2JSONObject(getActivity()));

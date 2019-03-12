@@ -13,21 +13,24 @@ public class VoiceResult {
     private int xunFeiPermissionError = -1;
     private int xunFeiError = -1;
 
-    public VoiceResult(String results,float seconds,String filePath){
+    public VoiceResult(String results, float seconds, String filePath) {
         this.results = results;
         this.seconds = seconds;
         this.filePath = filePath;
     }
 
-    public VoiceResult(String results,float seconds){
-        this(results,seconds,"");
+    public VoiceResult(String results, float seconds) {
+        this(results, seconds, "");
     }
 
-    public VoiceResult(String results){
-        this(results,0,"");
+    public VoiceResult(String results) {
+        this(results, 0, "");
     }
 
-    public VoiceResult(){};
+    public VoiceResult() {
+    }
+
+    ;
 
     public String getResults() {
         return results;

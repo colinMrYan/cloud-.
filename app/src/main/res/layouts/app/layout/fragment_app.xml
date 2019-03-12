@@ -4,85 +4,24 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/header_layout"
+        android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="?attr/header_bg_color">
-
-        <RelativeLayout
-            android:id="@+id/appcenter_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="7dp"
-            android:background="@drawable/bg_appcenter_btn"
-            android:paddingBottom="4.5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="4.5dp">
-
-            <ImageView
-                android:id="@+id/app_center_img"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerVertical="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_app_store" />
-
-            <TextView
-                android:id="@+id/app_center_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/app_center_img"
-                android:paddingLeft="5dp"
-                android:text="@string/app_center"
-                android:textColor="?attr/header_text_color"
-                android:textSize="13sp" />
-
-        </RelativeLayout>
+        android:background="?attr/header_bg">
 
         <TextView
-            android:id="@+id/header_text"
+            android:id="@+id/tv_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
-            android:text="@string/application"
+            android:text="@string/app_center"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_textsize" />
-
-        <ImageView
-            android:id="@+id/modify_app_btn"
-            android:layout_width="47dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/selector_before_edit_app_btn"
-            android:visibility="gone"></ImageView>
-
-        <ImageView
-            android:id="@+id/app_edit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:paddingBottom="13dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:paddingTop="13dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_config" />
+            android:textSize="@dimen/header_textsize_big" />
 
         <Button
-            android:id="@+id/app_edit_finish"
+            android:id="@+id/bt_sort_finish"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -92,10 +31,34 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
+            android:minWidth="0dp"
             android:text="@string/finish"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/content_normal_textsize"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_function_textsize"
             android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/ibt_appcenter_enter"
+            android:layout_width="38dp"
+            android:layout_height="match_parent"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="4dp"
+            android:layout_toLeftOf="@+id/ibt_appcenter_config"
+            android:scaleType="centerInside"
+            android:src="?attr/ic_appcenter_enter" />
+
+        <ImageButton
+            android:id="@+id/ibt_appcenter_config"
+            android:layout_width="46dp"
+            android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:paddingLeft="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"
+            android:src="?attr/ic_add" />
     </RelativeLayout>
 
 
@@ -103,7 +66,7 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_layout"
+        android:layout_below="@id/rl_header"
         android:background="@color/content_bg">
 
         <ListView
@@ -150,7 +113,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_below="@id/header_layout"
+        android:layout_below="@id/rl_header"
         android:background="#00000000"
         android:gravity="center"
         android:visibility="gone">

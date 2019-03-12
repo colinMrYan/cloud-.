@@ -87,14 +87,13 @@ public class DrawableWrapper extends Drawable {
         return drawable == null ? PixelFormat.TRANSPARENT : drawable.getOpacity();
     }
 
-
-    public void setScaleType(int scaleType) {
-        this.scaleType = scaleType;
-    }
-
     @ImageHolder.ScaleType
     public int getScaleType() {
         return scaleType;
+    }
+
+    public void setScaleType(int scaleType) {
+        this.scaleType = scaleType;
     }
 
     public ImageHolder.BorderHolder getBorderHolder() {

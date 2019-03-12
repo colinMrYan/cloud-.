@@ -63,21 +63,22 @@ public class NewsListAdapter extends BaseAdapter {
             holder = (NewsHolder) convertView.getTag();
         }
         String uri = handlePoster(position);
-        ImageDisplayUtils.getInstance().displayImage(holder.imageView,uri,R.drawable.ic_app_news_default_icon);
-        holder.title.setTextColor(groupNewsList.get(position).isImportant()? Color.RED:0xff203b4f);
+        ImageDisplayUtils.getInstance().displayImage(holder.imageView, uri, R.drawable.ic_app_news_default_icon);
+        holder.title.setTextColor(groupNewsList.get(position).isImportant() ? Color.RED : 0xff203b4f);
         holder.title.setText(groupNewsList.get(position).getTitle());
         String postTime = groupNewsList.get(position).getCreationDate();
         postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_DEFAULT_DATE));
-        String dataTime  =  postTime.substring(0,10);
+        String dataTime = postTime.substring(0, 10);
         holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "   " + dataTime);
         return convertView;
     }
 
     /**
      * 刷新新闻列表
+     *
      * @param groupNewsList
      */
-    public void reFreshNewsList(List<GroupNews> groupNewsList){
+    public void reFreshNewsList(List<GroupNews> groupNewsList) {
         this.groupNewsList = groupNewsList;
         notifyDataSetChanged();
     }

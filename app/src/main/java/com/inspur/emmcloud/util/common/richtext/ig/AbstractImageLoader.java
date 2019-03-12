@@ -25,14 +25,13 @@ import java.lang.ref.WeakReference;
  */
 abstract class AbstractImageLoader<T> implements ImageLoader {
 
-    BitmapWrapper.SizeCacheHolder sizeCacheHolder;
     final ImageHolder holder;
+    final SourceDecode<T> sourceDecode;
     private final RichTextConfig config;
     private final WeakReference<DrawableWrapper> drawableWrapperWeakReference;
-    final SourceDecode<T> sourceDecode;
     private final WeakReference<TextView> textViewWeakReference;
     private final WeakReference<ImageLoadNotify> notifyWeakReference;
-
+    BitmapWrapper.SizeCacheHolder sizeCacheHolder;
     private WeakReference<ImageWrapper> imageWrapperWeakReference;
 
     AbstractImageLoader(ImageHolder holder, RichTextConfig config, TextView textView, DrawableWrapper drawableWrapper, ImageLoadNotify iln, SourceDecode<T> sourceDecode, BitmapWrapper.SizeCacheHolder sizeCacheHolder) {
@@ -44,6 +43,13 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
         this.notifyWeakReference = new WeakReference<>(iln);
         this.sizeCacheHolder = sizeCacheHolder;
         onLoading();
+    }
+
+    static int getSampleSize(int inWidth, int inHeight, int outWidth, int outHeight) {
+        int maxIntegerFactor = (int) Math.ceil(Math.max(inHeight / (float) outHeight,
+                inWidth / (float) outWidth));
+        int lesserOrEqualSampleSize = Math.max(1, Integer.highestOneBit(maxIntegerFactor));
+        return lesserOrEqualSampleSize << (lesserOrEqualSampleSize < maxIntegerFactor ? 1 : 0);
     }
 
     @Override
@@ -211,13 +217,6 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
                 imageWrapper.recycle();
             }
         }
-    }
-
-    static int getSampleSize(int inWidth, int inHeight, int outWidth, int outHeight) {
-        int maxIntegerFactor = (int) Math.ceil(Math.max(inHeight / (float) outHeight,
-                inWidth / (float) outWidth));
-        int lesserOrEqualSampleSize = Math.max(1, Integer.highestOneBit(maxIntegerFactor));
-        return lesserOrEqualSampleSize << (lesserOrEqualSampleSize < maxIntegerFactor ? 1 : 0);
     }
 
     InputStream openAssetFile(String name) throws IOException {

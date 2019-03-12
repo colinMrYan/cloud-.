@@ -11,21 +11,23 @@ import java.util.List;
  */
 public class GetAppGroupResult {
 
-	private List<AppGroupBean> appGroupBeanList = new ArrayList<AppGroupBean>();
-	public GetAppGroupResult(String response) {
-		try {
-			JSONArray jsonArray = new JSONArray(response);
-			int length = jsonArray.length();
-			for (int i = 0; i < length; i++) {
-				AppGroupBean appGroupBean = new AppGroupBean(jsonArray.getJSONObject(i).toString());
-				appGroupBeanList.add(appGroupBean);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public List<AppGroupBean> getAppGroupBeanList() {
-		return appGroupBeanList;
-	}
+    private List<AppGroupBean> appGroupBeanList = new ArrayList<AppGroupBean>();
+
+    public GetAppGroupResult(String response) {
+        try {
+            JSONArray jsonArray = new JSONArray(response);
+            int length = jsonArray.length();
+            for (int i = 0; i < length; i++) {
+                AppGroupBean appGroupBean = new AppGroupBean(jsonArray.getJSONObject(i).toString());
+                appGroupBeanList.add(appGroupBean);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<AppGroupBean> getAppGroupBeanList() {
+        return appGroupBeanList;
+    }
 }
  

@@ -61,19 +61,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     }
 
     /**
-     * 设置是否全选
-     *
-     * @param isMultiselect
-     */
-    public void setMultiselect(boolean isMultiselect) {
-        this.isMultiselect = isMultiselect;
-        if (!isMultiselect) {
-            selectVolumeFileList.clear();
-        }
-        notifyDataSetChanged();
-    }
-
-    /**
      * 选中所有的文件
      *
      * @param isSelectAll
@@ -108,6 +95,19 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
      */
     public boolean getMultiselect() {
         return isMultiselect;
+    }
+
+    /**
+     * 设置是否全选
+     *
+     * @param isMultiselect
+     */
+    public void setMultiselect(boolean isMultiselect) {
+        this.isMultiselect = isMultiselect;
+        if (!isMultiselect) {
+            selectVolumeFileList.clear();
+        }
+        notifyDataSetChanged();
     }
 
     /**
@@ -222,6 +222,25 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         return volumeFileList.size();
     }
 
+    public void setItemClickListener(MyItemClickListener myItemClickListener) {
+        this.mItemClickListener = myItemClickListener;
+    }
+
+    public void setItemDropDownImgClickListener(MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
+        this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
+    }
+
+
+    public interface MyItemClickListener {
+        void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int position);
+    }
+
+    public interface MyItemDropDownImgClickListener {
+        void onItemDropDownImgClick(View view, int position);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private MyItemClickListener myItemClickListener;
         private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
@@ -286,25 +305,5 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             myItemClickListener.onItemLongClick(v, getAdapterPosition());
             return false;
         }
-    }
-
-    public void setItemClickListener(MyItemClickListener myItemClickListener) {
-        this.mItemClickListener = myItemClickListener;
-    }
-
-
-    public void setItemDropDownImgClickListener(MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
-        this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
-    }
-
-    public interface MyItemClickListener {
-        void onItemClick(View view, int position);
-
-        void onItemLongClick(View view, int position);
-    }
-
-
-    public interface MyItemDropDownImgClickListener {
-        void onItemDropDownImgClick(View view, int position);
     }
 }

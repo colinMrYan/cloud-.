@@ -232,7 +232,7 @@ public class ChannelV0Activity extends BaseActivity {
      * 初始化下拉刷新UI
      */
     private void initPullRefreshLayout() {
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -358,7 +358,7 @@ public class ChannelV0Activity extends BaseActivity {
     //接收Action卡片的Action点击事件
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSendAcitionContentMessage(SimpleEventMessage eventMessage) {
-        if (eventMessage.getAction() == Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE){
+        if (eventMessage.getAction() == Constant.EVENTBUS_TAG_SEND_ACTION_CONTENT_MESSAGE) {
             String actionContent = (String) eventMessage.getMessageObj();
             sendTextMessage(actionContent, null, null, true);
         }
@@ -415,7 +415,7 @@ public class ChannelV0Activity extends BaseActivity {
     /**
      * 弹出消息重新发送提示框
      *
-     * @param uiMessage
+     * @param msg
      */
     private void showResendMessageDlg(final Msg msg) {
         new MyQMUIDialog.MessageDialogBuilder(ChannelV0Activity.this)
@@ -439,7 +439,7 @@ public class ChannelV0Activity extends BaseActivity {
     /**
      * 消息重新发送
      *
-     * @param uiMessage
+     * @param msg
      */
     private void resendMessage(Msg msg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -571,7 +571,7 @@ public class ChannelV0Activity extends BaseActivity {
                 String name = JSONUtils.getString(result, "name", null);
                 boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
                 chatInputMenu.addMentions(uid, name, isInputKeyWord);
-            }else if(requestCode == REQUEST_QUIT_CHANNELGROUP){
+            } else if (requestCode == REQUEST_QUIT_CHANNELGROUP) {
                 finish();
             }
         } else {
@@ -734,10 +734,10 @@ public class ChannelV0Activity extends BaseActivity {
             } else {
                 msgList.add(index, realMsg);
                 //如果是图片类型消息的话不再重新刷新消息体，防止图片重新加载
-                if (realMsg.getType().equals("res_image")){
-                    setMessageSendSuccess(index,realMsg);
+                if (realMsg.getType().equals("res_image")) {
+                    setMessageSendSuccess(index, realMsg);
                     adapter.setMsgList(msgList);
-                }else {
+                } else {
                     adapter.setMsgList(msgList);
                     adapter.notifyItemChanged(index);
                 }
@@ -772,7 +772,7 @@ public class ChannelV0Activity extends BaseActivity {
      *
      * @param index
      */
-    private void setMessageSendSuccess(int index,Msg realMsg) {
+    private void setMessageSendSuccess(int index, Msg realMsg) {
         Msg msg = adapter.getItemData(index);
         msg.setBody(realMsg.getBody());
         msg.setSendStatus(1);
@@ -797,11 +797,11 @@ public class ChannelV0Activity extends BaseActivity {
      */
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finishActivity();
                 break;
 
-            case R.id.channel_info_img:
+            case R.id.iv_config:
                 showChannelInfo();
                 break;
             default:
@@ -845,7 +845,7 @@ public class ChannelV0Activity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putString("cid", cid);
         if (channel.getType().equals("GROUP")) {
-            Intent intent = new Intent(this,ChannelInfoActivity.class);
+            Intent intent = new Intent(this, ChannelInfoActivity.class);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_QUIT_CHANNELGROUP);
         } else if (channel.getType().equals("SERVICE")) {
@@ -996,7 +996,6 @@ public class ChannelV0Activity extends BaseActivity {
      * 上传资源文件
      *
      * @param fakeMsg
-     * @param isResImgMsg
      */
     private void uploadResource(Msg fakeMsg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -1045,9 +1044,10 @@ public class ChannelV0Activity extends BaseActivity {
 
     /**
      * 设置频道是否置顶
+     *
      * @param isFoucus
      */
-    public void setChannelFoucs(boolean isFoucus){
+    public void setChannelFoucs(boolean isFoucus) {
 
     }
 
@@ -1095,6 +1095,10 @@ public class ChannelV0Activity extends BaseActivity {
             if (swipeRefreshLayout.isRefreshing()) {
                 final List<Msg> historyMsgList = getNewMsgsResult
                         .getNewMsgList(cid);
+                List<Msg> retainAllMsgList = new ArrayList<>();
+                retainAllMsgList.addAll(historyMsgList);
+                retainAllMsgList.retainAll(msgList);
+                historyMsgList.removeAll(retainAllMsgList);
                 if (historyMsgList.size() > 0) {
                     MsgCacheUtil.saveMsgList(ChannelV0Activity.this, historyMsgList,
                             msgList.get(0).getTime());

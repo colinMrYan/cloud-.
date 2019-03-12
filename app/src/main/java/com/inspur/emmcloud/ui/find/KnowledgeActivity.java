@@ -50,6 +50,16 @@ public class KnowledgeActivity extends BaseActivity {
         apiService.getKnowledgeList();
     }
 
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
+            default:
+                break;
+        }
+
+    }
 
     private class Adapter extends BaseAdapter {
 
@@ -85,18 +95,6 @@ public class KnowledgeActivity extends BaseActivity {
         }
 
     }
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.back_layout:
-                finish();
-                break;
-            default:
-                break;
-        }
-
-    }
-
 
     class WebService extends APIInterfaceInstance {
 

@@ -25,28 +25,21 @@ import org.xutils.view.annotation.ViewInject;
 @ContentView(R.layout.activity_volume_group_change_permission)
 public class VolumeGroupChangePermissionActivity extends BaseActivity {
 
-    @ViewInject(R.id.header_text)
-    protected TextView headerText;
-
-    @ViewInject(R.id.tv_volume_write_permission)
-    protected TextView writePermissionText;
-
-    @ViewInject(R.id.tv_volume_read_permission)
-    protected TextView readPermissionText;
-
-    @ViewInject(R.id.swv_volume_write_permission)
-    protected SwitchView writePermissionSwitch;
-
-    @ViewInject(R.id.swv_volume_read_permission)
-    protected SwitchView readPermissionSwitch;
-
-    private MyAppAPIService myAppAPIService;
-
-    private LoadingDialog loadingDialog;
-
     private static final int VOLUME_WRITE_PERMISSION = 6;
     private static final int VOLUME_READ_PERMISSION = 4;
     private static final int VOLUME_NO_PERMISSION = 0;
+    @ViewInject(R.id.header_text)
+    protected TextView headerText;
+    @ViewInject(R.id.tv_volume_write_permission)
+    protected TextView writePermissionText;
+    @ViewInject(R.id.tv_volume_read_permission)
+    protected TextView readPermissionText;
+    @ViewInject(R.id.swv_volume_write_permission)
+    protected SwitchView writePermissionSwitch;
+    @ViewInject(R.id.swv_volume_read_permission)
+    protected SwitchView readPermissionSwitch;
+    private MyAppAPIService myAppAPIService;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,74 +61,75 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         writePermissionSwitch.setOpened(group.getPrivilege() > VOLUME_READ_PERMISSION);
         readPermissionSwitch.setOpened(true);
         readPermissionSwitch.setEnable(group.getPrivilege() <= VOLUME_READ_PERMISSION);
-        readPermissionSwitch.setPaintColorOn(group.getPrivilege() > 4?0x667fc5f6:0xff7fc5f6);
-        readPermissionSwitch.setPaintCircleBtnColor(group.getPrivilege() > 4?0xbb7fc5f6:0xff008cee);
+        readPermissionSwitch.setPaintColorOn(group.getPrivilege() > 4 ? 0x667fc5f6 : 0xff7fc5f6);
+        readPermissionSwitch.setPaintCircleBtnColor(group.getPrivilege() > 4 ? 0xbb7fc5f6 : 0xff008cee);
         final String currentVolumePath = getIntent().getStringExtra("volumeFilePath");
         writePermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                updateVolumeGroupPermission(group,currentVolumePath, VOLUME_WRITE_PERMISSION,true);
+                updateVolumeGroupPermission(group, currentVolumePath, VOLUME_WRITE_PERMISSION, true);
             }
 
             @Override
             public void toggleToOff(View view) {
-                updateVolumeGroupPermission(group,currentVolumePath,VOLUME_READ_PERMISSION,true);
+                updateVolumeGroupPermission(group, currentVolumePath, VOLUME_READ_PERMISSION, true);
             }
         });
         readPermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                updateVolumeGroupPermission(group,currentVolumePath,VOLUME_READ_PERMISSION,true);
+                updateVolumeGroupPermission(group, currentVolumePath, VOLUME_READ_PERMISSION, true);
             }
 
             @Override
             public void toggleToOff(View view) {
-                updateVolumeGroupPermission(group,currentVolumePath,VOLUME_NO_PERMISSION,true);
+                updateVolumeGroupPermission(group, currentVolumePath, VOLUME_NO_PERMISSION, true);
             }
         });
     }
 
     /**
      * 更改文件夹组权限
+     *
      * @param group
      * @param currentVolumePath
      * @param i
      * @param b
      */
     private void updateVolumeGroupPermission(Group group, String currentVolumePath, int i, boolean b) {
-        if(NetUtils.isNetworkConnected(VolumeGroupChangePermissionActivity.this)){
+        if (NetUtils.isNetworkConnected(VolumeGroupChangePermissionActivity.this)) {
             loadingDialog.show();
-            myAppAPIService.updateVolumeFileGroupPermission(group.getVolume(),currentVolumePath,group.getId(),i,b);
+            myAppAPIService.updateVolumeFileGroupPermission(group.getVolume(), currentVolumePath, group.getId(), i, b);
         }
     }
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
         }
     }
 
-    class WebService extends APIInterfaceInstance{
+    class WebService extends APIInterfaceInstance {
         @Override
         public void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
             LoadingDialog.dimissDlg(loadingDialog);
-            if(getVolumeGroupPermissionResult.getPrivilege() >= VOLUME_WRITE_PERMISSION){
+            if (getVolumeGroupPermissionResult.getPrivilege() >= VOLUME_WRITE_PERMISSION) {
                 writePermissionSwitch.toggleSwitch(true);
-                readPermissionSwitch.setIsCodeManual(true,true);
+                readPermissionSwitch.setIsCodeManual(true, true);
                 readPermissionSwitch.setOpened(true);
                 readPermissionSwitch.setEnable(false);
                 readPermissionSwitch.setPaintColorOn(0x667fc5f6);
                 readPermissionSwitch.setPaintCircleBtnColor(0xbb7fc5f6);
-            }else {
+            } else {
                 writePermissionSwitch.toggleSwitch(false);
                 readPermissionSwitch.setEnable(true);
-                if(getVolumeGroupPermissionResult.getPrivilege() == VOLUME_NO_PERMISSION){
+                if (getVolumeGroupPermissionResult.getPrivilege() == VOLUME_NO_PERMISSION) {
                     readPermissionSwitch.toggleSwitch(false);
-                }else if(getVolumeGroupPermissionResult.getPrivilege() == VOLUME_READ_PERMISSION){
+                } else if (getVolumeGroupPermissionResult.getPrivilege() == VOLUME_READ_PERMISSION) {
                     readPermissionSwitch.toggleSwitch(true);
-                    readPermissionSwitch.setIsCodeManual(true,true);
+                    readPermissionSwitch.setIsCodeManual(true, true);
                 }
                 readPermissionSwitch.setPaintColorOn(0xff7fc5f6);
                 readPermissionSwitch.setPaintCircleBtnColor(0xff008cee);

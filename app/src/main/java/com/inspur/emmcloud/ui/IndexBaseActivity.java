@@ -48,6 +48,7 @@ import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -75,34 +76,33 @@ import java.util.List;
 import java.util.Map;
 
 @ContentView(R.layout.activity_index)
-public class IndexBaseActivity extends BaseFragmentActivity implements
-        OnTabChangeListener, OnTouchListener {
-    private long lastBackTime;
+public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChangeListener, OnTouchListener {
     private static final int REQUEST_CREATE_GUESTURE = 1;
     @ViewInject(android.R.id.tabhost)
     public MyFragmentTabHost mTabHost;
     @ViewInject(R.id.preload_webview)
     protected WebView webView;
+    protected NetworkChangeReceiver networkChangeReceiver;
+    private long lastBackTime;
     private TextView newMessageTipsText;
-
     private RelativeLayout newMessageTipsLayout;
-
     private boolean batteryDialogIsShow = true;
     @ViewInject(R.id.tip)
     private TipsView tipsView;
     private boolean isCommunicationRunning = false;
-    private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
+    private boolean isSystemChangeTag = true;// 控制如果是系统切换的tab则不计入用户行为
     private String tabId = "";
-    protected NetworkChangeReceiver networkChangeReceiver;
-//    protected ConnectivityManager.NetworkCallback networkCallback;
-//    protected ConnectivityManager connectivityManager;
+    // protected ConnectivityManager.NetworkCallback networkCallback;
+    // protected ConnectivityManager connectivityManager;
     private BatteryWhiteListDialog confirmDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         clearOldMainTabData();
         x.view().inject(this);
+        setStatus();
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
         initTabs();
@@ -115,27 +115,28 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void registerNetWorkListenerAccordingSysLevel() {
-//        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            networkChangeReceiver = new NetworkChangeReceiver();
-            registerReceiver(networkChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
-//        } else {
-//            networkCallback = new NetworkCallbackImpl(this);
-//            NetworkRequest.Builder builder = new NetworkRequest.Builder();
-//            NetworkRequest request = builder.build();
-//            connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-//            connectivityManager.registerNetworkCallback(request, networkCallback);
-//        }
+        // if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        networkChangeReceiver = new NetworkChangeReceiver();
+        registerReceiver(networkChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+        // } else {
+        // networkCallback = new NetworkCallbackImpl(this);
+        // NetworkRequest.Builder builder = new NetworkRequest.Builder();
+        // NetworkRequest request = builder.build();
+        // connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        // connectivityManager.registerNetworkCallback(request, networkCallback);
+        // }
     }
 
     /**
      * 检测配置是否强制开启手势验证码
      */
-    private void checkForceGuesture(){
-        int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION,-1);
-        if (doubleValidation == 1 && !CreateGestureActivity.getGestureCodeIsOpenByUser(MyApplication.getInstance())){
-            Intent intent = new Intent(this,CreateGestureActivity.class);
-            intent.putExtra(CreateGestureActivity.EXTRA_FORCE_SET,true);
-            startActivityForResult(intent,REQUEST_CREATE_GUESTURE);
+    private void checkForceGuesture() {
+        int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),
+                Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
+        if (doubleValidation == 1 && !CreateGestureActivity.getGestureCodeIsOpenByUser(MyApplication.getInstance())) {
+            Intent intent = new Intent(this, CreateGestureActivity.class);
+            intent.putExtra(CreateGestureActivity.EXTRA_FORCE_SET, true);
+            startActivityForResult(intent, REQUEST_CREATE_GUESTURE);
         }
 
     }
@@ -155,12 +156,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      */
     private void initTabs() {
         TabBean[] tabBeans = null;
-        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
+                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
             Configuration config = getResources().getConfiguration();
             String environmentLanguage = config.locale.getLanguage();
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
-            //发送到MessageFragment
+            // 发送到MessageFragment
             EventBus.getDefault().post(getAppMainTabResult);
             ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
             if (mainTabResultList.size() > 0) {
@@ -173,9 +175,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                             switch (mainTabResult.getUri()) {
                                 case Constant.APP_TAB_BAR_COMMUNACATE:
                                     if (MyApplication.getInstance().isV0VersionChat()) {
-                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationV0Fragment.class, mainTabResult);
+                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationV0Fragment.class,
+                                                mainTabResult);
                                     } else {
-                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationFragment.class, mainTabResult);
+                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationFragment.class,
+                                                mainTabResult);
                                     }
                                     break;
                                 case Constant.APP_TAB_BAR_WORK:
@@ -188,7 +192,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                                     tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);
                                     break;
                                 case Constant.APP_TAB_BAR_CONTACT:
-                                    tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class, mainTabResult);
+                                    tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
+                                            mainTabResult);
                                     break;
                             }
                             break;
@@ -204,7 +209,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                             break;
                     }
                     if (tabBean == null) {
-                        String noSupportTabName = mainTabResult.getMainTabTitleResult().getTabTileByLanguage(environmentLanguage);
+                        String noSupportTabName =
+                                mainTabResult.getMainTabTitleResult().getTabTileByLanguage(environmentLanguage);
                         tabBean = new TabBean(noSupportTabName, NotSupportFragment.class, mainTabResult);
                     }
                     tabBean.setTabId(mainTabResultList.get(i).getUri());
@@ -218,46 +224,47 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         showTabs(tabBeans);
     }
 
-    //显示icon本地映射
+    // 显示icon本地映射
     private int getIconFromLocalByIco(String icon) {
         int localIcon = R.drawable.selector_tab_unknown_btn;
-        switch (icon){
+        switch (icon) {
             case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
-                localIcon = R.drawable.selector_tab_message_btn;
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_communicate);
                 break;
             case Constant.APP_TAB_BAR_APPLICATION_NAME:
-                localIcon = R.drawable.selector_tab_app_btn;
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_app);
                 break;
             case Constant.APP_TAB_BAR_WORK_NAME:
-                localIcon = R.drawable.selector_tab_work_btn;
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_work);
                 break;
             case Constant.APP_TAB_BAR_MOMENT_NAME:
-                localIcon = R.drawable.selector_tab_cloud_tweet_btn;
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_cloud_tweet);
                 break;
             case Constant.APP_TAB_BAR_ME_NAME:
-                localIcon = R.drawable.selector_tab_more_btn;
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_mine);
                 break;
             case Constant.APP_TAB_BAR_CONTACT_NAME:
-                localIcon = R.drawable.selector_tab_contact_btn;
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_contact);
                 break;
             case Constant.APP_TAB_BAR_DISCOVER_NAME:
-                localIcon = R.drawable.selector_tab_find_btn;
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_find);
                 break;
             default:
-                localIcon = R.drawable.selector_tab_unknown_btn;
+                localIcon = ResourceUtils.getResValueOfAttr(IndexBaseActivity.this, R.attr.bg_tab_unknown);
                 break;
         }
         return localIcon;
     }
 
-    protected void batteryWhiteListRemind(final Context context){
-        batteryDialogIsShow= PreferencesUtils.getBoolean( context, Constant.BATTERY_WHITE_LIST_STATE,true);
+    protected void batteryWhiteListRemind(final Context context) {
+        batteryDialogIsShow = PreferencesUtils.getBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && batteryDialogIsShow) {
             try {
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if (!hasIgnored) {
-                    confirmDialog = new BatteryWhiteListDialog(context, R.string.battery_tip_content, R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
+                    confirmDialog = new BatteryWhiteListDialog(context, R.string.battery_tip_content,
+                            R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
                     confirmDialog.setClicklistener(new BatteryWhiteListDialog.ClickListenerInterface() {
                         @Override
                         public void doConfirm() {
@@ -270,6 +277,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                             // TODO Auto-generated method stub
                             confirmDialog.dismiss();
                         }
+
                         @Override
                         public void doCancel() {
                             if (confirmDialog.getIsHide()) {
@@ -299,17 +307,23 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             TabBean tabBean = tabs[i];
             String tabId = tabBean.getTabId();
             TabHost.TabSpec tab = mTabHost.newTabSpec(tabId);
-            View tabView = LayoutInflater.from(getApplicationContext())
-                    .inflate(R.layout.tab_item_view, null);
-            ImageView tabImg =  tabView.findViewById(R.id.imageview);
-            TextView tabText =  tabView.findViewById(R.id.textview);
+            View tabView = LayoutInflater.from(this).inflate(R.layout.tab_item_view, null);
+            ImageView tabImg = tabView.findViewById(R.id.imageview);
+            TextView tabText = tabView.findViewById(R.id.textview);
+//            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+//            if (currentThemeNo == 2) {
+//                tabText.setTextColor(getResources().getColorStateList(R.color.seclector_footer_text_grey));
+//            } else {
+//                tabText.setTextColor(getResources().getColorStateList(R.color.seclector_footer_text_white));
+//            }
+
             if (tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE)) {
                 handleTipsView(tabView);
                 communicateIndex = i;
             }
             tabText.setText(tabBean.getTabName());
             if (tabBean.getMainTabResult().getIcon().startsWith("http")) {
-                SelectorUtils.addSelectorFromNet(IndexBaseActivity.this,tabBean.getMainTabResult().getIcon(),tabImg);
+                SelectorUtils.addSelectorFromNet(IndexBaseActivity.this, tabBean.getMainTabResult().getIcon(), tabImg);
             } else {
                 tabImg.setImageResource(getIconFromLocalByIco(tabBean.getMainTabResult().getIcon()));
             }
@@ -323,11 +337,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             Bundle bundle = new Bundle();
             if (tabBean.getMainTabResult().getType().equals(Constant.APP_TAB_TYPE_WEB)) {
                 if (tabBean.getMainTabResult().getMainTabProperty().isHaveNavbar()) {
-                    bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,true);
-                    bundle.putString(Constant.WEB_FRAGMENT_VERSION, PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, ""));
-                    bundle.putSerializable(Constant.WEB_FRAGMENT_MENU, (Serializable) tabBean.getMainTabResult().getMainTabProperty().getMainTabMenuList());
-                }else{
-                    bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,false);
+                    bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+                    bundle.putString(Constant.WEB_FRAGMENT_VERSION, PreferencesByUserAndTanentUtils
+                            .getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, ""));
+                    bundle.putSerializable(Constant.WEB_FRAGMENT_MENU,
+                            (Serializable) tabBean.getMainTabResult().getMainTabProperty().getMainTabMenuList());
+                } else {
+                    bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, false);
                 }
             }
             bundle.putString(Constant.APP_WEB_URI, tabBean.getMainTabResult().getUri());
@@ -338,7 +354,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         }
         mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
         mTabHost.setOnTabChangedListener(this);
-        mTabHost.setCurrentTab((communicateIndex != -1 && isCommunicationRunning == false) ? communicateIndex : getTabIndex());
+        mTabHost.setCurrentTab(
+                (communicateIndex != -1 && isCommunicationRunning == false) ? communicateIndex : getTabIndex());
     }
 
     /**
@@ -354,7 +371,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         }
     }
 
-
     /**
      * 这个app未读数目变化
      *
@@ -366,18 +382,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             int snsTabBarBadgeNum = badgeBodyModel.getSnsBadgeBodyModuleModel().getTotal();
             setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME, snsTabBarBadgeNum);
         } else {
-            //如果没有动态的key就把动态清0
+            // 如果没有动态的key就把动态清0
             setTabBarBadge(Constant.APP_TAB_BAR_MOMENT_NAME, 0);
         }
         if (badgeBodyModel.isAppStoreExist()) {
             int appStoreTabBarBadgeNum = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getTotal();
             if (appStoreTabBarBadgeNum > 0) {
-                Map<String, Integer> appStoreBadgeMap = badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
+                Map<String, Integer> appStoreBadgeMap =
+                        badgeBodyModel.getAppStoreBadgeBodyModuleModel().getDetailBodyMap();
                 appStoreTabBarBadgeNum = getFilterAppStoreBadgeNum(appStoreBadgeMap);
             }
             setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, appStoreTabBarBadgeNum);
         } else {
-            //如果没有应用的key就把应用清0
+            // 如果没有应用的key就把应用清0
             setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, 0);
         }
     }
@@ -408,11 +425,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     }
 
     private void setTabBarBadge(String tabName, int number) {
-        //在某些情况下
+        // 在某些情况下
         try {
-            //查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
+            // 查找tab之前，先清空一下对应tab的数据，防止tab找不到，数据还有的情况
             saveTabBarBadgeNumber(tabName, 0);
-            //根据tabName确定tabView的位置
+            // 根据tabName确定tabView的位置
             List<MainTabResult> mainTabResultList = AppTabUtils.getMainTabResultList(this);
             for (int i = 0; i < mainTabResultList.size(); i++) {
                 if (mainTabResultList.get(i).getName().equals(tabName)) {
@@ -431,7 +448,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     saveTabBarBadgeNumber(tabName, number);
                 }
             }
-            //更新桌面角标数字
+            // 更新桌面角标数字
             ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexBaseActivity.this, getDesktopNumber());
         } catch (Exception e) {
             e.printStackTrace();
@@ -444,10 +461,15 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * @return
      */
     private int getDesktopNumber() {
-        int communicationTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_COMMUNICATION, 0);
-        int appStoreTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_APPSTORE, 0);
-        int momentTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_SNS, 0);
-        return (MyApplication.getInstance().isV0VersionChat() ? 0 : communicationTabBarNumber) + (appStoreTabBarNumber >= 0 ? appStoreTabBarNumber : 0) + (momentTabBarNumber >= 0 ? momentTabBarNumber : 0);
+        int communicationTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),
+                Constant.PREF_BADGE_NUM_COMMUNICATION, 0);
+        int appStoreTabBarNumber = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),
+                Constant.PREF_BADGE_NUM_APPSTORE, 0);
+        int momentTabBarNumber =
+                PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_SNS, 0);
+        return (MyApplication.getInstance().isV0VersionChat() ? 0 : communicationTabBarNumber)
+                + (appStoreTabBarNumber >= 0 ? appStoreTabBarNumber : 0)
+                + (momentTabBarNumber >= 0 ? momentTabBarNumber : 0);
     }
 
     /**
@@ -459,13 +481,16 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     private void saveTabBarBadgeNumber(String tabName, int tabBarBadgeNumber) {
         switch (tabName) {
             case Constant.APP_TAB_BAR_APPLICATION_NAME:
-                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_APPSTORE, tabBarBadgeNumber);
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_APPSTORE,
+                        tabBarBadgeNumber);
                 break;
             case Constant.APP_TAB_BAR_COMMUNACATE_NAME:
-                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_COMMUNICATION, tabBarBadgeNumber);
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_COMMUNICATION,
+                        tabBarBadgeNumber);
                 break;
             case Constant.APP_TAB_BAR_MOMENT_NAME:
-                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_SNS, tabBarBadgeNumber);
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_SNS,
+                        tabBarBadgeNumber);
                 break;
         }
     }
@@ -494,7 +519,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB)) {
                 isCommunicationRunning = true;
                 int targetTabIndex = getTabIndex();
-                boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
+                boolean isOpenNotify = getIntent().hasExtra("command")
+                        && getIntent().getStringExtra("command").equals("open_notification");
                 if (mTabHost != null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify) {
                     mTabHost.setCurrentTab(targetTabIndex);
                 }
@@ -512,15 +538,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * @return
      */
     private TabBean[] addDefaultTabs() {
-        //无数据改为显示两个tab，数组变为2
+        // 无数据改为显示两个tab，数组变为2
         TabBean[] tabBeans = new TabBean[2];
-        TabBean tabBeanApp = new TabBean(getString(R.string.application),
-                MyAppFragment.class, getApplicationMainTab());
+        TabBean tabBeanApp = new TabBean(getString(R.string.application), MyAppFragment.class, getApplicationMainTab());
         tabBeanApp.setTabId(Constant.APP_TAB_BAR_APPLICATION);
-        TabBean tabBeanMine = new TabBean(getString(R.string.mine),
-                MoreFragment.class, getMineTab());
+        TabBean tabBeanMine = new TabBean(getString(R.string.mine), MoreFragment.class, getMineTab());
         tabBeanMine.setTabId(Constant.APP_TAB_BAR_PROFILE);
-        //无数据改为显示两个tab
+        // 无数据改为显示两个tab
         tabBeans[0] = tabBeanApp;
         tabBeans[1] = tabBeanMine;
         return tabBeans;
@@ -528,6 +552,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     /**
      * 生成applicationMainTab
+     *
      * @return
      */
     private MainTabResult getApplicationMainTab() {
@@ -547,6 +572,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     /**
      * 生成mainTab
+     *
      * @return
      */
     private MainTabResult getMineTab() {
@@ -571,7 +597,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      * @param environmentLanguage
      * @return
      */
-    private TabBean internationalMainLanguage(MainTabResult mainTabResult, String environmentLanguage, TabBean tabBean) {
+    private TabBean internationalMainLanguage(MainTabResult mainTabResult, String environmentLanguage,
+                                              TabBean tabBean) {
         if (!tabBean.getClz().getName().equals(NotSupportFragment.class.getName())) {
             switch (environmentLanguage.toLowerCase()) {
                 case "zh-hant":
@@ -589,16 +616,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         return tabBean;
     }
 
-
-
     /**
      * 处理小红点的逻辑
      *
      * @param tabView
      */
     private void handleTipsView(View tabView) {
-        newMessageTipsText = (TextView) tabView
-                .findViewById(R.id.tv_badge);
+        newMessageTipsText = (TextView) tabView.findViewById(R.id.tv_badge);
         newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.rl_badge);
         tipsView.attach(newMessageTipsLayout, new TipsView.Listener() {
 
@@ -613,7 +637,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 Intent intent = new Intent("message_notify");
                 intent.putExtra("command", "set_all_message_read");
                 LocalBroadcastManager.getInstance(IndexBaseActivity.this).sendBroadcast(intent);
-                onReceiveCommunicationBadgeNum(new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, 0));
+                onReceiveCommunicationBadgeNum(
+                        new SimpleEventMessage(Constant.EVENTBUS_TAG_SET_ALL_MESSAGE_UNREAD_COUNT, 0));
             }
 
             @Override
@@ -631,9 +656,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      */
     private int getTabIndex() {
         int tabIndex = 0;
-        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
+                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
         if (!StringUtils.isBlank(appTabs)) {
-            ArrayList<MainTabResult> mainTabResultList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
+            ArrayList<MainTabResult> mainTabResultList =
+                    new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
             if (mainTabResultList.size() > 0) {
                 for (int i = 0; i < mainTabResultList.size(); i++) {
                     if (mainTabResultList.get(i).isSelected()) {
@@ -646,22 +673,20 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         return tabIndex;
     }
 
-
     /**
      * 连点退出应用
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            //如果是通讯录tab逐级返回功能，发送到ContactSearchFragment  updateUI方法
+            // 如果是通讯录tab逐级返回功能，发送到ContactSearchFragment updateUI方法
             if (tabId.equals(Constant.APP_TAB_BAR_CONTACT)) {
                 ContactClickMessage contactClickMessage = new ContactClickMessage();
                 contactClickMessage.setTabId(Constant.APP_TAB_BAR_CONTACT);
                 contactClickMessage.setViewId(-1);
                 EventBus.getDefault().post(contactClickMessage);
             } else if ((System.currentTimeMillis() - lastBackTime) > 2000) {
-                ToastUtils.show(IndexBaseActivity.this,
-                        getString(R.string.reclick_to_desktop));
+                ToastUtils.show(IndexBaseActivity.this, getString(R.string.reclick_to_desktop));
                 lastBackTime = System.currentTimeMillis();
             } else {
                 MyApplication.getInstance().exit();
@@ -673,13 +698,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN
-                && !v.equals(mTabHost.getCurrentTabView())) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN && !v.equals(mTabHost.getCurrentTabView())) {
             isSystemChangeTag = false;
         }
         return super.onTouchEvent(event);
     }
-
 
     @Override
     public void onTabChanged(final String tabId) {
@@ -689,7 +712,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    //记录打开的tab页
+                    // 记录打开的tab页
                     String mainTabName = getMainTabName(tabId);
                     PVCollectModel pvCollectModel = new PVCollectModel(mainTabName, mainTabName);
                     PVCollectModelCacheUtils.saveCollectModel(IndexBaseActivity.this, pvCollectModel);
@@ -699,11 +722,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CREATE_GUESTURE && resultCode != RESULT_OK){
+        if (requestCode == REQUEST_CREATE_GUESTURE && resultCode != RESULT_OK) {
             MyApplication.getInstance().exit();
         }
     }
@@ -736,26 +758,28 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     public void updateTabbarWithOrder(GetAppMainTabResult getAppMainTabResult) {
         String command = getAppMainTabResult.getCommand();
         if (command.equals("FORWARD")) {
-            PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, getAppMainTabResult.getMainTabPayLoad().getVersion());
-            PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, getAppMainTabResult.getAppTabInfo());
-            mTabHost.clearAllTabs(); //更新tabbar
+            PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION,
+                    getAppMainTabResult.getMainTabPayLoad().getVersion());
+            PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,
+                    getAppMainTabResult.getAppTabInfo());
+            mTabHost.clearAllTabs(); // 更新tabbar
             initTabs();
         }
     }
 
     @Override
     protected void onDestroy() {
-//        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            if (networkChangeReceiver != null) {
-                unregisterReceiver(networkChangeReceiver);
-                networkChangeReceiver = null;
-            }
-//        } else {
-//            if (connectivityManager != null && networkCallback != null) {
-//                connectivityManager.unregisterNetworkCallback(networkCallback);
-//                networkCallback = null;
-//            }
-//        }
+        // if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+            networkChangeReceiver = null;
+        }
+        // } else {
+        // if (connectivityManager != null && networkCallback != null) {
+        // connectivityManager.unregisterNetworkCallback(networkCallback);
+        // networkCallback = null;
+        // }
+        // }
         super.onDestroy();
     }
 }

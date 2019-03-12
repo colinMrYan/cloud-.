@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.plugin.filetransfer.filemanager.adapter.base.RecyclerViewAdapter;
 import com.inspur.imp.plugin.filetransfer.filemanager.adapter.base.RecyclerViewHolder;
 import com.inspur.imp.plugin.filetransfer.filemanager.bean.TitlePath;
@@ -16,17 +15,17 @@ import com.inspur.imp.plugin.filetransfer.filemanager.bean.TitlePath;
 
 public class TitleHolder extends RecyclerViewHolder<TitleHolder> {
 
-    TextView textView ;
+    TextView textView;
 
     public TitleHolder(View itemView) {
         super(itemView);
 
-        textView = (TextView) itemView.findViewById(R.id.title_Name );
+        textView = (TextView) itemView.findViewById(R.id.title_Name);
     }
 
     @Override
     public void onBindViewHolder(TitleHolder lineHolder, RecyclerViewAdapter adapter, int position) {
-        TitlePath titlePath = (TitlePath) adapter.getItem( position );
-        lineHolder.textView.setText( titlePath.getNameState() );
+        TitlePath titlePath = (TitlePath) adapter.getItem(position);
+        lineHolder.textView.setText(titlePath.getNameState());
     }
 }

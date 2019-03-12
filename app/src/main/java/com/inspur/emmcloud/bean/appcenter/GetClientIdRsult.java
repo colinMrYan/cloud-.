@@ -12,10 +12,10 @@ import org.json.JSONObject;
 public class GetClientIdRsult {
     private String clientId = "";
 
-    public GetClientIdRsult(String clientId){
+    public GetClientIdRsult(String clientId) {
         try {
             JSONObject jsonObject = new JSONObject(clientId);
-            if(jsonObject.has("clientId")){
+            if (jsonObject.has("clientId")) {
                 this.clientId = jsonObject.getString("clientId");
             }
         } catch (JSONException e) {

@@ -16,9 +16,9 @@ public class EMMErrorBean {
     private int errCode;
     private String msg;
 
-    public EMMErrorBean(String response){
-        errCode = JSONUtils.getInt(response,"errCode",0);
-        msg = JSONUtils.getString(response,"msg","");
+    public EMMErrorBean(String response) {
+        errCode = JSONUtils.getInt(response, "errCode", 0);
+        msg = JSONUtils.getString(response, "msg", "");
     }
 
     public int getErrCode() {

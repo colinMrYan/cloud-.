@@ -38,8 +38,37 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class RichText implements ImageGetterWrapper, ImageLoadNotify {
 
+    private static final String TAG_TARGET = "target";
     public static boolean debugMode = false;
-
+    private static Pattern IMAGE_TAG_PATTERN = Pattern.compile("<(img|IMG)(.*?)>");
+    private static Pattern IMAGE_WIDTH_PATTERN = Pattern.compile("(width|WIDTH)=\"(.*?)\"");
+    private static Pattern IMAGE_HEIGHT_PATTERN = Pattern.compile("(height|HEIGHT)=\"(.*?)\"");
+    private static Pattern IMAGE_SRC_PATTERN = Pattern.compile("(src|SRC)=\"(.*?)\"");
+    private final SpannedParser spannedParser;
+    private final CachedSpannedParser cachedSpannedParser;
+    private final SoftReference<TextView> textViewSoftReference;
+    private final RichTextConfig config;
+    private HashMap<String, ImageHolder> imageHolderMap;
+    @RichState
+    private int state = RichState.ready;
+    private int count;
+    private int loadingCount;
+    private SoftReference<SpannableStringBuilder> richText;
+    RichText(RichTextConfig config, TextView textView) {
+        this.config = config;
+        this.textViewSoftReference = new SoftReference<>(textView);
+        if (config.richType == RichType.MARKDOWN) {
+            spannedParser = new Markdown2SpannedParser(textView);
+        } else {
+            spannedParser = new Html2SpannedParser(new HtmlTagHandler(textView));
+        }
+        if (config.clickable > 0) {
+            textView.setMovementMethod(new LongClickableLinkMovementMethod());
+        } else if (config.clickable == 0) {
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+        this.cachedSpannedParser = new CachedSpannedParser();
+    }
 
     static void bind(Object tag, RichText richText) {
         RichTextPool.getPool().bind(tag, richText);
@@ -53,7 +82,6 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     public static void clear(Object tag) {
         RichTextPool.getPool().clear(tag);
     }
-
 
     /**
      * 设置缓存目录，若不设置将不会对图片进行本地缓存
@@ -88,42 +116,6 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
         initCacheDir(cacheDir);
     }
 
-    private static final String TAG_TARGET = "target";
-
-    private static Pattern IMAGE_TAG_PATTERN = Pattern.compile("<(img|IMG)(.*?)>");
-    private static Pattern IMAGE_WIDTH_PATTERN = Pattern.compile("(width|WIDTH)=\"(.*?)\"");
-    private static Pattern IMAGE_HEIGHT_PATTERN = Pattern.compile("(height|HEIGHT)=\"(.*?)\"");
-    private static Pattern IMAGE_SRC_PATTERN = Pattern.compile("(src|SRC)=\"(.*?)\"");
-
-    private HashMap<String, ImageHolder> imageHolderMap;
-
-    @RichState
-    private int state = RichState.ready;
-
-    private final SpannedParser spannedParser;
-    private final CachedSpannedParser cachedSpannedParser;
-    private final SoftReference<TextView> textViewSoftReference;
-    private final RichTextConfig config;
-    private int count;
-    private int loadingCount;
-    private SoftReference<SpannableStringBuilder> richText;
-
-    RichText(RichTextConfig config, TextView textView) {
-        this.config = config;
-        this.textViewSoftReference = new SoftReference<>(textView);
-        if (config.richType == RichType.MARKDOWN) {
-            spannedParser = new Markdown2SpannedParser(textView);
-        } else {
-            spannedParser = new Html2SpannedParser(new HtmlTagHandler(textView));
-        }
-        if (config.clickable > 0) {
-            textView.setMovementMethod(new LongClickableLinkMovementMethod());
-        } else if (config.clickable == 0) {
-            textView.setMovementMethod(LinkMovementMethod.getInstance());
-        }
-        this.cachedSpannedParser = new CachedSpannedParser();
-    }
-
     public static RichTextConfig.RichTextConfigBuild from(String source) {
         return fromHtml(source);
     }
@@ -140,19 +132,61 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
         return new RichTextConfig.RichTextConfigBuild(source, richType);
     }
 
+    /**
+     * 判断Activity是否已经结束
+     *
+     * @param context context
+     * @return true：已结束
+     */
+    private static boolean activityIsAlive(Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof TintContextWrapper) {
+            context = ((TintContextWrapper) context).getBaseContext();
+        }
+        if (context instanceof Activity) {
+            if (((Activity) context).isFinishing()) {
+                return false;
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && ((Activity) context).isDestroyed()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static int parseStringToInteger(String integerStr) {
+        int result = -1;
+        if (!TextUtils.isEmpty(integerStr)) {
+            try {
+                result = Integer.parseInt(integerStr);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    private static boolean isGif(String path) {
+        int index = path.lastIndexOf('.');
+        return index > 0 && "gif".toUpperCase().equals(path.substring(index + 1).toUpperCase());
+    }
+
     void generateAndSet() {
         final TextView textView = textViewSoftReference.get();
         if (textView != null) {
 //            if (!TextUtils.isEmpty(config.source) && config.source.length() < 0) {
 //                textView.setText(generateRichText());
 //            } else {
-                textView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        asyncGenerate(textView);
-                    }
-                });
-                textView.setText(generateRichText());
+            textView.post(new Runnable() {
+                @Override
+                public void run() {
+                    asyncGenerate(textView);
+                }
+            });
+            textView.setText(generateRichText());
 //            }
 
         }
@@ -279,48 +313,6 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
             imageHolderMap.put(holder.getSource(), holder);
             position++;
         }
-    }
-
-    /**
-     * 判断Activity是否已经结束
-     *
-     * @param context context
-     * @return true：已结束
-     */
-    private static boolean activityIsAlive(Context context) {
-        if (context == null) {
-            return false;
-        }
-        if (context instanceof TintContextWrapper) {
-            context = ((TintContextWrapper) context).getBaseContext();
-        }
-        if (context instanceof Activity) {
-            if (((Activity) context).isFinishing()) {
-                return false;
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && ((Activity) context).isDestroyed()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private static int parseStringToInteger(String integerStr) {
-        int result = -1;
-        if (!TextUtils.isEmpty(integerStr)) {
-            try {
-                result = Integer.parseInt(integerStr);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
-
-    private static boolean isGif(String path) {
-        int index = path.lastIndexOf('.');
-        return index > 0 && "gif".toUpperCase().equals(path.substring(index + 1).toUpperCase());
     }
 
     /**

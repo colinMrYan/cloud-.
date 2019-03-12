@@ -65,7 +65,6 @@ import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.login.GetSignoutResult;
-import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
@@ -76,6 +75,7 @@ import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.AppException;
@@ -235,23 +235,23 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCheckCloudPluseConnectionSuccess(byte[] arg0,String url) {
+    public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, String url) {
 
     }
 
     @Override
-    public void returnCheckCloudPluseConnectionError(String error, int responseCode,String url) {
+    public void returnCheckCloudPluseConnectionError(String error, int responseCode, String url) {
 
     }
 
     @Override
-    public void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult) {
+    public void returnLoginSMSCaptchaSuccess() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnReqLoginSMSFail(String error, int errorCode) {
+    public void returnLoginSMSCaptchaFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -295,9 +295,8 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadMyHeadSuccess(
-            GetUploadMyHeadResult getUploadMyInfoResult) {
+            GetUploadMyHeadResult getUploadMyInfoResult, String filePath) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -960,13 +959,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnModifyPsdSuccess() {
+    public void returnModifyPasswordSuccess() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnModifyPsdFail(String error, int errorCode) {
+    public void returnModifyPasswordFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -1105,6 +1104,7 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnFindMixSearchFail(String error, int errorCode) {
     }
+
     @Override
     public void returnMeetingListSuccess(
             GetMeetingListResult getMeetingListResult, String date) {
@@ -1128,11 +1128,11 @@ public class APIInterfaceInstance implements APIInterface {
 
 
     @Override
-    public void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean) {
+    public void returnResetPasswordSuccess() {
     }
 
     @Override
-    public void returnUpdatePwdBySMSCodeFail(String error, int errorCode) {
+    public void returnResetPasswordFail(String error, int errorCode) {
         // TODO Auto-generated method stub
     }
 
@@ -1147,7 +1147,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult,String clientConfigMyAppVersion) {
+    public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
         // TODO Auto-generated method stub
 
     }
@@ -1308,17 +1308,17 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnMDMStateFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
 
     }
 
     @Override
     public void returnUploadMDMInfoFail() {
-
-    }
-
-    @Override
-    public void returnMDMStateFail(String error, int errorCode) {
 
     }
 
@@ -1616,7 +1616,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListSuccess(byte[] bytes,String saveConfigVersion) {
+    public void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion) {
 
     }
 
@@ -1626,7 +1626,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListSuccess(byte[] bytes,String saveConfigVersion) {
+    public void returnContactOrgListSuccess(byte[] bytes, String saveConfigVersion) {
 
     }
 
@@ -1636,7 +1636,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult,String saveConfigVersion) {
+    public void returnContactUserListUpdateSuccess(GetContactUserListUpateResult getContactUserListUpateResult, String saveConfigVersion) {
 
     }
 
@@ -1646,7 +1646,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult,String saveConfigVersion) {
+    public void returnContactOrgListUpdateSuccess(GetContactOrgListUpateResult getContactOrgListUpateResult, String saveConfigVersion) {
 
     }
 
@@ -1701,7 +1701,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnJoinVoiceCommunicationChannelFail(String error,int errorCode) {
+    public void returnJoinVoiceCommunicationChannelFail(String error, int errorCode) {
 
     }
 
@@ -1750,7 +1750,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnSetConversationHideSuccess(String id,boolean isHide) {
+    public void returnSetConversationHideSuccess(String id, boolean isHide) {
     }
 
     @Override
@@ -1840,6 +1840,7 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnExperienceUpgradeFlagFail(String error, int errorCode) {
     }
+
     @Override
     public void returnUpdateExperienceUpgradeFlagSuccess() {
     }
@@ -1940,5 +1941,13 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnRemoveMailFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult) {
+    }
+
+    @Override
+    public void returnUserCardMenusFail(String error, int errorCode) {
     }
 }

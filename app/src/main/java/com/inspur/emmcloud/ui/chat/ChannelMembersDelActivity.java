@@ -25,29 +25,28 @@ import java.util.List;
 
 /**
  * 删除成员的Activity
- *
  */
 public class ChannelMembersDelActivity extends BaseActivity {
 
-	private ListView channelMemberListView;
-	private List<ContactUser> memberContactUserList;
-	private ChannelMemDelAdapter adapter;
-	private ArrayList<String> memberDelUidList = new ArrayList<>();
-	private boolean isRemoveMyself = true;
+    private ListView channelMemberListView;
+    private List<ContactUser> memberContactUserList;
+    private ChannelMemDelAdapter adapter;
+    private ArrayList<String> memberDelUidList = new ArrayList<>();
+    private boolean isRemoveMyself = true;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_channelmem_del);
-		final List<String> memberUidList = (List<String>) getIntent().getSerializableExtra("memberUidList");
-		memberContactUserList = ContactUserCacheUtils.getContactUserListById(memberUidList);
-		if (getIntent().hasExtra("title")){
-			((TextView)findViewById(R.id.header_text)).setText(getIntent().getStringExtra("title"));
-		}
-		isRemoveMyself = getIntent().getExtras().getBoolean("isRemoveMyself",true);
-		if (isRemoveMyself){
-			memberContactUserList.remove(new ContactUser(MyApplication.getInstance().getUid()));
-		}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_channelmem_del);
+        final List<String> memberUidList = (List<String>) getIntent().getSerializableExtra("memberUidList");
+        memberContactUserList = ContactUserCacheUtils.getContactUserListById(memberUidList);
+        if (getIntent().hasExtra("title")) {
+            ((TextView) findViewById(R.id.header_text)).setText(getIntent().getStringExtra("title"));
+        }
+        isRemoveMyself = getIntent().getExtras().getBoolean("isRemoveMyself", true);
+        if (isRemoveMyself) {
+            memberContactUserList.remove(new ContactUser(MyApplication.getInstance().getUid()));
+        }
         channelMemberListView = (ListView) findViewById(R.id.member_list);
         adapter = new ChannelMemDelAdapter();
         channelMemberListView.setAdapter(adapter);
@@ -56,65 +55,65 @@ public class ChannelMembersDelActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String uid = memberContactUserList.get(position).getId();
                 boolean isSelct = memberDelUidList.contains(uid);
-                if (isSelct){
+                if (isSelct) {
                     memberDelUidList.remove(uid);
-                }else {
+                } else {
                     memberDelUidList.add(uid);
                 }
                 adapter.notifyDataSetChanged();
             }
         });
 
-	}
+    }
 
-	class ChannelMemDelAdapter extends BaseAdapter {
-		@Override
-		public int getCount() {
-			return memberContactUserList.size();
-		}
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
+                finish();
+                break;
+            case R.id.header_del_text:
+                if (memberDelUidList.size() > 0) {
+                    Intent intent = new Intent();
+                    intent.putExtra("selectMemList", memberDelUidList);
+                    setResult(RESULT_OK, intent);
+                }
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
 
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
+    class ChannelMemDelAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return memberContactUserList.size();
+        }
 
-		@Override
-		public long getItemId(int position) {
-			return 0;
-		}
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
 
-		@Override
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
-		    ContactUser contactUser =  memberContactUserList.get(position);
-			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-			convertView = vi.inflate(R.layout.channel_member_list_item, null);
-			CircleTextImageView circleImageView = (CircleTextImageView) convertView
-					.findViewById(R.id.head);
-			ImageDisplayUtils.getInstance().displayImage(circleImageView, APIUri
-					.getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()),R.drawable.icon_person_default);
-			((TextView) convertView.findViewById(R.id.title))
-					.setText(contactUser.getName());
-            ((ImageView)convertView.findViewById(R.id.select_img)).setImageResource(memberDelUidList.contains(contactUser.getId())?R.drawable.checkbox_pressed:R.drawable.checkbox_normal);
-			return convertView;
-		}
-	}
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
 
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.back_layout:
-			finish();
-			break;
-		case R.id.header_del_text:
-			if (memberDelUidList.size()>0){
-				Intent intent = new Intent();
-				intent.putExtra("selectMemList", memberDelUidList);
-				setResult(RESULT_OK, intent);
-			}
-			finish();
-			break;
-		default:
-			break;
-		}
-	}
+        @Override
+        public View getView(final int position, View convertView,
+                            ViewGroup parent) {
+            ContactUser contactUser = memberContactUserList.get(position);
+            LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+            convertView = vi.inflate(R.layout.channel_member_list_item, null);
+            CircleTextImageView circleImageView = (CircleTextImageView) convertView
+                    .findViewById(R.id.head);
+            ImageDisplayUtils.getInstance().displayImage(circleImageView, APIUri
+                    .getChannelImgUrl(MyApplication.getInstance(), contactUser.getId()), R.drawable.icon_person_default);
+            ((TextView) convertView.findViewById(R.id.title))
+                    .setText(contactUser.getName());
+            ((ImageView) convertView.findViewById(R.id.select_img)).setImageResource(memberDelUidList.contains(contactUser.getId()) ? R.drawable.checkbox_pressed : R.drawable.checkbox_normal);
+            return convertView;
+        }
+    }
 }

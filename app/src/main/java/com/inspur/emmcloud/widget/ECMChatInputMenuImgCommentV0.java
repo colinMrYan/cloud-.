@@ -9,6 +9,7 @@ package com.inspur.emmcloud.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,9 +47,9 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
     private ChatInputEdit inputEdit;
 
 
-    @ViewInject(R.id.send_msg_btn)
+    @ViewInject(R.id.bt_send)
     private Button sendMsgBtn;
-    @ViewInject(R.id.add_menu_layout)
+    @ViewInject(R.id.rl_add_menu)
     private RelativeLayout addMenuLayout;
 
     private boolean canMentions = false;
@@ -73,7 +74,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
 
     private void initView(final Context context) {
         // TODO Auto-generated method stub
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_commentv0,this,true);
+        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_commentv0, this, true);
         x.view().inject(view);
         initInputEdit();
     }
@@ -87,7 +88,8 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
                 sendMsgBtn.setEnabled(!isContentBlank);
-                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
+//                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
+                sendMsgBtn.setTextColor(isContentBlank? Color.parseColor("#999999"):Color.parseColor("#333333"));
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -98,7 +100,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
         });
     }
 
-    public ChatInputEdit getChatInputEdit(){
+    public ChatInputEdit getChatInputEdit() {
         return inputEdit;
     }
 
@@ -121,6 +123,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
                 MENTIONS_RESULT);
 
     }
+
     public void setChatInputMenuListener(
             ChatInputMenuListener chatInputMenuListener) {
         this.chatInputMenuListener = chatInputMenuListener;
@@ -172,27 +175,32 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
             InsertModel insertModel;
-            insertModel= new InsertModel("@", uid, name);
+            insertModel = new InsertModel("@", uid, name);
             inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
     }
 
-    @Event({R.id.send_msg_btn})
+    @Event({R.id.bt_send,R.id.bt_cancel})
     private void onClick(View view) {
         switch (view.getId()) {
-            case R.id.send_msg_btn:
+            case R.id.bt_send:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    List<String> urlList= null;
+                    List<String> urlList = null;
                     String content = inputEdit.getRichContent(isMessageV0);
-                    Map<String,String> mentionsMap = null;
-                    if (isMessageV0){
+                    Map<String, String> mentionsMap = null;
+                    if (isMessageV0) {
                         urlList = getContentUrlList(inputEdit.getText().toString());
-                    }else {
+                    } else {
                         mentionsMap = inputEdit.getMentionsMap();
                     }
-                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
+                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList, mentionsMap);
 
                     inputEdit.setText("");
+                }
+                break;
+            case R.id.bt_cancel:
+                if (chatInputMenuListener != null) {
+                    chatInputMenuListener.hideChatInputMenu();
                 }
                 break;
             default:
@@ -233,9 +241,9 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
     }
 
 
-
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
+        void hideChatInputMenu();
     }
 
 

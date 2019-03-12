@@ -33,44 +33,6 @@ public class WorkSettingActivity extends BaseActivity {
     private DragSortListView listView;
     private List<WorkSetting> workSettingList = new ArrayList<>();
     private boolean isChangeSetting = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_work_setting);
-        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
-        SwitchView switchView = (SwitchView) findViewById(R.id.date_open_switch);
-        switchView.setOpened(isShowDate);
-        switchView.setOnStateChangedListener(new StateChangedListener(null));
-        listView = (DragSortListView) findViewById(R.id.work_setting_list);
-        workSettingList = WorkSettingCacheUtils.getAllWorkSettingList(this);
-        listView.setAdapter(adapter);
-        DragSortController controller = new DragSortController(listView);
-        controller.setDragHandleId(R.id.handle_img);
-        controller.setSortEnabled(true);
-        controller.setDragInitMode(0);
-        listView.setFloatViewManager(controller);
-        listView.setOnTouchListener(controller);
-        listView.setDragEnabled(true);
-        listView.setDropListener(new DragSortListView.DropListener() {
-            @Override
-            public void drop(int from, int to) {
-                if (from != to) {
-                    isChangeSetting = true;
-                    WorkSetting item = workSettingList.get(from);
-                    workSettingList.remove(item);
-                    workSettingList.add(to, item);
-                    adapter.notifyDataSetChanged();
-                    for (int i =0;i<workSettingList.size();i++){
-                        WorkSetting workSetting = workSettingList.get(i);
-                        workSetting.setSort(i);
-                    }
-                    WorkSettingCacheUtils.saveWorkSettingList(getApplicationContext(),workSettingList);
-                }
-            }
-        });
-    }
-
     private BaseAdapter adapter = new BaseAdapter() {
         @Override
         public int getCount() {
@@ -106,8 +68,45 @@ public class WorkSettingActivity extends BaseActivity {
         }
     };
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_work_setting);
+        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
+        SwitchView switchView = (SwitchView) findViewById(R.id.date_open_switch);
+        switchView.setOpened(isShowDate);
+        switchView.setOnStateChangedListener(new StateChangedListener(null));
+        listView = (DragSortListView) findViewById(R.id.work_setting_list);
+        workSettingList = WorkSettingCacheUtils.getAllWorkSettingList(this);
+        listView.setAdapter(adapter);
+        DragSortController controller = new DragSortController(listView);
+        controller.setDragHandleId(R.id.handle_img);
+        controller.setSortEnabled(true);
+        controller.setDragInitMode(0);
+        listView.setFloatViewManager(controller);
+        listView.setOnTouchListener(controller);
+        listView.setDragEnabled(true);
+        listView.setDropListener(new DragSortListView.DropListener() {
+            @Override
+            public void drop(int from, int to) {
+                if (from != to) {
+                    isChangeSetting = true;
+                    WorkSetting item = workSettingList.get(from);
+                    workSettingList.remove(item);
+                    workSettingList.add(to, item);
+                    adapter.notifyDataSetChanged();
+                    for (int i = 0; i < workSettingList.size(); i++) {
+                        WorkSetting workSetting = workSettingList.get(i);
+                        workSetting.setSort(i);
+                    }
+                    WorkSettingCacheUtils.saveWorkSettingList(getApplicationContext(), workSettingList);
+                }
+            }
+        });
+    }
+
     public void onClick(View v) {
-        if (isChangeSetting){
+        if (isChangeSetting) {
             setResult(RESULT_OK);
         }
         finish();
@@ -115,7 +114,7 @@ public class WorkSettingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (isChangeSetting){
+        if (isChangeSetting) {
             setResult(RESULT_OK);
         }
         finish();
@@ -134,11 +133,11 @@ public class WorkSettingActivity extends BaseActivity {
             isChangeSetting = true;
             if (workSetting == null) {
                 PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
-            } else{
+            } else {
                 workSetting.setOpen(true);
-                WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(),workSetting);
+                WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(), workSetting);
             }
-            ((SwitchView)view).setOpened(true);
+            ((SwitchView) view).setOpened(true);
         }
 
         @Override
@@ -147,11 +146,11 @@ public class WorkSettingActivity extends BaseActivity {
             isChangeSetting = true;
             if (workSetting == null) {
                 PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), Constant.PREF_WORK_INFO_BAR_OPEN, false);
-            } else{
+            } else {
                 workSetting.setOpen(false);
-                WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(),workSetting);
+                WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(), workSetting);
             }
-            ((SwitchView)view).setOpened(false);
+            ((SwitchView) view).setOpened(false);
 
         }
     }

@@ -5,55 +5,53 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 /**
- * 
  * 正方形的Layout
- *
  */
 public class SquareLayout extends RelativeLayout {
 
-	public SquareLayout(Context context, AttributeSet attrs, int defStyle) {
+    public SquareLayout(Context context, AttributeSet attrs, int defStyle) {
 
-		super(context, attrs, defStyle);
+        super(context, attrs, defStyle);
 
-	}
+    }
 
-	public SquareLayout(Context context, AttributeSet attrs) {
+    public SquareLayout(Context context, AttributeSet attrs) {
 
-		super(context, attrs);
+        super(context, attrs);
 
-	}
+    }
 
-	public SquareLayout(Context context) {
+    public SquareLayout(Context context) {
 
-		super(context);
+        super(context);
 
-	}
+    }
 
-	@SuppressWarnings("unused")
-	@Override
-	protected void onMeasure(int
+    @SuppressWarnings("unused")
+    @Override
+    protected void onMeasure(int
 
-	widthMeasureSpec, int
+                                     widthMeasureSpec, int
 
-	heightMeasureSpec) {
+                                     heightMeasureSpec) {
 
-		setMeasuredDimension(getDefaultSize(0, widthMeasureSpec),
-				getDefaultSize(0, heightMeasureSpec));
+        setMeasuredDimension(getDefaultSize(0, widthMeasureSpec),
+                getDefaultSize(0, heightMeasureSpec));
 
-		int
+        int
 
-		childWidthSize = getMeasuredWidth();
+                childWidthSize = getMeasuredWidth();
 
-		int
+        int
 
-		childHeightSize = getMeasuredHeight();
+                childHeightSize = getMeasuredHeight();
 
-		// 高度和宽度一�?
+        // 高度和宽度一�?
 
-		heightMeasureSpec = widthMeasureSpec = MeasureSpec.makeMeasureSpec(
-				childWidthSize, MeasureSpec.EXACTLY);
+        heightMeasureSpec = widthMeasureSpec = MeasureSpec.makeMeasureSpec(
+                childWidthSize, MeasureSpec.EXACTLY);
 
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-	}
+    }
 }

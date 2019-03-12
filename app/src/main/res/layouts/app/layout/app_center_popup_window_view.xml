@@ -4,78 +4,122 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/meesage_popwindow_arrow_img"
+        android:id="@+id/iv_arrow"
         android:layout_width="12dp"
         android:layout_height="8dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="22dp"
+        android:layout_marginRight="21dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/message_popwindow_list_arrow" />
+        android:src="@drawable/message_popwindow_list_arrow_white" />
 
     <RelativeLayout
-        android:id="@+id/message_popwindow_outsize_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/meesage_popwindow_arrow_img"
-        android:layout_marginRight="10dp"
+        android:layout_below="@id/iv_arrow"
+        android:paddingLeft="15dp"
+        android:layout_marginRight="8dp"
         android:background="@drawable/shape_message_pop_round_blue_layout">
 
-        <TextView
-            android:id="@+id/app_change_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/app_hide_layout"
-            android:layout_alignRight="@+id/app_hide_layout"
-            android:paddingBottom="12dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="12dp"
-            android:clickable="true"
-            android:text="@string/edit"
-            android:textColor="#ffffff"
-            android:textSize="16sp" />
-
         <LinearLayout
-            android:id="@+id/app_hide_layout"
+            android:id="@+id/ll_app_scan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/app_change_btn"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
-
+            <ImageView
+                android:id="@+id/iv_app_scan"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_message_menu_scan_black" />
             <TextView
-                android:id="@+id/app_hide_btn"
+                android:id="@+id/tv_app_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:paddingBottom="12dp"
-                android:paddingTop="12dp"
-                android:clickable="false"
-                android:text="@string/app_commonly_use"
-                android:textColor="#ffffff"
+                android:layout_alignLeft="@+id/ll_common_app_switch"
+                android:layout_alignRight="@+id/ll_common_app_switch"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="11dp"
+                android:paddingTop="11dp"
+                android:text="@string/sweep"
+                android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
-
-            <com.inspur.emmcloud.widget.SwitchView
-                android:id="@+id/app_hide_switch"
-                android:layout_width="42dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                 />
         </LinearLayout>
 
         <View
-            android:id="@+id/app_myapp_line"
             android:layout_width="wrap_content"
-            android:layout_height="0.5dp"
-            android:layout_alignLeft="@id/app_hide_layout"
-            android:layout_alignRight="@id/app_hide_layout"
-            android:layout_below="@id/app_change_btn"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            android:background="#3895D9" />
+            android:layout_height="1px"
+            android:layout_alignLeft="@id/ll_common_app_switch"
+            android:layout_alignRight="@id/ll_common_app_switch"
+            android:layout_below="@id/ll_app_scan"
+            android:background="#e3e3e3" />
+
+        <LinearLayout
+            android:id="@+id/ll_app_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_app_scan"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/iv_app_order"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_change_app_order" />
+            <TextView
+                android:id="@+id/tv_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/ll_common_app_switch"
+                android:layout_alignRight="@+id/ll_common_app_switch"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="11dp"
+                android:paddingTop="11dp"
+                android:text="@string/app_sort_order"
+                android:textColor="@color/header_text_black"
+                android:textSize="16sp" />
+        </LinearLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1px"
+            android:layout_alignLeft="@id/ll_common_app_switch"
+            android:layout_alignRight="@id/ll_common_app_switch"
+            android:layout_below="@id/ll_app_order"
+            android:background="#e3e3e3" />
+        <LinearLayout
+            android:id="@+id/ll_common_app_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_app_order"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/iv_app_commonly_use"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_commonly_use_open" />
+            <TextView
+                android:id="@+id/tv_app_commonly_use"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="11dp"
+                android:text="@string/app_commonly_use"
+                android:textColor="@color/header_text_black"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+
+
     </RelativeLayout>
 </RelativeLayout>

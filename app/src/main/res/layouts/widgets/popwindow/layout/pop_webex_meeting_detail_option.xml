@@ -4,20 +4,20 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/img_arrow"
+        android:id="@+id/iv_arrow"
         android:layout_width="12dp"
         android:layout_height="8dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/message_popwindow_list_arrow" />
+        android:src="@drawable/message_popwindow_list_arrow_white" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/img_arrow"
+        android:layout_below="@id/iv_arrow"
         android:layout_marginRight="10dp"
         android:background="@drawable/shape_message_pop_round_blue_layout">
 
@@ -36,6 +36,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
+                android:tint="@color/header_text_black"
                 android:src="@drawable/ic_webex_meeting_attendees" />
 
             <TextView
@@ -49,7 +50,7 @@
                 android:clickable="false"
                 android:paddingRight="30dp"
                 android:text="@string/webex_participant"
-                android:textColor="#ffffff"
+                android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -62,7 +63,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="#3895D9" />
+            android:background="#e3e3e3" />
 
         <RelativeLayout
             android:id="@+id/rl_share"
@@ -83,6 +84,7 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
+                android:tint="@color/header_text_black"
                 android:src="@drawable/ic_webex_meeting_share" />
 
             <TextView
@@ -95,8 +97,8 @@
                 android:background="@color/transparent"
                 android:clickable="false"
                 android:paddingRight="6dp"
+                android:textColor="@color/header_text_black"
                 android:text="@string/share"
-                android:textColor="#ffffff"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -121,7 +123,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="12dp"
                 android:layout_marginRight="15dp"
-                android:background="#3895D9" />
+                android:background="#e3e3e3" />
 
             <ImageView
                 android:id="@+id/iv_delete"
@@ -130,6 +132,7 @@
                 android:layout_below="@id/v_line_delete"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
+                android:tint="@color/header_text_black"
                 android:src="@drawable/ic_webex_meeting_delete" />
 
             <TextView
@@ -143,8 +146,8 @@
                 android:background="@color/transparent"
                 android:clickable="false"
                 android:paddingRight="6dp"
+                android:textColor="@color/header_text_black"
                 android:text="@string/delete"
-                android:textColor="#ffffff"
                 android:textSize="16sp" />
         </RelativeLayout>
     </RelativeLayout>

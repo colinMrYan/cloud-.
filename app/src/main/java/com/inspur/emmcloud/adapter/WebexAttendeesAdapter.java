@@ -22,7 +22,8 @@ import java.util.List;
 public class WebexAttendeesAdapter extends BaseAdapter {
     private List<WebexAttendees> webexAttendeesList;
     private Context context;
-    public WebexAttendeesAdapter(Context context,List<WebexAttendees> webexAttendeesList) {
+
+    public WebexAttendeesAdapter(Context context, List<WebexAttendees> webexAttendeesList) {
         this.webexAttendeesList = webexAttendeesList;
         this.context = context;
     }
@@ -45,15 +46,15 @@ public class WebexAttendeesAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         WebexAttendees webexAttendees = webexAttendeesList.get(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_attendees,null);
-        TextView emailText = (TextView)convertView.findViewById(R.id.tv_email);
-        TextView personTypeText = (TextView)convertView.findViewById(R.id.tv_persion_type);
-        TextView typeText = (TextView)convertView.findViewById(R.id.tv_type);
+        convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_attendees, null);
+        TextView emailText = (TextView) convertView.findViewById(R.id.tv_email);
+        TextView personTypeText = (TextView) convertView.findViewById(R.id.tv_persion_type);
+        TextView typeText = (TextView) convertView.findViewById(R.id.tv_type);
         emailText.setText(webexAttendees.getEmail());
-        personTypeText.setText(webexAttendees.getPersonType() == 0?R.string.webex_external_attendees:R.string.webex_internal_attendees);
+        personTypeText.setText(webexAttendees.getPersonType() == 0 ? R.string.webex_external_attendees : R.string.webex_internal_attendees);
         typeText.setText(webexAttendees.getType());
-        if (webexAttendees.getPersonType() == 1){
-            CircleTextImageView photoImg = (CircleTextImageView)convertView.findViewById(R.id.iv_photo);
+        if (webexAttendees.getPersonType() == 1) {
+            CircleTextImageView photoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_photo);
             String photoUrl = APIUri.getWebexPhotoUrl(webexAttendees.getEmail());
             ImageDisplayUtils.getInstance().displayImage(photoImg, photoUrl, R.drawable.icon_person_default);
         }

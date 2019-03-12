@@ -13,31 +13,34 @@ import java.util.List;
  * Created by chenmch on 2018/10/16.
  */
 
-public class WebexAttendees implements Serializable{
+public class WebexAttendees implements Serializable {
     private String email;
     private int personType = 1;
-    private String type="";
+    private String type = "";
     private SearchModel searchModel;
-    public WebexAttendees(){
+
+    public WebexAttendees() {
 
     }
-    public WebexAttendees(JSONObject object){
-        type = JSONUtils.getString(object,"type","");
-        personType = JSONUtils.getInt(object,"personType",1);
-        email = JSONUtils.getString(object,"email","");
+
+    public WebexAttendees(JSONObject object) {
+        type = JSONUtils.getString(object, "type", "");
+        personType = JSONUtils.getInt(object, "personType", 1);
+        email = JSONUtils.getString(object, "email", "");
     }
-    public WebexAttendees(String email){
+
+    public WebexAttendees(String email) {
         this.email = email;
     }
 
-    public WebexAttendees(SearchModel searchModel){
+    public WebexAttendees(SearchModel searchModel) {
         this.searchModel = searchModel;
         this.email = searchModel.getEmail();
     }
 
-    public static List<WebexAttendees> SearchModelList2WebexAttendeesList(List<SearchModel> searchModelList){
+    public static List<WebexAttendees> SearchModelList2WebexAttendeesList(List<SearchModel> searchModelList) {
         List<WebexAttendees> webexAttendeesList = new ArrayList<>();
-        for (SearchModel searchModel:searchModelList){
+        for (SearchModel searchModel : searchModelList) {
             webexAttendeesList.add(new WebexAttendees(searchModel));
         }
         return webexAttendeesList;

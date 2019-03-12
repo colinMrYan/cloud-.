@@ -12,11 +12,12 @@ public class Action {
     private String title;
     private String type;
     private String url;
-    public Action(JSONObject obj){
-        title = JSONUtils.getString(obj,"title","");
-        type = JSONUtils.getString(obj,"type","");
-        JSONObject paramsObj = JSONUtils.getJSONObject(obj,"params",new JSONObject());
-        url = JSONUtils.getString(paramsObj,"url","");
+
+    public Action(JSONObject obj) {
+        title = JSONUtils.getString(obj, "title", "");
+        type = JSONUtils.getString(obj, "type", "");
+        JSONObject paramsObj = JSONUtils.getJSONObject(obj, "params", new JSONObject());
+        url = JSONUtils.getString(paramsObj, "url", "");
     }
 
     public String getTitle() {

@@ -203,7 +203,7 @@ public class APIUri {
      * @param mobile
      * @return
      */
-    public static String getReqLoginSMSUrl(String mobile) {
+    public static String getLoginSMSCaptchaUrl(String mobile) {
         return MyApplication.getInstance().getCloudId() + "api/v1/passcode?phone=" + mobile;
     }
 
@@ -1116,52 +1116,55 @@ public class APIUri {
 
     /**************************Mail********************************************/
     public static String getMailBaseUrl() {
-        return getEMMBaseUrl()+"api/ews/v1.0";
+        return getEMMBaseUrl() + "api/ews/v1.0";
     }
 
     public static String getMailFolderUrl() {
-        return getMailBaseUrl()+"/Folder";
+        return getMailBaseUrl() + "/Folder";
     }
 
 
     public static String getMailListUrl() {
-        return getMailBaseUrl()+"/Mail/List";
+        return getMailBaseUrl() + "/Mail/List";
     }
 
-    public static String getMailDetailUrl(boolean isEncrypted){
-        return  getMailBaseUrl()+ (isEncrypted?"/Mail/EncryptedDetail":"/Mail/Detail");
+    public static String getMailDetailUrl(boolean isEncrypted) {
+        return getMailBaseUrl() + (isEncrypted ? "/Mail/EncryptedDetail" : "/Mail/Detail");
     }
 
-    public static String getLoginMailUrl(){
-        return  getMailBaseUrl()+"/UserProfile/MailBind";
+    public static String getLoginMailUrl() {
+        return getMailBaseUrl() + "/UserProfile/MailBind";
     }
 
-    public static String getMailAttachmentUrl(){
-        return getMailBaseUrl()+"/Mail/SafeAttachment?";
+    public static String getMailAttachmentUrl() {
+        return getMailBaseUrl() + "/Mail/SafeAttachment?";
     }
 
     /**
      * 获取上传Certificate的接口
+     *
      * @return
      */
-    public static String getCertificateUrl () {
-        return  getMailBaseUrl()+"/UserProfile/CheckData";
+    public static String getCertificateUrl() {
+        return getMailBaseUrl() + "/UserProfile/CheckData";
     }
 
     /**
      * 获取上传邮件Url
+     *
      * @return
      */
     public static String getUploadMailUrl() {
-        return  getMailBaseUrl()+"/Mail/SafeSend";
+        return getMailBaseUrl() + "/Mail/SafeSend";
     }
 
     /**
      * 获取删除邮件Url
+     *
      * @return
      */
     public static String getRemoveMailUrl() {
-        return  getMailBaseUrl()+"/Mail/Remove";
+        return getMailBaseUrl() + "/Mail/Remove";
     }
 
 /************************************************************************工作****************************************************************************/
@@ -1602,6 +1605,15 @@ public class APIUri {
     }
 
     /**
+     * 获取我的页面个人信息卡片的menu配置
+     *
+     * @return
+     */
+    public static String getUserCardMenusUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/UserCardMenus";
+    }
+
+    /**
      * 获取声网参数Url
      *
      * @return
@@ -1692,8 +1704,8 @@ public class APIUri {
         return "https://emm.inspur.com/api/mam/v3.0/heart/success";
     }
 
-    public static String getCancelTokenUrl(){
-        return MyApplication.getInstance().getCloudId()+"oauth2.0/profile";
+    public static String getCancelTokenUrl() {
+        return MyApplication.getInstance().getCloudId() + "oauth2.0/profile";
     }
 
 }

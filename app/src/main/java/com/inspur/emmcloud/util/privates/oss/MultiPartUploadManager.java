@@ -47,7 +47,7 @@ public class MultiPartUploadManager {
             @Override
             public void onProgress(PauseableUploadRequest pauseableUploadRequest, long currentSize, long totalSize) {
                 int progress = (int) (100 * currentSize / totalSize);
-                LogUtils.jasonDebug("progress="+progress);
+                LogUtils.jasonDebug("progress=" + progress);
 //                UIDisplayer.updateProgress(progress);
 //                UIDisplayer.displayInfo("上传进度: " + String.valueOf(progress) + "%");
             }
@@ -68,7 +68,7 @@ public class MultiPartUploadManager {
 
                 Log.d("ETag", result.getETag());
                 Log.d("RequestId", result.getRequestId());
-                LogUtils.jasonDebug("resultCode"+result.getStatusCode());
+                LogUtils.jasonDebug("resultCode" + result.getStatusCode());
 //                UIDisplayer.uploadComplete();
 //                UIDisplayer.displayInfo("Bucket: " + bucket + "\nObject: " + request.getObject() + "\nETag: " + result.getETag() +  "\nRequestId: " + result.getRequestId());
             }
@@ -118,8 +118,7 @@ public class MultiPartUploadManager {
                         uploadId = task.initUpload();
                         Log.d("InitUploadId", uploadId);
                         multiPartStatus.put(totalMd5, uploadId);
-                    }
-                    else {
+                    } else {
                         //如果之前已经存在一样的上传任务，那么继续使用上次的uploadId
                         Log.d("GetPausedUploadId", uploadId);
                     }
@@ -129,14 +128,11 @@ public class MultiPartUploadManager {
                     if (task.isComplete()) {
                         multiPartStatus.remove(totalMd5);
                     }
-                }
-                catch (ServiceException e) {
+                } catch (ServiceException e) {
                     e.printStackTrace();
-                }
-                catch (ClientException e) {
+                } catch (ClientException e) {
                     e.printStackTrace();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

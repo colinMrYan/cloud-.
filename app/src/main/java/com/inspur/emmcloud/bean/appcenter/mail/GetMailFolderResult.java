@@ -14,11 +14,12 @@ import java.util.List;
 
 public class GetMailFolderResult {
     private List<MailFolder> mailFolderList = new ArrayList<>();
-    public GetMailFolderResult(String response){
-        JSONArray array = JSONUtils.getJSONArray(response,new JSONArray());
-        for (int i=0;i<array.length();i++){
-            JSONObject object = JSONUtils.getJSONObject(array,i,new JSONObject());
-            mailFolderList.add(new MailFolder(object,i));
+
+    public GetMailFolderResult(String response) {
+        JSONArray array = JSONUtils.getJSONArray(response, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
+            mailFolderList.add(new MailFolder(object, i));
         }
     }
 

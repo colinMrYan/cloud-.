@@ -3,18 +3,43 @@
 
     <color name="progress_grey">#c1c1c1</color>
     <color name="content_border">#c8c7cc</color>
-    <color name="header_bg">#0F7BCA</color>
+
+
+    <color name="header_bg_blue">#0F7BCA</color>
     <color name="header_bg_white">#FDFDFD</color>
+    <color name="header_bg_grey">#EEEEEE</color>
+
+    <color name="footer_bg_blue">#f8f8f8</color>
+    <color name="footer_bg_white">#FCFCFC</color>
+    <color name="footer_bg_grey">#f8f8f8</color>
+
+    <color name="header_text">#ffffff</color>
+    <color name="header_text_black">#333333</color>
+    <color name="header_text_grey">#333333</color>
+
+
+    <color name="footer_tab_text_nor_white">#979EA3</color>
+    <color name="footer_tab_text_nor_grey">#666666</color>
+    <color name="footer_tab_text_nor_blue">#666666</color>
+
+
+    <color name="footer_tab_text_sel_white">#36A5F6</color>
+    <color name="footer_tab_text_sel_grey">#36A5F6</color>
+    <color name="footer_tab_text_sel_blue">#36A5F6</color>
+
     <color name="contact_header_bg">#EFEFF4</color>
-    <color name="bg_my_card">#0F7BCA</color>
+    <color name="bg_my_card">#36A5F6</color>
+    <color name="bg_other_card">#ECEEF2</color>
     <color name="bg_my_card_press">#e00F7BCA</color>
     <color name="statebar_color">#0C68AB</color>
     <!-- 导航栏原来色值#1596d2 -->
-    <color name="header_text">#ffffff</color>
-    <color name="content_bg">#efefef</color>
-    <color name="footer_tab_text_nor">#929292</color>
+
+
+
+    <color name="content_bg">#f8f9fb</color>
+    <color name="footer_tab_text_nor">#979EA3</color>
     <!-- 原底部文字颜色#698fa7 -->
-    <color name="footer_tab_text_sel">#0f7bca</color>
+    <color name="footer_tab_text_sel">#36A5F6</color>
     <!-- 原底部文字颜色#64abe9 -->
     <color name="login_btn_nor">#38a4f0</color>
     <color name="login_btn_sel">#008cee</color>
@@ -34,12 +59,11 @@
     <color name="text_lightblue">#007aff</color>
     <color name="item_select_bg">#D9D9D9</color>
     <color name="set_textColor">#d10100</color>
-    <color name="set_protected">#4f89a2</color>
     <color name="set_item1_bgColor">#ffffff</color>
     <color name="onekey_username_textcolor">#359fdd</color>
     <color name="onekey_line_view">#cfd3d6</color>
     <color name="onekey_content_text">#4f87a2</color>
-    <color name="hightlight_in_blue_bg">#31EEFF</color>
+    <color name="hightlight_in_blue_bg">#4CFFFD</color>
 
     <!--新闻导航栏-->
     <color name="app_news_head_color">#323C49</color>
@@ -158,7 +182,7 @@
     <color name="grey_a5a5a5">#777777</color>
     <color name="grey_dde1e7">#DDE1E7</color>
     <color name="red_f4333c">#F4333C</color>
-    <color name="color_list_divider">#99dddddd</color>
+    <color name="color_list_divider">#dddddd</color>
     <color name="color_list_divider_tran">#99dddddd</color>
 <!--
     <color name="colorPrimary">#3F51B5</color>
@@ -188,4 +212,11 @@
     <color name="voice_communication_function_select">#3CA6F7</color>
     <color name="voice_communication_function_default">#333333</color>
     <color name="voice_communication_function_unavailiable_text">#CBCCCE</color>
+
+    <color name="line_color">#e7e7e7</color>
+    <color name="content_background">#f2f2f2</color>
+
+    <color name="schedule_week_bg_color">#F8F9FB</color>
+
+    <color name="app_font_color">#35A4F6</color>
 </resources>

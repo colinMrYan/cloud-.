@@ -41,7 +41,8 @@ public final class TransferConfig {
     private IIndexIndicator indexIndicator;
     private ImageLoaderCommon imageLoader;
 
-    private @IdRes int imageId;
+    private @IdRes
+    int imageId;
     private AbsListView listView;
     private RecyclerView recyclerView;
 
@@ -244,11 +245,12 @@ public final class TransferConfig {
         private IIndexIndicator indexIndicator;
         private ImageLoaderCommon imageLoader;
 
-        private @IdRes int imageId;
+        private @IdRes
+        int imageId;
         private AbsListView listView;
         private RecyclerView recyclerView;
 
-    //    private Transferee.OnTransfereeLongClickListener longClickListener;
+        //    private Transferee.OnTransfereeLongClickListener longClickListener;
 
         /**
          * 当前缩略图在所有图片中的索引
@@ -417,7 +419,7 @@ public final class TransferConfig {
             config.setListView(listView);
             config.setRecyclerView(recyclerView);
 
-  //          config.setLongClickListener(longClickListener);
+            //          config.setLongClickListener(longClickListener);
 
             return config;
         }

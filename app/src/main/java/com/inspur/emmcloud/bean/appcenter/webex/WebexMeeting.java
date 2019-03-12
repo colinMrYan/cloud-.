@@ -17,7 +17,7 @@ import java.util.List;
  * Created by chenmch on 2018/10/12.
  */
 
-public class WebexMeeting implements Serializable{
+public class WebexMeeting implements Serializable {
     private String meetingID;
     private String confName;
     private String meetingPassword;
@@ -25,35 +25,37 @@ public class WebexMeeting implements Serializable{
     private String hostKey;
     private Calendar startDateCalendar;
     private int duration;
-   // private List<String> attendeesList;
+    // private List<String> attendeesList;
     private List<WebexAttendees> webexAttendeesList = new ArrayList<>();
     private String hostWebExID;
     private boolean inProgress;
-    public WebexMeeting(){
+
+    public WebexMeeting() {
 
     }
 
-    public WebexMeeting(String response){
+    public WebexMeeting(String response) {
         this(JSONUtils.getJSONObject(response));
     }
-    public WebexMeeting(JSONObject obj){
-        meetingID = JSONUtils.getString(obj,"meetingID","");
-        confName = JSONUtils.getString(obj,"confName","");
-        meetingPassword = JSONUtils.getString(obj,"meetingPassword","");
-        hostUserName = JSONUtils.getString(obj,"hostUserName","");
-        hostKey = JSONUtils.getString(obj,"hostKey","");
-        String startDate = JSONUtils.getString(obj,"startDate","");
+
+    public WebexMeeting(JSONObject obj) {
+        meetingID = JSONUtils.getString(obj, "meetingID", "");
+        confName = JSONUtils.getString(obj, "confName", "");
+        meetingPassword = JSONUtils.getString(obj, "meetingPassword", "");
+        hostUserName = JSONUtils.getString(obj, "hostUserName", "");
+        hostKey = JSONUtils.getString(obj, "hostKey", "");
+        String startDate = JSONUtils.getString(obj, "startDate", "");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        startDateCalendar = TimeUtils.timeString2Calendar(startDate,simpleDateFormat);
-        duration = JSONUtils.getInt(obj,"duration",0);
-        JSONArray array = JSONUtils.getJSONArray(obj,"attendees",new JSONArray());
-        for (int i=0;i<array.length();i++){
-            WebexAttendees webexAttendees = new WebexAttendees(JSONUtils.getJSONObject(array,i,new JSONObject()));
+        startDateCalendar = TimeUtils.timeString2Calendar(startDate, simpleDateFormat);
+        duration = JSONUtils.getInt(obj, "duration", 0);
+        JSONArray array = JSONUtils.getJSONArray(obj, "attendees", new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            WebexAttendees webexAttendees = new WebexAttendees(JSONUtils.getJSONObject(array, i, new JSONObject()));
             webexAttendeesList.add(webexAttendees);
         }
-        meetingID = JSONUtils.getString(obj,"meetingID","");
-        hostWebExID = JSONUtils.getString(obj,"hostWebExID","");
-        inProgress = JSONUtils.getBoolean(obj,"inProgress",false);
+        meetingID = JSONUtils.getString(obj, "meetingID", "");
+        hostWebExID = JSONUtils.getString(obj, "hostWebExID", "");
+        inProgress = JSONUtils.getBoolean(obj, "inProgress", false);
     }
 
     public String getMeetingID() {
@@ -136,29 +138,29 @@ public class WebexMeeting implements Serializable{
         this.inProgress = inProgress;
     }
 
-    public JSONObject toJsonObject(){
+    public JSONObject toJsonObject() {
         JSONObject object = new JSONObject();
         try {
-            object.put("confName",confName);
+            object.put("confName", confName);
             //object.put("meetingID",meetingID);
-            object.put("meetingPassword",meetingPassword);
-            object.put("agenda","");
-            object.put("duration",duration);
+            object.put("meetingPassword", meetingPassword);
+            object.put("agenda", "");
+            object.put("duration", duration);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            String time = TimeUtils.getTime(startDateCalendar.getTimeInMillis(),simpleDateFormat);
-            object.put("startDate",time);
-            object.put("agenda","");
+            String time = TimeUtils.getTime(startDateCalendar.getTimeInMillis(), simpleDateFormat);
+            object.put("startDate", time);
+            object.put("agenda", "");
             JSONArray array = new JSONArray();
-            for (WebexAttendees webexAttendees:webexAttendeesList){
+            for (WebexAttendees webexAttendees : webexAttendeesList) {
                 JSONObject attendeesObj = new JSONObject();
-                attendeesObj.put("email",webexAttendees.getEmail());
+                attendeesObj.put("email", webexAttendees.getEmail());
                 array.put(attendeesObj);
             }
-            object.put("attendees",array);
-        }catch (Exception e){
+            object.put("attendees", array);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return  object;
+        return object;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

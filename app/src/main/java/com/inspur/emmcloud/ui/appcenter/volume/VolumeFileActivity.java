@@ -60,31 +60,22 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
     private static final int REQUEST_SHOW_FILE_FILTER = 5;
-
-    @ViewInject(R.id.operation_sort_text)
-    private TextView operationSortText;
-
-    @ViewInject(R.id.batch_operation_bar_layout)
-    private RelativeLayout batchOperationBarLayout;
-
-    @ViewInject(R.id.batch_operation_header_layout)
-    private RelativeLayout batchOprationHeaderLayout;
-
-    @ViewInject(R.id.batch_operation_header_text)
-    private TextView batchOprationHeaderText;
-
-    @ViewInject(R.id.batch_operation_select_all_text)
-    private TextView getBatchOprationSelectAllText;
-
-    @ViewInject(R.id.batch_operation_delete_text)
-    private TextView batchOperationDeleteText;
-
-    @ViewInject(R.id.batch_operation_move_text)
-    private TextView batchOperationMoveText;
-
     @ViewInject(R.id.operation_layout)
     protected RelativeLayout operationLayout;
-
+    @ViewInject(R.id.operation_sort_text)
+    private TextView operationSortText;
+    @ViewInject(R.id.batch_operation_bar_layout)
+    private RelativeLayout batchOperationBarLayout;
+    @ViewInject(R.id.batch_operation_header_layout)
+    private RelativeLayout batchOprationHeaderLayout;
+    @ViewInject(R.id.batch_operation_header_text)
+    private TextView batchOprationHeaderText;
+    @ViewInject(R.id.batch_operation_select_all_text)
+    private TextView getBatchOprationSelectAllText;
+    @ViewInject(R.id.batch_operation_delete_text)
+    private TextView batchOperationDeleteText;
+    @ViewInject(R.id.batch_operation_move_text)
+    private TextView batchOperationMoveText;
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
@@ -190,7 +181,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 onBackPressed();
                 break;
             case R.id.new_forder_img:
@@ -367,50 +358,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         volumeFileList.addAll(VolumeFileNormalList);
     }
 
-    private class FileSortComparable implements Comparator {
-        @Override
-        public int compare(Object o1, Object o2) {
-            VolumeFile volumeFileA = (VolumeFile) o1;
-            VolumeFile volumeFileB = (VolumeFile) o2;
-            int sortResult = 0;
-            if (volumeFileA.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileB.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
-                sortResult = -1;
-            } else if (volumeFileB.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileA.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
-                sortResult = 1;
-            } else {
-                switch (sortType) {
-                    case SORT_BY_NAME_UP:
-                        sortResult = Collator.getInstance(Locale.CHINA).compare(volumeFileA.getName(), volumeFileB.getName());
-                        break;
-                    case SORT_BY_NAME_DOWN:
-                        sortResult = 0 - Collator.getInstance(Locale.CHINA).compare(volumeFileA.getName(), volumeFileB.getName());
-                        break;
-                    case SORT_BY_TIME_DOWN:
-                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
-                            sortResult = 0;
-                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
-                            sortResult = 1;
-                        } else {
-                            sortResult = -1;
-                        }
-                        break;
-                    case SORT_BY_TIME_UP:
-                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
-                            sortResult = 0;
-                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
-                            sortResult = -1;
-                        } else {
-                            sortResult = 1;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return sortResult;
-        }
-    }
-
     /**
      * 弹出文件筛选框
      */
@@ -442,7 +389,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         fileFilterPop.setOutsideTouchable(true);
         fileFilterPop.showAsDropDown(v);
     }
-
 
     /**
      * 设置当前目录权限有关的layout展示
@@ -488,7 +434,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         batchOprationHeaderText.setText(getString(R.string.clouddriver_has_selected, adapter.getSelectVolumeFileList().size()));
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -504,7 +449,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                             .compressToFile(new File(imgPath));
                     imgPath = file.getAbsolutePath();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 uploadFile(imgPath);
@@ -515,12 +460,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
                 ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                         .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                String imgPath =imageItemList.get(0).path;
+                String imgPath = imageItemList.get(0).path;
                 try {
                     File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                             .compressToFile(new File(imgPath));
                     imgPath = file.getAbsolutePath();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 uploadFile(imgPath);
@@ -584,13 +529,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         } else {
             //当从外部分享完成后进入到相应界面，返回时按目录结构逐级回退
             String[] forders = currentDirAbsolutePath.split("/");
-            String parentForderName=forders[forders.length-1];
-            String parentDirAbsolutePath = currentDirAbsolutePath.substring(0,currentDirAbsolutePath.length()-1-parentForderName.length());
+            String parentForderName = forders[forders.length - 1];
+            String parentDirAbsolutePath = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1 - parentForderName.length());
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("currentDirAbsolutePath", parentDirAbsolutePath);
             bundle.putSerializable("title", parentForderName);
-            IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle,true);
+            IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle, true);
         }
 
     }
@@ -602,6 +547,50 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             broadcastReceiver = null;
         }
         super.onDestroy();
+    }
+
+    private class FileSortComparable implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
+            VolumeFile volumeFileA = (VolumeFile) o1;
+            VolumeFile volumeFileB = (VolumeFile) o2;
+            int sortResult = 0;
+            if (volumeFileA.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileB.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
+                sortResult = -1;
+            } else if (volumeFileB.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileA.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
+                sortResult = 1;
+            } else {
+                switch (sortType) {
+                    case SORT_BY_NAME_UP:
+                        sortResult = Collator.getInstance(Locale.CHINA).compare(volumeFileA.getName(), volumeFileB.getName());
+                        break;
+                    case SORT_BY_NAME_DOWN:
+                        sortResult = 0 - Collator.getInstance(Locale.CHINA).compare(volumeFileA.getName(), volumeFileB.getName());
+                        break;
+                    case SORT_BY_TIME_DOWN:
+                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
+                            sortResult = 0;
+                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
+                            sortResult = 1;
+                        } else {
+                            sortResult = -1;
+                        }
+                        break;
+                    case SORT_BY_TIME_UP:
+                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
+                            sortResult = 0;
+                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
+                            sortResult = -1;
+                        } else {
+                            sortResult = 1;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return sortResult;
+        }
     }
 
 

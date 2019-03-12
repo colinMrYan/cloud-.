@@ -95,22 +95,22 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     }
 
     private void initViews() {
-        state = getIntent().getIntExtra(MEMBER_PAGE_STATE,-1);
+        state = getIntent().getIntExtra(MEMBER_PAGE_STATE, -1);
         loadingDlg = new LoadingDialog(this);
         loadingDlg.show();
         selectedMemberRecylerView = (RecyclerView) findViewById(R.id.recyclerview_voice_communication_select_members);
-        okTv.setVisibility(state == SELECT_STATE?View.VISIBLE:View.GONE);
+        okTv.setVisibility(state == SELECT_STATE ? View.VISIBLE : View.GONE);
         allReadySelectUserList = new ArrayList<>();
         allReadySelectUserList.add(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid()));
         allReadySelectPersonDtoList = tranContactUserList2PersonDtoList(allReadySelectUserList);
         selectedUserList.add(tranContactUser2PersonDto(ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid())));
         selectGridAdapter = new MemberSelectGridAdapter(this, allReadySelectPersonDtoList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,5);
-        selectedMemberRecylerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this,8)));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 5);
+        selectedMemberRecylerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(this, 8)));
         selectedMemberRecylerView.setLayoutManager(gridLayoutManager);
         selectedMemberRecylerView.setAdapter(selectGridAdapter);
-        selectedMemberRecylerView.setVisibility((state == SELECT_STATE && allReadySelectUserList.size() > 0)?View.VISIBLE:View.GONE);
-        lettersSideBar.setVisibility(state == SELECT_STATE?View.GONE:View.VISIBLE);
+        selectedMemberRecylerView.setVisibility((state == SELECT_STATE && allReadySelectUserList.size() > 0) ? View.VISIBLE : View.GONE);
+        lettersSideBar.setVisibility(state == SELECT_STATE ? View.GONE : View.VISIBLE);
         channelId = getIntent().getStringExtra("cid");
         userHeadText.setText(getIntent().getStringExtra("title"));
     }
@@ -123,18 +123,18 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             @Override
             public void run() {
                 if (!StringUtils.isBlank(channelId)) {
-                    List<String> uidList= null;
-                    if (MyApplication.getInstance().isV1xVersionChat()){
-                        Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(),channelId);
+                    List<String> uidList = null;
+                    if (MyApplication.getInstance().isV1xVersionChat()) {
+                        Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), channelId);
                         uidList = conversation.getMemberList();
-                    }else {
+                    } else {
                         uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelId, 0);
                     }
                     personDtoList = ContactUserCacheUtils.getShowMemberList(uidList);
                 } else if (getIntent().getStringArrayListExtra("uidList") != null) {
                     personDtoList = ContactUserCacheUtils.getShowMemberList(getIntent().getStringArrayListExtra("uidList"));
                 }
-                if (state == MENTIONS_STATE){
+                if (state == MENTIONS_STATE) {
                     Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
                     while (personDtoIterator.hasNext()) {
                         PersonDto personDto = personDtoIterator.next();
@@ -178,10 +178,10 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
         Collections.sort(personDtoList, pinyinComparator);
 //        ArrayList<String> letterIndexList = getSideBarLetterList();
 //        lettersSideBar.setIndexArray(letterIndexList);
-        if(state == SELECT_STATE){
+        if (state == SELECT_STATE) {
             channelMemberListAdapter = new ChannelMemberListAdapter(MembersActivity.this,
                     personDtoList, allReadySelectPersonDtoList);
-        }else{
+        } else {
             channelMemberListAdapter = new ChannelMemberListAdapter(MembersActivity.this,
                     personDtoList);
         }
@@ -192,13 +192,14 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
 
     /**
      * 备用方法，获取索引letters
+     *
      * @return
      */
     private ArrayList<String> getSideBarLetterList() {
         ArrayList<String> letterIndexList = new ArrayList<>();
-        for (PersonDto personDto:personDtoList){
+        for (PersonDto personDto : personDtoList) {
             String sortLetter = personDto.getSortLetters();
-            if(!letterIndexList.contains(sortLetter)){
+            if (!letterIndexList.contains(sortLetter)) {
                 letterIndexList.add(sortLetter);
             }
         }
@@ -215,24 +216,24 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent();
-                switch (state){
+                switch (state) {
                     case SELECT_STATE:
-                        PersonDto dto = (filterList.size() != 0)?filterList.get(position):personDtoList.get(position);
-                        if(!allReadySelectPersonDtoList.contains(dto)){
-                            if(selectedUserList.size() < TOTAL_MEMBERS_NUM){
-                                if(!selectedUserList.contains(dto)){
+                        PersonDto dto = (filterList.size() != 0) ? filterList.get(position) : personDtoList.get(position);
+                        if (!allReadySelectPersonDtoList.contains(dto)) {
+                            if (selectedUserList.size() < TOTAL_MEMBERS_NUM) {
+                                if (!selectedUserList.contains(dto)) {
                                     selectedUserList.add(dto);
                                     newSelectUserList.add(dto);
-                                    updateView(view,View.VISIBLE);
-                                }else{
+                                    updateView(view, View.VISIBLE);
+                                } else {
                                     selectedUserList.remove(dto);
                                     newSelectUserList.remove(dto);
-                                    updateView(view,View.GONE);
+                                    updateView(view, View.GONE);
                                 }
                                 channelMemberListAdapter.updateSelectListViewData(selectedUserList);
                                 selectGridAdapter.setAndRefreshSelectMemberData(selectedUserList);
-                            }else{
-                                ToastUtils.show(MembersActivity.this,getString(R.string.voice_communication_support_nine_members));
+                            } else {
+                                ToastUtils.show(MembersActivity.this, getString(R.string.voice_communication_support_nine_members));
                             }
                         }
                         break;
@@ -248,8 +249,8 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                             e.printStackTrace();
                         }
                         intent.putExtra("searchResult", jsonResult.toString());
-                        boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord",false);
-                        intent.putExtra("isInputKeyWord",isInputKeyWord);
+                        boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord", false);
+                        intent.putExtra("isInputKeyWord", isInputKeyWord);
                         setResult(RESULT_OK, intent);
                         finish();
                         break;
@@ -293,6 +294,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
 
     /**
      * 更新view
+     *
      * @param view
      * @param visible
      */
@@ -303,13 +305,13 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     }
 
 
-
     /**
      * 数据转换器
+     *
      * @param contactUserList
      * @return
      */
-    private List<PersonDto> tranContactUserList2PersonDtoList(List<ContactUser> contactUserList){
+    private List<PersonDto> tranContactUserList2PersonDtoList(List<ContactUser> contactUserList) {
         List<PersonDto> resultList = new ArrayList<>();
         if (contactUserList != null) {
             Iterator<ContactUser> contactListIterator = contactUserList.iterator();
@@ -323,10 +325,11 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
 
     /**
      * 单个数据转换
+     *
      * @param contactUser
      * @return
      */
-    private PersonDto tranContactUser2PersonDto(ContactUser contactUser){
+    private PersonDto tranContactUser2PersonDto(ContactUser contactUser) {
         PersonDto personDto = new PersonDto();
         personDto.setName(contactUser.getName());
         personDto.setUid(contactUser.getId());
@@ -418,7 +421,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.tv_ok:
@@ -441,9 +444,9 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             voiceCommunicationUserInfoBeanList.add(voiceCommunicationJoinChannelInfoBean);
         }
         Intent intent = new Intent();
-        intent.setClass(MembersActivity.this,ChannelVoiceCommunicationActivity.class);
+        intent.setClass(MembersActivity.this, ChannelVoiceCommunicationActivity.class);
         intent.putExtra("userList", (Serializable) voiceCommunicationUserInfoBeanList);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITER_LAYOUT_STATE);
         startActivity(intent);
         finish();
     }

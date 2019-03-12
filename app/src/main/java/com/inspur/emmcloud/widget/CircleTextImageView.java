@@ -54,7 +54,7 @@ public class CircleTextImageView extends ImageView {
     private String mTextString;
     private int mTextColor = DEFAULT_TEXT_COLOR;
     private int mTextSize = DEFAULT_TEXT_SIZE;
-    private int mTextPadding=DEFAULT_TEXT_PADDING;
+    private int mTextPadding = DEFAULT_TEXT_PADDING;
 
     private Bitmap mBitmap;
     private BitmapShader mBitmapShader;
@@ -92,7 +92,7 @@ public class CircleTextImageView extends ImageView {
         mTextString = a.getString(R.styleable.CircleTextImageView_citv_text_text);
         mTextColor = a.getColor(R.styleable.CircleTextImageView_citv_border_color, DEFAULT_TEXT_COLOR);
         mTextSize = a.getDimensionPixelSize(R.styleable.CircleTextImageView_citv_text_size, DEFAULT_TEXT_SIZE);
-        mTextPadding=a.getDimensionPixelSize(R.styleable.CircleTextImageView_citv_text_padding, DEFAULT_TEXT_PADDING);
+        mTextPadding = a.getDimensionPixelSize(R.styleable.CircleTextImageView_citv_text_padding, DEFAULT_TEXT_PADDING);
         a.recycle();
 
         init();
@@ -129,14 +129,14 @@ public class CircleTextImageView extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (mBitmap == null&&TextUtils.isEmpty(mTextString)) {
+        if (mBitmap == null && TextUtils.isEmpty(mTextString)) {
             return;
         }
 
         if (mFillColor != Color.TRANSPARENT) {
             canvas.drawCircle(getWidth() / 2.0f, getHeight() / 2.0f, mDrawableRadius, mFillPaint);
         }
-        if(mBitmap!=null) {
+        if (mBitmap != null) {
             canvas.drawCircle(getWidth() / 2.0f, getHeight() / 2.0f, mDrawableRadius, mBitmapPaint);
         }
         if (mBorderWidth != 0) {
@@ -165,9 +165,9 @@ public class CircleTextImageView extends ImageView {
     public void setText(@StringRes int TextResId) {
         setText(getResources().getString(TextResId));
     }
-    public void setText(String textString)
-    {
-        this.mTextString=textString;
+
+    public void setText(String textString) {
+        this.mTextString = textString;
         invalidate();
 
     }
@@ -189,9 +189,9 @@ public class CircleTextImageView extends ImageView {
     public int getTextSize() {
         return mTextSize;
     }
-    public void setTextSize(int textSize)
-    {
-        this.mTextSize=textSize;
+
+    public void setTextSize(int textSize) {
+        this.mTextSize = textSize;
         mTextPaint.setTextSize(textSize);
         invalidate();
     }
@@ -209,7 +209,7 @@ public class CircleTextImageView extends ImageView {
         return mBorderColor;
     }
 
-    public void setBorderColor( int borderColor) {
+    public void setBorderColor(int borderColor) {
         if (borderColor == mBorderColor) {
             return;
         }
@@ -227,7 +227,7 @@ public class CircleTextImageView extends ImageView {
         return mFillColor;
     }
 
-    public void setFillColor( int fillColor) {
+    public void setFillColor(int fillColor) {
         if (fillColor == mFillColor) {
             return;
         }
@@ -345,12 +345,10 @@ public class CircleTextImageView extends ImageView {
         }
 
 
-
-        if (mBitmap == null&&TextUtils.isEmpty(mTextString)) {
+        if (mBitmap == null && TextUtils.isEmpty(mTextString)) {
             invalidate();
             return;
         }
-
 
 
         mTextPaint.setAntiAlias(true);
@@ -368,7 +366,6 @@ public class CircleTextImageView extends ImageView {
         mFillPaint.setColor(mFillColor);
 
 
-
         mBorderRect.set(0, 0, getWidth(), getHeight());
         mBorderRadius = Math.min((mBorderRect.height() - mBorderWidth) / 2.0f, (mBorderRect.width() - mBorderWidth) / 2.0f);
 
@@ -378,8 +375,7 @@ public class CircleTextImageView extends ImageView {
         }
         mDrawableRadius = Math.min(mDrawableRect.height() / 2.0f, mDrawableRect.width() / 2.0f);
 
-        if(mBitmap!=null)
-        {
+        if (mBitmap != null) {
             mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
             mBitmapHeight = mBitmap.getHeight();
             mBitmapWidth = mBitmap.getWidth();
@@ -414,20 +410,17 @@ public class CircleTextImageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int widthMeasureSpecMode=MeasureSpec.getMode(widthMeasureSpec);
-        int widthMeasureSpecSize=MeasureSpec.getSize(widthMeasureSpec);
-        int heightMeasureSpecMode=MeasureSpec.getMode(heightMeasureSpec);
-        int heightMeasureSpecSize=MeasureSpec.getSize(heightMeasureSpec);
+        int widthMeasureSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthMeasureSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMeasureSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightMeasureSpecSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        if(!TextUtils.isEmpty(mTextString))
-        {
-            int textMeasuredSize= (int) (mTextPaint.measureText(mTextString));
-            textMeasuredSize+=2*mTextPadding;
-            if(widthMeasureSpecMode==MeasureSpec.AT_MOST&&heightMeasureSpecMode==MeasureSpec.AT_MOST)
-            {
-                if(textMeasuredSize>getMeasuredWidth()||textMeasuredSize>getMeasuredHeight())
-                {
-                    setMeasuredDimension(textMeasuredSize,textMeasuredSize);
+        if (!TextUtils.isEmpty(mTextString)) {
+            int textMeasuredSize = (int) (mTextPaint.measureText(mTextString));
+            textMeasuredSize += 2 * mTextPadding;
+            if (widthMeasureSpecMode == MeasureSpec.AT_MOST && heightMeasureSpecMode == MeasureSpec.AT_MOST) {
+                if (textMeasuredSize > getMeasuredWidth() || textMeasuredSize > getMeasuredHeight()) {
+                    setMeasuredDimension(textMeasuredSize, textMeasuredSize);
                 }
             }
         }

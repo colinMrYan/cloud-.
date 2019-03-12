@@ -42,6 +42,24 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
         return R.layout.list_card_item;
     }
 
+    /**
+     * @param position
+     * @return
+     */
+    private int getBackGroundImg(int position) {
+        int index = position % 3;
+        switch (index) {
+            case 0:
+                return R.drawable.icon_card_package_head_bg_1;
+            case 1:
+                return R.drawable.icon_card_package_head_bg_2;
+            case 2:
+                return R.drawable.icon_card_pakcage_head_bg_3;
+            default:
+                return R.drawable.icon_card_package_head_bg_1;
+        }
+    }
+
     class ColorItemViewHolder extends RxCardStackView.ViewHolder {
 
         private TextView companyNameText;
@@ -75,23 +93,5 @@ public class CardStackAdapter extends RxAdapterStack<CardPackageBean> {
             phoneText.setText(cardPackageBean.getPhone());
         }
 
-    }
-
-    /**
-     * @param position
-     * @return
-     */
-    private int getBackGroundImg(int position) {
-        int index = position % 3;
-        switch (index) {
-            case 0:
-                return R.drawable.icon_card_package_head_bg_1;
-            case 1:
-                return R.drawable.icon_card_package_head_bg_2;
-            case 2:
-                return R.drawable.icon_card_pakcage_head_bg_3;
-            default:
-                return R.drawable.icon_card_package_head_bg_1;
-        }
     }
 }

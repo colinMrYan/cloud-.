@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -86,7 +87,7 @@ public class MineAPIService {
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)));
+                        .returnUploadMyHeadSuccess(new GetUploadMyHeadResult(new String(arg0)), filePath);
             }
 
             @Override
@@ -524,7 +525,7 @@ public class MineAPIService {
     /**
      * 获取卡包信息
      */
-    public void getCardPackageList(){
+    public void getCardPackageList() {
         final String completeUrl = APIUri.getCardPackageUrl();
         RequestParams params =
                 ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
@@ -554,7 +555,7 @@ public class MineAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnCardPackageListFail(error,responseCode);
+                apiInterface.returnCardPackageListFail(error, responseCode);
             }
 
         });
@@ -563,7 +564,7 @@ public class MineAPIService {
     /**
      * 获取是否加入用户体验计划
      */
-    public void getUserExperienceUpgradeFlag(){
+    public void getUserExperienceUpgradeFlag() {
         final String completeUrl = APIUri.getUserExperienceUpgradeFlagUrl();
         RequestParams params =
                 ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
@@ -593,7 +594,7 @@ public class MineAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnExperienceUpgradeFlagFail(error,responseCode);
+                apiInterface.returnExperienceUpgradeFlagFail(error, responseCode);
             }
 
         });
@@ -602,7 +603,7 @@ public class MineAPIService {
     /**
      * 获取是否加入用户体验计划
      */
-    public void updateUserExperienceUpgradeFlag(int flag){
+    public void updateUserExperienceUpgradeFlag(int flag) {
         final String completeUrl = APIUri.getUpdateUserExperienceUpgradeFlagUrl(flag);
         RequestParams params =
                 ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
@@ -632,10 +633,48 @@ public class MineAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUpdateExperienceUpgradeFlagFail(error,responseCode);
+                apiInterface.returnUpdateExperienceUpgradeFlagFail(error, responseCode);
             }
 
         });
     }
 
+
+    /**
+     * 获取个人信息卡片的menu
+     */
+    public void getUserCardMenus() {
+        final String completeUrl = APIUri.getUserCardMenusUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getUserCardMenus();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUserCardMenusSuccess(new GetUserCardMenusResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUserCardMenusFail(error, responseCode);
+            }
+
+        });
+    }
 }

@@ -6,7 +6,8 @@ package com.inspur.emmcloud.bean.appcenter.volume;
 
 public class GetVolumeGroupPermissionResult {
     private int privilege = -1;
-    public GetVolumeGroupPermissionResult(String response){
+
+    public GetVolumeGroupPermissionResult(String response) {
 
     }
 

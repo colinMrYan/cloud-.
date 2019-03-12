@@ -15,11 +15,12 @@ public class BadgeBodyModel {
     private BadgeBodyModuleModel appStoreBadgeBodyModuleModel;
     private BadgeBodyModuleModel snsBadgeBodyModuleModel;
     private String body = "";
-    public BadgeBodyModel(String body){
+
+    public BadgeBodyModel(String body) {
         this.body = body;
-        snsBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,COM_INSPUR_ECM_SNS,""));
-        appStoreBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,COM_INSPUR_EMM_APP_STORE,""));
-        chatBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body,COM_INSPUR_ECM_CHAT,""));
+        snsBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body, COM_INSPUR_ECM_SNS, ""));
+        appStoreBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body, COM_INSPUR_EMM_APP_STORE, ""));
+        chatBadgeBodyModuleModel = new BadgeBodyModuleModel(JSONUtils.getString(body, COM_INSPUR_ECM_CHAT, ""));
     }
 
     public BadgeBodyModuleModel getChatBadgeBodyModuleModel() {
@@ -46,15 +47,15 @@ public class BadgeBodyModel {
         this.snsBadgeBodyModuleModel = snsBadgeBodyModuleModel;
     }
 
-    public boolean isChatExist(){
+    public boolean isChatExist() {
         return JSONUtils.getJSONObject(body).has(COM_INSPUR_ECM_CHAT);
     }
 
-    public boolean isAppStoreExist(){
+    public boolean isAppStoreExist() {
         return JSONUtils.getJSONObject(body).has(COM_INSPUR_EMM_APP_STORE);
     }
 
-    public boolean isSNSExist(){
+    public boolean isSNSExist() {
         return JSONUtils.getJSONObject(body).has(COM_INSPUR_ECM_SNS);
     }
 }

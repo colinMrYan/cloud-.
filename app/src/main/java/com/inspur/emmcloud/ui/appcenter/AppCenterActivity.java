@@ -114,10 +114,10 @@ public class AppCenterActivity extends BaseActivity {
         recommendListView.setFocusable(false); //lbc
         classListView = (ListView) classView.findViewById(R.id.app_center_categories_list);
         recommendSwipeRefreshLayout = (MySwipeRefreshLayout) recommendView.findViewById(R.id.refresh_layout);
-        recommendSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        recommendSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         recommendSwipeRefreshLayout.setOnRefreshListener(new AppCenterRefreshListener());
         classSwipeRefreshLayout = (SwipeRefreshLayout) classView.findViewById(R.id.refresh_layout);
-        classSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        classSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         classSwipeRefreshLayout.setOnRefreshListener(new AppCenterRefreshListener());
         recommendAppAdapter = new RecommendAppAdapter();
         recommendListView.setAdapter(recommendAppAdapter);
@@ -141,42 +141,9 @@ public class AppCenterActivity extends BaseActivity {
         viewPager.addOnPageChangeListener(new PageChangeListener());
     }
 
-    class AppCenterRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
-        @Override
-        public void onRefresh() {
-            LogUtils.LbcDebug("AppCenterRefreshListener");
-            getAllApp();
-        }
-    }
-
-    /**
-     * 最外层两个tab的监听器
-     */
-    private class PageChangeListener implements OnPageChangeListener {
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-        }
-
-        @Override
-        public void onPageSelected(int arg0) {
-            int recommendTabTextColor = arg0 == 0 ? Color.parseColor("#4990E2") : Color.parseColor("#999999");
-            int classTabTextColor = arg0 == 1 ? Color.parseColor("#4990E2") : Color.parseColor("#999999");
-            int recommendTabFooterViewVisible = arg0 == 0 ? View.VISIBLE : View.INVISIBLE;
-            int classTabFooterViewVisible = arg0 == 1 ? View.VISIBLE : View.INVISIBLE;
-            ((TextView) findViewById(R.id.recommand_tab_text)).setTextColor(recommendTabTextColor);
-            ((TextView) findViewById(R.id.class_tab_text)).setTextColor(classTabTextColor);
-            findViewById(R.id.recommand_tab_footer_view).setVisibility(recommendTabFooterViewVisible);
-            findViewById(R.id.class_tab_footer_view).setVisibility(classTabFooterViewVisible);
-        }
-    }
-
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.search_img:
@@ -246,6 +213,203 @@ public class AppCenterActivity extends BaseActivity {
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction(ACTION_NAME);
         LocalBroadcastManager.getInstance(this).registerReceiver(addAppReceiver, myIntentFilter);
+    }
+
+    private void destoryTimer(Timer timer) {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    /**
+     * writer: lbc
+     * data:18/08/29
+     * 初始化AdsViewPager
+     */
+    private void initAdsViewPager() {
+        if (adsPagerContainer == null) {
+            adsPagerContainer = (RelativeLayout) recommendView.findViewById(R.id.rl_ads_app);
+        }
+        // 当个数大于0时
+        if (adsList.size() > 0) {
+            adsPagerContainer.setVisibility(View.VISIBLE); //设置显示
+            //当adapter 为空时
+            if (adsViewPager == null) {
+                adsViewPager = (AdsViewPager) recommendView.findViewById(R.id.avp_ads);
+                adspagerAdapter = new AdsAppPagerAdapter();
+                adsViewPager.setOffscreenPageLimit(DensityUtil.dip2px(AppCenterActivity.this, 3));
+                adsViewPager.setPageMargin(DensityUtil.dip2px(AppCenterActivity.this, 5));
+                adsViewPager.setAdapter(adspagerAdapter);
+                adsViewPager.setFocusable(true);
+                adsViewPager.setFocusableInTouchMode(true);
+                //触摸事件通过mAdspager下发触摸事件
+                adsPagerContainer.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return adsViewPager.dispatchTouchEvent(event);
+                    }
+                });
+            } else {
+                adspagerAdapter.notifyDataSetChanged();
+            }
+            //如果广告数目大于1则启动定时器
+            if (adsList.size() > 1) {
+                if (timer == null) {
+                    timer = new Timer();
+                    TimerTask timerTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (mHandler != null) {
+                                mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
+                            }
+                        }
+                    };
+                    adsViewPager.setCurrentItem(1);
+                    startAutoSlide(adsViewPager);
+                    timer.schedule(timerTask, 3000, 3000);
+                }
+            } else {
+                destoryTimer(timer);
+            }
+
+        } else {
+            adsPagerContainer.setVisibility(View.GONE); //设置不显示
+            destoryTimer(timer);
+        }
+    }
+
+    /**
+     * ViewPager自动滚动
+     *
+     * @param mViewPager
+     */
+    private void startAutoSlide(final ViewPager mViewPager) {
+        //定时轮播图片，需要在主线程里面修改 UI
+        if (mHandler == null) {
+            mHandler = new Handler() {
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case UPDATE_VIEWPAGER:
+                            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                            break;
+                    }
+                }
+            };
+        }
+    }
+
+    /**
+     * 根据uri分发打开请求
+     *
+     * @param uri
+     */
+    private void openDetailByUri(String uri) {
+        if (!StringUtils.isBlank(uri)) {
+            Intent intent = new Intent();
+            if (uri.startsWith("http")) {
+                intent.setClass(AppCenterActivity.this, ImpActivity.class);
+                intent.putExtra("uri", uri);
+                startActivity(intent);
+            } else if (uri.startsWith(APP_CENTER_APP_NAME_PROTOCOL)) {
+                Uri appUri = Uri.parse(uri);
+                String appId = appUri.getPathSegments().get(1);
+                openAppDetailByAppId(appId);
+            } else if (uri.startsWith(APP_CENTER_CATEGORY_PROTOCOL)) {
+                Uri categoryIdUri = Uri.parse(uri);
+                String categoryId = categoryIdUri.getPathSegments().get(1);
+                openCategoryDetailByCategoryId(categoryId);
+            }
+        }
+    }
+
+    /**
+     * 根据appId打开App详情
+     *
+     * @param appId
+     */
+    private void openAppDetailByAppId(String appId) {
+        App appWithId = new App();
+        appWithId.setAppID(appId);
+        for (int i = 0; i < categoryAppList.size(); i++) {
+            int appIndex = categoryAppList.get(i).getAppItemList().indexOf(appWithId);
+            if (appIndex != -1) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("app", categoryAppList.get(i).getAppItemList().get(appIndex));
+                IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
+                break;
+            }
+        }
+    }
+
+    /**
+     * 根据categoryId打开category
+     *
+     * @param categoryId
+     */
+    private void openCategoryDetailByCategoryId(String categoryId) {
+        AppGroupBean appGroupBean = new AppGroupBean();
+        appGroupBean.setCategoryID(categoryId);
+        int appCategoryIndex = categoryAppList.indexOf(appGroupBean);
+        if (appCategoryIndex != -1) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(APP_CENTER_APPLIST, (Serializable) categoryAppList.get(appCategoryIndex).getAppItemList());
+            bundle.putString(APP_CENTER_CATEGORY_NAME, categoryAppList.get(appCategoryIndex).getCategoryName());
+            IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (addAppReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(addAppReceiver);
+            addAppReceiver = null;
+        }
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        if (mHandler != null) {
+            mHandler = null;
+        }
+    }
+
+    public interface OnRecommendItemClickListener {
+        void onRecommendItemClick(View view, int position);
+    }
+
+    class AppCenterRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            LogUtils.LbcDebug("AppCenterRefreshListener");
+            getAllApp();
+        }
+    }
+
+    /**
+     * 最外层两个tab的监听器
+     */
+    private class PageChangeListener implements OnPageChangeListener {
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+        }
+
+        @Override
+        public void onPageSelected(int arg0) {
+            int recommendTabTextColor = arg0 == 0 ? Color.parseColor("#4990E2") : Color.parseColor("#999999");
+            int classTabTextColor = arg0 == 1 ? Color.parseColor("#4990E2") : Color.parseColor("#999999");
+            int recommendTabFooterViewVisible = arg0 == 0 ? View.VISIBLE : View.INVISIBLE;
+            int classTabFooterViewVisible = arg0 == 1 ? View.VISIBLE : View.INVISIBLE;
+            ((TextView) findViewById(R.id.recommand_tab_text)).setTextColor(recommendTabTextColor);
+            ((TextView) findViewById(R.id.class_tab_text)).setTextColor(classTabTextColor);
+            findViewById(R.id.recommand_tab_footer_view).setVisibility(recommendTabFooterViewVisible);
+            findViewById(R.id.class_tab_footer_view).setVisibility(classTabFooterViewVisible);
+        }
     }
 
     /**
@@ -338,92 +502,6 @@ public class AppCenterActivity extends BaseActivity {
         }
     }
 
-
-    private void destoryTimer(Timer timer) {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
-
-    /**
-     * writer: lbc
-     * data:18/08/29
-     * 初始化AdsViewPager
-     */
-    private void initAdsViewPager() {
-        if (adsPagerContainer == null) {
-            adsPagerContainer = (RelativeLayout) recommendView.findViewById(R.id.rl_ads_app);
-        }
-        // 当个数大于0时
-        if (adsList.size() > 0) {
-            adsPagerContainer.setVisibility(View.VISIBLE); //设置显示
-            //当adapter 为空时
-            if (adsViewPager == null) {
-                adsViewPager = (AdsViewPager) recommendView.findViewById(R.id.avp_ads);
-                adspagerAdapter = new AdsAppPagerAdapter();
-                adsViewPager.setOffscreenPageLimit(DensityUtil.dip2px(AppCenterActivity.this, 3));
-                adsViewPager.setPageMargin(DensityUtil.dip2px(AppCenterActivity.this, 5));
-                adsViewPager.setAdapter(adspagerAdapter);
-                adsViewPager.setFocusable(true);
-                adsViewPager.setFocusableInTouchMode(true);
-                //触摸事件通过mAdspager下发触摸事件
-                adsPagerContainer.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return adsViewPager.dispatchTouchEvent(event);
-                    }
-                });
-            } else {
-                adspagerAdapter.notifyDataSetChanged();
-            }
-            //如果广告数目大于1则启动定时器
-            if (adsList.size() > 1) {
-                if (timer == null) {
-                    timer = new Timer();
-                    TimerTask timerTask = new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (mHandler != null) {
-                                mHandler.sendEmptyMessage(UPDATE_VIEWPAGER);
-                            }
-                        }
-                    };
-                    adsViewPager.setCurrentItem(1);
-                    startAutoSlide(adsViewPager);
-                    timer.schedule(timerTask, 3000, 3000);
-                }
-            } else {
-                destoryTimer(timer);
-            }
-
-        } else {
-            adsPagerContainer.setVisibility(View.GONE); //设置不显示
-            destoryTimer(timer);
-        }
-    }
-
-
-    /**
-     * ViewPager自动滚动
-     *
-     * @param mViewPager
-     */
-    private void startAutoSlide(final ViewPager mViewPager) {
-        //定时轮播图片，需要在主线程里面修改 UI
-        if (mHandler == null) {
-            mHandler = new Handler() {
-                public void handleMessage(Message msg) {
-                    switch (msg.what) {
-                        case UPDATE_VIEWPAGER:
-                            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-                            break;
-                    }
-                }
-            };
-        }
-    }
-
     /**
      * banner的adapter
      */
@@ -464,66 +542,6 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((ImageView) object);
-        }
-    }
-
-    /**
-     * 根据uri分发打开请求
-     *
-     * @param uri
-     */
-    private void openDetailByUri(String uri) {
-        if (!StringUtils.isBlank(uri)) {
-            Intent intent = new Intent();
-            if (uri.startsWith("http")) {
-                intent.setClass(AppCenterActivity.this, ImpActivity.class);
-                intent.putExtra("uri", uri);
-                startActivity(intent);
-            } else if (uri.startsWith(APP_CENTER_APP_NAME_PROTOCOL)) {
-                Uri appUri = Uri.parse(uri);
-                String appId = appUri.getPathSegments().get(1);
-                openAppDetailByAppId(appId);
-            } else if (uri.startsWith(APP_CENTER_CATEGORY_PROTOCOL)) {
-                Uri categoryIdUri = Uri.parse(uri);
-                String categoryId = categoryIdUri.getPathSegments().get(1);
-                openCategoryDetailByCategoryId(categoryId);
-            }
-        }
-    }
-
-    /**
-     * 根据appId打开App详情
-     *
-     * @param appId
-     */
-    private void openAppDetailByAppId(String appId) {
-        App appWithId = new App();
-        appWithId.setAppID(appId);
-        for (int i = 0; i < categoryAppList.size(); i++) {
-            int appIndex = categoryAppList.get(i).getAppItemList().indexOf(appWithId);
-            if (appIndex != -1) {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("app", categoryAppList.get(i).getAppItemList().get(appIndex));
-                IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
-                break;
-            }
-        }
-    }
-
-    /**
-     * 根据categoryId打开category
-     *
-     * @param categoryId
-     */
-    private void openCategoryDetailByCategoryId(String categoryId) {
-        AppGroupBean appGroupBean = new AppGroupBean();
-        appGroupBean.setCategoryID(categoryId);
-        int appCategoryIndex = categoryAppList.indexOf(appGroupBean);
-        if (appCategoryIndex != -1) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(APP_CENTER_APPLIST, (Serializable) categoryAppList.get(appCategoryIndex).getAppItemList());
-            bundle.putString(APP_CENTER_CATEGORY_NAME, categoryAppList.get(appCategoryIndex).getCategoryName());
-            IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
         }
     }
 
@@ -583,26 +601,6 @@ public class AppCenterActivity extends BaseActivity {
             public RecommendViewHolder(View itemView) {
                 super(itemView);
             }
-        }
-    }
-
-    public interface OnRecommendItemClickListener {
-        void onRecommendItemClick(View view, int position);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (addAppReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(addAppReceiver);
-            addAppReceiver = null;
-        }
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-        if (mHandler != null) {
-            mHandler = null;
         }
     }
 

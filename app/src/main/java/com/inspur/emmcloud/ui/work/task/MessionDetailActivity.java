@@ -325,7 +325,7 @@ public class MessionDetailActivity extends BaseActivity {
                 String userID = ((MyApplication) getApplication()).getUid();
                 if (ownerUid.contains(userID)) {
                     if (position == attachments.size()) {
-                        AppUtils.openFileSystem(MessionDetailActivity.this,UPLOAD_FILE);
+                        AppUtils.openFileSystem(MessionDetailActivity.this, UPLOAD_FILE);
                     } else {
                         downLoadFile(view, position);
                     }
@@ -509,57 +509,6 @@ public class MessionDetailActivity extends BaseActivity {
     }
 
     /**
-     * 附件
-     */
-    class AttachmentGridAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return attachments.size() + 1;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-            Holder holder = null;
-            if (null == convertView) {
-                holder = new Holder();
-                LayoutInflater mInflater = LayoutInflater
-                        .from(MessionDetailActivity.this);
-                convertView = mInflater.inflate(R.layout.gridview_item, null);
-                holder.attachmentImg = (ImageView) convertView
-                        .findViewById(R.id.btn_gv_item);
-                holder.attachmentImg.setFocusable(false);
-                convertView.setTag(holder);
-                holder.textView = (TextView) convertView
-                        .findViewById(R.id.file_text);
-            } else {
-                holder = (Holder) convertView.getTag();
-            }
-            if (position < attachments.size()) {
-                displayAttachments(position, holder.attachmentImg);
-                holder.textView.setText(attachments.get(position).getName());
-            } else if (position == attachments.size()) {
-                ImageDisplayUtils.getInstance().displayImage(holder.attachmentImg, "drawable://"
-                        + R.drawable.icon_member_add, R.drawable.icon_member_add);
-                holder.textView.setText(getString(R.string.add));
-            }
-            return convertView;
-        }
-
-    }
-
-    /**
      * 删除附件
      *
      * @param position
@@ -594,11 +543,6 @@ public class MessionDetailActivity extends BaseActivity {
         ImageDisplayUtils.getInstance().displayImage(attachmentImg, displayImg, R.drawable.icon_file_unknown);
     }
 
-    private static class Holder {
-        ImageView attachmentImg;
-        TextView textView;
-    }
-
     /**
      * 展示邀请的同伴
      */
@@ -613,7 +557,7 @@ public class MessionDetailActivity extends BaseActivity {
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 if (isRefreshList) {
                     setResult(RESULT_OK);
                 }
@@ -806,6 +750,188 @@ public class MessionDetailActivity extends BaseActivity {
             loadingDlg.show();
             apiService.uploadMsgResource(filePath, System.currentTimeMillis() + "", false);
         }
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param convertView
+     * @param position
+     */
+    private void downLoadFile(View convertView, int position) {
+        if (!(position < attachments.size())) {
+            return;
+        }
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String fileName = attachments.get(position).getName();
+            final String fileUri = attachments.get(position).getUri();
+            final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH
+                    + fileName;
+            final String downlaodSource = APIUri.getPreviewUrl(fileUri);
+            final HorizontalProgressBarWithNumber fileProgressbar = (HorizontalProgressBarWithNumber) convertView
+                    .findViewById(R.id.filecard_progressbar);
+            fileProgressbar.setTag(target);
+            fileProgressbar.setVisibility(View.VISIBLE);
+            // 当文件正在下载中 点击不响应
+            if ((0 < fileProgressbar.getProgress())
+                    && (fileProgressbar.getProgress() < 100)) {
+                return;
+            }
+
+            APIDownloadCallBack progressCallback = new APIDownloadCallBack(MessionDetailActivity.this, downlaodSource) {
+                @Override
+                public void callbackStart() {
+                    if ((fileProgressbar.getTag() != null)
+                            && (fileProgressbar.getTag() == target)) {
+                        fileProgressbar.setVisibility(View.VISIBLE);
+                    } else {
+                        fileProgressbar.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void callbackLoading(long total, long current,
+                                            boolean isUploading) {
+                    if (total == 0) {
+                        total = 1;
+                    }
+                    int progress = (int) ((current * 100) / total);
+                    if (!(fileProgressbar.getVisibility() == View.VISIBLE)) {
+                        fileProgressbar.setVisibility(View.VISIBLE);
+                    }
+                    fileProgressbar.setProgress(progress);
+                    fileProgressbar.refreshDrawableState();
+                }
+
+                @Override
+                public void callbackSuccess(File file) {
+                    fileProgressbar.setVisibility(View.GONE);
+                    ToastUtils.show(MessionDetailActivity.this,
+                            getString(R.string.download_success));
+                }
+
+                @Override
+                public void callbackError(Throwable arg0, boolean arg1) {
+                    fileProgressbar.setVisibility(View.GONE);
+                    ToastUtils.show(MessionDetailActivity.this,
+                            getString(R.string.download_fail));
+                }
+
+                @Override
+                public void callbackCanceled(CancelledException e) {
+
+                }
+            };
+
+            if (FileUtils.isFileExist(fileUri)) {
+                fileProgressbar.setVisibility(View.INVISIBLE);
+                FileUtils.openFile(MessionDetailActivity.this, fileUri);
+            } else if (FileUtils.isFileExist(target)) {
+                fileProgressbar.setVisibility(View.INVISIBLE);
+                FileUtils.openFile(MessionDetailActivity.this, target);
+            } else {
+                new DownLoaderUtils().startDownLoad(downlaodSource, target,
+                        progressCallback);
+            }
+
+        } else {
+            ToastUtils.show(getApplicationContext(),
+                    R.string.filetransfer_sd_not_exist);
+        }
+
+    }
+
+    /**
+     * 筛选任务获取参与人员的list
+     *
+     * @param getTaskListResult
+     * @return
+     */
+    public ArrayList<String> handleTaskSearhMembers(
+            GetTaskListResult getTaskListResult) {
+        ArrayList<String> membersIds = new ArrayList<String>();
+        for (int i = 0; i < getTaskListResult.getTaskList().size(); i++) {
+            if (getTaskListResult.getTaskList().get(i).getState()
+                    .contains("ACTIVED")
+                    || getTaskListResult.getTaskList().get(i).getState()
+                    .contains("REMOVED")) {
+                membersIds.add(getTaskListResult.getTaskList().get(i)
+                        .getMaster());
+                String masterUid = getTaskListResult.getTaskList().get(i).getMaster();
+                if (!StringUtils.isBlank(masterUid)) {
+                    ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
+                    if (contactUser != null) {
+                        SearchModel searchModel = new SearchModel(contactUser);
+                        selectMemList.add(searchModel);
+                        deleteMemList.add(searchModel);
+                        oldMemList.add(searchModel);
+                    }
+                }
+
+            }
+        }
+        return membersIds;
+    }
+
+    private static class Holder {
+        ImageView attachmentImg;
+        TextView textView;
+    }
+
+    /**
+     * 附件
+     */
+    class AttachmentGridAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return attachments.size() + 1;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, View convertView,
+                            ViewGroup parent) {
+            Holder holder = null;
+            if (null == convertView) {
+                holder = new Holder();
+                LayoutInflater mInflater = LayoutInflater
+                        .from(MessionDetailActivity.this);
+                convertView = mInflater.inflate(R.layout.gridview_item, null);
+                holder.attachmentImg = (ImageView) convertView
+                        .findViewById(R.id.btn_gv_item);
+                holder.attachmentImg.setFocusable(false);
+                convertView.setTag(holder);
+                holder.textView = (TextView) convertView
+                        .findViewById(R.id.file_text);
+            } else {
+                holder = (Holder) convertView.getTag();
+            }
+            if (position < attachments.size()) {
+                displayAttachments(position, holder.attachmentImg);
+                holder.textView.setText(attachments.get(position).getName());
+            } else if (position == attachments.size()) {
+                ImageDisplayUtils.getInstance().displayImage(holder.attachmentImg, "drawable://"
+                        + R.drawable.icon_member_add, R.drawable.icon_member_add);
+                holder.textView.setText(getString(R.string.add));
+            }
+            return convertView;
+        }
+
     }
 
     private class WebService extends APIInterfaceInstance {
@@ -1015,132 +1141,6 @@ public class MessionDetailActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
         }
 
-    }
-
-    /**
-     * 下载文件
-     *
-     * @param convertView
-     * @param position
-     */
-    private void downLoadFile(View convertView, int position) {
-        if (!(position < attachments.size())) {
-            return;
-        }
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            String fileName = attachments.get(position).getName();
-            final String fileUri = attachments.get(position).getUri();
-            final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH
-                    + fileName;
-            final String downlaodSource = APIUri.getPreviewUrl(fileUri);
-            final HorizontalProgressBarWithNumber fileProgressbar = (HorizontalProgressBarWithNumber) convertView
-                    .findViewById(R.id.filecard_progressbar);
-            fileProgressbar.setTag(target);
-            fileProgressbar.setVisibility(View.VISIBLE);
-            // 当文件正在下载中 点击不响应
-            if ((0 < fileProgressbar.getProgress())
-                    && (fileProgressbar.getProgress() < 100)) {
-                return;
-            }
-
-            APIDownloadCallBack progressCallback = new APIDownloadCallBack(MessionDetailActivity.this, downlaodSource) {
-                @Override
-                public void callbackStart() {
-                    if ((fileProgressbar.getTag() != null)
-                            && (fileProgressbar.getTag() == target)) {
-                        fileProgressbar.setVisibility(View.VISIBLE);
-                    } else {
-                        fileProgressbar.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void callbackLoading(long total, long current,
-                                            boolean isUploading) {
-                    if (total == 0) {
-                        total = 1;
-                    }
-                    int progress = (int) ((current * 100) / total);
-                    if (!(fileProgressbar.getVisibility() == View.VISIBLE)) {
-                        fileProgressbar.setVisibility(View.VISIBLE);
-                    }
-                    fileProgressbar.setProgress(progress);
-                    fileProgressbar.refreshDrawableState();
-                }
-
-                @Override
-                public void callbackSuccess(File file) {
-                    fileProgressbar.setVisibility(View.GONE);
-                    ToastUtils.show(MessionDetailActivity.this,
-                            getString(R.string.download_success));
-                }
-
-                @Override
-                public void callbackError(Throwable arg0, boolean arg1) {
-                    fileProgressbar.setVisibility(View.GONE);
-                    ToastUtils.show(MessionDetailActivity.this,
-                            getString(R.string.download_fail));
-                }
-
-                @Override
-                public void callbackCanceled(CancelledException e) {
-
-                }
-            };
-
-            if (FileUtils.isFileExist(fileUri)) {
-                fileProgressbar.setVisibility(View.INVISIBLE);
-                FileUtils.openFile(MessionDetailActivity.this, fileUri);
-            } else if (FileUtils.isFileExist(target)) {
-                fileProgressbar.setVisibility(View.INVISIBLE);
-                FileUtils.openFile(MessionDetailActivity.this, target);
-            } else {
-                new DownLoaderUtils().startDownLoad(downlaodSource, target,
-                        progressCallback);
-            }
-
-        } else {
-            ToastUtils.show(getApplicationContext(),
-                    R.string.filetransfer_sd_not_exist);
-        }
-
-    }
-
-    /**
-     * 筛选任务获取参与人员的list
-     *
-     * @param getTaskListResult
-     * @return
-     */
-    public ArrayList<String> handleTaskSearhMembers(
-            GetTaskListResult getTaskListResult) {
-        ArrayList<String> membersIds = new ArrayList<String>();
-        for (int i = 0; i < getTaskListResult.getTaskList().size(); i++) {
-            if (getTaskListResult.getTaskList().get(i).getState()
-                    .contains("ACTIVED")
-                    || getTaskListResult.getTaskList().get(i).getState()
-                    .contains("REMOVED")) {
-                membersIds.add(getTaskListResult.getTaskList().get(i)
-                        .getMaster());
-                String masterUid = getTaskListResult.getTaskList().get(i).getMaster();
-                if (!StringUtils.isBlank(masterUid)) {
-                    ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
-                    if (contactUser != null) {
-                        SearchModel searchModel = new SearchModel(contactUser);
-                        selectMemList.add(searchModel);
-                        deleteMemList.add(searchModel);
-                        oldMemList.add(searchModel);
-                    }
-                }
-
-            }
-        }
-        return membersIds;
     }
 
 

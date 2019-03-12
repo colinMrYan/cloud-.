@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.util.common;
 
+import android.text.Html;
+import android.text.Spanned;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -8,7 +11,7 @@ import java.util.regex.Pattern;
 
 /**
  * String Utils
- * 
+ *
  * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2011-7-22
  */
 public class StringUtils {
@@ -19,7 +22,7 @@ public class StringUtils {
 
     /**
      * is null or its length is 0 or it is made by space
-     * 
+     * <p>
      * <pre>
      * isBlank(null) = true;
      * isBlank(&quot;&quot;) = true;
@@ -29,7 +32,7 @@ public class StringUtils {
      * isBlank(&quot; a&quot;) = false;
      * isBlank(&quot;a b&quot;) = false;
      * </pre>
-     * 
+     *
      * @param str
      * @return if string is null or its size is 0 or it is made by space, return true, else return false.
      */
@@ -39,13 +42,13 @@ public class StringUtils {
 
     /**
      * is null or its length is 0
-     * 
+     * <p>
      * <pre>
      * isEmpty(null) = true;
      * isEmpty(&quot;&quot;) = true;
      * isEmpty(&quot;  &quot;) = false;
      * </pre>
-     * 
+     *
      * @param str
      * @return if string is null or its size is 0, return true, else return false.
      */
@@ -55,7 +58,7 @@ public class StringUtils {
 
     /**
      * compare two string
-     * 
+     *
      * @param actual
      * @param expected
      * @return
@@ -67,13 +70,13 @@ public class StringUtils {
 
     /**
      * get length of CharSequence
-     * 
+     * <p>
      * <pre>
      * length(null) = 0;
      * length(\"\") = 0;
      * length(\"abc\") = 3;
      * </pre>
-     * 
+     *
      * @param str
      * @return if str is null or empty, return 0, else return {@link CharSequence#length()}.
      */
@@ -83,23 +86,23 @@ public class StringUtils {
 
     /**
      * null Object to empty string
-     * 
+     * <p>
      * <pre>
      * nullStrToEmpty(null) = &quot;&quot;;
      * nullStrToEmpty(&quot;&quot;) = &quot;&quot;;
      * nullStrToEmpty(&quot;aa&quot;) = &quot;aa&quot;;
      * </pre>
-     * 
+     *
      * @param str
      * @return
      */
     public static String nullStrToEmpty(Object str) {
-        return (str == null ? "" : (str instanceof String ? (String)str : str.toString()));
+        return (str == null ? "" : (str instanceof String ? (String) str : str.toString()));
     }
 
     /**
      * capitalize first letter
-     * 
+     * <p>
      * <pre>
      * capitalizeFirstLetter(null)     =   null;
      * capitalizeFirstLetter("")       =   "";
@@ -108,7 +111,7 @@ public class StringUtils {
      * capitalizeFirstLetter("ab")     =   "Ab"
      * capitalizeFirstLetter("Abc")    =   "Abc"
      * </pre>
-     * 
+     *
      * @param str
      * @return
      */
@@ -124,34 +127,34 @@ public class StringUtils {
 
     /**
      * 判断是否标点符号
+     *
      * @param results
      * @return
      */
-    public static boolean isSymbol(String results){
-        for(char ch:results.toCharArray()){
-            if(isSymbol(ch)){
+    public static boolean isSymbol(String results) {
+        for (char ch : results.toCharArray()) {
+            if (isSymbol(ch)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isSymbol(char ch)
-    {
-        if(isCnSymbol(ch)) return true;
-        if(isEnSymbol(ch))return true;
+    public static boolean isSymbol(char ch) {
+        if (isCnSymbol(ch)) return true;
+        if (isEnSymbol(ch)) return true;
 
-        if(0x2010 <= ch && ch <= 0x2017) return true;
-        if(0x2020 <= ch && ch <= 0x2027) return true;
-        if(0x2B00 <= ch && ch <= 0x2BFF) return true;
-        if(0xFF03 <= ch && ch <= 0xFF06) return true;
-        if(0xFF08 <= ch && ch <= 0xFF0B) return true;
-        if(ch == 0xFF0D || ch == 0xFF0F) return true;
-        if(0xFF1C <= ch && ch <= 0xFF1E) return true;
-        if(ch == 0xFF20 || ch == 0xFF65) return true;
-        if(0xFF3B <= ch && ch <= 0xFF40) return true;
-        if(0xFF5B <= ch && ch <= 0xFF60) return true;
-        if(ch == 0xFF62 || ch == 0xFF63) return true;
+        if (0x2010 <= ch && ch <= 0x2017) return true;
+        if (0x2020 <= ch && ch <= 0x2027) return true;
+        if (0x2B00 <= ch && ch <= 0x2BFF) return true;
+        if (0xFF03 <= ch && ch <= 0xFF06) return true;
+        if (0xFF08 <= ch && ch <= 0xFF0B) return true;
+        if (ch == 0xFF0D || ch == 0xFF0F) return true;
+        if (0xFF1C <= ch && ch <= 0xFF1E) return true;
+        if (ch == 0xFF20 || ch == 0xFF65) return true;
+        if (0xFF3B <= ch && ch <= 0xFF40) return true;
+        if (0xFF5B <= ch && ch <= 0xFF60) return true;
+        if (ch == 0xFF62 || ch == 0xFF63) return true;
         return ch == 0x0020 || ch == 0x3000;
 
     }
@@ -160,7 +163,8 @@ public class StringUtils {
         if (0x3004 <= ch && ch <= 0x301C) return true;
         return 0x3020 <= ch && ch <= 0x303F;
     }
-    static boolean isEnSymbol(char ch){
+
+    static boolean isEnSymbol(char ch) {
 
         if (ch == 0x40) return true;
         if (ch == 0x2D || ch == 0x2F) return true;
@@ -174,14 +178,14 @@ public class StringUtils {
 
     /**
      * encoded in utf-8
-     * 
+     * <p>
      * <pre>
      * utf8Encode(null)        =   null
      * utf8Encode("")          =   "";
      * utf8Encode("aa")        =   "aa";
      * utf8Encode("啊啊啊啊")   = "%E5%95%8A%E5%95%8A%E5%95%8A%E5%95%8A";
      * </pre>
-     * 
+     *
      * @param str
      * @return
      * @throws UnsupportedEncodingException if an error occurs
@@ -199,7 +203,7 @@ public class StringUtils {
 
     /**
      * encoded in utf-8, if exception, return defultReturn
-     * 
+     *
      * @param str
      * @param defultReturn
      * @return
@@ -217,7 +221,7 @@ public class StringUtils {
 
     /**
      * get innerHtml from href
-     * 
+     * <p>
      * <pre>
      * getHrefInnerHtml(null)                                  = ""
      * getHrefInnerHtml("")                                    = ""
@@ -232,13 +236,13 @@ public class StringUtils {
      * getHrefInnerHtml("jack&lt;a&gt;innerHtml&lt;/a&gt;&lt;/a&gt;")                  = "innerHtml";
      * getHrefInnerHtml("&lt;a&gt;innerHtml1&lt;/a&gt;&lt;a&gt;innerHtml2&lt;/a&gt;")        = "innerHtml2";
      * </pre>
-     * 
+     *
      * @param href
      * @return <ul>
-     *         <li>if href is null, return ""</li>
-     *         <li>if not match regx, return source</li>
-     *         <li>return the last string that match regx</li>
-     *         </ul>
+     * <li>if href is null, return ""</li>
+     * <li>if not match regx, return source</li>
+     * <li>return the last string that match regx</li>
+     * </ul>
      */
     public static String getHrefInnerHtml(String href) {
         if (isEmpty(href)) {
@@ -254,9 +258,9 @@ public class StringUtils {
         return href;
     }
 
-/**
+    /**
      * process special char in html
-     * 
+     * <p>
      * <pre>
      * htmlEscapeCharsToString(null) = null;
      * htmlEscapeCharsToString("") = "";
@@ -267,7 +271,7 @@ public class StringUtils {
      * htmlEscapeCharsToString("mp3&quot;mp4") = "mp3\"mp4";
      * htmlEscapeCharsToString("mp3&lt;&gt;&amp;&quot;mp4") = "mp3\<\>&\"mp4";
      * </pre>
-     * 
+     *
      * @param source
      * @return
      */
@@ -278,14 +282,14 @@ public class StringUtils {
 
     /**
      * transform half width char to full width char
-     * 
+     * <p>
      * <pre>
      * fullWidthToHalfWidth(null) = null;
      * fullWidthToHalfWidth("") = "";
      * fullWidthToHalfWidth(new String(new char[] {12288})) = " ";
      * fullWidthToHalfWidth("！＂＃＄％＆) = "!\"#$%&";
      * </pre>
-     * 
+     *
      * @param s
      * @return
      */
@@ -301,7 +305,7 @@ public class StringUtils {
                 // } else if (source[i] == 12290) {
                 // source[i] = '.';
             } else if (source[i] >= 65281 && source[i] <= 65374) {
-                source[i] = (char)(source[i] - 65248);
+                source[i] = (char) (source[i] - 65248);
             } else {
                 source[i] = source[i];
             }
@@ -311,14 +315,14 @@ public class StringUtils {
 
     /**
      * transform full width char to half width char
-     * 
+     * <p>
      * <pre>
      * halfWidthToFullWidth(null) = null;
      * halfWidthToFullWidth("") = "";
      * halfWidthToFullWidth(" ") = new String(new char[] {12288});
      * halfWidthToFullWidth("!\"#$%&) = "！＂＃＄％＆";
      * </pre>
-     * 
+     *
      * @param s
      * @return
      */
@@ -330,11 +334,11 @@ public class StringUtils {
         char[] source = s.toCharArray();
         for (int i = 0; i < source.length; i++) {
             if (source[i] == ' ') {
-                source[i] = (char)12288;
+                source[i] = (char) 12288;
                 // } else if (source[i] == '.') {
                 // source[i] = (char)12290;
             } else if (source[i] >= 33 && source[i] <= 126) {
-                source[i] = (char)(source[i] + 65248);
+                source[i] = (char) (source[i] + 65248);
             } else {
                 source[i] = source[i];
             }
@@ -344,13 +348,14 @@ public class StringUtils {
 
     /**
      * 判断字符串是否是纯数字
+     *
      * @param str
      * @return
      */
-    public static boolean isNumeric(String str){
-        for (int i = 0; i < str.length(); i++){
+    public static boolean isNumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
             System.out.println(str.charAt(i));
-            if (!Character.isDigit(str.charAt(i))){
+            if (!Character.isDigit(str.charAt(i))) {
                 return false;
             }
         }
@@ -359,6 +364,7 @@ public class StringUtils {
 
     /**
      * 判断字符串首个字母是否为英文
+     *
      * @param s
      * @return
      */
@@ -371,13 +377,14 @@ public class StringUtils {
 
     /**
      * 是否为纯汉字
+     *
      * @param str
      * @return
      */
-    public static boolean isChinese(String str){
+    public static boolean isChinese(String str) {
         boolean isChinese = true;
         for (char c : str.toCharArray()) {
-            if (c < 0x4E00 || c > 0x9FA5){
+            if (c < 0x4E00 || c > 0x9FA5) {
                 isChinese = false;
                 break;
             }
@@ -387,15 +394,17 @@ public class StringUtils {
 
     /**
      * 正则表达式 判断邮箱格式是否正确
-     * */
+     */
     public static boolean isEmail(String email) {
         String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
         Pattern p = Pattern.compile(str);
         Matcher m = p.matcher(email);
         return m.matches();
     }
+
     /**
      * 合并数组
+     *
      * @param first
      * @param rest
      * @param <T>
@@ -413,6 +422,20 @@ public class StringUtils {
             offset += array.length;
         }
         return result;
+    }
+
+    /**
+     * 传入文本内容，关键词颜色和关键词，把内容里所有关键词变成keyWordsColor
+     * 返回Spanned可以直接用setText方法
+     * @param content
+     * @param keyWordsColor
+     * @param keyWords
+     * @return
+     */
+    public static Spanned getHtmlString(String content, String keyWordsColor, String keyWords){
+        String htmlKeyWords = "<font color='"+keyWordsColor+"'>"+keyWords+"</font>";
+        content = content.replaceAll(keyWords,htmlKeyWords);
+        return Html.fromHtml(String.format(content));
     }
 
 

@@ -11,15 +11,10 @@ import org.json.JSONObject;
 
 /**
  * 网络连接&流量监测
- * 
+ *
  * @author 浪潮移动应用平台(IMP)产品组
- * 
  */
 public class NetworkService extends ImpPlugin {
-
-	public static int NOT_REACHABLE = 0;
-    public static int REACHABLE_VIA_CARRIER_DATA_NETWORK = 1;
-    public static int REACHABLE_VIA_WIFI_NETWORK = 2;
 
     public static final String WIFI = "wifi";
     public static final String WIMAX = "wimax";
@@ -49,29 +44,29 @@ public class NetworkService extends ImpPlugin {
     public static final String TYPE_3G = "3g";
     public static final String TYPE_4G = "4g";
     public static final String TYPE_NONE = "无网络";
-    
+    public static int NOT_REACHABLE = 0;
+    public static int REACHABLE_VIA_CARRIER_DATA_NETWORK = 1;
+    public static int REACHABLE_VIA_WIFI_NETWORK = 2;
+    ConnectivityManager sockMan;
     //获取网络流量服务的参数
     private long data;
-	private String packageName;
-    
+    private String packageName;
 
-    ConnectivityManager sockMan;
-
-	@Override
-	public String executeAndReturn(String action, JSONObject paramsObject) {
-		String res = "";
-		// 打开系统发送短信的界面，根据传入参数自动填写好相关信息
-		if ("getConnInfo".equals(action)) {
-			//检查网络连接
-			res = getConnInfo(paramsObject);
-			return res;
-		}
-		//流量监测服务
-		else if ("getTotalRxBytes".equals(action)) {
-			data = getTotalRxBytes();
-		} else if ("getMobileRxBytes".equals(action)) {
-			data = getMobileRxBytes();
-		}
+    @Override
+    public String executeAndReturn(String action, JSONObject paramsObject) {
+        String res = "";
+        // 打开系统发送短信的界面，根据传入参数自动填写好相关信息
+        if ("getConnInfo".equals(action)) {
+            //检查网络连接
+            res = getConnInfo(paramsObject);
+            return res;
+        }
+        //流量监测服务
+        else if ("getTotalRxBytes".equals(action)) {
+            data = getTotalRxBytes();
+        } else if ("getMobileRxBytes".equals(action)) {
+            data = getMobileRxBytes();
+        }
 //		else if ("getAppRecive".equals(action)){
 //			try {
 //				data = getAppRecive(paramsObject);
@@ -90,52 +85,49 @@ public class NetworkService extends ImpPlugin {
 //				e.printStackTrace();
 //			}
 //		}
-		else{
-			showCallIMPMethodErrorDlg();
-		}
-		return Long.toString(data)+"MB";
-	}
+        else {
+            showCallIMPMethodErrorDlg();
+        }
+        return Long.toString(data) + "MB";
+    }
 
-	/**
-	 * 检查网络的连接情况
-	 * 
-	 * @param paramsObject
-	 */
-	private String getConnInfo(JSONObject paramsObject) {
-		this.sockMan = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo info = sockMan.getActiveNetworkInfo();
-		String connectionType =  this.getConnectionInfo(info);
-		return connectionType;
-	}
-	
-	private String getConnectionInfo(NetworkInfo info) {
+    /**
+     * 检查网络的连接情况
+     *
+     * @param paramsObject
+     */
+    private String getConnInfo(JSONObject paramsObject) {
+        this.sockMan = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = sockMan.getActiveNetworkInfo();
+        String connectionType = this.getConnectionInfo(info);
+        return connectionType;
+    }
+
+    private String getConnectionInfo(NetworkInfo info) {
         String type = TYPE_NONE;
         if (info != null) {
             if (!info.isConnected()) {
                 type = TYPE_NONE;
-            }
-            else {
+            } else {
                 type = getType(info);
             }
         }
         return type;
     }
-	
-	private String getType(NetworkInfo info) {
+
+    private String getType(NetworkInfo info) {
         if (info != null) {
             String type = info.getTypeName();
 
             if (type.toLowerCase().equals(WIFI)) {
                 return TYPE_WIFI;
-            }
-            else if (type.toLowerCase().equals(MOBILE)) {
+            } else if (type.toLowerCase().equals(MOBILE)) {
                 type = info.getSubtypeName();
                 if (type.toLowerCase().equals(GSM) ||
                         type.toLowerCase().equals(GPRS) ||
                         type.toLowerCase().equals(EDGE)) {
                     return TYPE_2G;
-                }
-                else if (type.toLowerCase().startsWith(CDMA) ||
+                } else if (type.toLowerCase().startsWith(CDMA) ||
                         type.toLowerCase().equals(UMTS) ||
                         type.toLowerCase().equals(ONEXRTT) ||
                         type.toLowerCase().equals(EHRPD) ||
@@ -143,40 +135,38 @@ public class NetworkService extends ImpPlugin {
                         type.toLowerCase().equals(HSDPA) ||
                         type.toLowerCase().equals(HSPA)) {
                     return TYPE_3G;
-                }
-                else if (type.toLowerCase().equals(LTE) ||
+                } else if (type.toLowerCase().equals(LTE) ||
                         type.toLowerCase().equals(UMB) ||
                         type.toLowerCase().equals(HSPA_PLUS)) {
                     return TYPE_4G;
                 }
             }
-        }
-        else {
+        } else {
             return TYPE_NONE;
         }
         return TYPE_UNKNOWN;
     }
-	
-	
-	/**
-	 * 获得系统传入的总流量
-	 * 
-	 * @return 单位是MB
-	 */
-	public long getTotalRxBytes() {
-		return TrafficStats.getTotalRxBytes() == TrafficStats.UNSUPPORTED ? 0
-				: (TrafficStats.getTotalRxBytes() / 1024 / 1024);
-	}
 
-	/**
-	 * 获取通过Mobile连接收到的字节总数，不包含WiFi
-	 * 
-	 * @return 单位是MB
-	 */
-	public long getMobileRxBytes() {
-		return TrafficStats.getMobileRxBytes() == TrafficStats.UNSUPPORTED ? 0
-				: (TrafficStats.getMobileRxBytes() / 1024 / 1024);
-	}
+
+    /**
+     * 获得系统传入的总流量
+     *
+     * @return 单位是MB
+     */
+    public long getTotalRxBytes() {
+        return TrafficStats.getTotalRxBytes() == TrafficStats.UNSUPPORTED ? 0
+                : (TrafficStats.getTotalRxBytes() / 1024 / 1024);
+    }
+
+    /**
+     * 获取通过Mobile连接收到的字节总数，不包含WiFi
+     *
+     * @return 单位是MB
+     */
+    public long getMobileRxBytes() {
+        return TrafficStats.getMobileRxBytes() == TrafficStats.UNSUPPORTED ? 0
+                : (TrafficStats.getMobileRxBytes() / 1024 / 1024);
+    }
 
 //	/**
 //	 * 通过包名查看对应应用的流量上行数据
@@ -195,7 +185,7 @@ public class NetworkService extends ImpPlugin {
 //		uid = ai.uid;
 //		return TrafficStats.getUidTxBytes(uid) / 1024 / 1024;
 //	}
-	
+
 //	/**
 //	 * 通过包名查看对应应用的流量下行数据
 //	 * @param paramsObject
@@ -214,15 +204,15 @@ public class NetworkService extends ImpPlugin {
 //		uid = ai.uid;
 //		return TrafficStats.getUidRxBytes(uid) / 1024 / 1024;
 //	}
-	
 
-	@Override
-	public void onDestroy() {
 
-	}
+    @Override
+    public void onDestroy() {
 
-	@Override
-	public void execute(String action, JSONObject paramsObject){
-		showCallIMPMethodErrorDlg();
-	}
+    }
+
+    @Override
+    public void execute(String action, JSONObject paramsObject) {
+        showCallIMPMethodErrorDlg();
+    }
 }

@@ -26,12 +26,12 @@ public class MailLoginUtils {
     public void loginMail(Activity activity) {
         String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         String password = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
-        loginMail(activity,mail, password);
+        loginMail(activity, mail, password);
     }
 
-    public void loginMail(Activity activity,String mail, String password) {
+    public void loginMail(Activity activity, String mail, String password) {
         this.activity = activity;
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false) && !StringUtils.isBlank(mail) && !StringUtils.isBlank(password)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false) && !StringUtils.isBlank(mail) && !StringUtils.isBlank(password)) {
             loadingDlg = new LoadingDialog(activity);
             loadingDlg.show();
             String key = EncryptUtils.stringToMD5(mail);
@@ -43,10 +43,10 @@ public class MailLoginUtils {
             MailApiService apiService = new MailApiService(MyApplication.getInstance());
             apiService.setAPIInterface(new WebServie());
             apiService.loginMail(mail, password);
-        }else {
-            IntentUtils.startActivity(activity,MailLoginActivity.class,true );
+        } else {
+            IntentUtils.startActivity(activity, MailLoginActivity.class, true);
             //SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_LOGIN_FAIL);
-           // EventBus.getDefault().post(simpleEventMessage);
+            // EventBus.getDefault().post(simpleEventMessage);
         }
     }
 
@@ -55,7 +55,7 @@ public class MailLoginUtils {
         @Override
         public void returnMailLoginSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            IntentUtils.startActivity(activity,MailHomeActivity.class,true);
+            IntentUtils.startActivity(activity, MailHomeActivity.class, true);
 //            SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_LOGIN_SUCCESS);
 //            EventBus.getDefault().post(simpleEventMessage);
         }
@@ -63,7 +63,7 @@ public class MailLoginUtils {
         @Override
         public void returnMailLoginFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            IntentUtils.startActivity(activity,MailLoginActivity.class,true);
+            IntentUtils.startActivity(activity, MailLoginActivity.class, true);
 //            SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.EVENTBUS_TAG_MAIL_LOGIN_FAIL,error);
 //            EventBus.getDefault().post(simpleEventMessage);
         }

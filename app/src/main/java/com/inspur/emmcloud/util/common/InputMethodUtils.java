@@ -66,7 +66,7 @@ public class InputMethodUtils {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenHeight = displayMetrics.heightPixels;
         //消息手机需要特殊处理：如果小米手机隐藏了NavigationBar，就在获取到的高度基础上加上NavigationBar的高度
-        if (AppUtils.getIsXiaoMi() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 ) {
+        if (AppUtils.getIsXiaoMi() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             boolean isHideNavigationBar = Settings.Global.getInt(activity.getContentResolver(), "force_fsg_nav_bar", 0) != 0;
             if (isHideNavigationBar) {
                 int navigationBarHeight = ResolutionUtils.getNavigationBarHeight();

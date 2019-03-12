@@ -15,33 +15,34 @@ public class MediaPlayerUtils {
 
     private MediaPlayer mediaPlayerVoiceOn;
     private MediaPlayer mediaPlayerVoiceOff;
-    public MediaPlayerUtils(Context context){
+
+    public MediaPlayerUtils(Context context) {
         mediaPlayerVoiceOn = MediaPlayer.create(context, R.raw.voice_search_on);
-        mediaPlayerVoiceOff = MediaPlayer.create(context,R.raw.voice_search_off);
+        mediaPlayerVoiceOff = MediaPlayer.create(context, R.raw.voice_search_off);
     }
 
     /**
      * 播放开始提示音
      */
-    public void playVoiceOn(){
+    public void playVoiceOn() {
         mediaPlayerVoiceOn.start();
     }
 
     /**
      * 播放结束提示音
      */
-    public void playVoiceOff(){
+    public void playVoiceOff() {
         mediaPlayerVoiceOff.start();
     }
 
     /**
      * 释放资源
      */
-    public void release(){
-        if(mediaPlayerVoiceOn.isPlaying()){
+    public void release() {
+        if (mediaPlayerVoiceOn.isPlaying()) {
             mediaPlayerVoiceOn.stop();
         }
-        if(mediaPlayerVoiceOff.isPlaying()){
+        if (mediaPlayerVoiceOff.isPlaying()) {
             mediaPlayerVoiceOff.stop();
         }
         mediaPlayerVoiceOn.release();

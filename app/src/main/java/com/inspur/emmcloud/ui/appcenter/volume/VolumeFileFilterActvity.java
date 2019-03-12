@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
 
     private BroadcastReceiver broadcastReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +69,7 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 finishActivity();
                 break;
             case R.id.refresh_btn:
@@ -89,7 +90,7 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
     /**
      * 分类展示返回时,前一个页面进行数据刷新，以便于更新在此页面进行操作的数据
      */
-    private void finishActivity(){
+    private void finishActivity() {
         setResult(RESULT_OK);
         finish();
     }

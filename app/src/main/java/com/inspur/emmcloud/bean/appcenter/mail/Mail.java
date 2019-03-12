@@ -124,6 +124,10 @@ public class Mail implements Serializable {
         return fromMailRecipient;
     }
 
+    public void setFromMailRecipient(MailRecipient fromMailRecipient) {
+        this.fromMailRecipient = fromMailRecipient;
+    }
+
     public List<MailRecipient> getCcMailRecipientList() {
         if (ccMailRecipientList.size() == 0) {
             JSONArray ccRecipientArray = JSONUtils.getJSONArray(ccRecipients, new JSONArray());
@@ -133,6 +137,10 @@ public class Mail implements Serializable {
             }
         }
         return ccMailRecipientList;
+    }
+
+    public void setCcMailRecipientList(List<MailRecipient> ccMailRecipientList) {
+        this.ccMailRecipientList = ccMailRecipientList;
     }
 
     public List<MailRecipient> getBccMailRecipientList() {
@@ -146,6 +154,10 @@ public class Mail implements Serializable {
         return bccMailRecipientList;
     }
 
+    public void setBccMailRecipientList(List<MailRecipient> bccMailRecipientList) {
+        this.bccMailRecipientList = bccMailRecipientList;
+    }
+
     public List<MailRecipient> getToMailRecipientList() {
         if (toMailRecipientList.size() == 0) {
             JSONArray toRecipientArray = JSONUtils.getJSONArray(toRecipients, new JSONArray());
@@ -155,6 +167,10 @@ public class Mail implements Serializable {
             }
         }
         return toMailRecipientList;
+    }
+
+    public void setToMailRecipientList(List<MailRecipient> toMailRecipientList) {
+        this.toMailRecipientList = toMailRecipientList;
     }
 
     public String getAttachments() {
@@ -176,6 +192,10 @@ public class Mail implements Serializable {
         return mailAttachmentList;
     }
 
+    public void setMailAttachmentList(List<MailAttachment> mailAttachmentList) {
+        this.mailAttachmentList = mailAttachmentList;
+    }
+
     public List<MailAttachment> getReallyMailAttachmentList() {
         List<MailAttachment> mailAttachmentList = getMailAttachmentList();
         List<MailAttachment> reallyMailAttachmentList = new ArrayList<>();
@@ -185,26 +205,6 @@ public class Mail implements Serializable {
             }
         }
         return reallyMailAttachmentList;
-    }
-
-    public void setMailAttachmentList(List<MailAttachment> mailAttachmentList) {
-        this.mailAttachmentList = mailAttachmentList;
-    }
-
-    public void setFromMailRecipient(MailRecipient fromMailRecipient) {
-        this.fromMailRecipient = fromMailRecipient;
-    }
-
-    public void setCcMailRecipientList(List<MailRecipient> ccMailRecipientList) {
-        this.ccMailRecipientList = ccMailRecipientList;
-    }
-
-    public void setBccMailRecipientList(List<MailRecipient> bccMailRecipientList) {
-        this.bccMailRecipientList = bccMailRecipientList;
-    }
-
-    public void setToMailRecipientList(List<MailRecipient> toMailRecipientList) {
-        this.toMailRecipientList = toMailRecipientList;
     }
 
     public boolean isComplete() {

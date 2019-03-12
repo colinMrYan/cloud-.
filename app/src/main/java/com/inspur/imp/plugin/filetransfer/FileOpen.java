@@ -350,82 +350,6 @@ public class FileOpen {
         this.mimeType = mimeType;
     }
 
-    /**
-     * 显示附件打开对话框
-     */
-    public void showOpenDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(context,
-                android.R.style.Theme_Holo_Light_Dialog)
-                .setMessage(Res.getStringID("file_download_success"))
-                .setTitle(Res.getStringID("tips"))
-                .setCancelable(false)
-                .setPositiveButton(Res.getStringID("file_ok"),
-                        new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                // TODO Auto-generated method stub
-                                openFile();
-
-                            }
-                        })
-                .setNegativeButton(Res.getStringID("file_cancel"),
-                        new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                // TODO Auto-generated method stub
-
-                            }
-                        }).create();
-        alertDialog.getWindow().setBackgroundDrawableResource(
-                android.R.color.transparent);
-        alertDialog.show();
-    }
-
-    private void openFile() {
-        // TODO Auto-generated method stub
-        File file = new File(path);
-        if (StringUtils.isBlank(mimeType)) {
-            fileType = fileType.toLowerCase();
-            fileType = "." + fileType;
-            mimeType = "*/*";
-            for (int i = 0; i < MIME_MapTable.length; i++) {
-                if (fileType.equals(MIME_MapTable[i][0])){
-                    mimeType = MIME_MapTable[i][1];
-                    break;
-                }
-
-            }
-        }
-        if (mimeType.equals("text/plain")) {
-            String text = getText(path);
-            showTxtContent(text);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //判断是否是AndroidN以及更高的版本
-            if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.N) {
-                Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID+".fileprovider",file);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                intent.setDataAndType(contentUri, FileUtils.getMimeType(file));
-            }else{
-                intent.setDataAndType(Uri.fromFile(file),FileUtils.getMimeType(file));
-            }
-            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
-                try {
-                    context.startActivity(intent);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
-    }
-
-
     private static String getText(String path) {
         // TODO Auto-generated method stub
         File file = new File(path);
@@ -480,6 +404,81 @@ public class FileOpen {
             e.printStackTrace();
         }
         return text;
+    }
+
+    /**
+     * 显示附件打开对话框
+     */
+    public void showOpenDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(context,
+                android.R.style.Theme_Holo_Light_Dialog)
+                .setMessage(Res.getStringID("file_download_success"))
+                .setTitle(Res.getStringID("tips"))
+                .setCancelable(false)
+                .setPositiveButton(Res.getStringID("file_ok"),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                // TODO Auto-generated method stub
+                                openFile();
+
+                            }
+                        })
+                .setNegativeButton(Res.getStringID("file_cancel"),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        }).create();
+        alertDialog.getWindow().setBackgroundDrawableResource(
+                android.R.color.transparent);
+        alertDialog.show();
+    }
+
+    private void openFile() {
+        // TODO Auto-generated method stub
+        File file = new File(path);
+        if (StringUtils.isBlank(mimeType)) {
+            fileType = fileType.toLowerCase();
+            fileType = "." + fileType;
+            mimeType = "*/*";
+            for (int i = 0; i < MIME_MapTable.length; i++) {
+                if (fileType.equals(MIME_MapTable[i][0])) {
+                    mimeType = MIME_MapTable[i][1];
+                    break;
+                }
+
+            }
+        }
+        if (mimeType.equals("text/plain")) {
+            String text = getText(path);
+            showTxtContent(text);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //判断是否是AndroidN以及更高的版本
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.setDataAndType(contentUri, FileUtils.getMimeType(file));
+            } else {
+                intent.setDataAndType(Uri.fromFile(file), FileUtils.getMimeType(file));
+            }
+            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                try {
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     private void showTxtContent(String text) {

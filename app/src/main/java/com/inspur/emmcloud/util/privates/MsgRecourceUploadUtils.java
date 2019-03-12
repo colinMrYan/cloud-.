@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.util.privates;
 
 public class MsgRecourceUploadUtils {
-	
-	
+
+
 //	/**
 //	 * 发送图片类型消息
 //	 *

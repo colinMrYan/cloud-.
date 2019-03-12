@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ConversationAdapter;
@@ -63,7 +63,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -83,6 +82,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -95,7 +95,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 沟通页面
  */
-public class CommunicationFragment extends Fragment {
+public class CommunicationFragment extends BaseFragment {
 
     private static final int CREAT_CHANNEL_GROUP = 1;
     private static final int RERESH_GROUP_ICON = 2;
@@ -120,18 +120,61 @@ public class CommunicationFragment extends Fragment {
     private ImageView headerFunctionOptionImg;
     private ImageView contactImg;
     private CheckingNetStateUtils checkingNetStateUtils;
+    private OnClickListener onViewClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            switch (v.getId()) {
+                case R.id.more_function_list_img:
+                    showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
+                    break;
+                case R.id.contact_img:
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("select_content", 4);
+                    bundle.putBoolean("isMulti_select", false);
+                    bundle.putString("title",
+                            getActivity().getString(R.string.adress_list));
+                    IntentUtils.startActivity(getActivity(),
+                            ContactSearchActivity.class, bundle);
+                    recordUserClickContact();
+                    break;
+                case R.id.message_create_group_layout:
+                    Intent contactIntent = new Intent();
+                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                    contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
+                            getActivity().getString(R.string.message_create_group));
+                    contactIntent.setClass(getActivity(), ContactSearchActivity.class);
+                    startActivityForResult(contactIntent, CREAT_CHANNEL_GROUP);
+                    popupWindow.dismiss();
+                    break;
+                case R.id.message_scan_layout:
+//                    Intent scanIntent = new Intent();
+//                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
+//                    scanIntent.putExtra("from", "CommunicationFragment");
+//                    startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+//                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                    AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
+                    popupWindow.dismiss();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        checkingNetStateUtils=new CheckingNetStateUtils( getContext(),NetUtils.pingUrls );
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
     }
 
     /**
@@ -140,11 +183,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(checkingNetStateUtils.isConnectedNet()){
-            conversationAdapter.setNetExceptionView(true);
-        }else{
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
-        }
+            checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {
@@ -175,14 +214,13 @@ public class CommunicationFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, intentFilter);
     }
 
-
     /**
      * 初始化PullRefreshLayout
      */
     private void initPullRefreshLayout() {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView
                 .findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -204,30 +242,31 @@ public class CommunicationFragment extends Fragment {
         conversationAdapter.setAdapterListener(new ConversationAdapter.AdapterListener() {
             @Override
             public void onItemClick(View view, int position) {
-                    try {
-                        UIConversation uiConversation = displayUIConversationList.get(position);
-                        Conversation conversation = uiConversation.getConversation();
-                        String type = conversation.getType();
-                        if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                            IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                        }else if(conversation.getType().equals(Conversation.TYPE_LINK)){
-                            EmmAction emmAction = new EmmAction(conversation.getAction());
-                            if(emmAction.getCanOpenAction()){
-                                if(emmAction.getUrl().startsWith("http")){
-                                    UriUtils.openUrl(getActivity(),emmAction.getUrl());
-                                }else{
-                                    IntentUtils.startActivity(getActivity(),emmAction.getUrl());
-                                }
+                try {
+                    UIConversation uiConversation = displayUIConversationList.get(position);
+                    Conversation conversation = uiConversation.getConversation();
+                    String type = conversation.getType();
+                    if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(ConversationBaseActivity.EXTRA_UNREAD_MESSAGE, (Serializable) MessageCacheUtil.getAllUnReadMessage(getActivity(), conversation.getId()));
+                        bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                        IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
+                    } else if (conversation.getType().equals(Conversation.TYPE_LINK)) {
+                        EmmAction emmAction = new EmmAction(conversation.getAction());
+                        if (emmAction.getCanOpenAction()) {
+                            if (emmAction.getUrl().startsWith("http")) {
+                                UriUtils.openUrl(getActivity(), emmAction.getUrl());
+                            } else {
+                                IntentUtils.startActivity(getActivity(), emmAction.getUrl());
                             }
-                        }  else {
-                            ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
                         }
-                        setConversationRead(position, uiConversation);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
+                        ToastUtils.show(MyApplication.getInstance(), R.string.not_support_open_channel);
                     }
+                    setConversationRead(position, uiConversation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -265,11 +304,11 @@ public class CommunicationFragment extends Fragment {
     private void showConversationOperationDlg(final UIConversation uiConversation) {
         // TODO Auto-generated method stub
         final String[] items;
-        if(uiConversation.getConversation().getType().equals("CAST")) {
+        if (uiConversation.getConversation().getType().equals("CAST")) {
             items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top)};
-           } else {
-             items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top), getString(R.string.chat_remove)};
-           }
+        } else {
+            items = new String[]{getString(uiConversation.getConversation().isStick() ? R.string.chat_remove_from_top : R.string.chat_stick_on_top), getString(R.string.chat_remove)};
+        }
         new MyQMUIDialog.MenuDialogBuilder(getActivity())
                 .setTitle(uiConversation.getTitle())
                 .addItems(items, new DialogInterface.OnClickListener() {
@@ -279,7 +318,7 @@ public class CommunicationFragment extends Fragment {
                         if (which == 0) {
                             setConversationStick(uiConversation.getId(), !uiConversation.getConversation().isStick());
                         } else {
-                            setConversationHide(uiConversation.getId());
+                            setConversationHide(uiConversation);
                         }
                     }
                 })
@@ -318,25 +357,8 @@ public class CommunicationFragment extends Fragment {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG__NET_STATE_CHANGE)){
-            if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK)&&(!NetUtils.isVpnConnected())){
-                checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls,5,Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT);
-            } else if(((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
-                conversationAdapter.setNetExceptionView(false);
-            } else if (((String)netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
-                conversationAdapter.setNetExceptionView(true);
-            }else {
-                conversationAdapter.setNetExceptionView(true);
-            }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG__NET_EXCEPTION_HINT)) {   //网络异常提示
-            if(!NetUtils.isNetworkConnected(getContext(),false)) {
-                conversationAdapter.setNetExceptionView(false);
-            } else {
-                List<Object> pingIdAndData = (List<Object>)netState.getMessageObj();
-                Boolean pingConnectedResult=checkingNetStateUtils.isPingConnectedNet( (String)pingIdAndData.get( 0 ),(boolean)pingIdAndData.get( 1 ) );
-                conversationAdapter.setNetExceptionView(pingConnectedResult);
-            }
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
+            conversationAdapter.setNetExceptionView((boolean)netState.getMessageObj());
             if ((Boolean)netState.getMessageObj()){
                 WebSocketPush.getInstance().startWebSocket();
             }
@@ -360,6 +382,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setFragmentStatusBarCommon();
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_message, container,
                     false);
@@ -378,51 +401,6 @@ public class CommunicationFragment extends Fragment {
             popupWindow.dismiss();
         }
     }
-
-
-    private OnClickListener onViewClickListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            switch (v.getId()) {
-                case R.id.more_function_list_img:
-                    showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
-                    break;
-                case R.id.contact_img:
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("select_content", 4);
-                    bundle.putBoolean("isMulti_select", false);
-                    bundle.putString("title",
-                            getActivity().getString(R.string.adress_list));
-                    IntentUtils.startActivity(getActivity(),
-                            ContactSearchActivity.class, bundle);
-                    recordUserClickContact();
-                    break;
-                case R.id.message_create_group_layout:
-                    Intent contactIntent = new Intent();
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
-                    contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
-                            getActivity().getString(R.string.message_create_group));
-                    contactIntent.setClass(getActivity(), ContactSearchActivity.class);
-                    startActivityForResult(contactIntent, CREAT_CHANNEL_GROUP);
-                    popupWindow.dismiss();
-                    break;
-                case R.id.message_scan_layout:
-//                    Intent scanIntent = new Intent();
-//                    scanIntent.setClass(getActivity(), PreviewDecodeActivity.class);
-//                    scanIntent.putExtra("from", "CommunicationFragment");
-//                    startActivityForResult(scanIntent, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-//                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-                    AppUtils.openScanCode(CommunicationFragment.this,REQUEST_SCAN_LOGIN_QRCODE_RESULT);
-                    popupWindow.dismiss();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     /**
      * 通讯录和创建群组，扫一扫合并
@@ -512,10 +490,10 @@ public class CommunicationFragment extends Fragment {
                                 continue;
                             }
                             uiConversation.getConversation().setDraft(getDraftWords(conversation));
-                            if (uiConversation.getMessageList().size() == 0){
+                            if (uiConversation.getMessageList().size() == 0) {
                                 //当会话内没有消息时，如果是单聊或者不是owner的群聊，则进行隐藏
                                 if (conversation.getType().equals(Conversation.TYPE_DIRECT) ||
-                                        (conversation.getType().equals(CREAT_CHANNEL_GROUP) && conversation.getOwner().equals(MyApplication.getInstance().getUid()))){
+                                        (conversation.getType().equals(CREAT_CHANNEL_GROUP) && conversation.getOwner().equals(MyApplication.getInstance().getUid()))) {
                                     it.remove();
                                     continue;
                                 }
@@ -545,8 +523,8 @@ public class CommunicationFragment extends Fragment {
      * @return
      */
     private String getDraftWords(Conversation conversation) {
-        String draft = MessageCacheUtil.getDraftByCid(getActivity(),conversation.getId());
-        return StringUtils.isBlank(draft)?"":draft;
+        String draft = MessageCacheUtil.getDraftByCid(getActivity(), conversation.getId());
+        return StringUtils.isBlank(draft) ? "" : draft;
     }
 
 
@@ -600,82 +578,13 @@ public class CommunicationFragment extends Fragment {
                 receivedWSMessage.getChannel(), new MatheSet(ChannelMessageMatheSetStart, receivedWSMessage.getCreationDate()));
     }
 
-    class CacheConversationThread extends Thread {
-        private GetConversationListResult getConversationListResult;
-
-        public CacheConversationThread(GetConversationListResult getConversationListResult) {
-            this.getConversationListResult = getConversationListResult;
-        }
-
-        @Override
-        public void run() {
-            List<Conversation> conversationList = getConversationListResult.getConversationList();
-            List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
-            ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
-            //服务端和本地数据取交集
-            List<Conversation> intersectionConversationList = new ArrayList<>();
-            intersectionConversationList.addAll(conversationList);
-            intersectionConversationList.retainAll(cacheConversationList);
-            cacheConversationList.removeAll(intersectionConversationList);
-            ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(), cacheConversationList);
-            if (handler != null) {
-                if (isGroupIconCreate) {
-                    conversationList.removeAll(intersectionConversationList);
-                }
-                android.os.Message message = handler.obtainMessage(CACHE_CONVERSATION_LIST_SUCCESS, conversationList);
-                message.sendToTarget();
-            }
-        }
-    }
-
-    /**
-     * 接受创建群组头像的icon
-     *
-     * @author Administrator
-     */
-    public class CommunicationFragmentReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
-            String command = intent.getExtras().getString("command");
-            switch (command) {
-                case "creat_group_icon":
-                    isGroupIconCreate = false;
-                    createGroupIcon(null);
-                    break;
-                case "refresh_session_list":
-                    getConversationList();
-                    break;
-                case "sort_session_list":
-                    sortConversationList();
-                    break;
-                case "sync_all_base_data_success":
-                    createGroupIcon(null);
-                    sortConversationList();
-                    break;
-                case "set_all_message_read":
-                    setAllConversationRead();
-                    break;
-                case "websocket_status":
-                    String socketStatus = intent.getExtras().getString("status");
-                    showSocketStatusInTitle(socketStatus);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-
     /**
      * 显示websocket的连接状态
      *
      * @param socketStatus
      */
     private void showSocketStatusInTitle(String socketStatus) {
-        if (socketStatus.equals("socket_connecting")) {
+        if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
@@ -735,7 +644,6 @@ public class CommunicationFragment extends Fragment {
             conversationAdapter.notifyRealItemChanged(position);
         }
     }
-
 
     @Override
     public void onDestroy() {
@@ -814,35 +722,6 @@ public class CommunicationFragment extends Fragment {
                 });
     }
 
-    class CacheMessageListThread extends Thread {
-        private List<Message> messageList;
-        private List<ChannelMessageSet> channelMessageSetList;
-
-        public CacheMessageListThread(List<Message> messageList, List<ChannelMessageSet> channelMessageSetList) {
-            this.messageList = messageList;
-            this.channelMessageSetList = channelMessageSetList;
-        }
-
-        @Override
-        public void run() {
-            try {
-                if (messageList != null && messageList.size() > 0) {
-                    MessageCacheUtil.handleRealMessage(getActivity(),messageList, null,"",false);// 获取的消息需要缓存
-                    if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
-                        for (ChannelMessageSet channelMessageSet : channelMessageSetList) {
-                            MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
-                        }
-                    }
-                    if (handler != null) {
-                        handler.sendEmptyMessage(SORT_CONVERSATION_LIST);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         Conversation conversation = null;
@@ -888,7 +767,6 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
-
     //接收到websocket发过来的消息，在channel里正常收发消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
@@ -899,7 +777,7 @@ public class CommunicationFragment extends Fragment {
                 Message receivedWSMessage = new Message(contentObj);
                 //验重处理
                 if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
-                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(),receivedWSMessage);
+                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(), receivedWSMessage);
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
                         receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
@@ -916,20 +794,20 @@ public class CommunicationFragment extends Fragment {
                     if (receiveMessageConversation == null) {
                         getConversationList();
                     } else {
-                        if (receiveMessageConversation.isHide()){
-                            ConversationCacheUtils.setConversationHide(MyApplication.getInstance(),receiveMessageConversation.getId(),false);
+                        if (receiveMessageConversation.isHide()) {
+                            ConversationCacheUtils.setConversationHide(MyApplication.getInstance(), receiveMessageConversation.getId(), false);
                         }
                         sortConversationList();
                     }
                 }
             } else {
                 //当消息发送失败，已离开此频道时，存储该消息
-                Message fakeMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(),eventMessage.getId());
-                if (fakeMessage != null){
-                   if(!MyApplication.getInstance().getCurrentChannelCid().equals(fakeMessage.getChannel())){
-                       fakeMessage.setSendStatus(Message.MESSAGE_SEND_FAIL);
-                       MessageCacheUtil.saveMessage(MyApplication.getInstance(),fakeMessage);
-                   }
+                Message fakeMessage = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), eventMessage.getId());
+                if (fakeMessage != null) {
+                    if (!MyApplication.getInstance().getCurrentChannelCid().equals(fakeMessage.getChannel())) {
+                        fakeMessage.setSendStatus(Message.MESSAGE_SEND_FAIL);
+                        MessageCacheUtil.saveMessage(MyApplication.getInstance(), fakeMessage);
+                    }
                 }
             }
 
@@ -957,7 +835,7 @@ public class CommunicationFragment extends Fragment {
                     }
                     if (currentChannelOfflineMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE,currentChannelOfflineMessageList));
+                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE, currentChannelOfflineMessageList));
                     }
                 }
                 new CacheMessageListThread(offlineMessageList, getOfflineMessageListResult.getChannelMessageSetList()).start();
@@ -993,7 +871,7 @@ public class CommunicationFragment extends Fragment {
                     }
                     if (currentChannelRecentMessageList.size() > 0) {
                         //将离线消息发送到当前频道
-                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE,currentChannelRecentMessageList));
+                        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE, currentChannelRecentMessageList));
                     }
                 }
                 new CacheMessageListThread(getRecentMessageListResult.getMessageList(), getRecentMessageListResult.getChannelMessageSetList()).start();
@@ -1068,15 +946,135 @@ public class CommunicationFragment extends Fragment {
     /**
      * 隐藏频道
      *
-     * @param id
+     * @param uiConversation
      */
-    private void setConversationHide(String id) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            apiService.setConversationHide(id,true);
+    private void setConversationHide(final UIConversation uiConversation) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), uiConversation.getId(), true);
+                MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), uiConversation.getId());
+            }
+        }).start();
+        int index = displayUIConversationList.indexOf(uiConversation);
+        if (index != -1) {
+            long unReadCount = displayUIConversationList.get(index).getUnReadCount();
+            displayUIConversationList.remove(index);
+            conversationAdapter.setData(displayUIConversationList);
+            conversationAdapter.notifyRealItemRemoved(index);
+            if (unReadCount > 0) {
+                WSAPIService.getInstance().setChannelMessgeStateRead(uiConversation.getId());
+            }
+        }
+//        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+//            loadingDlg.show();
+//            apiService.setConversationHide(id, true);
+//        }
+    }
+
+    class CacheConversationThread extends Thread {
+        private GetConversationListResult getConversationListResult;
+
+        public CacheConversationThread(GetConversationListResult getConversationListResult) {
+            this.getConversationListResult = getConversationListResult;
+        }
+
+        @Override
+        public void run() {
+            List<Conversation> conversationList = getConversationListResult.getConversationList();
+            List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
+            //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
+            for (Conversation conversation:conversationList){
+                int index = cacheConversationList.indexOf(conversation);
+                if (index != -1){
+                    conversation.setHide(cacheConversationList.get(index).isHide());
+                }
+            }
+            ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
+            //服务端和本地数据取交集
+            List<Conversation> intersectionConversationList = new ArrayList<>();
+            intersectionConversationList.addAll(conversationList);
+            intersectionConversationList.retainAll(cacheConversationList);
+            cacheConversationList.removeAll(intersectionConversationList);
+            ConversationCacheUtils.deleteConversationList(MyApplication.getInstance(), cacheConversationList);
+            if (handler != null) {
+                if (isGroupIconCreate) {
+                    conversationList.removeAll(intersectionConversationList);
+                }
+                android.os.Message message = handler.obtainMessage(CACHE_CONVERSATION_LIST_SUCCESS, conversationList);
+                message.sendToTarget();
+            }
         }
     }
 
+    /**
+     * 接受创建群组头像的icon
+     *
+     * @author Administrator
+     */
+    public class CommunicationFragmentReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            String command = intent.getExtras().getString("command");
+            switch (command) {
+                case "creat_group_icon":
+                    isGroupIconCreate = false;
+                    createGroupIcon(null);
+                    break;
+                case "refresh_session_list":
+                    getConversationList();
+                    break;
+                case "sort_session_list":
+                    sortConversationList();
+                    break;
+                case "sync_all_base_data_success":
+                    createGroupIcon(null);
+                    sortConversationList();
+                    break;
+                case "set_all_message_read":
+                    setAllConversationRead();
+                    break;
+                case "websocket_status":
+                    String socketStatus = intent.getExtras().getString("status");
+                    showSocketStatusInTitle(socketStatus);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    class CacheMessageListThread extends Thread {
+        private List<Message> messageList;
+        private List<ChannelMessageSet> channelMessageSetList;
+
+        public CacheMessageListThread(List<Message> messageList, List<ChannelMessageSet> channelMessageSetList) {
+            this.messageList = messageList;
+            this.channelMessageSetList = channelMessageSetList;
+        }
+
+        @Override
+        public void run() {
+            try {
+                if (messageList != null && messageList.size() > 0) {
+                    MessageCacheUtil.handleRealMessage(getActivity(), messageList, null, "", false);// 获取的消息需要缓存
+                    if (channelMessageSetList != null && channelMessageSetList.size() > 0) {
+                        for (ChannelMessageSet channelMessageSet : channelMessageSetList) {
+                            MessageMatheSetCacheUtils.add(MyApplication.getInstance(), channelMessageSet.getCid(), channelMessageSet.getMatheSet());
+                        }
+                    }
+                    if (handler != null) {
+                        handler.sendEmptyMessage(SORT_CONVERSATION_LIST);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -1107,33 +1105,33 @@ public class CommunicationFragment extends Fragment {
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
 
-        @Override
-        public void returnSetConversationHideSuccess(final String id,boolean isHide) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), id,true);
-                    MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), id);
-                }
-            }).start();
-            int index = displayUIConversationList.indexOf(new UIConversation(id));
-            if (index != -1) {
-                long unReadCount = displayUIConversationList.get(index).getUnReadCount();
-                displayUIConversationList.remove(index);
-                conversationAdapter.setData(displayUIConversationList);
-                 conversationAdapter.notifyRealItemRemoved(index);
-                if (unReadCount > 0) {
-                    WSAPIService.getInstance().setChannelMessgeStateRead(id);
-                }
-            }
-        }
-
-        @Override
-        public void returnSetConversationHideFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
-        }
+//        @Override
+//        public void returnSetConversationHideSuccess(final String id, boolean isHide) {
+//            LoadingDialog.dimissDlg(loadingDlg);
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), id, true);
+//                    MessageCacheUtil.setChannelMessageRead(MyApplication.getInstance(), id);
+//                }
+//            }).start();
+//            int index = displayUIConversationList.indexOf(new UIConversation(id));
+//            if (index != -1) {
+//                long unReadCount = displayUIConversationList.get(index).getUnReadCount();
+//                displayUIConversationList.remove(index);
+//                conversationAdapter.setData(displayUIConversationList);
+//                conversationAdapter.notifyRealItemRemoved(index);
+//                if (unReadCount > 0) {
+//                    WSAPIService.getInstance().setChannelMessgeStateRead(id);
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void returnSetConversationHideFail(String error, int errorCode) {
+//            LoadingDialog.dimissDlg(loadingDlg);
+//            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+//        }
     }
 
 

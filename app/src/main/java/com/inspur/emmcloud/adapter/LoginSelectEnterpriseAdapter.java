@@ -1,14 +1,16 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.mine.Enterprise;
+import com.inspur.emmcloud.util.common.DensityUtil;
 
 import java.util.List;
 
@@ -20,12 +22,10 @@ public class LoginSelectEnterpriseAdapter extends BaseAdapter {
 
     private Context context;
     private List<Enterprise> enterpriseList;
-    private Enterprise defaultEnterprise;
 
-    public LoginSelectEnterpriseAdapter(Context context,List<Enterprise> enterpriseList,Enterprise defaultEnterprise){
-        this.context =context;
+    public LoginSelectEnterpriseAdapter(Context context, List<Enterprise> enterpriseList) {
+        this.context = context;
         this.enterpriseList = enterpriseList;
-        this.defaultEnterprise = defaultEnterprise;
     }
 
     @Override
@@ -45,11 +45,16 @@ public class LoginSelectEnterpriseAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        TextView enterpriseText = new TextView(context);
+        enterpriseText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        enterpriseText.setSingleLine();
+        int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 36);
+        int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(), 21);
+        int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 12);
+        enterpriseText.setPadding(paddingLeft, paddingTop, paddingRight, paddingTop);
+        enterpriseText.setTextColor(Color.parseColor("#333333"));
         Enterprise enterprise = enterpriseList.get(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.mine_setting_enterprise_item_view, null);
-        TextView enterpriseText = (TextView)convertView.findViewById(R.id.enterprise_text);
         enterpriseText.setText(enterprise.getName());
-        convertView.findViewById(R.id.img).setVisibility(View.GONE);
-        return convertView;
+        return enterpriseText;
     }
 }

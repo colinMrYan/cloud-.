@@ -19,10 +19,10 @@ import com.inspur.emmcloud.R;
 
 public class FolderPopUpWindow extends PopupWindow implements View.OnClickListener {
 
-    private ListView listView;
-    private OnItemClickListener onItemClickListener;
     private final View masker;
     private final View marginView;
+    private ListView listView;
+    private OnItemClickListener onItemClickListener;
     private int marginPx;
 
     public FolderPopUpWindow(Context context, BaseAdapter adapter) {
@@ -61,7 +61,8 @@ public class FolderPopUpWindow extends PopupWindow implements View.OnClickListen
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (onItemClickListener != null) onItemClickListener.onItemClick(adapterView, view, position, l);
+                if (onItemClickListener != null)
+                    onItemClickListener.onItemClick(adapterView, view, position, l);
             }
         });
     }

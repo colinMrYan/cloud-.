@@ -15,18 +15,19 @@ public class MsgContentComment {
 
     private String text;
     private String tmpId;
-    private Map<String,String> mentionsMap = new HashMap<>();
+    private Map<String, String> mentionsMap = new HashMap<>();
     private String message;
-    public MsgContentComment(String content){
+
+    public MsgContentComment(String content) {
         JSONObject object = JSONUtils.getJSONObject(content);
-        text = JSONUtils.getString(object,"text","");
-        tmpId = JSONUtils.getString(object,"tmpId","");
+        text = JSONUtils.getString(object, "text", "");
+        tmpId = JSONUtils.getString(object, "tmpId", "");
         JSONObject mentionObj = JSONUtils.getJSONObject(object, "mentions", null);
         mentionsMap = JSONUtils.parseKeyAndValueToMap(mentionObj);
-        message= JSONUtils.getString(object,"message","");
+        message = JSONUtils.getString(object, "message", "");
     }
 
-    public MsgContentComment(){
+    public MsgContentComment() {
 
     }
 

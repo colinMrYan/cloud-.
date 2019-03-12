@@ -64,9 +64,9 @@ import java.util.TimerTask;
 
 @ContentView(R.layout.activity_webex_my_meeting)
 public class WebexMyMeetingActivity extends BaseActivity {
-    private final String webexAppPackageName = "com.cisco.webex.meetings";
     private static final int REQUEST_SCHEDULE_WEBEX_MEETING = 1;
     private static final int REQUEST_REMOVE_WEBEX_MEETING = 1;
+    private final String webexAppPackageName = "com.cisco.webex.meetings";
     @ViewInject(R.id.srl)
     private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.elv_meeting)
@@ -122,7 +122,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
         PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, installUri);
         loadingDlg = new LoadingDialog(this);
         setNoMeetingTipsText();
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -295,7 +295,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_back:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.iv_add_meeting:
@@ -322,6 +322,30 @@ public class WebexMyMeetingActivity extends BaseActivity {
                 webexMeetingList.remove(webexMeeting);
                 initData();
             }
+        }
+    }
+
+    public void getWxMeetingList(boolean isShowRefresh) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            if (isShowRefresh) {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+            apiService.getWebexMeetingList();
+        }
+    }
+
+    private void getWebexMeeting() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            apiService.getWebexMeeting(webexMeetingOpen.getMeetingID());
+        }
+    }
+
+    private void getWebexTK() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            apiService.getWebexTK();
+        } else {
+            LoadingDialog.dimissDlg(loadingDlg);
         }
     }
 
@@ -360,32 +384,6 @@ public class WebexMyMeetingActivity extends BaseActivity {
             }
         }
     }
-
-
-    public void getWxMeetingList(boolean isShowRefresh) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if (isShowRefresh) {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-            apiService.getWebexMeetingList();
-        }
-    }
-
-    private void getWebexMeeting() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            apiService.getWebexMeeting(webexMeetingOpen.getMeetingID());
-        }
-    }
-
-    private void getWebexTK() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            apiService.getWebexTK();
-        } else {
-            LoadingDialog.dimissDlg(loadingDlg);
-        }
-    }
-
 
     private class WebService extends APIInterfaceInstance {
         @Override

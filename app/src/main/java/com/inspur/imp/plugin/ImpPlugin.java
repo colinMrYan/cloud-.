@@ -56,7 +56,7 @@ public abstract class ImpPlugin implements IPlugin {
      * @param context
      * @param webview
      */
-    public void init(Context context, ImpWebView webview,ImpCallBackInterface impCallBackInterface) {
+    public void init(Context context, ImpWebView webview, ImpCallBackInterface impCallBackInterface) {
         this.context = context;
         this.webview = webview;
         this.impCallBackInterface = impCallBackInterface;
@@ -140,15 +140,15 @@ public abstract class ImpPlugin implements IPlugin {
 
     }
 
-    public ImpCallBackInterface getImpCallBackInterface(){
+    public ImpCallBackInterface getImpCallBackInterface() {
         return impCallBackInterface;
     }
 
-    public void showCallIMPMethodErrorDlg(){
-        if (impCallBackInterface != null){
+    public void showCallIMPMethodErrorDlg() {
+        if (impCallBackInterface != null) {
 //            impCallBackInterface.onShowImpDialog();
             //暂改为toast提示
-            ToastUtils.show(getFragmentContext(),R.string.imp_function_error);
+            ToastUtils.show(getFragmentContext(), R.string.imp_function_error);
         }
     }
 

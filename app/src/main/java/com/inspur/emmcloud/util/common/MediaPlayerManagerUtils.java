@@ -48,15 +48,6 @@ public class MediaPlayerManagerUtils {
     private AudioManager.OnAudioFocusChangeListener mAudioFocusChangeListener = null;
     private CommonCallBack wakeLockCallBack;//当视频播放完成时息屏需要释放
 
-    public static MediaPlayerManagerUtils getManager() {
-        if (mediaPlayerManagerUtils == null) {
-            synchronized (MediaPlayerManagerUtils.class) {
-                mediaPlayerManagerUtils = new MediaPlayerManagerUtils();
-            }
-        }
-        return mediaPlayerManagerUtils;
-    }
-
     private MediaPlayerManagerUtils() {
         this.context = MyApplication.getInstance();
         initMediaPlayer();
@@ -65,33 +56,33 @@ public class MediaPlayerManagerUtils {
         mAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
-                LogUtils.jasonDebug("focusChange="+focusChange);
+                LogUtils.jasonDebug("focusChange=" + focusChange);
                 switch (focusChange) {
                     case AudioManager.AUDIOFOCUS_GAIN:
                     case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
                     case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK:
-                        if (callback != null){
+                        if (callback != null) {
                             callback.onPrepared();
                         }
-                        if (!isPlaying()){
+                        if (!isPlaying()) {
                             mediaPlayer.start();
                         }
                         break;
 
                     case AudioManager.AUDIOFOCUS_LOSS:
                         //暂停操作
-                        if (isPlaying()){
+                        if (isPlaying()) {
                             stop();
-                            if (wakeLockCallBack != null){
+                            if (wakeLockCallBack != null) {
                                 wakeLockCallBack.execute();
                             }
                         }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         //暂停操作
-                        if (isPlaying()){
+                        if (isPlaying()) {
                             pause();
-                            if (wakeLockCallBack != null){
+                            if (wakeLockCallBack != null) {
                                 wakeLockCallBack.execute();
                             }
                         }
@@ -102,6 +93,15 @@ public class MediaPlayerManagerUtils {
             }
 
         };
+    }
+
+    public static MediaPlayerManagerUtils getManager() {
+        if (mediaPlayerManagerUtils == null) {
+            synchronized (MediaPlayerManagerUtils.class) {
+                mediaPlayerManagerUtils = new MediaPlayerManagerUtils();
+            }
+        }
+        return mediaPlayerManagerUtils;
     }
 
     /**
@@ -125,41 +125,22 @@ public class MediaPlayerManagerUtils {
     }
 
     /**
-     * 播放回调接口
-     */
-    public interface PlayCallback {
-
-        /**
-         * 音乐准备完毕
-         */
-        void onPrepared();
-
-        /**
-         * 音乐播放完成
-         */
-        void onComplete();
-
-        /**
-         * 音乐停止播放
-         */
-        void onStop();
-    }
-
-    /**
      * 播放音乐
-     * @param rawResId  raw目录下的文件id
+     *
+     * @param rawResId raw目录下的文件id
      * @param callback
      */
-    public void play(int rawResId,PlayCallback callback){
-        String rawFileUri = "android.resource://" + MyApplication.getInstance().getPackageName() + "/"+ rawResId;
-        play(rawFileUri,callback);
+    public void play(int rawResId, PlayCallback callback) {
+        String rawFileUri = "android.resource://" + MyApplication.getInstance().getPackageName() + "/" + rawResId;
+        play(rawFileUri, callback);
     }
 
     /**
      * 设置息屏释放监听
+     *
      * @param wakeLockCallBack
      */
-    public void setWakeLockReleaseListener(CommonCallBack wakeLockCallBack){
+    public void setWakeLockReleaseListener(CommonCallBack wakeLockCallBack) {
         this.wakeLockCallBack = wakeLockCallBack;
     }
 
@@ -174,14 +155,14 @@ public class MediaPlayerManagerUtils {
         this.path = path;
         this.callback = callback;
         try {
-            audioManager.requestAudioFocus(mAudioFocusChangeListener,AudioManager.STREAM_MUSIC,
+            audioManager.requestAudioFocus(mAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
             BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
             boolean isBluetoothConnected = !(BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET));
             //耳机模式下直接返回
-            if (isBluetoothConnected || MediaPlayerManagerUtils.getManager().getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET){
+            if (isBluetoothConnected || MediaPlayerManagerUtils.getManager().getCurrentMode() == MediaPlayerManagerUtils.MODE_HEADSET) {
                 changeToHeadsetMode();
-            }else {
+            } else {
                 changeToSpeakerMode();
             }
             mediaPlayer.reset();
@@ -190,7 +171,7 @@ public class MediaPlayerManagerUtils {
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    if (callback != null){
+                    if (callback != null) {
                         callback.onPrepared();
                     }
                     mediaPlayer.start();
@@ -199,16 +180,16 @@ public class MediaPlayerManagerUtils {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    if (callback != null){
+                    if (callback != null) {
                         callback.onComplete();
                     }
-                    if (wakeLockCallBack != null){
+                    if (wakeLockCallBack != null) {
                         wakeLockCallBack.execute();
                     }
-                    if(isLooping){
+                    if (isLooping) {
                         mediaPlayer.start();
                         mediaPlayer.setLooping(true);
-                    }else {
+                    } else {
                         resetPlayMode();
                         audioManager.abandonAudioFocus(mAudioFocusChangeListener);
                     }
@@ -218,7 +199,6 @@ public class MediaPlayerManagerUtils {
             e.printStackTrace();
         }
     }
-
 
     public boolean isPause() {
         return isPause;
@@ -266,11 +246,11 @@ public class MediaPlayerManagerUtils {
 
     }
 
-    public void changeToEarpieceModeNoStop(){
+    public void changeToEarpieceModeNoStop() {
         LogUtils.jasonDebug("changeToEarpieceModeNoStop---------------------");
         currentMode = MODE_EARPIECE;
         audioManager.setSpeakerphoneOn(false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         } else {
             audioManager.setMode(AudioManager.MODE_IN_CALL);
@@ -342,7 +322,7 @@ public class MediaPlayerManagerUtils {
         if (isPlaying()) {
             try {
                 mediaPlayer.stop();
-                if (callback != null){
+                if (callback != null) {
                     callback.onStop();
                 }
             } catch (IllegalStateException e) {
@@ -354,26 +334,29 @@ public class MediaPlayerManagerUtils {
 
     /**
      * 设置是否循环播放
+     *
      * @param looping
      */
-    public void setMediaPlayerLooping(boolean looping){
+    public void setMediaPlayerLooping(boolean looping) {
         isLooping = looping;
     }
 
     /**
      * 设置左右声道的音量
+     *
      * @param leftVolume
      * @param rightVolume
      */
-    public void setVolume(float leftVolume,float rightVolume){
-        mediaPlayer.setVolume(leftVolume,rightVolume);
+    public void setVolume(float leftVolume, float rightVolume) {
+        mediaPlayer.setVolume(leftVolume, rightVolume);
     }
 
     /**
      * 调到指定播放位置，以毫秒为单位
+     *
      * @param time
      */
-    public void setSeekTo(int time){
+    public void setSeekTo(int time) {
         mediaPlayer.seekTo(time);
     }
 
@@ -386,12 +369,34 @@ public class MediaPlayerManagerUtils {
         return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
-    /**是否正在播放某个文件
+    /**
+     * 是否正在播放某个文件
      *
      * @param path
      * @return
      */
-    public boolean isPlaying(String path){
-        return  isPlaying() && this.path.equals(path);
+    public boolean isPlaying(String path) {
+        return isPlaying() && this.path.equals(path);
+    }
+
+    /**
+     * 播放回调接口
+     */
+    public interface PlayCallback {
+
+        /**
+         * 音乐准备完毕
+         */
+        void onPrepared();
+
+        /**
+         * 音乐播放完成
+         */
+        void onComplete();
+
+        /**
+         * 音乐停止播放
+         */
+        void onStop();
     }
 }

@@ -9,60 +9,51 @@ import android.os.Bundle;
 
 public class IntentUtils {
 
-	/**
-	 * 
-	 *
-	 * @param context
-	 * @param clz
-	 */
-	public static void startActivity(Activity context, Class<?> clz) {
-		startActivity(context, clz, null, false);
-	}
+    /**
+     * @param context
+     * @param clz
+     */
+    public static void startActivity(Activity context, Class<?> clz) {
+        startActivity(context, clz, null, false);
+    }
 
-	/**
-	 * 
-	 *
-	 * @param context
-	 * @param clz
-	 */
-	public static void startActivity(Activity context, Class<?> clz,
-			boolean isFinishCurrentActivity) {
-		startActivity(context, clz, null, isFinishCurrentActivity);
-	}
+    /**
+     * @param context
+     * @param clz
+     */
+    public static void startActivity(Activity context, Class<?> clz,
+                                     boolean isFinishCurrentActivity) {
+        startActivity(context, clz, null, isFinishCurrentActivity);
+    }
 
-	/**
-	 * 
-	 *
-	 * @param context
-	 * @param clz
-	 * @param bundle
-	 */
-	public static void startActivity(Activity context, Class<?> clz,
-			Bundle bundle) {
-		startActivity(context, clz, bundle, false);
-	}
+    /**
+     * @param context
+     * @param clz
+     * @param bundle
+     */
+    public static void startActivity(Activity context, Class<?> clz,
+                                     Bundle bundle) {
+        startActivity(context, clz, bundle, false);
+    }
 
-	/**
-	 * 
-	 *
-	 * @param context
-	 * @param clz
-	 * @param bundle
-	 * @param isFinishCurrentActivity
-	 *            是否关闭当前Activity
-	 */
-	public static void startActivity(Activity context, Class<?> clz,
-			Bundle bundle, boolean isFinishCurrentActivity) {
-		Intent intent = new Intent();
-		intent.setClass(context, clz);
-		if (bundle != null) {
-			intent.putExtras(bundle);
-		}
-		context.startActivity(intent);
-		if (isFinishCurrentActivity) {
-			context.finish();
-		}
-	}
+    /**
+     * @param context
+     * @param clz
+     * @param bundle
+     * @param isFinishCurrentActivity 是否关闭当前Activity
+     */
+    public static void startActivity(Activity context, Class<?> clz,
+                                     Bundle bundle, boolean isFinishCurrentActivity) {
+        Intent intent = new Intent();
+        intent.setClass(context, clz);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        context.startActivity(intent);
+        if (isFinishCurrentActivity) {
+            context.finish();
+        }
+    }
 
 	public static void startActivity(Activity context,String scheme) {
 		try {

@@ -13,7 +13,7 @@ public class SimpleEventMessage {
         this.messageObj = messageObj;
     }
 
-    public SimpleEventMessage(String action){
+    public SimpleEventMessage(String action) {
         this.action = action;
     }
 

@@ -7,7 +7,7 @@ import org.xutils.db.annotation.Table;
 
 @Table(name = "WebPVCollect")
 public class PVCollectModel {
-    @Column(name = "id",isId = true)
+    @Column(name = "id", isId = true)
     private int id;
     @Column(name = "functionID")
     private String functionID = "";
@@ -30,13 +30,12 @@ public class PVCollectModel {
         return functionID;
     }
 
-    public String getFunctionType() {
-        return functionType;
-    }
-
-
     public void setFunctionID(String FunctionID) {
         this.functionID = FunctionID;
+    }
+
+    public String getFunctionType() {
+        return functionType;
     }
 
     public void setFunctionType(String FunctionType) {
@@ -48,13 +47,15 @@ public class PVCollectModel {
         this.collectTime = CollectTime;
     }
 
-    public JSONObject getObj(){
+    public JSONObject getObj() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("functionID",functionID);
-            obj.put("functionType",functionType);
-            obj.put("collectTime",collectTime);
-        }catch (Exception e){e.printStackTrace();}
-        return  obj;
+            obj.put("functionID", functionID);
+            obj.put("functionType", functionType);
+            obj.put("collectTime", collectTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 }

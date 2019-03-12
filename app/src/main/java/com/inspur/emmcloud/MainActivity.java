@@ -9,11 +9,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
@@ -24,7 +23,6 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -76,22 +74,18 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             finish();
             return;
         }
-        //当Android版本在4.4以下时不全屏显示，否则在进入IndexActivity时状态栏过度不美观
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-                //全屏显示
-                WindowManager.LayoutParams lp = getWindow().getAttributes();
-                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-                getWindow().setAttributes(lp);
-            }
-        }
         setContentView(R.layout.activity_main);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setNavigationBarColor(ContextCompat.getColor(MyApplication.getInstance(),android.R.color.white));
+        }
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
-
+        //        AlertDialog alertDialog = null;
+//        AlertDialog.Builder builder= new AlertDialog.Builder(this,R.style.Theme_AppCompat_Light_Dialog_Alert);
+//        builder.setTitle("我是title").setMessage("我是message").setPositiveButton("确定",null).setNegativeButton("取消",null).setNeutralButton("其他",null);
+//        alertDialog =  builder.create();
+//        alertDialog.show();
     }
 
     private void checkNecessaryPermission() {
@@ -103,13 +97,16 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             permissionDialog.setCanceledOnTouchOutside(false);
             permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE) ? View.VISIBLE : View.GONE);
             permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION) ? View.VISIBLE : View.GONE);
-            if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
-                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION)) {
-                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
-                layout.setLayoutParams(params);
+            if(AppUtils.getIsHuaWei() && (android.os.Build.VERSION.SDK_INT == 28)){
+                permissionDialog.findViewById(R.id.ll_permission_call_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.CALL_PHONE) ? View.VISIBLE : View.GONE);
             }
+//            if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
+//                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION)) {
+//                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
+//                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+//                params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
+//                layout.setLayoutParams(params);
+//            }
             ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
             ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
             permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
@@ -330,6 +327,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 public void run() {
                     String accessToken = PreferencesUtils.getString(MainActivity.this,
                             "accessToken", "");
+                    MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                     IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
                             IndexActivity.class : LoginActivity.class, true);
                 }

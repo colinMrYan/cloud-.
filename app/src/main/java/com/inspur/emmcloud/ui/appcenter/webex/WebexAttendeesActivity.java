@@ -27,14 +27,14 @@ public class WebexAttendeesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        List<WebexAttendees> webexAttendeesList = (List<WebexAttendees>)getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
-        attendeesListView.setAdapter(new WebexAttendeesAdapter(this,webexAttendeesList));
+        List<WebexAttendees> webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
+        attendeesListView.setAdapter(new WebexAttendeesAdapter(this, webexAttendeesList));
 
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
-            case R.id.rl_back:
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ibt_back:
                 finish();
                 break;
         }

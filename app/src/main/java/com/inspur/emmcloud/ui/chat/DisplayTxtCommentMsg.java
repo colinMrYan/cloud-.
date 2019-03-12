@@ -32,13 +32,14 @@ public class DisplayTxtCommentMsg {
 
     /**
      * 评论卡片
+     *
      * @param context
      * @param childView
      * @param msg
      * @param apiService
      */
     public static View displayCommentMsg(final Activity context,
-                                          final Msg msg, ChatAPIService apiService) {
+                                         final Msg msg, ChatAPIService apiService) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_comment_view, null);
         String msgBody = msg.getBody();
@@ -48,16 +49,16 @@ public class DisplayTxtCommentMsg {
         TextView commentTitleText = (TextView) cardContentView
                 .findViewById(R.id.comment_title_text);
         BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
-        cardLayout.setArrowDirection(isMyMsg? ArrowDirection.RIGHT:ArrowDirection.LEFT);
-        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.white));
-        cardLayout.setStrokeWidth(isMyMsg ?0: 0.5f);
+        cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
+        cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
+        cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
         SpannableString spannableString = MentionsAndUrlShowUtils.getMsgContentSpannableString(msgBody);
         commentContentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 commentContentText,
                 context.getResources().getColor(
                         isMyMsg ? R.color.hightlight_in_blue_bg
-                                : R.color.header_bg));
+                                : R.color.header_bg_blue));
         // 取出评论消息的id
         Msg commentedMsg = MsgCacheUtil.getCacheMsg(context,
                 msg.getCommentMid());
@@ -77,6 +78,7 @@ public class DisplayTxtCommentMsg {
 
     /**
      * 评论消息的详情
+     *
      * @param context
      * @param commentedMsg
      * @param commentTitleText
@@ -113,7 +115,7 @@ public class DisplayTxtCommentMsg {
         style.setSpan(
                 new ForegroundColorSpan(context.getResources().getColor(
                         isMyMsg ? R.color.hightlight_in_blue_bg
-                                : R.color.header_bg)), fstart, fend,
+                                : R.color.header_bg_blue)), fstart, fend,
                 Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         commentTitleText.setText(style);
     }

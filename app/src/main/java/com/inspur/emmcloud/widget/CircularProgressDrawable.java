@@ -17,7 +17,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 public class CircularProgressDrawable extends Drawable implements Animatable {
-    
+
     /**
      * 绘制圆弧起始位置角度的动画，这样该圆弧是打圈转的动画
      */
@@ -63,6 +63,28 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
     private float mCurrentSweepAngle;
     private float mBorderWidth;
     private boolean mRunning;
+    private Property<CircularProgressDrawable, Float> mAngleProperty = new Property<CircularProgressDrawable, Float>(Float.class, "angle") {
+        @Override
+        public Float get(CircularProgressDrawable object) {
+            return object.getCurrentGlobalAngle();
+        }
+
+        @Override
+        public void set(CircularProgressDrawable object, Float value) {
+            object.setCurrentGlobalAngle(value);
+        }
+    };
+    private Property<CircularProgressDrawable, Float> mSweepProperty = new Property<CircularProgressDrawable, Float>(Float.class, "arc") {
+        @Override
+        public Float get(CircularProgressDrawable object) {
+            return object.getCurrentSweepAngle();
+        }
+
+        @Override
+        public void set(CircularProgressDrawable object, Float value) {
+            object.setCurrentSweepAngle(value);
+        }
+    };
 
     public CircularProgressDrawable(int color, float borderWidth) {
         mBorderWidth = borderWidth;
@@ -104,6 +126,9 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         return PixelFormat.TRANSPARENT;
     }
 
+    // ////////////////////////////////////////////////////////////////////////////
+    // ////////////// Animation
+
     private void toggleAppearingMode() {
         mModeAppearing = !mModeAppearing;
         if (mModeAppearing) {
@@ -119,33 +144,6 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         fBounds.top = bounds.top + mBorderWidth / 2f + .5f;
         fBounds.bottom = bounds.bottom - mBorderWidth / 2f - .5f;
     }
-
-    // ////////////////////////////////////////////////////////////////////////////
-    // ////////////// Animation
-
-    private Property<CircularProgressDrawable, Float> mAngleProperty = new Property<CircularProgressDrawable, Float>(Float.class, "angle") {
-        @Override
-        public Float get(CircularProgressDrawable object) {
-            return object.getCurrentGlobalAngle();
-        }
-
-        @Override
-        public void set(CircularProgressDrawable object, Float value) {
-            object.setCurrentGlobalAngle(value);
-        }
-    };
-
-    private Property<CircularProgressDrawable, Float> mSweepProperty = new Property<CircularProgressDrawable, Float>(Float.class, "arc") {
-        @Override
-        public Float get(CircularProgressDrawable object) {
-            return object.getCurrentSweepAngle();
-        }
-
-        @Override
-        public void set(CircularProgressDrawable object, Float value) {
-            object.setCurrentSweepAngle(value);
-        }
-    };
 
     private void setupAnimations() {
         mObjectAnimatorAngle = ObjectAnimator.ofFloat(this, mAngleProperty, 360f);
@@ -211,22 +209,22 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         return mRunning;
     }
 
+    public float getCurrentGlobalAngle() {
+        return mCurrentGlobalAngle;
+    }
+
     public void setCurrentGlobalAngle(float currentGlobalAngle) {
         mCurrentGlobalAngle = currentGlobalAngle;
         invalidateSelf();
     }
 
-    public float getCurrentGlobalAngle() {
-        return mCurrentGlobalAngle;
+    public float getCurrentSweepAngle() {
+        return mCurrentSweepAngle;
     }
 
     public void setCurrentSweepAngle(float currentSweepAngle) {
         mCurrentSweepAngle = currentSweepAngle;
         invalidateSelf();
-    }
-
-    public float getCurrentSweepAngle() {
-        return mCurrentSweepAngle;
     }
 
 }

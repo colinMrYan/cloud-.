@@ -67,13 +67,9 @@ public class Message implements Serializable {
         type = JSONUtils.getString(dataObj, "type", "");
         state = JSONUtils.getString(dataObj, "state", "");
         content = JSONUtils.getString(dataObj, "content", "");
-        tmpId = JSONUtils.getString(content,"tmpId","");
+        tmpId = JSONUtils.getString(content, "tmpId", "");
         channel = msg.getCid();
         creationDate = msg.getTime();
-    }
-
-    public static boolean isMessage(Msg msg) {
-        return msg.getBody().contains("\\\"message\\\":\\\"1.0\\\"");
     }
 
     public Message(JSONObject obj) {
@@ -85,14 +81,18 @@ public class Message implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
-        tmpId = JSONUtils.getString(content,"tmpId","");
+        tmpId = JSONUtils.getString(content, "tmpId", "");
         String UTCTime = JSONUtils.getString(obj, "creationDate", "");
         creationDate = TimeUtils.UTCString2Long(UTCTime);
         boolean readState = JSONUtils.getBoolean(obj, "read", false);
         if (!readState && getFromUser().equals(MyApplication.getInstance().getUid())) {
             readState = true;
         }
-        read = readState?1:0;
+        read = readState ? 1 : 0;
+    }
+
+    public static boolean isMessage(Msg msg) {
+        return msg.getBody().contains("\\\"message\\\":\\\"1.0\\\"");
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
@@ -242,8 +242,8 @@ public class Message implements Serializable {
     }
 
     /*
-                     * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-                     */
+                         * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+                         */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

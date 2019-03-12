@@ -2,6 +2,7 @@ package com.inspur.reactnative;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Promise;
@@ -20,9 +21,18 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResultWithoutSerializable;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.inspur.reactnative.bean.AlertButton;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -119,6 +129,40 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 
     }
 
+    @ReactMethod
+    public void alertDialog(String title,String content,String buttonJson,final Promise promise){
+        MyQMUIDialog.MessageDialogBuilder messageDialogBuilder = new MyQMUIDialog.MessageDialogBuilder(getCurrentActivity());
+       if (!StringUtils.isBlank(title)){
+           messageDialogBuilder.setTitle(title);
+       }
+        if (!StringUtils.isBlank(content)){
+            messageDialogBuilder.setMessage(content);
+        }
+        JSONArray array = JSONUtils.getJSONArray(buttonJson,new JSONArray());
+        for (int i=0;i<array.length();i++){
+            final AlertButton alertButton = new AlertButton(JSONUtils.getJSONObject(array,i,new JSONObject()));
+            messageDialogBuilder.addAction(alertButton.getText(),new QMUIDialogAction.ActionListener(){
+                @Override
+                public void onClick(QMUIDialog dialog, int i) {
+                    dialog.dismiss();
+                    try {
+                        promise.resolve(alertButton.getCode());
+                    } catch (Exception e) {
+                        promise.reject(e);
+                    }
+                }
+            });
+        }
+        messageDialogBuilder.show();
+
+    }
+
+    @ReactMethod
+    public void showToast(String content,Promise promise){
+        ToastUtils.show(MyApplication.getInstance(),content, Toast.LENGTH_LONG);
+    }
+
+
     /**
      * 通讯录选人
      *
@@ -180,7 +224,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
                     List<ContactUser> contactUserList = ContactUserCacheUtils.getSoreUserList(uidList);
                     if (multi) {
                         WritableNativeArray writableNativeArray = new WritableNativeArray();
-                        for (ContactUser contactUser:contactUserList) {
+                        for (ContactUser contactUser : contactUserList) {
                             WritableNativeMap map = contactUser2Map(contactUser);
                             writableNativeArray.pushMap(map);
                         }
@@ -229,13 +273,13 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         WritableNativeMap map = new WritableNativeMap();
         try {
             map.putString("inspur_id", contactUser.getId());
-         //   map.putString("code", code);
+            //   map.putString("code", code);
             map.putString("real_name", contactUser.getName());
             map.putString("pinyin", contactUser.getPinyin());
             map.putString("mobile", contactUser.getMobile());
             map.putString("email", contactUser.getEmail());
-         //   map.putString("org_name", orgName);
-          //  map.putString("type", type);
+            //   map.putString("org_name", orgName);
+            //  map.putString("type", type);
             map.putString("head", APIUri.getUserIconUrl(MyApplication.getInstance(), contactUser.getId()));
         } catch (Exception e) {
             e.printStackTrace();

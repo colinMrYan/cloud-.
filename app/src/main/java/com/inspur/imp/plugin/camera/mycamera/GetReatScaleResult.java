@@ -16,10 +16,10 @@ public class GetReatScaleResult {
 
     private List<RectScale> rectScaleList = new ArrayList<>();
 
-    public GetReatScaleResult(String  reatScaleLsitJson){
-        JSONArray array = JSONUtils.getJSONArray(reatScaleLsitJson,new JSONArray());
-        for (int i=0;i<array.length();i++){
-            JSONObject object = JSONUtils.getJSONObject(array,i,new JSONObject());
+    public GetReatScaleResult(String reatScaleLsitJson) {
+        JSONArray array = JSONUtils.getJSONArray(reatScaleLsitJson, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
             RectScale rectScale = new RectScale(object);
             rectScaleList.add(rectScale);
         }

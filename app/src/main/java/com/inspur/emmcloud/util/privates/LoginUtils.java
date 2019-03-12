@@ -38,20 +38,20 @@ public class LoginUtils extends APIInterfaceInstance {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_LANGUAGE_SUCCESS = 3;
-    private  LoginAPIService apiServices;
+    private LoginAPIService apiServices;
     private Activity activity;
     private Handler handler;
     private boolean isSMSLogin = false;
     private Handler loginUtilsHandler;
     private LanguageUtils languageUtils;
     private GetLoginResult getLoginResult;
-    private LoadingDialog loadingDialog;
+    private LoadingDialog loadingDlg;
     private boolean isLogin = false;  //标记是登录界面(包括手机验证码登录界面)调用
 
     public LoginUtils(Activity activity, Handler handler) {
         this.handler = handler;
         this.activity = activity;
-        loadingDialog = new LoadingDialog(activity);
+        loadingDlg = new LoadingDialog(activity);
         apiServices = new LoginAPIService(activity);
         apiServices.setAPIInterface(LoginUtils.this);
         handMessage();
@@ -73,14 +73,14 @@ public class LoginUtils extends APIInterfaceInstance {
                         startMDM();
                         break;
                     case LOGIN_SUCCESS:
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
+                        if (loadingDlg != null && loadingDlg.isShowing()) {
+                            loadingDlg.dismiss();
                         }
                         handler.sendEmptyMessage(LOGIN_SUCCESS);
                         break;
                     case LOGIN_FAIL:
-                        if (loadingDialog != null && loadingDialog.isShowing()) {
-                            loadingDialog.dismiss();
+                        if (loadingDlg != null && loadingDlg.isShowing()) {
+                            loadingDlg.dismiss();
                         }
                         handler.sendEmptyMessage(LOGIN_FAIL);
                         break;
@@ -97,28 +97,27 @@ public class LoginUtils extends APIInterfaceInstance {
         // TODO Auto-generated method stub
         String userName = PreferencesUtils.getString(activity, "userRealName",
                 "");
-        String tanentId = ((MyApplication) activity.getApplicationContext()).getCurrentEnterprise().getId();
-        String userCode = ((MyApplication) activity.getApplicationContext())
-                .getUid();
+        String tanentId = MyApplication.getInstance().getCurrentEnterprise().getId();
+        String userCode = MyApplication.getInstance().getUid();
         final MDM mdm = new MDM(activity, tanentId, userCode, userName);
         mdm.addOnMDMListener(new MDMListener() {
-
             @Override
             public void MDMStatusPass(int doubleValidation) {
                 // TODO Auto-generated method stub
-                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION,doubleValidation);
+                PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, doubleValidation);
                 PreferencesUtils.putBoolean(activity, "isMDMStatusPass", true);
                 saveLoginInfo();
                 loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
                 mdm.destroyOnMDMListener();
             }
 
+
             @Override
             public void MDMStatusNoPass() {
                 // TODO Auto-generated method stub
                 clearLoginInfo();
                 //当设备因为设备管理无法进入时，把记住选择企业选项情况，让用户重新选择企业进入
-                PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
+                PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                 loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
                 mdm.destroyOnMDMListener();
             }
@@ -126,8 +125,8 @@ public class LoginUtils extends APIInterfaceInstance {
             @Override
             public void dimissExternalLoadingDlg() {
                 // TODO Auto-generated method stub
-                if (loadingDialog != null && loadingDialog.isShowing()) {
-                    loadingDialog.dismiss();
+                if (loadingDlg != null && loadingDlg.isShowing()) {
+                    loadingDlg.dismiss();
                 }
             }
         });
@@ -138,7 +137,7 @@ public class LoginUtils extends APIInterfaceInstance {
     public void login(String userName, String password) {
         isLogin = true;
         if (NetUtils.isNetworkConnected(activity)) {
-            loadingDialog.show();
+            loadingDlg.show();
             clearLoginInfo();
             apiServices.OauthSignin(userName, password);
         } else {
@@ -234,13 +233,13 @@ public class LoginUtils extends APIInterfaceInstance {
      * @param enterpriseList
      * @param defaultEnterprise
      */
-    private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList, Enterprise defaultEnterprise) {
+    private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList) {
         final MyDialog myDialog = new MyDialog(activity, R.layout.dialog_login_select_tanent);
-        final SwitchView switchView = (SwitchView) myDialog.findViewById(R.id.auto_select_switch);
+        final SwitchView switchView = myDialog.findViewById(R.id.auto_select_switch);
         switchView.setOpened(true);
-        MaxHightListView enterpriseListView = (MaxHightListView) myDialog.findViewById(R.id.enterprise_list);
+        MaxHightListView enterpriseListView = myDialog.findViewById(R.id.enterprise_list);
         enterpriseListView.setMaxHeight(DensityUtil.dip2px(activity, 180));
-        enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList, defaultEnterprise));
+        enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList));
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -250,7 +249,7 @@ public class LoginUtils extends APIInterfaceInstance {
                 PreferencesByUsersUtils.putString(activity, Constant.PREF_CURRENT_ENTERPRISE_ID, enterpriseId);
                 myDialog.dismiss();
                 MyApplication.getInstance().initTanent();
-                loadingDialog.show();
+                loadingDlg.show();
                 getServerSupportLanguage();
             }
         });
@@ -265,10 +264,8 @@ public class LoginUtils extends APIInterfaceInstance {
         this.getLoginResult = getLoginResult;
         String accessToken = getLoginResult.getAccessToken();
         String refreshToken = getLoginResult.getRefreshToken();
-        ((MyApplication) activity.getApplicationContext())
-                .setAccessToken(accessToken);
-        ((MyApplication) activity.getApplicationContext())
-                .setRefreshToken(refreshToken);
+        MyApplication.getInstance().setAccessToken(accessToken);
+        MyApplication.getInstance().setRefreshToken(refreshToken);
         getMyInfo();
     }
 
@@ -292,26 +289,24 @@ public class LoginUtils extends APIInterfaceInstance {
         PreferencesUtils.putString(activity, "userRealName", name);
         PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
         PreferencesUtils.putString(activity, "myInfo", myInfo);
-        PreferencesUtils.putBoolean(activity, "hasPassword",
+        PreferencesUtils.putBoolean(activity, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,
                 getMyInfoResult.getHasPassord());
         ((MyApplication) activity.getApplicationContext())
                 .setUid(getMyInfoResult.getID());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-        if (enterpriseList.size() == 0 && defaultEnterprise == null){
-            ToastUtils.show(activity,  R.string.login_user_not_bound_enterprise);
+        if (enterpriseList.size() == 0 && defaultEnterprise == null) {
+            ToastUtils.show(activity, R.string.login_user_not_bound_enterprise);
             MyApplication.getInstance().setAccessToken("");
             PreferencesUtils.putString(MyApplication.getInstance(), "accessToken", "");
             loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
-        }else {
+        } else {
             if (isLogin && enterpriseList.size() > 1) {
                 String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                 //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面
                 if (StringUtils.isBlank(selectLoginEnterpriseId) || !isEnterpriseIdValid(enterpriseList, selectLoginEnterpriseId)) {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                    showSelectEnterpriseDlg(enterpriseList, defaultEnterprise);
+                    LoadingDialog.dimissDlg(loadingDlg);
+                    showSelectEnterpriseDlg(enterpriseList);
                     return;
                 }
             }

@@ -15,12 +15,14 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.io.Serializable;
 import java.util.List;
@@ -37,45 +39,53 @@ public class DisplayMediaImageMsg {
      * @param context
      */
     public static View getView(final Activity context,
-                                        final UIMessage uiMessage) {
+                               final UIMessage uiMessage) {
         final Message message = uiMessage.getMessage();
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_img_view, null);
         final RoundedImageView imageView = (RoundedImageView) cardContentView
                 .findViewById(R.id.content_img);
         final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
+        final QMUILoadingView loadingView = cardContentView.findViewById(R.id.qlv_downloading_left);
         MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
         String imageUri = msgContentMediaImage.getRawMedia();
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.icon_photo_default)
-                .showImageOnFail(R.drawable.icon_photo_default)
-                .showImageOnLoading(R.drawable.icon_photo_default)
+                .showImageForEmptyUri(R.drawable.ic_chat_img_bg)
+                .showImageOnFail(R.drawable.ic_chat_img_bg)
+                .showImageOnLoading(R.drawable.ic_chat_img_bg)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();
         if (!imageUri.startsWith("http") && !imageUri.startsWith("file:") && !imageUri.startsWith("content:") && !imageUri.startsWith("assets:") && !imageUri.startsWith("drawable:")) {
-            if (uiMessage.getSendStatus() == 1){
-                imageUri = APIUri.getChatFileResouceUrl(message.getChannel(),imageUri);
-            }else {
+            if (uiMessage.getSendStatus() == 1) {
+                imageUri = APIUri.getChatFileResouceUrl(message.getChannel(), imageUri);
+            } else {
                 imageUri = "file://" + imageUri;
             }
 
         }
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
-        final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w,h);
-		ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener(){
-			@Override
-			public void onLoadingComplete(String imageUri, View view,
-					Bitmap loadedImage) {
-				FadeInBitmapDisplayer.animate(imageView, 800);
-                if (!isHasSetImageViewSize){
-                    int w = loadedImage.getWidth();
-                    int h = loadedImage.getHeight();
-                    setImgViewSize(context, imageView, longImgText, w,h);
+        final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
+        ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                super.onLoadingStarted(imageUri, view);
+                loadingView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view,
+                                          Bitmap loadedImage) {
+                FadeInBitmapDisplayer.animate(imageView, 800);
+                int w = loadedImage.getWidth();
+                int h = loadedImage.getHeight();
+                if (!isHasSetImageViewSize) {
+                    setImgViewSize(context, imageView, longImgText, w, h);
                 }
-			}
-		});
+                loadingView.setVisibility(View.GONE);
+            }
+        });
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +102,7 @@ public class DisplayMediaImageMsg {
                         ImagePagerActivity.class);
                 List<Message> imgTypeMsgList = MessageCacheUtil.getImgTypeMessageList(context, uiMessage.getMessage().getChannel(), false);
                 intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG,  uiMessage.getMessage());
+                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, uiMessage.getMessage());
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
@@ -106,6 +116,7 @@ public class DisplayMediaImageMsg {
 
     /**
      * 设置imageView的尺寸
+     *
      * @param context
      * @param imageView
      * @param longImgText
@@ -113,7 +124,7 @@ public class DisplayMediaImageMsg {
      * @param h
      * @return
      */
-    private static boolean setImgViewSize(Activity context, ImageView imageView, TextView longImgText, int w,int h) {
+    private static boolean setImgViewSize(Activity context, ImageView imageView, TextView longImgText, int w, int h) {
         if (w == 0 || h == 0) {
             return false;
         }
@@ -146,4 +157,5 @@ public class DisplayMediaImageMsg {
         imageView.setLayoutParams(params);
         return true;
     }
+
 }

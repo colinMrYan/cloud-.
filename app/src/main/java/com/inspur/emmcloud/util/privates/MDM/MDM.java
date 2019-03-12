@@ -27,14 +27,13 @@ public class MDM extends APIInterfaceInstance {
     private static final int STATUS_WAITING_VERIFY = 3;
     private static final int STATUS_REVIEW_REJECT = 4;
     private static final int STATUS_IN_BLACKLIST = 5;
-
+    private static MDMListener mdmListener;
     private Activity context;
     private GetDeviceCheckResult getDeviceCheckResult;
     private String tanentId;
     private String userCode;
     private String userName;
     private ArrayList<String> requireFieldList;
-    private static MDMListener mdmListener;
 
     public MDM() {
 

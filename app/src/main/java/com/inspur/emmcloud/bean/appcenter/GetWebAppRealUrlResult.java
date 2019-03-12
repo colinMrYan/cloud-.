@@ -7,9 +7,10 @@ import com.inspur.emmcloud.util.common.JSONUtils;
  */
 
 public class GetWebAppRealUrlResult {
-    private String url= "";
-    public GetWebAppRealUrlResult(String response){
-        url = JSONUtils.getString(response,"uri","");
+    private String url = "";
+
+    public GetWebAppRealUrlResult(String response) {
+        url = JSONUtils.getString(response, "uri", "");
 
     }
 

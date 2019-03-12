@@ -5,9 +5,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 
-import com.jakewharton.disklrucache.DiskLruCache;
 import com.inspur.emmcloud.util.common.richtext.ImageHolder;
 import com.inspur.emmcloud.util.common.richtext.ext.Debug;
+import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -45,40 +45,6 @@ class BitmapWrapper {
         this.sizeCacheHolder = new SizeCacheHolder(name, rect, scaleType, borderHolder);
     }
 
-    public int size() {
-        return bitmap == null ? 0 : bitmap.getRowBytes() * bitmap.getHeight() + 100;
-    }
-
-    void save() {
-
-        DiskLruCache diskLruCache = getDiskLruCache();
-
-        if (diskLruCache != null) {
-            try {
-                DiskLruCache.Editor edit = diskLruCache.edit(name);
-
-                // write size
-                OutputStream sizeOutputStream = edit.newOutputStream(0);
-                sizeCacheHolder.save(sizeOutputStream);
-
-                // write bitmap
-                OutputStream bitmapOutputStream = edit.newOutputStream(1);
-                writeBoolean(bitmapOutputStream, bitmap != null);
-                if (bitmap != null) {
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bitmapOutputStream);
-                }
-                bitmapOutputStream.flush();
-                bitmapOutputStream.close();
-                // write bitmap
-
-                edit.commit();
-            } catch (IOException e) {
-                Debug.e(e);
-            }
-        }
-
-    }
-
     static int exist(String name) {
 
         DiskLruCache diskLruCache = getDiskLruCache();
@@ -99,7 +65,6 @@ class BitmapWrapper {
 
         return -1;
     }
-
 
     static BitmapWrapper read(String name, boolean readBitmap) {
 
@@ -167,7 +132,6 @@ class BitmapWrapper {
         return BitmapFactory.decodeStream(bufferedInputStream, null, options);
     }
 
-
     private static File checkRichText(File dir) {
         File cacheDir = new File(dir, RICH_TEXT_DIR_NAME);
         if (!cacheDir.exists()) {
@@ -200,18 +164,6 @@ class BitmapWrapper {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    SizeCacheHolder getSizeCacheHolder() {
-        return sizeCacheHolder;
-    }
-
     private static void writeBoolean(OutputStream stream, boolean b) throws IOException {
         stream.write(b ? 1 : 0);
     }
@@ -239,7 +191,6 @@ class BitmapWrapper {
         return Float.intBitsToFloat(readInt(stream));
     }
 
-
     private static byte[] int2byte(int res) {
         byte[] targets = new byte[4];
 
@@ -255,6 +206,52 @@ class BitmapWrapper {
                 | ((res[2] << 24) >>> 8) | (res[3] << 24);
     }
 
+    public int size() {
+        return bitmap == null ? 0 : bitmap.getRowBytes() * bitmap.getHeight() + 100;
+    }
+
+    void save() {
+
+        DiskLruCache diskLruCache = getDiskLruCache();
+
+        if (diskLruCache != null) {
+            try {
+                DiskLruCache.Editor edit = diskLruCache.edit(name);
+
+                // write size
+                OutputStream sizeOutputStream = edit.newOutputStream(0);
+                sizeCacheHolder.save(sizeOutputStream);
+
+                // write bitmap
+                OutputStream bitmapOutputStream = edit.newOutputStream(1);
+                writeBoolean(bitmapOutputStream, bitmap != null);
+                if (bitmap != null) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bitmapOutputStream);
+                }
+                bitmapOutputStream.flush();
+                bitmapOutputStream.close();
+                // write bitmap
+
+                edit.commit();
+            } catch (IOException e) {
+                Debug.e(e);
+            }
+        }
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    SizeCacheHolder getSizeCacheHolder() {
+        return sizeCacheHolder;
+    }
+
     static class SizeCacheHolder {
 
         Rect rect;
@@ -268,24 +265,6 @@ class BitmapWrapper {
             this.scaleType = scaleType;
             this.name = name;
             this.borderHolder = borderHolder;
-        }
-
-        private void save(OutputStream fos) {
-            try {
-                writeInt(fos, rect.left);
-                writeInt(fos, rect.top);
-                writeInt(fos, rect.right);
-                writeInt(fos, rect.bottom);
-                writeInt(fos, scaleType);
-                writeBoolean(fos, borderHolder.isShowBorder());
-                writeInt(fos, borderHolder.getBorderColor());
-                writeFloat(fos, borderHolder.getBorderSize());
-                writeFloat(fos, borderHolder.getRadius());
-                fos.flush();
-                fos.close();
-            } catch (IOException e) {
-                Debug.e(e);
-            }
         }
 
         private static SizeCacheHolder read(InputStream fis, String name) {
@@ -309,7 +288,6 @@ class BitmapWrapper {
             return null;
         }
 
-
         @ImageHolder.ScaleType
         private static int getScaleType(int value) {
             switch (value) {
@@ -331,6 +309,24 @@ class BitmapWrapper {
                     return ImageHolder.ScaleType.FIT_AUTO;
                 default:
                     return ImageHolder.ScaleType.NONE;
+            }
+        }
+
+        private void save(OutputStream fos) {
+            try {
+                writeInt(fos, rect.left);
+                writeInt(fos, rect.top);
+                writeInt(fos, rect.right);
+                writeInt(fos, rect.bottom);
+                writeInt(fos, scaleType);
+                writeBoolean(fos, borderHolder.isShowBorder());
+                writeInt(fos, borderHolder.getBorderColor());
+                writeFloat(fos, borderHolder.getBorderSize());
+                writeFloat(fos, borderHolder.getRadius());
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                Debug.e(e);
             }
         }
     }

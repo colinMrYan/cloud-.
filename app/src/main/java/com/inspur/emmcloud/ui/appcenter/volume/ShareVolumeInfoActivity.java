@@ -52,35 +52,28 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     private static final int ADD_MEMBER = 1;
     private static final int DEL_MEMBER = 2;
     private static final int UPDATE_VOLUME_NAME = 3;
+    private static final int VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION = 0;
+    private static final int VOLUME_HAS_WATCH_PERMISSION = 1;
     private Volume volume;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
     private VolumeDetail volumeDetail;
-
     @ViewInject(R.id.gv_member)
     private NoScrollGridView memberGrid;
-
     @ViewInject(R.id.volume_member_text)
     private TextView volumeMemberText;
-
     @ViewInject(R.id.volume_name_text)
     private TextView volumeNameText;
-
     @ViewInject(R.id.slv_write_group)
     private ScrollViewWithListView groupWriteListView;
-
     @ViewInject(R.id.slv_read_group)
     private ScrollViewWithListView groupReadListView;
-
     @ViewInject(R.id.img_volume_name_arrow)
     private ImageView volumeNameArrowImg;
-
     @ViewInject(R.id.ll_write_group)
     private LinearLayout groupWriteLayout;
-
     @ViewInject(R.id.ll_group_watch)
     private LinearLayout groupReadLayout;
-
     private VolumeInfoMemberAdapter memberAdapter;
     private VolumeInfoGroupAdapter groupWriteAdapter;
     private VolumeInfoGroupAdapter groupReadAdapter;
@@ -88,8 +81,10 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     private boolean isVolumeNameUpdate = false;
     private BroadcastReceiver receiver;
 
-    private static final int VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION = 0;
-    private static final int VOLUME_HAS_WATCH_PERMISSION = 1;
+    public static void notifyVolumeInfoUpdate(Context context) {
+        Intent intent = new Intent(Constant.ACTION_VOLUME_INFO_UPDATE);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,21 +110,15 @@ public class ShareVolumeInfoActivity extends BaseActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 
-    public static void notifyVolumeInfoUpdate(Context context){
-        Intent intent = new Intent(Constant.ACTION_VOLUME_INFO_UPDATE);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-    }
-
-
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_layout:
+            case R.id.ibt_back:
                 onBackPressed();
                 break;
             case R.id.volume_member_layout:
                 Bundle bundle = new Bundle();
                 bundle.putString("title", getString(R.string.clouddriver_volume_member));
-                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
+                bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
                 bundle.putStringArrayList("uidList", volumeDetail.getMemberUidList());
                 IntentUtils.startActivity(ShareVolumeInfoActivity.this,
                         MembersActivity.class, bundle);
@@ -148,25 +137,25 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
     private void showVolumeDetail() {
         if (isOwner) {
-            if(volumeDetail.getGroupWriteList().size() > 0){
+            if (volumeDetail.getGroupWriteList().size() > 0) {
                 groupWriteLayout.setVisibility(View.VISIBLE);
                 groupWriteAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupWriteList());
                 groupWriteListView.setAdapter(groupWriteAdapter);
                 groupWriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        openMemberDetail(position,VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION);
+                        openMemberDetail(position, VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION);
                     }
                 });
             }
-            if(volumeDetail.getGroupReadList().size() > 0){
+            if (volumeDetail.getGroupReadList().size() > 0) {
                 groupReadLayout.setVisibility(View.VISIBLE);
-                groupReadAdapter = new VolumeInfoGroupAdapter(getApplicationContext(),volumeDetail.getGroupReadList());
+                groupReadAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupReadList());
                 groupReadListView.setAdapter(groupReadAdapter);
                 groupReadListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        openMemberDetail(position,VOLUME_HAS_WATCH_PERMISSION);
+                        openMemberDetail(position, VOLUME_HAS_WATCH_PERMISSION);
                     }
                 });
             }
@@ -208,21 +197,21 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     /**
      * 打开详细成员列表
      */
-    private void openMemberDetail(int position,int type) {
+    private void openMemberDetail(int position, int type) {
         Group group = null;
-        if(type == VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION){
+        if (type == VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION) {
             group = volumeDetail.getGroupWriteList().get(position);
-        }else{
+        } else {
             group = volumeDetail.getGroupReadList().get(position);
         }
         Bundle bundle = new Bundle();
-        bundle.putSerializable("group",group);
-        bundle.putSerializable("volumeMemList",volumeDetail.getMemberUidList());
-        IntentUtils.startActivity(ShareVolumeInfoActivity.this,GroupInfoActivity.class,bundle);
+        bundle.putSerializable("group", group);
+        bundle.putSerializable("volumeMemList", volumeDetail.getMemberUidList());
+        IntentUtils.startActivity(ShareVolumeInfoActivity.this, GroupInfoActivity.class, bundle);
     }
 
     private void updateVolumeMemNum() {
-        volumeMemberText.setText(getString(R.string.clouddriver_all_volume_member_size,volumeDetail.getMemberUidList().size()));
+        volumeMemberText.setText(getString(R.string.clouddriver_all_volume_member_size, volumeDetail.getMemberUidList().size()));
     }
 
     @Override
@@ -237,7 +226,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (receiver != null){
+        if (receiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
             receiver = null;
         }

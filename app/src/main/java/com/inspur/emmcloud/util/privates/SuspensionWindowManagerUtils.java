@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 /**
  * 悬浮窗管理类封装
@@ -24,6 +23,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 
 public class SuspensionWindowManagerUtils {
 
+    private static SuspensionWindowManagerUtils suspensionWindowManagerUtils;
     private View windowView = null;//整个悬浮窗view
     private WindowManager windowManager = null;//WindowManager管理类
     private Context windowContext = null;//传入的上下文
@@ -34,16 +34,16 @@ public class SuspensionWindowManagerUtils {
     private Chronometer chronometer;
     private long beginTime = 0;//touch开始时间
     private boolean isTouchEvent = false;//判定touch事件的标志
-    private static SuspensionWindowManagerUtils suspensionWindowManagerUtils;
 
     /**
      * 获取悬浮窗实例
+     *
      * @return
      */
-    public static SuspensionWindowManagerUtils getInstance(){
-        if(suspensionWindowManagerUtils == null){
-            synchronized (SuspensionWindowManagerUtils.class){
-                if(suspensionWindowManagerUtils == null){
+    public static SuspensionWindowManagerUtils getInstance() {
+        if (suspensionWindowManagerUtils == null) {
+            synchronized (SuspensionWindowManagerUtils.class) {
+                if (suspensionWindowManagerUtils == null) {
                     suspensionWindowManagerUtils = new SuspensionWindowManagerUtils();
                 }
             }
@@ -53,6 +53,7 @@ public class SuspensionWindowManagerUtils {
 
     /**
      * 显示悬浮窗
+     *
      * @param context
      * @param screenWidthSize
      * @param time
@@ -82,6 +83,7 @@ public class SuspensionWindowManagerUtils {
 
     /**
      * 组装悬浮窗View
+     *
      * @return
      */
     private void initSuspensionWindowView() {
@@ -93,7 +95,7 @@ public class SuspensionWindowManagerUtils {
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isTouchEvent){
+                if (!isTouchEvent) {
                     goBackVoiceCommunicationActivity();
                     hideCommunicationSmallWindow();
                     isTouchEvent = false;
@@ -109,14 +111,14 @@ public class SuspensionWindowManagerUtils {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                switch (event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         isTouchEvent = false;
                         beginTime = System.currentTimeMillis();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        params.x = (int) event.getRawX() - DensityUtil.dip2px(windowContext,32);
-                        params.y = (int) event.getRawY() - DensityUtil.dip2px(windowContext,42) - getStatusBarHeight();
+                        params.x = (int) event.getRawX() - DensityUtil.dip2px(windowContext, 32);
+                        params.y = (int) event.getRawY() - DensityUtil.dip2px(windowContext, 42) - getStatusBarHeight();
                         windowManager.updateViewLayout(windowView, params);
                         break;
                     case MotionEvent.ACTION_UP:
@@ -132,6 +134,7 @@ public class SuspensionWindowManagerUtils {
 
     /**
      * 设置参数
+     *
      * @return
      */
     private void initParamsAndListeners() {
@@ -151,20 +154,21 @@ public class SuspensionWindowManagerUtils {
         // 不设置这个弹出框的透明遮罩显示为黑色
         params.format = PixelFormat.TRANSLUCENT;
         //设置悬浮窗口长宽数据.
-        params.width = DensityUtil.dip2px(windowContext,64);
-        params.height = DensityUtil.dip2px(windowContext,84);
+        params.width = DensityUtil.dip2px(windowContext, 64);
+        params.height = DensityUtil.dip2px(windowContext, 84);
         //设置悬浮窗位置
-        params.x = screenWidthSize - DensityUtil.dip2px(windowContext,74);
-        params.y = DensityUtil.dip2px(windowContext,4);
+        params.x = screenWidthSize - DensityUtil.dip2px(windowContext, 74);
+        params.y = DensityUtil.dip2px(windowContext, 4);
         //设置悬浮窗位置和滑动参数
         params.gravity = Gravity.LEFT | Gravity.TOP;
     }
 
     /**
      * 获取statusBar高度
+     *
      * @return
      */
-    private int getStatusBarHeight(){
+    private int getStatusBarHeight() {
         int statusBarHeight = 0;
         int resourceId = windowContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
@@ -178,9 +182,9 @@ public class SuspensionWindowManagerUtils {
      */
     private void goBackVoiceCommunicationActivity() {
         Intent intent = new Intent();
-        intent.setClass(windowContext,ChannelVoiceCommunicationActivity.class);
+        intent.setClass(windowContext, ChannelVoiceCommunicationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE,ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer)));
         windowContext.startActivity(intent);
     }
