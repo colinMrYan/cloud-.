@@ -37,6 +37,7 @@ public class DragAdapter extends BaseAdapter {
     private int groupPosition = -1;
     private NotifyCommonlyUseListener commonlyUseListener;
     private boolean canEdit = false;//表示排序和删除两个状态
+    private boolean isCommonlyUseGroup = false;
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
     private Map<String, Integer> appStoreBadgeMap;
@@ -110,7 +111,7 @@ public class DragAdapter extends BaseAdapter {
         ImageView deleteImg = (ImageView) convertView
                 .findViewById(R.id.delete_markview_text);
         if (canEdit) {
-            if (!app.getIsMustHave()) {
+            if (!app.getIsMustHave() || isCommonlyUseGroup) {
                 deleteImg.setVisibility(View.VISIBLE);
                 deleteImg.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -197,6 +198,14 @@ public class DragAdapter extends BaseAdapter {
                     R.anim.rotate_right);
         }
         convertView.startAnimation(animation);
+    }
+
+    public boolean isCommonlyUseGroup() {
+        return isCommonlyUseGroup;
+    }
+
+    public void setCommonlyUseGroup(boolean commonlyUseGroup) {
+        isCommonlyUseGroup = commonlyUseGroup;
     }
 
     /**
