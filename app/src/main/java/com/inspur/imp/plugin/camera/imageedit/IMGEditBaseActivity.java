@@ -4,11 +4,11 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 import android.widget.ViewSwitcher;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.R;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.imageedit.core.IMGMode;
@@ -38,10 +38,9 @@ abstract class IMGEditBaseActivity extends ImpBaseActivity implements View.OnCli
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
+        ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black).init();
         Bitmap bitmap = getBitmap();
         if (bitmap != null) {
             setContentView(R.layout.plugin_camera_image_edit_activity);
