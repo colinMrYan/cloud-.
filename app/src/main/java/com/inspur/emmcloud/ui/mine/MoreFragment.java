@@ -40,9 +40,9 @@ import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -309,6 +309,7 @@ public class MoreFragment extends BaseFragment {
             View view = new View(getActivity());
             int height = groupPosition > 1 ? DensityUtil.dip2px(MyApplication.getInstance(), 10) : 0;
             view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, height));
+            view.setBackgroundColor(ContextCompat.getColor(MyApplication.getInstance(),R.color.content_bg));
             return view;
         }
 
@@ -331,26 +332,24 @@ public class MoreFragment extends BaseFragment {
                 GetUserCardMenusResult getUserCardMenusResult = new GetUserCardMenusResult(UserCardMenus);
                 final List<MineLayoutItem> mineLayoutItemList = getUserCardMenusResult.getMineLayoutItemList();
                 LinearLayout userCardMenuLayout = convertView.findViewById(R.id.ll_user_card_menu);
-                int paddintTop = mineLayoutItemList.size() > 0 ? DensityUtil.dip2px(MyApplication.getInstance(), 10) : 0;
-                userCardMenuLayout.setPadding(0, paddintTop, 0, 0);
                 setUserCardMenuLayout(userCardMenuLayout, mineLayoutItemList);
-                convertView.findViewById(R.id.card_view_my_info).setOnClickListener(myClickListener);
+                convertView.findViewById(R.id.ll_my_info).setOnClickListener(myClickListener);
                 enterpriseText.setOnClickListener(myClickListener);
 
                 String myInfo = PreferencesUtils.getString(MyApplication.getInstance(), "myInfo", "");
                 GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
                 Drawable drawable = null;
                 if (getMyInfoResult.getEnterpriseList().size() > 1) {
-                    drawable = ContextCompat.getDrawable(MyApplication.getInstance(),
-                            R.drawable.ic_mine_switch_enterprise);
+                    int drawableId = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.mine_my_info_switch_enterprise);
+                    drawable = ContextCompat.getDrawable(MyApplication.getInstance(),drawableId);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 }
                 enterpriseText.setCompoundDrawables(null, null, drawable, null);
             } else {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine_common_item_view, null);
                 View lineView = convertView.findViewById(R.id.line);
-                lineView.setVisibility(
-                        (childPosition == getChildrenCount(groupPosition) - 1) ? View.INVISIBLE : View.VISIBLE);
+//                lineView.setVisibility(
+//                        (childPosition == getChildrenCount(groupPosition) - 1) ? View.INVISIBLE : View.VISIBLE);
                 setViewByLayoutItem(convertView, layoutItem);
             }
             return convertView;
@@ -367,23 +366,28 @@ public class MoreFragment extends BaseFragment {
         private void setUserCardMenuLayout(LinearLayout userCardMenuLayout, List<MineLayoutItem> mineLayoutItemList) {
             for (final MineLayoutItem mineLayoutItem : mineLayoutItemList) {
                 ImageButton menuImgBtn = new ImageButton(getActivity());
-                int height = DensityUtil.dip2px(MyApplication.getInstance(), 38);
-                int width = DensityUtil.dip2px(MyApplication.getInstance(), 37);
-                int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 3);
+                int height = DensityUtil.dip2px(MyApplication.getInstance(), 42);
+                int width = DensityUtil.dip2px(MyApplication.getInstance(), 48);
+                int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 8);
                 int paddingTop = DensityUtil.dip2px(MyApplication.getInstance(), 10);
-                int paddingRight = DensityUtil.dip2px(MyApplication.getInstance(), 6);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-                layoutParams.setMargins(0, 0, paddingRight, 0);
                 menuImgBtn.setScaleType(ImageView.ScaleType.FIT_XY);
                 menuImgBtn.setLayoutParams(layoutParams);
-                menuImgBtn.setPadding(paddingLeft, paddingTop, paddingRight, 0);
+                menuImgBtn.setPadding(paddingLeft, paddingTop, paddingLeft, 0);
+                int tintColor= ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_menu_tint_color);
+                menuImgBtn.setColorFilter(getContext().getResources().getColor(tintColor));
                 menuImgBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         openMineLayoutItem(mineLayoutItem);
                     }
                 });
-                ImageDisplayUtils.getInstance().displayImage(menuImgBtn, getIconUrl(mineLayoutItem.getIco()), R.drawable.ic_mine_item_default);
+                String iconUrl = getIconUrl(mineLayoutItem.getIco());
+                if (iconUrl.startsWith("drawable")){
+                    ImageDisplayUtils.getInstance().displayImageNoCache(menuImgBtn,iconUrl);
+                }else {
+                    ImageDisplayUtils.getInstance().displayImage(menuImgBtn, iconUrl);
+                }
                 userCardMenuLayout.addView(menuImgBtn);
             }
 
@@ -392,7 +396,7 @@ public class MoreFragment extends BaseFragment {
 
         private String getIconUrl(String icon) {
             if (!icon.startsWith("http")) {
-                switch (icon) {
+                switch (icon.toLowerCase()) {
                     case "personcenter_setting":
                         icon = "drawable://" + R.drawable.ic_mine_setting;
                         break;
@@ -411,7 +415,6 @@ public class MoreFragment extends BaseFragment {
                         break;
                 }
             }
-            LogUtils.YfcDebug("icon=" + icon);
             return icon;
         }
 
@@ -428,7 +431,7 @@ public class MoreFragment extends BaseFragment {
                 case R.id.tv_enterprise:
                     IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
                     break;
-                case R.id.card_view_my_info:
+                case R.id.ll_my_info:
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), MyInfoActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);

@@ -52,7 +52,7 @@ public class PasswordModifyActivity extends Activity implements View.OnTouchList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true,0.2f).init();
         EditWatcher editWatcher = new EditWatcher();
         passwordOriginEdit.addTextChangedListener(editWatcher);
         passwordNewEdit.addTextChangedListener(editWatcher);
@@ -83,6 +83,9 @@ public class PasswordModifyActivity extends Activity implements View.OnTouchList
                     return;
                 }
                 modifyPassword();
+                break;
+            case R.id.ibt_back:
+                finish();
                 break;
         }
     }

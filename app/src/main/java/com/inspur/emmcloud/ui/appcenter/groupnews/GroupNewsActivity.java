@@ -6,11 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.gxz.PagerSlidingTabStrip;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -21,7 +21,6 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.PagerSlidingTabStrip;
 
 import java.util.List;
 
@@ -30,8 +29,7 @@ import java.util.List;
  * com.inspur.emmcloud.ui.GroupNewsActivity
  * create at 2016年9月5日 上午10:31:56
  */
-public class GroupNewsActivity extends BaseFragmentActivity implements
-        OnPageChangeListener {
+public class GroupNewsActivity extends BaseFragmentActivity {
 
     private MyPagerAdapter pagerAdapter;
     private LoadingDialog loadingDlg;
@@ -62,20 +60,6 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
         finish();
     }
 
-    @Override
-    public void onPageScrollStateChanged(int arg0) {
-    }
-
-    @Override
-    public void onPageScrolled(int arg0, float arg1, int arg2) {
-    }
-
-    @Override
-    public void onPageSelected(int arg0) {
-        pagerAdapter.getItem(arg0);
-        pagerAdapter.notifyDataSetChanged();
-    }
-
     /**
      * 集团新闻pager设置
      *
@@ -101,8 +85,12 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
         pagerSlidingTabStrip.setDividerColor(getResources().getColor(R.color.content_border));
         pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#00000000"));
         pagerSlidingTabStrip.setTextSize(17);
-        pagerSlidingTabStrip.setTextColorStateList(R.color.news_viewpager_tab_text_color);
-        pagerSlidingTabStrip.setOnPageChangeListener(this);
+        pagerSlidingTabStrip.setUnderlineHeight(1);
+        pagerSlidingTabStrip.setTextColor(Color.parseColor("#333333"));
+        pagerSlidingTabStrip.setSelectedTextColor(Color.parseColor("#0F7BCA"));
+        pagerSlidingTabStrip.setFadeEnabled(false);
+        pagerSlidingTabStrip.setZoomMax(0);
+        pagerSlidingTabStrip.setSmoothScrollWhenClickTab(false);
         //设置导航器和viewPager关联
         pagerSlidingTabStrip.setViewPager(viewPager);
     }

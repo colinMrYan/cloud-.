@@ -187,9 +187,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                 }
             }
-        }
-
-        ;
+        };
     }
 
 
@@ -204,7 +202,17 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void initChannelMessage() {
-        List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+        List<Message> cacheMessageList ;
+        UIMessage uiMessage = null;
+        if(getIntent().hasExtra(EXTRA_UIMESSAGE)){
+            uiMessage = (UIMessage)getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
+            cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null);
+        }else{
+            cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+        }
+        if(cacheMessageList == null){
+            cacheMessageList = new ArrayList<>();
+        }
         List<Message> messageSendingList = new ArrayList<>();
         for (int i = 0; i < cacheMessageList.size(); i++) {
             if (cacheMessageList.get(i).getSendStatus() == Message.MESSAGE_SEND_ING && ((System.currentTimeMillis() - cacheMessageList.get(i).getCreationDate()) > 16 * 1000)) {
@@ -218,6 +226,12 @@ public class ConversationActivity extends ConversationBaseActivity {
             getNewMessageOfChannel();
         }
         initViews();
+        if(uiMessage != null){
+            int position = uiMessageList.indexOf(uiMessage);
+            if(position != -1){
+                msgListView.scrollToPosition(position);
+            }
+        }
     }
 
     /**
@@ -258,7 +272,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 初始化下拉刷新UI
      */
     private void initPullRefreshLayout() {
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -571,14 +585,14 @@ public class ConversationActivity extends ConversationBaseActivity {
             case "file/regular-file":
             case "media/image":
                 bundle.putString("mid", message.getId());
-                bundle.putString("cid", message.getChannel());
+                bundle.putString(EXTRA_CID, message.getChannel());
                 IntentUtils.startActivity(ConversationActivity.this,
                         ChannelMessageDetailActivity.class, bundle);
                 break;
             case "comment/text-plain":
                 String mid = message.getMsgContentComment().getMessage();
                 bundle.putString("mid", mid);
-                bundle.putString("cid", message.getChannel());
+                bundle.putString(EXTRA_CID, message.getChannel());
                 IntentUtils.startActivity(ConversationActivity.this,
                         ChannelMessageDetailActivity.class, bundle);
                 break;
@@ -1238,13 +1252,14 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     //接收到websocket发过来的消息，推送消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePushMessage(EventMessage eventMessage) {
+    public void onReceiveNewMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_NEW_MESSAGE) && eventMessage.getExtra().equals(cid)) {
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
                 GetChannelMessagesResult getChannelMessagesResult = new GetChannelMessagesResult(content);
                 final List<Message> newMessageList = getChannelMessagesResult.getMessageList();
                 new CacheMessageListThread(newMessageList, null, REFRESH_PUSH_MESSAGE).start();
+                WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             }
         }
     }
@@ -1278,6 +1293,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     public void onReceiveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
         }
     }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.chat.ConversationGroupInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -20,6 +19,7 @@ import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.inspur.imp.plugin.photo.ImageGalleryActivity;
@@ -31,9 +31,10 @@ import java.util.Arrays;
 public class BaseActivity extends Activity {
     private static final String[] classNames = {
             MainActivity.class.getName(),
-            SchemeHandleActivity.class.getName(),
+//            SchemeHandleActivity.class.getName(),
             LoginActivity.class.getName(),
             CaptureActivity.class.getName(),
+            PreviewDecodeActivity.class.getName(),
             FaceVerifyActivity.class.getName(),
             ReactNativeAppActivity.class.getName(),
             ScanQrCodeLoginGSActivity.class.getName(),
@@ -88,20 +89,20 @@ public class BaseActivity extends Activity {
     private void setStatus() {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
-        int navigationBarColor =ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.footer_bg_color);
+        int navigationBarColor =R.color.white;
         if (!isContain) {
             int statusBarColor = ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
             boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).statusBarDarkFont(isStatusBarDarkFont).init();
+            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true).statusBarDarkFont(isStatusBarDarkFont,0.2f).init();
         }else {
-            ImmersionBar.with(this).navigationBarColor(navigationBarColor).init();
+            ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true).init();
         }
     }
 
-    protected void setTransparentStatus() {
-        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont).init();
-    }
+//    protected void setTransparentStatus() {
+//        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
+//        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont).init();
+//    }
 
 
     @Override

@@ -63,7 +63,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.NetWorkStateChangeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -170,12 +169,12 @@ public class CommunicationFragment extends BaseFragment {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
         initView();
         sortConversationList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
     }
 
     /**
@@ -184,11 +183,7 @@ public class CommunicationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (checkingNetStateUtils.isConnectedNet()) {
-            conversationAdapter.setNetExceptionView(true);
-        } else {
-            checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-        }
+            checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {
@@ -225,7 +220,7 @@ public class CommunicationFragment extends BaseFragment {
     private void initPullRefreshLayout() {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView
                 .findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -358,33 +353,13 @@ public class CommunicationFragment extends BaseFragment {
 
     /**
      * 沟通页网络异常提示框
-     *
-     * @param netState 通过Action获取操作类型
-     */
+     * @param netState  通过Action获取操作类型
+     * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
-        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)) {
-            if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_WIFI_STATE_OK) && (!NetUtils.isVpnConnected())) {
-                checkingNetStateUtils.clearUrlsStates();
-                checkingNetStateUtils.CheckNetPingThreadStart(NetUtils.pingUrls, 5, Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT);
-            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_STATE_ERROR)) {
-                conversationAdapter.setNetExceptionView(false);
-            } else if (((String) netState.getMessageObj()).equals(NetWorkStateChangeUtils.NET_GPRS_STATE_OK)) {
-                conversationAdapter.setNetExceptionView(true);
-            } else {
-                conversationAdapter.setNetExceptionView(true);
-            }
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            Boolean pingConnectedResult = false;
-            if (!NetUtils.isNetworkConnected(getContext(), false)) {
-                conversationAdapter.setNetExceptionView(false);
-                pingConnectedResult = false;
-            } else {
-                List<Object> pingIdAndData = (List<Object>) netState.getMessageObj();
-                pingConnectedResult = checkingNetStateUtils.isPingConnectedNet((String) pingIdAndData.get(0), (boolean) pingIdAndData.get(1));
-                conversationAdapter.setNetExceptionView(pingConnectedResult);
-            }
-            if (pingConnectedResult) {
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
+            conversationAdapter.setNetExceptionView((boolean)netState.getMessageObj());
+            if ((Boolean)netState.getMessageObj()){
                 WebSocketPush.getInstance().startWebSocket();
             }
         }
@@ -609,7 +584,7 @@ public class CommunicationFragment extends BaseFragment {
      * @param socketStatus
      */
     private void showSocketStatusInTitle(String socketStatus) {
-        if (socketStatus.equals("socket_connecting")) {
+        if (socketStatus.equals(Socket.EVENT_CONNECTING)) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
@@ -971,7 +946,7 @@ public class CommunicationFragment extends BaseFragment {
     /**
      * 隐藏频道
      *
-     * @param id
+     * @param uiConversation
      */
     private void setConversationHide(final UIConversation uiConversation) {
         new Thread(new Runnable() {

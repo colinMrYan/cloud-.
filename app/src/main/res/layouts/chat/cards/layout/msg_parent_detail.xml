@@ -35,7 +35,7 @@
                 android:layout_toRightOf="@id/sender_photo_img"
                 android:paddingRight="6dp"
                 android:singleLine="true"
-                android:textColor="@color/header_bg"
+                android:textColor="@color/header_bg_blue"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <TextView

@@ -47,7 +47,7 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true,0.2f).init();
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
@@ -63,7 +63,7 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bt_save:
+            case R.id.bt_ok:
                 if (!passwordNew.equals(passwordConfirm)) {
                     ToastUtils.show(PasswordResetActivity.this, R.string.modify_not_same);
                     return;
@@ -73,6 +73,9 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
                     return;
                 }
                 resetPassword();
+                break;
+            case R.id.ibt_back:
+                finish();
                 break;
         }
     }

@@ -36,6 +36,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
+                android:tint="@color/header_text_black"
                 android:src="@drawable/ic_webex_meeting_attendees" />
 
             <TextView
@@ -49,7 +50,7 @@
                 android:clickable="false"
                 android:paddingRight="30dp"
                 android:text="@string/webex_participant"
-                android:textColor="?attr/header_text_color"
+                android:textColor="@color/header_text_black"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -83,6 +84,7 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
+                android:tint="@color/header_text_black"
                 android:src="@drawable/ic_webex_meeting_share" />
 
             <TextView
@@ -95,8 +97,8 @@
                 android:background="@color/transparent"
                 android:clickable="false"
                 android:paddingRight="6dp"
+                android:textColor="@color/header_text_black"
                 android:text="@string/share"
-                android:textColor="?attr/header_text_color"
                 android:textSize="16sp" />
         </RelativeLayout>
 
@@ -130,6 +132,7 @@
                 android:layout_below="@id/v_line_delete"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
+                android:tint="@color/header_text_black"
                 android:src="@drawable/ic_webex_meeting_delete" />
 
             <TextView
@@ -143,8 +146,8 @@
                 android:background="@color/transparent"
                 android:clickable="false"
                 android:paddingRight="6dp"
+                android:textColor="@color/header_text_black"
                 android:text="@string/delete"
-                android:textColor="?attr/header_text_color"
                 android:textSize="16sp" />
         </RelativeLayout>
     </RelativeLayout>

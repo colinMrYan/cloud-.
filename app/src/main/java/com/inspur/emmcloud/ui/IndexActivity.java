@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -112,7 +113,6 @@ public class IndexActivity extends IndexBaseActivity {
         updateReactNative();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
     }
-
     /**
      * 获取我的应用推荐小部件数据,如果到了更新时间才请求
      */
@@ -187,6 +187,9 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void setPreloadWebApp() {
         if (MyApplication.getInstance().getTanent().equals("inspur_esg")) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                webView.getSettings().setSafeBrowsingEnabled(false);
+            }
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setSavePassword(false);
             webView.setWebViewClient(new WebViewClient() {
@@ -256,9 +259,9 @@ public class IndexActivity extends IndexBaseActivity {
                             MyApplication.getInstance()
                                     .setIsContactReady(true);
                             notifySyncAllBaseDataSuccess();
-                            WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                             getContactOrg();
                         }
+                        WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
                         batteryWhiteListRemind(IndexActivity.this);
                         break;
                     case RELOAD_WEB:

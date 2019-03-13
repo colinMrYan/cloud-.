@@ -13,7 +13,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="13dp"
         android:scaleType="centerInside"
-        android:src="@drawable/icon_blue_arrow_left" />
+        android:src="@drawable/ic_back_btn_white" />
 
     <LinearLayout
         android:layout_width="match_parent"

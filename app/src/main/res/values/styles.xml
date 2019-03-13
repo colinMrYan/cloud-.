@@ -32,6 +32,7 @@
     <style name="AppTheme_0"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_white</item>
         <item name="header_bg">@drawable/shape_header_bg_white</item>
+        <item name="footer_bg">@drawable/footer_bg_white</item>
         <item name="footer_bg_color">@color/footer_bg_white</item>
         <item name="header_text_color">@color/header_text_black</item>
 
@@ -55,11 +56,20 @@
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
+        <item name="mine_my_info_card_name_color">@android:color/black</item>
+        <item name="mine_my_info_card_enterprise_color">#666666</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
+        <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+
     </style>
 
     <style name="AppTheme_1"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_grey</item>
         <item name="header_bg">@drawable/shape_header_bg_grey</item>
+        <item name="footer_bg">@drawable/footer_bg_grey</item>
         <item name="footer_bg_color">@color/footer_bg_grey</item>
         <item name="header_text_color">@color/header_text_grey</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
@@ -82,12 +92,20 @@
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
+        <item name="mine_my_info_card_name_color">@android:color/black</item>
+        <item name="mine_my_info_card_enterprise_color">#666666</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
+        <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
     </style>
 
     <style name="AppTheme_2"  parent="AppTheme">
-        <item name="header_bg_color">@color/header_bg</item>
+        <item name="header_bg_color">@color/header_bg_blue</item>
         <item name="header_bg">@drawable/shape_header_bg_blue</item>
-        <item name="footer_bg_color">@color/footer_bg</item>
+        <item name="footer_bg">@drawable/footer_bg_blue</item>
+        <item name="footer_bg_color">@color/footer_bg_blue</item>
         <item name="header_text_color">@color/header_text</item>
         <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
         <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
@@ -109,12 +127,19 @@
         <item name="status_bar_dark_font">false</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
+        <item name="mine_my_info_card_name_color">@android:color/white</item>
+        <item name="mine_my_info_card_enterprise_color">@android:color/white</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
+        <item name="mine_my_info_menu_tint_color">@android:color/white</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_blue</item>
     </style>
 
 
 
     <!-- Application theme. -->
-    <style name="AppTheme.Transparent" parent="AppTheme">
+    <style name="AppTheme_Transparent" parent="AppTheme">
         <!--不设置activity进入和退出动画样式-->
         <item name="android:windowAnimationStyle">@null</item>
         <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
@@ -122,6 +147,36 @@
         <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
         <item name="android:windowIsTranslucent">true</item>
     </style>
+    <!-- Application theme. -->
+    <style name="AppTheme_Transparent_0" parent="AppTheme_0">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme_Transparent_1" parent="AppTheme_1">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme_Transparent_2" parent="AppTheme_2">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
 
 
     <style name="userhead_dialog_bg" parent="@android:style/Theme.Dialog">

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -62,8 +61,6 @@ public class LoginActivity extends BaseActivity {
     private TextView currentLoginEnterpriseText;
     @ViewInject(R.id.tv_welcome)
     private TextView welcomeText;
-    @ViewInject(R.id.tv_register)
-    private TextView registerText;
     private EmmSecurityKeyboard securityKeyboard;
 
     @Override
@@ -72,7 +69,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true,0.2f).init();
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
@@ -80,7 +77,6 @@ public class LoginActivity extends BaseActivity {
 
     private void initView() {
         welcomeText.setText(getString(R.string.login_tv_welcome, AppUtils.getAppName(this)));
-        registerText.setText(Html.fromHtml(getString(R.string.login_to_register)));
         LoadingDlg = new LoadingDialog(LoginActivity.this, getString(R.string.login_loading_text));
         EditWatcher watcher = new EditWatcher();
         usernameEdit.addTextChangedListener(watcher);

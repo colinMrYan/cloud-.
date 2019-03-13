@@ -10,7 +10,7 @@
     <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
     <string name="retry">Retry</string>
     <string name="re_login">ReLogin</string>
-    <string name="software_service_term">Services Agreemen</string>
+    <string name="software_service_term">Services Agreement</string>
     <string name="update_fail">Update failed</string>
     <string name="downloading_package">Please wait a minute while downloading</string>
     <string name="service_term">Services Agreement</string>
@@ -198,8 +198,8 @@
     <string name="login_set_pwd">Set password</string>
     <string name="login_change_phone_num">Change Phone Number</string>
     <string name="login_captchas_login">Quick Login</string>
-    <string name="login_by_account">帳號密碼登錄</string>
-    <string name="login_find_password">找回密码</string>
+    <string name="login_by_account">Log in Via password</string>
+    <string name="login_find_password">Retrieve password</string>
     <string name="login_get_captchas">Reset Password By SMS</string>
     <string name="login_get_captchas_code">Get Code</string>
     <string name="login_resent">Resent</string>
@@ -229,6 +229,9 @@
     <string name="captchas">Code</string>
     <string name="password">Password</string>
     <string name="recover">Retry</string>
+    <string name="login_tv_welcome">Hello，\nwelcome to %1$s</string>
+    <string name="login_current_login_enterprise">Current system：%1$s</string>
+    <string name="login_forget_password">Forgot Password</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">Please type message content</string>
@@ -317,6 +320,7 @@
     <string name="meeting_cancel_confirm">Cancel Confirmation</string>
     <string name="meeting_cancel_reject">Cancel Rejection</string>
     <string name="chat_resend_message">Resend</string>
+    <string name="chat_group_message_search">Search History</string>
 
     <!-- 工作页面部分 -->
     <string name="work">Work</string>
@@ -554,6 +558,9 @@
     <string name="feed_back_input_phone">Enter the phone or mail</string>
     <string name="feed_back_upload">Submit</string>
     <string name="feed_back_without_name">Anonymous</string>
+    <string name="feed_back_content_hint">Please enter suggestions and comments</string>
+    <string name="feed_back_contact_hint">Enter your contact information here</string>
+    <string name="feed_back_submit">Submit feedback</string>
     <string name="invite_friend_invite_text">Invite a friend</string>
     <string name="invite_friend_code">Scan QR code to install  Cloud+ directly</string>
     <string name="invite_friend_recommend">推荐【Cloud+】给好友</string>
@@ -596,23 +603,22 @@
     <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
     <string name="select_enterprise">Select enterprise</string>
     <string name="auto_select_enterprise">Automatically choose</string>
-    <string name="close_auto_select_enterprise">下次登录默认使用该企业</string>
+    <string name="close_auto_select_enterprise">Turn off auto selection enterprise</string>
     <string name="turn_off_success">Turn off successfully</string>
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App Rotation</string>
     <string name="run_background">AppStarting</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
-    <string name="setting_join_experience_plan">Join the upgrade experience plan</string>
-    <string name="setting_gesture_force_set">根据企业安全策略，需要您设置手势密码</string>
-    <string name="setting_gesture_force_open">根据企业安全策略，您不可以关闭手势密码</string>
-
+    <string name="setting_join_experience_plan">Join Early Experience Program</string>
+    <string name="setting_gesture_force_set">According to the enterprise security policy, you need to set a gesture password</string>
+    <string name="setting_gesture_force_open">You can\'t turn off the gesture password according to the enterprise security policy</string>
     <string name="contact">Contact</string>
     <string name="web">web</string>
-    <string name="mine_theme_switch">换肤</string>
-    <string name="mine_theme_white">清新白</string>
-    <string name="mine_theme_grey">优雅灰</string>
-    <string name="mine_theme_blue">商务蓝</string>
+    <string name="mine_theme_switch">Theme</string>
+    <string name="mine_theme_white">White</string>
+    <string name="mine_theme_grey">Grey</string>
+    <string name="mine_theme_blue">Blue</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
@@ -880,7 +886,7 @@
     <string name="mession_delete_blue">Blue</string>
     <string name="mession_delete_purple">Purple</string>
     <string name="mession_delete_exist">Tag already existed</string>
-    <string name="mession_delete_no_empty">No tags to be deleted</string>
+    <string name="mession_delete_no_empty">Please input the title</string>
     <string name="mession_add_tag">Tag</string>
     <string name="mession_full_tag">Enter tag title</string>
     <string name="mession_color_tag">Color</string>
@@ -1023,8 +1029,8 @@
     <string name="splash_skip">Enter immediately</string>
 
     <!--安全中心-->
-    <string name="setting_safe_gesture_face">面容ID、手势密码</string>
-    <string name="setting_safe_gesture_face_setting">面容ID、手势密码设置</string>
+    <string name="setting_safe_gesture_face">Face ID and Gesture Password</string>
+    <string name="setting_safe_gesture_face_setting">Face ID and Gesture Password Settings</string>
     <string name="setting_safe_center">Account,Device Security</string>
     <string name="safe_center_gesture">Gesture Password</string>
     <string name="safe_center_finger_print">Fingerprint</string>
@@ -1077,7 +1083,6 @@
     <string name="login_more_scan_find_left">Scan to[</string>
     <string name="login_more_scan_find_right">]Do you decide to add？</string>
     <string name="cluster_default">default</string>
-    <string name="current_system">Current Sys</string>
 
     <string name="volume_read_write_permission">Have upload / view permissions</string>
     <string name="volume_read_permission">Have view permissions</string>
@@ -1137,6 +1142,7 @@
     <string name="permission_open_cloud_plus">Open %1$s</string>
     <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>
     <string name="permission_phone_permission">Phone</string>
+    <string name="permission_call_phone_permission">Call Phone</string>
     <string name="permission_storage_permission">Storage</string>
     <string name="permission_next">Next</string>
 
@@ -1144,9 +1150,18 @@
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
     <string name="emm_keyboard_zero2nine">1234567890</string>
     <string name="emm_keyboard_number">Number</string>
-    <string name="emm_keyboard_symbol">Symbol</string>
+    <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">Letter</string>
     <string name="emm_secure_keyboard">Secure Keyboard</string>
+    <string name="emm_keyboard_space">space</string>
 
     <string name="welcome_to">Welcome to </string>
+
+    <string name="phone_sms">SMS</string>
+    <string name="phone_email">Email</string>
+    <string name="current_month">This month</string>
+    <string name="user_office_phone">Fixed line</string>
+    <string name="group_qrcode">QR Code</string>
+
+    <string name="user_call">Call</string>
 </resources>

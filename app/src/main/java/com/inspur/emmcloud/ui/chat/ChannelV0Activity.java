@@ -232,7 +232,7 @@ public class ChannelV0Activity extends BaseActivity {
      * 初始化下拉刷新UI
      */
     private void initPullRefreshLayout() {
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -415,7 +415,7 @@ public class ChannelV0Activity extends BaseActivity {
     /**
      * 弹出消息重新发送提示框
      *
-     * @param uiMessage
+     * @param msg
      */
     private void showResendMessageDlg(final Msg msg) {
         new MyQMUIDialog.MessageDialogBuilder(ChannelV0Activity.this)
@@ -439,7 +439,7 @@ public class ChannelV0Activity extends BaseActivity {
     /**
      * 消息重新发送
      *
-     * @param uiMessage
+     * @param msg
      */
     private void resendMessage(Msg msg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -996,7 +996,6 @@ public class ChannelV0Activity extends BaseActivity {
      * 上传资源文件
      *
      * @param fakeMsg
-     * @param isResImgMsg
      */
     private void uploadResource(Msg fakeMsg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -1096,6 +1095,10 @@ public class ChannelV0Activity extends BaseActivity {
             if (swipeRefreshLayout.isRefreshing()) {
                 final List<Msg> historyMsgList = getNewMsgsResult
                         .getNewMsgList(cid);
+                List<Msg> retainAllMsgList = new ArrayList<>();
+                retainAllMsgList.addAll(historyMsgList);
+                retainAllMsgList.retainAll(msgList);
+                historyMsgList.removeAll(retainAllMsgList);
                 if (historyMsgList.size() > 0) {
                     MsgCacheUtil.saveMsgList(ChannelV0Activity.this, historyMsgList,
                             msgList.get(0).getTime());

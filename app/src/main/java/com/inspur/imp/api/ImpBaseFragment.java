@@ -23,6 +23,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
 import java.util.List;
@@ -62,6 +63,7 @@ public class ImpBaseFragment extends BaseFragment {
                         imageView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingTop);
                         imageView.setOnClickListener(onClickListener);
                         imageView.setLayoutParams(params);
+                        imageView.setColorFilter(getContext().getResources().getColor(ResourceUtils.getResValueOfAttr(getActivity(), R.attr.header_text_color)));
                         ImageDisplayUtils.getInstance().displayImage(imageView, mainTabMenu.getIco());
                         webFunctionLayout.addView(imageView);
                     } else {
@@ -110,9 +112,11 @@ public class ImpBaseFragment extends BaseFragment {
         webFunctionLayout.post(new Runnable() {
             @Override
             public void run() {
-                functionLayoutWidth = functionLayout.getWidth();
-                webFunctionLayoutWidth = webFunctionLayout.getWidth();
-                headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
+                if (getActivity() != null){
+                    functionLayoutWidth = functionLayout.getWidth();
+                    webFunctionLayoutWidth = webFunctionLayout.getWidth();
+                    headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);
+                }
             }
         });
     }
@@ -150,8 +154,15 @@ public class ImpBaseFragment extends BaseFragment {
                 return false;
             }
         });
+        optionMenuPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
+            }
+        });
         optionMenuPop.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
+        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
         // 设置好参数之后再show
         optionMenuPop.showAsDropDown(view);
     }
@@ -191,6 +202,7 @@ public class ImpBaseFragment extends BaseFragment {
                 iconImg.setVisibility(View.GONE);
             } else {
                 iconImg.setVisibility(View.VISIBLE);
+                iconImg.setColorFilter(getContext().getResources().getColor(R.color.header_text_black));
                 ImageDisplayUtils.getInstance().displayImage(iconImg, optionMenu.getIco());
             }
             textView.setText(optionMenu.getText());

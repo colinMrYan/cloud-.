@@ -83,7 +83,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
         adapter = new Adapter();
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg), ContextCompat.getColor(getApplicationContext(), R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue), ContextCompat.getColor(getApplicationContext(), R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(this);
         shareVolumeListView.setAdapter(adapter);
         shareVolumeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

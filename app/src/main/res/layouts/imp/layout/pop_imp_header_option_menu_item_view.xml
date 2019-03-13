@@ -23,7 +23,7 @@
         android:layout_toRightOf="@id/iv_icon"
         android:background="@color/transparent"
         android:clickable="false"
-        android:textColor="?attr/header_text_color"
+        android:textColor="@color/header_text_black"
         android:textSize="16sp" />
 
 </RelativeLayout>

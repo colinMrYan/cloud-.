@@ -26,9 +26,9 @@
             android:src="@drawable/ic_emm_keyboard_view_arrow_down"/>
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.4dp"
+            android:layout_height="0.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/color_list_divider"/>
+            android:background="#666666"/>
     </RelativeLayout>
 
     <android.inputmethodservice.KeyboardView

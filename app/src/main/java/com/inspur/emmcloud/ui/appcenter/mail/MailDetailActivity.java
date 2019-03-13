@@ -428,10 +428,8 @@ public class MailDetailActivity extends BaseActivity {
             case R.id.rl_reply:
                 intentMailSendActivity(MailSendActivity.MODE_REPLY);
                 break;
-            case R.id.bt_mail_delete:
+            case R.id.ibt_mail_delete:
                 removeMail(mail);
-                break;
-            case R.id.bt_mail_tab:
                 break;
             case R.id.tv_mail_receiver_expand:
                 if (receiverFlowLayout.getVisibility() == View.GONE) {

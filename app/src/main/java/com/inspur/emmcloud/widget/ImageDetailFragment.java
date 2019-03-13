@@ -129,6 +129,7 @@ public class ImageDetailFragment extends Fragment {
                 return false;
             }
         });
+        mAttacher.setMaximumScale(5);
         progressBar = (ProgressBar) v.findViewById(R.id.loading);
         return v;
     }
@@ -215,10 +216,10 @@ public class ImageDetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.icon_photo_default)
+                .showImageForEmptyUri(R.drawable.default_image)
 
-                .showImageOnFail(R.drawable.icon_photo_default)
-                .showImageOnLoading(R.drawable.icon_photo_default)
+                .showImageOnFail(R.drawable.default_image)
+                .showImageOnLoading(R.drawable.default_image)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)

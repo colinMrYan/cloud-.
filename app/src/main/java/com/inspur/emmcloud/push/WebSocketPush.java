@@ -161,7 +161,7 @@ public class WebSocketPush {
             String url = APIUri.getWebsocketConnectUrl();
             String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                     "/chat/socket/handshake";
-            sendWebSocketStatusBroadcast("socket_connecting");
+            sendWebSocketStatusBroadcast(Socket.EVENT_CONNECTING);
             IO.Options opts = new IO.Options();
             opts.reconnectionAttempts = 5; // 设置websocket重连次数
             opts.forceNew = true;
@@ -303,6 +303,7 @@ public class WebSocketPush {
     private void removeListeners() {
         mSocket.off("message");
         mSocket.off("com.inspur.ecm.chat");
+        mSocket.off("status");
         mSocket.off(Socket.EVENT_CONNECT_ERROR);
         mSocket.off(Socket.EVENT_CONNECT);
         mSocket.off(Socket.EVENT_DISCONNECT);

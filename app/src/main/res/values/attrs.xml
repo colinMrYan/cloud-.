@@ -6,6 +6,7 @@
     <attr name="footer_tab_text_color_nor" format="reference|color"/>
     <attr name="footer_tab_text_color_select" format="reference|color"/>
     <attr name="header_bg" format="reference"/>
+    <attr name="footer_bg" format="reference"/>
 
     <attr name="footer_tab_text_color" format="reference"/>
 
@@ -26,7 +27,13 @@
     <attr name="status_bar_dark_font" format="boolean"/>
     <attr name="ic_back_btn" format="reference"/>
     <attr name="ic_appcenter_search" format="reference"/>
-
+    <attr name="plugin_ic_header_title_drop_down" format="reference"/>
+    <attr name="plugin_ic_header_title_drop_up" format="reference"/>
+    <attr name="mine_my_info_card_name_color" format="reference|color"/>
+    <attr name="mine_my_info_card_enterprise_color" format="reference|color"/>
+    <attr name="mine_my_info_card_bg" format="reference"/>
+    <attr name="mine_my_info_menu_tint_color" format="reference|color"/>
+    <attr name="mine_my_info_switch_enterprise" format="reference"/>
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
@@ -40,19 +47,6 @@
         <attr name="android:layout_gravity" />
     </declare-styleable>
     
-    <declare-styleable name="PagerSlidingTabStrip">
-        <attr name="pstsIndicatorColor" format="color" />
-        <attr name="pstsUnderlineColor" format="color" />
-        <attr name="pstsDividerColor" format="color" />
-        <attr name="pstsIndicatorHeight" format="dimension" />
-        <attr name="pstsUnderlineHeight" format="dimension" />
-        <attr name="pstsDividerPadding" format="dimension" />
-        <attr name="pstsTabPaddingLeftRight" format="dimension" />
-        <attr name="pstsScrollOffset" format="dimension" />
-        <attr name="pstsTabBackground" format="reference" />
-        <attr name="pstsShouldExpand" format="boolean" />
-        <attr name="pstsTextAllCaps" format="boolean" />
-    </declare-styleable>
     <declare-styleable name="RoundAngleImageView">
         <attr name="roundWidth" format="dimension" />
         <attr name="roundHeight" format="dimension" />

@@ -113,7 +113,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String accessToken;
     private String refreshToken;
     private Enterprise currentEnterprise;
-    private Map<String, String> userPhotoUrlMap;
+    private Map<String, String> userPhotoUrlMap = new LinkedHashMap<>();
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;

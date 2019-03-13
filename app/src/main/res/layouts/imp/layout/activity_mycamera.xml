@@ -75,25 +75,23 @@
         app:focus_overlay_color="#86000000"
         app:focus_set_max_initial_frame_scale="true"
         app:focus_touch_padding="8dp" />
-
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/set_radio_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/preview_sv"
+        android:paddingLeft="10dp"
+        android:scrollbars="none"
+        android:visibility="gone"></android.support.v7.widget.RecyclerView>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/preview_sv"
         android:background="@android:color/black">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/set_radio_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:scrollbars="none"
-            android:visibility="gone"></android.support.v7.widget.RecyclerView>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/set_radio_list">
+           >
 
             <Button
                 android:id="@+id/take_bt"

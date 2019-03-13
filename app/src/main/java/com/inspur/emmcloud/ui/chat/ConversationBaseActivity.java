@@ -24,6 +24,8 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     public static final String EXTRA_CONVERSATION = "conversation";
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";
     public static final String EXTRA_UNREAD_MESSAGE = "unread_count";
+    public static final String EXTRA_UIMESSAGE = "uimessage";
+
     protected String cid;
     protected LoadingDialog loadingDlg;
     protected Conversation conversation;
@@ -89,10 +91,12 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String from = getIntent().getExtras().getString("from", "");
-                if (!from.equals("customer")) {
-                    PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
-                    PVCollectModelCacheUtils.saveCollectModel(MyApplication.getInstance(), pvCollectModel);
+                if(getIntent() != null && getIntent().hasExtra("from")){
+                    String from = getIntent().getExtras().getString("from", "");
+                    if (!from.equals("customer")) {
+                        PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
+                        PVCollectModelCacheUtils.saveCollectModel(MyApplication.getInstance(), pvCollectModel);
+                    }
                 }
             }
         }).start();

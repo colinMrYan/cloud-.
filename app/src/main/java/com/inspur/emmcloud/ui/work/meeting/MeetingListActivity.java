@@ -124,7 +124,7 @@ public class MeetingListActivity extends BaseActivity implements
 
         loadingDlg = new LoadingDialog(MeetingListActivity.this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(MeetingListActivity.this);
         relNullLayout = (LinearLayout) findViewById(R.id.meeting_list_out_layout);
         expandListView = (ExpandableListView) findViewById(R.id.expandable_list);

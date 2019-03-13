@@ -237,7 +237,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         adapter = new MyAdapter(MeetingRoomListActivity.this);
         loadingDlg = new LoadingDialog(MeetingRoomListActivity.this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg_blue), getResources().getColor(R.color.header_bg_blue));
         swipeRefreshLayout.setOnRefreshListener(MeetingRoomListActivity.this);
         headLayout = (RelativeLayout) findViewById(R.id.rl_header);
         filteImg = (ImageView) findViewById(R.id.filte_img);
@@ -306,7 +306,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                 handleReset();
                 break;
             case R.id.filte_img:
-                filteImg.setImageResource(R.drawable.icon_in_filte);
                 showPopupWindow(headLayout);
                 break;
             case R.id.ok_text:
@@ -332,7 +331,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         this.endCalendar = Calendar.getInstance();
         if (isAfterFilte) {
             isHasModifyTime = false;
-            filteImg.setImageResource(R.drawable.icon_in_filte);
+            filteImg.setImageResource(R.drawable.icon_before_filte);
         }
         isAfterFilte = false;
         isFirstTime = true;

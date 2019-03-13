@@ -5,17 +5,17 @@
     <color name="content_border">#c8c7cc</color>
 
 
-    <color name="header_bg">#0F7BCA</color>
+    <color name="header_bg_blue">#0F7BCA</color>
     <color name="header_bg_white">#FDFDFD</color>
     <color name="header_bg_grey">#EEEEEE</color>
 
-    <color name="footer_bg">#f8f8f8</color>
+    <color name="footer_bg_blue">#f8f8f8</color>
     <color name="footer_bg_white">#FCFCFC</color>
     <color name="footer_bg_grey">#f8f8f8</color>
 
     <color name="header_text">#ffffff</color>
-    <color name="header_text_black">#222222</color>
-    <color name="header_text_grey">#222222</color>
+    <color name="header_text_black">#333333</color>
+    <color name="header_text_grey">#333333</color>
 
 
     <color name="footer_tab_text_nor_white">#979EA3</color>
@@ -217,4 +217,6 @@
     <color name="content_background">#f2f2f2</color>
 
     <color name="schedule_week_bg_color">#F8F9FB</color>
+
+    <color name="app_font_color">#35A4F6</color>
 </resources>

@@ -7,7 +7,7 @@
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_header_bg">
+        android:background="?attr/header_bg">
 
 
         <RelativeLayout
@@ -30,12 +30,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:gravity="center"
+                android:layout_marginLeft="15dp"
                 android:text="@string/work"
                 android:textColor="?attr/header_text_color"
-                android:textSize="@dimen/header_textsize" />
+                android:textSize="@dimen/header_textsize_big"/>
         </RelativeLayout>
 
 

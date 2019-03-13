@@ -1,13 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
-import android.widget.TextView;
+import java.io.Serializable;
+import java.util.List;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -20,9 +14,16 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.qmuiteam.qmui.widget.QMUILoadingView;
 
-import java.io.Serializable;
-import java.util.List;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * DisplayResImageMsg
@@ -43,6 +44,7 @@ public class DisplayResImageMsg {
                 R.layout.chat_msg_card_child_res_img_view, null);
         final RoundedImageView imageView = (RoundedImageView) cardContentView
                 .findViewById(R.id.content_img);
+        final QMUILoadingView loadingView = cardContentView.findViewById(R.id.qlv_downloading_left);
         final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
         String imageUri = JSONUtils.getString(msg.getBody(), "key", "");
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -63,16 +65,24 @@ public class DisplayResImageMsg {
         int w = JSONUtils.getInt(body, "width", 0);
         int h = JSONUtils.getInt(body, "height", 0);
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
+
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+                super.onLoadingStarted(imageUri, view);
+                loadingView.setVisibility(View.VISIBLE);
+            }
+
             @Override
             public void onLoadingComplete(String imageUri, View view,
                                           Bitmap loadedImage) {
                 FadeInBitmapDisplayer.animate(imageView, 800);
+                int w = loadedImage.getWidth();
+                int h = loadedImage.getHeight();
                 if (!isHasSetImageViewSize) {
-                    int w = loadedImage.getWidth();
-                    int h = loadedImage.getHeight();
                     setImgViewSize(context, imageView, longImgText, w, h);
                 }
+                loadingView.setVisibility(View.GONE);
             }
         });
 

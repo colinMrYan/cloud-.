@@ -42,6 +42,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -570,6 +571,7 @@ public class MeetingDetailActivity extends BaseActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
+
         popupWindow.setTouchInterceptor(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -578,6 +580,13 @@ public class MeetingDetailActivity extends BaseActivity {
                 // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
             }
         });
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                AppUtils.setWindowBackgroundAlpha(MeetingDetailActivity.this, 1.0f);
+            }
+        });
+
 
         RelativeLayout meetingPopChange = (RelativeLayout) contentView
                 .findViewById(R.id.meeting_change_layout);
@@ -615,6 +624,7 @@ public class MeetingDetailActivity extends BaseActivity {
         // 我觉得这里是API的一个bug
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
+        AppUtils.setWindowBackgroundAlpha(MeetingDetailActivity.this, 0.8f);
         // 设置好参数之后再show
         popupWindow.showAsDropDown(view);
 
@@ -682,7 +692,7 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
         TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-                MeetingDetailActivity.this, TimePickerDialog.THEME_HOLO_LIGHT, new OnTimeSetListener() {
+                MeetingDetailActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert, new OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,
                                   int minute) {

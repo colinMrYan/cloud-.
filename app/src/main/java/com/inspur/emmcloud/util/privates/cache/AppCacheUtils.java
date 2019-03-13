@@ -64,7 +64,7 @@ public class AppCacheUtils {
     }
 
     /**
-     * 删除常用app  List
+     * 删除常用app
      *
      * @param context
      */
