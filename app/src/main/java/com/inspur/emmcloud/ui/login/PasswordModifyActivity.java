@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -31,7 +31,7 @@ import org.xutils.x;
  */
 
 @ContentView(R.layout.activity_password_modify)
-public class PasswordModifyActivity extends Activity implements View.OnTouchListener {
+public class PasswordModifyActivity extends BaseActivity implements View.OnTouchListener {
 
     @ViewInject(R.id.bt_save)
     private Button saveBtn;

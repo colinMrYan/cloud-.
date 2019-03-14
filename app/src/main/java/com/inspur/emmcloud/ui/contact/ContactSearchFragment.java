@@ -179,47 +179,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         return rootView;
     }
 
-    private void clickView(int id) {
-        Intent intent = new Intent(getActivity().getApplicationContext(),
-                ContactSearchMoreActivity.class);
-        intent.putExtra(EXTRA_LIMIT, selectLimit);
-        switch (id) {
-            case R.id.pop_second_group_more_text:
-                intent.putExtra("groupTextList",
-                        (Serializable) popSecondGroupTextList);
-                intent.putExtra("groupTextList",
-                        (Serializable) popSecondGroupTextList);
-                intent.putExtra("selectMemList", (Serializable) selectMemList);
-                intent.putExtra("groupPosition", 2);
-                intent.putExtra("searchText", searchEdit.getText().toString());
-                intent.putExtra("searchContent", searchContent);
-                intent.putExtra("isMultiSelect", isMultiSelect);
-                if (excludeContactUidList.size() > 0) {
-                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SELECT, (Serializable) excludeContactUidList);
-                }
-                startActivityForResult(intent, SEARCH_MORE);
-                break;
-            case R.id.pop_third_group_more_text:
-                FirstGroupTextModel groupTextModel = new FirstGroupTextModel(getString(R.string.origanization_struct), "");
-                List<FirstGroupTextModel> popGroupTextList = new ArrayList<>();
-                popGroupTextList.add(groupTextModel);
-                intent.putExtra("groupTextList",
-                        (Serializable) popGroupTextList);
-                intent.putExtra("selectMemList", (Serializable) selectMemList);
-                intent.putExtra("groupPosition", 3);
-                intent.putExtra("searchText", searchEdit.getText().toString());
-                intent.putExtra("searchContent", searchContent);
-                intent.putExtra("isMultiSelect", isMultiSelect);
-                if (excludeContactUidList.size() > 0) {
-                    intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SELECT, (Serializable) excludeContactUidList);
-                }
-                startActivityForResult(intent, SEARCH_MORE);
-                break;
-            default:
-                break;
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -398,6 +357,8 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         rootView.findViewById(R.id.struct_layout).setOnClickListener(contactSearchClickListener);
         rootView.findViewById(R.id.channel_group_layout).setOnClickListener(contactSearchClickListener);
         rootView.findViewById(R.id.layout).setOnClickListener(contactSearchClickListener);
+        rootView.findViewById(R.id.pop_second_group_more_text).setOnClickListener(contactSearchClickListener);
+        rootView.findViewById(R.id.pop_third_group_more_text).setOnClickListener(contactSearchClickListener);
     }
 
     /**
@@ -765,15 +726,6 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 }).start();
             }
         };
-    }
-
-    /**
-     * 处理点击事件
-     *
-     * @param v
-     */
-    public void onClick(View v) {
-        clickView(v.getId());
     }
 
     /**
@@ -1236,7 +1188,41 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
         @Override
         public void onClick(View v) {
+            Intent intent = new Intent(getActivity().getApplicationContext(),
+                    ContactSearchMoreActivity.class);
+            intent.putExtra(EXTRA_LIMIT, selectLimit);
             switch (v.getId()) {
+                case R.id.pop_second_group_more_text:
+                    intent.putExtra("groupTextList",
+                            (Serializable) popSecondGroupTextList);
+                    intent.putExtra("groupTextList",
+                            (Serializable) popSecondGroupTextList);
+                    intent.putExtra("selectMemList", (Serializable) selectMemList);
+                    intent.putExtra("groupPosition", 2);
+                    intent.putExtra("searchText", searchEdit.getText().toString());
+                    intent.putExtra("searchContent", searchContent);
+                    intent.putExtra("isMultiSelect", isMultiSelect);
+                    if (excludeContactUidList.size() > 0) {
+                        intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SELECT, (Serializable) excludeContactUidList);
+                    }
+                    startActivityForResult(intent, SEARCH_MORE);
+                    break;
+                case R.id.pop_third_group_more_text:
+                    FirstGroupTextModel groupTextModel = new FirstGroupTextModel(getString(R.string.origanization_struct), "");
+                    List<FirstGroupTextModel> popGroupTextList = new ArrayList<>();
+                    popGroupTextList.add(groupTextModel);
+                    intent.putExtra("groupTextList",
+                            (Serializable) popGroupTextList);
+                    intent.putExtra("selectMemList", (Serializable) selectMemList);
+                    intent.putExtra("groupPosition", 3);
+                    intent.putExtra("searchText", searchEdit.getText().toString());
+                    intent.putExtra("searchContent", searchContent);
+                    intent.putExtra("isMultiSelect", isMultiSelect);
+                    if (excludeContactUidList.size() > 0) {
+                        intent.putExtra(ContactSearchMoreActivity.EXTRA_EXCLUDE_SELECT, (Serializable) excludeContactUidList);
+                    }
+                    startActivityForResult(intent, SEARCH_MORE);
+                    break;
                 case R.id.ibt_back:
                     InputMethodUtils.hide(getActivity());
                     getActivity().finish();

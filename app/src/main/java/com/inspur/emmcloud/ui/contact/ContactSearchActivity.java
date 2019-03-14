@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.contact;
 
 import android.os.Bundle;
-import android.view.View;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
@@ -31,7 +30,4 @@ public class ContactSearchActivity extends BaseFragmentActivity {
         }
     }
 
-    public void onClick(View view) {
-        fragment.onClick(view);
-    }
 }
