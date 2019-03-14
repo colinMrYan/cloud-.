@@ -45,7 +45,6 @@ import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -72,7 +71,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +90,6 @@ public class ScheduleFragment extends Fragment implements
     private static final String TYPE_MEETING = "meeting";
     private static final String TYPE_TASK = "task";
     private static final int WORK_SETTING = 1;
-
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
@@ -399,7 +396,6 @@ public class ScheduleFragment extends Fragment implements
      * 当工作页面配置发生改变后进行数据和layout的刷新
      */
     private void refreshWorkLayout() {
-//        setHeadLayout();
         initWorkSetting();
         adapter.notifyDataSetChanged();
         getWorkData();
@@ -633,13 +629,13 @@ public class ScheduleFragment extends Fragment implements
                 @Override
                 public void onClick(View v) {
                     if (id.equals(TYPE_CALENDAR)) {
-                        recordUserClickWorkFunction("calendar");
+                        recordUserClickWorkFunction(TYPE_CALENDAR);
                         IntentUtils.startActivity(getActivity(), CalActivity.class);
                     } else if (id.equals(TYPE_MEETING)) {
-                        recordUserClickWorkFunction("meeting");
+                        recordUserClickWorkFunction(TYPE_MEETING);
                         IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
                     } else if (id.equals(TYPE_TASK)) {
-                        recordUserClickWorkFunction("task");
+                        recordUserClickWorkFunction(TYPE_TASK);
                         IntentUtils.startActivity(getActivity(), MessionListActivity.class);
                     }
                 }
@@ -648,13 +644,13 @@ public class ScheduleFragment extends Fragment implements
                 @Override
                 public void onClick(View v) {
                     if (id.equals(TYPE_CALENDAR)) {
-                        recordUserClickWorkFunction("calendar");
+                        recordUserClickWorkFunction(TYPE_CALENDAR);
                         IntentUtils.startActivity(getActivity(), CalEventAddActivity.class);
                     } else if (id.equals(TYPE_MEETING)) {
-                        recordUserClickWorkFunction("meeting");
+                        recordUserClickWorkFunction(TYPE_MEETING);
                         IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
                     } else if (id.equals(TYPE_TASK)) {
-                        recordUserClickWorkFunction("task");
+                        recordUserClickWorkFunction(TYPE_TASK);
                         IntentUtils.startActivity(getActivity(), MessionListActivity.class);
                     }
                 }
@@ -777,31 +773,29 @@ public class ScheduleFragment extends Fragment implements
                 bundle.putSerializable("calEvent",
                         calEventList.get(position));
                 IntentUtils.startActivity(getActivity(), CalEventAddActivity.class, bundle);
-                recordUserClickWorkFunction("calendar");
+                recordUserClickWorkFunction(TYPE_CALENDAR);
             } else if (type.equals(TYPE_TASK)) {
-                bundle.putSerializable("task",
+                bundle.putSerializable(TYPE_TASK,
                         taskList.get(position));
                 IntentUtils.startActivity(getActivity(), MessionDetailActivity.class, bundle);
-                recordUserClickWorkFunction("task");
+                recordUserClickWorkFunction(TYPE_TASK);
             } else if (type.equals(TYPE_MEETING)) {
                 Meeting meeting = meetingList.get(position);
-                bundle.putSerializable("meeting", meeting);
+                bundle.putSerializable(TYPE_MEETING, meeting);
                 IntentUtils.startActivity(getActivity(),
                         MeetingDetailActivity.class, bundle);
-                recordUserClickWorkFunction("meeting");
+                recordUserClickWorkFunction(TYPE_MEETING);
             }
         }
 
     }
 
+
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult) {
-            ScheduleFragment.this.meetingList = getMeetingsResult.getMeetingsList();
-            LogUtils.YfcDebug("会议数据获取成功：" + meetingList.size());
-            Collections.sort(ScheduleFragment.this.meetingList, new Meeting());
+            meetingList = getMeetingsResult.getMeetingsList();
             if (meetingChildAdapter != null) {
-                LogUtils.YfcDebug("会议数据刷新");
                 meetingChildAdapter.notifyDataSetChanged();
             }
         }
@@ -814,9 +808,7 @@ public class ScheduleFragment extends Fragment implements
         @Override
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
             taskList = getTaskListResult.getTaskList();
-            LogUtils.YfcDebug("任务数据获取成功：" + taskList.size());
             if (taskChildAdapter != null) {
-                LogUtils.YfcDebug("任务数据刷新");
                 taskChildAdapter.notifyDataSetChanged();
             }
         }
