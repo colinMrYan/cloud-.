@@ -153,7 +153,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
         this.setContentView(mainView);
         this.setWidth(EmmDisplayUtils.getScreenWidth(context));
         this.setHeight(LayoutParams.WRAP_CONTENT);
-        ColorDrawable dw = new ColorDrawable(Color.parseColor("#00000000"));
+        ColorDrawable dw = new ColorDrawable(Color.parseColor("#212121"));
         // 设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
         this.setFocusable(false);
