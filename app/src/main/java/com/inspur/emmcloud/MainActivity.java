@@ -4,12 +4,10 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -77,10 +75,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             return;
         }
         setContentView(R.layout.activity_main);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setNavigationBarColor(ContextCompat.getColor(MyApplication.getInstance(),android.R.color.white));
-        }
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
     }
