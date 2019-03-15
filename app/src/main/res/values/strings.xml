@@ -346,6 +346,7 @@
     <string name="work_calendar_text">企业日历</string>
     <string name="work_task_text">我的任务</string>
     <string name="work_info_text">信息栏</string>
+    <string name="work_search_hint">搜索日历、任务</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
