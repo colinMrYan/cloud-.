@@ -129,8 +129,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         if (context != null) {
                             if (upgradeCode == 2) {
                                 showForceUpgradeDlg();
-                            } else {
-                                showSelectUpgradeDlg();
                             }
                         }
                         break;

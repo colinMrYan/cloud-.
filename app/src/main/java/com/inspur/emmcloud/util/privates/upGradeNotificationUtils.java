@@ -24,7 +24,7 @@ public class upGradeNotificationUtils {
     private String NotificationChannelId = "NotificationChannelId";
     private String NotificationChannelName = "NotificationChannelName";
 
-    public upGradeNotificationUtils(Context context, int id ) {
+    public upGradeNotificationUtils(Context context, int id) {
         this.context = context;
         notificationId = id;
 
@@ -47,9 +47,9 @@ public class upGradeNotificationUtils {
             notificationManager.createNotificationChannel(mChannel);
         }
         builder.setTicker("");//设置信息提示
-        builder.setSmallIcon(R.drawable.ic_launcher);//设置通知提示图标
-        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));//设置图标
-        builder.setContentTitle(context.getResources().getString(R.string.app_name));//设置标题
+        builder.setSmallIcon(AppUtils.getAppIconRes(context));//设置通知提示图标
+        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), AppUtils.getAppIconRes(context)));//设置图标
+        builder.setContentTitle(AppUtils.getAppName(context));//设置标题
         builder.setContentText(context.getResources().getString(R.string.app_update_prepare));//设置文本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             builder.setShowWhen(true);
@@ -61,7 +61,7 @@ public class upGradeNotificationUtils {
     /**
      * 更新通知栏信息
      */
-    public void updateNotification(String appSizeData,boolean isOngoing) {
+    public void updateNotification(String appSizeData, boolean isOngoing) {
         builder.setOngoing(isOngoing);
         builder.setContentText(appSizeData);
         notificationManager.notify(notificationId, builder.build());
