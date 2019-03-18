@@ -24,17 +24,21 @@ public class NotificationUtils {
     private int notificationId = 10000;
     private String NotificationChannelId = "NotificationChannelId";
     private String NotificationChannelName = "NotificationChannelName";
+    private boolean isForceUpGrade=true;
 
-    public NotificationUtils(Context context, int id) {
+    public NotificationUtils(Context context, int id,boolean isForceUpGrade) {
         this.context = context;
         notificationId = id;
-        initNotification();
+        this.isForceUpGrade = isForceUpGrade;
     }
 
     /**
      * 初始化更新
      */
     public void initNotification() {
+        if(isForceUpGrade){
+            return;
+        }
         notificationManager = (NotificationManager) context.getSystemService
                 (context.NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(context, NotificationChannelId);
@@ -62,7 +66,11 @@ public class NotificationUtils {
     /**
      * 更新通知栏信息
      */
-    public void updateNotification(String appSizeData) {
+    public void updateNotification(String appSizeData,boolean isOngoing) {
+        if(isForceUpGrade){
+            return;
+        }
+        builder.setOngoing(false);
         builder.setContentText(appSizeData);
         notificationManager.notify(notificationId, builder.build());
     }
@@ -71,6 +79,9 @@ public class NotificationUtils {
      * 删除通知栏信息
      */
     public void delectNotification() {
+        if (isForceUpGrade){
+            return;
+        }
         notificationManager.cancel(notificationId);
     }
 

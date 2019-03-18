@@ -175,6 +175,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
             case 1: // 可选升级
                 long appNotUpdateTime = PreferencesUtils.getLong(context, "appNotUpdateTime");
                 if (isManualCheck || System.currentTimeMillis() - appNotUpdateTime > notUpdateInterval) {
+                    if (null == notificationUtils) {
+                        notificationUtils = new NotificationUtils(context, 10000, false);
+                    }
                     showSelectUpgradeDlg();
                 } else if (handler != null) {
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
@@ -323,7 +326,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(DOWNLOAD_FAIL);
                             if (null != notificationUtils) {
-                                notificationUtils.updateNotification(context.getResources().getString(R.string.app_update_error));
+                                notificationUtils.updateNotification(context.getResources().getString(R.string.app_update_error), false);
                             }
                         }
 
@@ -356,7 +359,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                             if (null != notificationUtils) {
                                 String data = context.getResources().getString(R.string.app_update_loaded) +
                                         FileUtils.formatFileSize(downloadSize) + "/" + FileUtils.formatFileSize(totalSize);
-                                notificationUtils.updateNotification(data);
+                                notificationUtils.updateNotification(data, true);
                             }
                         }
 
@@ -364,8 +367,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         public void onStarted() {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(SHOW_PEOGRESS_LAODING_DLG);
-                            if (null == notificationUtils) {
-                                notificationUtils = new NotificationUtils(context, 10000);
+                            if (null != notificationUtils) {
+                                notificationUtils.initNotification();
                             }
                         }
 
