@@ -128,7 +128,6 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 //切换到特殊符号键盘
                 keyboardView.setKeyboard(keyboardSymbol);
             } else if(primaryCode == -10){
-//                LogUtils.YfcDebug("点击了切换模式键");
                 isSafeLetter = isSafeLetter?false:true;
                 setRandomLetter(isSafeLetter);
             } else {
