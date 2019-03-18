@@ -4,12 +4,10 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -77,30 +75,21 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             return;
         }
         setContentView(R.layout.activity_main);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setNavigationBarColor(ContextCompat.getColor(MyApplication.getInstance(),android.R.color.white));
-        }
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
-        //        AlertDialog alertDialog = null;
-//        AlertDialog.Builder builder= new AlertDialog.Builder(this,R.style.Theme_AppCompat_Light_Dialog_Alert);
-//        builder.setTitle("我是title").setMessage("我是message").setPositiveButton("确定",null).setNegativeButton("取消",null).setNeutralButton("其他",null);
-//        alertDialog =  builder.create();
-//        alertDialog.show();
     }
 
     private void checkNecessaryPermission() {
-        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, Permissions.PHONE_PERMISSION);
+        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
         if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
             final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
             permissionDialog.setCancelable(false);
             permissionDialog.setCanceledOnTouchOutside(false);
             permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE) ? View.VISIBLE : View.GONE);
-            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION) ? View.VISIBLE : View.GONE);
+            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE) ? View.VISIBLE : View.GONE);
             if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
-                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.PHONE_PERMISSION)) {
+                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE)) {
                 LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);

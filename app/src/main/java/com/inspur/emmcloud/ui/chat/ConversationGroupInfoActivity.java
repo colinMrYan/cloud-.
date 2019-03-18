@@ -28,7 +28,6 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -337,6 +336,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             String name = ((Conversation) eventMessage.getMessageObj()).getName();
             nameText.setText(name);
             conversation.setName(name);
+            groupMembersText.setText(name + getString(R.string.bracket_with_word, (memberUidList.size() + "")));
         }
     }
 

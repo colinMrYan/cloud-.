@@ -1198,6 +1198,7 @@
     <string name="permission_open_cloud_plus">开启%1$s</string>
     <string name="permission_necessary_permission">为了您能正常使用%1$s，需要以下权限</string>
     <string name="permission_phone_permission">设备信息</string>
+    <string name="permission_call_phone_permission">拨打电话</string>
     <string name="permission_storage_permission">存储空间</string>
     <string name="permission_next">下一步</string>
 

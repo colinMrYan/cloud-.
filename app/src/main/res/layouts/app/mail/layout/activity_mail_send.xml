@@ -45,7 +45,7 @@
             android:visibility="gone"
             android:text="设置"
             android:textColor="?attr/header_text_color"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/header_function_textsize"/>
 
         <TextView
             android:id="@+id/tv_add_attachments"
@@ -61,7 +61,7 @@
             android:paddingRight="12dp"
             android:text="附件"
             android:textColor="?attr/header_text_color"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/header_function_textsize"/>
 
         <TextView
             android:id="@+id/tv_send_mail"
@@ -76,7 +76,7 @@
             android:paddingRight="12dp"
             android:text="发送"
             android:textColor="?attr/header_text_color"
-            android:textSize="16sp"/>
+            android:textSize="@dimen/header_function_textsize"/>
     </RelativeLayout>
 
     <ScrollView

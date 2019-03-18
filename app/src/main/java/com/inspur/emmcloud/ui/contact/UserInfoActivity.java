@@ -234,7 +234,9 @@ public class UserInfoActivity extends BaseActivity {
                 showCallUserDialog(contactUser.getTel());
                 break;
             case R.id.ll_user_mail:
-                AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
+                if(!contactUser.getId().equals(MyApplication.getInstance().getUid())){
+                    AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
+                }
                 break;
             default:
                 break;
@@ -242,29 +244,31 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     private void showCallUserDialog(final String mobile) {
-        new MyQMUIDialog.MessageDialogBuilder(UserInfoActivity.this)
-                .setMessage(mobile)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
-                })
-                .addAction(R.string.user_call, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
-                    }
-                })
-                .show();
+        if(!contactUser.getId().equals(MyApplication.getInstance().getUid())){
+            new MyQMUIDialog.MessageDialogBuilder(UserInfoActivity.this)
+                    .setMessage(mobile)
+                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .addAction(R.string.user_call, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void showCallPhoneDialog() {
         final String phoneNum = contactUser.getMobile();
         final String officePhoneNum = contactUser.getTel();
         ActionSheetDialog.ActionListSheetBuilder builder = new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
-                .setTitle(getString(R.string.user_call) + contactUser.getName())
+                .setTitle(getString(R.string.user_call))
                 .setTitleColor(Color.parseColor("#888888"))
                 .setItemColor(Color.parseColor("#36A5F6"))
                 .setCancelColor(Color.parseColor("#333333"));

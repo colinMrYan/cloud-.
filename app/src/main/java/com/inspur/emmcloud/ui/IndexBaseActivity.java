@@ -258,7 +258,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     protected void batteryWhiteListRemind(final Context context) {
         batteryDialogIsShow = PreferencesUtils.getBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && batteryDialogIsShow) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && batteryDialogIsShow) {
             try {
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
@@ -271,10 +271,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                             if (confirmDialog.getIsHide()) {
                                 PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                             }
-                            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                            intent.setData(Uri.parse("package:" + context.getPackageName()));
-                            startActivity(intent);
-                            // TODO Auto-generated method stub
+                            try {
+                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                                intent.setData(Uri.parse("package:" + context.getPackageName()));
+                                startActivity(intent);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                            }
                             confirmDialog.dismiss();
                         }
 

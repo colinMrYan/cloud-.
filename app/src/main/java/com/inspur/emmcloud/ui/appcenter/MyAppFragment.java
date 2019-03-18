@@ -180,7 +180,7 @@ public class MyAppFragment extends BaseFragment {
             hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
-        checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_V1_EXCEPTION_HINT,5);
+        checkingNetStateUtils.getNetStateResult(5);
     }
 
     /**
@@ -405,9 +405,7 @@ public class MyAppFragment extends BaseFragment {
      * */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
-        if(netState.getAction().equals(Constant.EVENTBUS_TAG_NET_STATE_CHANGE)){
-            checkingNetStateUtils.getNetStateResult(Constant.EVENTBUS_TAG_NET_APP_CENTER_EXCEPTION_HINT,5);
-        } else if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_APP_CENTER_EXCEPTION_HINT)) {   //网络异常提示
+        if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
             if((boolean)netState.getMessageObj()){
                 DeleteHeaderView();
             }else{
@@ -554,12 +552,15 @@ public class MyAppFragment extends BaseFragment {
      *
      * @param appAdapterList
      */
-    private void handCommonlyUseAppChange(List<AppGroupBean> appAdapterList,
-                                          App app) {
+    private void deleteCommonlyUseApp(List<AppGroupBean> appAdapterList,
+                                      App app) {
         List<App> commonlyAppItemList = appAdapterList.get(0)
                 .getAppItemList();
         if (getNeedCommonlyUseApp() && (commonlyAppItemList.indexOf(app) != -1)) {
             commonlyAppItemList.remove(app);
+            List<App> appList = AppCacheUtils.getCommonlyUseNeedShowList(getActivity());
+            appAdapterList.get(0)
+                    .setAppItemList(appList.size()>8?appList.subList(0,8):appList);
         }
         Iterator<AppGroupBean> appGroupBeanList = appAdapterList.iterator();
         while (appGroupBeanList.hasNext()) {
@@ -951,6 +952,7 @@ public class MyAppFragment extends BaseFragment {
                     listPosition).getAppItemList();
             final DragAdapter dragGridViewAdapter = new DragAdapter(
                     getActivity(), appGroupItemList, listPosition, appStoreBadgeMap);
+            dragGridViewAdapter.setCommonlyUseGroup(getIsCommonlyUseGroupInList(listPosition));
             dragGridView.setCanScroll(false);
             dragGridView.setPosition(listPosition);
             dragGridView.setPullRefreshLayout(swipeRefreshLayout);
@@ -978,7 +980,7 @@ public class MyAppFragment extends BaseFragment {
                                 intent.putExtra("appGroupList", (Serializable) app.getSubAppList());
                                 startActivity(intent);
                             } else {
-                                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                                if (getIsCommonlyUseGroupInList(listPosition)) {
                                     UriUtils.openApp(getActivity(), app, "commonapplications");
                                 } else {
                                     UriUtils.openApp(getActivity(), app, "application");
@@ -1014,7 +1016,7 @@ public class MyAppFragment extends BaseFragment {
                     .setNotifyCommonlyUseListener(new DragAdapter.NotifyCommonlyUseListener() {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
-                            handCommonlyUseAppChange(appAdapterList, app);
+                            deleteCommonlyUseApp(appAdapterList, app);
                             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
@@ -1022,14 +1024,15 @@ public class MyAppFragment extends BaseFragment {
                         }
                     });
             if (canEdit) {
-                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
-                    //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
-                    dragGridViewAdapter.setCanEdit(false);
-                } else {
+                //控制常用应用是否可以晃动删除
+//                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+//                    //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
+//                    dragGridViewAdapter.setCanEdit(false);
+//                } else {
                     //如果应用列表可以编辑，不是常用应用分组
                     dragGridViewAdapter.setCanEdit(true);
                     dragGridView.setCanEdit(true);
-                }
+//                }
             } else {
                 //如果不能编辑则把adapter和View的属性都设置为false
                 dragGridViewAdapter.setCanEdit(false);
@@ -1069,6 +1072,15 @@ public class MyAppFragment extends BaseFragment {
         public void setCanEdit(boolean canDelete) {
             this.canEdit = canDelete;
         }
+    }
+
+    /**
+     * 在应用ListView中获取当前分组是否是常用应用分组，传入参数为当前分组的位置，返回是否常用应用分组
+     * @param listPosition
+     * @return
+     */
+    private boolean getIsCommonlyUseGroupInList(int listPosition) {
+        return  (listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0;
     }
 
     /**

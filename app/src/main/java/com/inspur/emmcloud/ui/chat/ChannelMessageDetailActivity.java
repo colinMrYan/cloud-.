@@ -197,7 +197,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             fileSize = FileUtils.formatFileSize(msgContentMediaImage.getRawSize());
             final String imgPath = APIUri.getChatFileResouceUrl(message.getChannel(), msgContentMediaImage.getRawMedia());
             ImageDisplayUtils.getInstance().displayImage(msgContentImg,
-                    imgPath, R.drawable.icon_photo_default);
+                    imgPath, R.drawable.default_image);
             msgContentImg.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

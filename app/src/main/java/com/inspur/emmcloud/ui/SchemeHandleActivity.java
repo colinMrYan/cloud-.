@@ -119,12 +119,12 @@ public class SchemeHandleActivity extends Activity {
                 break;
         }
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont,0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true).init();
+        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont,0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true,1.0f).init();
     }
 
     private boolean isLackNecessaryPermission() {
         //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, Permissions.PHONE_PERMISSION);
+        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
         if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
             Intent intent = new Intent(SchemeHandleActivity.this, MainActivity.class);
             startActivity(intent);
