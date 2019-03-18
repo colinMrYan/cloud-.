@@ -28,7 +28,6 @@ import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MineLayoutItem;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -251,8 +250,7 @@ public class MoreFragment extends BaseFragment {
      * @param functionId
      */
     private void recordUserClick(String functionId) {
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "mine");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+        PVCollectModelCacheUtils.saveCollectModel(functionId, "mine");
     }
 
     private void getUserCardMenu() {
