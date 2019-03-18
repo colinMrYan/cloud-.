@@ -20,8 +20,10 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.InputMethodUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -42,12 +44,14 @@ public class EmmSecurityKeyboard extends PopupWindow {
     private Keyboard keyboardSymbol;
     private boolean isNumber = false;
     private boolean isUpper = false;
+    private boolean isSafeLetter = false;
     private View mainView;
     private ArrayList<String> numberList = new ArrayList<>();
     private ArrayList<String> letterList = new ArrayList<>();
     private EmmSecurityConfigure configuration;
     private EditText curEditText;
-    private Context context;
+    private Context contextLocal;
+
     private OnKeyboardActionListener listener = new OnKeyboardActionListener() {
         @Override
         public void swipeUp() {
@@ -123,6 +127,10 @@ public class EmmSecurityKeyboard extends PopupWindow {
             } else if (primaryCode == KEYBOARD_CHANGE_SYMBOL) {
                 //切换到特殊符号键盘
                 keyboardView.setKeyboard(keyboardSymbol);
+            } else if(primaryCode == -10){
+//                LogUtils.YfcDebug("点击了切换模式键");
+                isSafeLetter = isSafeLetter?false:true;
+                setRandomLetter(isSafeLetter);
             } else {
                 editable.insert(start, Character.toString((char) primaryCode));
             }
@@ -140,7 +148,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
         } else {
             configuration = securityConfigure;
         }
-        this.context = context;
+        this.contextLocal = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mainView = inflater.inflate(R.layout.emm_keyboard, null);
@@ -148,6 +156,13 @@ public class EmmSecurityKeyboard extends PopupWindow {
             @Override
             public void onClick(View v) {
                 dismiss();
+            }
+        });
+        mainView.findViewById(R.id.iv_keyboard_view_sys).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                InputMethodUtils.showKeyboard(curEditText);
             }
         });
         this.setContentView(mainView);
@@ -191,6 +206,35 @@ public class EmmSecurityKeyboard extends PopupWindow {
         keyboardView.setEnabled(true);
         keyboardView.setPreviewEnabled(false);
         keyboardView.setOnKeyboardActionListener(listener);
+    }
+
+    /**
+     * 设置字母键盘是否乱序
+     * @param isRandomLetter
+     */
+    private void setRandomLetter(boolean isRandomLetter){
+        if(isRandomLetter){
+            randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
+            keyboardView.setKeyboard(keyboardLetter);
+            for (Key key : keyboardLetter.getKeys()) {
+                if (key.codes[0] == -10) {
+                    key.icon = contextLocal.getResources().getDrawable(
+                            R.drawable.ic_safe_keyboard_press);
+                }
+            }
+            ((TextView)mainView.findViewById(R.id.tv_keyboard_name)).setText(contextLocal.getString(R.string.emm_secure_keyboard));
+        }else{
+            EmmCreateKeyList.initLetters(letterList);
+            keyboardLetter = new Keyboard(contextLocal, R.xml.emm_keyboard_english);
+            keyboardView.setKeyboard(keyboardLetter);
+            for (Key key : keyboardLetter.getKeys()) {
+                if (key.codes[0] == -10) {
+                    key.icon = contextLocal.getResources().getDrawable(
+                            R.drawable.ic_safe_keyboard_normal);
+                }
+            }
+            ((TextView)mainView.findViewById(R.id.tv_keyboard_name)).setText(contextLocal.getString(R.string.emm_secure_keyboard_normal));
+        }
     }
 
     private void editTextAddListener() {
@@ -249,7 +293,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
 
     private void randomKeysForOnce() {
         EmmCreateKeyList.initLetters(letterList);
-        randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
+//        randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
         EmmCreateKeyList.initNumbers(numberList);
         randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
     }
@@ -290,7 +334,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
                     key.codes[0] = key.codes[0] + 32;
                 }
                 if (key.codes[0] == -1) {
-                    key.icon = context.getResources().getDrawable(
+                    key.icon = contextLocal.getResources().getDrawable(
                             R.drawable.icon_keyboard_shift);
                 }
             }
@@ -302,7 +346,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
                     key.codes[0] = key.codes[0] - 32;
                 }
                 if (key.codes[0] == -1) {
-                    key.icon = context.getResources().getDrawable(
+                    key.icon = contextLocal.getResources().getDrawable(
                             R.drawable.icon_keyboard_shift_c);
                 }
             }
@@ -311,35 +355,35 @@ public class EmmSecurityKeyboard extends PopupWindow {
 
     private void randomKeys(int keyType) {
         List<Key> keyList = null;
-        ArrayList<String> temNumList = null;
+        ArrayList<String> temList = null;
         switch (keyType) {
             case KEYBOARD_NUMBER_RANDOM_TYPE:
                 if (numberList.size() == 0) {
                     EmmCreateKeyList.initNumbers(numberList);
                 }
                 keyList = keyboardNumber.getKeys();
-                temNumList = new ArrayList<>(numberList);
+                temList = new ArrayList<>(numberList);
                 break;
             case KEYBOARD_LETTER_RANDOM_TYPE:
                 if (letterList.size() == 0) {
                     EmmCreateKeyList.initLetters(letterList);
                 }
                 keyList = keyboardLetter.getKeys();
-                temNumList = new ArrayList<>(letterList);
+                temList = new ArrayList<>(letterList);
                 break;
             default:
                 keyList = new ArrayList<>();
-                temNumList = new ArrayList<>();
+                temList = new ArrayList<>();
                 break;
         }
         for (Key key : keyList) {
             if (key.label != null && (keyType == KEYBOARD_LETTER_RANDOM_TYPE ?
                     isLetter(key.label.toString()) : isNumber(key.label.toString()))) {
-                int number = new Random().nextInt(temNumList.size());
-                String[] textArray = temNumList.get(number).split("#");
+                int number = new Random().nextInt(temList.size());
+                String[] textArray = temList.get(number).split("#");
                 key.label = textArray[1];
                 key.codes[0] = Integer.valueOf(textArray[0], KEYBOARD_RADIX);
-                temNumList.remove(number);
+                temList.remove(number);
             }
 
         }
@@ -353,25 +397,25 @@ public class EmmSecurityKeyboard extends PopupWindow {
     private void showKeyboard(View view) {
         int realHeight = 0;
         int yOff;
-        yOff = realHeight - EmmDisplayUtils.dp2px(context, 231);
-        if (EmmDisplayUtils.dp2px(context, 236) > (int) (EmmDisplayUtils
-                .getScreenHeight(context) * 3.0f / 5.0f)) {
-            yOff = EmmDisplayUtils.getScreenHeight(context)
-                    - EmmDisplayUtils.dp2px(context, 199);
+        yOff = realHeight - EmmDisplayUtils.dp2px(contextLocal, 231);
+        if (EmmDisplayUtils.dp2px(contextLocal, 236) > (int) (EmmDisplayUtils
+                .getScreenHeight(contextLocal) * 3.0f / 5.0f)) {
+            yOff = EmmDisplayUtils.getScreenHeight(contextLocal)
+                    - EmmDisplayUtils.dp2px(contextLocal, 199);
         }
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.push_bottom_in);
+        Animation animation = AnimationUtils.loadAnimation(contextLocal, R.anim.push_bottom_in);
         showAtLocation(view, Gravity.BOTTOM | Gravity.LEFT, 0, yOff);
         getContentView().setAnimation(animation);
     }
 
 
     private boolean isLetter(String str) {
-        String letterStr = context.getString(R.string.emm_keyboard_a2z);
+        String letterStr = contextLocal.getString(R.string.emm_keyboard_a2z);
         return letterStr.contains(str.toLowerCase());
     }
 
     private boolean isNumber(String str) {
-        String numStr = context.getString(R.string.emm_keyboard_zero2nine);
+        String numStr = contextLocal.getString(R.string.emm_keyboard_zero2nine);
         return numStr.contains(str.toLowerCase());
     }
 
