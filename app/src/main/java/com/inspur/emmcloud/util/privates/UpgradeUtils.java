@@ -71,7 +71,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
     private ProgressBar downloadProgressBar;
     private TextView percentText;
 
-    private NotificationUtils notificationUtils;
+    private upGradeNotificationUtils notificationUtils;
 
     //isManualCheck 是否在关于中手动检查更新
     public UpgradeUtils(Context context, Handler handler, boolean isManualCheck) {
@@ -135,7 +135,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         }
                         break;
                     case SHOW_PEOGRESS_LAODING_DLG:
-                        progressDownloadDialog.show();
+                        if(null!=progressDownloadDialog){
+                            progressDownloadDialog.show();
+                        }
                         break;
 
                     default:
@@ -176,7 +178,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                 long appNotUpdateTime = PreferencesUtils.getLong(context, "appNotUpdateTime");
                 if (isManualCheck || System.currentTimeMillis() - appNotUpdateTime > notUpdateInterval) {
                     if (null == notificationUtils) {
-                        notificationUtils = new NotificationUtils(context, 10000, false);
+                        notificationUtils = new upGradeNotificationUtils(context, 10000);
                     }
                     showSelectUpgradeDlg();
                 } else if (handler != null) {
@@ -213,7 +215,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                showDownloadDialog();
+                if (context != null) {
+                    // 下载文件
+                    downloadApk();
+                }
             }
         });
         Button cancelBt = dialog.findViewById(R.id.cancel_btn);
@@ -341,7 +346,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(DOWNLOAD_FINISH);
                             if (null != notificationUtils) {
-                                notificationUtils.delectNotification();
+                                notificationUtils.deleteNotification();
                             }
                         }
 

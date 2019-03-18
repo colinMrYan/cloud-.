@@ -12,11 +12,10 @@ import android.support.v4.app.NotificationCompat;
 import com.inspur.emmcloud.R;
 
 /**
- * Created by libaochao on 2019/3/12.
+ * Created by libaochao on 2019/3/18.
  */
 
-public class NotificationUtils {
-
+public class upGradeNotificationUtils {
     NotificationManager notificationManager;
     private NotificationChannel mChannel;
     private Context context;
@@ -24,21 +23,17 @@ public class NotificationUtils {
     private int notificationId = 10000;
     private String NotificationChannelId = "NotificationChannelId";
     private String NotificationChannelName = "NotificationChannelName";
-    private boolean isForceUpGrade=true;
 
-    public NotificationUtils(Context context, int id,boolean isForceUpGrade) {
+    public upGradeNotificationUtils(Context context, int id ) {
         this.context = context;
         notificationId = id;
-        this.isForceUpGrade = isForceUpGrade;
+
     }
 
     /**
      * 初始化更新
      */
     public void initNotification() {
-        if(isForceUpGrade){
-            return;
-        }
         notificationManager = (NotificationManager) context.getSystemService
                 (context.NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(context, NotificationChannelId);
@@ -67,10 +62,7 @@ public class NotificationUtils {
      * 更新通知栏信息
      */
     public void updateNotification(String appSizeData,boolean isOngoing) {
-        if(isForceUpGrade){
-            return;
-        }
-        builder.setOngoing(false);
+        builder.setOngoing(isOngoing);
         builder.setContentText(appSizeData);
         notificationManager.notify(notificationId, builder.build());
     }
@@ -78,12 +70,7 @@ public class NotificationUtils {
     /**
      * 删除通知栏信息
      */
-    public void delectNotification() {
-        if (isForceUpGrade){
-            return;
-        }
+    public void deleteNotification() {
         notificationManager.cancel(notificationId);
     }
-
-
 }
