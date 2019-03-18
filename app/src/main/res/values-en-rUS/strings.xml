@@ -1152,7 +1152,8 @@
     <string name="emm_keyboard_number">Number</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">Letter</string>
-    <string name="emm_secure_keyboard">Secure Keyboard</string>
+    <string name="emm_secure_keyboard">Safety Keyboard Safe Mode</string>
+    <string name="emm_secure_keyboard_normal">Safety Keyboard Common Mode</string>
     <string name="emm_keyboard_space">space</string>
 
     <string name="welcome_to">Welcome to </string>
