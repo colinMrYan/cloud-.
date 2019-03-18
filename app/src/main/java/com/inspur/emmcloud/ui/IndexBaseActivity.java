@@ -32,7 +32,6 @@ import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabTitleResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
@@ -258,7 +257,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     protected void batteryWhiteListRemind(final Context context) {
         batteryDialogIsShow = PreferencesUtils.getBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && batteryDialogIsShow) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && batteryDialogIsShow) {
             try {
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
@@ -271,10 +270,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                             if (confirmDialog.getIsHide()) {
                                 PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                             }
-                            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                            intent.setData(Uri.parse("package:" + context.getPackageName()));
-                            startActivity(intent);
-                            // TODO Auto-generated method stub
+                            try {
+                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                                intent.setData(Uri.parse("package:" + context.getPackageName()));
+                                startActivity(intent);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                            }
                             confirmDialog.dismiss();
                         }
 
@@ -709,15 +712,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    // 记录打开的tab页
-                    String mainTabName = getMainTabName(tabId);
-                    PVCollectModel pvCollectModel = new PVCollectModel(mainTabName, mainTabName);
-                    PVCollectModelCacheUtils.saveCollectModel(IndexBaseActivity.this, pvCollectModel);
-                }
-            }).start();
+            String mainTabName = getMainTabName(tabId);
+            PVCollectModelCacheUtils.saveCollectModel(mainTabName, mainTabName);
             isSystemChangeTag = true;
         }
     }

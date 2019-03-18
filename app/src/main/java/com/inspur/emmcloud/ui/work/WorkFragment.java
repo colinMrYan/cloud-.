@@ -23,7 +23,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.FestivalDate;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
@@ -468,8 +467,7 @@ public class WorkFragment extends BaseFragment {
      * @param functionId
      */
     private void recordUserClickWorkFunction(String functionId) {
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+        PVCollectModelCacheUtils.saveCollectModel(functionId, "work");
     }
 
     @Override

@@ -71,7 +71,7 @@ public class BaseFragmentActivity extends FragmentActivity {
             int statusBarColor = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
             int navigationBarColor =R.color.white;
             boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true).statusBarDarkFont(isStatusBarDarkFont,0.2f).init();
+            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true,1.0f).statusBarDarkFont(isStatusBarDarkFont,0.2f).init();
         }
     }
 

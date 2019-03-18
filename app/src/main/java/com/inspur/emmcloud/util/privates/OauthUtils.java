@@ -9,6 +9,7 @@ import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
@@ -50,9 +51,19 @@ public class OauthUtils {
             synchronized (this) {
                 if (!isTokenRefreshing) {
                     isTokenRefreshing = true;
-                    LoginAPIService apiService = new LoginAPIService(MyApplication.getInstance());
-                    apiService.setAPIInterface(new WebService());
-                    apiService.refreshToken();
+                    if (!StringUtils.isBlank(MyApplication.getInstance().getRefreshToken())) {
+                        LoginAPIService apiService = new LoginAPIService(MyApplication.getInstance());
+                        apiService.setAPIInterface(new WebService());
+                        apiService.refreshToken();
+                    } else {
+                        if (!(MyApplication.getInstance().getActivityLifecycleCallbacks().getCurrentActivity() instanceof LoginActivity)) {
+                            ToastUtils.show(MyApplication.getInstance(), R.string.login_authorization_expired);
+                            MyApplication.getInstance().signout();
+                        }
+                        callBackList.clear();
+                        isTokenRefreshing = false;
+                    }
+
                 }
             }
         }
