@@ -32,11 +32,10 @@
             android:keyLabel="^" />
         <Key
             android:codes="38"
-            android:keyEdgeFlags="right"
             android:keyLabel="&amp;" />
         <Key
             android:codes="42"
-            android:keyEdgeFlags="left"
+            android:keyEdgeFlags="right"
             android:keyLabel="*" />
     </Row>
     <Row>

@@ -384,9 +384,9 @@ public class MoreFragment extends BaseFragment {
                 });
                 String iconUrl = getIconUrl(mineLayoutItem.getIco());
                 if (iconUrl.startsWith("drawable")){
-                    ImageDisplayUtils.getInstance().displayImageNoCache(menuImgBtn,iconUrl,R.drawable.ic_mine_item_default);
+                    ImageDisplayUtils.getInstance().displayImageNoCache(menuImgBtn,iconUrl);
                 }else {
-                    ImageDisplayUtils.getInstance().displayImage(menuImgBtn, iconUrl, R.drawable.ic_mine_item_default);
+                    ImageDisplayUtils.getInstance().displayImage(menuImgBtn, iconUrl);
                 }
                 userCardMenuLayout.addView(menuImgBtn);
             }

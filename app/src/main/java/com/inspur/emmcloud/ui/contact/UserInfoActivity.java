@@ -268,7 +268,7 @@ public class UserInfoActivity extends BaseActivity {
         final String phoneNum = contactUser.getMobile();
         final String officePhoneNum = contactUser.getTel();
         ActionSheetDialog.ActionListSheetBuilder builder = new ActionSheetDialog.ActionListSheetBuilder(UserInfoActivity.this)
-                .setTitle(getString(R.string.user_call) + contactUser.getName())
+                .setTitle(getString(R.string.user_call))
                 .setTitleColor(Color.parseColor("#888888"))
                 .setItemColor(Color.parseColor("#36A5F6"))
                 .setCancelColor(Color.parseColor("#333333"));
