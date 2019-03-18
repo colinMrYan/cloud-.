@@ -46,7 +46,6 @@ import com.inspur.emmcloud.bean.system.EmmAction;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.Constant;
@@ -153,21 +152,13 @@ public class CommunicationV0Fragment extends BaseFragment {
                             getActivity().getString(R.string.adress_list));
                     IntentUtils.startActivity(getActivity(),
                             ContactSearchActivity.class, bundle);
-                    recordUserClickContact();
+                    PVCollectModelCacheUtils.saveCollectModel("contact", "communicate");
                     break;
                 default:
                     break;
             }
         }
     };
-
-    /**
-     * 记录用户点击的频道
-     */
-    private void recordUserClickContact() {
-        PVCollectModel pvCollectModel = new PVCollectModel("contact", "communicate");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
-    }
 
     @Override
     public void onAttach(Context context) {
