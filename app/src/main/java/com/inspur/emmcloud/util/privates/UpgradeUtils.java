@@ -179,7 +179,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         notificationUtils = new upGradeNotificationUtils(context, 10000);
                     }
                     showSelectUpgradeDlg();
-                } else if (handler != null) {
+                }
+                if (handler != null) {
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }
 
@@ -372,6 +373,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
                             upgradeHandler.sendEmptyMessage(SHOW_PEOGRESS_LAODING_DLG);
                             if (null != notificationUtils) {
                                 notificationUtils.initNotification();
+                                ToastUtils.show(context,
+                                        context.getString(R.string.app_update_prepare));
                             }
                         }
 
