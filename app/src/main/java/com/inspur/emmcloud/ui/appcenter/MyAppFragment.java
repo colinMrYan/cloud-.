@@ -50,7 +50,6 @@ import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
@@ -447,14 +446,6 @@ public class MyAppFragment extends BaseFragment {
         myIntentFilter.addAction(ACTION_NAME);
         // 注册广播
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, myIntentFilter);
-    }
-
-    /**
-     * 记录用户使用了应用中心功能
-     */
-    private void recordUserClickAppCenter() {
-        PVCollectModel pvCollectModel = new PVCollectModel("appcenter", "application");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
     }
 
     /**
@@ -1152,7 +1143,7 @@ public class MyAppFragment extends BaseFragment {
             switch (v.getId()) {
                 case R.id.ibt_appcenter_enter:
                     IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
-                    recordUserClickAppCenter();
+                    PVCollectModelCacheUtils.saveCollectModel("appcenter", "application");
                     break;
                 case R.id.ibt_appcenter_config:
                     showPopupWindow(v);

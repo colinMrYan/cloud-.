@@ -85,9 +85,9 @@
         <View
             android:id="@+id/space_edit"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:layout_below="@id/search_edit_layout"
-            android:background="#e3e3e3" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/origin_all_layout"
@@ -117,8 +117,8 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#E3E3E3" />
+                    android:layout_height="0.5px"
+                    android:background="@color/color_list_divider" />
 
                 <ListView
                     android:id="@+id/open_first_group_list"
@@ -126,7 +126,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
                     android:divider="#ffffff"
-                    android:dividerHeight="0.5dp"></ListView>
+                    android:dividerHeight="0.5px"></ListView>
             </LinearLayout>
 
             <LinearLayout
@@ -159,8 +159,8 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#e3e3e3" />
+                        android:layout_height="0.5px"
+                        android:background="@color/color_list_divider" />
 
                     <RelativeLayout
                         android:id="@+id/struct_layout"
@@ -202,9 +202,9 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
+                            android:layout_height="0.5px"
                             android:layout_marginLeft="55dp"
-                            android:background="#e3e3e3" />
+                            android:background="@color/color_list_divider" />
 
                         <com.inspur.emmcloud.widget.CircleTextImageView
                             android:id="@+id/channel_group_img"
@@ -230,9 +230,9 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="0.5px"
                         android:layout_marginLeft="55dp"
-                        android:background="#e3e3e3" />
+                        android:background="@color/color_list_divider" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -257,8 +257,8 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#e3e3e3" />
+                        android:layout_height="0.5px"
+                        android:background="@color/color_list_divider" />
 
                     <ListView
                         android:id="@+id/second_group_list"
@@ -266,7 +266,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1.0"
                         android:divider="#ffffff"
-                        android:dividerHeight="0.5dp"></ListView>
+                        android:dividerHeight="0.5px"></ListView>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -320,8 +320,8 @@
                     </RelativeLayout>
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#e3e3e3" />
+                        android:layout_height="0.5px"
+                        android:background="@color/color_list_divider" />
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -380,8 +380,8 @@
                     </RelativeLayout>
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#e3e3e3" />
+                        android:layout_height="0.5px"
+                        android:background="@color/color_list_divider" />
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -401,7 +401,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="#ffffff"
-                            android:dividerHeight="0.5dp"></ListView>
+                            android:dividerHeight="0.5px"></ListView>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -31,6 +31,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
@@ -165,6 +166,7 @@ public class LoginBySmsActivity extends BaseActivity {
                             //存储手机号作为登录用户名
                             PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_LOGIN_USERNAME, phone);
                             PreferencesUtils.putString(getApplicationContext(), Constant.PREF_LOGIN_PASSWORD, "");
+                            PVCollectModelCacheUtils.saveCollectModel("login", "smsLogin");
                             enterApp();
                         } else {
                             Bundle bundle = new Bundle();

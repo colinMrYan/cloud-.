@@ -32,7 +32,6 @@ import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabTitleResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
@@ -713,15 +712,8 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         this.tabId = tabId;
         tipsView.setCanTouch(tabId.equals(Constant.APP_TAB_BAR_COMMUNACATE));
         if (!isSystemChangeTag) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    // 记录打开的tab页
-                    String mainTabName = getMainTabName(tabId);
-                    PVCollectModel pvCollectModel = new PVCollectModel(mainTabName, mainTabName);
-                    PVCollectModelCacheUtils.saveCollectModel(IndexBaseActivity.this, pvCollectModel);
-                }
-            }).start();
+            String mainTabName = getMainTabName(tabId);
+            PVCollectModelCacheUtils.saveCollectModel(mainTabName, mainTabName);
             isSystemChangeTag = true;
         }
     }

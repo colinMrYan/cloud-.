@@ -24,7 +24,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
@@ -501,8 +500,7 @@ public class ScheduleFragment extends Fragment implements
      * @param functionId
      */
     private void recordUserClickWorkFunction(String functionId) {
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+        PVCollectModelCacheUtils.saveCollectModel(functionId, "work");
     }
 
     @Override
