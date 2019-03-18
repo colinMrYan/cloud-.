@@ -116,7 +116,7 @@
                     android:background="@drawable/ic_work_today_left_arrow_bg"
                     android:gravity="center"
                     android:layout_marginLeft="12dp"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="15dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/white"
                     android:text="今"/>
