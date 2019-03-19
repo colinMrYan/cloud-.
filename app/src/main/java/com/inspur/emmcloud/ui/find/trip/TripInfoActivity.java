@@ -10,7 +10,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.FindAPIService;
 import com.inspur.emmcloud.bean.find.Trip;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -36,19 +35,9 @@ public class TripInfoActivity extends BaseActivity {
             trip = (Trip) getIntent().getExtras().getSerializable("tripInfo");
             disPlayTripInfo();
         }
-        recordUserClickTrip();
+        PVCollectModelCacheUtils.saveCollectModel("traintickets", "find");
     }
 
-    /**
-     * 记录用户使用了行程功能
-     */
-    private void recordUserClickTrip() {
-        PVCollectModel pvCollectModel = new PVCollectModel();
-        pvCollectModel.setCollectTime(System.currentTimeMillis());
-        pvCollectModel.setFunctionID("traintickets");
-        pvCollectModel.setFunctionType("find");
-        PVCollectModelCacheUtils.saveCollectModel(TripInfoActivity.this, pvCollectModel);
-    }
 
     /**
      * 网络获取行程数据

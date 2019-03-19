@@ -1160,7 +1160,8 @@
     <string name="emm_keyboard_number">數位</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">字母</string>
-    <string name="emm_secure_keyboard">安全鍵盤</string>
+    <string name="emm_secure_keyboard">安全鍵盤安全模式</string>
+    <string name="emm_secure_keyboard_normal">安全鍵盤普通模式</string>
     <string name="emm_keyboard_space">空格</string>
 
     <string name="welcome_to">歡迎使用</string>

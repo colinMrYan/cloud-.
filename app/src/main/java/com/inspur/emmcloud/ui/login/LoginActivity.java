@@ -28,6 +28,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
@@ -102,7 +103,6 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-
     /**
      * 显示当前登录租户信息
      */
@@ -162,6 +162,7 @@ public class LoginActivity extends BaseActivity {
                 LoadingDialog.dimissDlg(LoadingDlg);
                 switch (msg.what) {
                     case LOGIN_SUCCESS:
+                        PVCollectModelCacheUtils.saveCollectModel("login", "passwordLogin");
                         enterApp();
                         break;
                     case LOGIN_FAIL:

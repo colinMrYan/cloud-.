@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -74,19 +73,9 @@ public class UriUtils {
                         R.string.app_not_support_app_type);
                 break;
         }
-        saveAPPPVCollect(activity, app, appCollectType);
-    }
-
-    /**
-     * 应用pv收集
-     *
-     * @param activity
-     * @param app
-     */
-    private static void saveAPPPVCollect(Activity activity, App app, String appCollectType) {
+        //应用pv收集
         String appID = (app.getAppID().equals("inspur_news_esg")) ? "news" : app.getAppID();  //新闻应用跟普通应用区分开
-        PVCollectModel pvCollectModel = new PVCollectModel(appID, appCollectType);
-        PVCollectModelCacheUtils.saveCollectModel(activity, pvCollectModel);
+        PVCollectModelCacheUtils.saveCollectModel(appID, appCollectType);
     }
 
     /**
