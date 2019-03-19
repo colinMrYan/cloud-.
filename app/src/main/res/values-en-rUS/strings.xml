@@ -60,7 +60,7 @@
     <string name="tab_not_support_tips">%1$s function has been revised , Please<Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
     <string name="choose">Choose</string>
     <string name="file_type">File type</string>
-    <string name="app_update_prepare">Ready to update</string>
+    <string name="app_update_prepare">Ready to download</string>
     <string name="app_update_error">Update failed</string>
     <string name="app_update_loaded">Downloaded:</string>
 

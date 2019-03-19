@@ -175,12 +175,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
             case 1: // 可选升级
                 long appNotUpdateTime = PreferencesUtils.getLong(context, "appNotUpdateTime");
                 if (isManualCheck || System.currentTimeMillis() - appNotUpdateTime > notUpdateInterval) {
-                    if (null == notificationUtils) {
-                        notificationUtils = new upGradeNotificationUtils(context, 10000);
-                    }
                     showSelectUpgradeDlg();
-                }
-                if (handler != null) {
+                } else if (handler != null) {
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }
 
@@ -215,8 +211,14 @@ public class UpgradeUtils extends APIInterfaceInstance {
             public void onClick(View v) {
                 dialog.dismiss();
                 if (context != null) {
+                    if (null == notificationUtils) {
+                        notificationUtils = new upGradeNotificationUtils(context, 10000);
+                    }
                     // 下载文件
                     downloadApk();
+                    if (handler != null) {
+                        handler.sendEmptyMessage(NO_NEED_UPGRADE);
+                    }
                 }
             }
         });
