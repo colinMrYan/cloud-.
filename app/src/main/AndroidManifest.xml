@@ -221,7 +221,6 @@
             android:name=".ui.mine.setting.NoPermissionDialogActivity"
             android:launchMode="singleInstance"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
             android:theme="@style/dialog_activity" />
         <activity
             android:name=".ui.mine.setting.EnterpriseSwitchActivity"
