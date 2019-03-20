@@ -460,6 +460,7 @@ public class CommunicationFragment extends BaseFragment {
                     List<UIConversation> uiConversationList = new ArrayList<>();
                     if (conversationList.size() > 0) {
                         uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
+                        ConversationCacheUtils.saveConversationList(MyApplication.getInstance(),conversationList);
                         List<UIConversation> stickUIConversationList = new ArrayList<>();
                         Iterator<UIConversation> it = uiConversationList.iterator();
                         while (it.hasNext()) {
