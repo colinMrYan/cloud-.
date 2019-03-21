@@ -44,6 +44,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private Activity context;
     private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
+    private ItemLongClickListener itemLongClickListener;
     private String channelType;
     private ECMChatInputMenu chatInputMenu;
 
@@ -108,6 +109,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      */
     public void setItemClickListener(MyItemClickListener myItemClickListener) {
         this.mItemClickListener = myItemClickListener;
+    }
+
+    public void setItemLongClickListener(ItemLongClickListener myItemClickListener) {
+        this.itemLongClickListener = myItemClickListener;
     }
 
     @Override
@@ -198,10 +203,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
                 break;
         }
-
-
         holder.cardLayout.addView(cardContentView);
     }
+
+
 
     /**
      * 展示消息发送时间
@@ -294,6 +299,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         void onAdapterDataSizeChange();
     }
 
+    public interface ItemLongClickListener{
+        void onItemLongClick(View view,int position);
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public RelativeLayout cardLayout;
         public TextView senderNameText;
@@ -325,6 +335,13 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
+            cardParentLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    itemLongClickListener.onItemLongClick(view,getAdapterPosition());
+                    return false;
+                }
+            });
         }
 
         /**

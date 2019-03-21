@@ -56,7 +56,7 @@ public class DisplayTxtPlainMsg {
         contentText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                copyContentToPasteBoard(context, contentText);
+              //  copyContentToPasteBoard(context, contentText);
                 return true;
             }
         });

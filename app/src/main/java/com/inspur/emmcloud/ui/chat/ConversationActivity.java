@@ -419,6 +419,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             }
         });
+        adapter.setItemLongClickListener(new ChannelMessageAdapter.ItemLongClickListener(){
+            @Override
+            public void onItemLongClick(View view, int position) {
+                ToastUtils.show(ConversationActivity.this,"11111111111111111111111111");
+            }
+        });
         adapter.setMessageList(uiMessageList);
         msgListView.setAdapter(adapter);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
