@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,16 +17,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
@@ -40,17 +45,23 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
+import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -71,11 +82,13 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -95,6 +108,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REQUEST_CAMERA = 3;
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
+
+    private static final int SHARE_SEARCH_RUEST_CODE=31;
 
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
@@ -419,10 +434,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             }
         });
-        adapter.setItemLongClickListener(new ChannelMessageAdapter.ItemLongClickListener(){
+        adapter.setItemLongClickListener(new ChannelMessageAdapter.ItemLongClickListener() {     //长按回调事件
             @Override
-            public void onItemLongClick(View view, int position) {
-                ToastUtils.show(ConversationActivity.this,"11111111111111111111111111");
+            public void onItemLongClick(View view, UIMessage uiMessage) {
+
             }
         });
         adapter.setMessageList(uiMessageList);
@@ -790,6 +805,28 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case REQUEST_QUIT_CHANNELGROUP:
                     MyApplication.getInstance().setCurrentChannelCid("");
                     finish();
+                    break;
+                case SHARE_SEARCH_RUEST_CODE:
+                    if(NetUtils.isNetworkConnected(getApplicationContext(){
+                    String searchResult = data.getStringExtra("searchResult");
+                    JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
+                    if (jsonObject.has("people")) {
+                        JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+                        if (peopleArray.length() > 0) {
+                            JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+                            String pidUid = JSONUtils.getString(peopleObj, "pid", "");
+                            createDirectChannel(pidUid);
+                        }
+                    }
+                    if (jsonObject.has("channelGroup")) {
+                        JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+                        if (channelGroupArray.length() > 0) {
+                            JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+                            String cid = JSONUtils.getString(cidObj, "cid", "");
+                            sendMsg(cid);
+                        }
+                    }
+                }
                     break;
             }
         } else {
@@ -1368,5 +1405,207 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     class WebService extends APIInterfaceInstance {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SHARE_SEARCH_RUEST_CODE && resultCode == RESULT_OK
+                && NetUtils.isNetworkConnected(getApplicationContext())) {
+            String result = data.getStringExtra("searchResult");
+            JSONObject jsonObject = JSONUtils.getJSONObject(result);
+            if (jsonObject.has("people")) {
+                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+                if (peopleArray.length() > 0) {
+                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+                    String uid = JSONUtils.getString(peopleObj, "pid", "");
+                    createDirectChannel(uid);
+                }
+            }
+            if (jsonObject.has("channelGroup")) {
+                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+                if (channelGroupArray.length() > 0) {
+                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+                    String cid = JSONUtils.getString(cidObj, "cid", "");
+                    sendMsg(cid);
+                }
+            }
+        }
+
+        if(NetUtils.isNetworkConnected(getApplicationContext() {
+            String result = data.getStringExtra("searchResult");
+            JSONObject jsonObject = JSONUtils.getJSONObject(result);
+            if (jsonObject.has("people")) {
+                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+                if (peopleArray.length() > 0) {
+                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+                    String uid = JSONUtils.getString(peopleObj, "pid", "");
+                    createDirectChannel(uid);
+                }
+            }
+            if (jsonObject.has("channelGroup")) {
+                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+                if (channelGroupArray.length() > 0) {
+                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+                    String cid = JSONUtils.getString(cidObj, "cid", "");
+                    sendMsg(cid);
+                }
+            }
+        }
+
+
+    }
+
+    /**
+     * 创建单聊
+     *
+     * @param uid
+     */
+    private void createDirectChannel(String uid) {
+        if (MyApplication.getInstance().isV1xVersionChat()) {
+            new ConversationCreateUtils().createDirectConversation(NewsWebDetailActivity.this, uid,
+                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        @Override
+                        public void createDirectConversationSuccess(Conversation conversation) {
+                            sendMsg(conversation.getId());
+                        }
+
+                        @Override
+                        public void createDirectConversationFail() {
+
+                        }
+                    });
+        } else {
+            new ChatCreateUtils().createDirectChannel(this, uid,
+                    new OnCreateDirectChannelListener() {
+                        @Override
+                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                            sendMsg(getCreateSingleChannelResult.getCid());
+                        }
+
+                        @Override
+                        public void createDirectChannelFail() {
+                            //showShareFailToast();
+                        }
+                    });
+        }
+
+    }
+
+    /**
+     * 转发消息
+     * @param cid
+     */
+    private void sendMsg(String cid) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            if (MyApplication.getInstance().isV0VersionChat()) {
+                ChatAPIService apiService = new ChatAPIService(
+                        NewsWebDetailActivity.this);
+                apiService.setAPIInterface(new NewsWebDetailActivity.WebService());
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("url", url);
+                    jsonObject.put("poster", groupNews.getPoster());
+                    jsonObject.put("digest", groupNews.getSummary());
+                    jsonObject.put("title", groupNews.getTitle());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
+            } else {
+                String poster = StringUtils.isBlank(groupNews.getPoster()) ? "" : APIUri.getPreviewUrl(groupNews.getPoster());
+                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, groupNews.getTitle(), groupNews.getSummary(), url);
+                fakeMessageId = message.getId();
+                WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
+            }
+
+        }
+
+    }
+
+    public  boolean MessageLongClick(final Context context,final UIMessage uiMessage ){
+        Message message = uiMessage.getMessage();
+        String type = message.getType();
+        boolean isConsume=false;
+        final String[] items;
+        switch (type) {
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                items = new String[]{"复制", "转发", "日程"};
+                LongClickDialog(items,context,uiMessage);
+                isConsume= true;
+                break;
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                LogUtils.LbcDebug("TYPE_TEXT_MARKDOWN");
+                break;
+            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                LogUtils.LbcDebug("MESSAGE_TYPE_FILE_REGULAR_FILE");
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                LogUtils.LbcDebug("MESSAGE_TYPE_EXTENDED_CONTACT_CARD");
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
+                LogUtils.LbcDebug("MESSAGE_TYPE_EXTENDED_ACTIONS");
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                LogUtils.LbcDebug("MESSAGE_TYPE_MEDIA_IMAGE");
+                items = new String[]{"转发", "日程"};
+                LongClickDialog(items,context,uiMessage);
+                isConsume= true;
+                break;
+            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                LogUtils.LbcDebug("MESSAGE_TYPE_COMMENT_TEXT_PLAIN");
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                LogUtils.LbcDebug("MESSAGE_TYPE_EXTENDED_LINKS");
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                LogUtils.LbcDebug("MESSAGE_TYPE_MEDIA_VOICE");
+                break;
+            default:
+                LogUtils.LbcDebug("DEFAULT");
+                break;
+        }
+        return isConsume;
+    }
+
+
+    private  void LongClickDialog(final String[] items, final Context context,final UIMessage uiMessage) {
+        new QMUIDialog.MenuDialogBuilder(context)
+                .addItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (items[which]){
+                            case "复制":
+                                Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
+                                break;
+                            case "转发":
+                                shareMessageToFrinds(context,uiMessage);
+                                Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
+                                break;
+                            case "日程":
+                                Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .create(R.style.QMUI_Dialog).show();
+    }
+
+
+    /**
+     * 给朋友分享新闻
+     */
+    private void shareMessageToFrinds(Context context, UIMessage uiMessage) {
+        Intent intent = new Intent();
+        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        ArrayList<String> uidList = new ArrayList<>();
+        uidList.add(MyApplication.getInstance().getUid());
+        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE,context.getString(R.string.news_share));
+        intent.setClass(context,
+                ContactSearchActivity.class);
+        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
     }
 }

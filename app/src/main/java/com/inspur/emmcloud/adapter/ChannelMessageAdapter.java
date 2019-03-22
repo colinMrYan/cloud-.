@@ -27,6 +27,7 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -111,8 +112,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         this.mItemClickListener = myItemClickListener;
     }
 
-    public void setItemLongClickListener(ItemLongClickListener myItemClickListener) {
-        this.itemLongClickListener = myItemClickListener;
+    public void setItemLongClickListener(ItemLongClickListener itemLongClickListener){
+        this.itemLongClickListener=itemLongClickListener;
     }
 
     @Override
@@ -168,11 +169,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         String type = message.getType();
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-
+                LogUtils.LbcDebug("textPlin");
                 cardContentView = DisplayTxtPlainMsg.getView(context,
                         message);
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                LogUtils.LbcDebug("TYPE_TEXT_MARKDOWN");
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
                         message);
                 break;
@@ -204,6 +206,19 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
         }
         holder.cardLayout.addView(cardContentView);
+        cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                itemLongClickListener.onItemLongClick(view,uiMessage);
+               return  true;
+        }});
+
+//        cardContentView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ToastUtils.show(context,"1111111111111111111");
+//            }
+//        });
     }
 
 
@@ -300,11 +315,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     }
 
     public interface ItemLongClickListener{
-        void onItemLongClick(View view,int position);
+        void onItemLongClick(View view,UIMessage uiMessage);
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener   {
         public RelativeLayout cardLayout;
         public TextView senderNameText;
         public ImageView senderPhotoImgLeft;
@@ -335,13 +350,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
-            cardParentLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    itemLongClickListener.onItemLongClick(view,getAdapterPosition());
-                    return false;
-                }
-            });
         }
 
         /**

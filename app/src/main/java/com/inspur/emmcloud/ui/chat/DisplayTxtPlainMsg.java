@@ -14,7 +14,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.widget.LinkMovementClickMethod;
+import com.inspur.emmcloud.widget.TextViewFixTouchConsume;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -29,11 +29,9 @@ public class DisplayTxtPlainMsg {
      * 富文本卡片
      *
      * @param context
-     * @param convertView
      * @param message
      */
-    public static View getView(final Context context,
-                               Message message) {
+    public static View getView(final Context context, Message message) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = message.getFromUser().equals(
@@ -42,24 +40,26 @@ public class DisplayTxtPlainMsg {
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
-        final TextView contentText = (TextView) cardContentView
+        final TextViewFixTouchConsume contentText = (TextViewFixTouchConsume) cardContentView
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         String text = message.getMsgContentTextPlain().getText();
-        contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
+        contentText.setMovementMethod(TextViewFixTouchConsume.LocalLinkMovementMethod.getInstance());
+        contentText.setFocusable(false);
+        contentText.setFocusableInTouchMode(false);
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
         contentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 contentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg_blue));
-        contentText.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-              //  copyContentToPasteBoard(context, contentText);
-                return true;
-            }
-        });
+//        contentText.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//              //  copyContentToPasteBoard(context, contentText);
+//                return true;
+//            }
+//        });
         return cardContentView;
     }
 
