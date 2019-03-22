@@ -5,14 +5,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.systool.tedpermission.PermissionListener;
+import com.inspur.emmcloud.util.common.systool.tedpermission.TedPermission;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
-import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.Setting;
@@ -31,6 +33,11 @@ public class PermissionRequestManagerUtils {
     private static PermissionRequestManagerUtils permissionManagerUtils;
     private PermissionRequestCallback callback;
     private Context context;
+    public static final int REQ_CODE_PERMISSION_REQUEST = 10;
+    /**
+     * Classic permission checker.
+     */
+    private static final PermissionChecker permissionChecker = new StandardChecker();
 
     private PermissionRequestManagerUtils() {
     }
@@ -73,30 +80,58 @@ public class PermissionRequestManagerUtils {
         if (PermissionRequestManagerUtils.getInstance().isHasPermission(context, permissionGroup)) {
             callback.onPermissionRequestSuccess(Arrays.asList(permissionGroup));
         } else {
-            AndPermission.with(context)
-                    .runtime()
-                    .permission(permissionGroup)
-                    .onGranted(new Action<List<String>>() {
-                        @Override
-                        public void onAction(List<String> permissions) {
-                            if (callback != null) {
-                                callback.onPermissionRequestSuccess(permissions);
-                            }
-                        }
-                    })
-                    .onDenied(new Action<List<String>>() {
-                        @Override
-                        public void onAction(List<String> permissions) {
-                            if (AndPermission.hasAlwaysDeniedPermission(context, permissions)) {
-                                showSettingDialog(context, permissions);
-                            } else {
-                                if (callback != null) {
-                                    callback.onPermissionRequestFail(permissions);
-                                }
-                            }
-                        }
-                    })
-                    .start();
+//            AndPermission.with(context)
+//                    .runtime()
+//                    .permission(permissionGroup)
+//                    .onGranted(new Action<List<String>>() {
+//                        @Override
+//                        public void onAction(List<String> permissions) {
+//                            if (callback != null) {
+//                                callback.onPermissionRequestSuccess(permissions);
+//                            }
+//                        }
+//                    })
+//                    .onDenied(new Action<List<String>>() {
+//                        @Override
+//                        public void onAction(List<String> permissions) {
+//                            if (AndPermission.hasAlwaysDeniedPermission(context, permissions)) {
+//                                showSettingDialog(context, permissions);
+//                            } else {
+//                                if (callback != null) {
+//                                    callback.onPermissionRequestFail(permissions);
+//                                }
+//                            }
+//                        }
+//                    })
+//                    .start();
+            PermissionListener permissionlistener = new PermissionListener() {
+                @Override
+                public void onPermissionGranted() {
+//                    if (callback != null) {
+//                        callback.onPermissionRequestSuccess(permissions);
+//                    }
+                    Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onPermissionDenied(List<String> deniedPermissions) {
+                    exitByPermission(deniedPermissions);
+                    Toast.makeText(context, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT)
+                            .show();
+                }
+            };
+
+
+            TedPermission.with(context)
+                    .setPermissionListener(permissionlistener)
+//                    .setRationaleTitle(R.string.app_name)
+//                    .setRationaleMessage("content")
+                    .setDeniedTitle("Permission denied")
+                    .setDeniedMessage(
+                            "If you reject permission,you can not use this service\nPlease turn on permissions at [Setting] > [Permission]")
+                    .setGotoSettingButtonText("确定")
+                    .setPermissions(permissionGroup)
+                    .check();
         }
     }
 
@@ -178,7 +213,7 @@ public class PermissionRequestManagerUtils {
      * @return
      */
     public boolean isHasPermission(Context context, String permission) {
-        return AndPermission.hasPermissions(context, permission);
+        return permissionChecker.hasPermission(context,permission);
     }
 
     /**
@@ -189,7 +224,7 @@ public class PermissionRequestManagerUtils {
      * @return
      */
     public boolean isHasPermission(Context context, String[] permissions) {
-        return AndPermission.hasPermissions(context, permissions);
+        return permissionChecker.hasPermission(context,permissions);
     }
 
     private String[] stringList2StringArray(List<String> permissionList) {
