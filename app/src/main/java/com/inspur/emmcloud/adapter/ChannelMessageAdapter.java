@@ -209,8 +209,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                itemLongClickListener.onItemLongClick(view,uiMessage);
-               return  true;
+                return  itemLongClickListener.onItemLongClick(view,uiMessage);
         }});
 
 //        cardContentView.setOnClickListener(new View.OnClickListener() {
@@ -315,7 +314,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     }
 
     public interface ItemLongClickListener{
-        void onItemLongClick(View view,UIMessage uiMessage);
+        boolean onItemLongClick(View view,UIMessage uiMessage);
     }
 
 

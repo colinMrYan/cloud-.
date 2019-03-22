@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +25,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -45,10 +46,10 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
-import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
@@ -139,6 +140,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     private BroadcastReceiver refreshNameReceiver;
     private PopupWindow mediaVoiceReRecognizerPop;
     private PopupWindow resendMessagePop;
+
+    private UIMessage backUiMessage=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -436,8 +439,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         });
         adapter.setItemLongClickListener(new ChannelMessageAdapter.ItemLongClickListener() {     //长按回调事件
             @Override
-            public void onItemLongClick(View view, UIMessage uiMessage) {
-
+            public boolean onItemLongClick(View view, UIMessage uiMessage) {
+                backUiMessage=uiMessage;
+              return MessageLongClick(ConversationActivity.this,uiMessage);
             }
         });
         adapter.setMessageList(uiMessageList);
@@ -807,7 +811,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     finish();
                     break;
                 case SHARE_SEARCH_RUEST_CODE:
-                    if(NetUtils.isNetworkConnected(getApplicationContext(){
+                    if(NetUtils.isNetworkConnected(getApplicationContext())){
                     String searchResult = data.getStringExtra("searchResult");
                     JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
                     if (jsonObject.has("people")) {
@@ -815,7 +819,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         if (peopleArray.length() > 0) {
                             JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
                             String pidUid = JSONUtils.getString(peopleObj, "pid", "");
-                            createDirectChannel(pidUid);
+                            createDirectChannel(pidUid,backUiMessage);
                         }
                     }
                     if (jsonObject.has("channelGroup")) {
@@ -823,7 +827,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         if (channelGroupArray.length() > 0) {
                             JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
                             String cid = JSONUtils.getString(cidObj, "cid", "");
-                            sendMsg(cid);
+                            sendMsg(cid,backUiMessage.getMessage());
                         }
                     }
                 }
@@ -1407,67 +1411,18 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SHARE_SEARCH_RUEST_CODE && resultCode == RESULT_OK
-                && NetUtils.isNetworkConnected(getApplicationContext())) {
-            String result = data.getStringExtra("searchResult");
-            JSONObject jsonObject = JSONUtils.getJSONObject(result);
-            if (jsonObject.has("people")) {
-                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
-                if (peopleArray.length() > 0) {
-                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
-                    String uid = JSONUtils.getString(peopleObj, "pid", "");
-                    createDirectChannel(uid);
-                }
-            }
-            if (jsonObject.has("channelGroup")) {
-                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
-                if (channelGroupArray.length() > 0) {
-                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-                    String cid = JSONUtils.getString(cidObj, "cid", "");
-                    sendMsg(cid);
-                }
-            }
-        }
-
-        if(NetUtils.isNetworkConnected(getApplicationContext() {
-            String result = data.getStringExtra("searchResult");
-            JSONObject jsonObject = JSONUtils.getJSONObject(result);
-            if (jsonObject.has("people")) {
-                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
-                if (peopleArray.length() > 0) {
-                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
-                    String uid = JSONUtils.getString(peopleObj, "pid", "");
-                    createDirectChannel(uid);
-                }
-            }
-            if (jsonObject.has("channelGroup")) {
-                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
-                if (channelGroupArray.length() > 0) {
-                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-                    String cid = JSONUtils.getString(cidObj, "cid", "");
-                    sendMsg(cid);
-                }
-            }
-        }
-
-
-    }
-
     /**
      * 创建单聊
      *
      * @param uid
      */
-    private void createDirectChannel(String uid) {
+    private void createDirectChannel(String uid, final UIMessage uiMessage) {
         if (MyApplication.getInstance().isV1xVersionChat()) {
-            new ConversationCreateUtils().createDirectConversation(NewsWebDetailActivity.this, uid,
+            new ConversationCreateUtils().createDirectConversation(this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
-                            sendMsg(conversation.getId());
+                            sendMsg(conversation.getId(),uiMessage.getMessage());
                         }
 
                         @Override
@@ -1477,10 +1432,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     });
         } else {
             new ChatCreateUtils().createDirectChannel(this, uid,
-                    new OnCreateDirectChannelListener() {
+                    new ChatCreateUtils.OnCreateDirectChannelListener() {
                         @Override
                         public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                            sendMsg(getCreateSingleChannelResult.getCid());
+                            sendMsg(getCreateSingleChannelResult.getCid(),uiMessage.getMessage());
                         }
 
                         @Override
@@ -1496,34 +1451,16 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 转发消息
      * @param cid
      */
-    private void sendMsg(String cid) {
+    private void sendMsg(String cid,Message sendMessage) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             if (MyApplication.getInstance().isV0VersionChat()) {
-                ChatAPIService apiService = new ChatAPIService(
-                        NewsWebDetailActivity.this);
-                apiService.setAPIInterface(new NewsWebDetailActivity.WebService());
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("url", url);
-                    jsonObject.put("poster", groupNews.getPoster());
-                    jsonObject.put("digest", groupNews.getSummary());
-                    jsonObject.put("title", groupNews.getTitle());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
             } else {
-                String poster = StringUtils.isBlank(groupNews.getPoster()) ? "" : APIUri.getPreviewUrl(groupNews.getPoster());
-                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, poster, groupNews.getTitle(), groupNews.getSummary(), url);
-                fakeMessageId = message.getId();
-                WSAPIService.getInstance().sendChatExtendedLinksMsg(message);
+                sendMessageWithText(sendMessage.getContent(),false, null);
             }
-
         }
-
     }
 
-    public  boolean MessageLongClick(final Context context,final UIMessage uiMessage ){
+    private   boolean MessageLongClick(final Context context,final UIMessage uiMessage ){
         Message message = uiMessage.getMessage();
         String type = message.getType();
         boolean isConsume=false;
@@ -1576,14 +1513,25 @@ public class ConversationActivity extends ConversationBaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (items[which]){
                             case "复制":
-                                Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
+                                ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                                String content1=uiMessage.getMessage().getContent();
+                                JSONObject jsonObject1 = JSONUtils.getJSONObject(content1);
+                                String strContent1= JSONUtils.getString(jsonObject1,"text","");
+                                cmb.setPrimaryClip(ClipData.newPlainText(null,strContent1));
+                                ToastUtils.show(context, R.string.copyed_to_paste_board);
                                 break;
                             case "转发":
-                                shareMessageToFrinds(context,uiMessage);
+                                shareMessageToFrinds(context);
                                 Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
                                 break;
                             case "日程":
-                                Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
+                                String content=uiMessage.getMessage().getContent();
+                                JSONObject jsonObject = JSONUtils.getJSONObject(content);
+                                String strContent= JSONUtils.getString(jsonObject,"text","");
+                                Intent intent=new Intent();
+                                intent.putExtra("message", strContent);
+                                intent.setClass(ConversationActivity.this, CalEventAddActivity.class);
+                                startActivity(intent);
                                 break;
                         }
                         dialog.dismiss();
@@ -1594,9 +1542,9 @@ public class ConversationActivity extends ConversationBaseActivity {
 
 
     /**
-     * 给朋友分享新闻
+     * 给朋友转发
      */
-    private void shareMessageToFrinds(Context context, UIMessage uiMessage) {
+    private void shareMessageToFrinds(Context context) {
         Intent intent = new Intent();
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
         intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);

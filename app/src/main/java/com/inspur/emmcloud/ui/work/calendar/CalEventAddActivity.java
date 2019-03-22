@@ -161,6 +161,9 @@ public class CalEventAddActivity extends BaseActivity {
                 calendarImg.setFillColor(color);
             }
 
+        }else if(getIntent().hasExtra("message")){
+             String data = getIntent().getStringExtra("message");
+            titleEdit.setText(data);
         }
         setEventTime(startCalendar, endCalendar);
         if (isAllDay) {
