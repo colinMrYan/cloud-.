@@ -39,7 +39,7 @@ import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
@@ -275,7 +275,7 @@ public class SettingActivity extends BaseActivity {
                 .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
-                        new PushIdManagerUtils(SettingActivity.this).unregisterPushId2Emm();
+                        PushManagerUtils.getInstance().unregisterPushId2Emm();
                         dialog.dismiss();
                         boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
                         if (NetUtils.isNetworkConnected(getApplicationContext(), false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist) {

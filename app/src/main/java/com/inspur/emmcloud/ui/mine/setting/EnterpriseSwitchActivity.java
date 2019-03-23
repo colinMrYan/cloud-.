@@ -19,6 +19,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -107,7 +108,7 @@ public class EnterpriseSwitchActivity extends BaseActivity {
         WebSocketPush.getInstance().closeWebsocket();
         PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_CURRENT_ENTERPRISE_ID, enterprise.getId());
         MyApplication.getInstance().initTanent();
-        MyApplication.getInstance().stopPush();
+        PushManagerUtils.getInstance().stopPush();
         MyApplication.getInstance().clearNotification();
         MyApplication.getInstance().removeAllCookie();
         MyApplication.getInstance().clearUserPhotoMap();

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 
 /**
  * 在华为mate9，系统8.0.0上测试
@@ -21,8 +22,8 @@ public class ActionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
-        if (((MyApplication) context.getApplicationContext()).isHaveLogin()) {
-            ((MyApplication) context.getApplicationContext()).startPush();
+        if (MyApplication.getInstance().isHaveLogin()) {
+            PushManagerUtils.getInstance().startPush();
         }
     }
 

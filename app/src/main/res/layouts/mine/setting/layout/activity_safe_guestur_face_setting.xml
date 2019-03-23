@@ -16,6 +16,7 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
@@ -51,6 +52,7 @@
                 android:layout_centerVertical="true"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:textColor="#333333"
                 android:text="@string/switch_gesture_unlock"
                 android:textSize="16sp" />
 
@@ -83,6 +85,7 @@
                 android:layout_centerVertical="true"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
+                android:textColor="#333333"
                 android:text="@string/face_enter"
                 android:textSize="16sp" />
 
