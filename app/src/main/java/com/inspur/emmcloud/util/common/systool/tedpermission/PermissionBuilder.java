@@ -9,6 +9,8 @@ import android.support.annotation.StringRes;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.systool.tedpermission.util.ObjectUtils;
 
+import java.util.ArrayList;
+
 
 public abstract class PermissionBuilder<T extends PermissionBuilder> {
 
@@ -44,7 +46,7 @@ public abstract class PermissionBuilder<T extends PermissionBuilder> {
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            listener.onPermissionGranted();
+            listener.onPermissionGranted(new ArrayList<String>());
             return;
         }
 

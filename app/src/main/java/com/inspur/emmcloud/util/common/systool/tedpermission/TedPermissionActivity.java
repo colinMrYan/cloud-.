@@ -15,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.inspur.emmcloud.R;
@@ -188,16 +187,12 @@ public class TedPermissionActivity extends AppCompatActivity {
     }
 
     private void permissionResult(List<String> deniedPermissions) {
-        Log.v(TedPermission.TAG, "permissionResult(): " + deniedPermissions);
-
         finish();
         overridePendingTransition(0, 0);
-
         if (permissionListenerStack != null) {
             PermissionListener listener = permissionListenerStack.pop();
-
             if (ObjectUtils.isEmpty(deniedPermissions)) {
-                listener.onPermissionGranted();
+                listener.onPermissionGranted(new ArrayList<String>());
             } else {
                 listener.onPermissionDenied(deniedPermissions);
             }
@@ -205,7 +200,6 @@ public class TedPermissionActivity extends AppCompatActivity {
                 permissionListenerStack = null;
             }
         }
-
     }
 
     @Override

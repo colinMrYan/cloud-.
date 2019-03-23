@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface PermissionListener {
 
-  void onPermissionGranted();
+  void onPermissionGranted(List<String> grantPermissions);
 
   void onPermissionDenied(List<String> deniedPermissions);
 

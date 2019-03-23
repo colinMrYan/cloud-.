@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util.common.systool.permission;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
@@ -12,12 +11,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.systool.tedpermission.PermissionListener;
 import com.inspur.emmcloud.util.common.systool.tedpermission.TedPermission;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
-import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-import com.yanzhenjie.permission.Setting;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,10 +100,10 @@ public class PermissionRequestManagerUtils {
 //                    .start();
             PermissionListener permissionlistener = new PermissionListener() {
                 @Override
-                public void onPermissionGranted() {
-//                    if (callback != null) {
-//                        callback.onPermissionRequestSuccess(permissions);
-//                    }
+                public void onPermissionGranted(List<String> grantPermissions) {
+                    if (callback != null) {
+                        callback.onPermissionRequestSuccess(grantPermissions);
+                    }
                     Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show();
                 }
 
@@ -124,8 +118,6 @@ public class PermissionRequestManagerUtils {
 
             TedPermission.with(context)
                     .setPermissionListener(permissionlistener)
-//                    .setRationaleTitle(R.string.app_name)
-//                    .setRationaleMessage("content")
                     .setDeniedTitle("Permission denied")
                     .setDeniedMessage(
                             "If you reject permission,you can not use this service\nPlease turn on permissions at [Setting] > [Permission]")
@@ -135,37 +127,37 @@ public class PermissionRequestManagerUtils {
         }
     }
 
-    /**
-     * 展示设置权限dialog
-     */
-    @SuppressLint("StringFormatMatches")
-    private void showSettingDialog(final Context context, final List<String> permissionList) {
-        if (context instanceof Activity) {
-            List<String> permissionNameList = Permission.transformText(context, permissionList);
-            String message = context.getString(R.string.permission_message_always_failed, AppUtils.getAppName(context), TextUtils.join(" ", permissionNameList));
-            new MyQMUIDialog.MessageDialogBuilder(context)
-                    .setMessage(message)
-                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            exitByPermission(permissionList);
-                        }
-                    })
-                    .addAction(R.string.settings, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            setComeBackFromSysPermissionSetting(context, permissionList);
-                        }
-                    })
-                    .show();
-        } else {
-            if (callback != null) {
-                callback.onPermissionRequestFail(permissionList);
-            }
-        }
-    }
+//    /**
+//     * 展示设置权限dialog
+//     */
+//    @SuppressLint("StringFormatMatches")
+//    private void showSettingDialog(final Context context, final List<String> permissionList) {
+//        if (context instanceof Activity) {
+//            List<String> permissionNameList = Permission.transformText(context, permissionList);
+//            String message = context.getString(R.string.permission_message_always_failed, AppUtils.getAppName(context), TextUtils.join(" ", permissionNameList));
+//            new MyQMUIDialog.MessageDialogBuilder(context)
+//                    .setMessage(message)
+//                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+//                        @Override
+//                        public void onClick(QMUIDialog dialog, int index) {
+//                            dialog.dismiss();
+//                            exitByPermission(permissionList);
+//                        }
+//                    })
+//                    .addAction(R.string.settings, new QMUIDialogAction.ActionListener() {
+//                        @Override
+//                        public void onClick(QMUIDialog dialog, int index) {
+//                            dialog.dismiss();
+//                            setComeBackFromSysPermissionSetting(context, permissionList);
+//                        }
+//                    })
+//                    .show();
+//        } else {
+//            if (callback != null) {
+//                callback.onPermissionRequestFail(permissionList);
+//            }
+//        }
+//    }
 
     private void exitByPermission(List<String> permissionList) {
         if (!(PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), Permissions.STORAGE)
@@ -187,22 +179,22 @@ public class PermissionRequestManagerUtils {
         }
     }
 
-    /**
-     * 设置权限回来
-     */
-    private void setComeBackFromSysPermissionSetting(final Context context, final List<String> permissionList) {
-        AndPermission.with(context)
-                .runtime()
-                .setting()
-                .onComeback(new Setting.Action() {
-                    @Override
-                    public void onAction() {
-                        //从设置页面回来，判断申请权限是否成功
-                        exitByPermission(permissionList);
-                    }
-                })
-                .start();
-    }
+//    /**
+//     * 设置权限回来
+//     */
+//    private void setComeBackFromSysPermissionSetting(final Context context, final List<String> permissionList) {
+//        AndPermission.with(context)
+//                .runtime()
+//                .setting()
+//                .onComeback(new Setting.Action() {
+//                    @Override
+//                    public void onAction() {
+//                        //从设置页面回来，判断申请权限是否成功
+//                        exitByPermission(permissionList);
+//                    }
+//                })
+//                .start();
+//    }
 
 
     /**
