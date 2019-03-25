@@ -7,7 +7,10 @@ import android.text.TextUtils;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.systool.emmpermission.PermissionChecker;
 import com.inspur.emmcloud.util.common.systool.emmpermission.PermissionListener;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.common.systool.emmpermission.StandardChecker;
 import com.inspur.emmcloud.util.common.systool.emmpermission.TedPermission;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.yanzhenjie.permission.Permission;

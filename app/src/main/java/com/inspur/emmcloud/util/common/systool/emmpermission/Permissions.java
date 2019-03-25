@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.common.systool.permission;
+package com.inspur.emmcloud.util.common.systool.emmpermission;
 
 /**
  * Created by yufuchang on 2018/10/23.
