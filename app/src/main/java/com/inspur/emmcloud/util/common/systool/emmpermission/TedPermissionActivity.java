@@ -44,6 +44,8 @@ public class TedPermissionActivity extends AppCompatActivity {
     public static final String EXTRA_RATIONALE_CONFIRM_TEXT = "rationale_confirm_text";
     public static final String EXTRA_DENIED_DIALOG_CLOSE_TEXT = "denied_dialog_close_text";
     public static final String EXTRA_SCREEN_ORIENTATION = "screen_orientation";
+    public static final String EXTRA_BUTTON_NEGATIVE = "#36A5F6";
+    public static final String EXTRA_BUTTON_POSITIVE = "#36A5F6";
     private static Deque<PermissionListener> permissionListenerStack;
     private CharSequence rationaleTitle;
     private CharSequence rationale_message;
@@ -261,8 +263,8 @@ public class TedPermissionActivity extends AppCompatActivity {
 
         }
         AlertDialog alertDialog = builder.show();
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#36A5F6"));
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#36A5F6"));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(EXTRA_BUTTON_POSITIVE));
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor(EXTRA_BUTTON_NEGATIVE));
     }
 
     private boolean shouldShowRequestPermissionRationale(List<String> needPermissions) {

@@ -7,11 +7,10 @@ import android.text.TextUtils;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.systool.emmpermission.PermissionChecker;
 import com.inspur.emmcloud.util.common.systool.emmpermission.PermissionListener;
 import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.emmpermission.StandardChecker;
 import com.inspur.emmcloud.util.common.systool.emmpermission.TedPermission;
+import com.inspur.emmcloud.util.common.systool.emmpermission.TedPermissionBase;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.yanzhenjie.permission.Permission;
 
@@ -33,7 +32,6 @@ public class PermissionRequestManagerUtils {
     /**
      * Classic permission checker.
      */
-    private static final PermissionChecker permissionChecker = new StandardChecker();
 
     private PermissionRequestManagerUtils() {
     }
@@ -207,7 +205,7 @@ public class PermissionRequestManagerUtils {
      * @return
      */
     public boolean isHasPermission(Context context, String permission) {
-        return permissionChecker.hasPermission(context,permission);
+        return TedPermissionBase.isGranted(context,permission);
     }
 
     /**
@@ -218,7 +216,7 @@ public class PermissionRequestManagerUtils {
      * @return
      */
     public boolean isHasPermission(Context context, String[] permissions) {
-        return permissionChecker.hasPermission(context,permissions);
+        return TedPermissionBase.isGranted(context,permissions);
     }
 
     private String[] stringList2StringArray(List<String> permissionList) {

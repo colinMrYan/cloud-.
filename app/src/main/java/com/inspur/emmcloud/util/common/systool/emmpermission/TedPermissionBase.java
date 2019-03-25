@@ -62,11 +62,9 @@ public abstract class TedPermissionBase {
     }
 
     public static boolean canRequestPermission(Activity activity, @NonNull String... permissions) {
-
         if (isFirstRequest(activity, permissions)) {
             return true;
         }
-
         for (String permission : permissions) {
             boolean showRationale = ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
             if (isDenied(activity, permission) && !showRationale) {
