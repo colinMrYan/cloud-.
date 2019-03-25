@@ -673,8 +673,7 @@ public class MessionDetailActivity extends BaseActivity {
             Locale locale = getResources().getConfiguration().locale;
             Locale.setDefault(locale);
             MyDatePickerDialog dialog = new MyDatePickerDialog(
-                    MessionDetailActivity.this, AlertDialog.THEME_HOLO_LIGHT,
-                    new DatePickerDialog.OnDateSetListener() {
+                    MessionDetailActivity.this,new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
