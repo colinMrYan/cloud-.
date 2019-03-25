@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.common.systool.tedpermission;
+package com.inspur.emmcloud.util.common.systool.emmpermission;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -18,7 +18,9 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.systool.tedpermission.util.ObjectUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.util.ObjectUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.yanzhenjie.permission.Permission;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -101,7 +103,6 @@ public class TedPermissionActivity extends AppCompatActivity {
             settingButtonText = savedInstanceState.getString(EXTRA_SETTING_BUTTON_TEXT);
             requestedOrientation = savedInstanceState.getInt(EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         } else {
-
             Intent intent = getIntent();
             permissions = intent.getStringArrayExtra(EXTRA_PERMISSIONS);
             rationaleTitle = intent.getCharSequenceExtra(EXTRA_RATIONALE_TITLE);
@@ -114,7 +115,6 @@ public class TedPermissionActivity extends AppCompatActivity {
             deniedCloseButtonText = intent.getStringExtra(EXTRA_DENIED_DIALOG_CLOSE_TEXT);
             settingButtonText = intent.getStringExtra(EXTRA_SETTING_BUTTON_TEXT);
             requestedOrientation = intent.getIntExtra(EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-
         }
 
 
@@ -242,16 +242,18 @@ public class TedPermissionActivity extends AppCompatActivity {
 
     public void showPermissionDenyDialog(final List<String> deniedPermissions) {
 
-        if (TextUtils.isEmpty(denyMessage)) {
-            // denyMessage 설정 안함
-            permissionResult(deniedPermissions);
-            return;
-        }
+//        if (TextUtils.isEmpty(denyMessage)) {
+//            // denyMessage 설정 안함
+//            permissionResult(deniedPermissions);
+//            return;
+//        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
 
+        List<String> permissionNameList = Permission.transformText(this, deniedPermissions);
         builder.setTitle(denyTitle)
-                .setMessage(denyMessage)
+//                .setMessage(denyMessage)
+                .setMessage(getString(R.string.permission_message_always_failed, AppUtils.getAppName(this), TextUtils.join(" ", permissionNameList)))
                 .setCancelable(false)
                 .setNegativeButton(deniedCloseButtonText, new DialogInterface.OnClickListener() {
                     @Override
@@ -261,7 +263,6 @@ public class TedPermissionActivity extends AppCompatActivity {
                 });
 
         if (hasSettingButton) {
-
             if (TextUtils.isEmpty(settingButtonText)) {
                 settingButtonText = getString(R.string.settings);
             }
@@ -270,7 +271,6 @@ public class TedPermissionActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     TedPermissionBase.startSettingActivityForResult(TedPermissionActivity.this);
-
                 }
             });
 

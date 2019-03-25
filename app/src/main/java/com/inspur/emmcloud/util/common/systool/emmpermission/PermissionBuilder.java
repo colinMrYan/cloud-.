@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.common.systool.tedpermission;
+package com.inspur.emmcloud.util.common.systool.emmpermission;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.os.Build;
 import android.support.annotation.StringRes;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.systool.tedpermission.util.ObjectUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.util.ObjectUtils;
 
 import java.util.ArrayList;
 

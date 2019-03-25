@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.common.systool.tedpermission;
+package com.inspur.emmcloud.util.common.systool.emmpermission;
 
 import java.util.ArrayList;
 import java.util.List;

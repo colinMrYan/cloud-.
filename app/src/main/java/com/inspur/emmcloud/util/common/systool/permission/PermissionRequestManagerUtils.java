@@ -4,12 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.systool.tedpermission.PermissionListener;
-import com.inspur.emmcloud.util.common.systool.tedpermission.TedPermission;
+import com.inspur.emmcloud.util.common.systool.emmpermission.PermissionListener;
+import com.inspur.emmcloud.util.common.systool.emmpermission.TedPermission;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.yanzhenjie.permission.Permission;
 
@@ -104,14 +103,14 @@ public class PermissionRequestManagerUtils {
                     if (callback != null) {
                         callback.onPermissionRequestSuccess(grantPermissions);
                     }
-                    Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onPermissionDenied(List<String> deniedPermissions) {
                     exitByPermission(deniedPermissions);
-                    Toast.makeText(context, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT)
-                            .show();
+//                    Toast.makeText(context, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT)
+//                            .show();
                 }
             };
 
@@ -119,9 +118,9 @@ public class PermissionRequestManagerUtils {
             TedPermission.with(context)
                     .setPermissionListener(permissionlistener)
                     .setDeniedTitle("Permission denied")
-                    .setDeniedMessage(
-                            "If you reject permission,you can not use this service\nPlease turn on permissions at [Setting] > [Permission]")
-                    .setGotoSettingButtonText("确定")
+//                    .setDeniedMessage(
+//                            "If you reject permission,you can not use this service\nPlease turn on permissions at [Setting] > [Permission]")
+                    .setGotoSettingButtonText(R.string.ok)
                     .setPermissions(permissionGroup)
                     .check();
         }
@@ -137,7 +136,7 @@ public class PermissionRequestManagerUtils {
 //            String message = context.getString(R.string.permission_message_always_failed, AppUtils.getAppName(context), TextUtils.join(" ", permissionNameList));
 //            new MyQMUIDialog.MessageDialogBuilder(context)
 //                    .setMessage(message)
-//                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+//                    .addAction(R.string.cancel , new QMUIDialogAction.ActionListener() {
 //                        @Override
 //                        public void onClick(QMUIDialog dialog, int index) {
 //                            dialog.dismiss();

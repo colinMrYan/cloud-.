@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.common.systool.tedpermission.util;
+package com.inspur.emmcloud.util.common.systool.emmpermission.util;
 
 import java.util.List;
 import java.util.Map;

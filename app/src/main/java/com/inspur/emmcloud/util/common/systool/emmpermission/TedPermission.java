@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.common.systool.tedpermission;
+package com.inspur.emmcloud.util.common.systool.emmpermission;
 
 import android.content.Context;
 
