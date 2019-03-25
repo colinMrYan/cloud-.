@@ -46,6 +46,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
     private ItemLongClickListener itemLongClickListener;
+    private CardItemClickListener cardItemClickListener;
     private String channelType;
     private ECMChatInputMenu chatInputMenu;
 
@@ -114,6 +115,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
     public void setItemLongClickListener(ItemLongClickListener itemLongClickListener){
         this.itemLongClickListener=itemLongClickListener;
+    }
+
+    public void setCardItemClickListener(CardItemClickListener cardItemClickListener){
+        this.cardItemClickListener=cardItemClickListener;
     }
 
     @Override
@@ -212,12 +217,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 return  itemLongClickListener.onItemLongClick(view,uiMessage);
         }});
 
-//        cardContentView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ToastUtils.show(context,"1111111111111111111");
-//            }
-//        });
     }
 
 
@@ -315,6 +314,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
     public interface ItemLongClickListener{
         boolean onItemLongClick(View view,UIMessage uiMessage);
+    }
+    public interface CardItemClickListener{
+        void onCardItemClick(View view,UIMessage uiMessage);
     }
 
 

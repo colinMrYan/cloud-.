@@ -110,7 +110,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
 
-    private static final int SHARE_SEARCH_RUEST_CODE=31;
+    private static final int SHARE_SEARCH_RUEST_CODE = 31;
 
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
@@ -141,7 +141,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private PopupWindow mediaVoiceReRecognizerPop;
     private PopupWindow resendMessagePop;
 
-    private UIMessage backUiMessage=null;
+    private UIMessage backUiMessage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,15 +220,15 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void initChannelMessage() {
-        List<Message> cacheMessageList ;
+        List<Message> cacheMessageList;
         UIMessage uiMessage = null;
-        if(getIntent().hasExtra(EXTRA_UIMESSAGE)){
-            uiMessage = (UIMessage)getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
+        if (getIntent().hasExtra(EXTRA_UIMESSAGE)) {
+            uiMessage = (UIMessage) getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
             cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null);
-        }else{
+        } else {
             cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
         }
-        if(cacheMessageList == null){
+        if (cacheMessageList == null) {
             cacheMessageList = new ArrayList<>();
         }
         List<Message> messageSendingList = new ArrayList<>();
@@ -244,9 +244,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             getNewMessageOfChannel();
         }
         initViews();
-        if(uiMessage != null){
+        if (uiMessage != null) {
             int position = uiMessageList.indexOf(uiMessage);
-            if(position != -1){
+            if (position != -1) {
                 msgListView.scrollToPosition(position);
             }
         }
@@ -415,6 +415,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     openMessage(uiMessage.getMessage());
+                    LogUtils.LbcDebug("111111111111111");
                 }
             }
 
@@ -440,10 +441,16 @@ public class ConversationActivity extends ConversationBaseActivity {
         adapter.setItemLongClickListener(new ChannelMessageAdapter.ItemLongClickListener() {     //长按回调事件
             @Override
             public boolean onItemLongClick(View view, UIMessage uiMessage) {
-                backUiMessage=uiMessage;
-              return MessageLongClick(ConversationActivity.this,uiMessage);
+                backUiMessage = uiMessage;
+                return CardLongClick(ConversationActivity.this, uiMessage);
             }
         });
+//        adapter.setCardItemClickListener(new ChannelMessageAdapter.CardItemClickListener() {
+//            @Override
+//            public void onCardItemClick(View view, UIMessage uiMessage) {
+//                CardClick(ConversationActivity.this,view,uiMessage);
+//            }
+//        });
         adapter.setMessageList(uiMessageList);
         msgListView.setAdapter(adapter);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
@@ -811,26 +818,26 @@ public class ConversationActivity extends ConversationBaseActivity {
                     finish();
                     break;
                 case SHARE_SEARCH_RUEST_CODE:
-                    if(NetUtils.isNetworkConnected(getApplicationContext())){
-                    String searchResult = data.getStringExtra("searchResult");
-                    JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
-                    if (jsonObject.has("people")) {
-                        JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
-                        if (peopleArray.length() > 0) {
-                            JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
-                            String pidUid = JSONUtils.getString(peopleObj, "pid", "");
-                            createDirectChannel(pidUid,backUiMessage);
+                    if (NetUtils.isNetworkConnected(getApplicationContext())) {
+                        String searchResult = data.getStringExtra("searchResult");
+                        JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
+                        if (jsonObject.has("people")) {
+                            JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+                            if (peopleArray.length() > 0) {
+                                JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+                                String pidUid = JSONUtils.getString(peopleObj, "pid", "");
+                                createDirectChannel(pidUid, backUiMessage);
+                            }
+                        }
+                        if (jsonObject.has("channelGroup")) {
+                            JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+                            if (channelGroupArray.length() > 0) {
+                                JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+                                String cid = JSONUtils.getString(cidObj, "cid", "");
+                                sendMsg(cid, backUiMessage.getMessage());
+                            }
                         }
                     }
-                    if (jsonObject.has("channelGroup")) {
-                        JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
-                        if (channelGroupArray.length() > 0) {
-                            JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
-                            String cid = JSONUtils.getString(cidObj, "cid", "");
-                            sendMsg(cid,backUiMessage.getMessage());
-                        }
-                    }
-                }
                     break;
             }
         } else {
@@ -1422,7 +1429,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
-                            sendMsg(conversation.getId(),uiMessage.getMessage());
+                            sendMsg(conversation.getId(), uiMessage.getMessage());
                         }
 
                         @Override
@@ -1435,7 +1442,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     new ChatCreateUtils.OnCreateDirectChannelListener() {
                         @Override
                         public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                            sendMsg(getCreateSingleChannelResult.getCid(),uiMessage.getMessage());
+                            sendMsg(getCreateSingleChannelResult.getCid(), uiMessage.getMessage());
                         }
 
                         @Override
@@ -1449,27 +1456,31 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     /**
      * 转发消息
+     *
      * @param cid
      */
-    private void sendMsg(String cid,Message sendMessage) {
+    private void sendMsg(String cid, Message sendMessage) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             if (MyApplication.getInstance().isV0VersionChat()) {
             } else {
-                sendMessageWithText(sendMessage.getContent(),false, null);
+                sendMessageWithText(sendMessage.getContent(), false, null);
             }
         }
     }
 
-    private   boolean MessageLongClick(final Context context,final UIMessage uiMessage ){
+    /**
+     * Card 长按事件
+     */
+    private boolean CardLongClick(final Context context, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         String type = message.getType();
-        boolean isConsume=false;
+        boolean isConsume = false;
         final String[] items;
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 items = new String[]{"复制", "转发", "日程"};
-                LongClickDialog(items,context,uiMessage);
-                isConsume= true;
+                LongClickDialog(items, context, uiMessage);
+                isConsume = true;
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 LogUtils.LbcDebug("TYPE_TEXT_MARKDOWN");
@@ -1485,9 +1496,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 LogUtils.LbcDebug("MESSAGE_TYPE_MEDIA_IMAGE");
-                items = new String[]{"转发", "日程"};
-                LongClickDialog(items,context,uiMessage);
-                isConsume= true;
+                items = new String[]{"转发"};
+                LongClickDialog(items, context, uiMessage);
+                isConsume = true;
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 LogUtils.LbcDebug("MESSAGE_TYPE_COMMENT_TEXT_PLAIN");
@@ -1505,19 +1516,78 @@ public class ConversationActivity extends ConversationBaseActivity {
         return isConsume;
     }
 
+    /**
+     * Card 点击事件
+     */
+    private void CardClick(final Context context,View view, final UIMessage uiMessage) {
+        Message message = uiMessage.getMessage();
+        String type = message.getType();
+        switch (type) {
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_TEXT_PLAIN");
+                break;
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                LogUtils.LbcDebug("Click" + "TYPE_TEXT_MARKDOWN");
+                break;
+            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_FILE_REGULAR_FILE");
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_EXTENDED_CONTACT_CARD");
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
+                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_EXTENDED_ACTIONS");
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                if (uiMessage.getSendStatus() != 1) {
+                    return;
+                }
+                int[] location = new int[2];
+                view.getLocationOnScreen(location);
+                view.invalidate();
+                int width = view.getWidth();
+                int height = view.getHeight();
+                Intent intent = new Intent(context,
+                        ImagePagerActivity.class);
+                List<Message> imgTypeMsgList = MessageCacheUtil.getImgTypeMessageList(context, uiMessage.getMessage().getChannel(), false);
+                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, uiMessage.getMessage());
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+                context.startActivity(intent);
+                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_MEDIA_IMAGE");
+                break;
+            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_COMMENT_TEXT_PLAIN");
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_EXTENDED_LINKS");
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_MEDIA_VOICE");
+                break;
+            default:
+                if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
+                    showResendMessageDlg(uiMessage, view);
+                }
+                break;
+        }
+    }
 
-    private  void LongClickDialog(final String[] items, final Context context,final UIMessage uiMessage) {
+    private void LongClickDialog(final String[] items, final Context context, final UIMessage uiMessage) {
         new QMUIDialog.MenuDialogBuilder(context)
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (items[which]){
+                        switch (items[which]) {
                             case "复制":
                                 ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                                String content1=uiMessage.getMessage().getContent();
+                                String content1 = uiMessage.getMessage().getContent();
                                 JSONObject jsonObject1 = JSONUtils.getJSONObject(content1);
-                                String strContent1= JSONUtils.getString(jsonObject1,"text","");
-                                cmb.setPrimaryClip(ClipData.newPlainText(null,strContent1));
+                                String strContent1 = JSONUtils.getString(jsonObject1, "text", "");
+                                cmb.setPrimaryClip(ClipData.newPlainText(null, strContent1));
                                 ToastUtils.show(context, R.string.copyed_to_paste_board);
                                 break;
                             case "转发":
@@ -1525,10 +1595,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
                                 break;
                             case "日程":
-                                String content=uiMessage.getMessage().getContent();
+                                String content = uiMessage.getMessage().getContent();
                                 JSONObject jsonObject = JSONUtils.getJSONObject(content);
-                                String strContent= JSONUtils.getString(jsonObject,"text","");
-                                Intent intent=new Intent();
+                                String strContent = JSONUtils.getString(jsonObject, "text", "");
+                                Intent intent = new Intent();
                                 intent.putExtra("message", strContent);
                                 intent.setClass(ConversationActivity.this, CalEventAddActivity.class);
                                 startActivity(intent);
@@ -1551,7 +1621,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(MyApplication.getInstance().getUid());
         intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-        intent.putExtra(ContactSearchFragment.EXTRA_TITLE,context.getString(R.string.news_share));
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.news_share));
         intent.setClass(context,
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
