@@ -117,7 +117,7 @@ public class PermissionRequestManagerUtils {
 
             TedPermission.with(context)
                     .setPermissionListener(permissionlistener)
-                    .setDeniedTitle("Permission denied")
+//                    .setDeniedTitle("Permission denied")
 //                    .setDeniedMessage(
 //                            "If you reject permission,you can not use this service\nPlease turn on permissions at [Setting] > [Permission]")
                     .setGotoSettingButtonText(R.string.ok)

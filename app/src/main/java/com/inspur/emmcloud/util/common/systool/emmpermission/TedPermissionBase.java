@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.util.common.systool.emmpermission;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by TedPark on 2017. 9. 26..
@@ -49,6 +49,16 @@ public abstract class TedPermissionBase {
             }
         }
         return deniedPermissions;
+    }
+
+    public static List<String> getGrantPermissions(Context context, @NonNull String... permissions) {
+        List<String> grantPermissionList = new ArrayList<>();
+        for (String permission : permissions) {
+            if (!isDenied(context, permission)) {
+                grantPermissionList.add(permission);
+            }
+        }
+        return grantPermissionList;
     }
 
     public static boolean canRequestPermission(Activity activity, @NonNull String... permissions) {
