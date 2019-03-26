@@ -445,7 +445,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
             }
         });
-        adapter.setItemLongClickListener(new ChannelMessageAdapter.ItemLongClickListener() {     //长按回调事件
+        adapter.setCardItemLongClickListener(new ChannelMessageAdapter.CardItemLongClickListener() {     //长按回调事件
             @Override
             public boolean onItemLongClick(View view, UIMessage uiMessage) {
                 backUiMessage = uiMessage;
