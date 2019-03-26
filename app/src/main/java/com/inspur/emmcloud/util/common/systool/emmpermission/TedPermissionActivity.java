@@ -21,7 +21,6 @@ import android.view.WindowManager;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.systool.emmpermission.util.ObjectUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.yanzhenjie.permission.Permission;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class TedPermissionActivity extends AppCompatActivity {
     private String settingButtonText;
     private String deniedCloseButtonText;
     private String rationaleConfirmText;
-    private boolean isShownRationaleDialog;
+//    private boolean isShownRationaleDialog;
     private int requestedOrientation;
 
     public static void startActivity(Context context, Intent intent, PermissionListener listener) {
@@ -145,7 +144,7 @@ public class TedPermissionActivity extends AppCompatActivity {
                         }
                     })
                     .show();
-            isShownRationaleDialog = true;
+//            isShownRationaleDialog = true;
         } else {
             startActivityForResult(intent, REQ_CODE_SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST);
         }
@@ -172,9 +171,9 @@ public class TedPermissionActivity extends AppCompatActivity {
         } else if (needPermissions.size() == 1 && needPermissions
                 .contains(Manifest.permission.SYSTEM_ALERT_WINDOW)) {   // window permission deny
             permissionResult(needPermissions, new ArrayList<String>());
-        } else if (!isShownRationaleDialog && !TextUtils.isEmpty(rationale_message)) { // //Need Show Rationale
+        } else if (/*!isShownRationaleDialog && */!TextUtils.isEmpty(rationale_message)) { // //Need Show Rationale
             requestPermissions(needPermissions);
-            isShownRationaleDialog = true;
+//            isShownRationaleDialog = true;
         } else { //Need Request Permissions
             requestPermissions(needPermissions);
         }
@@ -230,17 +229,17 @@ public class TedPermissionActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         List<String> deniedPermissionList = TedPermissionBase.getDeniedPermissions(this, permissions);
-        List<String> grantPemissionList = TedPermissionBase.getGrantPermissions(this,permissions);
+        List<String> grantPermissionList = TedPermissionBase.getGrantPermissions(this,permissions);
         if (deniedPermissionList.isEmpty()) {
-            permissionResult(null,grantPemissionList);
+            permissionResult(null,grantPermissionList);
         } else {
-            showPermissionDenyDialog(deniedPermissionList,grantPemissionList);
+            showPermissionDenyDialog(deniedPermissionList,grantPermissionList);
         }
     }
 
     private void showPermissionDenyDialog(final List<String> deniedPermissionList, final List<String> grantPermissonList) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
-        List<String> permissionNameList = Permission.transformText(this, deniedPermissionList);
+        List<String> permissionNameList = Permissions.transformText(this, deniedPermissionList);
         builder.setTitle(denyTitle)
                 .setMessage(getString(R.string.permission_message_always_failed, AppUtils.getAppName(this), TextUtils.join(" ", permissionNameList)))
                 .setCancelable(false)
@@ -305,7 +304,9 @@ public class TedPermissionActivity extends AppCompatActivity {
             });
 
         }
-        builder.show();
+        AlertDialog alertDialog = builder.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(EXTRA_BUTTON_POSITIVE));
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.parseColor(EXTRA_BUTTON_NEGATIVE));
     }
 
     @Override

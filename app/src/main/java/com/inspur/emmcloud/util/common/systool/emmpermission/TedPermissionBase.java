@@ -24,6 +24,12 @@ public abstract class TedPermissionBase {
     private static final String PREFS_NAME_PERMISSION = "PREFS_NAME_PERMISSION";
     private static final String PREFS_IS_FIRST_REQUEST = "IS_FIRST_REQUEST";
 
+    /**
+     * 判断一组权限是否授予，传入string数组
+     * @param context
+     * @param permissions
+     * @return
+     */
     public static boolean isGranted(Context context, @NonNull String... permissions) {
         for (String permission : permissions) {
             if (isDenied(context, permission)) {
@@ -33,14 +39,32 @@ public abstract class TedPermissionBase {
         return true;
     }
 
+    /**
+     * 判断权限一个权限是否被拒绝
+     * @param context
+     * @param permission
+     * @return
+     */
     public static boolean isDenied(Context context, @NonNull String permission) {
         return !isGranted(context, permission);
     }
 
+    /**
+     * 判断一个权限是否被授予
+     * @param context
+     * @param permission
+     * @return
+     */
     private static boolean isGranted(Context context, @NonNull String permission) {
         return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * 获取传入权限中被拒绝的权限
+     * @param context
+     * @param permissions
+     * @return
+     */
     public static List<String> getDeniedPermissions(Context context, @NonNull String... permissions) {
         List<String> deniedPermissions = new ArrayList<>();
         for (String permission : permissions) {
@@ -51,6 +75,12 @@ public abstract class TedPermissionBase {
         return deniedPermissions;
     }
 
+    /**
+     * 获取传入权限中被授予权限的列表
+     * @param context
+     * @param permissions
+     * @return
+     */
     public static List<String> getGrantPermissions(Context context, @NonNull String... permissions) {
         List<String> grantPermissionList = new ArrayList<>();
         for (String permission : permissions) {
@@ -61,6 +91,12 @@ public abstract class TedPermissionBase {
         return grantPermissionList;
     }
 
+    /**
+     * 判断是否永久拒绝不再提醒
+     * @param activity
+     * @param permissions
+     * @return
+     */
     public static boolean canRequestPermission(Activity activity, @NonNull String... permissions) {
         if (isFirstRequest(activity, permissions)) {
             return true;

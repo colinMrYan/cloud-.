@@ -1,14 +1,11 @@
 package com.inspur.emmcloud.util.common.systool.emmpermission;
 
-/**
- * Created by yufuchang on 2018/10/23.
- */
 
+import android.content.Context;
+import com.inspur.emmcloud.R;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * <p>Permissions.</p>
- * Created by YanZhenjie on 2017/8/4.
- */
 public final class Permissions {
 
     public static final String READ_CALENDAR = "android.permission.READ_CALENDAR";
@@ -77,5 +74,95 @@ public final class Permissions {
                 Permissions.WRITE_CALENDAR};
 
         public static final String[] CAMERA = new String[]{Permissions.CAMERA};
+    }
+
+    /**
+     * Turn permissions into text.
+     */
+    public static List<String> transformText(Context context, List<String> permissions) {
+        List<String> textList = new ArrayList<>();
+        for (String permission : permissions) {
+            switch (permission) {
+                case READ_CALENDAR:
+                case WRITE_CALENDAR: {
+                    String message = context.getString(R.string.permission_name_calendar);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+
+                case CAMERA: {
+                    String message = context.getString(R.string.permission_name_camera);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+                case READ_CONTACTS:
+                case WRITE_CONTACTS:
+                case GET_ACCOUNTS: {
+                    String message = context.getString(R.string.permission_name_contacts);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+                case ACCESS_FINE_LOCATION:
+                case ACCESS_COARSE_LOCATION: {
+                    String message = context.getString(R.string.permission_name_location);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+                case RECORD_AUDIO: {
+                    String message = context.getString(R.string.permission_name_microphone);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+                case READ_PHONE_STATE:
+                case CALL_PHONE:
+                case READ_CALL_LOG:
+                case WRITE_CALL_LOG:
+                case USE_SIP:
+                case PROCESS_OUTGOING_CALLS: {
+                    String message = context.getString(R.string.permission_name_phone);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+                case BODY_SENSORS: {
+                    String message = context.getString(R.string.permission_name_sensors);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+                case SEND_SMS:
+                case RECEIVE_SMS:
+                case READ_SMS:
+                case RECEIVE_WAP_PUSH:
+                case RECEIVE_MMS: {
+                    String message = context.getString(R.string.permission_name_sms);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+                case READ_EXTERNAL_STORAGE:
+                case WRITE_EXTERNAL_STORAGE: {
+                    String message = context.getString(R.string.permission_name_storage);
+                    if (!textList.contains(message)) {
+                        textList.add(message);
+                    }
+                    break;
+                }
+            }
+        }
+        return textList;
     }
 }
