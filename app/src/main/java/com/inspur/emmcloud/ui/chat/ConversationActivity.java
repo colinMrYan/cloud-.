@@ -30,7 +30,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
-import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
@@ -60,7 +59,6 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -1444,21 +1442,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
                         }
                     });
-        } else {
-            new ChatCreateUtils().createDirectChannel(this, uid,
-                    new ChatCreateUtils.OnCreateDirectChannelListener() {
-                        @Override
-                        public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                            transmitMsg(getCreateSingleChannelResult.getCid(), uiMessage);
-                        }
-
-                        @Override
-                        public void createDirectChannelFail() {
-                            //showShareFailToast();
-                        }
-                    });
         }
-
     }
 
     /**
@@ -1532,36 +1516,27 @@ public class ConversationActivity extends ConversationBaseActivity {
                 isConsume = true;
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                LogUtils.LbcDebug("TYPE_TEXT_MARKDOWN");
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                LogUtils.LbcDebug("MESSAGE_TYPE_FILE_REGULAR_FILE");
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                LogUtils.LbcDebug("MESSAGE_TYPE_EXTENDED_CONTACT_CARD");
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
-                LogUtils.LbcDebug("MESSAGE_TYPE_EXTENDED_ACTIONS");
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                LogUtils.LbcDebug("MESSAGE_TYPE_MEDIA_IMAGE");
-                items = new String[]{transmit};
-                LongClickDialog(items, context, uiMessage);
-                isConsume = true;
+//                items = new String[]{transmit};
+//                LongClickDialog(items, context, uiMessage);
+//                isConsume = true;
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
-                LogUtils.LbcDebug("MESSAGE_TYPE_COMMENT_TEXT_PLAIN");
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
-                LogUtils.LbcDebug("MESSAGE_TYPE_EXTENDED_LINKS");
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 items = new String[]{copyText};
                 LongClickDialog(items, context, uiMessage);
-                LogUtils.LbcDebug("MESSAGE_TYPE_MEDIA_VOICE");
                 break;
             default:
-                LogUtils.LbcDebug("DEFAULT");
                 break;
         }
         return isConsume;
@@ -1723,7 +1698,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         intent.setClass(ConversationActivity.this, CalEventAddActivity.class);
         startActivity(intent);
     }
-
 
     /**
      * 给朋友转发
