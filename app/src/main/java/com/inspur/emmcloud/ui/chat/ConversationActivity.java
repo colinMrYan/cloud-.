@@ -1634,10 +1634,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                         String content;
                         Message message = uiMessage.getMessage();
                         int intWhich = getLongClickItemId(items[which]);
+                        SpannableString spannableString;
                         switch (intWhich) {
                             case LONG_CLICK_COPY:
                                 String text = message.getMsgContentTextPlain().getText();
-                                SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
+                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
                                 text = spannableString.toString();
                                 if (!StringUtils.isBlank(text))
                                     copyToClipboard(context, text);
@@ -1646,10 +1647,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 shareMessageToFrinds(context);
                                 break;
                             case LONG_CLICK_SCHEDULE:
-                                content = uiMessage.getMessage().getContent();
-                                if (!StringUtils.isBlank(content)) {
+                                content = message.getMsgContentTextPlain().getText();
+                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, content, message.getMsgContentTextPlain().getMentionsMap());
+                                content = spannableString.toString();
+                                if (!StringUtils.isBlank(content))
                                     addTextToSchedule(content);
-                                }
                                 break;
                             case LONG_CLICK_COPY_TEXT:
                                 content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
