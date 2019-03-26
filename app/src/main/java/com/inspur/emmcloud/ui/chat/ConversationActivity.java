@@ -1693,10 +1693,8 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 文本信息添加到日程
      */
     private void addTextToSchedule(String content) {
-        JSONObject jsonObject = JSONUtils.getJSONObject(content);
-        String strContent = JSONUtils.getString(jsonObject, "text", "");
         Intent intent = new Intent();
-        intent.putExtra("message", strContent);
+        intent.putExtra("message", content);
         intent.setClass(ConversationActivity.this, CalEventAddActivity.class);
         startActivity(intent);
     }
