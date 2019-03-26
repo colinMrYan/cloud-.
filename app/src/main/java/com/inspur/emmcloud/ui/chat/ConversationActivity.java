@@ -119,10 +119,10 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
 
-    private static final int LONG_CLICK_COPY=100;
-    private static final int LONG_CLICK_TRANSMIT=200;
-    private static final int LONG_CLICK_SCHEDULE=300;
-    private static final int LONG_CLICK_COPY_TEXT=400;
+    private static final int LONG_CLICK_COPY = 100;
+    private static final int LONG_CLICK_TRANSMIT = 200;
+    private static final int LONG_CLICK_SCHEDULE = 300;
+    private static final int LONG_CLICK_COPY_TEXT = 400;
 
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
@@ -423,7 +423,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     openMessage(uiMessage.getMessage());
-                    LogUtils.LbcDebug("111111111111111");
                 }
             }
 
@@ -1479,7 +1478,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-
     /**
      * 转发文本消息
      *
@@ -1522,14 +1520,14 @@ public class ConversationActivity extends ConversationBaseActivity {
         Message message = uiMessage.getMessage();
         String type = message.getType();
         boolean isConsume = false;
-        String copy =getResources().getString(R.string.chat_long_click_copy);
-        String copyText =getResources().getString(R.string.chat_long_click_copy_text);
+        String copy = getResources().getString(R.string.chat_long_click_copy);
+        String copyText = getResources().getString(R.string.chat_long_click_copy_text);
         String transmit = getResources().getString(R.string.chat_long_click_transmit);
-        String schedule =  getResources().getString(R.string.chat_long_click_schedule);
+        String schedule = getResources().getString(R.string.chat_long_click_schedule);
         final String[] items;
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                items = new String[]{copy,transmit,schedule};
+                items = new String[]{copy, transmit, schedule};
                 LongClickDialog(items, context, uiMessage);
                 isConsume = true;
                 break;
@@ -1651,7 +1649,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     *长按事件*/
+     * 长按事件
+     */
     private void LongClickDialog(final String[] items, final Context context, final UIMessage uiMessage) {
         new QMUIDialog.MenuDialogBuilder(context)
                 .addItems(items, new DialogInterface.OnClickListener() {
@@ -1690,9 +1689,10 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     *匹配长按项ID*/
-    private int getLongClickItemId(String itemName){
-        if(itemName.equals(getResources().getString(R.string.chat_long_click_copy)))
+     * 匹配长按项ID
+     */
+    private int getLongClickItemId(String itemName) {
+        if (itemName.equals(getResources().getString(R.string.chat_long_click_copy)))
             return LONG_CLICK_COPY;
         if (itemName.equals(getResources().getString(R.string.chat_long_click_copy_text)))
             return LONG_CLICK_COPY_TEXT;
@@ -1704,7 +1704,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     * 文本复制到剪切板*/
+     * 文本复制到剪切板
+     */
     private void copyToClipboard(Context context, String content) {
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setPrimaryClip(ClipData.newPlainText(null, content));
@@ -1712,7 +1713,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     * 文本信息添加到日程*/
+     * 文本信息添加到日程
+     */
     private void addTextToSchedule(String content) {
         JSONObject jsonObject = JSONUtils.getJSONObject(content);
         String strContent = JSONUtils.getString(jsonObject, "text", "");
@@ -1724,7 +1726,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 
 
     /**
-     * 给朋友转发*/
+     * 给朋友转发
+     */
     private void shareMessageToFrinds(Context context) {
         Intent intent = new Intent();
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);

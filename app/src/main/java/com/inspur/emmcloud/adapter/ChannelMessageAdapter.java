@@ -27,7 +27,6 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -174,6 +173,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         String type = message.getType();
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
+
                 cardContentView = DisplayTxtPlainMsg.getView(context,
                         message);
                 break;
@@ -208,6 +208,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
                 break;
         }
+
+
         holder.cardLayout.addView(cardContentView);
         cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -222,8 +224,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         });
 
     }
-
-
 
     /**
      * 展示消息发送时间
@@ -366,7 +366,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public void onClick(View v) {
             if (mListener != null) {
                 mListener.onItemClick(v, getAdapterPosition());
-                LogUtils.LbcDebug("MyItemClick");
             }
 
         }
