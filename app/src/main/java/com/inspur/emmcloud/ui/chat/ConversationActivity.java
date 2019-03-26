@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.SpannableString;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -61,6 +61,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
@@ -117,6 +118,12 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
+
+    private static final int LONG_CLICK_COPY=100;
+    private static final int LONG_CLICK_TRANSMIT=200;
+    private static final int LONG_CLICK_SCHEDULE=300;
+    private static final int LONG_CLICK_COPY_TEXT=400;
+
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -449,7 +456,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         adapter.setCardItemClickListener(new ChannelMessageAdapter.CardItemClickListener() {
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
-                CardClick(ConversationActivity.this,view,uiMessage);
+                CardClick(ConversationActivity.this, view, uiMessage);
             }
         });
         adapter.setMessageList(uiMessageList);
@@ -835,7 +842,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                             if (channelGroupArray.length() > 0) {
                                 JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
                                 String cid = JSONUtils.getString(cidObj, "cid", "");
-                                sendMsg(cid, backUiMessage.getMessage());
+                                transmitTextMsg(cid, backUiMessage.getMessage());
                             }
                         }
                     }
@@ -1430,7 +1437,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
                         public void createDirectConversationSuccess(Conversation conversation) {
-                            sendMsg(conversation.getId(), uiMessage.getMessage());
+                            transmitMsg(conversation.getId(), uiMessage);
                         }
 
                         @Override
@@ -1443,7 +1450,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     new ChatCreateUtils.OnCreateDirectChannelListener() {
                         @Override
                         public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                            sendMsg(getCreateSingleChannelResult.getCid(), uiMessage.getMessage());
+                            transmitMsg(getCreateSingleChannelResult.getCid(), uiMessage);
                         }
 
                         @Override
@@ -1457,15 +1464,54 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     /**
      * 转发消息
+     */
+    private void transmitMsg(String cid, UIMessage uiMessage) {
+        String msgType = uiMessage.getMessage().getType();
+        switch (msgType) {
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                transmitTextMsg(cid, uiMessage.getMessage());
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                transmitImgMsg(cid, uiMessage.getMessage());
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    /**
+     * 转发文本消息
      *
      * @param cid
      */
-    private void sendMsg(String cid, Message sendMessage) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+    private void transmitTextMsg(String cid, Message sendMessage) {
+        String text = sendMessage.getMsgContentTextPlain().getText();
+        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(ConversationActivity.this, text, sendMessage.getMsgContentTextPlain().getMentionsMap());
+        text = spannableString.toString();
+        if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
             if (MyApplication.getInstance().isV0VersionChat()) {
             } else {
-                sendMessageWithText(sendMessage.getContent(), false, null);
+                Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
+                WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
             }
+        }
+    }
+
+    /**
+     * 转发图片消息
+     */
+    private void transmitImgMsg(String cid, Message sendMessage) {
+        String path1 = sendMessage.getMsgContentMediaImage().getPreviewMedia();
+        String data = JSONUtils.toJSONString(sendMessage);
+        LogUtils.LbcDebug("data::" + data);
+        String path = sendMessage.getLocalPath();
+        LogUtils.LbcDebug("path::" + path);
+        LogUtils.LbcDebug("path1::" + path1);
+        if (!StringUtils.isBlank(path) && NetUtils.isNetworkConnected(getApplicationContext())) {
+//                Message localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid,path);
+//                localMessage.getMsgContentMediaImage().setPreviewMedia(path1);
+//              sendMessageWithFile(localMessage);
         }
     }
 
@@ -1476,10 +1522,14 @@ public class ConversationActivity extends ConversationBaseActivity {
         Message message = uiMessage.getMessage();
         String type = message.getType();
         boolean isConsume = false;
+        String copy =getResources().getString(R.string.chat_long_click_copy);
+        String copyText =getResources().getString(R.string.chat_long_click_copy_text);
+        String transmit = getResources().getString(R.string.chat_long_click_transmit);
+        String schedule =  getResources().getString(R.string.chat_long_click_schedule);
         final String[] items;
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                items = new String[]{"复制", "转发", "日程"};
+                items = new String[]{copy,transmit,schedule};
                 LongClickDialog(items, context, uiMessage);
                 isConsume = true;
                 break;
@@ -1497,7 +1547,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 LogUtils.LbcDebug("MESSAGE_TYPE_MEDIA_IMAGE");
-                items = new String[]{"转发"};
+                items = new String[]{transmit};
                 LongClickDialog(items, context, uiMessage);
                 isConsume = true;
                 break;
@@ -1508,7 +1558,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 LogUtils.LbcDebug("MESSAGE_TYPE_EXTENDED_LINKS");
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                items = new String[]{"复制文字"};
+                items = new String[]{copyText};
                 LongClickDialog(items, context, uiMessage);
                 LogUtils.LbcDebug("MESSAGE_TYPE_MEDIA_VOICE");
                 break;
@@ -1522,7 +1572,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * Card 点击事件
      */
-    private void CardClick(final Context context,View view, final UIMessage uiMessage) {
+    private void CardClick(final Context context, View view, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         int messageSendStatus = uiMessage.getSendStatus();
         String type = message.getType();
@@ -1600,34 +1650,37 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
+    /**
+     *长按事件*/
     private void LongClickDialog(final String[] items, final Context context, final UIMessage uiMessage) {
         new QMUIDialog.MenuDialogBuilder(context)
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
-                        switch (items[which]) {
-                            case "复制":
-                                content = uiMessage.getMessage().getContent();
-                                if(!StringUtils.isBlank(content))
-                                    copyToClipboard(context,content);
+                        Message message = uiMessage.getMessage();
+                        int intWhich = getLongClickItemId(items[which]);
+                        switch (intWhich) {
+                            case LONG_CLICK_COPY:
+                                String text = message.getMsgContentTextPlain().getText();
+                                SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
+                                text = spannableString.toString();
+                                if (!StringUtils.isBlank(text))
+                                    copyToClipboard(context, text);
                                 break;
-                            case "转发":
+                            case LONG_CLICK_TRANSMIT:
                                 shareMessageToFrinds(context);
-                                Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
                                 break;
-                            case "日程":
+                            case LONG_CLICK_SCHEDULE:
                                 content = uiMessage.getMessage().getContent();
-                                if(!StringUtils.isBlank(content)) {
+                                if (!StringUtils.isBlank(content)) {
                                     addTextToSchedule(content);
                                 }
                                 break;
-                            case "转文字":
-                                break;
-                            case "复制文字":
+                            case LONG_CLICK_COPY_TEXT:
                                 content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
-                                if(!StringUtils.isBlank(content))
-                                    copyToClipboard(context,content);
+                                if (!StringUtils.isBlank(content))
+                                    copyToClipboard(context, content);
                                 break;
                         }
                         dialog.dismiss();
@@ -1637,18 +1690,30 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
+     *匹配长按项ID*/
+    private int getLongClickItemId(String itemName){
+        if(itemName.equals(getResources().getString(R.string.chat_long_click_copy)))
+            return LONG_CLICK_COPY;
+        if (itemName.equals(getResources().getString(R.string.chat_long_click_copy_text)))
+            return LONG_CLICK_COPY_TEXT;
+        if (itemName.equals(getResources().getString(R.string.chat_long_click_transmit)))
+            return LONG_CLICK_TRANSMIT;
+        if (itemName.equals(getResources().getString(R.string.chat_long_click_schedule)))
+            return LONG_CLICK_SCHEDULE;
+        return 0;
+    }
+
+    /**
      * 文本复制到剪切板*/
-    private void copyToClipboard(Context context,String content){
+    private void copyToClipboard(Context context, String content) {
         ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        JSONObject jsonObject1 = JSONUtils.getJSONObject(content);
-        String strContent1 = JSONUtils.getString(jsonObject1, "text", "");
-        cmb.setPrimaryClip(ClipData.newPlainText(null, strContent1));
+        cmb.setPrimaryClip(ClipData.newPlainText(null, content));
         ToastUtils.show(context, R.string.copyed_to_paste_board);
     }
 
     /**
      * 文本信息添加到日程*/
-    private void addTextToSchedule(String content){
+    private void addTextToSchedule(String content) {
         JSONObject jsonObject = JSONUtils.getJSONObject(content);
         String strContent = JSONUtils.getString(jsonObject, "text", "");
         Intent intent = new Intent();
@@ -1659,8 +1724,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
 
     /**
-     * 给朋友转发
-     */
+     * 给朋友转发*/
     private void shareMessageToFrinds(Context context) {
         Intent intent = new Intent();
         intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
