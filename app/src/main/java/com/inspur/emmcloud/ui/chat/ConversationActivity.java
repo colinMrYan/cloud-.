@@ -67,6 +67,7 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
+import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
@@ -445,12 +446,12 @@ public class ConversationActivity extends ConversationBaseActivity {
                 return CardLongClick(ConversationActivity.this, uiMessage);
             }
         });
-//        adapter.setCardItemClickListener(new ChannelMessageAdapter.CardItemClickListener() {
-//            @Override
-//            public void onCardItemClick(View view, UIMessage uiMessage) {
-//                CardClick(ConversationActivity.this,view,uiMessage);
-//            }
-//        });
+        adapter.setCardItemClickListener(new ChannelMessageAdapter.CardItemClickListener() {
+            @Override
+            public void onCardItemClick(View view, UIMessage uiMessage) {
+                CardClick(ConversationActivity.this,view,uiMessage);
+            }
+        });
         adapter.setMessageList(uiMessageList);
         msgListView.setAdapter(adapter);
         msgListView.MoveToPosition(uiMessageList.size() - 1);
@@ -1507,6 +1508,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 LogUtils.LbcDebug("MESSAGE_TYPE_EXTENDED_LINKS");
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                items = new String[]{"复制文字"};
+                LongClickDialog(items, context, uiMessage);
                 LogUtils.LbcDebug("MESSAGE_TYPE_MEDIA_VOICE");
                 break;
             default:
@@ -1521,6 +1524,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void CardClick(final Context context,View view, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
+        int messageSendStatus = uiMessage.getSendStatus();
         String type = message.getType();
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
@@ -1530,6 +1534,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                 LogUtils.LbcDebug("Click" + "TYPE_TEXT_MARKDOWN");
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                if (uiMessage.getSendStatus() != 1) {
+                    return;
+                }
+                final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+                final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+                if (FileUtils.isFileExist(fileDownloadPath)) {
+                    FileUtils.openFile(context, fileDownloadPath);
+                } else {
+                    Intent intent = new Intent(context, ChatFileDownloadActivtiy.class);
+                    intent.putExtra("message", message);
+                    context.startActivity(intent);
+                }
                 LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_FILE_REGULAR_FILE");
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
@@ -1560,18 +1576,26 @@ public class ConversationActivity extends ConversationBaseActivity {
                 LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_MEDIA_IMAGE");
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                //当消息处于发送中状态时无法点击
+                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
+                    openMessage(uiMessage.getMessage());
+                }
                 LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_COMMENT_TEXT_PLAIN");
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                //当消息处于发送中状态时无法点击
+                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
+                    openMessage(uiMessage.getMessage());
+                }
                 LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_EXTENDED_LINKS");
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_MEDIA_VOICE");
                 break;
             default:
-                if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
-                    showResendMessageDlg(uiMessage, view);
-                }
+                UpgradeUtils upgradeUtils = new UpgradeUtils(context,
+                        null, true);
+                upgradeUtils.checkUpdate(true);
                 break;
         }
     }
@@ -1581,33 +1605,56 @@ public class ConversationActivity extends ConversationBaseActivity {
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        String content;
                         switch (items[which]) {
                             case "复制":
-                                ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                                String content1 = uiMessage.getMessage().getContent();
-                                JSONObject jsonObject1 = JSONUtils.getJSONObject(content1);
-                                String strContent1 = JSONUtils.getString(jsonObject1, "text", "");
-                                cmb.setPrimaryClip(ClipData.newPlainText(null, strContent1));
-                                ToastUtils.show(context, R.string.copyed_to_paste_board);
+                                content = uiMessage.getMessage().getContent();
+                                if(!StringUtils.isBlank(content))
+                                    copyToClipboard(context,content);
                                 break;
                             case "转发":
                                 shareMessageToFrinds(context);
                                 Toast.makeText(context, "你选择了 " + items[which], Toast.LENGTH_SHORT).show();
                                 break;
                             case "日程":
-                                String content = uiMessage.getMessage().getContent();
-                                JSONObject jsonObject = JSONUtils.getJSONObject(content);
-                                String strContent = JSONUtils.getString(jsonObject, "text", "");
-                                Intent intent = new Intent();
-                                intent.putExtra("message", strContent);
-                                intent.setClass(ConversationActivity.this, CalEventAddActivity.class);
-                                startActivity(intent);
+                                content = uiMessage.getMessage().getContent();
+                                if(!StringUtils.isBlank(content)) {
+                                    addTextToSchedule(content);
+                                }
+                                break;
+                            case "转文字":
+                                break;
+                            case "复制文字":
+                                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
+                                if(!StringUtils.isBlank(content))
+                                    copyToClipboard(context,content);
                                 break;
                         }
                         dialog.dismiss();
                     }
                 })
                 .create(R.style.QMUI_Dialog).show();
+    }
+
+    /**
+     * 文本复制到剪切板*/
+    private void copyToClipboard(Context context,String content){
+        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        JSONObject jsonObject1 = JSONUtils.getJSONObject(content);
+        String strContent1 = JSONUtils.getString(jsonObject1, "text", "");
+        cmb.setPrimaryClip(ClipData.newPlainText(null, strContent1));
+        ToastUtils.show(context, R.string.copyed_to_paste_board);
+    }
+
+    /**
+     * 文本信息添加到日程*/
+    private void addTextToSchedule(String content){
+        JSONObject jsonObject = JSONUtils.getJSONObject(content);
+        String strContent = JSONUtils.getString(jsonObject, "text", "");
+        Intent intent = new Intent();
+        intent.putExtra("message", strContent);
+        intent.setClass(ConversationActivity.this, CalEventAddActivity.class);
+        startActivity(intent);
     }
 
 

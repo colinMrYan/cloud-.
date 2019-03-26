@@ -1,17 +1,13 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.widget.TextViewFixTouchConsume;
@@ -53,19 +49,6 @@ public class DisplayTxtPlainMsg {
         TransHtmlToTextUtils.stripUnderlines(
                 contentText, context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg_blue));
-//        contentText.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//              //  copyContentToPasteBoard(context, contentText);
-//                return true;
-//            }
-//        });
         return cardContentView;
-    }
-
-    public static void copyContentToPasteBoard(Context context, TextView textView) {
-        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        cmb.setPrimaryClip(ClipData.newPlainText(null, textView.getText().toString()));
-        ToastUtils.show(context, R.string.copyed_to_paste_board);
     }
 }

@@ -52,22 +52,6 @@ public class DisplayRegularFileMsg {
         ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getRegularFileIconResId(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
-        final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sendStauts != 1) {
-                    return;
-                }
-                if (FileUtils.isFileExist(fileDownloadPath)) {
-                    FileUtils.openFile(context, fileDownloadPath);
-                } else {
-                    Intent intent = new Intent(context, ChatFileDownloadActivtiy.class);
-                    intent.putExtra("message", message);
-                    context.startActivity(intent);
-                }
-            }
-        });
         return convertView;
     }
 

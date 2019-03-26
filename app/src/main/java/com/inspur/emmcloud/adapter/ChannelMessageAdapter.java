@@ -174,12 +174,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         String type = message.getType();
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                LogUtils.LbcDebug("textPlin");
                 cardContentView = DisplayTxtPlainMsg.getView(context,
                         message);
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                LogUtils.LbcDebug("TYPE_TEXT_MARKDOWN");
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
                         message);
                 break;
@@ -216,6 +214,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             public boolean onLongClick(View view) {
                 return  itemLongClickListener.onItemLongClick(view,uiMessage);
         }});
+        cardContentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cardItemClickListener.onCardItemClick(view,uiMessage);
+            }
+        });
 
     }
 
@@ -315,10 +319,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     public interface ItemLongClickListener{
         boolean onItemLongClick(View view,UIMessage uiMessage);
     }
+
     public interface CardItemClickListener{
         void onCardItemClick(View view,UIMessage uiMessage);
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener   {
         public RelativeLayout cardLayout;
@@ -362,6 +366,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public void onClick(View v) {
             if (mListener != null) {
                 mListener.onItemClick(v, getAdapterPosition());
+                LogUtils.LbcDebug("MyItemClick");
             }
 
         }

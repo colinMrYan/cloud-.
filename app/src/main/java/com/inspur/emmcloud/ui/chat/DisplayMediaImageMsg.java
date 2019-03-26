@@ -80,30 +80,6 @@ public class DisplayMediaImageMsg {
                 loadingView.setVisibility(View.GONE);
             }
         });
-
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (uiMessage.getSendStatus() != 1) {
-//                    return;
-//                }
-//                int[] location = new int[2];
-//                view.getLocationOnScreen(location);
-//                view.invalidate();
-//                int width = view.getWidth();
-//                int height = view.getHeight();
-//                Intent intent = new Intent(context,
-//                        ImagePagerActivity.class);
-//                List<Message> imgTypeMsgList = MessageCacheUtil.getImgTypeMessageList(context, uiMessage.getMessage().getChannel(), false);
-//                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-//                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, uiMessage.getMessage());
-//                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-//                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-//                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-//                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-//                context.startActivity(intent);
-//            }
-//        });
         return cardContentView;
 
     }
