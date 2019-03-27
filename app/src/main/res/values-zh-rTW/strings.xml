@@ -834,7 +834,7 @@
     <string name="monthly">每月</string>
     <string name="weekly">每週</string>
     <string name="every_day">每日</string>
-    <string name="calendar_when_event_occurs">事件發生時</string>
+    <string name="calendar_when_event_occurs">開始時</string>
     <string name="calendar_five_minite_ago">5分鐘前</string>
     <string name="calendar_ten_minite_ago">10分鐘前</string>
     <string name="calendar_fifteen_minite_ago">15分鐘前</string>
