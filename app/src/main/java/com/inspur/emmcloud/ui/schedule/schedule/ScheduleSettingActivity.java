@@ -134,7 +134,7 @@ public class ScheduleSettingActivity extends BaseActivity {
             final MyCalendar calendar = calendarsList.get(position);
 
             if (null == convertView) {
-                v = View.inflate(ScheduleSettingActivity.this, R.layout.item_calender_list, null);
+                v = View.inflate(ScheduleSettingActivity.this, R.layout.item_calendar_list, null);
                 calendarHolder = new CalendarHolder();
                 calendarHolder.calendarName = v.findViewById(R.id.tv_calendar_name);
                 calendarHolder.calendarStyleColor = v.findViewById(R.id.iv_calendar_color_hint);
