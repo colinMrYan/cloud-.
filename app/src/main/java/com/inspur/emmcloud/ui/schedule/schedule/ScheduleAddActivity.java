@@ -69,7 +69,6 @@ public class ScheduleAddActivity extends BaseActivity {
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
-    private CalendarEvent addCalendarEvent;
     private CalendarEvent calEvent;
     private MyCalendar myCalendar;
     private Boolean isAllDay = false;

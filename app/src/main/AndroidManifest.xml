@@ -892,6 +892,19 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.schedule.schedule.ScheduleAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.schedule.CalendarAlertTimeActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.schedule.CalendarTypeSelectActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />

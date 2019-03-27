@@ -39,7 +39,7 @@ public class CalendarColorUtils {
 		} else if (color.equals( "BLUE" )) {
 			displayColor = R.drawable.icon_blue_circle;
 		} else if (color.equals( "PURPLE" )) {
-			displayColor = R.drawable.icon_purple_cricle;
+			displayColor = R.drawable.icon_purple_circle;
 		} else if (color.equals( "BROWN" )) {
 			displayColor = R.drawable.icon_brown_circle;
 		} else {

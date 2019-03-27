@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/alert"
+            android:text="@string/schedule_event_alert"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -59,7 +59,7 @@
                 android:layout_centerVertical="true"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:text="@string/nothing"
+                android:text="@string/calendar_no_alert"
                 android:textColor="#FF333333"
                 android:textSize="@dimen/content_title_textsize" />
 

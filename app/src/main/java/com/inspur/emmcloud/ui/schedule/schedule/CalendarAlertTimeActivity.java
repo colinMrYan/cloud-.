@@ -36,21 +36,18 @@ public class CalendarAlertTimeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         final String[] alertTimeArray = {
                 getString(R.string.calendar_when_event_occurs),
-                getString(R.string.calendar_five_minite_ago),
-                getString(R.string.calendar_fifteen_minite_ago),
+                getString(R.string.calendar_ten_minite_ago),
+                getString(R.string.calendar_twenty_minite_ago),
                 getString(R.string.calendar_thirty_minite_ago),
                 getString(R.string.calendar_one_hour_ago),
-                getString(R.string.calendar_two_hours_ago),
-                getString(R.string.calendar_one_day_ago),
-                getString(R.string.calendar_two_days_ago),
-                getString(R.string.calendar_a_week_ago)};
+                getString(R.string.calendar_one_day_ago)};
         if (getIntent().getExtras().containsKey("alertTime")) {
             alertTime = getIntent().getExtras().getString("alertTime");
         } else {
-            alertTime = getString(R.string.nothing);
+            alertTime = getString(R.string.calendar_no_alert);
             selectPosition = -1;
         }
-        if (!alertTime.equals(getString(R.string.nothing))) {
+        if (!alertTime.equals(getString(R.string.calendar_no_alert))) {
             noAlertSelectImage.setVisibility(View.GONE);
             for (int i = 0; i < alertTimeArray.length; i++) {
                 if (alertTimeArray[i].equals(alertTime)) {
@@ -86,7 +83,7 @@ public class CalendarAlertTimeActivity extends BaseActivity {
             case R.id.rl_no_alert:
                 noAlertSelectImage.setVisibility(View.VISIBLE);
                 selectPosition = -1;
-                alertTime = getString(R.string.nothing);
+                alertTime = getString(R.string.calendar_no_alert);
                 returnData();
                 break;
             default:
