@@ -349,6 +349,12 @@
     <string name="work_task_text">我的任务</string>
     <string name="work_info_text">信息栏</string>
 
+    <!-- 日程 -->
+    <string name="schedule_event_alert">日程提醒</string>
+    <string name="schedule_calendar">日历</string>
+    <string name="schedule_calendar_company">公司日历</string>
+
+
     <!-- 发现部分 -->
     <string name="find">发现</string>
     <string name="travel_analysis">差旅分析</string>

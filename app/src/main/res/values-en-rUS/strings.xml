@@ -344,6 +344,8 @@
     <string name="work_info_text">Info bar</string>
     <string name="time">Time</string>
 
+    <string name="schedule_event_alert">Schedule reminder</string>
+
     <!-- 发现部分 -->
     <string name="find">Discover</string>
     <string name="travel_analysis">Travel analysis</string>
