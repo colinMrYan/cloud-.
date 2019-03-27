@@ -840,9 +840,9 @@
     <string name="every_day">每日</string>
     <string name="calendar_when_event_occurs">事件发生时</string>
     <string name="calendar_five_minite_ago">5分钟前</string>
-    <string name="calendar_ten_minite_ago">15分钟前</string>
+    <string name="calendar_ten_minite_ago">10分钟前</string>
     <string name="calendar_fifteen_minite_ago">15分钟前</string>
-    <string name="calendar_twenty_minite_ago">15分钟前</string>
+    <string name="calendar_twenty_minite_ago">20分钟前</string>
     <string name="calendar_thirty_minite_ago">30分钟前</string>
     <string name="calendar_one_hour_ago">1小时前</string>
     <string name="calendar_two_hours_ago">2小时前</string>
