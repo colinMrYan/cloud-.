@@ -112,10 +112,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         this.mItemClickListener = myItemClickListener;
     }
 
+    /**
+     * Activity 实现卡片长按监听接口函数并通过该方法添加到卡片上*/
     public void setCardItemLongClickListener(CardItemLongClickListener CardItemLongClickListener){
         this.cardItemLongClickListener=CardItemLongClickListener;
     }
 
+    /**
+     * Activity 实现卡片点击监听听接口函数并通过该方法添加到卡片上*/
     public void setCardItemClickListener(CardItemClickListener cardItemClickListener){
         this.cardItemClickListener=cardItemClickListener;
     }
@@ -316,10 +320,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         void onAdapterDataSizeChange();
     }
 
+    /**
+     *沟通 卡片长按监听接口*/
     public interface CardItemLongClickListener{
         boolean onItemLongClick(View view,UIMessage uiMessage);
     }
 
+    /**
+     *沟通 卡片点击事件监听接口*/
     public interface CardItemClickListener{
         void onCardItemClick(View view,UIMessage uiMessage);
     }
