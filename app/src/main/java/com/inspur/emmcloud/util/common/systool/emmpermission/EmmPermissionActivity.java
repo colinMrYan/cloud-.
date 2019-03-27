@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-public class TedPermissionActivity extends AppCompatActivity {
+public class EmmPermissionActivity extends AppCompatActivity {
     public static final int REQ_CODE_PERMISSION_REQUEST = 10;
     public static final int REQ_CODE_SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST = 30;
     public static final int REQ_CODE_SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST_SETTING = 31;
@@ -45,7 +45,7 @@ public class TedPermissionActivity extends AppCompatActivity {
     public static final String EXTRA_SCREEN_ORIENTATION = "screen_orientation";
     public static final String EXTRA_BUTTON_NEGATIVE = "#36A5F6";
     public static final String EXTRA_BUTTON_POSITIVE = "#36A5F6";
-    private static Deque<PermissionListener> permissionListenerStack;
+    private static Deque<EmmPermissionListener> permissionListenerStack;
     private CharSequence rationaleTitle;
     private CharSequence rationale_message;
     private CharSequence denyTitle;
@@ -59,7 +59,7 @@ public class TedPermissionActivity extends AppCompatActivity {
 //    private boolean isShownRationaleDialog;
     private int requestedOrientation;
 
-    public static void startActivity(Context context, Intent intent, PermissionListener listener) {
+    public static void startActivity(Context context, Intent intent, EmmPermissionListener listener) {
         if (permissionListenerStack == null) {
             permissionListenerStack = new ArrayDeque<>();
         }
@@ -151,43 +151,43 @@ public class TedPermissionActivity extends AppCompatActivity {
     }
 
     private void checkPermissions(boolean fromOnActivityResult) {
-        List<String> needPermissions = new ArrayList<>();
+        List<String> needPermissionList = new ArrayList<>();
         for (String permission : permissions) {
             if (permission.equals(Manifest.permission.SYSTEM_ALERT_WINDOW)) {
                 if (!hasWindowPermission()) {
-                    needPermissions.add(permission);
+                    needPermissionList.add(permission);
                 }
             } else {
-                if (TedPermissionBase.isDenied(this, permission)) {
-                    needPermissions.add(permission);
+                if (EmmPermissionBase.isDenied(this, permission)) {
+                    needPermissionList.add(permission);
                 }
             }
         }
 
-        if (needPermissions.isEmpty()) {
+        if (needPermissionList.isEmpty()) {
             permissionResult(null,new ArrayList<String>());
         } else if (fromOnActivityResult) { //From Setting Activity
-            permissionResult(needPermissions,new ArrayList<String>());
-        } else if (needPermissions.size() == 1 && needPermissions
+            permissionResult(needPermissionList,new ArrayList<String>());
+        } else if (needPermissionList.size() == 1 && needPermissionList
                 .contains(Manifest.permission.SYSTEM_ALERT_WINDOW)) {   // window permission deny
-            permissionResult(needPermissions, new ArrayList<String>());
+            permissionResult(needPermissionList, new ArrayList<String>());
         } else if (/*!isShownRationaleDialog && */!TextUtils.isEmpty(rationale_message)) { // //Need Show Rationale
-            requestPermissions(needPermissions);
+            requestPermissions(needPermissionList);
 //            isShownRationaleDialog = true;
         } else { //Need Request Permissions
-            requestPermissions(needPermissions);
+            requestPermissions(needPermissionList);
         }
     }
 
-    private void permissionResult(List<String> deniedPermissions,List<String> grantPermissionList) {
+    private void permissionResult(List<String> deniedPermissionList,List<String> grantPermissionList) {
         finish();
         overridePendingTransition(0, 0);
         if (permissionListenerStack != null) {
-            PermissionListener listener = permissionListenerStack.pop();
-            if (ObjectUtils.isEmpty(deniedPermissions)) {
+            EmmPermissionListener listener = permissionListenerStack.pop();
+            if (ObjectUtils.isEmpty(deniedPermissionList)) {
                 listener.onPermissionGranted(grantPermissionList);
             } else {
-                listener.onPermissionDenied(deniedPermissions);
+                listener.onPermissionDenied(deniedPermissionList);
             }
             if (permissionListenerStack.size() == 0) {
                 permissionListenerStack = null;
@@ -201,8 +201,8 @@ public class TedPermissionActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
-    private void requestPermissions(List<String> needPermissions) {
-        ActivityCompat.requestPermissions(this, needPermissions.toArray(new String[needPermissions.size()]),
+    private void requestPermissions(List<String> needPermissionList) {
+        ActivityCompat.requestPermissions(this, needPermissionList.toArray(new String[needPermissionList.size()]),
                 REQ_CODE_PERMISSION_REQUEST);
     }
 
@@ -228,8 +228,8 @@ public class TedPermissionActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        List<String> deniedPermissionList = TedPermissionBase.getDeniedPermissions(this, permissions);
-        List<String> grantPermissionList = TedPermissionBase.getGrantPermissions(this,permissions);
+        List<String> deniedPermissionList = EmmPermissionBase.getDeniedPermissions(this, permissions);
+        List<String> grantPermissionList = EmmPermissionBase.getGrantPermissions(this,permissions);
         if (deniedPermissionList.isEmpty()) {
             permissionResult(null,grantPermissionList);
         } else {
@@ -256,7 +256,7 @@ public class TedPermissionActivity extends AppCompatActivity {
             builder.setPositiveButton(settingButtonText, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    TedPermissionBase.startSettingActivityForResult(TedPermissionActivity.this);
+                    EmmPermissionBase.startSettingActivityForResult(EmmPermissionActivity.this);
                 }
             });
 
@@ -271,7 +271,7 @@ public class TedPermissionActivity extends AppCompatActivity {
             return false;
         }
         for (String permission : needPermissions) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(TedPermissionActivity.this, permission)) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(EmmPermissionActivity.this, permission)) {
                 return false;
             }
         }
@@ -312,7 +312,7 @@ public class TedPermissionActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case TedPermissionBase.REQ_CODE_REQUEST_SETTING:
+            case EmmPermissionBase.REQ_CODE_REQUEST_SETTING:
                 checkPermissions(true);
                 break;
             case REQ_CODE_SYSTEM_ALERT_WINDOW_PERMISSION_REQUEST:   // 최초 ALERT WINDOW 요청에 대한 결과

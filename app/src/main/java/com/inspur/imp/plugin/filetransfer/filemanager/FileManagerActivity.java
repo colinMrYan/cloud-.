@@ -307,7 +307,7 @@ public class FileManagerActivity extends BaseActivity {
 //        AndPermission.onRequestPermissionsResult(requestCode, permissions, grantResults, listener);
 //    }
 
-//    private PermissionListener listener = new PermissionListener() {
+//    private EmmPermissionListener listener = new EmmPermissionListener() {
 //        @Override
 //        public void onSucceed(int requestCode, List<String> grantedPermissions) {
 //            // 权限申请成功回调。

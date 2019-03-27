@@ -2,14 +2,13 @@ package com.inspur.emmcloud.util.common.systool.emmpermission;
 
 import android.content.Context;
 
-public class TedPermission extends TedPermissionBase{
-  public static final String TAG=TedPermission.class.getSimpleName();
+public class EmmPermission extends EmmPermissionBase {
 
   public static Builder with(Context context) {
     return new Builder(context);
   }
 
-    public static class Builder extends PermissionBuilder<Builder> {
+    public static class Builder extends EmmPermissionBuilder<Builder> {
 
     private Builder(Context context) {
       super(context);

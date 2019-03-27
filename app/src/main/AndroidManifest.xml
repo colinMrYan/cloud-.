@@ -1084,7 +1084,7 @@
         <!-- ImagePicker -->
 
 
-        <activity android:name="com.inspur.emmcloud.util.common.systool.emmpermission.TedPermissionActivity"
+        <activity android:name="com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionActivity"
             android:configChanges="mcc|mnc|locale|keyboard|keyboardHidden|screenLayout|fontScale|uiMode|orientation|screenSize|layoutDirection"
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.Transparent.Permission"

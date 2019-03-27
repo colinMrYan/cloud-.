@@ -12,12 +12,12 @@ import com.inspur.emmcloud.util.common.systool.emmpermission.util.ObjectUtils;
 import java.util.ArrayList;
 
 
-public abstract class PermissionBuilder<T extends PermissionBuilder> {
+public abstract class EmmPermissionBuilder<T extends EmmPermissionBuilder> {
 
     private static final String PREFS_NAME_PERMISSION = "PREFS_NAME_PERMISSION";
     private static final String PREFS_IS_FIRST_REQUEST = "PREFS_IS_FIRST_REQUEST";
 
-    private PermissionListener listener;
+    private EmmPermissionListener listener;
     private String[] permissions;
     private CharSequence rationaleTitle;
     private CharSequence rationaleMessage;
@@ -31,7 +31,7 @@ public abstract class PermissionBuilder<T extends PermissionBuilder> {
     private int requestedOrientation;
     private Context context;
 
-    public PermissionBuilder(Context context) {
+    public EmmPermissionBuilder(Context context) {
         this.context = context;
         deniedCloseButtonText = context.getString(R.string.cancel);
         rationaleConfirmText = context.getString(R.string.ok);
@@ -40,9 +40,9 @@ public abstract class PermissionBuilder<T extends PermissionBuilder> {
 
     protected void checkPermissions() {
         if (listener == null) {
-            throw new IllegalArgumentException("You must setPermissionListener() on TedPermission");
+            throw new IllegalArgumentException("You must setPermissionListener() on EmmPermission");
         } else if (ObjectUtils.isEmpty(permissions)) {
-            throw new IllegalArgumentException("You must setPermissions() on TedPermission");
+            throw new IllegalArgumentException("You must setPermissions() on EmmPermission");
         }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -50,27 +50,27 @@ public abstract class PermissionBuilder<T extends PermissionBuilder> {
             return;
         }
 
-        Intent intent = new Intent(context, TedPermissionActivity.class);
-        intent.putExtra(TedPermissionActivity.EXTRA_PERMISSIONS, permissions);
+        Intent intent = new Intent(context, EmmPermissionActivity.class);
+        intent.putExtra(EmmPermissionActivity.EXTRA_PERMISSIONS, permissions);
 
-        intent.putExtra(TedPermissionActivity.EXTRA_RATIONALE_TITLE, rationaleTitle);
-        intent.putExtra(TedPermissionActivity.EXTRA_RATIONALE_MESSAGE, rationaleMessage);
-        intent.putExtra(TedPermissionActivity.EXTRA_DENY_TITLE, denyTitle);
-        intent.putExtra(TedPermissionActivity.EXTRA_DENY_MESSAGE, denyMessage);
-        intent.putExtra(TedPermissionActivity.EXTRA_PACKAGE_NAME, context.getPackageName());
-        intent.putExtra(TedPermissionActivity.EXTRA_SETTING_BUTTON, hasSettingBtn);
-        intent.putExtra(TedPermissionActivity.EXTRA_DENIED_DIALOG_CLOSE_TEXT, deniedCloseButtonText);
-        intent.putExtra(TedPermissionActivity.EXTRA_RATIONALE_CONFIRM_TEXT, rationaleConfirmText);
-        intent.putExtra(TedPermissionActivity.EXTRA_SETTING_BUTTON_TEXT, settingButtonText);
-        intent.putExtra(TedPermissionActivity.EXTRA_SCREEN_ORIENTATION, requestedOrientation);
+        intent.putExtra(EmmPermissionActivity.EXTRA_RATIONALE_TITLE, rationaleTitle);
+        intent.putExtra(EmmPermissionActivity.EXTRA_RATIONALE_MESSAGE, rationaleMessage);
+        intent.putExtra(EmmPermissionActivity.EXTRA_DENY_TITLE, denyTitle);
+        intent.putExtra(EmmPermissionActivity.EXTRA_DENY_MESSAGE, denyMessage);
+        intent.putExtra(EmmPermissionActivity.EXTRA_PACKAGE_NAME, context.getPackageName());
+        intent.putExtra(EmmPermissionActivity.EXTRA_SETTING_BUTTON, hasSettingBtn);
+        intent.putExtra(EmmPermissionActivity.EXTRA_DENIED_DIALOG_CLOSE_TEXT, deniedCloseButtonText);
+        intent.putExtra(EmmPermissionActivity.EXTRA_RATIONALE_CONFIRM_TEXT, rationaleConfirmText);
+        intent.putExtra(EmmPermissionActivity.EXTRA_SETTING_BUTTON_TEXT, settingButtonText);
+        intent.putExtra(EmmPermissionActivity.EXTRA_SCREEN_ORIENTATION, requestedOrientation);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
-        TedPermissionActivity.startActivity(context, intent, listener);
-        TedPermissionBase.setFirstRequest(context,permissions);
+        EmmPermissionActivity.startActivity(context, intent, listener);
+        EmmPermissionBase.setFirstRequest(context,permissions);
     }
 
-    public T setPermissionListener(PermissionListener listener) {
+    public T setPermissionListener(EmmPermissionListener listener) {
         this.listener = listener;
         return (T) this;
     }
