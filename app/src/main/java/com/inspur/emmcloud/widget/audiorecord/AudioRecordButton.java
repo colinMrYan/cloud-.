@@ -429,11 +429,7 @@ public class AudioRecordButton extends Button {
         }
     }
 
-    @Override
-    public boolean onPreDraw() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+
 
     /**
      * 获取Mp3文件夹路径
