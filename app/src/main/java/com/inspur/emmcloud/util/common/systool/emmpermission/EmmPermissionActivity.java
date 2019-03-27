@@ -65,6 +65,7 @@ public class EmmPermissionActivity extends AppCompatActivity {
         }
         permissionListenerStack.push(listener);
         context.startActivity(intent);
+
     }
 
     @Override
