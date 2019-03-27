@@ -23,11 +23,14 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.DataTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+
+import java.util.Calendar;
 
 /**
  * Created by libaochao on 2019/3/27.
@@ -85,7 +88,7 @@ public class ScheduleAddActivity extends BaseActivity {
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(getApplicationContext());
-        apiService.setAPIInterface(new CalendarEventAddActivity.WebService());
+        apiService.setAPIInterface(new ScheduleAddActivity.WebService());
         allDaySwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
@@ -111,9 +114,9 @@ public class ScheduleAddActivity extends BaseActivity {
         startDataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
             @Override
             public void positiveListener(Calendar calendar) {
-                String startDateStr = TimeUtils.calendar2FormatString(CalendarEventAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                String startDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                 startDateText.setText(startDateStr);
-                startDateStr = TimeUtils.calendar2FormatString(CalendarEventAddActivity.this, calendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                startDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, calendar, TimeUtils.FORMAT_HOUR_MINUTE);
                 startTimeText.setText(startDateStr);
             }
 
@@ -125,9 +128,9 @@ public class ScheduleAddActivity extends BaseActivity {
         endDataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
             @Override
             public void positiveListener(Calendar calendar) {
-                String endDataStr = TimeUtils.calendar2FormatString(CalendarEventAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                String endDataStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                 endDateText.setText(endDataStr);
-                endDataStr = TimeUtils.calendar2FormatString(CalendarEventAddActivity.this, calendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                endDataStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, calendar, TimeUtils.FORMAT_HOUR_MINUTE);
                 endTimeText.setText(endDataStr);
             }
 
@@ -250,12 +253,12 @@ public class ScheduleAddActivity extends BaseActivity {
                 }
                 break;
             case R.id.rl_repeat:
-                if (isEditable == true) {
-                    intent.setClass(getApplicationContext(),
-                            CalendarRepeatActivity.class);
-                    intent.putExtra("repeatType", repeatText.getText());
-                    startActivityForResult(intent, REPEAT_TYPE_REQUEST_CODE);
-                }
+//                if (isEditable == true) {
+//                    intent.setClass(getApplicationContext(),
+//                            CalendarRepeatActivity.class);
+//                    intent.putExtra("repeatType", repeatText.getText());
+//                    startActivityForResult(intent, REPEAT_TYPE_REQUEST_CODE);
+//                }
                 break;
         }
     }
@@ -337,7 +340,7 @@ public class ScheduleAddActivity extends BaseActivity {
             startDateStr = startDateText.getText() + " "
                     + startTimeText.getText();
         }
-        startCalendar = TimeUtils.timeString2Calendar(CalendarEventAddActivity.this, startDateStr,
+        startCalendar = TimeUtils.timeString2Calendar(ScheduleAddActivity.this, startDateStr,
                 TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
         return startCalendar;
     }
@@ -355,7 +358,7 @@ public class ScheduleAddActivity extends BaseActivity {
             endDateStr = endDateText.getText() + " "
                     + endTimeText.getText();
         }
-        endCalendar = TimeUtils.timeString2Calendar(CalendarEventAddActivity.this, endDateStr,
+        endCalendar = TimeUtils.timeString2Calendar(ScheduleAddActivity.this, endDateStr,
                 TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
         return endCalendar;
     }
@@ -470,7 +473,7 @@ public class ScheduleAddActivity extends BaseActivity {
         public void returnAddCalEventFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(CalendarEventAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ScheduleAddActivity.this, error, errorCode);
         }
 
         @Override
@@ -496,7 +499,7 @@ public class ScheduleAddActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            WebServiceMiddleUtils.hand(CalendarEventAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ScheduleAddActivity.this, error, errorCode);
         }
 
     }

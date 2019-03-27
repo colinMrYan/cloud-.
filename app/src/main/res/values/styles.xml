@@ -374,7 +374,7 @@
         <!--这个绿色是选中时的背景颜色，和当前日期的颜色-->
         <item name="colorAccent">#588ce6</item>
         <!--设置字体颜色-->
-        <item name="android:textColorPrimary">@android:colorack</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
     <style name="DateTimeAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
