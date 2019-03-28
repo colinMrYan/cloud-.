@@ -63,6 +63,8 @@ public class ScheduleAddActivity extends BaseActivity {
     private TextView timeAlertText;
     @ViewInject(R.id.tv_repeat_text)
     private TextView repeatText;
+    @ViewInject(R.id.tv_title)
+    private TextView titleText;
     private static final int CAL_TYPE_REQUEST_CODE = 1;
     private static final int REPEAT_TYPE_REQUEST_CODE = 2;
     private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
@@ -151,10 +153,8 @@ public class ScheduleAddActivity extends BaseActivity {
         if (getIntent().hasExtra("calEvent")) {
             isEditable = false;
             allDaySwitch.setEnable(false);
-            calEvent = (CalendarEvent) getIntent().getSerializableExtra(
-                    "calEvent");
-            ((TextView) findViewById(R.id.tv_title))
-                    .setText(getString(R.string.calendar_detail));
+            calEvent = (CalendarEvent) getIntent().getSerializableExtra("calEvent");
+            titleText.setText(getString(R.string.calendar_detail));
             if (calEvent.getCalendar().getCommunity()) {
                 saveText.setVisibility(View.GONE);
             }
@@ -175,13 +175,8 @@ public class ScheduleAddActivity extends BaseActivity {
             }
         }
         setEventTime(startCalendar, endCalendar);
-        if (isAllDay) {
-            startTimeText.setVisibility(View.GONE);
-            endTimeText.setVisibility(View.GONE);
-        } else {
-            startTimeText.setVisibility(View.VISIBLE);
-            endTimeText.setVisibility(View.VISIBLE);
-        }
+        startTimeText.setVisibility(isAllDay ? View.GONE : View.VISIBLE);
+        endTimeText.setVisibility(isAllDay ? View.GONE : View.VISIBLE);
     }
 
     /**
