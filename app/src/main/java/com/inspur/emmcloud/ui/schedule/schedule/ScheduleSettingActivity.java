@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
@@ -31,7 +32,7 @@ import java.util.List;
  * Created by libaochao on 2019/3/27.
  */
 
-   @ContentView(R.layout.activity_schedule_setting)
+@ContentView(R.layout.activity_schedule_setting)
 public class ScheduleSettingActivity extends BaseActivity {
     @ViewInject(R.id.scrollview_list_calendars)
     private ScrollViewWithListView calendarsListView;
@@ -39,6 +40,10 @@ public class ScheduleSettingActivity extends BaseActivity {
     private ImageView quarterImageView;
     @ViewInject(R.id.iv_month_tip)
     private ImageView monthImageView;
+    @ViewInject(R.id.iv_list_view_tip)
+    private ImageView listViewImageView;
+    @ViewInject(R.id.iv_day_view_tip)
+    private ImageView dayImageView;
 
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
@@ -49,11 +54,15 @@ public class ScheduleSettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         String calEventDisplayType = PreferencesUtils.getString(
                 getApplicationContext(), "celEventDisplayType", "monthly");
+        String viewDisplayType = PreferencesUtils.getString(
+                getApplicationContext(), "viewDisplayType", "listview");
         boolean isMonth = calEventDisplayType.equals("monthly");
+        boolean isListView = viewDisplayType.equals("listview");
         quarterImageView.setVisibility(isMonth ? View.GONE : View.VISIBLE);
         monthImageView.setVisibility(isMonth ? View.VISIBLE : View.GONE);
-        calendarsList = (List<MyCalendar>) getIntent().getExtras()
-                .getSerializable("calendarList");
+        listViewImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
+        dayImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
+        calendarsList  = MyCalendarCacheUtils.getAllMyCalendarList(this);
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
     }
@@ -78,6 +87,22 @@ public class ScheduleSettingActivity extends BaseActivity {
                     quarterImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
                             "celEventDisplayType", "monthly");
+                }
+                break;
+            case R.id.rl_list_view:
+                if (listViewImageView.getVisibility() != View.VISIBLE) {
+                    listViewImageView.setVisibility(View.VISIBLE);
+                    dayImageView.setVisibility(View.INVISIBLE);
+                    PreferencesUtils.putString(getApplicationContext(),
+                            "viewDisplayType", "listview");
+                }
+                break;
+            case R.id.rl_day_view:
+                if (dayImageView.getVisibility() != View.VISIBLE) {
+                    dayImageView.setVisibility(View.VISIBLE);
+                    listViewImageView.setVisibility(View.INVISIBLE);
+                    PreferencesUtils.putString(getApplicationContext(),
+                            "viewDisplayType", "dayview");
                 }
                 break;
             default:

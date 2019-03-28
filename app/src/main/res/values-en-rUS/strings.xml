@@ -344,7 +344,14 @@
     <string name="work_info_text">Info bar</string>
     <string name="time">Time</string>
 
+    <!-- 日程 -->
     <string name="schedule_event_alert">Schedule reminder</string>
+    <string name="schedule_setting_list_view">List view</string>
+    <string name="schedule_setting_day_view">Day View</string>
+    <string name="schedule_setting_divide_group">Divide groups</string>
+    <string name="schedule_setting_quarter">Quarter</string>
+    <string name="schedule_setting_month">Month</string>
+    <string name="schedule_setting_view">View</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

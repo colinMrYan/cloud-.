@@ -903,7 +903,10 @@
             android:name=".ui.schedule.schedule.CalendarTypeSelectActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".ui.schedule.schedule.ScheduleSettingActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
             android:resizeableActivity="true"

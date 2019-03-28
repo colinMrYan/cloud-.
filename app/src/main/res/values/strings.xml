@@ -353,6 +353,12 @@
     <string name="schedule_event_alert">日程提醒</string>
     <string name="schedule_calendar">日历</string>
     <string name="schedule_calendar_company">公司日历</string>
+    <string name="schedule_setting_list_view">列表视图</string>
+    <string name="schedule_setting_day_view">日视图</string>
+    <string name="schedule_setting_divide_group">分组</string>
+    <string name="schedule_setting_quarter">季度</string>
+    <string name="schedule_setting_month">月度</string>
+    <string name="schedule_setting_view">视图</string>
 
 
     <!-- 发现部分 -->
