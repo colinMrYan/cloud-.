@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    android:fitsSystemWindows="true"
+    tools:context="com.inspur.emmcloud.MainActivity"
+    tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
+    <RelativeLayout
+        android:id="@+id/rl_tool"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_schedule"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            app:tabTextAppearance="@style/ScheduleTabLayoutTextStyle"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabTextColor="#888888"
+            app:tabSelectedTextColor="@color/black"
+            />
+
+        <ImageView
+            android:id="@+id/iv_schedule_function_list"
+            android:layout_width="46dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:paddingLeft="8dp"
+            android:paddingRight="16dp"
+            android:scaleType="centerInside"
+            android:src="?attr/ic_add" />
+
+
+    </RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/all_schedule_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -112,6 +114,8 @@ public class ScheduleFragment extends Fragment implements
 
     private boolean isWorkPortletConfigUploadSuccess = true;  //flag:判断是否上传配置信息成功
     private List<WorkSetting> workSettingList = new ArrayList<>();
+    private TabLayout tabLayoutSchedule;
+
     private View.OnClickListener onViewClickListener = new View.OnClickListener() {
 
         @Override
@@ -189,6 +193,27 @@ public class ScheduleFragment extends Fragment implements
     private void initView() {
         calendarView = rootView.findViewById(R.id.calendar_view_schedule);
         calendarLayout = rootView.findViewById(R.id.calendar_layout_schedule);
+        tabLayoutSchedule = rootView.findViewById(R.id.tl_schedule);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_schedule));
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_meeting_text));
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_mession));
+//        tabLayoutSchedule.getTabAt(1).select();
+        tabLayoutSchedule.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Toast.makeText(getActivity(), "选中的"+tab.getText(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                Toast.makeText(getActivity(), "未选中的"+tab.getText(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                Toast.makeText(getActivity(), "复选的"+tab.getText(), Toast.LENGTH_SHORT).show();
+            }
+        });
         listView = rootView.findViewById(R.id.list);
         adapter = new Adapter();
         listView.setAdapter(adapter);

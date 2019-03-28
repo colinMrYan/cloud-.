@@ -348,6 +348,8 @@
     <string name="work_task_text">我的任務</string>
     <string name="work_info_text">資訊欄</string>
     <string name="work_search_hint">蒐索行事曆、任務</string>
+    <string name="work_mession">任務</string>
+    <string name="work_schedule">日期</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
