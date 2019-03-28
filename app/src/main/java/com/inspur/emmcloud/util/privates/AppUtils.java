@@ -45,13 +45,12 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.permission.Permissions;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
-import com.yanzhenjie.permission.Permission;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -630,7 +629,7 @@ public class AppUtils {
     public static void openCamera(final Activity activity, final String fileName, final int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permission.CAMERA,
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA,
                     new PermissionRequestCallback() {
                         @Override
                         public void onPermissionRequestSuccess(List<String> permissions) {

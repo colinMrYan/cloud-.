@@ -49,7 +49,7 @@ import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.permission.Permissions;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.MailLoginUtils;
