@@ -111,7 +111,6 @@ public class ScheduleAddActivity extends BaseActivity {
                 endTimeText.setVisibility(View.VISIBLE);
             }
         });
-        initDate();
         startDataTimePickerDialog = new DataTimePickerDialog(this);
         endDataTimePickerDialog = new DataTimePickerDialog(this);
         startDataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
@@ -142,6 +141,7 @@ public class ScheduleAddActivity extends BaseActivity {
 
             }
         });
+        initDate();
     }
 
     /**
