@@ -104,8 +104,8 @@
 
                 <ImageView
                     android:id="@+id/iv_list_view_tip"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/icon_schedule_alert_select" />
@@ -138,8 +138,8 @@
 
                 <ImageView
                     android:id="@+id/iv_day_view_tip"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"

@@ -117,6 +117,7 @@ android {
                             'src/main/res/layouts/work',//其他工作相关布局
                             'src/main/res/layouts/schedule',//日程
                             'src/main/res/layouts/schedule/schedule',//日程_日程
+                            'src/main/res/layouts/schedule/task',//日程_任务
                             'src/main/res/layouts/notsupport',//不支持此功能页面
                             'src/main/res/layouts/imp',//imp插件
                             'src/main/res/layouts/widgets/popwindow',//popwindow

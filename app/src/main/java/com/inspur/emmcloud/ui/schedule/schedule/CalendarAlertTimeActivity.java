@@ -127,11 +127,11 @@ public class CalendarAlertTimeActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.alert_time_item_view, null);
+            convertView = vi.inflate(R.layout.item_alert_time, null);
             TextView timeText = convertView
-                    .findViewById(R.id.alert_time_text);
+                    .findViewById(R.id.tv_alert_time);
             ImageView selectImg = convertView
-                    .findViewById(R.id.alert_time_select_img);
+                    .findViewById(R.id.iv_alert_time_select);
             timeText.setText(alertTimeArray[position]);
             if (selectPosition == position) {
                 selectImg.setVisibility(View.VISIBLE);
@@ -140,7 +140,6 @@ public class CalendarAlertTimeActivity extends BaseActivity {
             }
             return convertView;
         }
-
     }
 
 }
