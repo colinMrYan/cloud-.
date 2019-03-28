@@ -114,18 +114,16 @@ public class CalendarTypeSelectActivity extends BaseActivity {
             // TODO Auto-generated method stub
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.item_calendar_type_select, null);
-            TextView textView = (TextView) convertView
-                    .findViewById(R.id.tv_calendar_name);
+            TextView textView = convertView.findViewById(R.id.tv_calendar_name);
             MyCalendar calendar = calendarList.get(position);
-            ImageView calSelectImg = (ImageView) convertView.findViewById(R.id.iv_calendar_select);
+            ImageView calSelectImg = convertView.findViewById(R.id.iv_calendar_select);
             if (position == selectPosition) {
                 calSelectImg.setVisibility(View.VISIBLE);
             } else {
                 calSelectImg.setVisibility(View.GONE);
             }
             textView.setText(calendar.getName());
-            View colorView = convertView
-                    .findViewById(R.id.v_calendar_color);
+            View colorView = convertView.findViewById(R.id.v_calendar_color);
             int color = CalendarColorUtils.getColor(CalendarTypeSelectActivity.this, calendar.getColor());
             colorView.setBackgroundColor(color);
             return convertView;
