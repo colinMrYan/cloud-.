@@ -1455,7 +1455,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 transmitTextMsg(cid, uiMessage.getMessage());
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                transmitImgMsg(cid, uiMessage.getMessage());
+              //  transmitImgMsg(cid, uiMessage.getMessage());
                 break;
             default:
                 break;
@@ -1498,7 +1498,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     * Card 长按事件
+     * Card 长按事件弹出dialog
      */
     private boolean CardLongClick(final Context context, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
@@ -1524,9 +1524,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-//                items = new String[]{transmit};
-//                LongClickDialog(items, context, uiMessage);
-//                isConsume = true;
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
@@ -1543,7 +1540,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     * Card 点击事件
+     * Card 点击事件 及处理
      */
     private void CardClick(final Context context, View view, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
@@ -1551,10 +1548,8 @@ public class ConversationActivity extends ConversationBaseActivity {
         String type = message.getType();
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_TEXT_PLAIN");
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
-                LogUtils.LbcDebug("Click" + "TYPE_TEXT_MARKDOWN");
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 if (uiMessage.getSendStatus() != 1) {
@@ -1569,13 +1564,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                     intent.putExtra("message", message);
                     context.startActivity(intent);
                 }
-                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_FILE_REGULAR_FILE");
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
-                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_EXTENDED_CONTACT_CARD");
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
-                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_EXTENDED_ACTIONS");
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 if (uiMessage.getSendStatus() != 1) {
@@ -1596,24 +1588,20 @@ public class ConversationActivity extends ConversationBaseActivity {
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
                 context.startActivity(intent);
-                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_MEDIA_IMAGE");
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     openMessage(uiMessage.getMessage());
                 }
-                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_COMMENT_TEXT_PLAIN");
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
                     openMessage(uiMessage.getMessage());
                 }
-                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_EXTENDED_LINKS");
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                LogUtils.LbcDebug("Click" + "MESSAGE_TYPE_MEDIA_VOICE");
                 break;
             default:
                 UpgradeUtils upgradeUtils = new UpgradeUtils(context,
@@ -1624,7 +1612,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     * 长按事件
+     * 长按事件处理
      */
     private void LongClickDialog(final String[] items, final Context context, final UIMessage uiMessage) {
         new QMUIDialog.MenuDialogBuilder(context)
