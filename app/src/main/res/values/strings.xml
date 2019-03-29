@@ -1218,8 +1218,7 @@
     <string name="emm_keyboard_number">数字</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">字母</string>
-    <string name="emm_secure_keyboard">安全键盘安全模式</string>
-    <string name="emm_secure_keyboard_normal">安全键盘普通模式</string>
+    <string name="emm_secure_keyboard">%1$s安全键盘</string>
     <string name="emm_keyboard_space">空格</string>
 
 
