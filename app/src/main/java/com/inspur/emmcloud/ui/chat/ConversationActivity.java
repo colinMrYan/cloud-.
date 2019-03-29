@@ -442,15 +442,13 @@ public class ConversationActivity extends ConversationBaseActivity {
                     mediaVoiceReRecognizerPop.dismiss();
                 }
             }
-        });
-        adapter.setCardItemLongClickListener(new ChannelMessageAdapter.CardItemLongClickListener() {     //长按回调事件
+
             @Override
-            public boolean onItemLongClick(View view, UIMessage uiMessage) {
+            public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
                 backUiMessage = uiMessage;
                 return CardLongClick(ConversationActivity.this, uiMessage);
             }
-        });
-        adapter.setCardItemClickListener(new ChannelMessageAdapter.CardItemClickListener() {
+
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 CardClick(ConversationActivity.this, view, uiMessage);
