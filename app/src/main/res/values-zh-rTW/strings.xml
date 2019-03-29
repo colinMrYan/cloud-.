@@ -1167,6 +1167,16 @@
     <string name="permission_storage_permission">存儲空間</string>
     <string name="permission_next">下一步</string>
 
+    <string name="permission_name_calendar">日曆</string>
+    <string name="permission_name_camera">相機</string>
+    <string name="permission_name_contacts">通訊錄</string>
+    <string name="permission_name_location">位置信息</string>
+    <string name="permission_name_microphone">麥克風</string>
+    <string name="permission_name_phone">電話</string>
+    <string name="permission_name_sensors">身體感測器</string>
+    <string name="permission_name_sms">簡訊</string>
+    <string name="permission_name_storage">存儲空間</string>
+
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
     <string name="emm_keyboard_zero2nine">1234567890</string>
