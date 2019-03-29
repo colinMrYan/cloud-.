@@ -28,6 +28,8 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.DataTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -78,6 +80,11 @@ public class ScheduleAddActivity extends BaseActivity {
     private String addCalendarStr;
     private DataTimePickerDialog startDataTimePickerDialog;
     private DataTimePickerDialog endDataTimePickerDialog;
+    private Calendar startCalendar;
+    private Calendar endCalendar;
+    private String contentText;
+
+    private long intervalMin = Long.valueOf(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +96,7 @@ public class ScheduleAddActivity extends BaseActivity {
      * 初始化View
      */
     private void initView() {
+        initDate();
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(getApplicationContext());
         apiService.setAPIInterface(new ScheduleAddActivity.WebService());
@@ -116,10 +124,18 @@ public class ScheduleAddActivity extends BaseActivity {
         startDataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
             @Override
             public void positiveListener(Calendar calendar) {
-                String startDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                startCalendar = calendar;
+                String startDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                 startDateText.setText(startDateStr);
-                startDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, calendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                startDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
                 startTimeText.setText(startDateStr);
+                endCalendar = (Calendar) startCalendar.clone();
+                LogUtils.LbcDebug("调整开始时间同时调整结束时间是开始时间再加间隔时间:"+intervalMin);
+                endCalendar.add(Calendar.MINUTE, (int) intervalMin);
+                String endDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                endDateText.setText(endDateStr);
+                endDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                endTimeText.setText(endDateStr);
             }
 
             @Override
@@ -130,10 +146,16 @@ public class ScheduleAddActivity extends BaseActivity {
         endDataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
             @Override
             public void positiveListener(Calendar calendar) {
-                String endDataStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-                endDateText.setText(endDataStr);
-                endDataStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, calendar, TimeUtils.FORMAT_HOUR_MINUTE);
-                endTimeText.setText(endDataStr);
+                if(calendar.before(startCalendar)){
+                  showEndDateErrorRemindDialog();
+                  return;
+                }
+                    endCalendar = calendar;
+                    String endDataStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                    endDateText.setText(endDataStr);
+                    endDataStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                    endTimeText.setText(endDataStr);
+                    intervalMin = getIntervalMin();
             }
 
             @Override
@@ -141,59 +163,67 @@ public class ScheduleAddActivity extends BaseActivity {
 
             }
         });
-        initDate();
+        titleText.setText(getString(R.string.calendar_detail));
+        if(calEvent!=null){
+            if (calEvent.getCalendar().getCommunity()) {
+                saveText.setVisibility(View.GONE);
+            }
+            saveText.setText(getString(R.string.calendar_adjust));
+        }
+        allDaySwitch.setEnable(isEditable);
+        allDaySwitch.setOpened(isAllDay);
+        inputContentEdit.setText(contentText);
+        setEditTextState(inputContentEdit, isEditable);
+        if (myCalendar != null) {
+            calendarTypeNameText.setText(myCalendar.getName());
+            calendarIconImage.setVisibility(View.VISIBLE);
+            calendarIconImage.setImageResource(CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
+            calenderTypeLayout.setVisibility(View.VISIBLE);
+        }
+        setEventTime();
+    }
+
+    private void showEndDateErrorRemindDialog(){
+         new QMUIDialog.MessageDialogBuilder(this).setMessage("开始时间不能晚于结束时间")
+                 .addAction("确定", new QMUIDialogAction.ActionListener() {
+                     @Override
+                     public void onClick(QMUIDialog qmuiDialog, int i) {
+                         qmuiDialog.dismiss();
+                     }
+                 }).show();
     }
 
     /**
      * 初始化日期数据
      */
     private void initDate() {
-        Calendar startCalendar = null;
-        Calendar endCalendar = null;
         if (getIntent().hasExtra("calEvent")) {
             isEditable = false;
-            allDaySwitch.setEnable(false);
             calEvent = (CalendarEvent) getIntent().getSerializableExtra("calEvent");
-            titleText.setText(getString(R.string.calendar_detail));
-            if (calEvent.getCalendar().getCommunity()) {
-                saveText.setVisibility(View.GONE);
-            }
-            saveText.setText(getString(R.string.calendar_adjust));
             isAllDay = calEvent.getAllday();
-            allDaySwitch.setOpened(isAllDay);
             startCalendar = calEvent.getLocalStartDate();
             endCalendar = calEvent.getLocalEndDate();
-            String title = calEvent.getTitle();
-            inputContentEdit.setText(title);
-            setEditTextState(inputContentEdit, false);
+            contentText = calEvent.getTitle();
             myCalendar = calEvent.getCalendar();
-            if (myCalendar != null) {
-                calendarTypeNameText.setText(myCalendar.getName());
-                calendarIconImage.setVisibility(View.VISIBLE);
-                calendarIconImage.setImageResource(CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
-                calenderTypeLayout.setVisibility(View.VISIBLE);
+        }
+        if (startCalendar == null) {
+            startCalendar = Calendar.getInstance();
+        }
+        if (endCalendar == null) {
+            endCalendar = (Calendar) startCalendar.clone();
+            if (!isAllDay) {
+                endCalendar.add(Calendar.HOUR_OF_DAY, 1);
             }
         }
-        setEventTime(startCalendar, endCalendar);
-        startTimeText.setVisibility(isAllDay ? View.GONE : View.VISIBLE);
-        endTimeText.setVisibility(isAllDay ? View.GONE : View.VISIBLE);
+        intervalMin = getIntervalMin();
+        LogUtils.LbcDebug("开始间隔值应该为60"+intervalMin);
     }
 
     /**
      * 设置事件的初始开始和结束时间
      */
-    private void setEventTime(Calendar startCalendar, Calendar endCalendar) {
+    private void setEventTime() {
         // TODO Auto-generated method stub
-        if (startCalendar == null) {
-            startCalendar = Calendar.getInstance();
-        }
-        if (endCalendar == null) {
-            endCalendar = Calendar.getInstance();
-            endCalendar.setTime(startCalendar.getTime());
-            if (!isAllDay) {
-                endCalendar.add(Calendar.HOUR_OF_DAY, 1);
-            }
-        }
         String startDateStr = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
         String startTimeStr = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         String endDateStr = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
@@ -202,6 +232,8 @@ public class ScheduleAddActivity extends BaseActivity {
         startTimeText.setText(startTimeStr);
         endDateText.setText(endDateStr);
         endTimeText.setText(endTimeStr);
+        startTimeText.setVisibility(isAllDay ? View.GONE : View.VISIBLE);
+        endTimeText.setVisibility(isAllDay ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -499,5 +531,22 @@ public class ScheduleAddActivity extends BaseActivity {
         }
 
     }
+
+    /**
+     * 获取间隔时间 单位Min（分钟）
+     * */
+    private long getIntervalMin(){
+        long interval=0;
+        if (isAllDay) {
+            long remainder = endCalendar.getTimeInMillis() % (1000 * 24 * 3600);
+            interval = (remainder + (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis())) / (1000 * 24 * 3600);
+            interval=interval*24*60;
+        } else {
+            interval =(endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis()+1)/(1000*60);
+        }
+        LogUtils.LbcDebug("计算间隔时间interval：："+interval);
+        return interval;
+    }
+
 
 }
