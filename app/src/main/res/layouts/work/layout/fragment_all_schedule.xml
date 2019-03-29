@@ -27,14 +27,24 @@
             app:tabSelectedTextColor="@color/black"
             />
 
-        <ImageView
-            android:id="@+id/iv_schedule_function_list"
+        <ImageButton
+            android:id="@+id/ibt_back_to_today"
+            android:layout_width="46dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/ibt_schedule_function_list"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:scaleType="centerInside"
+            android:tint="?attr/header_text_color"
+            android:src="@drawable/ic_schedule_back_to_today" />
+
+        <ImageButton
+            android:id="@+id/ibt_schedule_function_list"
             android:layout_width="46dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:clickable="true"
-            android:onClick="onClick"
             android:paddingLeft="8dp"
             android:paddingRight="16dp"
             android:scaleType="centerInside"
