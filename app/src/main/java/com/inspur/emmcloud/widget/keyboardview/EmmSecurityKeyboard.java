@@ -214,6 +214,8 @@ public class EmmSecurityKeyboard extends PopupWindow {
     private void setRandomLetter(boolean isRandomLetter){
         if(isRandomLetter){
             randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
+            randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
+            keyboardView.setKeyboard(keyboardNumber);
             keyboardView.setKeyboard(keyboardLetter);
             for (Key key : keyboardLetter.getKeys()) {
                 if (key.codes[0] == -10) {
@@ -224,7 +226,10 @@ public class EmmSecurityKeyboard extends PopupWindow {
             ((TextView)mainView.findViewById(R.id.tv_keyboard_name)).setText(contextLocal.getString(R.string.emm_secure_keyboard));
         }else{
             EmmCreateKeyList.initLetters(letterList);
+            EmmCreateKeyList.initNumbers(numberList);
             keyboardLetter = new Keyboard(contextLocal, R.xml.emm_keyboard_english);
+            keyboardNumber = new Keyboard(contextLocal, R.xml.emm_keyboard_number);
+            keyboardView.setKeyboard(keyboardNumber);
             keyboardView.setKeyboard(keyboardLetter);
             for (Key key : keyboardLetter.getKeys()) {
                 if (key.codes[0] == -10) {

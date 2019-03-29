@@ -1153,6 +1153,16 @@
     <string name="permission_storage_permission">Storage</string>
     <string name="permission_next">Next</string>
 
+    <string name="permission_name_calendar">Calendar</string>
+    <string name="permission_name_camera">Camera</string>
+    <string name="permission_name_contacts">Contacts</string>
+    <string name="permission_name_location">Location</string>
+    <string name="permission_name_microphone">Microphone</string>
+    <string name="permission_name_phone">Phone</string>
+    <string name="permission_name_sensors">Body Sensors</string>
+    <string name="permission_name_sms">SMS</string>
+    <string name="permission_name_storage">Storage</string>
+
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
     <string name="emm_keyboard_zero2nine">1234567890</string>
