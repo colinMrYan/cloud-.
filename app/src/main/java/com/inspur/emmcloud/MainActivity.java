@@ -22,16 +22,15 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.ui.schedule.schedule.ScheduleAddActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -77,8 +76,8 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         }
         setContentView(R.layout.activity_main);
         skipImageBtn = findViewById(R.id.ibt_skip);
-        //checkNecessaryPermission();
-        IntentUtils.startActivity(this, ScheduleAddActivity.class);
+        checkNecessaryPermission();
+        //IntentUtils.startActivity(this, ScheduleAddActivity.class);
     }
 
     private void checkNecessaryPermission() {

@@ -18,17 +18,17 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 /**
- * Created by libaochao on 2019/3/6.
+ * Created by libaochao on 2019/3/29.
  */
 @ContentView(R.layout.activity_calendar_alert_time)
-public class CalendarAlertTimeActivity extends BaseActivity {
+public class ScheduleAlertTimeActivity extends BaseActivity {
     @ViewInject(R.id.lv_alert_time)
     ListView alertTimeListView;
     @ViewInject(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
 
     String alertTime = "";
-    private Adapter adapter;
+    private  Adapter adapter;
     private int selectPosition = -1;
 
     @Override
@@ -58,7 +58,7 @@ public class CalendarAlertTimeActivity extends BaseActivity {
         } else {
             noAlertSelectImage.setVisibility(View.VISIBLE);
         }
-        adapter = new Adapter(alertTimeArray);
+        adapter = new  Adapter(alertTimeArray);
         alertTimeListView.setAdapter(adapter);
         alertTimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -141,5 +141,4 @@ public class CalendarAlertTimeActivity extends BaseActivity {
             return convertView;
         }
     }
-
 }

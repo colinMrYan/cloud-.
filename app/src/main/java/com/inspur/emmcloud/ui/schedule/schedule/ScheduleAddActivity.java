@@ -258,7 +258,7 @@ public class ScheduleAddActivity extends BaseActivity {
                 break;
             case R.id.rl_calendar_type:
                 if (isEditable == true) {
-                    intent = new Intent(this, CalendarTypeSelectActivity.class);
+                    intent = new Intent(this, ScheduleTypeSelectActivity.class);
                     startActivityForResult(intent, CAL_TYPE_REQUEST_CODE);
                 }
                 break;
@@ -275,7 +275,7 @@ public class ScheduleAddActivity extends BaseActivity {
             case R.id.rl_alert_time:
                 if (isEditable == true) {
                     intent.setClass(getApplicationContext(),
-                            CalendarAlertTimeActivity.class);
+                            ScheduleAlertTimeActivity.class);
                     intent.putExtra("alertTime", timeAlertText.getText());
                     startActivityForResult(intent, CAL_ALERT_TIME_REQUEST_CODE);
                 }
