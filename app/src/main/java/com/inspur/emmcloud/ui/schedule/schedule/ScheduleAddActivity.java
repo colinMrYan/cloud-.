@@ -281,12 +281,6 @@ public class ScheduleAddActivity extends BaseActivity {
                 }
                 break;
             case R.id.rl_repeat:
-//                if (isEditable == true) {
-//                    intent.setClass(getApplicationContext(),
-//                            CalendarRepeatActivity.class);
-//                    intent.putExtra("repeatType", repeatText.getText());
-//                    startActivityForResult(intent, REPEAT_TYPE_REQUEST_CODE);
-//                }
                 break;
         }
     }
