@@ -15,7 +15,6 @@ import android.widget.DatePicker;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * com.inspur.emmcloud.widget.MyDatePickerDialog
@@ -44,6 +43,12 @@ public class MyDatePickerDialog extends DatePickerDialog {
         calendar.set(year, monthOfYear, dayOfMonth);
         String title = TimeUtils.calendar2FormatString(context, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
         this.setTitle(title);
+        try {
+            ((ViewGroup) ((ViewGroup) this.getDatePicker().getChildAt(0)).getChildAt(0)).getChildAt(0).setVisibility(View.GONE);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -62,26 +67,13 @@ public class MyDatePickerDialog extends DatePickerDialog {
         calendar.set(year, monthOfYear, dayOfMonth);
         String title = TimeUtils.calendar2FormatString(context, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
         this.setTitle(title);
-    }
-
-
-    public void setHideYear() {
-        Locale locale = context.getResources().getConfiguration().locale;
-        //nexus Android7.0手机这里会出现空指针异常
         try {
-            if (locale.toString().contains("en")) {
-                ((ViewGroup) ((ViewGroup) this.getDatePicker().getChildAt(0)).getChildAt(0)).getChildAt(2).setVisibility(View.GONE);
-            } else {
-                ((ViewGroup) ((ViewGroup) this.getDatePicker().getChildAt(0)).getChildAt(0)).getChildAt(0).setVisibility(View.GONE);
-            }
+            ((ViewGroup) ((ViewGroup) this.getDatePicker().getChildAt(0)).getChildAt(0)).getChildAt(0).setVisibility(View.GONE);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
-
-
     }
-
 
     @Override
     public void onDateChanged(DatePicker view, int year, int month, int day) {
