@@ -27,7 +27,7 @@ import java.util.List;
  * Created by libaochao on 2019/3/29.
  */
 @ContentView(R.layout.activity_calendar_type_select)
-public class ScheduleTypeSelectActivity extends BaseActivity {
+public class CalendarTypeSelectActivity extends BaseActivity {
     @ViewInject(R.id.lv_calendars)
     private ListView calendarListView;
 
@@ -124,7 +124,7 @@ public class ScheduleTypeSelectActivity extends BaseActivity {
             }
             textView.setText(calendar.getName());
             View colorView = convertView.findViewById(R.id.v_calendar_color);
-            int color = CalendarColorUtils.getColor(ScheduleTypeSelectActivity.this, calendar.getColor());
+            int color = CalendarColorUtils.getColor(CalendarTypeSelectActivity.this, calendar.getColor());
             colorView.setBackgroundColor(color);
             return convertView;
         }

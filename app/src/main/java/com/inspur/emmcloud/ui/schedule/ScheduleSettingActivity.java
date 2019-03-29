@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.ui.schedule.schedule;
+package com.inspur.emmcloud.ui.schedule;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,10 +36,6 @@ import java.util.List;
 public class ScheduleSettingActivity extends BaseActivity {
     @ViewInject(R.id.scrollview_list_calendars)
     private ScrollViewWithListView calendarsListView;
-    @ViewInject(R.id.iv_quarter_tip)
-    private ImageView quarterImageView;
-    @ViewInject(R.id.iv_month_tip)
-    private ImageView monthImageView;
     @ViewInject(R.id.iv_list_view_tip)
     private ImageView listViewImageView;
     @ViewInject(R.id.iv_day_view_tip)
@@ -56,10 +52,7 @@ public class ScheduleSettingActivity extends BaseActivity {
                 getApplicationContext(), "celEventDisplayType", "monthly");
         String viewDisplayType = PreferencesUtils.getString(
                 getApplicationContext(), "viewDisplayType", "listview");
-        boolean isMonth = calEventDisplayType.equals("monthly");
         boolean isListView = viewDisplayType.equals("listview");
-        quarterImageView.setVisibility(isMonth ? View.GONE : View.VISIBLE);
-        monthImageView.setVisibility(isMonth ? View.VISIBLE : View.GONE);
         listViewImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         dayImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
         calendarsList  = MyCalendarCacheUtils.getAllMyCalendarList(this);
@@ -72,22 +65,6 @@ public class ScheduleSettingActivity extends BaseActivity {
             case R.id.ibt_back:
                 returnCalList();
                 finish();
-                break;
-            case R.id.rl_quarter:
-                if (quarterImageView.getVisibility() != View.VISIBLE) {
-                    quarterImageView.setVisibility(View.VISIBLE);
-                    monthImageView.setVisibility(View.INVISIBLE);
-                    PreferencesUtils.putString(getApplicationContext(),
-                            "celEventDisplayType", "quarter");
-                }
-                break;
-            case R.id.rl_month:
-                if (monthImageView.getVisibility() != View.VISIBLE) {
-                    monthImageView.setVisibility(View.VISIBLE);
-                    quarterImageView.setVisibility(View.INVISIBLE);
-                    PreferencesUtils.putString(getApplicationContext(),
-                            "celEventDisplayType", "monthly");
-                }
                 break;
             case R.id.rl_list_view:
                 if (listViewImageView.getVisibility() != View.VISIBLE) {

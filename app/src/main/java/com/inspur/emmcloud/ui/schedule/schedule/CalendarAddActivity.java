@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -37,10 +38,10 @@ import org.xutils.view.annotation.ViewInject;
 import java.util.Calendar;
 
 /**
- * Created by libaochao on 2019/3/27.
+ * Created by libaochao on 2019/3/29.
  */
 @ContentView(R.layout.activity_schedule_add)
-public class ScheduleAddActivity extends BaseActivity {
+public class CalendarAddActivity extends BaseActivity {
     @ViewInject(R.id.tv_save)
     private TextView saveText;
     @ViewInject(R.id.et_input_content)
@@ -99,7 +100,7 @@ public class ScheduleAddActivity extends BaseActivity {
         initDate();
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(getApplicationContext());
-        apiService.setAPIInterface(new ScheduleAddActivity.WebService());
+        apiService.setAPIInterface(new WebService());
         allDaySwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
@@ -125,16 +126,16 @@ public class ScheduleAddActivity extends BaseActivity {
             @Override
             public void positiveListener(Calendar calendar) {
                 startCalendar = calendar;
-                String startDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                String startDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                 startDateText.setText(startDateStr);
-                startDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                startDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
                 startTimeText.setText(startDateStr);
                 endCalendar = (Calendar) startCalendar.clone();
                 LogUtils.LbcDebug("调整开始时间同时调整结束时间是开始时间再加间隔时间:"+intervalMin);
                 endCalendar.add(Calendar.MINUTE, (int) intervalMin);
-                String endDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                String endDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                 endDateText.setText(endDateStr);
-                endDateStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                endDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
                 endTimeText.setText(endDateStr);
             }
 
@@ -147,15 +148,15 @@ public class ScheduleAddActivity extends BaseActivity {
             @Override
             public void positiveListener(Calendar calendar) {
                 if(calendar.before(startCalendar)){
-                  showEndDateErrorRemindDialog();
-                  return;
+                    showEndDateErrorRemindDialog();
+                    return;
                 }
-                    endCalendar = calendar;
-                    String endDataStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-                    endDateText.setText(endDataStr);
-                    endDataStr = TimeUtils.calendar2FormatString(ScheduleAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
-                    endTimeText.setText(endDataStr);
-                    intervalMin = getIntervalMin();
+                endCalendar = calendar;
+                String endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                endDateText.setText(endDataStr);
+                endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                endTimeText.setText(endDataStr);
+                intervalMin = getIntervalMin();
             }
 
             @Override
@@ -184,13 +185,13 @@ public class ScheduleAddActivity extends BaseActivity {
     }
 
     private void showEndDateErrorRemindDialog(){
-         new QMUIDialog.MessageDialogBuilder(this).setMessage("开始时间不能晚于结束时间")
-                 .addAction("确定", new QMUIDialogAction.ActionListener() {
-                     @Override
-                     public void onClick(QMUIDialog qmuiDialog, int i) {
-                         qmuiDialog.dismiss();
-                     }
-                 }).show();
+        new QMUIDialog.MessageDialogBuilder(this).setMessage("开始时间不能晚于结束时间")
+                .addAction("确定", new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog qmuiDialog, int i) {
+                        qmuiDialog.dismiss();
+                    }
+                }).show();
     }
 
     /**
@@ -258,7 +259,7 @@ public class ScheduleAddActivity extends BaseActivity {
                 break;
             case R.id.rl_calendar_type:
                 if (isEditable == true) {
-                    intent = new Intent(this, ScheduleTypeSelectActivity.class);
+                    intent = new Intent(this, CalendarTypeSelectActivity.class);
                     startActivityForResult(intent, CAL_TYPE_REQUEST_CODE);
                 }
                 break;
@@ -362,7 +363,7 @@ public class ScheduleAddActivity extends BaseActivity {
             startDateStr = startDateText.getText() + " "
                     + startTimeText.getText();
         }
-        startCalendar = TimeUtils.timeString2Calendar(ScheduleAddActivity.this, startDateStr,
+        startCalendar = TimeUtils.timeString2Calendar(CalendarAddActivity.this, startDateStr,
                 TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
         return startCalendar;
     }
@@ -380,7 +381,7 @@ public class ScheduleAddActivity extends BaseActivity {
             endDateStr = endDateText.getText() + " "
                     + endTimeText.getText();
         }
-        endCalendar = TimeUtils.timeString2Calendar(ScheduleAddActivity.this, endDateStr,
+        endCalendar = TimeUtils.timeString2Calendar(CalendarAddActivity.this, endDateStr,
                 TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
         return endCalendar;
     }
@@ -495,7 +496,7 @@ public class ScheduleAddActivity extends BaseActivity {
         public void returnAddCalEventFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(ScheduleAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
         }
 
         @Override
@@ -521,7 +522,7 @@ public class ScheduleAddActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            WebServiceMiddleUtils.hand(ScheduleAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
         }
 
     }
@@ -541,6 +542,5 @@ public class ScheduleAddActivity extends BaseActivity {
         LogUtils.LbcDebug("计算间隔时间interval：："+interval);
         return interval;
     }
-
 
 }
