@@ -44,8 +44,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private Activity context;
     private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
-    private CardItemLongClickListener cardItemLongClickListener;
-    private CardItemClickListener cardItemClickListener;
     private String channelType;
     private ECMChatInputMenu chatInputMenu;
 
@@ -110,18 +108,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      */
     public void setItemClickListener(MyItemClickListener myItemClickListener) {
         this.mItemClickListener = myItemClickListener;
-    }
-
-    /**
-     * Activity 实现卡片长按监听接口函数并通过该方法添加到卡片上*/
-    public void setCardItemLongClickListener(CardItemLongClickListener CardItemLongClickListener){
-        this.cardItemLongClickListener=CardItemLongClickListener;
-    }
-
-    /**
-     * Activity 实现卡片点击监听听接口函数并通过该方法添加到卡片上*/
-    public void setCardItemClickListener(CardItemClickListener cardItemClickListener){
-        this.cardItemClickListener=cardItemClickListener;
     }
 
     @Override
@@ -324,19 +310,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         void onAdapterDataSizeChange();
     }
 
-    /**
-     *沟通 卡片长按监听接口*/
-    public interface CardItemLongClickListener{
-        boolean onItemLongClick(View view,UIMessage uiMessage);
-    }
-
-    /**
-     *沟通 卡片点击事件监听接口*/
-    public interface CardItemClickListener{
-        void onCardItemClick(View view,UIMessage uiMessage);
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener   {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public RelativeLayout cardLayout;
         public TextView senderNameText;
         public ImageView senderPhotoImgLeft;
