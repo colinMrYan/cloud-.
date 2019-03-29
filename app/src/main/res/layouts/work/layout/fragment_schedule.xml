@@ -13,18 +13,20 @@
         android:id="@+id/rl_tool"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
+        android:visibility="gone"
         android:background="?attr/header_bg">
 
-        <TextView
-            android:id="@+id/header_text"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_schedule"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:text="@string/work_schedule"
-            android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_textsize_big" />
+            app:tabTextAppearance="@style/ScheduleTabLayoutTextStyle"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabTextColor="#888888"
+            app:tabSelectedTextColor="@color/black"
+            />
 
         <ImageView
             android:id="@+id/iv_schedule_function_list"
@@ -38,7 +40,22 @@
             android:paddingRight="16dp"
             android:scaleType="centerInside"
             android:src="?attr/ic_add" />
+
+
     </RelativeLayout>
+
+    <EditText
+        android:id="@+id/ev_schedule_search"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_schedule_search"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:hint="@string/work_search_hint"/>
 
     <com.inspur.emmcloud.widget.calendarview.CalendarLayout
         android:id="@+id/calendar_layout_schedule"
@@ -93,15 +110,32 @@
                 android:padding="5dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/ic_schedule_down"/>
-            <TextView
-                android:id="@+id/tv_schedule_date"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="#333333"
-                android:paddingLeft="15dp"
-                android:paddingBottom="11dp"
-                />
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_work_today_left_arrow_bg"
+                    android:gravity="center"
+                    android:layout_marginLeft="12dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="10dp"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
+                    android:text="今"/>
+                <TextView
+                    android:id="@+id/tv_schedule_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="#333333"
+                    android:paddingLeft="15dp"
+                    android:paddingBottom="11dp"
+                    />
+            </LinearLayout>
+
             <!--<com.inspur.emmcloud.widget.calendarview.group.GroupRecyclerView-->
                 <!--android:id="@+id/recycler_view"-->
                 <!--app:group_background="@color/content_background"-->
@@ -128,7 +162,6 @@
                     android:listSelector="#00000000"
                     android:fadingEdge="none"
                     android:overScrollMode="never"
-
                     android:background="@color/content_background"
                     android:scrollbars="none" />
                 <RelativeLayout

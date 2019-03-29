@@ -143,7 +143,7 @@ public class CalendarLayout extends LinearLayout {
 
     private CalendarViewDelegate mDelegate;
     private CalendarExpandListener listener;
-    private boolean isViewTopShow = false;
+    private boolean isViewTopShow = true;
 
     public CalendarLayout(Context context, AttributeSet attrs) {
         super(context, attrs);

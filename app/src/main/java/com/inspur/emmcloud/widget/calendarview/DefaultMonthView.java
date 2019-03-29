@@ -76,6 +76,7 @@ public final class DefaultMonthView extends MonthView {
         canvas.drawText(calendar.getScheme(),
                 x + mItemWidth - mPadding - mRadio / 2 - getTextWidth(calendar.getScheme()) / 2,
                 y + mPadding + mSchemeBaseLine, mTextPaint);
+        canvas.drawCircle(x + mItemWidth / 2, y + mItemHeight - 10, 5, mSchemeBasicPaint);
     }
 
 
