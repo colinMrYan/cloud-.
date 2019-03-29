@@ -32,11 +32,11 @@ public class DisplayTxtPlainMsg {
                 R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
-        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        BubbleLayout cardLayout =  cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
-        final TextViewFixTouchConsume contentText = (TextViewFixTouchConsume) cardContentView
+        final TextViewFixTouchConsume contentText = cardContentView
                 .findViewById(R.id.tv_content);
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
