@@ -348,6 +348,9 @@
     <string name="work_calendar_text">企业日历</string>
     <string name="work_task_text">我的任务</string>
     <string name="work_info_text">信息栏</string>
+    <string name="work_search_hint">搜索日历、任务</string>
+    <string name="work_mession">任务</string>
+    <string name="work_schedule">日程</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
@@ -1450,7 +1453,6 @@
         <item>申</item>
 
     </string-array>
-    <string name="work_schedule">日程</string>
     <!--日历字符串资源结束-->
 
 </resources>
