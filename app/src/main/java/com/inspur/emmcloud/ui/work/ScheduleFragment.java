@@ -59,7 +59,7 @@ import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.WorkSettingCacheUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.widget.calendarview.Calendar;
+import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
 
@@ -220,24 +220,24 @@ public class ScheduleFragment extends Fragment implements
     private void initData() {
         int year = calendarView.getCurYear();
         int month = calendarView.getCurMonth();
-        Map<String, Calendar> map = new HashMap<>();
+        Map<String, EmmCalendar> map = new HashMap<>();
         map.put(getSchemeCalendar(year, month, 3, 0xFF40db25, "假").toString(),
                 getSchemeCalendar(year, month, 3, 0xFF40db25, "假"));
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         calendarView.setSchemeDate(map);
     }
 
-    private Calendar getSchemeCalendar(int year, int month, int day, int color, String text) {
-        Calendar calendar = new Calendar();
-        calendar.setYear(year);
-        calendar.setMonth(month);
-        calendar.setDay(day);
-        calendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
-        calendar.setScheme(text);
-        calendar.addScheme(new Calendar.Scheme());
-        calendar.addScheme(0xFF008800, "假");
-        calendar.addScheme(0xFF008800, "节");
-        return calendar;
+    private EmmCalendar getSchemeCalendar(int year, int month, int day, int color, String text) {
+        EmmCalendar emmCalendar = new EmmCalendar();
+        emmCalendar.setYear(year);
+        emmCalendar.setMonth(month);
+        emmCalendar.setDay(day);
+        emmCalendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
+        emmCalendar.setScheme(text);
+        emmCalendar.addScheme(new EmmCalendar.Scheme());
+        emmCalendar.addScheme(0xFF008800, "假");
+        emmCalendar.addScheme(0xFF008800, "节");
+        return emmCalendar;
     }
 
     /**
@@ -516,13 +516,13 @@ public class ScheduleFragment extends Fragment implements
     }
 
     @Override
-    public void onCalendarOutOfRange(Calendar calendar) {
+    public void onCalendarOutOfRange(EmmCalendar emmCalendar) {
 
     }
 
     @Override
-    public void onCalendarSelect(Calendar calendar, boolean isClick) {
-        setCalendarTime(calendar.getTimeInMillis());
+    public void onCalendarSelect(EmmCalendar emmCalendar, boolean isClick) {
+        setCalendarTime(emmCalendar.getTimeInMillis());
     }
 
     private void setCalendarTime(long timeInMillis) {

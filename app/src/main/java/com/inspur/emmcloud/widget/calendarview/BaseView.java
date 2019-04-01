@@ -117,7 +117,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     /**
      * 日历项
      */
-    List<Calendar> mItems;
+    List<EmmCalendar> mItems;
     /**
      * 点击的x、y坐标
      */
@@ -261,7 +261,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      * 移除事件
      */
     final void removeSchemes() {
-        for (Calendar a : mItems) {
+        for (EmmCalendar a : mItems) {
             a.setScheme("");
             a.setSchemeColor(0);
             a.setSchemes(null);
@@ -275,9 +275,9 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         if (mDelegate.mSchemeDatesMap == null || mDelegate.mSchemeDatesMap.size() == 0) {
             return;
         }
-        for (Calendar a : mItems) {
+        for (EmmCalendar a : mItems) {
             if (mDelegate.mSchemeDatesMap.containsKey(a.toString())) {
-                Calendar d = mDelegate.mSchemeDatesMap.get(a.toString());
+                EmmCalendar d = mDelegate.mSchemeDatesMap.get(a.toString());
                 a.setScheme(TextUtils.isEmpty(d.getScheme()) ? mDelegate.getSchemeText() : d.getScheme());
                 a.setSchemeColor(d.getSchemeColor());
                 a.setSchemes(d.getSchemes());
@@ -331,11 +331,11 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     /**
      * 是否是选中的
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return true or false
      */
-    protected boolean isSelected(Calendar calendar) {
-        return mItems != null && mItems.indexOf(calendar) == mCurrentItem;
+    protected boolean isSelected(EmmCalendar emmCalendar) {
+        return mItems != null && mItems.indexOf(emmCalendar) == mCurrentItem;
     }
 
     /**
@@ -355,22 +355,22 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     /**
      * 是否拦截日期，此设置续设置mCalendarInterceptListener
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 是否拦截日期
      */
-    protected final boolean onCalendarIntercept(Calendar calendar) {
+    protected final boolean onCalendarIntercept(EmmCalendar emmCalendar) {
         return mDelegate.mCalendarInterceptListener != null &&
-                mDelegate.mCalendarInterceptListener.onCalendarIntercept(calendar);
+                mDelegate.mCalendarInterceptListener.onCalendarIntercept(emmCalendar);
     }
 
     /**
      * 是否在日期范围内
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 是否在日期范围内
      */
-    protected final boolean isInRange(Calendar calendar) {
-        return mDelegate != null && CalendarUtil.isCalendarInRange(calendar, mDelegate);
+    protected final boolean isInRange(EmmCalendar emmCalendar) {
+        return mDelegate != null && CalendarUtil.isCalendarInRange(emmCalendar, mDelegate);
     }
 
     /**

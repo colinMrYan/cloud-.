@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
 
-import com.inspur.emmcloud.widget.calendarview.Calendar;
+import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import com.inspur.emmcloud.widget.calendarview.WeekView;
 
 
@@ -61,26 +61,26 @@ public class MeizuWeekView extends WeekView {
 
     /**
      * @param canvas    canvas
-     * @param calendar  日历日历calendar
+     * @param emmCalendar  日历日历calendar
      * @param x         日历Card x起点坐标
      * @param hasScheme hasScheme 非标记的日期
      * @return true 则绘制onDrawScheme，因为这里背景色不是是互斥的
      */
     @Override
-    protected boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, boolean hasScheme) {
+    protected boolean onDrawSelected(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme) {
         mSelectedPaint.setStyle(Paint.Style.FILL);
         canvas.drawRect(x + mPadding, mPadding, x + mItemWidth - mPadding, mItemHeight - mPadding, mSelectedPaint);
         return true;
     }
 
     @Override
-    protected void onDrawScheme(Canvas canvas, Calendar calendar, int x) {
-        mSchemeBasicPaint.setColor(calendar.getSchemeColor());
+    protected void onDrawScheme(Canvas canvas, EmmCalendar emmCalendar, int x) {
+        mSchemeBasicPaint.setColor(emmCalendar.getSchemeColor());
 
         canvas.drawCircle(x + mItemWidth - mPadding - mRadio / 2, mPadding + mRadio, mRadio, mSchemeBasicPaint);
 
-        canvas.drawText(calendar.getScheme(),
-                x + mItemWidth - mPadding - mRadio / 2 - getTextWidth(calendar.getScheme()) / 2,
+        canvas.drawText(emmCalendar.getScheme(),
+                x + mItemWidth - mPadding - mRadio / 2 - getTextWidth(emmCalendar.getScheme()) / 2,
                 mPadding + mSchemeBaseLine, mTextPaint);
     }
 
@@ -89,28 +89,28 @@ public class MeizuWeekView extends WeekView {
     }
 
     @Override
-    protected void onDrawText(Canvas canvas, Calendar calendar, int x, boolean hasScheme, boolean isSelected) {
+    protected void onDrawText(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme, boolean isSelected) {
         int cx = x + mItemWidth / 2;
         int top = -mItemHeight / 6;
 
-        boolean isInRange = isInRange(calendar);
+        boolean isInRange = isInRange(emmCalendar);
 
         if (isSelected) {
-            canvas.drawText(String.valueOf(calendar.getDay()), cx, mTextBaseLine + top,
+            canvas.drawText(String.valueOf(emmCalendar.getDay()), cx, mTextBaseLine + top,
                     mSelectTextPaint);
-            canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + mItemHeight / 10, mSelectedLunarTextPaint);
+            canvas.drawText(emmCalendar.getLunar(), cx, mTextBaseLine + mItemHeight / 10, mSelectedLunarTextPaint);
         } else if (hasScheme) {
-            canvas.drawText(String.valueOf(calendar.getDay()), cx, mTextBaseLine + top,
-                    calendar.isCurrentMonth() && isInRange ? mSchemeTextPaint : mOtherMonthTextPaint);
+            canvas.drawText(String.valueOf(emmCalendar.getDay()), cx, mTextBaseLine + top,
+                    emmCalendar.isCurrentMonth() && isInRange ? mSchemeTextPaint : mOtherMonthTextPaint);
 
-            canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + mItemHeight / 10, mCurMonthLunarTextPaint);
+            canvas.drawText(emmCalendar.getLunar(), cx, mTextBaseLine + mItemHeight / 10, mCurMonthLunarTextPaint);
         } else {
-            canvas.drawText(String.valueOf(calendar.getDay()), cx, mTextBaseLine + top,
-                    calendar.isCurrentDay() && isInRange ? mCurDayTextPaint :
-                            calendar.isCurrentMonth() && isInRange ? mCurMonthTextPaint : mOtherMonthTextPaint);
-            canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + mItemHeight / 10,
-                    calendar.isCurrentDay() && isInRange ? mCurDayLunarTextPaint :
-                            calendar.isCurrentMonth() ? mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
+            canvas.drawText(String.valueOf(emmCalendar.getDay()), cx, mTextBaseLine + top,
+                    emmCalendar.isCurrentDay() && isInRange ? mCurDayTextPaint :
+                            emmCalendar.isCurrentMonth() && isInRange ? mCurMonthTextPaint : mOtherMonthTextPaint);
+            canvas.drawText(emmCalendar.getLunar(), cx, mTextBaseLine + mItemHeight / 10,
+                    emmCalendar.isCurrentDay() && isInRange ? mCurDayLunarTextPaint :
+                            emmCalendar.isCurrentMonth() ? mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
         }
     }
 }

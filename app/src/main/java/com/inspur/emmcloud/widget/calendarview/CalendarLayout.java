@@ -168,8 +168,8 @@ public class CalendarLayout extends LinearLayout {
     final void setup(CalendarViewDelegate delegate) {
         this.mDelegate = delegate;
         mItemHeight = mDelegate.getCalendarItemHeight();
-        initCalendarPosition(delegate.mSelectedCalendar.isAvailable() ?
-                delegate.mSelectedCalendar :
+        initCalendarPosition(delegate.mSelectedEmmCalendar.isAvailable() ?
+                delegate.mSelectedEmmCalendar :
                 delegate.createCurrentDate());
         updateContentViewTranslateY();
     }
@@ -179,7 +179,7 @@ public class CalendarLayout extends LinearLayout {
      *
      * @param cur 当前日期时间
      */
-    private void initCalendarPosition(Calendar cur) {
+    private void initCalendarPosition(EmmCalendar cur) {
         int diff = CalendarUtil.getMonthViewStartDiff(cur, mDelegate.getWeekStart());
         int size = diff + cur.getDay() - 1;
         updateSelectPosition(size);
@@ -209,11 +209,11 @@ public class CalendarLayout extends LinearLayout {
      * 更新内容ContentView可平移的最大距离
      */
     void updateContentViewTranslateY() {
-        Calendar calendar = mDelegate.mIndexCalendar;
+        EmmCalendar emmCalendar = mDelegate.mIndexEmmCalendar;
         if (mDelegate.getMonthViewShowMode() == CalendarViewDelegate.MODE_ALL_MONTH) {
             mContentViewTranslateY = 5 * mItemHeight;
         } else {
-            mContentViewTranslateY = CalendarUtil.getMonthViewHeight(calendar.getYear(), calendar.getMonth(), mItemHeight, mDelegate.getWeekStart())
+            mContentViewTranslateY = CalendarUtil.getMonthViewHeight(emmCalendar.getYear(), emmCalendar.getMonth(), mItemHeight, mDelegate.getWeekStart())
                     - mItemHeight;
         }
         //已经显示周视图，则需要动态平移contentView的高度
@@ -235,12 +235,12 @@ public class CalendarLayout extends LinearLayout {
         mItemHeight = mDelegate.getCalendarItemHeight();
         if (mContentView == null)
             return;
-        Calendar calendar = mDelegate.mIndexCalendar;
-        updateSelectWeek(CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart()));
+        EmmCalendar emmCalendar = mDelegate.mIndexEmmCalendar;
+        updateSelectWeek(CalendarUtil.getWeekFromDayInMonth(emmCalendar, mDelegate.getWeekStart()));
         if (mDelegate.getMonthViewShowMode() == CalendarViewDelegate.MODE_ALL_MONTH) {
             mContentViewTranslateY = 5 * mItemHeight;
         } else {
-            mContentViewTranslateY = CalendarUtil.getMonthViewHeight(calendar.getYear(), calendar.getMonth(),
+            mContentViewTranslateY = CalendarUtil.getMonthViewHeight(emmCalendar.getYear(), emmCalendar.getMonth(),
                     mItemHeight, mDelegate.getWeekStart()) - mItemHeight;
         }
         translationViewPager();
@@ -493,8 +493,8 @@ public class CalendarLayout extends LinearLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         if (mContentView != null && mMonthView != null) {
-            int year = mDelegate.mIndexCalendar.getYear();
-            int month = mDelegate.mIndexCalendar.getMonth();
+            int year = mDelegate.mIndexEmmCalendar.getYear();
+            int month = mDelegate.mIndexEmmCalendar.getMonth();
 
             int monthHeight = CalendarUtil.getMonthViewHeight(year, month,
                     mDelegate.getCalendarItemHeight(),
