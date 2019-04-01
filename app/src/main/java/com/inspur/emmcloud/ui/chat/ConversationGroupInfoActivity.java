@@ -150,11 +150,13 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
         if(conversation == null){
             finish();
+        }else {
+            isOwner = conversation.getOwner().equals(MyApplication.getInstance().getUid());
+            apiService = new ChatAPIService(ConversationGroupInfoActivity.this);
+            apiService.setAPIInterface(new WebService());
+            initView();
         }
-        isOwner = conversation.getOwner().equals(MyApplication.getInstance().getUid());
-        apiService = new ChatAPIService(ConversationGroupInfoActivity.this);
-        apiService.setAPIInterface(new WebService());
-        initView();
+
     }
 
 

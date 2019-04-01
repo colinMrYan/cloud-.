@@ -20,7 +20,7 @@
         <item name="qmui_dialog_content_padding_top">10dp</item>
         <item name="qmui_dialog_title_margin_top">20dp</item>
         <item name="qmui_config_color_blue">@color/transparent</item>
-        <item name="colorAccent">#24ABE9</item>
+        <item name="colorAccent">#36A5F6</item>
     </style>
     <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">#C8C7CC</item>
@@ -382,6 +382,10 @@
         <item name="windowActionBar">false</item>
 
 
+    </style>
+
+    <style name="ScheduleTabLayoutTextStyle">
+        <item name="android:textSize">20sp</item>
     </style>
     <style name="DateTimePickerDateTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->

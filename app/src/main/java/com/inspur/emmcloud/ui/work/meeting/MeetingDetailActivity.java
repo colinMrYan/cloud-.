@@ -692,7 +692,7 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
         TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-                MeetingDetailActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert, new OnTimeSetListener() {
+                MeetingDetailActivity.this, new OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,
                                   int minute) {
@@ -744,8 +744,7 @@ public class MeetingDetailActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingDetailActivity.this, DatePickerDialog.THEME_HOLO_LIGHT,
-                new DatePickerDialog.OnDateSetListener() {
+                MeetingDetailActivity.this,new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
@@ -759,7 +758,6 @@ public class MeetingDetailActivity extends BaseActivity {
                                 TimeUtils.FORMAT_MONTH_DAY));
                     }
                 }, year, month, day);
-        datePickerDialog.setHideYear();
         datePickerDialog.show();
     }
 
