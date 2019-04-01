@@ -387,4 +387,8 @@
     <style name="ScheduleTabLayoutTextStyle">
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="ScheduleTaskTabLayoutTextStyle">
+        <item name="android:textSize">13sp</item>
+    </style>
 </resources>

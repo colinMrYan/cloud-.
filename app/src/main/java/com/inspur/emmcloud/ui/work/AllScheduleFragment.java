@@ -17,6 +17,7 @@ import com.inspur.emmcloud.adapter.AllScheduleFragmentAdapter;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
+import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -157,7 +158,7 @@ public class AllScheduleFragment extends Fragment{
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
         meetingFragment = new ScheduleFragment();
-        missionFragment = new ScheduleFragment();
+        missionFragment = new AllTaskListFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
         list.add(meetingFragment);
