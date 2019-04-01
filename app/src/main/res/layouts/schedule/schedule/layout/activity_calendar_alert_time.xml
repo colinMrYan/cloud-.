@@ -70,7 +70,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5sp"
+            android:layout_height="0.5px"
             android:layout_below="@id/rl_no_alert"
             android:layout_marginLeft="16dp"
             android:background="#DDDDDD" />
@@ -82,13 +82,13 @@
             android:layout_marginTop="10dp"
             android:background="@color/white"
             android:divider="#DDDDDD"
-            android:dividerHeight="0.5sp"
+            android:dividerHeight="0.5px"
             android:listSelector="@android:color/transparent"
             android:paddingLeft="14dp"></ListView>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5sp"
+            android:layout_height="0.5px"
             android:layout_marginLeft="16dp"
             android:background="#DDDDDD" />
     </LinearLayout>

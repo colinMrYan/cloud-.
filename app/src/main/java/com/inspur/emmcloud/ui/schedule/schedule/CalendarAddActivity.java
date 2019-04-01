@@ -2,7 +2,6 @@ package com.inspur.emmcloud.ui.schedule.schedule;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,9 +13,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.MyCalendar;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -32,6 +31,7 @@ import com.inspur.emmcloud.widget.SwitchView;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -443,11 +443,12 @@ public class CalendarAddActivity extends BaseActivity {
      *
      * @param
      */
-    public void sendBoradcastReceiver() {
-        Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
-        mIntent.putExtra("refreshCalendar", "");
-        // 发送广播
-        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+    public void sendCalendarEventNotification() {
+//        Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
+//        mIntent.putExtra("refreshCalendar", "");
+//        // 发送广播
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
+        EventBus.getDefault().post(new SimpleEventMessage("refreshCalendar", ""));
     }
 
     /**
@@ -485,7 +486,7 @@ public class CalendarAddActivity extends BaseActivity {
             }
             ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
             calEvent.setId(getIDResult.getId());
-            sendBoradcastReceiver();
+            sendCalendarEventNotification();
             Intent intent = new Intent();
             intent.putExtra("addCalendarEvent", calEvent);
             setResult(RESULT_OK, intent);
@@ -505,7 +506,7 @@ public class CalendarAddActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            sendBoradcastReceiver();
+            sendCalendarEventNotification();
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.modify_success));
             Intent intent = new Intent();

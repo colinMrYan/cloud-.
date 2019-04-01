@@ -22,7 +22,7 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.ui.schedule.schedule.CalendarAddActivity;
+import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         setContentView(R.layout.activity_main);
         skipImageBtn = findViewById(R.id.ibt_skip);
         //checkNecessaryPermission();
-        IntentUtils.startActivity(this, CalendarAddActivity.class);
+        IntentUtils.startActivity(this, TaskAddActivity.class);
     }
 
     private void checkNecessaryPermission() {

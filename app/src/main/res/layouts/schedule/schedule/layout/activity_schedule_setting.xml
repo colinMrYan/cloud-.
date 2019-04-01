@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
             android:divider="#DDDDDD"
-            android:dividerHeight="0.5sp"
+            android:dividerHeight="0.5px"
             android:paddingLeft="16dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
     </RelativeLayout>
 
@@ -113,7 +113,7 @@
             <View
                 android:id="@+id/v_after_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="0.5sp"
+                android:layout_height="0.5px"
                 android:layout_below="@id/rl_list_view"
                 android:background="#DDDDDD" />
 
@@ -148,7 +148,7 @@
             <View
                 android:id="@+id/v_after_day_view"
                 android:layout_width="match_parent"
-                android:layout_height="0.5sp"
+                android:layout_height="0.5px"
                 android:layout_below="@id/rl_day_view"
                 android:background="#DDDDDD" />
         </RelativeLayout>
