@@ -892,7 +892,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.schedule.CalendarAddActivity"
+            android:name=".ui.schedule.calendar.CalendarAddActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -900,11 +900,11 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.schedule.CalendarTypeSelectActivity"
+            android:name=".ui.schedule.calendar.CalendarTypeSelectActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.schedule.ScheduleSettingActivity"
+            android:name=".ui.schedule.calendar.CalendarSettingActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
