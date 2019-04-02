@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingRight="18dp" >
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/alert_time_text"
+        android:id="@+id/tv_alert_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -16,7 +15,7 @@
         android:textSize="@dimen/content_title_textsize" />
 
     <ImageView
-        android:id="@+id/alert_time_select_img"
+        android:id="@+id/iv_alert_time_select"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_alignParentRight="true"
