@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
@@ -43,13 +46,12 @@ public class CalendarSettingActivity extends BaseActivity {
 
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
+    private WorkAPIService workAPIService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        String calEventDisplayType = PreferencesUtils.getString(
-                getApplicationContext(), "celEventDisplayType", "monthly");
         String viewDisplayType = PreferencesUtils.getString(
                 getApplicationContext(), "viewDisplayType", "listview");
         boolean isListView = viewDisplayType.equals("listview");
@@ -59,6 +61,7 @@ public class CalendarSettingActivity extends BaseActivity {
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
     }
+
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -164,10 +167,27 @@ public class CalendarSettingActivity extends BaseActivity {
         }
     }
 
+
+    class webService extends APIInterfaceInstance {
+        @Override
+        public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
+            super.returnMyCalendarSuccess(getMyCalendarResult);
+            List<MyCalendar> calendarList = getMyCalendarResult
+                    .getCalendarList();
+            MyCalendarCacheUtils
+                    .saveMyCalendarList(CalendarSettingActivity.this, calendarList);
+        }
+
+        @Override
+        public void returnMyCalendarFail(String error, int errorCode) {
+            super.returnMyCalendarFail(error, errorCode);
+        }
+    }
+
     /**
      * 发送Calendar变化通知
      */
     public void sendBoradcastReceiver() {
-     EventBus.getDefault().post(new SimpleEventMessage("refreshCalendar", ""));
+        EventBus.getDefault().post(new SimpleEventMessage("refreshCalendar", ""));
     }
 }

@@ -69,7 +69,6 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 selectPosition = position;
                 adapter.notifyDataSetChanged();
                 alertTime = alertTimeArray[position];
-                returnData();
             }
         });
     }
@@ -84,6 +83,9 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 noAlertSelectImage.setVisibility(View.VISIBLE);
                 selectPosition = -1;
                 alertTime = getString(R.string.calendar_no_alert);
+                returnData();
+                break;
+            case R.id.tv_save:
                 returnData();
                 break;
             default:

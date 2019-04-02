@@ -119,6 +119,7 @@ android {
                             'src/main/res/layouts/schedule/schedule',//日程_日程
                             'src/main/res/layouts/schedule/calendar',//日程_日历
                             'src/main/res/layouts/schedule/task',//日程_任务
+                            'src/main/res/layouts/schedule/meeting',//日程_任务
                             'src/main/res/layouts/notsupport',//不支持此功能页面
                             'src/main/res/layouts/imp',//imp插件
                             'src/main/res/layouts/widgets/popwindow',//popwindow

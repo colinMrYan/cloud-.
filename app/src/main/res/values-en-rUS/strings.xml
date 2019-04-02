@@ -349,6 +349,8 @@
 
     <!-- 日程 -->
     <string name="schedule_event_alert">Schedule reminder</string>
+    <string name="schedule_calendar_add">Add schedule</string>
+    <string name="schedule_calendar_detail">Schedule detail</string>
     <string name="schedule_setting_list_view">List view</string>
     <string name="schedule_setting_day_view">Day View</string>
     <string name="schedule_setting_divide_group">Divide groups</string>
