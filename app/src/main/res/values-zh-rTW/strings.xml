@@ -351,6 +351,16 @@
     <string name="work_mession">任務</string>
     <string name="work_schedule">日期</string>
 
+    <!-- 日程 -->
+    <string name="schedule_event_alert">日程提醒</string>
+    <string name="schedule_calendar">日曆</string>
+    <string name="schedule_calendar_company">公司日曆</string>
+    <string name="schedule_setting_list_view">列表視圖</string>
+    <string name="schedule_setting_day_view">日視圖</string>
+    <string name="schedule_setting_divide_group">分組</string>
+    <string name="schedule_setting_quarter">季度</string>
+    <string name="schedule_setting_month">月度</string>
+    <string name="schedule_setting_view">視圖</string>
     <!-- 發現部分 -->
     <string name="find">發現</string>
     <string name="travel_analysis">差旅分析</string>
@@ -832,9 +842,11 @@
     <string name="monthly">每月</string>
     <string name="weekly">每週</string>
     <string name="every_day">每日</string>
-    <string name="calendar_when_event_occurs">事件發生時</string>
+    <string name="calendar_when_event_occurs">開始時</string>
     <string name="calendar_five_minite_ago">5分鐘前</string>
+    <string name="calendar_ten_minite_ago">10分鐘前</string>
     <string name="calendar_fifteen_minite_ago">15分鐘前</string>
+    <string name="calendar_twenty_minite_ago">20分鐘前</string>
     <string name="calendar_thirty_minite_ago">30分鐘前</string>
     <string name="calendar_one_hour_ago">1小時前</string>
     <string name="calendar_two_hours_ago">2小時前</string>
@@ -842,6 +854,7 @@
     <string name="calendar_two_days_ago">2天前</string>
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加行事曆</string>
+    <string name="calendar_no_alert">無提醒</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>

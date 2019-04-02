@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/content_bg"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height">
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp"
+            android:text="@string/cancel"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_function_textsize" />
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="添加任务"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_textsize" />
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="15dp"
+            android:text="@string/save"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_function_textsize" />
+    </RelativeLayout>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_header">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/rl_task_input_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_input_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:background="#FFFFFF"
+                    android:gravity="top|left"
+                    android:hint="请输入任务内容..."
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_task_priority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_task_input_content"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16sp"
+                    android:text="优先级"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+
+                <cn.carbs.android.segmentcontrolview.library.SegmentControlView
+                    android:layout_width="210dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginTop="10dp"
+                    app:scv_BackgroundSelectedColor="#36A5F6"
+                    app:scv_FrameColor="#36A5F6"
+                    app:scv_FrameCornerRadius="2dp"
+                    app:scv_FrameWidth="0.5dp"
+                    app:scv_Gradient="true"
+                    app:scv_SegmentPaddingVertical="5dp"
+                    app:scv_TextArray="@array/segment_control_items"
+                    app:scv_TextNormalColor="#36A5F6"
+                    app:scv_TextSize="13sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_task_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_task_priority"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/tv_task_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="所属项目"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_task_type_tap"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/tv_task_type_name"
+                    android:src="@drawable/icon_blue_circle" />
+
+                <TextView
+                    android:id="@+id/tv_task_type_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toLeftOf="@id/iv_task_type_arrow"
+                    android:text="未分类" />
+
+                <ImageView
+                    android:id="@+id/iv_task_type_arrow"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="7dp"
+                    android:src="@drawable/icon_schedule_enter" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_above="@id/rl_task_manager"
+                android:layout_marginLeft="15dp"
+                android:background="#DDDDDD" />
+
+            <RelativeLayout
+                android:id="@+id/rl_task_manager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_task_type"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/tv_task_manager"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="负责人"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_task_manager_add"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/iv_task_manager_arrow"
+                    android:src="@drawable/icon_schedule_add" />
+
+                <ImageView
+                    android:id="@+id/iv_task_manager_arrow"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="7dp"
+                    android:src="@drawable/icon_schedule_enter" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_above="@id/rl_task_parter"
+                android:layout_marginLeft="15dp"
+                android:background="#DDDDDD" />
+
+            <RelativeLayout
+                android:id="@+id/rl_task_parter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_task_manager"
+                android:background="#FFFFFF"
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/tv_task_parter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="参与人"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_task_parter_add"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/iv_task_parter_arrow"
+                    android:src="@drawable/icon_schedule_add" />
+
+                <ImageView
+                    android:id="@+id/iv_task_parter_arrow"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="7dp"
+                    android:src="@drawable/icon_schedule_enter" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_above="@id/rl_task_manager"
+                android:layout_marginLeft="15dp"
+                android:background="#DDDDDD" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/rl_task_parter"
+                android:layout_marginLeft="15dp"
+                android:background="#DDDDDD" />
+
+            <RelativeLayout
+                android:id="@+id/rl_deadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_task_parter"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="截止时间"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_deadline_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/iv_deadline_select_enter"
+                    android:text="5月21日 18:00" />
+
+                <ImageView
+                    android:id="@+id/iv_deadline_select_enter"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="7dp"
+                    android:src="@drawable/icon_schedule_enter" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/rl_state_top_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/rl_deadline"
+                android:layout_marginLeft="15dp"
+                android:background="#DDDDDD" />
+
+            <RelativeLayout
+                android:id="@+id/rl_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_state_top_line"
+                android:background="#FFFFFF"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="状态"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_state_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/iv_state_enter"
+                    android:text="进行中"
+                    android:textColor="#36A5F6"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_state_enter"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="7dp"
+                    android:src="@drawable/icon_schedule_enter" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/v_top_more_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/rl_state"
+                android:layout_marginLeft="15dp"
+                android:background="#DDDDDD" />
+
+            <RelativeLayout
+                android:id="@+id/rl_more"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/v_top_more_line"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="更多"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+
+                <ImageView
+                    android:id="@+id/iv_more"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_schedule_down" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/v_attachment_topline"
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/rl_more"
+                android:layout_marginLeft="15dp"
+                android:background="#DDDDDD" />
+
+            <RelativeLayout
+                android:id="@+id/rl_attachments_pictures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/v_attachment_topline"
+                android:onClick="onClick"
+                android:background="#FFFFFF"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="图片"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+
+                <ImageView
+                    android:id="@+id/iv_attachemnt_picture_add"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_schedule_add" />
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/lv_attachment_abstract_picture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_attachments_pictures"></ListView>
+
+            <RelativeLayout
+                android:id="@+id/rl_attachments_others"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lv_attachment_abstract_picture"
+                android:background="#FFFFFF"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp"
+                android:onClick="onClick">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="附件"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/iv_attachemnt_add"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_schedule_add" />
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/lv_attachment_abstract_other"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_attachments_others"></ListView>
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>
