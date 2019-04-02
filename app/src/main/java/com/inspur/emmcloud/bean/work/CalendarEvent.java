@@ -2,12 +2,15 @@ package com.inspur.emmcloud.bean.work;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.List;
 
 public class CalendarEvent implements Serializable, Comparator {
     private String id;
@@ -201,6 +204,16 @@ public class CalendarEvent implements Serializable, Comparator {
 
     public void setEndDate(Calendar endDate) {
         this.endDate = endDate;
+    }
+
+
+    public List<Event> calendarEventList2EventList(List<CalendarEvent> calendarEventList){
+        List<Event> eventList = new ArrayList<>();
+        for (CalendarEvent calendarEvent:calendarEventList){
+            Event event = new Event(calendarEvent.getId(),Event.TYPE_CALENDAR,title,"",startDate,endDate);
+            eventList.add(event);
+        }
+        return eventList;
     }
 
     @Override

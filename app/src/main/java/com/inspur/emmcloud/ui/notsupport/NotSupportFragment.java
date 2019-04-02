@@ -12,11 +12,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
 /**
@@ -92,13 +88,13 @@ public class NotSupportFragment extends BaseFragment {
      */
     private String getTabTitle() {
         String title = "";
-        if (!StringUtils.isBlank(getArguments().getString("uri"))) {
-            String uri = getArguments().getString("uri");
-            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-            if (!StringUtils.isBlank(appTabs)) {
-                title = AppTabUtils.getTabTitle(getActivity(), NotSupportFragment.class.getSimpleName(), uri);
-            }
-        }
+//        if (!StringUtils.isBlank(getArguments().getString("uri"))) {
+//            String uri = getArguments().getString("uri");
+//            String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+//            if (!StringUtils.isBlank(appTabs)) {
+//                title = AppTabUtils.getTabTitle(getActivity(), NotSupportFragment.class.getSimpleName(), uri);
+//            }
+//        }
         return title;
 
     }
