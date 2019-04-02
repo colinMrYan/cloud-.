@@ -904,7 +904,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.schedule.ScheduleSettingActivity"
+            android:name=".ui.schedule.schedule.ScheduleSettingActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity

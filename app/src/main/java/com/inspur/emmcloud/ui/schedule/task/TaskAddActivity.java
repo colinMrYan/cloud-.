@@ -74,6 +74,7 @@ public class TaskAddActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private TaskResult taskResult;
     private List<Attachment> attachments;
+    private List<JSONObject> jsonAttachments;
 
 
     @Override
@@ -81,6 +82,13 @@ public class TaskAddActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
     }
 
+    private void initData(){
+        jsonAttachments=new ArrayList<>();
+    }
+
+    private void initView(){
+
+    }
 
     public void onClick(View view) {
         switch (view.getId()) {
@@ -261,8 +269,10 @@ public class TaskAddActivity extends BaseActivity {
             taskResult.setOwner(PreferencesUtils.getString(
                     TaskAddActivity.this, "userID"));
             taskResult.setState("ACTIVED");
-            //调用
-             apiService.addAttachments(getTaskAddResult.getId(),"");
+            //调用创建任务成功
+            for(int i =0;i<jsonAttachments.size();i++){
+                apiService.addAttachments(getTaskAddResult.getId(),attachments.get(i).toString());
+            }
         }
 
         @Override
@@ -319,7 +329,8 @@ public class TaskAddActivity extends BaseActivity {
             }
 //            isRefreshList = true;
              JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
-             addAttachMents(jsonAttachment);
+            jsonAttachments.add(jsonAttachment);
+            addAttachMents(jsonAttachment);
         }
 
         @Override
@@ -357,7 +368,7 @@ public class TaskAddActivity extends BaseActivity {
             super.returnAddAttachMentSuccess(attachment);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
-           //     apiService.getSigleTask(task.getId());
+               //apiService.getSigleTask(task.getId());
             }
            // isRefreshList = true;
         }
@@ -422,6 +433,8 @@ public class TaskAddActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
+            attachments.remove(position);
+            jsonAttachments.remove(position);
 //            attachments.remove(position);
 //            task.setAttachments(attachments);
 //            attachmentAdapter.notifyDataSetChanged();

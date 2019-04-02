@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.ui.schedule;
+package com.inspur.emmcloud.ui.schedule.schedule;
 
 import android.content.Intent;
 import android.os.Bundle;
