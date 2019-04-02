@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,7 +35,7 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.TaskSubject;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -93,7 +92,7 @@ public class MessionDetailActivity extends BaseActivity {
     private List<SearchModel> deleteMemList = new ArrayList<SearchModel>();
     private List<SearchModel> oldMemList = new ArrayList<SearchModel>();
     private TextView managerText;
-    private TaskResult task;
+    private Task task;
     private List<TaskColorTag> tagList;
     private Calendar dueDate;
     private WorkAPIService apiService;
@@ -120,7 +119,7 @@ public class MessionDetailActivity extends BaseActivity {
         apiService = new WorkAPIService(MessionDetailActivity.this);
         apiService.setAPIInterface(new WebService());
 //		initTask();
-        task = (TaskResult) getIntent().getExtras().getSerializable("task");
+        task = (Task) getIntent().getExtras().getSerializable("task");
         attachments = task.getAttachments();
         initUI();
         getTasks();
@@ -993,7 +992,7 @@ public class MessionDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnAttachmentSuccess(TaskResult taskResult) {
+        public void returnAttachmentSuccess(Task taskResult) {
             super.returnAttachmentSuccess(taskResult);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();

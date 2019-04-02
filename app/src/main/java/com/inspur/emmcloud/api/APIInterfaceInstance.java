@@ -101,7 +101,7 @@ import com.inspur.emmcloud.bean.work.GetOfficeResult;
 import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.work.Task;
 
 import java.util.List;
 
@@ -837,7 +837,7 @@ public class APIInterfaceInstance implements APIInterface {
 
 
     @Override
-    public void returnAttachmentSuccess(TaskResult taskResult) {
+    public void returnAttachmentSuccess(Task taskResult) {
         // TODO Auto-generated method stub
 
     }
