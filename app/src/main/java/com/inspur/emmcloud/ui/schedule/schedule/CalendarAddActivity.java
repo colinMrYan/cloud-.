@@ -444,39 +444,10 @@ public class CalendarAddActivity extends BaseActivity {
      * @param
      */
     public void sendCalendarEventNotification() {
-//        Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
-//        mIntent.putExtra("refreshCalendar", "");
-//        // 发送广播
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
         EventBus.getDefault().post(new SimpleEventMessage("refreshCalendar", ""));
     }
-
     /**
-     * 本地数据拼接CalEvent
-     *
-     * @param title
-     * @param isAllDay
-     * @param startCalendar
-     * @param endCalendar
-     */
-    private void combineCalEvent(String title, boolean isAllDay,
-                                 Calendar startCalendar, Calendar endCalendar, long calendarEventId) {
-        // TODO Auto-generated method stub
-//        addCalendarEvent = new CalendarEvent();
-//        addCalendarEvent.setTitle(title);
-//        addCalendarEvent.setAllday(isAllDay);
-//        addCalendarEvent.setStartDate(TimeUtils
-//                .localCalendar2UTCCalendar(startCalendar));
-//        addCalendarEvent.setState("ACTIVED");
-//        if (!isAllDay) {
-//            addCalendarEvent.setEndDate(TimeUtils
-//                    .localCalendar2UTCCalendar(endCalendar));
-//        }
-//        addCalendarEvent.setSysCalendarEventId(calendarEventId);
-//        addCalendarEvent.setCalendar(myCalendar);
-//        addCalendarJson = JSONUtils.toJSONString(addCalendarEvent);
-    }
-
+     * */
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnAddCalEventSuccess(GetIDResult getIDResult) {
