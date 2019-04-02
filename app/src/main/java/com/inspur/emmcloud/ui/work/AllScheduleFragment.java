@@ -15,7 +15,8 @@ import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllScheduleFragmentAdapter;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
-import com.inspur.emmcloud.ui.work.calendar.CalActivity;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -149,7 +150,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
                 switch (menuItem.getItemId()){
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
-                        IntentUtils.startActivity(getActivity(), CalActivity.class);
+                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class);
                     break;
                     case 2:
                         recordUserClickWorkFunction(PV_COLLECTION_MISSION);
@@ -162,6 +163,9 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
                         IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
                         break;
                     case 5:
+                        if (allScheduleFragmentViewPager.getCurrentItem() == 0){
+                            IntentUtils.startActivity(getActivity(), CalendarSettingActivity.class);
+                        }
                         break;
                 }
             }
