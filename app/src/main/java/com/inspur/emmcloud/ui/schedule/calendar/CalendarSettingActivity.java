@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.MyCalendar;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
@@ -92,7 +93,7 @@ public class CalendarSettingActivity extends BaseActivity {
 
     private void returnCalList() {
         // TODO Auto-generated method stub
-        sendBoradcastReceiver();
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_REFRESH, ""));
         Intent intent = new Intent();
         intent.putExtra("calendarList", (Serializable) calendarsList);
         setResult(RESULT_OK, intent);
@@ -167,7 +168,6 @@ public class CalendarSettingActivity extends BaseActivity {
         }
     }
 
-
     class webService extends APIInterfaceInstance {
         @Override
         public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
@@ -184,10 +184,4 @@ public class CalendarSettingActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 发送Calendar变化通知
-     */
-    public void sendBoradcastReceiver() {
-        EventBus.getDefault().post(new SimpleEventMessage("refreshCalendar", ""));
-    }
 }
