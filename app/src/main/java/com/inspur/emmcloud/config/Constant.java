@@ -61,6 +61,8 @@ public class Constant {
     public static final String PREF_MY_INFO_SHOW_CONFIG = "user_profiles";
     public static final String PREF_MINE_USER_MENUS = "mine_user_menus";
 
+    public static final String PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE= "schedule_calendar_view_display_type";
+
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
     public static final String ACTION_CALENDAR = "com.inspur.calendar";

@@ -20,7 +20,7 @@ import org.xutils.view.annotation.ViewInject;
 /**
  * Created by libaochao on 2019/3/29.
  */
-@ContentView(R.layout.activity_calendar_alert_time)
+@ContentView(R.layout.activity_schedule_alert_time)
 public class ScheduleAlertTimeActivity extends BaseActivity {
     @ViewInject(R.id.lv_alert_time)
     ListView alertTimeListView;

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_calendar_item_content"
+    android:layout_marginRight="10dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#FFFFFF">
-    <RelativeLayout
-        android:id="@+id/rl_calendar_item_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp">
         <View
             android:id="@+id/iv_calendar_color_hint"
             android:layout_width="8dp"
@@ -29,15 +26,9 @@
             android:id="@+id/switch_view_calendar_state"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
             android:layout_width="51dp"
             android:layout_height="31dp"
             android:layout_marginTop="7dp"
             android:layout_marginBottom="6dp"/>
-    </RelativeLayout>
-
-    <View
-        android:layout_below="@id/rl_calendar_item_content"
-        android:layout_width="match_parent"
-        android:layout_height="1sp"
-        android:background="#DDDDDD"/>
 </RelativeLayout>

@@ -35,13 +35,13 @@ import java.util.List;
 /**
  * Created by libaochao on 2019/4/2.
  */
-@ContentView(R.layout.activity_schedule_setting)
+@ContentView(R.layout.activity_calendar_setting)
 public class CalendarSettingActivity extends BaseActivity {
 
-    @ViewInject(R.id.scrollview_list_calendars)
+    @ViewInject(R.id.listview_list_calendars)
     private ScrollViewWithListView calendarsListView;
     @ViewInject(R.id.iv_list_view_tip)
-    private ImageView listViewImageView;
+    private ImageView listImageView;
     @ViewInject(R.id.iv_day_view_tip)
     private ImageView dayImageView;
 
@@ -54,9 +54,9 @@ public class CalendarSettingActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         String viewDisplayType = PreferencesUtils.getString(
-                getApplicationContext(), "viewDisplayType", "listview");
+                getApplicationContext(), Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, "listview");
         boolean isListView = viewDisplayType.equals("listview");
-        listViewImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
+        listImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         dayImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
         calendarsList = MyCalendarCacheUtils.getAllMyCalendarList(this);
         calendarAdapter = new CalendarAdapter();
@@ -71,8 +71,8 @@ public class CalendarSettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_list_view:
-                if (listViewImageView.getVisibility() != View.VISIBLE) {
-                    listViewImageView.setVisibility(View.VISIBLE);
+                if (listImageView.getVisibility() != View.VISIBLE) {
+                    listImageView.setVisibility(View.VISIBLE);
                     dayImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
                             "viewDisplayType", "listview");
@@ -81,7 +81,7 @@ public class CalendarSettingActivity extends BaseActivity {
             case R.id.rl_day_view:
                 if (dayImageView.getVisibility() != View.VISIBLE) {
                     dayImageView.setVisibility(View.VISIBLE);
-                    listViewImageView.setVisibility(View.INVISIBLE);
+                    listImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
                             "viewDisplayType", "dayview");
                 }

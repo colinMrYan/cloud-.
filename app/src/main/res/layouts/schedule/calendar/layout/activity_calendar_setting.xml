@@ -28,67 +28,79 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="设置"
+            android:text="@string/settings"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="15dp"
+            android:text="@string/save"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_calendar_list_tip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_header"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/schedule_calendar"
-        android:textColor="#999999"
-        android:textSize="13sp" />
 
-    <RelativeLayout
-        android:id="@+id/rl_all_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_calendar_list_tip">
-
-        <com.inspur.emmcloud.widget.ScrollViewWithListView
-            android:id="@+id/scrollview_list_calendars"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:divider="#DDDDDD"
-            android:dividerHeight="0.5px"
-            android:paddingLeft="16dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tv_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_all_switch"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/schedule_setting_view"
-        android:textColor="#999999"
-        android:textSize="13sp" />
     <ScrollView
         android:id="@+id/sv_view_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_view"
-        android:background="#FFFFFF"
-        android:paddingLeft="16dp">
+        android:layout_below="@id/rl_header">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/tv_calendar_list_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/schedule_calendar"
+                android:textColor="#999999"
+                android:textSize="13sp"
+                android:paddingLeft="16dp"/>
+
+
+            <com.inspur.emmcloud.widget.ScrollViewWithListView
+                android:id="@+id/listview_list_calendars"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_calendar_list_tip"
+                android:background="#FFFFFF"
+                android:divider="@color/color_list_divider"
+                android:paddingLeft="16dp"
+                android:dividerHeight="0.5px"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+
+            <TextView
+                android:id="@+id/tv_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/listview_list_calendars"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/schedule_setting_view"
+                android:textColor="#999999"
+                android:textSize="13sp"
+                android:paddingLeft="16dp"/>
+
             <RelativeLayout
                 android:id="@+id/rl_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
+                android:layout_below="@id/tv_view"
+                android:paddingLeft="16dp"
+                android:paddingRight="15dp"
+                android:background="#FFFFFF"
                 android:onClick="onClick">
 
                 <TextView
@@ -122,7 +134,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/v_after_list_view"
-                android:layout_marginRight="15dp"
+                android:background="#FFFFFF"
+                android:paddingLeft="16dp"
+                android:paddingRight="15dp"
                 android:onClick="onClick">
 
                 <TextView
