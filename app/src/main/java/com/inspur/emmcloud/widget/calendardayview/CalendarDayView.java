@@ -230,15 +230,15 @@ public class CalendarDayView extends RelativeLayout {
         ImageView eventImg = eventView.findViewById(R.id.iv_event);
         TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
         TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
-        int eventImgResId = -1;
+        int eventIconResId = -1;
         if (event.getEventType().equals(Event.TYPE_CALENDAR)) {
-            eventImgResId = R.drawable.ic_schedule_event_calendar;
+            eventIconResId = R.drawable.ic_schedule_event_calendar;
         } else if (event.getEventType().equals(Event.TYPE_MEETING)) {
-            eventImgResId = R.drawable.ic_schedule_event_meeing;
+            eventIconResId = R.drawable.ic_schedule_event_meeing;
         } else {
-            eventImgResId = R.drawable.ic_schedule_event_task;
+            eventIconResId = R.drawable.ic_schedule_event_task;
         }
-        eventImg.setImageResource(eventImgResId);
+        eventImg.setImageResource(eventIconResId);
         eventTitleEvent.setText(event.getEventTitle());
         eventSubtitleEvent.setText(event.getEventSubTitle());
         eventLayout.addView(eventView, eventLayoutParams);

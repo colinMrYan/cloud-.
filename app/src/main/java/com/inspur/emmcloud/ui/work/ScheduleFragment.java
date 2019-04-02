@@ -23,7 +23,6 @@ import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -68,6 +67,7 @@ public class ScheduleFragment extends BaseFragment implements
     private List<String> calendarIdList = new ArrayList<>();
     private CalendarDayView calendarDayView;
     private BroadcastReceiver meetingAndTaskReceiver;
+    private java.util.Calendar selectCalendar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,7 +148,7 @@ public class ScheduleFragment extends BaseFragment implements
             public void onEventClick(Event event) {
             }
         });
-        setCalendarTime(System.currentTimeMillis());
+        onCalendarSelect(java.util.Calendar.getInstance(),false);
         initData();
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
@@ -223,6 +223,61 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
 
+    @Override
+    public void onYearChange(int year) {
+
+    }
+
+    @Override
+    public void onCalendarOutOfRange(Calendar calendar) {
+
+    }
+
+    @Override
+    public void onCalendarSelect(Calendar calendar, boolean isClick) {
+        java.util.Calendar selectCalendar = java.util.Calendar.getInstance();
+        selectCalendar.set(calendar.getYear(),calendar.getMonth(),calendar.getDay(),0,0,0);
+        selectCalendar.set(java.util.Calendar.MILLISECOND,0);
+        onCalendarSelect(selectCalendar,isClick);
+    }
+
+    /**
+     * 选中日期
+     * @param calendar
+     * @param isClick
+     */
+    private void onCalendarSelect(java.util.Calendar calendar,boolean isClick){
+        selectCalendar = calendar;
+        setCalendarTime();
+        getMeetings();
+        getMyCalendar();
+        getTasks();
+//        calendarDayView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                calendarDayView.setEventList(getEventList());
+//            }
+//        });
+    }
+
+    private void setCalendarTime() {
+        String time = TimeUtils.calendar2FormatString(getActivity(), selectCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY_BY_DASH) + "·" +
+                CalendarUtil.getWeekDay(selectCalendar);
+        boolean isToday = TimeUtils.isCalendarToday(selectCalendar);
+        if (isToday) {
+            time = getString(R.string.today) + "·" + time;
+            calendarDayView.setCurrentTimeLineShow(true);
+        }else {
+            calendarDayView.setCurrentTimeLineShow(false);
+        }
+        scheduleDataText.setText(time);
+    }
+
+    @Override
+    public void isExpand(boolean isExpand) {
+        calendarViewExpandImg.setImageResource(isExpand ? R.drawable.ic_schedule_up : R.drawable.ic_schedule_down);
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -244,31 +299,13 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
 
-    /**
-     * 获取会议时间
-     *
-     * @param meeting
-     * @return
-     */
-    private String getMeetingTime(Meeting meeting) {
-        String from = meeting.getFrom();
-        String meetingFromTime = TimeUtils.calendar2FormatString(
-                getActivity(), TimeUtils.timeString2Calendar(from),
-                TimeUtils.FORMAT_HOUR_MINUTE);
-        String to = meeting.getTo();
-        String meetingToTime = TimeUtils.calendar2FormatString(
-                getActivity(), TimeUtils.timeString2Calendar(to),
-                TimeUtils.FORMAT_HOUR_MINUTE);
-        return meetingFromTime + " - " + meetingToTime;
-    }
-
 
     /**
      * 获取会议
      */
     private void getMeetings() {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            apiService.getMeetings(7);
+            apiService.getMeetings(30);
         }
     }
 
@@ -292,48 +329,6 @@ public class ScheduleFragment extends BaseFragment implements
                     "order_type", "DESC");
             apiService.getRecentTasks(orderBy, orderType);
         }
-    }
-
-
-    @Override
-    public void onYearChange(int year) {
-
-    }
-
-    @Override
-    public void onCalendarOutOfRange(Calendar calendar) {
-
-    }
-
-    @Override
-    public void onCalendarSelect(Calendar calendar, boolean isClick) {
-        setCalendarTime(calendar.getTimeInMillis());
-        calendarDayView.post(new Runnable() {
-            @Override
-            public void run() {
-                calendarDayView.setEventList(getEventList());
-            }
-        });
-    }
-
-    private void setCalendarTime(long timeInMillis) {
-        java.util.Calendar calendar1 = TimeUtils.
-                timeLong2Calendar(timeInMillis);
-        String time = TimeUtils.calendar2FormatString(getActivity(), calendar1, TimeUtils.FORMAT_YEAR_MONTH_DAY_BY_DASH) + "·" +
-                CalendarUtil.getWeekDay(calendar1);
-        boolean isToday = TimeUtils.isCalendarToday(calendar1);
-        if (isToday) {
-            time = getString(R.string.today) + "·" + time;
-            calendarDayView.setCurrentTimeLineShow(true);
-        }else {
-            calendarDayView.setCurrentTimeLineShow(false);
-        }
-        scheduleDataText.setText(time);
-    }
-
-    @Override
-    public void isExpand(boolean isExpand) {
-        calendarViewExpandImg.setImageResource(isExpand ? R.drawable.ic_schedule_up : R.drawable.ic_schedule_down);
     }
 
 

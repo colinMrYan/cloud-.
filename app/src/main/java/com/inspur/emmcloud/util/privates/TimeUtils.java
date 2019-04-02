@@ -1135,6 +1135,24 @@ public class TimeUtils {
         return String.valueOf(totalss);
     }
 
+    /**开始日期和结束日期是否包含特定日期
+     *
+     * @param targetCalendar
+     * @param startCalendar
+     * @param endCalendar
+     * @return
+     */
+    public static boolean isContainTargentCalendarDay(Calendar targetCalendar,Calendar startCalendar,Calendar endCalendar){
+        Calendar dayBeginCalendar = (Calendar) targetCalendar.clone();
+        dayBeginCalendar.set(Calendar.HOUR_OF_DAY,0);
+        dayBeginCalendar.set(Calendar.MINUTE,0);
+        dayBeginCalendar.set(Calendar.SECOND,0);
+        dayBeginCalendar.set(Calendar.MILLISECOND,0);
+        Calendar dayEndCalendar = (Calendar) dayBeginCalendar.clone();
+        dayEndCalendar.add(Calendar.DAY_OF_YEAR,1);
+        return (dayBeginCalendar.before(endCalendar) && dayBeginCalendar.after(startCalendar))||(dayEndCalendar.before(endCalendar) && dayEndCalendar.after(startCalendar));
+    }
+
     /**
      * 时间戳转成提示性日期格式（昨天、今天……)
      */
