@@ -506,7 +506,7 @@
     <string name="file_rename">文件重命名</string>
     <string name="disk">网盘</string>
 
-     <!--Webex 会议-->
+    <!--Webex 会议-->
     <string name="webex_meeting_title">%1$s的会议</string>
     <string name="webex_input_invitee_emails_hint">添加参会人含后缀邮箱</string>
     <string name="webex_input_invitee_emails">请输入参会人的电子邮箱地址</string>
@@ -1129,10 +1129,7 @@
     <string name="safe_center_unenable">未启用</string>
 
 
-
-
     <string name="qr_code_analysis_fail">二维码解析失败</string>
-
 
 
     //tag标签
@@ -1316,7 +1313,7 @@
         <item>三十</item>
     </string-array>
 
-    <string-array name="solar_festival" >
+    <string-array name="solar_festival">
         <item>0101元旦</item>
         <item>0214情人节</item>
         <item>0308妇女节</item>

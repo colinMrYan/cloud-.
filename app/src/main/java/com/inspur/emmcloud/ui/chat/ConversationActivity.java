@@ -1453,7 +1453,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 transmitTextMsg(cid, uiMessage.getMessage());
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-              //  transmitImgMsg(cid, uiMessage.getMessage());
+                //  transmitImgMsg(cid, uiMessage.getMessage());
                 break;
             default:
                 break;

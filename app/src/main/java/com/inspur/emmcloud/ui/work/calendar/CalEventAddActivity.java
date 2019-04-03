@@ -161,8 +161,8 @@ public class CalEventAddActivity extends BaseActivity {
                 calendarImg.setFillColor(color);
             }
 
-        }else if(getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)){
-             String data = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
+        } else if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
+            String data = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
             titleEdit.setText(data);
         }
         setEventTime(startCalendar, endCalendar);
@@ -430,27 +430,27 @@ public class CalEventAddActivity extends BaseActivity {
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
                 CalEventAddActivity.this, new DatePickerDialog.OnDateSetListener() {
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        String tripDateString = TimeUtils.calendar2FormatString(CalEventAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-                        if (isStartDate) {
-                            startDateText.setText(tripDateString);
-                            if (isAllDay) {
-                                endDateText.setText(tripDateString);
-                            }
-                        } else {
-                            if (isAllDay) {
-                                startDateText.setText(tripDateString);
-                            }
-                            endDateText.setText(tripDateString);
-                        }
-
+            @Override
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                // TODO Auto-generated method stub
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, monthOfYear, dayOfMonth);
+                String tripDateString = TimeUtils.calendar2FormatString(CalEventAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                if (isStartDate) {
+                    startDateText.setText(tripDateString);
+                    if (isAllDay) {
+                        endDateText.setText(tripDateString);
                     }
-                }, year, month, day);
+                } else {
+                    if (isAllDay) {
+                        startDateText.setText(tripDateString);
+                    }
+                    endDateText.setText(tripDateString);
+                }
+
+            }
+        }, year, month, day);
         datePickerDialog.show();
     }
 

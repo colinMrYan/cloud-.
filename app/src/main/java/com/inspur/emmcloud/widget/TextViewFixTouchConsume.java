@@ -45,8 +45,7 @@ public class TextViewFixTouchConsume extends TextView {
 
     }
 
-    public void setTextViewHTML(String html)
-    {
+    public void setTextViewHTML(String html) {
         CharSequence sequence = Html.fromHtml(html);
         SpannableStringBuilder strBuilder =
                 new SpannableStringBuilder(sequence);
@@ -96,7 +95,7 @@ public class TextViewFixTouchConsume extends TextView {
                                 buffer.getSpanEnd(link[0]));
                     }
 
-                    if (widget instanceof TextViewFixTouchConsume){
+                    if (widget instanceof TextViewFixTouchConsume) {
                         ((TextViewFixTouchConsume) widget).linkHit = true;
                     }
                     return true;
