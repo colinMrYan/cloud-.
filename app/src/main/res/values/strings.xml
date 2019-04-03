@@ -98,6 +98,7 @@
     <string name="format_month_day">MM\'月\'dd\'日\'</string>
     <string name="format_task_month_day">MM.dd</string>
     <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
+    <string name="format_month_day_hour_minute">MM\'月\'dd\'日\' HH:mm</string>
     <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
     <string name="time_null">无</string>
     <string name="cutdown_now">今</string>
@@ -351,6 +352,12 @@
     <string name="work_search_hint">搜索日历、任务</string>
     <string name="work_mession">任务</string>
     <string name="work_schedule">日程</string>
+    <string name="work_task_mine">我创建的</string>
+    <string name="work_task_involved">我参与的</string>
+    <string name="work_task_focused">我关注的</string>
+    <string name="work_task_done">已完成的</string>
+    <string name="work_task_all">全部</string>
+    <string name="work_task_end">%1$s 截止</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>

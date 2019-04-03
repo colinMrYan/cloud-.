@@ -92,6 +92,7 @@
     <string name="format_month_day">MMM dd</string>
     <string name="format_task_month_day">MMM dd</string>
     <string name="format_year_month_day_hour_minute">MM/dd/yy HH:mm</string>
+    <string name="format_month_day_hour_minute">MM/dd HH:mm</string>
     <string name="format_year_month">yyyy-MM</string>
     <string name="time_null">null</string>
     <string name="cutdown_now">now</string>
@@ -344,8 +345,14 @@
     <string name="work_info_text">Info bar</string>
     <string name="time">Time</string>
     <string name="work_search_hint">Search calendars, tasks</string>
-    <string name="work_mession">Mission</string>
+    <string name="work_mession">Task</string>
     <string name="work_schedule">Schedule</string>
+    <string name="work_task_mine">Created</string>
+    <string name="work_task_involved">Involved</string>
+    <string name="work_task_focused">Focused</string>
+    <string name="work_task_done">Finished</string>
+    <string name="work_task_all">Whole</string>
+    <string name="work_task_end">%1$s End</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

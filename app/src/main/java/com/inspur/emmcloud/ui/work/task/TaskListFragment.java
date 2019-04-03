@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -66,6 +67,7 @@ public class TaskListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         injected = true;
+        LogUtils.YfcDebug("onCreateView");
         return x.view().inject(this, inflater, container);
     }
 
@@ -75,15 +77,24 @@ public class TaskListFragment extends Fragment {
         if (!injected) {
             x.view().inject(this, this.getView());
         }
+        LogUtils.YfcDebug("onViewCreated");
         initViews();
     }
 
     private void initViews() {
+        nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         getOrder();
         initPullRefreshLayout();
+        taskListView.setOnItemClickListener(new OnTaskClickListener());
+//        taskListView.setOnItemLongClickListener(new OnTaskLongClickListener());
         loadingDialog = new LoadingDialog(getActivity());
+        getCurrentTaskList();
+    }
+
+    public void refeshView(){
+        initViews();
     }
 
 
@@ -103,28 +114,32 @@ public class TaskListFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (NetUtils.isNetworkConnected(getActivity())) {
-                    if (nowIndex == AllTaskListFragment.MY_MINE) {
-                        getMineMessions(false);
-                    } else if (nowIndex == AllTaskListFragment.MY_INVOLVED) {
-                        getInvolvedMessions(false);
-                    } else if (nowIndex == AllTaskListFragment.MY_FOCUSED) {
-                        getFocusedMessions(false);
-                    }
-                } else {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+                getCurrentTaskList();
             }
         });
     }
 
+    private void getCurrentTaskList(){
+        nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
+        if (NetUtils.isNetworkConnected(getActivity())) {
+            if (nowIndex == AllTaskListFragment.MY_MINE) {
+                getMineTasks(false);
+            } else if (nowIndex == AllTaskListFragment.MY_INVOLVED) {
+                getInvolvedTasks(false);
+            } else if (nowIndex == AllTaskListFragment.MY_FOCUSED) {
+                getFocusedTasks(false);
+            }
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
 
     /**
      * 获取关注的任务
      *
      * @param isDialogShow
      */
-    protected void getFocusedMessions(boolean isDialogShow) {
+    protected void getFocusedTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
             loadingDialog.show(isDialogShow);
             apiService.getFocusedTasks(orderBy, orderType);
@@ -136,7 +151,7 @@ public class TaskListFragment extends Fragment {
      *
      * @param isDialogShow
      */
-    protected void getInvolvedMessions(boolean isDialogShow) {
+    protected void getInvolvedTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
             loadingDialog.show(isDialogShow);
             apiService.getInvolvedTasks(orderBy, orderType);
@@ -148,7 +163,7 @@ public class TaskListFragment extends Fragment {
      *
      * @param isDialogShow
      */
-    protected void getMineMessions(boolean isDialogShow) {
+    protected void getMineTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
             loadingDialog.show(isDialogShow);
             apiService.getRecentTasks(orderBy, orderType);
@@ -228,7 +243,7 @@ public class TaskListFragment extends Fragment {
     /**
      * 长按事件监听
      */
-    class TaskLongClickListener implements AdapterView.OnItemLongClickListener {
+    class OnTaskLongClickListener implements AdapterView.OnItemLongClickListener {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        final int position, long id) {

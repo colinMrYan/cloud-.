@@ -95,6 +95,7 @@
     <string name="not_support_upload">不支持沒有后綴名的文件上傳 </string>
     <string name="format_month_day">MM\'月\'dd\'日\'</string>
     <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
+    <string name="format_month_day_hour_minute">MM\'月\'dd\'日\' HH:mm</string>
     <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
     <string name="time_null">無</string>
     <string name="cutdown_now">今</string>
@@ -350,6 +351,14 @@
     <string name="work_search_hint">蒐索行事曆、任務</string>
     <string name="work_mession">任務</string>
     <string name="work_schedule">日期</string>
+    <string name="work_task_all">全部</string>
+    <string name="work_task_end">%1$s 截止</string>
+
+    <string name="work_task_mine">我創建的</string>
+    <string name="work_task_involved">我參與的</string>
+    <string name="work_task_focused">我關注的</string>
+    <string name="work_task_done">已完成的</string>
+
 
     <!-- 發現部分 -->
     <string name="find">發現</string>

@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.work.TaskResult;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
 
 /**
- * Created by yufuchang on 2019/4/1.
+ * Created by yufuchang on 2019/4/3.
  */
 
 public class TaskListAdapter extends BaseAdapter {
@@ -47,31 +47,18 @@ public class TaskListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context)
-                .inflate(R.layout.meession_list_item, null);
-        ((TextView) convertView.findViewById(R.id.mession_text))
-                .setText(taskList.get(position).getTitle());
-        if (taskList.get(position).getTags().size() > 0) {
-            MessionTagColorUtils.setTagColorImg((ImageView) convertView
-                            .findViewById(R.id.mession_color),
-                    taskList.get(position).getTags().get(0).getColor());
-        } else {
-            // 如果没有tag，显示默认tag
-            MessionTagColorUtils.setTagColorImg((ImageView) convertView
-                    .findViewById(R.id.mession_color), "YELLOW");
-        }
-        if (taskList.get(position).getPriority() == 1) {
-            // 当重要程度为1时可能后续需要做处理
-            // ((ImageView) convertView
-            // .findViewById(R.id.mession_state_img))
-            // .setVisibility(View.VISIBLE);
-        } else if (taskList.get(position).getPriority() == 2) {
-            convertView.findViewById(R.id.mession_state_img)
-                    .setVisibility(View.VISIBLE);
-            // 当重要程度为2时后续可能需要添加两个叹号
-            // ((ImageView) convertView
-            // .findViewById(R.id.mession_state_img2))
-            // .setVisibility(View.VISIBLE);
-        }
+                .inflate(R.layout.task_list_item, null);
+        TaskResult taskResult = taskList.get(position);
+        ((TextView) convertView.findViewById(R.id.tv_task_name))
+                .setText(taskResult.getTitle());
+        ((TextView) convertView.findViewById(R.id.tv_task_deadline))
+                .setText(context.getString(R.string.work_task_end,TimeUtils.calendar2FormatString(context,
+                        TimeUtils.timeLong2Calendar(Long.parseLong(taskResult.getCreationDate())),
+                        TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
+
+        ((TextView) convertView.findViewById(R.id.tv_task_from))
+                .setText("我创建的");
+        ((ImageView)convertView.findViewById(R.id.iv_task_color)).setImageResource(R.drawable.tuesday);
         return convertView;
     }
 
