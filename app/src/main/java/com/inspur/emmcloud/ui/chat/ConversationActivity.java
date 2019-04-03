@@ -117,11 +117,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
 
-    private static final int LONG_CLICK_COPY = 100;
-    private static final int LONG_CLICK_TRANSMIT = 200;
-    private static final int LONG_CLICK_SCHEDULE = 300;
-    private static final int LONG_CLICK_COPY_TEXT = 400;
-
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
