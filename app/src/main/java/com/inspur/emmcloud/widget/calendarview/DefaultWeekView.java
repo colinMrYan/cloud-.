@@ -77,6 +77,8 @@ public final class DefaultWeekView extends WeekView {
         canvas.drawText(calendar.getScheme(),
                 x + mItemWidth - mPadding - mRadio / 2 - getTextWidth(calendar.getScheme()) / 2,
                 mPadding + mSchemeBaseLine, mTextPaint);
+
+        canvas.drawCircle(x + mItemWidth / 2, mPadding + mItemHeight - 25, 5, mSchemeBasicPaint);
     }
 
     /**

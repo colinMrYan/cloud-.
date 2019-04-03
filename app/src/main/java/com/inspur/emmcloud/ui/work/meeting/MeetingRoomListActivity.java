@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -354,8 +353,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingRoomListActivity.this, DatePickerDialog.THEME_HOLO_LIGHT,
-                new DatePickerDialog.OnDateSetListener() {
+                MeetingRoomListActivity.this,new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
@@ -390,7 +388,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                     }
                 }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.setHideYear();
         datePickerDialog.show();
     }
 
@@ -428,8 +425,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
         isHasModifyTime = true;
         TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-                MeetingRoomListActivity.this, AlertDialog.THEME_HOLO_LIGHT, new OnTimeSetListener() {
-
+                MeetingRoomListActivity.this, new OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,
                                   int minute) {

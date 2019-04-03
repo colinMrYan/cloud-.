@@ -347,6 +347,9 @@
     <string name="work_task_text">Todo</string>
     <string name="work_info_text">Info bar</string>
     <string name="time">Time</string>
+    <string name="work_search_hint">Search calendars, tasks</string>
+    <string name="work_mession">Mission</string>
+    <string name="work_schedule">Schedule</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
