@@ -162,4 +162,7 @@ public class Constant {
 
     public static final String SF_OPEN_URL = "open-url";
 
+    //沟通文本消息长按至日程
+    public static final String COMMUNICATION_LONG_CLICK_TO_SCHEDULE = "message_long_click_to_schedule";
+
 }
