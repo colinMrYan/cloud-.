@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.bean.work;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TaskResult implements Serializable {
+public class Task implements Serializable{
 
     private String creationDate = "";
     private String lastUpdate = "";
@@ -31,12 +33,10 @@ public class TaskResult implements Serializable {
     private String subjectstr = "";
     private TaskSubject subject;
 
-    public TaskResult() {
+    public Task() {
     }
 
-    public TaskResult(String task) {
-
-
+    public Task(String task) {
         try {
             JSONObject jsonObject = new JSONObject(task);
 
@@ -124,7 +124,7 @@ public class TaskResult implements Serializable {
         }
     }
 
-    public TaskResult(JSONObject jsonObject) {
+    public Task(JSONObject jsonObject) {
 
         try {
 
@@ -346,6 +346,18 @@ public class TaskResult implements Serializable {
         return isNum.matches();
     }
 
+
+    public List<Event>  taskList2EventList(List<Task> taskList){
+        List<Event> eventList = new ArrayList<>();
+        for (Task task:taskList){
+            String eventSubTitle = TimeUtils.calendar2FormatString(MyApplication.getInstance(),dueDate,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE)+"截止";
+            Calendar eventStartTime = TimeUtils.timeString2Calendar(creationDate);
+            Event event = new Event(task.getId(),Event.TYPE_TASK,title,eventSubTitle,eventStartTime,dueDate);
+            eventList.add(event);
+        }
+        return eventList;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -354,10 +366,10 @@ public class TaskResult implements Serializable {
         if (other == null) {
             return false;
         }
-        if (!(other instanceof TaskResult)) {
+        if (!(other instanceof Task)) {
             return false;
         }
-        TaskResult taskResult = (TaskResult) other;
+        Task taskResult = (Task) other;
         //此处从==判断是否相等  改为equals
         return getId().equals(taskResult.getId());
     }

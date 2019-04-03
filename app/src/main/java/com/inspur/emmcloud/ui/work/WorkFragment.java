@@ -31,7 +31,7 @@ import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.MyCalendar;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.WorkSetting;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
@@ -92,7 +92,7 @@ public class WorkFragment extends BaseFragment {
     private BaseAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetingList = new ArrayList<>();
-    private ArrayList<TaskResult> taskList = new ArrayList<>();
+    private ArrayList<Task> taskList = new ArrayList<>();
     private List<CalendarEvent> calEventList = new ArrayList<>();
     private BroadcastReceiver calEventReceiver;
     private BroadcastReceiver meetingAndTaskReceiver;
@@ -284,7 +284,7 @@ public class WorkFragment extends BaseFragment {
      * @param taskResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTaskData(TaskResult taskResult) {
+    public void updateTaskData(Task taskResult) {
         if (taskResult != null) {
             int index = taskList.indexOf(taskResult);
             if (index != -1) {
@@ -674,7 +674,7 @@ public class WorkFragment extends BaseFragment {
                     dateText.setText(time);
                     break;
                 case TYPE_TASK:
-                    TaskResult task = taskList.get(position);
+                    Task task = taskList.get(position);
                     content = task.getTitle();
                     ViewGroup.LayoutParams param = countDownText.getLayoutParams();
                     param.height = DensityUtil.dip2px(getActivity(), 8);

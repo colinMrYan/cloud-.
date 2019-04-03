@@ -351,6 +351,15 @@
     <string name="work_mession">Mission</string>
     <string name="work_schedule">Schedule</string>
 
+    <!-- 日程 -->
+    <string name="schedule_event_alert">Schedule reminder</string>
+    <string name="schedule_setting_list_view">List view</string>
+    <string name="schedule_setting_day_view">Day View</string>
+    <string name="schedule_setting_divide_group">Divide groups</string>
+    <string name="schedule_setting_quarter">Quarter</string>
+    <string name="schedule_setting_month">Month</string>
+    <string name="schedule_setting_view">View</string>
+
     <!-- 发现部分 -->
     <string name="find">Discover</string>
     <string name="travel_analysis">Travel analysis</string>
@@ -830,7 +839,9 @@
     <string name="every_day">Every Day</string>
     <string name="calendar_when_event_occurs">The event occurs</string>
     <string name="calendar_five_minite_ago">5 minutes ago</string>
+    <string name="calendar_ten_minite_ago">10 minutes ago</string>
     <string name="calendar_fifteen_minite_ago">15 minutes ago</string>
+    <string name="calendar_twenty_minite_ago">20 minutes ago</string>
     <string name="calendar_thirty_minite_ago">30 minutes ago</string>
     <string name="calendar_one_hour_ago">1 hour ago</string>
     <string name="calendar_two_hours_ago">2 hour ago</string>
@@ -839,6 +850,7 @@
     <string name="calendar_a_week_ago">1 week ago</string>
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
+    <string name="calendar_no_alert">No reminder</string>
 
     <!-- 通用 -->
     <string name="save">Save</string>
@@ -1172,8 +1184,7 @@
     <string name="emm_keyboard_number">Number</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">Letter</string>
-    <string name="emm_secure_keyboard">Safety Keyboard Safe Mode</string>
-    <string name="emm_secure_keyboard_normal">Safety Keyboard Common Mode</string>
+    <string name="emm_secure_keyboard">%1$s Safety Keyboard</string>
     <string name="emm_keyboard_space">space</string>
 
     <string name="welcome_to">Welcome to </string>

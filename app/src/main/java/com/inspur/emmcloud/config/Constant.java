@@ -104,6 +104,9 @@ public class Constant {
     public static final String EVENTBUS_TAG_MAIL_LOGIN_SUCCESS = "tag_mail_login_success";
     public static final String EVENTBUS_TAG_MAIL_LOGIN_FAIL = "tag_mail_login_fail";
     public static final String EVENTBUS_TAG_MAIL_REMOVE = "tag_mail_remove";
+    public static final String EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED = "tag_schedule_meeting_data_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_DATA_CHANGED = "tag_schedule_calendar_data_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED = "tag_schedule_task_data_changed";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
