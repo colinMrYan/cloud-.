@@ -34,13 +34,12 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_calendar_setting)
 public class CalendarSettingActivity extends BaseActivity {
-
     @ViewInject(R.id.listview_list_calendars)
     private ScrollViewWithListView calendarsListView;
-    @ViewInject(R.id.iv_list_view_tip)
-    private ImageView listImageView;
-    @ViewInject(R.id.iv_day_view_tip)
-    private ImageView dayImageView;
+    @ViewInject(R.id.iv_list_view_select)
+    private ImageView listSelectImageView;
+    @ViewInject(R.id.iv_day_view_select)
+    private ImageView daySelectImageView;
 
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
@@ -52,8 +51,8 @@ public class CalendarSettingActivity extends BaseActivity {
         String viewDisplayType = PreferencesUtils.getString(
                 getApplicationContext(), Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
         boolean isListView = viewDisplayType.equals(Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
-        listImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
-        dayImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
+        listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
+        daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
         calendarsList = MyCalendarCacheUtils.getAllMyCalendarList(this);
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
@@ -67,17 +66,17 @@ public class CalendarSettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_list_view:
-                if (listImageView.getVisibility() != View.VISIBLE) {
-                    listImageView.setVisibility(View.VISIBLE);
-                    dayImageView.setVisibility(View.INVISIBLE);
+                if (listSelectImageView.getVisibility() != View.VISIBLE) {
+                    listSelectImageView.setVisibility(View.VISIBLE);
+                    daySelectImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
                             Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
                 }
                 break;
             case R.id.rl_day_view:
-                if (dayImageView.getVisibility() != View.VISIBLE) {
-                    dayImageView.setVisibility(View.VISIBLE);
-                    listImageView.setVisibility(View.INVISIBLE);
+                if (daySelectImageView.getVisibility() != View.VISIBLE) {
+                    daySelectImageView.setVisibility(View.VISIBLE);
+                    listSelectImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
                             Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_DAYVIEW);
                 }
@@ -103,9 +102,9 @@ public class CalendarSettingActivity extends BaseActivity {
     }
 
     private class CalendarHolder {
-        View calendarStyleColor;
+        View calendarStyleColorView;
         SwitchCompat calendarSwitch;
-        TextView calendarName;
+        TextView calendarNameText;
     }
 
     private class CalendarAdapter extends BaseAdapter {
@@ -138,8 +137,8 @@ public class CalendarSettingActivity extends BaseActivity {
             if (null == convertView) {
                 v = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
                 calendarHolder = new CalendarHolder();
-                calendarHolder.calendarName = v.findViewById(R.id.tv_calendar_name);
-                calendarHolder.calendarStyleColor = v.findViewById(R.id.iv_calendar_color_hint);
+                calendarHolder.calendarNameText = v.findViewById(R.id.tv_calendar_name);
+                calendarHolder.calendarStyleColorView = v.findViewById(R.id.iv_calendar_color_hint);
                 calendarHolder.calendarSwitch = v.findViewById(R.id.switch_view_calendar_state);
                 v.setTag(calendarHolder);
             } else {
@@ -158,8 +157,8 @@ public class CalendarSettingActivity extends BaseActivity {
                     }
                 }
             });
-            calendarHolder.calendarStyleColor.setBackgroundResource(CalendarColorUtils.getColorCircleImage(calendar.getColor()));
-            calendarHolder.calendarName.setText(calendar.getName());
+            calendarHolder.calendarStyleColorView.setBackgroundResource(CalendarColorUtils.getColorCircleImage(calendar.getColor()));
+            calendarHolder.calendarNameText.setText(calendar.getName());
             return v;
         }
     }
