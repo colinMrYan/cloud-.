@@ -113,7 +113,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.item_calendar_type_select, null);
+            convertView = vi.inflate(R.layout.schedule_calendar_type_select, null);
             TextView textView = convertView.findViewById(R.id.tv_calendar_name);
             MyCalendar calendar = calendarList.get(position);
             ImageView calSelectImg = convertView.findViewById(R.id.iv_calendar_select);

@@ -81,6 +81,13 @@
                 android:paddingLeft="16dp"
                 android:dividerHeight="0.5px"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_marginLeft="16dp"
+                android:layout_below="@+id/listview_list_calendars"
+                android:background="@color/color_list_divider"/>
+
             <TextView
                 android:id="@+id/tv_view"
                 android:layout_width="wrap_content"
@@ -127,7 +134,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/rl_list_view"
-                android:background="#DDDDDD" />
+                android:background="#DDDDDD"
+                android:layout_marginLeft="16dp"/>
 
             <RelativeLayout
                 android:id="@+id/rl_day_view"
@@ -164,7 +172,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/rl_day_view"
-                android:background="#DDDDDD" />
+                android:background="#DDDDDD"
+                android:layout_marginLeft="16dp"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

@@ -12,10 +12,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -47,15 +44,14 @@ public class CalendarSettingActivity extends BaseActivity {
 
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
-    private WorkAPIService workAPIService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         String viewDisplayType = PreferencesUtils.getString(
-                getApplicationContext(), Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, "listview");
-        boolean isListView = viewDisplayType.equals("listview");
+                getApplicationContext(), Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
+        boolean isListView = viewDisplayType.equals(Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
         listImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         dayImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
         calendarsList = MyCalendarCacheUtils.getAllMyCalendarList(this);
@@ -75,7 +71,7 @@ public class CalendarSettingActivity extends BaseActivity {
                     listImageView.setVisibility(View.VISIBLE);
                     dayImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
-                            "viewDisplayType", "listview");
+                            Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
                 }
                 break;
             case R.id.rl_day_view:
@@ -83,7 +79,7 @@ public class CalendarSettingActivity extends BaseActivity {
                     dayImageView.setVisibility(View.VISIBLE);
                     listImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
-                            "viewDisplayType", "dayview");
+                            Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_DAYVIEW);
                 }
                 break;
             default:
@@ -140,7 +136,7 @@ public class CalendarSettingActivity extends BaseActivity {
             final MyCalendar calendar = calendarsList.get(position);
 
             if (null == convertView) {
-                v = View.inflate(CalendarSettingActivity.this, R.layout.item_calendar_list, null);
+                v = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
                 calendarHolder = new CalendarHolder();
                 calendarHolder.calendarName = v.findViewById(R.id.tv_calendar_name);
                 calendarHolder.calendarStyleColor = v.findViewById(R.id.iv_calendar_color_hint);
@@ -165,22 +161,6 @@ public class CalendarSettingActivity extends BaseActivity {
             calendarHolder.calendarStyleColor.setBackgroundResource(CalendarColorUtils.getColorCircleImage(calendar.getColor()));
             calendarHolder.calendarName.setText(calendar.getName());
             return v;
-        }
-    }
-
-    class webService extends APIInterfaceInstance {
-        @Override
-        public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
-            super.returnMyCalendarSuccess(getMyCalendarResult);
-            List<MyCalendar> calendarList = getMyCalendarResult
-                    .getCalendarList();
-            MyCalendarCacheUtils
-                    .saveMyCalendarList(CalendarSettingActivity.this, calendarList);
-        }
-
-        @Override
-        public void returnMyCalendarFail(String error, int errorCode) {
-            super.returnMyCalendarFail(error, errorCode);
         }
     }
 

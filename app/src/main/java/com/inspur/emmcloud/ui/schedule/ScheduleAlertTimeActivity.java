@@ -129,7 +129,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.item_alert_time, null);
+            convertView = vi.inflate(R.layout.schedule_alert_time, null);
             TextView timeText = convertView
                     .findViewById(R.id.tv_alert_time);
             ImageView selectImg = convertView
