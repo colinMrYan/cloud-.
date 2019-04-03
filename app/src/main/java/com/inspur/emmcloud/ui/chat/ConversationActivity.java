@@ -440,7 +440,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
-                CardClick(ConversationActivity.this, view, uiMessage);
+                CardClickOperation(ConversationActivity.this, view, uiMessage);
             }
         });
         adapter.setMessageList(uiMessageList);
@@ -1480,7 +1480,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * Card 点击事件 及处理
      */
-    private void CardClick(final Context context, View view, final UIMessage uiMessage) {
+    private void CardClickOperation(final Context context, View view, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         int messageSendStatus = uiMessage.getSendStatus();
         Bundle bundle = new Bundle();
