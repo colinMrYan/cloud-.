@@ -437,7 +437,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
                 backUiMessage = uiMessage;
                 int[] operationsId= getCardLongClickOperations(uiMessage);
-                showLongClickOperationsDialog(operationsId,ConversationActivity.this,uiMessage);
+                if(operationsId.length>0){
+                 showLongClickOperationsDialog(operationsId,ConversationActivity.this,uiMessage);
+                }
                  return true;
             }
 
@@ -1568,9 +1570,9 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 长按事件处理
      */
     private void showLongClickOperationsDialog(final int[] operationsId, final Context context, final UIMessage uiMessage) {
-        final String[] operations = new String[0];
+        final String[] operations = new String[operationsId.length];
         for(int i=0;i<operationsId.length;i++){
-            String operation = getResources().getString(operationsId[i]);
+            String operation = context.getResources().getString(operationsId[i]);
             operations[i]=operation;
         }
         new QMUIDialog.MenuDialogBuilder(context)
@@ -1579,27 +1581,26 @@ public class ConversationActivity extends ConversationBaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
                         Message message = uiMessage.getMessage();
-                        int intWhich = getLongClickItemId(operations[which]);
                         SpannableString spannableString;
-                        switch (intWhich) {
-                            case LONG_CLICK_COPY:
+                        switch (operationsId[which]) {
+                            case R.string.chat_long_click_copy:
                                 String text = message.getMsgContentTextPlain().getText();
                                 spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
                                 text = spannableString.toString();
                                 if (!StringUtils.isBlank(text))
                                     copyToClipboard(context, text);
                                 break;
-                            case LONG_CLICK_TRANSMIT:
+                            case R.string.chat_long_click_transmit:
                                 shareMessageToFrinds(context);
                                 break;
-                            case LONG_CLICK_SCHEDULE:
+                            case R.string.chat_long_click_schedule:
                                 content = message.getMsgContentTextPlain().getText();
                                 spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, content, message.getMsgContentTextPlain().getMentionsMap());
                                 content = spannableString.toString();
                                 if (!StringUtils.isBlank(content))
                                     addTextToSchedule(content);
                                 break;
-                            case LONG_CLICK_COPY_TEXT:
+                            case R.string.chat_long_click_copy_text:
                                 content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
                                 if (!StringUtils.isBlank(content))
                                     copyToClipboard(context, content);
@@ -1611,20 +1612,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 .create(R.style.QMUI_Dialog).show();
     }
 
-    /**
-     * 匹配长按项ID
-     */
-    private int getLongClickItemId(String itemName) {
-        if (itemName.equals(getResources().getString(R.string.chat_long_click_copy)))
-            return LONG_CLICK_COPY;
-        if (itemName.equals(getResources().getString(R.string.chat_long_click_copy_text)))
-            return LONG_CLICK_COPY_TEXT;
-        if (itemName.equals(getResources().getString(R.string.chat_long_click_transmit)))
-            return LONG_CLICK_TRANSMIT;
-        if (itemName.equals(getResources().getString(R.string.chat_long_click_schedule)))
-            return LONG_CLICK_SCHEDULE;
-        return 0;
-    }
 
     /**
      * 文本复制到剪切板
@@ -1640,7 +1627,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void addTextToSchedule(String content) {
         Intent intent = new Intent();
-        intent.putExtra("message", content);
+        intent.putExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE, content);
         intent.setClass(ConversationActivity.this, CalEventAddActivity.class);
         startActivity(intent);
     }
