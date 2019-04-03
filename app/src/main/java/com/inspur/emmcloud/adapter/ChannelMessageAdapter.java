@@ -298,7 +298,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 创建一个回调接口
      */
     public interface MyItemClickListener {
-        void onItemClick(View view, int position);
 
         boolean onCardItemLongClick(View view, UIMessage uiMessage);
 
@@ -352,10 +351,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
          */
         @Override
         public void onClick(View v) {
-            if (mListener != null) {
-                mListener.onItemClick(v, getAdapterPosition());
-            }
-
         }
 
         public void onMessageResendClick(UIMessage uiMessage) {

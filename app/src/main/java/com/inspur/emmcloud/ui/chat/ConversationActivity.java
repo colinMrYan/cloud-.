@@ -415,16 +415,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                UIMessage uiMessage = uiMessageList.get(position);
-                int messageSendStatus = uiMessage.getSendStatus();
-                //当消息处于发送中状态时无法点击
-                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
-                    openMessage(uiMessage.getMessage());
-                }
-            }
-
-            @Override
             public void onMessageResend(UIMessage uiMessage, View view) {
                 if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
                     showResendMessageDlg(uiMessage, view);
@@ -446,7 +436,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
                 backUiMessage = uiMessage;
-                return CardLongClick(ConversationActivity.this, uiMessage);
+                int[] operationsId= getCardLongClickOperations(uiMessage);
+                showLongClickOperationsDialog(operationsId,ConversationActivity.this,uiMessage);
+                 return true;
             }
 
             @Override
@@ -600,46 +592,6 @@ public class ConversationActivity extends ConversationBaseActivity {
             WSAPIService.getInstance().sendChatMediaVoiceMsg(message);
         }
     }
-
-    /**
-     * 打开消息
-     * 未发送成功的不可调用此方法，不会根据消息id获取评论
-     *
-     * @param message
-     */
-    private void openMessage(Message message) {
-        String msgType = message.getType();
-        Bundle bundle = new Bundle();
-        switch (msgType) {
-            case "attachment/card":
-                String uid = message.getMsgContentAttachmentCard().getUid();
-                bundle.putString("uid", uid);
-                IntentUtils.startActivity(ConversationActivity.this,
-                        UserInfoActivity.class, bundle);
-                break;
-            case "file/regular-file":
-            case "media/image":
-                bundle.putString("mid", message.getId());
-                bundle.putString(EXTRA_CID, message.getChannel());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        ChannelMessageDetailActivity.class, bundle);
-                break;
-            case "comment/text-plain":
-                String mid = message.getMsgContentComment().getMessage();
-                bundle.putString("mid", mid);
-                bundle.putString(EXTRA_CID, message.getChannel());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        ChannelMessageDetailActivity.class, bundle);
-                break;
-            case "extended/links":
-                String url = message.getMsgContentExtendedLinks().getUrl();
-                UriUtils.openUrl(ConversationActivity.this, url);
-                break;
-            default:
-                break;
-        }
-    }
-
 
     private void showMeidaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final QMUILoadingView downloadLoadingView) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
@@ -1496,22 +1448,15 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
-     * Card 长按事件弹出dialog
+     * Card 长按事件弹出dialogCard LongClick
      */
-    private boolean CardLongClick(final Context context, final UIMessage uiMessage) {
+    private int[] getCardLongClickOperations(final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         String type = message.getType();
-        boolean isConsume = false;
-        String copy = getResources().getString(R.string.chat_long_click_copy);
-        String copyText = getResources().getString(R.string.chat_long_click_copy_text);
-        String transmit = getResources().getString(R.string.chat_long_click_transmit);
-        String schedule = getResources().getString(R.string.chat_long_click_schedule);
-        final String[] items;
+        int[] items = new int[0];
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                items = new String[]{copy, transmit, schedule};
-                LongClickDialog(items, context, uiMessage);
-                isConsume = true;
+                items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 break;
@@ -1528,13 +1473,11 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
-                items = new String[]{copyText};
-                LongClickDialog(items, context, uiMessage);
                 break;
             default:
                 break;
         }
-        return isConsume;
+        return items;
     }
 
     /**
@@ -1543,8 +1486,15 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void CardClick(final Context context, View view, final UIMessage uiMessage) {
         Message message = uiMessage.getMessage();
         int messageSendStatus = uiMessage.getSendStatus();
+        Bundle bundle = new Bundle();
         String type = message.getType();
         switch (type) {
+            case Message.MESSAGE_TYPE_ATTACHMENT_CARD:
+                String uid = message.getMsgContentAttachmentCard().getUid();
+                bundle.putString("uid", uid);
+                IntentUtils.startActivity(ConversationActivity.this,
+                        UserInfoActivity.class, bundle);
+                break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
@@ -1590,13 +1540,18 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
-                    openMessage(uiMessage.getMessage());
+                    String mid = message.getMsgContentComment().getMessage();
+                    bundle.putString("mid", mid);
+                    bundle.putString(EXTRA_CID, message.getChannel());
+                    IntentUtils.startActivity(ConversationActivity.this,
+                            ChannelMessageDetailActivity.class, bundle);
                 }
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
-                    openMessage(uiMessage.getMessage());
+                    String url = message.getMsgContentExtendedLinks().getUrl();
+                    UriUtils.openUrl(ConversationActivity.this, url);
                 }
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
@@ -1612,14 +1567,19 @@ public class ConversationActivity extends ConversationBaseActivity {
     /**
      * 长按事件处理
      */
-    private void LongClickDialog(final String[] items, final Context context, final UIMessage uiMessage) {
+    private void showLongClickOperationsDialog(final int[] operationsId, final Context context, final UIMessage uiMessage) {
+        final String[] operations = new String[0];
+        for(int i=0;i<operationsId.length;i++){
+            String operation = getResources().getString(operationsId[i]);
+            operations[i]=operation;
+        }
         new QMUIDialog.MenuDialogBuilder(context)
-                .addItems(items, new DialogInterface.OnClickListener() {
+                .addItems(operations, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
                         Message message = uiMessage.getMessage();
-                        int intWhich = getLongClickItemId(items[which]);
+                        int intWhich = getLongClickItemId(operations[which]);
                         SpannableString spannableString;
                         switch (intWhich) {
                             case LONG_CLICK_COPY:
