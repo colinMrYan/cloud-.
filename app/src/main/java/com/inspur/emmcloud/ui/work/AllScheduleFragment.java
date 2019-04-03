@@ -21,6 +21,7 @@ import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class AllScheduleFragment extends Fragment{
     private View rootView;
     private TabLayout tabLayoutSchedule;
     private PopupWindow popupWindow;
-    private ViewPager allScheduleFragmentViewPager;
+    private NoScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
     private Fragment meetingFragment;
     private Fragment missionFragment;
@@ -136,6 +137,7 @@ public class AllScheduleFragment extends Fragment{
         });
 
         allScheduleFragmentViewPager = rootView.findViewById(R.id.all_schedule_viewpager);
+        allScheduleFragmentViewPager.setNoScroll(true);
         allScheduleFragmentViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
