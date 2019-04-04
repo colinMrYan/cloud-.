@@ -17,13 +17,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllScheduleFragmentAdapter;
-import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
 
@@ -41,7 +41,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
     private View rootView;
     private TabLayout tabLayout;
     private ImageButton backToToDayImgBtn;
-    private ViewPager allScheduleFragmentViewPager;
+    private CustomScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
     private Fragment meetingFragment;
     private Fragment taskFragment;
@@ -83,7 +83,8 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
         rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         backToToDayImgBtn = rootView.findViewById(R.id.ibt_back_to_today);
         backToToDayImgBtn.setOnClickListener(this);
-        allScheduleFragmentViewPager = rootView.findViewById(R.id.all_schedule_viewpager);
+        allScheduleFragmentViewPager = rootView.findViewById(R.id.view_pager_all_schedule);
+        allScheduleFragmentViewPager.setScrollable(false);
         allScheduleFragmentViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -105,8 +106,8 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
-        meetingFragment = new NotSupportFragment();
-        taskFragment = new NotSupportFragment();
+        meetingFragment = new ScheduleFragment();
+        taskFragment = new ScheduleFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
         list.add(meetingFragment);

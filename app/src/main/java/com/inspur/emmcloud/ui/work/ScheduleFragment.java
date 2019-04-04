@@ -156,12 +156,6 @@ public class ScheduleFragment extends BaseFragment implements
         });
         onCalendarSelect(java.util.Calendar.getInstance(),false);
         initData();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                calendarDayView.setEventList(getEventList());
-//            }
-//        }, 200);
 
     }
 
