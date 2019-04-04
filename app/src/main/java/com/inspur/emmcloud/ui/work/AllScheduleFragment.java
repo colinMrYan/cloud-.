@@ -39,8 +39,8 @@ public class AllScheduleFragment extends Fragment{
     private PopupWindow popupWindow;
     private NoScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
-    private Fragment meetingFragment;
-    private Fragment missionFragment;
+    private ScheduleFragment meetingFragment;
+    private AllTaskListFragment allTaskFragment;
 
     private View.OnClickListener onViewClickListener = new View.OnClickListener() {
 
@@ -160,11 +160,11 @@ public class AllScheduleFragment extends Fragment{
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
         meetingFragment = new ScheduleFragment();
-        missionFragment = new AllTaskListFragment();
+        allTaskFragment = new AllTaskListFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
         list.add(meetingFragment);
-        list.add(missionFragment);
+        list.add(allTaskFragment);
 
         //初始化adapter
         AllScheduleFragmentAdapter adapter = new AllScheduleFragmentAdapter(getActivity().getSupportFragmentManager(), list);

@@ -14,7 +14,7 @@
         android:scaleType="fitXY"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:src="@drawable/tuesday" />
+        android:src="@drawable/ic_task_item" />
 
     <LinearLayout
         android:id="@+id/ll_content"

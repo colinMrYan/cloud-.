@@ -72,7 +72,7 @@ public class AllTaskListFragment extends Fragment{
             x.view().inject(this, this.getView());
         }
         initViews();
-        LogUtils.YfcDebug("选中的位置："+tabLayoutSchedule.getSelectedTabPosition());
+        LogUtils.YfcDebug("Tab个数："+tabLayoutSchedule.getTabCount());
         LogUtils.YfcDebug("切到AllTaskListFragment2222222222");
     }
 
@@ -168,7 +168,6 @@ public class AllTaskListFragment extends Fragment{
         AllScheduleFragmentAdapter adapter = new AllScheduleFragmentAdapter(getActivity().getSupportFragmentManager(), list);
         //将适配器和ViewPager结合
         taskViewPager.setAdapter(adapter);
-
     }
 
     /**

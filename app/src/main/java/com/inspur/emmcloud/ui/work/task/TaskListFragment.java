@@ -94,7 +94,7 @@ public class TaskListFragment extends Fragment {
     }
 
     public void refeshView(){
-        initViews();
+        getCurrentTaskList();
     }
 
 
@@ -123,11 +123,11 @@ public class TaskListFragment extends Fragment {
         nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
         if (NetUtils.isNetworkConnected(getActivity())) {
             if (nowIndex == AllTaskListFragment.MY_MINE) {
-                getMineTasks(false);
+                getMineTasks(true);
             } else if (nowIndex == AllTaskListFragment.MY_INVOLVED) {
-                getInvolvedTasks(false);
+                getInvolvedTasks(true);
             } else if (nowIndex == AllTaskListFragment.MY_FOCUSED) {
-                getFocusedTasks(false);
+                getFocusedTasks(true);
             }
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -269,6 +269,30 @@ public class TaskListFragment extends Fragment {
             return true;
         }
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LogUtils.YfcDebug("TaskListFragment  onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LogUtils.YfcDebug("TaskListFragment  onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.YfcDebug("TaskListFragment onDestroy");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LogUtils.YfcDebug("TaskListFragment onDestroyView");
     }
 
     /**
