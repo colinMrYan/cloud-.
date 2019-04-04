@@ -37,7 +37,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     /**
      * 字体大小
      */
-    static final int TEXT_SIZE = 14;
+    static final int TEXT_SIZE = 15;
     /**
      * 当前月份日期的笔
      */
@@ -148,14 +148,14 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     private void initPaint(Context context) {
         mCurMonthTextPaint.setAntiAlias(true);
         mCurMonthTextPaint.setTextAlign(Paint.Align.CENTER);
-        mCurMonthTextPaint.setColor(0xFF111111);
-        mCurMonthTextPaint.setFakeBoldText(true);
+        mCurMonthTextPaint.setColor(0x333333);
+        mCurMonthTextPaint.setFakeBoldText(false);
         mCurMonthTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mOtherMonthTextPaint.setAntiAlias(true);
         mOtherMonthTextPaint.setTextAlign(Paint.Align.CENTER);
         mOtherMonthTextPaint.setColor(0xFFe1e1e1);
-        mOtherMonthTextPaint.setFakeBoldText(true);
+        mOtherMonthTextPaint.setFakeBoldText(false);
         mOtherMonthTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mCurMonthLunarTextPaint.setAntiAlias(true);
@@ -175,14 +175,14 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mSchemeTextPaint.setStyle(Paint.Style.FILL);
         mSchemeTextPaint.setTextAlign(Paint.Align.CENTER);
         mSchemeTextPaint.setColor(0xffed5353);
-        mSchemeTextPaint.setFakeBoldText(true);
+        mSchemeTextPaint.setFakeBoldText(false);
         mSchemeTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mSelectTextPaint.setAntiAlias(true);
         mSelectTextPaint.setStyle(Paint.Style.FILL);
         mSelectTextPaint.setTextAlign(Paint.Align.CENTER);
         mSelectTextPaint.setColor(0xffed5353);
-        mSelectTextPaint.setFakeBoldText(true);
+        mSelectTextPaint.setFakeBoldText(false);
         mSelectTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mSchemePaint.setAntiAlias(true);
@@ -193,13 +193,13 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mCurDayTextPaint.setAntiAlias(true);
         mCurDayTextPaint.setTextAlign(Paint.Align.CENTER);
         mCurDayTextPaint.setColor(Color.RED);
-        mCurDayTextPaint.setFakeBoldText(true);
+        mCurDayTextPaint.setFakeBoldText(false);
         mCurDayTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mCurDayLunarTextPaint.setAntiAlias(true);
         mCurDayLunarTextPaint.setTextAlign(Paint.Align.CENTER);
         mCurDayLunarTextPaint.setColor(Color.RED);
-        mCurDayLunarTextPaint.setFakeBoldText(true);
+        mCurDayLunarTextPaint.setFakeBoldText(false);
         mCurDayLunarTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mSelectedPaint.setAntiAlias(true);

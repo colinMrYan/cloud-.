@@ -36,9 +36,8 @@ public final class DefaultMonthView extends MonthView {
         super(context);
 
         mTextPaint.setTextSize(CalendarUtil.dipToPx(context, 8));
-        mTextPaint.setColor(0xffFFFFFF);
+        mTextPaint.setColor(0xff36A5F6);
         mTextPaint.setAntiAlias(true);
-        mTextPaint.setFakeBoldText(true);
 
         mSchemeBasicPaint.setAntiAlias(true);
         mSchemeBasicPaint.setStyle(Paint.Style.FILL);

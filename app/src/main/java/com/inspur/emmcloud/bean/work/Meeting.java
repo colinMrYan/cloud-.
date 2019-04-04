@@ -22,14 +22,12 @@ public class Meeting implements Serializable, Comparator {
     //	private JSONArray participantArray;
     private String alert;
     private String notice;
-
     private String organizer = "";
     private String attendant = "";
     private String location = "";
     private ArrayList<Room> rooms = new ArrayList<Room>();
     private ArrayList<String> participants = new ArrayList<String>();
     private String bookDate = "";
-
     public Meeting() {
 
     }
@@ -206,16 +204,55 @@ public class Meeting implements Serializable, Comparator {
         this.location = location;
     }
 
+    public Calendar getFromCalendar(){
+        return TimeUtils.timeString2Calendar(from);
+    }
 
-    public List<Event> MeetingList2EventList(List<Meeting> meetingList){
+    public Calendar getToCalendar(){
+        return TimeUtils.timeString2Calendar(to);
+    }
+
+//    public static List<Event> MeetingList2EventList(List<Meeting> meetingList){
+//        List<Event> eventList = new ArrayList<>();
+//        for (Meeting meeting:meetingList){
+//            Calendar eventStartTime = TimeUtils.timeString2Calendar(meeting.getFrom());
+//            Calendar eventEndTime = TimeUtils.timeString2Calendar(meeting.getTo());
+//            Event event = new Event(meeting.getMeetingId(),Event.TYPE_MEETING,meeting.getTopic(),meeting.getLocation(),eventStartTime,eventEndTime);
+//            eventList.add(event);
+//        }
+//        return eventList;
+//    }
+
+    public static List<Event> MeetingList2EventList(List<Meeting> meetingList,Calendar selectCalendar){
         List<Event> eventList = new ArrayList<>();
         for (Meeting meeting:meetingList){
-            Calendar eventStartTime = TimeUtils.timeString2Calendar(from);
-            Calendar eventEndTime = TimeUtils.timeString2Calendar(to);
-            Event event = new Event(meeting.getMeetingId(),Event.TYPE_MEETING,topic,location,eventStartTime,eventEndTime);
-            eventList.add(event);
+           if (TimeUtils.isContainTargentCalendarDay(selectCalendar,meeting.getFromCalendar(),meeting.getToCalendar())){
+               Calendar eventStartTime = meeting.getFromCalendar();
+               Calendar eventEndTime = meeting.getToCalendar();
+               Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
+               Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
+               if (eventStartTime.before(dayBeginCalendar)){
+                   eventStartTime = dayBeginCalendar;
+               }
+               if (eventEndTime.after(dayEndCalendar)){
+                   eventEndTime = dayEndCalendar;
+               }
+               Event event = new Event(meeting.getMeetingId(),Event.TYPE_MEETING,meeting.getTopic(),meeting.getLocation(),eventStartTime,eventEndTime);
+               if (!eventStartTime.after(dayBeginCalendar) && !eventEndTime.before(dayEndCalendar)){
+                   event.setAllDay(true);
+               }
+               eventList.add(event);
+           }
         }
         return eventList;
+    }
+
+
+    public Event Meeting2Event(){
+        Calendar eventStartTime = getFromCalendar();
+        Calendar eventEndTime = getToCalendar();
+        Event event = new Event(getMeetingId(),Event.TYPE_MEETING,topic,location,eventStartTime,eventEndTime);
+        return event;
     }
 
     @Override

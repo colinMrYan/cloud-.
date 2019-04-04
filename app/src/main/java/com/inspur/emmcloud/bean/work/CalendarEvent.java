@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.work;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
@@ -20,81 +21,65 @@ public class CalendarEvent implements Serializable, Comparator {
     private String title;
     private String owner;
     private String location;
-    private boolean allday;
+    private boolean isAllDay;
     private Calendar startDate;
     private Calendar endDate;
     private MyCalendar calendar;
-    private long creationDateLong;
 
     public CalendarEvent() {
 
     }
 
     public CalendarEvent(JSONObject obj) {
-        try {
-            if (obj.has("id")) {
-                id = obj.getString("id");
-            }
-            if (obj.has("title")) {
-                title = obj.getString("title");
-            }
-            if (obj.has("creationDate")) {
-                String creationDateStr = obj.getString("creationDate");
-                if (!creationDateStr.equals("null")) {
-                    creationDateLong = Long.parseLong(creationDateStr);
-                    Long creatDateLong = obj.getLong("creationDate");
-                    creationDate = TimeUtils.timeLong2UTCCalendar(creatDateLong);
-                }
-
-            }
-            if (obj.has("lastUpdate")) {
-                String lastUpdateStr = obj.getString("lastUpdate");
-                if (!lastUpdateStr.equals("null")) {
-                    Long lastUpdateLong = obj.getLong("lastUpdate");
-                    lastUpdate = TimeUtils.timeLong2UTCCalendar(lastUpdateLong);
-                }
-            }
-            if (obj.has("startDate")) {
-                String startDateStr = obj.getString("startDate");
-                if (!startDateStr.equals("null")) {
-                    Long startDateLong = obj.getLong("startDate");
-                    startDate = TimeUtils.timeLong2UTCCalendar(startDateLong);
-                }
-
-            }
-            if (obj.has("endDate")) {
-                String endDateStr = obj.getString("endDate");
-                if (!endDateStr.equals("null")) {
-                    Long endDateLong = obj.getLong("endDate");
-                    endDate = TimeUtils.timeLong2UTCCalendar(endDateLong);
-                }
-            }
-            if (obj.has("state")) {
-                state = obj.getString("state");
-            }
-            if (obj.has("owner")) {
-                owner = obj.getString("owner");
-            }
-            if (obj.has("location")) {
-                location = obj.getString("location");
-            }
-            if (obj.has("allday")) {
-                allday = obj.getBoolean("allday");
-            }
-            if (obj.has("id")) {
-                id = obj.getString("id");
-            }
-
-            if (obj.has("calendar")) {
-                JSONObject calendarObj = obj.getJSONObject("calendar");
-                calendar = new MyCalendar(calendarObj);
-            }
-
-
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
+        id = JSONUtils.getString(obj, "id", "");
+        title = JSONUtils.getString(obj, "title", "");
+        long creationDateLong = JSONUtils.getLong(obj, "creationDate", 0L);
+        creationDate = TimeUtils.timeLong2Calendar(creationDateLong);
+        Long lastUpdateLong = JSONUtils.getLong(obj, "lastUpdate", 0L);
+        lastUpdate = TimeUtils.timeLong2Calendar(lastUpdateLong);
+        isAllDay = JSONUtils.getBoolean(obj,"allday",false);
+        Long startDateLong = JSONUtils.getLong(obj, "startDate", 0L);
+        startDate = TimeUtils.timeLong2Calendar(startDateLong);
+        if (isAllDay){
+            startDate = TimeUtils.getDayBeginCalendar(startDate);
         }
+        Long endDateLong = JSONUtils.getLong(obj, "endDate", 0L);
+        if (endDateLong == 0){
+            endDate = TimeUtils.getDayEndCalendar(startDate);
+        }else if(isAllDay){
+            endDate = TimeUtils.timeLong2Calendar(endDateLong);
+            endDate= TimeUtils.getDayEndCalendar(endDate);
+        }
+        endDate = TimeUtils.timeLong2Calendar(endDateLong);
+        state = JSONUtils.getString(obj, "state", "");
+        owner = JSONUtils.getString(obj, "owner", "");
+        location = JSONUtils.getString(obj, "location", "");
+        title = JSONUtils.getString(obj, "title", "");
+        JSONObject calendarObj = JSONUtils.getJSONObject(obj, "calendar", new JSONObject());
+        calendar = new MyCalendar(calendarObj);
+    }
+
+
+    public static List<Event> calendarEvent2EventList(List<CalendarEvent> calendarEventList, Calendar selectCalendar) {
+        List<Event> eventList = new ArrayList<>();
+        for (CalendarEvent calendarEvent : calendarEventList) {
+            if (TimeUtils.isContainTargentCalendarDay(selectCalendar, calendarEvent.getStartDate(), calendarEvent.getEndDate())) {
+                Calendar eventStartTime =  calendarEvent.getStartDate();
+                Calendar eventEndTime = calendarEvent.getEndDate();
+                Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
+                Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
+                if (eventStartTime.before(dayBeginCalendar)) {
+                    eventStartTime = dayBeginCalendar;
+                }
+                if (eventEndTime.after(dayEndCalendar)) {
+                    eventEndTime = dayEndCalendar;
+                }
+                Event event = new Event(calendarEvent.getId(), Event.TYPE_CALENDAR, calendarEvent.getTitle(), "", eventStartTime, eventEndTime);
+                    event.setAllDay(calendarEvent.getAllDay());
+                eventList.add(event);
+            }
+        }
+        return eventList;
     }
 
     public MyCalendar getCalendar() {
@@ -167,35 +152,19 @@ public class CalendarEvent implements Serializable, Comparator {
         this.location = location;
     }
 
-    public boolean getAllday() {
-        return allday;
+    public boolean getAllDay() {
+        return isAllDay;
     }
 
-    public void setAllday(boolean allday) {
-        this.allday = allday;
+    public void setAllDay(boolean allDay) {
+        this.isAllDay = allDay;
     }
-
-    @JSONField(serialize = false)
-    public Calendar getLocalStartDate() {
-        return TimeUtils.UTCCalendar2LocalCalendar(startDate);
-    }
-
     public Calendar getStartDate() {
         return startDate;
     }
 
     public void setStartDate(Calendar startDate) {
         this.startDate = startDate;
-    }
-
-    @JSONField(serialize = false)
-    public Calendar getLocalEndDate() {
-        return TimeUtils.UTCCalendar2LocalCalendar(endDate);
-    }
-
-    @JSONField(serialize = false)
-    public long getCreationDateLong() {
-        return creationDateLong;
     }
 
     public Calendar getEndDate() {
@@ -207,10 +176,10 @@ public class CalendarEvent implements Serializable, Comparator {
     }
 
 
-    public List<Event> calendarEventList2EventList(List<CalendarEvent> calendarEventList){
+    public List<Event> calendarEventList2EventList(List<CalendarEvent> calendarEventList) {
         List<Event> eventList = new ArrayList<>();
-        for (CalendarEvent calendarEvent:calendarEventList){
-            Event event = new Event(calendarEvent.getId(),Event.TYPE_CALENDAR,title,"",startDate,endDate);
+        for (CalendarEvent calendarEvent : calendarEventList) {
+            Event event = new Event(calendarEvent.getId(), Event.TYPE_CALENDAR, title, "", startDate, endDate);
             eventList.add(event);
         }
         return eventList;

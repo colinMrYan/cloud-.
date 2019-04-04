@@ -50,8 +50,8 @@
 
 
     </RelativeLayout>
-    <com.inspur.emmcloud.widget.NoScrollViewPager
-        android:id="@+id/all_schedule_viewpager"
+    <com.inspur.emmcloud.widget.CustomScrollViewPager
+        android:id="@+id/view_pager_all_schedule"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 </LinearLayout>

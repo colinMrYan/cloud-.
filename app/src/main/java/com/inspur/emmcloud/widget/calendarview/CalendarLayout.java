@@ -302,7 +302,7 @@ public class CalendarLayout extends LinearLayout {
                     mLastY = y;
                     return false;
                 }
-                hideWeek(false);
+                hideWeek(true);
 
                 //向下滑动，并且contentView已经完全平移到底部
                 if (dy > 0 && mContentView.getTranslationY() + dy >= 0) {
