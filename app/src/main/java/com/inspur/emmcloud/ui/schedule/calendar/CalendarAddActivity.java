@@ -486,7 +486,7 @@ public class CalendarAddActivity extends BaseActivity {
     }
 
     /**
-     * 上传日历时间秒毫秒单位清零，allday 重设时间
+     * 上传日历时间秒毫秒单位清零矫正，allday 重设时间
      */
     private void correctedCalendarTime() {
         if (isAllDay) {
