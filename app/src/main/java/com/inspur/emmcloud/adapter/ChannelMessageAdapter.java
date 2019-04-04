@@ -201,6 +201,19 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
 
         holder.cardLayout.addView(cardContentView);
+        cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return mItemClickListener.onCardItemLongClick(view, uiMessage);
+            }
+        });
+        cardContentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mItemClickListener.onCardItemClick(view, uiMessage);
+            }
+        });
+
     }
 
     /**
@@ -285,7 +298,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 创建一个回调接口
      */
     public interface MyItemClickListener {
-        void onItemClick(View view, int position);
+
+        boolean onCardItemLongClick(View view, UIMessage uiMessage);
+
+        void onCardItemClick(View view, UIMessage uiMessage);
 
         void onMessageResend(UIMessage uiMessage, View view);
 
@@ -310,9 +326,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             super(view);
             //将全局的监听赋值给接口
             this.mListener = myItemClickListener;
-            itemView.setOnClickListener(this);
+
             cardLayout = (RelativeLayout) view
                     .findViewById(R.id.bll_card);
+            cardLayout.setOnClickListener(this);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
             senderPhotoImgLeft = (ImageView) view
@@ -334,10 +351,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
          */
         @Override
         public void onClick(View v) {
-            if (mListener != null) {
-                mListener.onItemClick(v, getAdapterPosition());
-            }
-
         }
 
         public void onMessageResendClick(UIMessage uiMessage) {

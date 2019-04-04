@@ -26,8 +26,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
-import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -59,7 +59,7 @@ public class MessionListActivity extends BaseActivity {
     private MessionListAdapter adapter;
     private WorkAPIService apiService;
     private LoadingDialog loadingDialog;
-    private ArrayList<TaskResult> taskList = new ArrayList<TaskResult>();
+    private ArrayList<Task> taskList = new ArrayList<Task>();
     private int nowIndex = 0;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout addLayout;
@@ -363,7 +363,7 @@ public class MessionListActivity extends BaseActivity {
      * @param chooseTagList
      * @return
      */
-    public ArrayList<TaskResult> handleTaskList(
+    public ArrayList<Task> handleTaskList(
             GetTaskListResult getTaskListResult, ArrayList<String> chooseTagList) {
         // String[] tags = chooseTags.split(":");
         if (chooseTagList.size() == 0) {
@@ -371,7 +371,7 @@ public class MessionListActivity extends BaseActivity {
             swipeRefreshLayout.setRefreshing(false);
             taskList = getTaskListResult.getTaskList();
         } else {
-            taskList = new ArrayList<TaskResult>();
+            taskList = new ArrayList<Task>();
             int taskSize = getTaskListResult.getTaskList().size();
             int chooseTagLength = chooseTagList.size();
             for (int i = 0; i < taskSize; i++) {
@@ -507,7 +507,7 @@ public class MessionListActivity extends BaseActivity {
                 loadingDialog.dismiss();
             }
             noResultText.setVisibility(View.GONE);
-            TaskResult taskResult = new TaskResult();
+            Task taskResult = new Task();
             taskResult.setTitle(messionAddEdit.getText().toString());
             taskResult.setId(getTaskAddResult.getId());
             taskResult.setOwner(PreferencesUtils.getString(

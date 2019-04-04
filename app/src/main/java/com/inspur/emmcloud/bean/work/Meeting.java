@@ -1,11 +1,17 @@
 package com.inspur.emmcloud.bean.work;
 
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.widget.calendardayview.Event;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.List;
 
 public class Meeting implements Serializable, Comparator {
     private String meetingId = "";
@@ -38,6 +44,7 @@ public class Meeting implements Serializable, Comparator {
             }
             if (obj.has("from")) {
                 this.from = obj.getString("from");
+                LogUtils.jasonDebug("from="+from);
             }
             if (obj.has("to")) {
                 this.to = obj.getString("to");
@@ -197,6 +204,18 @@ public class Meeting implements Serializable, Comparator {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+
+    public List<Event> MeetingList2EventList(List<Meeting> meetingList){
+        List<Event> eventList = new ArrayList<>();
+        for (Meeting meeting:meetingList){
+            Calendar eventStartTime = TimeUtils.timeString2Calendar(from);
+            Calendar eventEndTime = TimeUtils.timeString2Calendar(to);
+            Event event = new Event(meeting.getMeetingId(),Event.TYPE_MEETING,topic,location,eventStartTime,eventEndTime);
+            eventList.add(event);
+        }
+        return eventList;
     }
 
     @Override

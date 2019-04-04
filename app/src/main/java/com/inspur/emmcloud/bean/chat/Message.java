@@ -21,6 +21,7 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
     public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN = "comment/text-plain";
     public static final String MESSAGE_TYPE_EXTENDED_LINKS = "extended/links";
+    public static final String MESSAGE_TYPE_ATTACHMENT_CARD = "attachment/card";
     public static final int MESSAGE_SEND_ING = 0;
     public static final int MESSAGE_SEND_SUCCESS = 1;
     public static final int MESSAGE_SEND_FAIL = 2;

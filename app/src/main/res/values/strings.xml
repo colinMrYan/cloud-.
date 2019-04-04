@@ -319,6 +319,10 @@
     <string name="chat_file_open_fail_tip">没有找到对应的程序</string>
     <string name="chat_conversation_unread_count">%1$d条新消息</string>
     <string name="chat_group_message_search">查找聊天记录</string>
+    <string name="chat_long_click_copy">复制</string>
+    <string name="chat_long_click_transmit">转发</string>
+    <string name="chat_long_click_schedule">日程</string>
+    <string name="chat_long_click_copy_text">复制文字</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
@@ -358,6 +362,18 @@
     <string name="work_task_done">已完成的</string>
     <string name="work_task_all">全部</string>
     <string name="work_task_end">%1$s 截止</string>
+
+    <!-- 日程 -->
+    <string name="schedule_event_alert">日程提醒</string>
+    <string name="schedule_calendar">日历</string>
+    <string name="schedule_calendar_company">公司日历</string>
+    <string name="schedule_setting_list_view">列表视图</string>
+    <string name="schedule_setting_day_view">日视图</string>
+    <string name="schedule_setting_divide_group">分组</string>
+    <string name="schedule_setting_quarter">季度</string>
+    <string name="schedule_setting_month">月度</string>
+    <string name="schedule_setting_view">视图</string>
+
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
@@ -497,7 +513,7 @@
     <string name="file_rename">文件重命名</string>
     <string name="disk">网盘</string>
 
-     <!--Webex 会议-->
+    <!--Webex 会议-->
     <string name="webex_meeting_title">%1$s的会议</string>
     <string name="webex_input_invitee_emails_hint">添加参会人含后缀邮箱</string>
     <string name="webex_input_invitee_emails">请输入参会人的电子邮箱地址</string>
@@ -842,9 +858,11 @@
     <string name="monthly">每月</string>
     <string name="weekly">每周</string>
     <string name="every_day">每日</string>
-    <string name="calendar_when_event_occurs">事件发生时</string>
+    <string name="calendar_when_event_occurs">开始时</string>
     <string name="calendar_five_minite_ago">5分钟前</string>
+    <string name="calendar_ten_minite_ago">10分钟前</string>
     <string name="calendar_fifteen_minite_ago">15分钟前</string>
+    <string name="calendar_twenty_minite_ago">20分钟前</string>
     <string name="calendar_thirty_minite_ago">30分钟前</string>
     <string name="calendar_one_hour_ago">1小时前</string>
     <string name="calendar_two_hours_ago">2小时前</string>
@@ -852,7 +870,7 @@
     <string name="calendar_two_days_ago">2天前</string>
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加日历</string>
-
+    <string name="calendar_no_alert">无提醒</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>
@@ -1118,10 +1136,7 @@
     <string name="safe_center_unenable">未启用</string>
 
 
-
-
     <string name="qr_code_analysis_fail">二维码解析失败</string>
-
 
 
     //tag标签
@@ -1228,8 +1243,7 @@
     <string name="emm_keyboard_number">数字</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">字母</string>
-    <string name="emm_secure_keyboard">安全键盘安全模式</string>
-    <string name="emm_secure_keyboard_normal">安全键盘普通模式</string>
+    <string name="emm_secure_keyboard">%1$s安全键盘</string>
     <string name="emm_keyboard_space">空格</string>
 
 
@@ -1306,7 +1320,7 @@
         <item>三十</item>
     </string-array>
 
-    <string-array name="solar_festival" >
+    <string-array name="solar_festival">
         <item>0101元旦</item>
         <item>0214情人节</item>
         <item>0308妇女节</item>
@@ -1462,5 +1476,12 @@
 
     </string-array>
     <!--日历字符串资源结束-->
+
+    <string-array name="segment_control_items">
+        <item>高</item>
+        <item>中</item>
+        <item>低</item>
+    </string-array>
+
 
 </resources>

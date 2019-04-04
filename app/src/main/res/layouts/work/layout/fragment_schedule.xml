@@ -17,7 +17,7 @@
         android:background="?attr/header_bg">
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tl_schedule"
+            android:id="@+id/tab_layout_schedule"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
@@ -29,7 +29,7 @@
             />
 
         <ImageView
-            android:id="@+id/iv_schedule_function_list"
+            android:id="@+id/iv_add"
             android:layout_width="46dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -53,6 +53,7 @@
         android:layout_marginBottom="10dp"
         android:layout_gravity="center"
         android:background="@drawable/bg_schedule_search"
+        android:visibility="gone"
         android:gravity="center"
         android:textSize="13sp"
         android:hint="@string/work_search_hint"/>
@@ -104,7 +105,7 @@
             android:background="@color/white"
             android:orientation="vertical">
             <ImageView
-                android:id="@+id/iv_schedule_arrow"
+                android:id="@+id/iv_calendar_view_expand"
                 android:layout_width="28.4dp"
                 android:layout_height="28.4dp"
                 android:padding="5dp"
@@ -136,34 +137,20 @@
                     />
             </LinearLayout>
 
-            <!--<com.inspur.emmcloud.widget.calendarview.group.GroupRecyclerView-->
-                <!--android:id="@+id/recycler_view"-->
-                <!--app:group_background="@color/content_background"-->
-                <!--app:group_center="false"-->
-                <!--app:group_height="42dp"-->
-                <!--app:group_has_header="false"-->
-                <!--app:group_padding_left="16dp"-->
-                <!--app:group_padding_right="16dp"-->
-                <!--app:group_text_size="14sp"-->
-                <!--app:group_text_color="#555555"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:background="@color/content_background" />-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/content_background">
-                <ListView
-                    android:id="@+id/list"
+                <ScrollView
+                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="#00000000"
-                    android:dividerHeight="0dp"
-                    android:listSelector="#00000000"
-                    android:fadingEdge="none"
-                    android:overScrollMode="never"
-                    android:background="@color/content_background"
-                    android:scrollbars="none" />
+                    android:layout_height="match_parent">
+                    <com.inspur.emmcloud.widget.calendardayview.CalendarDayView
+                        android:id="@+id/calendar_day_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </com.inspur.emmcloud.widget.calendardayview.CalendarDayView>
+                </ScrollView>
                 <RelativeLayout
                     android:id="@+id/rl_no_work_content"
                     android:layout_width="match_parent"

@@ -29,7 +29,7 @@ import com.inspur.emmcloud.bean.work.GetOfficeResult;
 import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
@@ -1199,7 +1199,7 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAttachmentSuccess(new TaskResult(new String(arg0)));
+                apiInterface.returnAttachmentSuccess(new Task(new String(arg0)));
             }
 
             @Override

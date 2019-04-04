@@ -100,7 +100,7 @@ import com.inspur.emmcloud.bean.work.GetOfficeResult;
 import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.work.Task;
 
 import java.util.List;
 
@@ -362,7 +362,7 @@ public interface APIInterface {
 
     void returnCalEventsFail(String error, int errorCode);
 
-    void returnAttachmentSuccess(TaskResult taskResult);
+    void returnAttachmentSuccess(Task taskResult);
 
     void returnAttachmentFail(String error, int errorCode);
 

@@ -17,12 +17,12 @@
 
     <ImageView
         android:id="@+id/alert_time_select_img"
-        android:layout_width="13dp"
-        android:layout_height="10dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="17dp"
-        android:src="@drawable/icon_contact_selected"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/icon_schedule_alert_select"
         android:visibility="invisible" />
 
 </RelativeLayout>

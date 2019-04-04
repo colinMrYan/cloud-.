@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,7 +10,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
@@ -52,22 +50,6 @@ public class DisplayRegularFileMsg {
         ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getRegularFileIconResId(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
-        final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sendStauts != 1) {
-                    return;
-                }
-                if (FileUtils.isFileExist(fileDownloadPath)) {
-                    FileUtils.openFile(context, fileDownloadPath);
-                } else {
-                    Intent intent = new Intent(context, ChatFileDownloadActivtiy.class);
-                    intent.putExtra("message", message);
-                    context.startActivity(intent);
-                }
-            }
-        });
         return convertView;
     }
 
