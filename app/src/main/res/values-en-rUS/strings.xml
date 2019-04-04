@@ -311,6 +311,10 @@
     <string name="msg_key_search_member"> Please enter key words</string>
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>
+    <string name="chat_long_click_copy">Copy</string>
+    <string name="chat_long_click_transmit">Transmit</string>
+    <string name="chat_long_click_schedule">Schedule</string>
+    <string name="chat_long_click_copy_text">Copy text</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -1184,8 +1188,7 @@
     <string name="emm_keyboard_number">Number</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">Letter</string>
-    <string name="emm_secure_keyboard">Safety Keyboard Safe Mode</string>
-    <string name="emm_secure_keyboard_normal">Safety Keyboard Common Mode</string>
+    <string name="emm_secure_keyboard">%1$s Safety Keyboard</string>
     <string name="emm_keyboard_space">space</string>
 
     <string name="welcome_to">Welcome to </string>

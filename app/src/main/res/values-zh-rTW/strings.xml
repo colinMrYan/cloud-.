@@ -313,6 +313,10 @@
     <string name="msg_key_search_member">請輸入關鍵字</string>
     <string name="chat_file_open_fail_tip">沒有找到對應的程式</string>
     <string name="chat_conversation_unread_count">%1$d條新消息</string>
+    <string name="chat_long_click_copy">複製</string>
+    <string name="chat_long_click_transmit">轉發</string>
+    <string name="chat_long_click_schedule">日程</string>
+    <string name="chat_long_click_copy_text">複製文字</string>
 
 
     <!-- 會議卡片 -->
@@ -1190,8 +1194,7 @@
     <string name="emm_keyboard_number">數位</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">字母</string>
-    <string name="emm_secure_keyboard">安全鍵盤安全模式</string>
-    <string name="emm_secure_keyboard_normal">安全鍵盤普通模式</string>
+    <string name="emm_secure_keyboard">%1$s安全鍵盤</string>
     <string name="emm_keyboard_space">空格</string>
 
     <string name="welcome_to">歡迎使用</string>

@@ -22,7 +22,7 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
@@ -72,7 +72,7 @@ public class TaskAddActivity extends BaseActivity {
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
-    private TaskResult taskResult;
+    private Task taskResult;
     private List<Attachment> attachments;
     private List<JSONObject> jsonAttachments;
 
@@ -263,7 +263,7 @@ public class TaskAddActivity extends BaseActivity {
             if (loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            TaskResult taskResult = new TaskResult();
+            Task taskResult = new Task();
             taskResult.setTitle(contentInputEdit.getText().toString());
             taskResult.setId(getTaskAddResult.getId());
             taskResult.setOwner(PreferencesUtils.getString(
@@ -342,7 +342,7 @@ public class TaskAddActivity extends BaseActivity {
         }
 
         @Override
-        public void returnAttachmentSuccess(TaskResult taskResult) {
+        public void returnAttachmentSuccess(Task taskResult) {
             super.returnAttachmentSuccess(taskResult);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();

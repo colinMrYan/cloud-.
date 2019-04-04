@@ -318,6 +318,10 @@
     <string name="chat_file_open_fail_tip">没有找到对应的程序</string>
     <string name="chat_conversation_unread_count">%1$d条新消息</string>
     <string name="chat_group_message_search">查找聊天记录</string>
+    <string name="chat_long_click_copy">复制</string>
+    <string name="chat_long_click_transmit">转发</string>
+    <string name="chat_long_click_schedule">日程</string>
+    <string name="chat_long_click_copy_text">复制文字</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
@@ -506,7 +510,7 @@
     <string name="file_rename">文件重命名</string>
     <string name="disk">网盘</string>
 
-     <!--Webex 会议-->
+    <!--Webex 会议-->
     <string name="webex_meeting_title">%1$s的会议</string>
     <string name="webex_input_invitee_emails_hint">添加参会人含后缀邮箱</string>
     <string name="webex_input_invitee_emails">请输入参会人的电子邮箱地址</string>
@@ -1129,10 +1133,7 @@
     <string name="safe_center_unenable">未启用</string>
 
 
-
-
     <string name="qr_code_analysis_fail">二维码解析失败</string>
-
 
 
     //tag标签
@@ -1239,8 +1240,7 @@
     <string name="emm_keyboard_number">数字</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">字母</string>
-    <string name="emm_secure_keyboard">安全键盘安全模式</string>
-    <string name="emm_secure_keyboard_normal">安全键盘普通模式</string>
+    <string name="emm_secure_keyboard">%1$s安全键盘</string>
     <string name="emm_keyboard_space">空格</string>
 
 
@@ -1317,7 +1317,7 @@
         <item>三十</item>
     </string-array>
 
-    <string-array name="solar_festival" >
+    <string-array name="solar_festival">
         <item>0101元旦</item>
         <item>0214情人节</item>
         <item>0308妇女节</item>
