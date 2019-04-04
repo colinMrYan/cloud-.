@@ -405,6 +405,8 @@
 
     <style name="DateTimePickerTimeTheme" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="android:textColor">#111</item>
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">#588ce6</item>
     </style>
 
 </resources>
