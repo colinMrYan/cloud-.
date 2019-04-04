@@ -3,9 +3,11 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.widget.Chronometer;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.text.ParseException;
@@ -188,9 +190,9 @@ public class TimeUtils {
 
     /**
      * 时间字符串转为Calendar
-     *
+     * @param context
      * @param time
-     * @param fomat
+     * @param type
      * @return
      */
     public static Calendar timeString2Calendar(Context context, String time,
@@ -220,9 +222,9 @@ public class TimeUtils {
 
     /**
      * 时间字符串转为Date
-     *
+     * @param context
      * @param time
-     * @param fomat
+     * @param type
      * @return
      */
     public static Date timeString2Date(Context context, String time, int type) {
@@ -501,11 +503,7 @@ public class TimeUtils {
         return System.currentTimeMillis();
     }
 
-    /**
-     * get current time in milliseconds, format is {@link #DEFAULT_DATE_FORMAT}
-     *
-     * @return
-     */
+
     public static String getCurrentTimeInString(Context context) {
         return getTime(context, getCurrentTimeInLong());
     }
@@ -802,9 +800,9 @@ public class TimeUtils {
     public static String getCalEventTimeSelection(Context context,
                                                   CalendarEvent calendarEvent) {
         String timeSelection = "";
-        Calendar startDate = calendarEvent.getLocalStartDate();
-        Calendar endDate = calendarEvent.getLocalEndDate();
-        boolean isAllday = calendarEvent.getAllday();
+        Calendar startDate = calendarEvent.getStartDate();
+        Calendar endDate = calendarEvent.getEndDate();
+        boolean isAllday = calendarEvent.getAllDay();
         if (isAllday) {
             timeSelection = context.getString(R.string.all_day);
         } else if (startDate == null || endDate == null) {
@@ -874,8 +872,8 @@ public class TimeUtils {
 
     /**
      * 获取显示时间
-     *
-     * @param UTCStringTime
+     * @param context
+     * @param timeLong
      * @return
      */
     public static String getDisplayTime(Context context, long timeLong) {
@@ -935,8 +933,8 @@ public class TimeUtils {
 
     /**
      * 获取显示时间
-     *
-     * @param UTCStringTime
+     * @param context
+     * @param displayCalendar
      * @return
      */
     public static String getDisplayTime(Context context,
@@ -1085,10 +1083,13 @@ public class TimeUtils {
      * @param calDateB
      * @return
      */
-    public static boolean isSameDay(Calendar calDateA, Calendar calDateB) {
-        return calDateA.get(Calendar.YEAR) == calDateB.get(Calendar.YEAR)
-                && calDateA.get(Calendar.MONTH) == calDateB.get(Calendar.MONTH)
-                && calDateA.get(Calendar.DAY_OF_MONTH) == calDateB
+    public static boolean isSameDay(Calendar calendarA, Calendar calendarB) {
+        if (calendarA == null || calendarB == null){
+            return false;
+        }
+        return calendarA.get(Calendar.YEAR) == calendarB.get(Calendar.YEAR)
+                && calendarA.get(Calendar.MONTH) == calendarB.get(Calendar.MONTH)
+                && calendarA.get(Calendar.DAY_OF_MONTH) == calendarB
                 .get(Calendar.DAY_OF_MONTH);
     }
 
@@ -1133,6 +1134,24 @@ public class TimeUtils {
             return String.valueOf(totalss);
         }
         return String.valueOf(totalss);
+    }
+
+    /**开始日期和结束日期是否包含特定日期
+     *
+     * @param targetCalendar
+     * @param startCalendar
+     * @param endCalendar
+     * @return
+     */
+    public static boolean isContainTargentCalendarDay(Calendar targetCalendar,Calendar startCalendar,Calendar endCalendar){
+        Calendar dayBeginCalendar = (Calendar) targetCalendar.clone();
+        dayBeginCalendar.set(Calendar.HOUR_OF_DAY,0);
+        dayBeginCalendar.set(Calendar.MINUTE,0);
+        dayBeginCalendar.set(Calendar.SECOND,0);
+        dayBeginCalendar.set(Calendar.MILLISECOND,0);
+        Calendar dayEndCalendar = (Calendar) dayBeginCalendar.clone();
+        dayEndCalendar.add(Calendar.DAY_OF_YEAR,1);
+        return (!dayBeginCalendar.after(startCalendar) && dayEndCalendar.after(endCalendar))||(dayBeginCalendar.before(endCalendar) && dayBeginCalendar.after(startCalendar))||(dayEndCalendar.before(endCalendar) && dayEndCalendar.after(startCalendar));
     }
 
     /**
@@ -1183,5 +1202,24 @@ public class TimeUtils {
         }
 
     }
+
+
+    public static Calendar getDayBeginCalendar(Calendar calendar){
+        Calendar dayBeginCalendar =(Calendar)calendar.clone();
+        dayBeginCalendar.set(Calendar.HOUR_OF_DAY,0);
+        dayBeginCalendar.set(Calendar.MINUTE,0);
+        dayBeginCalendar.set(Calendar.SECOND,0);
+        dayBeginCalendar.set(Calendar.MILLISECOND,0);
+        return dayBeginCalendar;
+    }
+
+    public static Calendar getDayEndCalendar(Calendar  calendar){
+        Calendar dayBeginCalendar = getDayBeginCalendar(calendar);
+        dayBeginCalendar.add(Calendar.DAY_OF_YEAR,1);
+        dayBeginCalendar.add(Calendar.MINUTE,-1);
+        return (Calendar)dayBeginCalendar.clone();
+    }
+
+
 
 }

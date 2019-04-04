@@ -2,6 +2,7 @@ package com.inspur.emmcloud.bean.work;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
@@ -15,9 +16,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Task implements Serializable{
+public class Task implements Serializable {
 
-    private String creationDate = "";
+    private Calendar creationDate;
     private String lastUpdate = "";
     private String state = "";
     private String id = "";
@@ -28,7 +29,6 @@ public class Task implements Serializable{
     private Calendar dueDate;
     private List<TaskColorTag> tags = new ArrayList<TaskColorTag>();
     private List<Attachment> attachments = new ArrayList<Attachment>();
-    //private String attachments ="";
     private TaskSubject taskSubject;
     private String subjectstr = "";
     private TaskSubject subject;
@@ -37,91 +37,7 @@ public class Task implements Serializable{
     }
 
     public Task(String task) {
-        try {
-            JSONObject jsonObject = new JSONObject(task);
-
-            if (jsonObject.has("attachments")) {
-                JSONArray jsonArray = jsonObject.getJSONArray("attachments");
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonAttach = jsonArray.getJSONObject(i);
-                    Attachment attachment = new Attachment(jsonAttach);
-                    attachments.add(attachment);
-                }
-            }
-
-            if (jsonObject.has("dueDate")) {
-
-                if (isNumeric(jsonObject.getString("dueDate"))) {
-                    Long dueDateLong = jsonObject.getLong("dueDate");
-
-                    if (dueDateLong != null) {
-                        dueDate = TimeUtils.timeLong2Calendar(dueDateLong);
-                    }
-                }
-
-
-            }
-            if (jsonObject.has("creationDate")) {
-                this.creationDate = jsonObject.getString("creationDate");
-            }
-            if (jsonObject.has("lastUpdate")) {
-                this.lastUpdate = jsonObject.getString("lastUpdate");
-            }
-            if (jsonObject.has("state")) {
-                this.state = jsonObject.getString("state");
-            }
-            if (jsonObject.has("id")) {
-                this.id = jsonObject.getString("id");
-            }
-            if (jsonObject.has("master")) {
-                this.master = jsonObject.getString("master");
-            }
-            if (jsonObject.has("owner")) {
-                this.owner = jsonObject.getString("owner");
-            }
-            if (jsonObject.has("title")) {
-                this.title = jsonObject.getString("title");
-            }
-            if (jsonObject.has("priority")) {
-                this.priority = jsonObject.getInt("priority");
-            }
-
-
-            if (jsonObject.has("tags")) {
-                JSONArray array = jsonObject.getJSONArray("tags");
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject obj = array.getJSONObject(i);
-                    tags.add(new TaskColorTag(obj));
-                }
-            }
-
-
-            if (jsonObject.has("list")) {
-                String listStr = jsonObject.getString("list");
-                if (listStr != null && !listStr.equals("null")) {
-                    this.taskSubject = new TaskSubject(jsonObject.getString("list"));
-                }
-
-            }
-
-//			if(jsonObject.has("attachments")){
-//				this.attachments = jsonObject.getString("attachments");
-//			}
-//			
-//			if(jsonObject.has("list")){
-//				this.list = jsonObject.getString("list");
-//			}
-            if (jsonObject.has("subject")) {
-                String subjectStr = jsonObject.getString("subject");
-                if (subjectStr != null && !subjectStr.equals("null")) {
-                    this.subject = new TaskSubject(jsonObject.getString("subject"));
-                }
-
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        this(JSONUtils.getJSONObject(task));
     }
 
     public Task(JSONObject jsonObject) {
@@ -150,7 +66,8 @@ public class Task implements Serializable{
 
             }
             if (jsonObject.has("creationDate")) {
-                this.creationDate = jsonObject.getString("creationDate");
+                long creationDateLong = jsonObject.getLong("creationDate");
+                creationDate = TimeUtils.timeLong2Calendar(creationDateLong);
             }
             if (jsonObject.has("lastUpdate")) {
                 this.lastUpdate = jsonObject.getString("lastUpdate");
@@ -191,14 +108,6 @@ public class Task implements Serializable{
                 }
 
             }
-
-//			if(jsonObject.has("attachments")){
-//				this.attachments = jsonObject.getString("attachments");
-//			}
-//			
-//			if(jsonObject.has("list")){
-//				this.list = jsonObject.getString("list");
-//			}
             if (jsonObject.has("subject")) {
                 String subjectStr = jsonObject.getString("subject");
                 if (subjectStr != null && !subjectStr.equals("null")) {
@@ -213,6 +122,7 @@ public class Task implements Serializable{
 
     }
 
+
     public List<TaskColorTag> getTags() {
         return tags;
     }
@@ -222,11 +132,11 @@ public class Task implements Serializable{
         this.tags = tags;
     }
 
-    public String getCreationDate() {
+    public Calendar getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Calendar creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -307,13 +217,6 @@ public class Task implements Serializable{
         this.attachments = attachments;
     }
 
-
-//	public void setTags(String tags) {
-//		this.tags = tags;
-//	}
-
-
-    //
     public TaskSubject getList() {
         return taskSubject;
     }
@@ -322,16 +225,7 @@ public class Task implements Serializable{
         this.taskSubject = list;
     }
 
-//	public String getSubject() {
-//		return subject;
-//	}
-//
-//	
-//	public void setSubject(String subject) {
-//		this.subject = subject;
-//	}
 
-    //	@JSONField(serialize=false)
     public TaskSubject getSubject() {
         return subject;
     }
@@ -346,14 +240,15 @@ public class Task implements Serializable{
         return isNum.matches();
     }
 
-
-    public List<Event>  taskList2EventList(List<Task> taskList){
+    public static List<Event> taskList2EventList(List<Task> taskList, Calendar selectCalendar) {
         List<Event> eventList = new ArrayList<>();
-        for (Task task:taskList){
-            String eventSubTitle = TimeUtils.calendar2FormatString(MyApplication.getInstance(),dueDate,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE)+"截止";
-            Calendar eventStartTime = TimeUtils.timeString2Calendar(creationDate);
-            Event event = new Event(task.getId(),Event.TYPE_TASK,title,eventSubTitle,eventStartTime,dueDate);
-            eventList.add(event);
+        for (Task task : taskList) {
+            if (TimeUtils.isSameDay(selectCalendar, task.getCreationDate()) || TimeUtils.isSameDay(selectCalendar, task.getDueDate())) {
+                String eventSubTitle = TimeUtils.calendar2FormatString(MyApplication.getInstance(), task.getDueDate(), TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE) + "截止";
+                Event event = new Event(task.getId(), Event.TYPE_TASK, task.getTitle(), eventSubTitle, task.getCreationDate(), task.getDueDate());
+                eventList.add(event);
+            }
+
         }
         return eventList;
     }

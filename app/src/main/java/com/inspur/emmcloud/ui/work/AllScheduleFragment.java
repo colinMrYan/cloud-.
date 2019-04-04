@@ -1,27 +1,29 @@
 package com.inspur.emmcloud.ui.work;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllScheduleFragmentAdapter;
-import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
+import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
 
@@ -37,9 +39,9 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
     private View rootView;
-    private TabLayout scheduleTabLayout;
+    private TabLayout tabLayout;
     private ImageButton backToToDayImgBtn;
-    private ViewPager allScheduleFragmentViewPager;
+    private CustomScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
     private Fragment meetingFragment;
     private Fragment taskFragment;
@@ -77,33 +79,12 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void initView() {
-        scheduleTabLayout = rootView.findViewById(R.id.tab_layout_schedule);
-        scheduleTabLayout.addTab(scheduleTabLayout.newTab().setText(R.string.work_schedule));
-        scheduleTabLayout.addTab(scheduleTabLayout.newTab().setText(R.string.work_meeting_text));
-        scheduleTabLayout.addTab(scheduleTabLayout.newTab().setText(R.string.work_mession));
-        scheduleTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                if(allScheduleFragmentViewPager != null){
-                    allScheduleFragmentViewPager.setCurrentItem(position);
-                }
-                backToToDayImgBtn.setVisibility((position==0)?View.VISIBLE:View.INVISIBLE);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
-
+        initTabLayout();
         rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         backToToDayImgBtn = rootView.findViewById(R.id.ibt_back_to_today);
         backToToDayImgBtn.setOnClickListener(this);
-        allScheduleFragmentViewPager = rootView.findViewById(R.id.all_schedule_viewpager);
+        allScheduleFragmentViewPager = rootView.findViewById(R.id.view_pager_all_schedule);
+        allScheduleFragmentViewPager.setScrollable(false);
         allScheduleFragmentViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -112,9 +93,8 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
             @Override
             public void onPageSelected(int position) {
-                LogUtils.jasonDebug("onPageSelected=="+position);
-                if(scheduleTabLayout != null){
-                    scheduleTabLayout.getTabAt(position).select();
+                if (tabLayout != null) {
+                    tabLayout.getTabAt(position).select();
                 }
             }
 
@@ -126,8 +106,8 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
-        meetingFragment = new NotSupportFragment();
-        taskFragment = new NotSupportFragment();
+        meetingFragment = new ScheduleFragment();
+        taskFragment = new ScheduleFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
         list.add(meetingFragment);
@@ -140,6 +120,52 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
     }
 
+    private void initTabLayout() {
+        tabLayout = rootView.findViewById(R.id.tab_layout_schedule);
+        int[] tabTitleResIds = {R.string.work_schedule, R.string.work_meeting_text, R.string.work_mession};
+        for (int i = 0; i < tabTitleResIds.length; i++) {
+            TabLayout.Tab tab = tabLayout.newTab();
+            tab.setCustomView(R.layout.schedule_tablayout_text_item_view);
+            TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
+            textView.setText(getString(tabTitleResIds[i]));
+            updateTabLayoutTextStatus(tab, (i == 0));
+            tabLayout.addTab(tab);
+        }
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (allScheduleFragmentViewPager != null) {
+                    allScheduleFragmentViewPager.setCurrentItem(position);
+                }
+                backToToDayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
+                updateTabLayoutTextStatus(tab, true);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                updateTabLayoutTextStatus(tab, false);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+    }
+
+    /**
+     * 更新TabLayout文字状态-选中状态和未选中状态
+     * @param tab
+     * @param isSelect
+     */
+    private void updateTabLayoutTextStatus(TabLayout.Tab tab, boolean isSelect) {
+        TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
+        tab.getCustomView().findViewById(R.id.tv_tab).setSelected(isSelect);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, isSelect ? 20 : 18);
+        textView.setTextColor(Color.parseColor(isSelect ? "#333333" : "#888888"));
+    }
+
 
     private void showAddPopMenu(View view) {
         DropPopMenu dropPopMenu = new DropPopMenu(getActivity());
@@ -147,11 +173,11 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
-                switch (menuItem.getItemId()){
+                switch (menuItem.getItemId()) {
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
                         IntentUtils.startActivity(getActivity(), CalendarAddActivity.class);
-                    break;
+                        break;
                     case 2:
                         recordUserClickWorkFunction(PV_COLLECTION_MISSION);
                         IntentUtils.startActivity(getActivity(), MessionListActivity.class);
@@ -160,10 +186,10 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
                         break;
                     case 4:
                         recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                        IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
+                        IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
                         break;
                     case 5:
-                        if (allScheduleFragmentViewPager.getCurrentItem() == 0){
+                        if (allScheduleFragmentViewPager.getCurrentItem() == 0) {
                             IntentUtils.startActivity(getActivity(), CalendarSettingActivity.class);
                         }
                         break;
@@ -175,12 +201,12 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
         dropPopMenu.show(view);
     }
 
-    private List<MenuItem> getAddMenuList(){
+    private List<MenuItem> getAddMenuList() {
         List<MenuItem> menuItemList = new ArrayList<>();
-        switch (allScheduleFragmentViewPager.getCurrentItem()){
+        switch (allScheduleFragmentViewPager.getCurrentItem()) {
             case 0:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_calendar, 1, "新建日程"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2,  "新建任务"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, "预定会议室"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
@@ -191,7 +217,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
                 break;
             case 2:
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2,  "新建任务"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
                 break;
         }
