@@ -407,7 +407,6 @@ public class CalendarAddActivity extends BaseActivity {
         }
     }
 
-
     /**
      * 发送CalEvent变化通知
      *
