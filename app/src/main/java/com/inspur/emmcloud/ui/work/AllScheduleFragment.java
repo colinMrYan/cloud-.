@@ -20,13 +20,11 @@ import com.inspur.emmcloud.adapter.AllScheduleFragmentAdapter;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
-import com.inspur.emmcloud.widget.NoScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
 
@@ -46,7 +44,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
     private ImageButton backToToDayImgBtn;
     private CustomScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
-    private NotSupportFragment meetingFragment;
+    private ScheduleFragment meetingFragment;
     private AllTaskListFragment allTaskFragment;
 
     @Override
@@ -109,7 +107,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
-        meetingFragment = new NotSupportFragment();
+        meetingFragment = new ScheduleFragment();
         allTaskFragment = new AllTaskListFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);

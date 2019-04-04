@@ -53,7 +53,7 @@ public class TaskListAdapter extends BaseAdapter {
                 .setText(task.getTitle());
         ((TextView) convertView.findViewById(R.id.tv_task_deadline))
                 .setText(context.getString(R.string.work_task_end,TimeUtils.calendar2FormatString(context,
-                        TimeUtils.timeLong2Calendar(Long.parseLong(task.getCreationDate())),
+                        task.getCreationDate(),
                         TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
 
         ((TextView) convertView.findViewById(R.id.tv_task_from))

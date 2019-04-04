@@ -34,19 +34,11 @@ import com.inspur.emmcloud.util.privates.CalendarUtil;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.WorkColorUtils;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.WorkSettingCacheUtils;
-import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
+import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -237,12 +229,12 @@ public class ScheduleFragment extends BaseFragment implements
     }
 
     @Override
-    public void onCalendarOutOfRange(Calendar calendar) {
+    public void onCalendarOutOfRange(EmmCalendar calendar) {
 
     }
 
     @Override
-    public void onCalendarSelect(Calendar calendar, boolean isClick) {
+    public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
         java.util.Calendar selectCalendar = java.util.Calendar.getInstance();
         selectCalendar.set(calendar.getYear(),calendar.getMonth()-1,calendar.getDay(),0,0,0);
         selectCalendar.set(java.util.Calendar.MILLISECOND,0);

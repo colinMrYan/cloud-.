@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.widget.calendarview.Calendar;
+import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import com.inspur.emmcloud.widget.calendarview.WeekView;
 
 /**
@@ -118,7 +118,7 @@ public class CustomWeekView extends WeekView {
 
 
     @Override
-    protected boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, boolean hasScheme) {
+    protected boolean onDrawSelected(Canvas canvas, EmmCalendar calendar, int x, boolean hasScheme) {
         int cx = x + mItemWidth / 2;
         int cy = mItemHeight / 2;
         canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
@@ -126,14 +126,14 @@ public class CustomWeekView extends WeekView {
     }
 
     @Override
-    protected void onDrawScheme(Canvas canvas, Calendar calendar, int x) {
+    protected void onDrawScheme(Canvas canvas, EmmCalendar calendar, int x) {
 
         mPointPaint.setColor(0xFF95B0C5);
         canvas.drawCircle(x + mItemWidth / 2, mItemHeight - mPointRadius, mPointRadius, mPointPaint);
     }
 
     @Override
-    protected void onDrawText(Canvas canvas, Calendar calendar, int x, boolean hasScheme, boolean isSelected) {
+    protected void onDrawText(Canvas canvas, EmmCalendar calendar, int x, boolean hasScheme, boolean isSelected) {
         int cx = x + mItemWidth / 2;
  //       int cy = mItemHeight / 2;
         int top = -(int)(mItemHeight / 5.5);
