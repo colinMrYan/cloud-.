@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.MyCalendar;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -80,7 +81,14 @@ public class CalendarAddActivity extends BaseActivity {
 
     private static final int CAL_TYPE_REQUEST_CODE = 1;
     private static final int REPEAT_TYPE_REQUEST_CODE = 2;
-    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
+    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;           //"addCalendarEvent"
+
+    public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
+    public static final String EXTRA_SCHEDULE_CALENDAR_ALERT_TIME = "schedule_calendar_alertTime";
+    public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
+    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
+    public static final String EXTRA_SCHEDULE_CALENDAR_ADD_EVENT = "schedule_calendar_add_event";
+    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT = "schedule_calendar_type_select";
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -187,8 +195,8 @@ public class CalendarAddActivity extends BaseActivity {
      * 结束时间早于起始时间提醒
      */
     private void showEndDateErrorRemindDialog() {
-        new QMUIDialog.MessageDialogBuilder(this).setMessage("开始时间不能晚于结束时间")
-                .addAction("确定", new QMUIDialogAction.ActionListener() {
+        new QMUIDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog qmuiDialog, int i) {
                         qmuiDialog.dismiss();
@@ -210,9 +218,9 @@ public class CalendarAddActivity extends BaseActivity {
      * 初始化日期数据
      */
     private void initDate() {
-        if (getIntent().hasExtra("calEvent")) {
+        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
-            calEvent = (CalendarEvent) getIntent().getSerializableExtra("calEvent");
+            calEvent = (CalendarEvent) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
             isAllDay = calEvent.getAllday();
             startCalendar = calEvent.getLocalStartDate();
             endCalendar = calEvent.getLocalEndDate();
@@ -268,6 +276,9 @@ public class CalendarAddActivity extends BaseActivity {
                 break;
             case R.id.rl_calendar_type:
                 intent = new Intent(this, CalendarTypeSelectActivity.class);
+                if(myCalendar!=null){
+                    intent.putExtra(EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT,myCalendar);
+                }
                 startActivityForResult(intent, CAL_TYPE_REQUEST_CODE);
                 break;
             case R.id.rl_start_time:
@@ -279,7 +290,7 @@ public class CalendarAddActivity extends BaseActivity {
             case R.id.rl_alert_time:
                 intent.setClass(getApplicationContext(),
                         ScheduleAlertTimeActivity.class);
-                intent.putExtra("alertTime", alertText.getText());
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, alertText.getText());
                 startActivityForResult(intent, CAL_ALERT_TIME_REQUEST_CODE);
                 break;
             case R.id.rl_repeat:
@@ -299,7 +310,7 @@ public class CalendarAddActivity extends BaseActivity {
             if (!isAbleSaveAndTips(title, startCalendar, endCalendar)) {
                 return;
             }
-            calEvent = calEvent == null ? calEvent : new CalendarEvent();
+            calEvent = ((calEvent == null) ? new CalendarEvent():calEvent );
             calEvent.setTitle(title);
             calEvent.setAllday(isAllDay);
             calEvent.setState("ACTIVED");
@@ -309,7 +320,7 @@ public class CalendarAddActivity extends BaseActivity {
                     .localCalendar2UTCCalendar(endCalendar));
             addCalendarStr = JSONUtils.toJSONString(calEvent);
             calEvent.setCalendar(myCalendar);
-            if (getIntent().hasExtra("calEvent")) {
+            if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
                 updateCalEvent();
             } else {
                 addCalEvent();
@@ -376,18 +387,18 @@ public class CalendarAddActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REPEAT_TYPE_REQUEST_CODE:
-                    String calendarType = data.getStringExtra("repeatResult");
+                    String calendarType = data.getStringExtra(EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME);
                     repeatText.setText(calendarType);
                     break;
                 case CAL_TYPE_REQUEST_CODE:
-                    myCalendar = (MyCalendar) data.getSerializableExtra("result");
+                    myCalendar = (MyCalendar) data.getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_TYPE);
                     calendarTypeLayout.setVisibility(View.VISIBLE);
                     calendarTypeNameText.setText(myCalendar.getName());
                     calendarTypeFlagImage.setImageResource(CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
                     calenderTypeTipLayout.setVisibility(View.VISIBLE);
                     break;
                 case CAL_ALERT_TIME_REQUEST_CODE:
-                    String alertTime = data.getStringExtra("alertTime");
+                    String alertTime = data.getStringExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
                     alertText.setText(alertTime);
                     break;
                 default:
@@ -399,11 +410,10 @@ public class CalendarAddActivity extends BaseActivity {
 
     /**
      * 发送CalEvent变化通知
-     *
      * @param
      */
     public void sendCalendarEventNotification() {
-        EventBus.getDefault().post(new SimpleEventMessage("refreshCalendar", ""));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_REFRESH, ""));
     }
 
     /**
@@ -419,7 +429,7 @@ public class CalendarAddActivity extends BaseActivity {
             calEvent.setId(getIDResult.getId());
             sendCalendarEventNotification();
             Intent intent = new Intent();
-            intent.putExtra("addCalendarEvent", calEvent);
+            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_ADD_EVENT, calEvent);
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -441,7 +451,7 @@ public class CalendarAddActivity extends BaseActivity {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.modify_success));
             Intent intent = new Intent();
-            intent.putExtra("calEvent", calEvent);
+            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_EVENT, calEvent);
             LogUtils.debug("jason", "title=" + calEvent.getTitle());
             setResult(RESULT_OK, intent);
             //更新系日历事件

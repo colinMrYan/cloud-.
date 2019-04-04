@@ -364,6 +364,8 @@
     <string name="schedule_setting_quarter">季度</string>
     <string name="schedule_setting_month">月度</string>
     <string name="schedule_setting_view">视图</string>
+    <string name="schedule_calendar_input_content_hint">请输入日程内容...</string>
+    <string name="schedule_calendar_time_alert">结束时间不能早于起始时间</string>
 
 
     <!-- 发现部分 -->

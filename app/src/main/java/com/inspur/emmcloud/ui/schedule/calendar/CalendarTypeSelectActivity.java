@@ -33,6 +33,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
 
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
+    MyCalendar calendar;
     private int selectPosition = -1;
 
     @Override
@@ -51,10 +52,10 @@ public class CalendarTypeSelectActivity extends BaseActivity {
                 calendarList.add(myCalendar);
             }
         }
-        if (getIntent().hasExtra("selectCalendar")) {
-            MyCalendar selectCalendar = (MyCalendar) getIntent().getExtras().getSerializable("selectCalendar");
+        if (getIntent().hasExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT)) {
+            calendar = (MyCalendar) getIntent().getExtras().getSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT);
             for (int i = 0; i < calendarList.size(); i++) {
-                if (calendarList.get(i).getId().equals(selectCalendar.getId())) {
+                if (calendarList.get(i).getId().equals(calendar.getId())) {
                     selectPosition = i;
                     break;
                 }
@@ -71,11 +72,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 selectPosition = position;
                 calendarAdapter.notifyDataSetChanged();
-                MyCalendar calendar = calendarList.get(position);
-                Intent intent = new Intent();
-                intent.putExtra("result", calendar);
-                setResult(RESULT_OK, intent);
-                finish();
+                calendar = calendarList.get(position);
             }
         });
     }
@@ -83,6 +80,12 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
+                finish();
+                break;
+            case R.id.tv_save:
+                Intent intent = new Intent();
+                intent.putExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE, calendar);
+                setResult(RESULT_OK, intent);
                 finish();
                 break;
             default:

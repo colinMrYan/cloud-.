@@ -357,6 +357,8 @@
     <string name="schedule_setting_quarter">Quarter</string>
     <string name="schedule_setting_month">Month</string>
     <string name="schedule_setting_view">View</string>
+    <string name="schedule_calendar_input_content_hint">Please enter the schedule content...</string>
+    <string name="schedule_calendar_time_alert">End time cannot be earlier than start time</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

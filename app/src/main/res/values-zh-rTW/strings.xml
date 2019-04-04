@@ -363,6 +363,8 @@
     <string name="schedule_setting_quarter">季度</string>
     <string name="schedule_setting_month">月度</string>
     <string name="schedule_setting_view">視圖</string>
+    <string name="schedule_calendar_input_content_hint">請輸入日程內容...</string>
+    <string name="schedule_calendar_time_alert">結束時間不能早於起始時間</string>
     <!-- 發現部分 -->
     <string name="find">發現</string>
     <string name="travel_analysis">差旅分析</string>
