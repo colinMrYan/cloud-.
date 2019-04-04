@@ -43,7 +43,6 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 getString(R.string.calendar_thirty_minite_ago),
                 getString(R.string.calendar_one_hour_ago),
                 getString(R.string.calendar_one_day_ago)};
-        selectPosition = -1;
         alertTime = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME) ?
                 getIntent().getExtras().getString(EXTRA_SCHEDULE_ALERT_TIME) : getString(R.string.calendar_no_alert);
         if (!alertTime.equals(getString(R.string.calendar_no_alert))) {
@@ -82,7 +81,6 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 noAlertSelectImage.setVisibility(View.VISIBLE);
                 selectPosition = -1;
                 alertTime = getString(R.string.calendar_no_alert);
-                returnData();
                 break;
             case R.id.tv_save:
                 returnData();
