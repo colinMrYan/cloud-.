@@ -14,6 +14,7 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -24,9 +25,12 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
     private List<Event> eventList = new ArrayList<>();
     private Context context;
     private OnItemClickLister onItemClickLister;
+    private Calendar selectCalendar;
 
     public ScheduleEventListAdapter(Context context,List<Event> eventList){
         this.context = context;
+        this.eventList = eventList;
+        this.selectCalendar = selectCalendar;
     }
 
     @Override

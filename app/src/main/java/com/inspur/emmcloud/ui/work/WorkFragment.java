@@ -691,10 +691,10 @@ public class WorkFragment extends BaseFragment {
                 case TYPE_CALENDAR:
                     CalendarEvent calendarEvent = calEventList.get(position);
                     content = calendarEvent.getTitle();
-                    countDown = TimeUtils.getCountdown(getActivity(), calendarEvent.getLocalStartDate());
+                    countDown = TimeUtils.getCountdown(getActivity(), calendarEvent.getStartDate());
                     WorkColorUtils.showDayOfWeek(countDownText,
                             TimeUtils
-                                    .getCountdownNum(calendarEvent.getLocalStartDate()));
+                                    .getCountdownNum(calendarEvent.getStartDate()));
                     dateText.setText(TimeUtils.getCalEventTimeSelection(getActivity(), calendarEvent));
                     break;
                 default:

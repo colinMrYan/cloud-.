@@ -20,7 +20,7 @@ import com.inspur.emmcloud.adapter.AllScheduleFragmentAdapter;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
+import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -185,7 +185,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
                         break;
                     case 4:
                         recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                        IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
+                        IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
                         break;
                     case 5:
                         if (allScheduleFragmentViewPager.getCurrentItem() == 0) {

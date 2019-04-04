@@ -34,7 +34,7 @@ public class CalEventNotificationUtils {
      */
     public static void setCalEventNotification(Context context, CalendarEvent calEvent) {
         // TODO Auto-generated method stub
-        Long notificationId = calEvent.getCreationDateLong();
+        Long notificationId = calEvent.getCreationDate().getTimeInMillis();
         if (notificationId == null) {
             return;
         }
@@ -43,7 +43,7 @@ public class CalEventNotificationUtils {
         ln.setContent(context.getString(R.string.alert));
         ln.setTitle(calEvent.getTitle());
         ln.setNotificationId(notificationId);
-        Calendar startCalendar = calEvent.getLocalStartDate();
+        Calendar startCalendar = calEvent.getStartDate();
         startCalendar.add(Calendar.MILLISECOND, -300000);
         Calendar currentCalendar = Calendar.getInstance();
         if (startCalendar.after(currentCalendar)) {

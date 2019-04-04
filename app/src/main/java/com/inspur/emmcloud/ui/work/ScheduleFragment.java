@@ -23,13 +23,17 @@ import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.bean.work.Meeting;
+import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.CalendarUtil;
 import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.Calendar;
@@ -62,21 +66,23 @@ public class ScheduleFragment extends BaseFragment implements
     private TextView scheduleDataText;
     private ImageView calendarViewExpandImg;
     private WorkAPIService apiService;
-    private ArrayList<Task> taskList = new ArrayList<>();
-    private List<CalendarEvent> calEventList = new ArrayList<>();
     private List<String> calendarIdList = new ArrayList<>();
     private CalendarDayView calendarDayView;
     private BroadcastReceiver meetingAndTaskReceiver;
     private java.util.Calendar selectCalendar;
+    private List<Meeting> meetingList = new ArrayList<>();
+    private List<Task> taskList = new ArrayList<>();
+    private List<CalendarEvent> calendarEventList = new ArrayList<>();
+    private List<Event> eventList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         rootView = getLayoutInflater().inflate(R.layout.fragment_schedule, null);
-        initView();
+        EventBus.getDefault().register(this);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
-        EventBus.getDefault().register(this);
+        initView();
         registerWorkNotifyReceiver();
     }
 
@@ -195,8 +201,8 @@ public class ScheduleFragment extends BaseFragment implements
         int year = calendarView.getCurYear();
         int month = calendarView.getCurMonth();
         Map<String, Calendar> map = new HashMap<>();
-        map.put(getSchemeCalendar(year, month, 3, 0xFF40db25, "假").toString(),
-                getSchemeCalendar(year, month, 3, 0xFF40db25, "假"));
+        map.put(getSchemeCalendar(year, month, 3,0xff36A5F6 , "休").toString(),
+                getSchemeCalendar(year, month, 3, 0xff36A5F6, "休"));
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         calendarView.setSchemeDate(map);
     }
@@ -209,8 +215,8 @@ public class ScheduleFragment extends BaseFragment implements
         calendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
         calendar.setScheme(text);
         calendar.addScheme(new Calendar.Scheme());
-        calendar.addScheme(0xFF008800, "假");
-        calendar.addScheme(0xFF008800, "节");
+        calendar.addScheme(0xFF36A5F6, "假");
+        calendar.addScheme(0xFF36A5F6, "节");
         return calendar;
     }
 
@@ -236,7 +242,7 @@ public class ScheduleFragment extends BaseFragment implements
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
         java.util.Calendar selectCalendar = java.util.Calendar.getInstance();
-        selectCalendar.set(calendar.getYear(),calendar.getMonth(),calendar.getDay(),0,0,0);
+        selectCalendar.set(calendar.getYear(),calendar.getMonth()-1,calendar.getDay(),0,0,0);
         selectCalendar.set(java.util.Calendar.MILLISECOND,0);
         onCalendarSelect(selectCalendar,isClick);
     }
@@ -249,15 +255,10 @@ public class ScheduleFragment extends BaseFragment implements
     private void onCalendarSelect(java.util.Calendar calendar,boolean isClick){
         selectCalendar = calendar;
         setCalendarTime();
+        showCalendarEvent();
         getMeetings();
         getMyCalendar();
         getTasks();
-//        calendarDayView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                calendarDayView.setEventList(getEventList());
-//            }
-//        });
     }
 
     private void setCalendarTime() {
@@ -278,6 +279,13 @@ public class ScheduleFragment extends BaseFragment implements
         calendarViewExpandImg.setImageResource(isExpand ? R.drawable.ic_schedule_up : R.drawable.ic_schedule_down);
     }
 
+
+    private void showCalendarEvent(){
+        eventList.clear();
+        eventList.addAll(Meeting.MeetingList2EventList(meetingList,selectCalendar));
+        eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
+        calendarDayView.setEventList(eventList,selectCalendar);
+    }
 
     @Override
     public void onClick(View view) {
@@ -305,7 +313,7 @@ public class ScheduleFragment extends BaseFragment implements
      */
     private void getMeetings() {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            apiService.getMeetings(30);
+            apiService.getMeetings(7);
         }
     }
 
@@ -353,29 +361,7 @@ public class ScheduleFragment extends BaseFragment implements
                         beforeCalendar, 5, 0, true);
             }
         } else {
-            calEventList.clear();
-//            calendarChildAdapter.notifyDataSetChanged();
-        }
-
-    }
-
-    /**
-     * 获取三条Event
-     */
-    private void getCalEventsFor3() {
-        if (NetUtils.isNetworkConnected(getActivity()) && calendarIdList.size() > 0) {
-            java.util.Calendar afterCalendar = java.util.Calendar.getInstance();
-            java.util.Calendar beforeCalendar = java.util.Calendar.getInstance();
-            beforeCalendar.set(beforeCalendar.get(java.util.Calendar.YEAR) + 1,
-                    beforeCalendar.get(java.util.Calendar.MONTH),
-                    beforeCalendar.get(java.util.Calendar.DAY_OF_MONTH), 0, 0, 0);
-            afterCalendar.set(afterCalendar.get(java.util.Calendar.YEAR),
-                    afterCalendar.get(java.util.Calendar.MONTH),
-                    afterCalendar.get(java.util.Calendar.DAY_OF_MONTH), 0, 0, 0);
-            afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
-            beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
-            apiService.getAllCalEvents(calendarIdList, afterCalendar,
-                    beforeCalendar, 3, 0, false);
+            calendarEventList.clear();
         }
 
     }
@@ -393,7 +379,7 @@ public class ScheduleFragment extends BaseFragment implements
 //            Bundle bundle = new Bundle();
 //            if (type.equals(TYPE_CALENDAR)) {
 //                bundle.putSerializable("calEvent",
-//                        calEventList.get(position));
+//                        calendarEventList.get(position));
 //                IntentUtils.startActivity(getActivity(), CalEventAddActivity.class, bundle);
 //                recordUserClickWorkFunction(TYPE_CALENDAR);
 //            } else if (type.equals(TYPE_TASK)) {
@@ -416,71 +402,56 @@ public class ScheduleFragment extends BaseFragment implements
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult) {
-//            meetingList = getMeetingsResult.getMeetingsList();
-//            if (meetingChildAdapter != null) {
-//                meetingChildAdapter.notifyDataSetChanged();
-//            }
+            meetingList = getMeetingsResult.getMeetingsList();
+            showCalendarEvent();
         }
 
         @Override
         public void returnMeetingsFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
-//            taskList = getTaskListResult.getTaskList();
-//            if (taskChildAdapter != null) {
-//                taskChildAdapter.notifyDataSetChanged();
-//            }
+            taskList = getTaskListResult.getTaskList();
+            showCalendarEvent();
         }
 
         @Override
         public void returnRecentTasksFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnMyCalendarSuccess(
                 GetMyCalendarResult getMyCalendarResult) {
-//            List<MyCalendar> calendarList = getMyCalendarResult
-//                    .getCalendarList();
-//            MyCalendarCacheUtils
-//                    .saveMyCalendarList(getActivity(), calendarList);
-//            calendarIdList.clear();
-//            for (int i = 0; i < calendarList.size(); i++) {
-//                MyCalendar myCalendar = calendarList.get(i);
-//                if (myCalendar.getState() != null && !myCalendar.getState().equals("REMOVED")
-//                        && !MyCalendarOperationCacheUtils.getIsHide(
-//                        getActivity(), myCalendar.getId())) {
-//                    calendarIdList.add(calendarList.get(i).getId());
-//                }
-//            }
-//            getCalEventsForTwoDays();
+            List<MyCalendar> calendarList = getMyCalendarResult.getCalendarList();
+            MyCalendarCacheUtils.saveMyCalendarList(getActivity(), calendarList);
+            calendarIdList.clear();
+            for (int i = 0; i < calendarList.size(); i++) {
+                MyCalendar myCalendar = calendarList.get(i);
+                if (myCalendar.getState() != null && !myCalendar.getState().equals("REMOVED")
+                        && !MyCalendarOperationCacheUtils.getIsHide(
+                        getActivity(), myCalendar.getId())) {
+                    calendarIdList.add(calendarList.get(i).getId());
+                }
+            }
+            getCalEventsForTwoDays();
         }
 
         @Override
         public void returnMyCalendarFail(String error, int errorCode) {
-//            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnCalEventsSuccess(
                 GetCalendarEventsResult getCalendarEventsResult,
                 boolean isRefresh) {
-//            calEventList = getCalendarEventsResult.getCalEventList();
-//            CalEventNotificationUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
-//            if (isRefresh && (calEventList.size() < 3)) { // 获取今明两天的日历不足3条
-//                getCalEventsFor3();
-//            } else if (calendarChildAdapter != null) {
-//                calendarChildAdapter.notifyDataSetChanged();
-//            }
+            calendarEventList = getCalendarEventsResult.getCalEventList();
+            CalEventNotificationUtils.setCalEventNotification(getActivity().getApplicationContext(), calendarEventList);
 
         }
 
         @Override
         public void returnCalEventsFail(String error, boolean isRefresh, int errorCode) {
-//            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
     }
 }

@@ -143,7 +143,7 @@ public class CalActivity extends BaseActivity implements MySwipeRefreshLayout.On
                 getApplicationContext(), "celEventDisplayType", "monthly");
         for (int i = 0; i < allCalEventList.size(); i++) {
             CalendarEvent calEvent = allCalEventList.get(i);
-            Calendar startDate = calEvent.getLocalStartDate();
+            Calendar startDate = calEvent.getStartDate();
             boolean isHide = MyCalendarOperationCacheUtils.getIsHide(
                     getApplicationContext(), calEvent.getCalendar().getId());
             if (calEvent.getState() != null
@@ -420,7 +420,7 @@ public class CalActivity extends BaseActivity implements MySwipeRefreshLayout.On
             List<CalendarEvent> CalEventList = calEventGroupList.get(
                     groupPosition).getCalEventList();
             final CalendarEvent calendarEvent = CalEventList.get(childPosition);
-            Calendar localStartDate = calendarEvent.getLocalStartDate();
+            Calendar localStartDate = calendarEvent.getStartDate();
             holder.eventCountdownText.setText(TimeUtils
                     .getCountdown(getApplicationContext(), localStartDate));
             int color = CalendarColorUtils.getColor(CalActivity.this,
