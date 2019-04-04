@@ -18,10 +18,9 @@ import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
-import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
+import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.NoScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
@@ -43,7 +42,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
     private ImageButton backToToDayImgBtn;
     private NoScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
-    private ScheduleFragment meetingFragment;
+    private NotSupportFragment meetingFragment;
     private AllTaskListFragment allTaskFragment;
 
     @Override
@@ -115,7 +114,6 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
             @Override
             public void onPageSelected(int position) {
-                LogUtils.jasonDebug("onPageSelected=="+position);
                 if(scheduleTabLayout != null){
                     scheduleTabLayout.getTabAt(position).select();
                 }
@@ -129,8 +127,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
-
-        meetingFragment = new ScheduleFragment();
+        meetingFragment = new NotSupportFragment();
         allTaskFragment = new AllTaskListFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);

@@ -10,19 +10,16 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.AllScheduleFragmentAdapter;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,15 +52,22 @@ public class AllTaskListFragment extends Fragment{
     @ViewInject(R.id.rl_all_task)
     private RelativeLayout allTaskLayout;
     private TaskListFragment allTaskListFragment,mineTaskListFragment,involvedTaskListFragment,focusedTaskListFragment,allReadyDoneTaskListFragment;
-    private int lastIndex = -2;
+    private AllTaskFragmentAdapter adapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initData();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         injected = true;
-        LogUtils.YfcDebug("切到AllTaskListFragment111111111");
         return x.view().inject(this, inflater, container);
     }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -72,8 +76,39 @@ public class AllTaskListFragment extends Fragment{
             x.view().inject(this, this.getView());
         }
         initViews();
-        LogUtils.YfcDebug("Tab个数："+tabLayoutSchedule.getTabCount());
-        LogUtils.YfcDebug("切到AllTaskListFragment2222222222");
+    }
+
+    private void initData() {
+        List<Fragment> list = new ArrayList<Fragment>();
+        //建一个存放fragment的集合，并且把新的fragment放到集合中
+        Bundle bundle = new Bundle();
+        bundle.putInt(MY_TASK_TYPE,MY_MINE);
+        allTaskListFragment = new TaskListFragment();
+        allTaskListFragment.setArguments(bundle);
+        Bundle bundleMine = new Bundle();
+        bundleMine.putInt(MY_TASK_TYPE,MY_MINE);
+        mineTaskListFragment = new TaskListFragment();
+        mineTaskListFragment.setArguments(bundle);
+        Bundle bundleInvolved = new Bundle();
+        bundleInvolved.putInt(MY_TASK_TYPE,MY_INVOLVED);
+        involvedTaskListFragment = new TaskListFragment();
+        involvedTaskListFragment.setArguments(bundleInvolved);
+        Bundle bundleFocused = new Bundle();
+        bundleFocused.putInt(MY_TASK_TYPE,MY_FOCUSED);
+        focusedTaskListFragment = new TaskListFragment();
+        focusedTaskListFragment.setArguments(bundleFocused);
+        Bundle bundleDone = new Bundle();
+        bundleDone.putInt(MY_TASK_TYPE,MY_MINE);
+        allReadyDoneTaskListFragment = new TaskListFragment();
+        allReadyDoneTaskListFragment.setArguments(bundle);
+
+        list.add(allTaskListFragment);
+        list.add(mineTaskListFragment);
+        list.add(involvedTaskListFragment);
+        list.add(focusedTaskListFragment);
+        list.add(allReadyDoneTaskListFragment);
+        //初始化adapter
+        adapter = new AllTaskFragmentAdapter(this.getChildFragmentManager(), list);
     }
 
 
@@ -135,64 +170,10 @@ public class AllTaskListFragment extends Fragment{
                 taskViewPager.setCurrentItem(0);
             }
         });
-
-        //建一个存放fragment的集合，并且把新的fragment放到集合中
-        Bundle bundle = new Bundle();
-        bundle.putInt(MY_TASK_TYPE,MY_MINE);
-        allTaskListFragment = new TaskListFragment();
-        allTaskListFragment.setArguments(bundle);
-        Bundle bundleMine = new Bundle();
-        bundleMine.putInt(MY_TASK_TYPE,MY_MINE);
-        mineTaskListFragment = new TaskListFragment();
-        mineTaskListFragment.setArguments(bundle);
-        Bundle bundleInvolved = new Bundle();
-        bundleInvolved.putInt(MY_TASK_TYPE,MY_INVOLVED);
-        involvedTaskListFragment = new TaskListFragment();
-        involvedTaskListFragment.setArguments(bundleInvolved);
-        Bundle bundleFocused = new Bundle();
-        bundleFocused.putInt(MY_TASK_TYPE,MY_FOCUSED);
-        focusedTaskListFragment = new TaskListFragment();
-        focusedTaskListFragment.setArguments(bundleFocused);
-        Bundle bundleDone = new Bundle();
-        bundleDone.putInt(MY_TASK_TYPE,MY_MINE);
-        allReadyDoneTaskListFragment = new TaskListFragment();
-        allReadyDoneTaskListFragment.setArguments(bundle);
-        List<Fragment> list = new ArrayList<Fragment>();
-        list.add(allTaskListFragment);
-        list.add(mineTaskListFragment);
-        list.add(involvedTaskListFragment);
-        list.add(focusedTaskListFragment);
-        list.add(allReadyDoneTaskListFragment);
-
-        //初始化adapter
-        AllScheduleFragmentAdapter adapter = new AllScheduleFragmentAdapter(getActivity().getSupportFragmentManager(), list);
         //将适配器和ViewPager结合
         taskViewPager.setAdapter(adapter);
     }
 
-    /**
-     * 可能能实现控制指示器宽度的方法，未启用
-     */
-    private void setTabLayoutLength(){
-        try{
-            Field mTabStrip =tabLayoutSchedule.getClass().getDeclaredField("mTabStrip");
-            mTabStrip.setAccessible(true);
-            LinearLayout ltab = (LinearLayout) mTabStrip.get(tabLayoutSchedule);
-            int childCount = ltab.getChildCount();
-            for(int i =0; i < childCount; i++) {
-                View childAt = ltab.getChildAt(i);
-//                LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(0, -1);
-//                params.weight=1;
-                childAt.setPadding(40,0,40,0);
-//                childAt.setLayoutParams(params);
-                childAt.invalidate();
-            }
-
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public boolean getIsSelect(int i) {
         if(tabLayoutSchedule.getChildAt(i) != null ){

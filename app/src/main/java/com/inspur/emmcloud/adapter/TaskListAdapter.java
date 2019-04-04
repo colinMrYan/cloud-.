@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ import java.util.ArrayList;
  */
 
 public class TaskListAdapter extends BaseAdapter {
-    private ArrayList<TaskResult> taskList = new ArrayList<TaskResult>();
+    private ArrayList<Task> taskList = new ArrayList<Task>();
     private Context context;
-    public TaskListAdapter(Context context , ArrayList<TaskResult> taskList){
+    public TaskListAdapter(Context context , ArrayList<Task> taskList){
         this.taskList = taskList;
         this.context = context;
     }
@@ -48,12 +48,12 @@ public class TaskListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context)
                 .inflate(R.layout.task_list_item, null);
-        TaskResult taskResult = taskList.get(position);
+        Task task = taskList.get(position);
         ((TextView) convertView.findViewById(R.id.tv_task_name))
-                .setText(taskResult.getTitle());
+                .setText(task.getTitle());
         ((TextView) convertView.findViewById(R.id.tv_task_deadline))
                 .setText(context.getString(R.string.work_task_end,TimeUtils.calendar2FormatString(context,
-                        TimeUtils.timeLong2Calendar(Long.parseLong(taskResult.getCreationDate())),
+                        TimeUtils.timeLong2Calendar(Long.parseLong(task.getCreationDate())),
                         TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
 
         ((TextView) convertView.findViewById(R.id.tv_task_from))

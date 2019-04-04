@@ -21,10 +21,9 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
-import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -52,7 +51,7 @@ public class TaskListFragment extends Fragment {
     private WorkAPIService apiService;
     private LoadingDialog loadingDialog;
     private int nowIndex = 0;
-    private ArrayList<TaskResult> taskList = new ArrayList<TaskResult>();
+    private ArrayList<Task> taskList = new ArrayList<Task>();
     @ViewInject(R.id.refresh_layout)
     private SwipeRefreshLayout swipeRefreshLayout;
     private String orderBy = "PRIORITY";
@@ -67,7 +66,6 @@ public class TaskListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         injected = true;
-        LogUtils.YfcDebug("onCreateView");
         return x.view().inject(this, inflater, container);
     }
 
@@ -77,7 +75,6 @@ public class TaskListFragment extends Fragment {
         if (!injected) {
             x.view().inject(this, this.getView());
         }
-        LogUtils.YfcDebug("onViewCreated");
         initViews();
     }
 
@@ -92,11 +89,6 @@ public class TaskListFragment extends Fragment {
         loadingDialog = new LoadingDialog(getActivity());
         getCurrentTaskList();
     }
-
-    public void refeshView(){
-        getCurrentTaskList();
-    }
-
 
     /**
      * 获取缓存的排序规则
@@ -205,7 +197,7 @@ public class TaskListFragment extends Fragment {
      * @param chooseTagList
      * @return
      */
-    public ArrayList<TaskResult> handleTaskList(
+    public ArrayList<Task> handleTaskList(
             GetTaskListResult getTaskListResult, ArrayList<String> chooseTagList) {
         // String[] tags = chooseTags.split(":");
         if (chooseTagList.size() == 0) {
@@ -213,7 +205,7 @@ public class TaskListFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             taskList = getTaskListResult.getTaskList();
         } else {
-            taskList = new ArrayList<TaskResult>();
+            taskList = new ArrayList<Task>();
             int taskSize = getTaskListResult.getTaskList().size();
             int chooseTagLength = chooseTagList.size();
             for (int i = 0; i < taskSize; i++) {
@@ -271,30 +263,6 @@ public class TaskListFragment extends Fragment {
 
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        LogUtils.YfcDebug("TaskListFragment  onPause");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        LogUtils.YfcDebug("TaskListFragment  onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        LogUtils.YfcDebug("TaskListFragment onDestroy");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        LogUtils.YfcDebug("TaskListFragment onDestroyView");
-    }
-
     /**
      * 任务点击事件
      */
@@ -319,13 +287,13 @@ public class TaskListFragment extends Fragment {
                 loadingDialog.dismiss();
             }
             noResultText.setVisibility(View.GONE);
-            TaskResult taskResult = new TaskResult();
+            Task task = new Task();
 //            taskResult.setTitle(messionAddEdit.getText().toString());
-            taskResult.setId(getTaskAddResult.getId());
-            taskResult.setOwner(PreferencesUtils.getString(
+            task.setId(getTaskAddResult.getId());
+            task.setOwner(PreferencesUtils.getString(
                     getActivity(), "userID"));
-            taskResult.setState("ACTIVED");
-            taskList.add(taskResult);
+            task.setState("ACTIVED");
+            taskList.add(task);
             adapter.notifyDataSetChanged();
             isNeedRefresh = true;
         }

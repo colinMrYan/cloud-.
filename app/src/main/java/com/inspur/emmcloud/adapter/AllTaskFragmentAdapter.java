@@ -7,14 +7,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.List;
 
 /**
- * Created by yufuchang on 2019/3/29.
+ * Created by yufuchang on 2019/4/4.
  */
 
-public class AllScheduleFragmentAdapter extends FragmentStatePagerAdapter {
+public class AllTaskFragmentAdapter extends FragmentStatePagerAdapter {
     //存放fragment的集合
     private List<Fragment> mFragments;
 
-    public AllScheduleFragmentAdapter(FragmentManager fm, List<Fragment> mFragments) {
+    public AllTaskFragmentAdapter(FragmentManager fm, List<Fragment> mFragments) {
         super(fm);
         this.mFragments = mFragments;
     }
