@@ -275,8 +275,8 @@ public class CalendarAddActivity extends BaseActivity {
                 break;
             case R.id.rl_calendar_type:
                 intent = new Intent(this, CalendarTypeSelectActivity.class);
-                if(myCalendar!=null){
-                    intent.putExtra(EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT,myCalendar);
+                if (myCalendar != null) {
+                    intent.putExtra(EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT, myCalendar);
                 }
                 startActivityForResult(intent, CAL_TYPE_REQUEST_CODE);
                 break;
@@ -309,7 +309,8 @@ public class CalendarAddActivity extends BaseActivity {
             if (!isAbleSaveAndTips(title, startCalendar, endCalendar)) {
                 return;
             }
-            calEvent = ((calEvent == null) ? new CalendarEvent():calEvent );
+            correctedCalendarTime();
+            calEvent = ((calEvent == null) ? new CalendarEvent() : calEvent);
             calEvent.setTitle(title);
             calEvent.setAllday(isAllDay);
             calEvent.setState("ACTIVED");
@@ -409,10 +410,11 @@ public class CalendarAddActivity extends BaseActivity {
 
     /**
      * 发送CalEvent变化通知
+     *
      * @param
      */
     public void sendCalendarEventNotification() {
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_REFRESH, ""));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_DATA_CHANGED, ""));
     }
 
     /**
@@ -481,6 +483,22 @@ public class CalendarAddActivity extends BaseActivity {
             interval = (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis() + 1) / (1000 * 60);
         }
         return interval;
+    }
+
+    /**
+     * 上传日历时间秒毫秒单位清零，allday 重设时间
+     */
+    private void correctedCalendarTime() {
+        if (isAllDay) {
+            startCalendar.set(Calendar.HOUR_OF_DAY, 0);
+            startCalendar.set(Calendar.MINUTE, 0);
+            endCalendar.set(Calendar.HOUR_OF_DAY, 23);
+            endCalendar.set(Calendar.MINUTE, 59);
+        }
+        startCalendar.set(Calendar.SECOND, 0);
+        startCalendar.set(Calendar.MILLISECOND, 0);
+        endCalendar.set(Calendar.SECOND, 0);
+        endCalendar.set(Calendar.MILLISECOND, 0);
     }
 
 }

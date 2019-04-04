@@ -77,7 +77,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         setContentView(R.layout.activity_main);
         skipImageBtn = findViewById(R.id.ibt_skip);
         checkNecessaryPermission();
-        //IntentUtils.startActivity(this, CalendarAddActivity.class);
     }
 
     private void checkNecessaryPermission() {

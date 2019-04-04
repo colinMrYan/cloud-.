@@ -92,7 +92,7 @@ public class CalendarSettingActivity extends BaseActivity {
 
     private void returnCalList() {
         // TODO Auto-generated method stub
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_REFRESH, ""));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_DATA_CHANGED, ""));
         Intent intent = new Intent();
         intent.putExtra(EXTRA_SCHEDULE_CALENDAR_SETTING_CALENDARLIST, (Serializable) calendarsList);
         setResult(RESULT_OK, intent);
