@@ -81,10 +81,9 @@ public class CalendarAddActivity extends BaseActivity {
 
     private static final int CAL_TYPE_REQUEST_CODE = 1;
     private static final int REPEAT_TYPE_REQUEST_CODE = 2;
-    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;           //"addCalendarEvent"
+    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
 
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
-    public static final String EXTRA_SCHEDULE_CALENDAR_ALERT_TIME = "schedule_calendar_alertTime";
     public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
     public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
     public static final String EXTRA_SCHEDULE_CALENDAR_ADD_EVENT = "schedule_calendar_add_event";

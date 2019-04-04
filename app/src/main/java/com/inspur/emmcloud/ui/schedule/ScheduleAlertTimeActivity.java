@@ -27,10 +27,10 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     @ViewInject(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
 
-    public static String EXTRA_SCHEDULE_ALERT_TIME="schedule_alert_time";
+    public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
 
     String alertTime = "";
-    private  Adapter adapter;
+    private Adapter adapter;
     private int selectPosition = -1;
 
     @Override
@@ -44,8 +44,8 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 getString(R.string.calendar_one_hour_ago),
                 getString(R.string.calendar_one_day_ago)};
         selectPosition = -1;
-        alertTime=getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME)?
-                getIntent().getExtras().getString(EXTRA_SCHEDULE_ALERT_TIME):getString(R.string.calendar_no_alert);
+        alertTime = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME) ?
+                getIntent().getExtras().getString(EXTRA_SCHEDULE_ALERT_TIME) : getString(R.string.calendar_no_alert);
         if (!alertTime.equals(getString(R.string.calendar_no_alert))) {
             noAlertSelectImage.setVisibility(View.GONE);
             for (int i = 0; i < alertTimeArray.length; i++) {
@@ -57,7 +57,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         } else {
             noAlertSelectImage.setVisibility(View.VISIBLE);
         }
-        adapter = new  Adapter(alertTimeArray);
+        adapter = new Adapter(alertTimeArray);
         alertTimeListView.setAdapter(adapter);
         alertTimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
