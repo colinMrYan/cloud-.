@@ -26,7 +26,6 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     ListView alertTimeListView;
     @ViewInject(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
-
     public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
 
     String alertTime = "";
@@ -90,6 +89,9 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 返回数据
+     */
     public void returnData() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_SCHEDULE_ALERT_TIME, alertTime);
