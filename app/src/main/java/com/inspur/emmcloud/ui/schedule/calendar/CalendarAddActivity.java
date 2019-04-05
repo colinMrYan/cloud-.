@@ -220,9 +220,9 @@ public class CalendarAddActivity extends BaseActivity {
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
             calEvent = (CalendarEvent) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            isAllDay = calEvent.getAllday();
-            startCalendar = calEvent.getLocalStartDate();
-            endCalendar = calEvent.getLocalEndDate();
+            isAllDay = calEvent.getAllDay();
+            startCalendar = calEvent.getStartDate();
+            endCalendar = calEvent.getEndDate();
             contentText = calEvent.getTitle();
             myCalendar = calEvent.getCalendar();
         }
