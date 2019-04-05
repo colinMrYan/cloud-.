@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -28,17 +29,20 @@ import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.CircleTextImageView;
+import com.inspur.emmcloud.widget.DataTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
 
@@ -48,7 +52,9 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -70,72 +76,122 @@ public class TaskAddActivity extends BaseActivity {
     private TextView stateText;
     @ViewInject(R.id.iv_more)
     private ImageView moreImage;
-    @ViewInject(R.id.circleImageView_parter_head_three)
-    private CircleTextImageView parterHeadThreeImageView;
-    @ViewInject(R.id.circleImageView_parter_head_two)
-    private CircleTextImageView parterHeadTwoImageView;
-    @ViewInject(R.id.circleImageView_parter_head_one)
-    private CircleTextImageView parterHeadOneImageView;
-    @ViewInject(R.id.circleImageView_manager_head)
+    @ViewInject(R.id.iv_parter_head_three)
+    private ImageView parterHeadThreeImageView;
+    @ViewInject(R.id.iv_parter_head_two)
+    private ImageView parterHeadTwoImageView;
+    @ViewInject(R.id.iv_parter_head_one)
+    private ImageView parterHeadOneImageView;
+    @ViewInject(R.id.iv_task_parter_add)
+    private ImageView parterAddImageView;
+    @ViewInject(R.id.tv_parter_num)
+    private TextView parterNumText;
+    @ViewInject(R.id.iv_manager_head)
     private ImageView managerHeadImageView;
+    @ViewInject(R.id.tv_manager_num)
+    private TextView managerNumText;
     @ViewInject(R.id.iv_task_manager_add)
     private ImageView managerAddImageView;
+    @ViewInject(R.id.tv_end_task_alert_time)
+    private TextView taskAlertTimeView;
+    @ViewInject(R.id. lv_attachment_abstract_picture)
+    private ListView attachmentPicturesList;
 
-    private static final int MANGER_REQUEST_CODE=1;
-    private static final int ALBUM_REQUEST_CODE =2;
-    private static final int PARTER_REQUEST_CODE=3;
+
+    private static final int MANGER_REQUEST_CODE = 1;
+    private static final int ALBUM_REQUEST_CODE = 2;
+    private static final int PARTER_REQUEST_CODE = 3;
+    private static final int ALERT_TIME_REQUEST_CODE =4;
 
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult;
-    private List<Attachment> attachments;
-    private List<JSONObject> jsonAttachments;
+    private List<Attachment> pictureAttachments;
+    private List<Attachment> otherAttachments;
+    private List<JSONObject> pictureJsonAttachments;
+    private List<JSONObject> otherJsonAttachments;
     private List<SearchModel> taskManger;
     private List<SearchModel> taskParters;
+    private Calendar deadLineCalendar;
+    private AttachmentPictureAdapter attachmentPictureAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadingDlg=new LoadingDialog(this);
+        loadingDlg = new LoadingDialog(this);
         initData();
         initView();
     }
 
-    private void initData(){
-        jsonAttachments=new ArrayList<>();
-        taskManger=new ArrayList<>();
-        taskParters=new ArrayList<>();
+    private void initData() {
+        pictureJsonAttachments = new ArrayList<>();
+        taskManger = new ArrayList<>();
+        taskParters = new ArrayList<>();
+        attachmentPictureAdapter=new AttachmentPictureAdapter();
+        attachmentPicturesList.setAdapter(attachmentPictureAdapter);
     }
 
-    private void initView(){
+    private void initView() {
 
 
     }
 
     public void onClick(View view) {
+        Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_save:
                 break;
             case R.id.tv_cancel:
+                finish();
                 break;
             case R.id.rl_task_type:
                 break;
             case R.id.rl_task_manager:
-                Intent intent = new Intent();
                 intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                 intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
                 intent.putExtra(ContactSearchFragment.EXTRA_LIMIT, 1);
                 intent.putExtra(ContactSearchFragment.EXTRA_TITLE, "添加负责人");
+                intent.putExtra(ContactSearchFragment.EXTRA_HAS_SELECT, (Serializable) taskManger);
                 intent.setClass(getApplicationContext(), ContactSearchActivity.class);
-                startActivityForResult(intent,MANGER_REQUEST_CODE);
+                startActivityForResult(intent, MANGER_REQUEST_CODE);
                 break;
             case R.id.rl_task_parter:
+                intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                intent.putExtra(ContactSearchFragment.EXTRA_LIMIT, 20);
+                intent.putExtra(ContactSearchFragment.EXTRA_TITLE, "添加参与人");
+                intent.putExtra(ContactSearchFragment.EXTRA_HAS_SELECT, (Serializable) taskParters);
+                intent.setClass(getApplicationContext(), ContactSearchActivity.class);
+                startActivityForResult(intent, PARTER_REQUEST_CODE);
                 break;
             case R.id.rl_deadline:
+                DataTimePickerDialog dataTimePickerDialog = new DataTimePickerDialog(this);
+                dataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
+                    @Override
+                    public void positiveListener(Calendar calendar) {
+                     deadLineCalendar=calendar;
+                     String deadLineData=TimeUtils.calendar2FormatString(TaskAddActivity.this,deadLineCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
+                     deadlineTimeText.setText(deadLineData);
+                    }
+
+                    @Override
+                    public void negativeListener(Calendar calendar) {
+
+                    }
+                });
+                deadLineCalendar = deadLineCalendar == null ? Calendar.getInstance() : deadLineCalendar;
+                dataTimePickerDialog.showDatePickerDialog(false, deadLineCalendar);
                 break;
             case R.id.rl_state:
+                break;
+            case R.id.rl_task_end_alert:
+               intent=new Intent();
+               intent.setClass(this, ScheduleAlertTimeActivity.class);
+                String alertTimeData = taskAlertTimeView.getText().toString();
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME,alertTimeData);
+                startActivityForResult(intent,ALERT_TIME_REQUEST_CODE);
                 break;
             case R.id.rl_more:
                 break;
@@ -152,40 +208,86 @@ public class TaskAddActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-         if(RESULT_OK==resultCode){
-             switch (requestCode){
-                 case ALBUM_REQUEST_CODE:
-                     ChatAPIService apiService = new ChatAPIService(TaskAddActivity.this);
-                     apiService.setAPIInterface(new TaskAddActivity.WebService());
-                     sendFileMsg(data);
-                     break;
-                 case MANGER_REQUEST_CODE:
-                     taskManger = (List<SearchModel>) data
-                             .getSerializableExtra("selectMemList");
-                     String id =taskManger.get(0).getId();
-                     String ImageUrl= APIUri.getUserIconUrl(this, id);
-                     ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView,ImageUrl,R.drawable.default_image,this,15);
-                     managerAddImageView.setVisibility(View.GONE);
-                     managerHeadImageView.setVisibility(View.VISIBLE);
-                     break;
-                 case PARTER_REQUEST_CODE:
-                     taskParters = (List<SearchModel>) data
-                             .getSerializableExtra("selectMemList");
-                     break;
-             }
-         }
+        if (RESULT_OK == resultCode) {
+            switch (requestCode) {
+                case ALBUM_REQUEST_CODE:
+                    ChatAPIService apiService = new ChatAPIService(TaskAddActivity.this);
+                    apiService.setAPIInterface(new TaskAddActivity.WebService());
+                    sendFileMsg(data);
+                    break;
+                case MANGER_REQUEST_CODE:
+                    taskManger = (List<SearchModel>) data
+                            .getSerializableExtra("selectMemList");
+                    showManagerImage();
+                    break;
+                case PARTER_REQUEST_CODE:
+                    taskParters = (List<SearchModel>) data
+                            .getSerializableExtra("selectMemList");
+                    showPartersImage();
+                    break;
+                case ALERT_TIME_REQUEST_CODE:
+                    String alertData=data.getStringExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
+                    taskAlertTimeView.setText(alertData);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 显示管理者头像
+     */
+    private void showManagerImage() {
+        if (taskManger.size() < 1) {
+            return;
+        }
+        String id = taskManger.get(0).getId();
+        String ImageUrl = APIUri.getUserIconUrl(this, id);
+        ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.default_image, this, 15);
+        managerAddImageView.setVisibility(View.GONE);
+        managerHeadImageView.setVisibility(View.VISIBLE);
+        managerNumText.setText("1人");
+        managerNumText.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 显示参与者头像
+     */
+    private void showPartersImage() {
+        List<String> partersImageUrl = new ArrayList<>();
+        ImageView[] ImageList = {parterHeadOneImageView, parterHeadTwoImageView, parterHeadThreeImageView};
+        int taskPartersNum = taskParters.size();
+        if (taskPartersNum < 1) {
+            return;
+        }
+        for (int i = 0; i < taskParters.size(); i++) {
+            if (i == 3)
+                break;
+            String parterId = taskParters.get(i).getId();
+            String parterImageUrl = APIUri.getUserIconUrl(this, parterId);
+            partersImageUrl.add(parterImageUrl);
+        }
+        parterNumText.setText(taskPartersNum + "人");
+        parterNumText.setVisibility(View.VISIBLE);
+        parterAddImageView.setVisibility(View.GONE);
+        for (int j = 0; j < partersImageUrl.size(); j++) {
+            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[j], partersImageUrl.get(j), R.drawable.default_image, this, 15);
+            ImageList[j].setVisibility(View.VISIBLE);
+        }
     }
 
     /**
      * 发送文件
+     *
      * @param data
      */
     private void sendFileMsg(Intent data) {
+        LogUtils.LbcDebug("sendFileMsg");
         ChatAPIService apiService = new ChatAPIService(TaskAddActivity.this);
         apiService.setAPIInterface(new TaskAddActivity.WebService());
         Uri uri = data.getData();
         String filePath = GetPathFromUri4kitkat.getPathByUri(this, uri);
         File tempFile = new File(filePath);
+        LogUtils.LbcDebug("FilePath::"+tempFile);
         if (TextUtils.isEmpty(FileUtils.getSuffix(tempFile))) {
             ToastUtils.show(this, getString(R.string.not_support_upload));
             return;
@@ -198,6 +300,7 @@ public class TaskAddActivity extends BaseActivity {
 
     /**
      * 组织附件数据
+     *
      * @param msg
      * @return
      */
@@ -250,13 +353,21 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
+    private class PictureHolder {
+        public ImageView attachmentImageView;
+        public TextView  attachmentNameText;
+        public TextView  attachmentStateText;
+        public ImageView attachmentDeleteImageView;
+    }
+
     /**
-     * 图片 Adapter*/
-    public class attachmentPictureAdapter extends BaseAdapter {
+     * 图片 Adapter
+     */
+    public class AttachmentPictureAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return 0;
+            return pictureJsonAttachments.size();
         }
 
         @Override
@@ -271,17 +382,39 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            return null;
+            PictureHolder pictureHolder=new PictureHolder();
+            if(view==null){
+                view= View.inflate(TaskAddActivity.this,R.layout.item_attachments_abstract,null);
+                pictureHolder.attachmentDeleteImageView=view.findViewById(R.id.iv_delete_attachemnt);
+                pictureHolder.attachmentImageView=view.findViewById(R.id.iv_attachemnt_img);
+                pictureHolder.attachmentNameText=view.findViewById(R.id.tv_add_attachment_name);
+                pictureHolder.attachmentStateText=view.findViewById(R.id.tv_attachemnt_upload_state);
+                view.setTag(pictureHolder);
+            }else{
+                pictureHolder=(PictureHolder)view.getTag();
+            }
+            String pictureUri=JSONUtils.getString(pictureJsonAttachments.get(i),"uri","");
+            LogUtils.LbcDebug("pictureUri:::"+pictureUri);
+            ImageDisplayUtils.getInstance().displayImage(pictureHolder.attachmentImageView,pictureUri,R.drawable.default_image);
+            pictureHolder.attachmentNameText.setText(JSONUtils.getString(pictureJsonAttachments.get(i),"name",""));
+            pictureHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LogUtils.LbcDebug("删除该item并刷新");
+                }
+            });
+            return view;
         }
     }
 
     /**
-     * 文本 Adapter*/
-    public class attachmentOthersAdapter extends BaseAdapter{
+     * 文本 Adapter
+     */
+    public class attachmentOthersAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return 0;
+            return otherAttachments.size();
         }
 
         @Override
@@ -303,6 +436,7 @@ public class TaskAddActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
+            LogUtils.LbcDebug("sendFileMsg1111111111");
             if (loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -313,20 +447,23 @@ public class TaskAddActivity extends BaseActivity {
                     TaskAddActivity.this, "userID"));
             taskResult.setState("ACTIVED");
             //调用创建任务成功
-            for(int i =0;i<jsonAttachments.size();i++){
-                apiService.addAttachments(getTaskAddResult.getId(),attachments.get(i).toString());
+            for (int i = 0; i < pictureJsonAttachments.size(); i++) {
+                apiService.addAttachments(getTaskAddResult.getId(), pictureAttachments.get(i).toString());
             }
         }
 
         @Override
         public void returnCreateTaskFail(String error, int errorCode) {
+            LogUtils.LbcDebug("sendFileMsg2222222222");
             if (loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
             WebServiceMiddleUtils.hand(TaskAddActivity.this, error, errorCode);
         }
+
         @Override
         public void returnInviteMateForTaskSuccess(String subject) {
+            LogUtils.LbcDebug("sendFileMsg33333333333");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -337,6 +474,7 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnInviteMateForTaskFail(String error, int errorCode) {
+            LogUtils.LbcDebug("sendFileMsg4444444444");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -345,12 +483,13 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
+            LogUtils.LbcDebug("sendFileMsg5555555555");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
             Intent mIntent = new Intent(Constant.ACTION_TASK);
             mIntent.putExtra("refreshTask", "refreshTask");
-            EventBus.getDefault().post(new SimpleEventMessage("refreshTask","refreshTask"));
+            EventBus.getDefault().post(new SimpleEventMessage("refreshTask", "refreshTask"));
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.mession_saving_success));
             setResult(RESULT_OK);
@@ -358,6 +497,7 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnUpdateTaskFail(String error, int errorCode, int defaultValue) {
+            LogUtils.LbcDebug("sendFileMsg666666666666666");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -367,17 +507,22 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpLoadResFileSuccess(
                 GetFileUploadResult getFileUploadResult, String fakeMessageId) {
+            LogUtils.LbcDebug("sendFileMsg7777777777777");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
 //            isRefreshList = true;
-             JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
-            jsonAttachments.add(jsonAttachment);
-            addAttachMents(jsonAttachment);
+            JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
+            pictureJsonAttachments.add(jsonAttachment);
+
+             attachmentPictureAdapter.notifyDataSetChanged();
+             //addAttachMents(jsonAttachment);
+            //初始化图片
         }
 
         @Override
         public void returnUpLoadResFileFail(String error, int errorCode, String temp) {
+            LogUtils.LbcDebug("sendFileMsg88888888888888");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -386,6 +531,7 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAttachmentSuccess(Task taskResult) {
+            LogUtils.LbcDebug("sendFileMsg999999999999");
             super.returnAttachmentSuccess(taskResult);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
@@ -400,6 +546,7 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAttachmentFail(String error, int errorCode) {
+            LogUtils.LbcDebug("sendFileMsg9999999888888888");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -408,12 +555,13 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAddAttachMentSuccess(Attachment attachment) {
+            LogUtils.LbcDebug("sendFileMsg1234567");
             super.returnAddAttachMentSuccess(attachment);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
-               //apiService.getSigleTask(task.getId());
+                //apiService.getSigleTask(task.getId());
             }
-           // isRefreshList = true;
+            // isRefreshList = true;
         }
 
         @Override
@@ -431,7 +579,7 @@ public class TaskAddActivity extends BaseActivity {
                 loadingDlg.dismiss();
             }
             ArrayList<String> memebersIds = new ArrayList<String>();
-          //  memebersIds = handleTaskSearhMembers(getTaskListResult);
+            //  memebersIds = handleTaskSearhMembers(getTaskListResult);
             String memebers = "";
             int memimg = memebersIds.size();
             if (memimg > 4) {
@@ -440,7 +588,7 @@ public class TaskAddActivity extends BaseActivity {
             for (int i = 0; i < memimg; i++) {
                 memebers = memebers + ContactUserCacheUtils.getUserName(memebersIds.get(i)) + " ";
             }
-         //   memberText.setText(memebers);
+            //   memberText.setText(memebers);
         }
 
         @Override
@@ -458,7 +606,7 @@ public class TaskAddActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-           // displayInviteMates();
+            // displayInviteMates();
         }
 
         @Override
@@ -476,8 +624,8 @@ public class TaskAddActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            attachments.remove(position);
-            jsonAttachments.remove(position);
+            pictureAttachments.remove(position);
+            pictureJsonAttachments.remove(position);
 //            attachments.remove(position);
 //            task.setAttachments(attachments);
 //            attachmentAdapter.notifyDataSetChanged();
