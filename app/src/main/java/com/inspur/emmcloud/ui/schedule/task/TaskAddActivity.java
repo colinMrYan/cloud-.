@@ -15,15 +15,19 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
+import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -31,8 +35,10 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
 
@@ -64,10 +70,20 @@ public class TaskAddActivity extends BaseActivity {
     private TextView stateText;
     @ViewInject(R.id.iv_more)
     private ImageView moreImage;
+    @ViewInject(R.id.circleImageView_parter_head_three)
+    private CircleTextImageView parterHeadThreeImageView;
+    @ViewInject(R.id.circleImageView_parter_head_two)
+    private CircleTextImageView parterHeadTwoImageView;
+    @ViewInject(R.id.circleImageView_parter_head_one)
+    private CircleTextImageView parterHeadOneImageView;
+    @ViewInject(R.id.circleImageView_manager_head)
+    private ImageView managerHeadImageView;
+    @ViewInject(R.id.iv_task_manager_add)
+    private ImageView managerAddImageView;
 
-
-    //相册请求码
-    private static final int ALBUM_REQUEST_CODE = 1;
+    private static final int MANGER_REQUEST_CODE=1;
+    private static final int ALBUM_REQUEST_CODE =2;
+    private static final int PARTER_REQUEST_CODE=3;
 
 
     private WorkAPIService apiService;
@@ -75,18 +91,26 @@ public class TaskAddActivity extends BaseActivity {
     private Task taskResult;
     private List<Attachment> attachments;
     private List<JSONObject> jsonAttachments;
+    private List<SearchModel> taskManger;
+    private List<SearchModel> taskParters;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadingDlg=new LoadingDialog(this);
+        initData();
+        initView();
     }
 
     private void initData(){
         jsonAttachments=new ArrayList<>();
+        taskManger=new ArrayList<>();
+        taskParters=new ArrayList<>();
     }
 
     private void initView(){
+
 
     }
 
@@ -99,6 +123,13 @@ public class TaskAddActivity extends BaseActivity {
             case R.id.rl_task_type:
                 break;
             case R.id.rl_task_manager:
+                Intent intent = new Intent();
+                intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                intent.putExtra(ContactSearchFragment.EXTRA_LIMIT, 1);
+                intent.putExtra(ContactSearchFragment.EXTRA_TITLE, "添加负责人");
+                intent.setClass(getApplicationContext(), ContactSearchActivity.class);
+                startActivityForResult(intent,MANGER_REQUEST_CODE);
                 break;
             case R.id.rl_task_parter:
                 break;
@@ -118,6 +149,7 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
          if(RESULT_OK==resultCode){
@@ -127,13 +159,25 @@ public class TaskAddActivity extends BaseActivity {
                      apiService.setAPIInterface(new TaskAddActivity.WebService());
                      sendFileMsg(data);
                      break;
+                 case MANGER_REQUEST_CODE:
+                     taskManger = (List<SearchModel>) data
+                             .getSerializableExtra("selectMemList");
+                     String id =taskManger.get(0).getId();
+                     String ImageUrl= APIUri.getUserIconUrl(this, id);
+                     ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView,ImageUrl,R.drawable.default_image,this,15);
+                     managerAddImageView.setVisibility(View.GONE);
+                     managerHeadImageView.setVisibility(View.VISIBLE);
+                     break;
+                 case PARTER_REQUEST_CODE:
+                     taskParters = (List<SearchModel>) data
+                             .getSerializableExtra("selectMemList");
+                     break;
              }
          }
     }
 
     /**
      * 发送文件
-     *
      * @param data
      */
     private void sendFileMsg(Intent data) {
@@ -154,7 +198,6 @@ public class TaskAddActivity extends BaseActivity {
 
     /**
      * 组织附件数据
-     *
      * @param msg
      * @return
      */
