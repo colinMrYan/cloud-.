@@ -207,7 +207,6 @@ public class CalendarDayView extends RelativeLayout {
             }
             for (int i = 0; i < eventList.size(); i++) {
                 Event event = eventList.get(i);
-
                 if (event.getIndex() < 0) {
                     event.setIndex(i);
                     int eventWidth = timeHourRow.getEventWidth();
@@ -238,17 +237,9 @@ public class CalendarDayView extends RelativeLayout {
         ImageView eventImg = eventView.findViewById(R.id.iv_event);
         TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
         TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
-        int eventIconResId = -1;
-        if (event.getEventType().equals(Event.TYPE_CALENDAR)) {
-            eventIconResId = R.drawable.ic_schedule_event_calendar;
-        } else if (event.getEventType().equals(Event.TYPE_MEETING)) {
-            eventIconResId = R.drawable.ic_schedule_event_meeing;
-        } else {
-            eventIconResId = R.drawable.ic_schedule_event_task;
-        }
-        eventImg.setImageResource(eventIconResId);
+        eventImg.setImageResource(event.getEventIconResId());
         eventTitleEvent.setText(event.getEventTitle());
-        eventSubtitleEvent.setText(event.getEventSubTitle());
+        eventSubtitleEvent.setText(event.getShowEventSubTitle(getContext(),selectCalendar)+"截止");
         eventLayout.addView(eventView, eventLayoutParams);
 
         eventView.setOnClickListener(new OnClickListener() {

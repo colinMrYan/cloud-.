@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
@@ -28,11 +30,10 @@ import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
-import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
@@ -77,6 +78,8 @@ public class ScheduleFragment extends BaseFragment implements
     private List<CalendarEvent> calendarEventList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private TextView scheduleSumText;
+    private ScrollView eventScrollView;
+    private ListView eventListView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -158,7 +161,6 @@ public class ScheduleFragment extends BaseFragment implements
             public void onEventClick(Event event) {
             }
         });
-        LogUtils.jasonDebug(calendarView.getSelectedCalendar().getLunar());
         initData();
         onCalendarSelect(calendarView.getSelectedCalendar(),false);
 
@@ -209,7 +211,6 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
-        LogUtils.jasonDebug("onCalendarSelect==================================");
         selectCalendar = java.util.Calendar.getInstance();
         selectCalendar.set(calendar.getYear(),calendar.getMonth()-1,calendar.getDay(),0,0,0);
         selectCalendar.set(java.util.Calendar.MILLISECOND,0);

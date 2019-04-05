@@ -154,8 +154,10 @@
             </RelativeLayout>
 
             <ScrollView
+                android:id="@+id/scroll_view_event"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:background="@color/white">
                 <com.inspur.emmcloud.widget.calendardayview.CalendarDayView
                     android:id="@+id/calendar_day_view"
@@ -163,6 +165,11 @@
                     android:layout_height="wrap_content">
                 </com.inspur.emmcloud.widget.calendardayview.CalendarDayView>
             </ScrollView>
+            <ListView
+                android:id="@+id/lv_event"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ListView>
 
         </com.inspur.emmcloud.widget.CalendarLinearLayout>
     </com.inspur.emmcloud.widget.calendarview.CalendarLayout>
