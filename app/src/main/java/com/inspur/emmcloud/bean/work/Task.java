@@ -244,7 +244,7 @@ public class Task implements Serializable {
         List<Event> eventList = new ArrayList<>();
         for (Task task : taskList) {
             if (TimeUtils.isSameDay(selectCalendar, task.getCreationDate()) || TimeUtils.isSameDay(selectCalendar, task.getDueDate())) {
-                String eventSubTitle = TimeUtils.calendar2FormatString(MyApplication.getInstance(), task.getDueDate(), TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE) + "截止";
+                String eventSubTitle = TimeUtils.calendar2FormatString(MyApplication.getInstance(), task.getDueDate(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE) + " 截止";
                 Event event = new Event(task.getId(), Event.TYPE_TASK, task.getTitle(), eventSubTitle, task.getCreationDate(), task.getDueDate());
                 eventList.add(event);
             }

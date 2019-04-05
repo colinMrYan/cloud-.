@@ -159,7 +159,6 @@ public class ScheduleFragment extends BaseFragment implements
             }
         });
         LogUtils.jasonDebug(calendarView.getSelectedCalendar().getLunar());
-      //  onCalendarSelect(java.util.Calendar.getInstance(),false);
         initData();
         onCalendarSelect(calendarView.getSelectedCalendar(),false);
 
@@ -223,7 +222,9 @@ public class ScheduleFragment extends BaseFragment implements
 
     private void setSelectCalendarTimeInfo() {
         StringBuilder builder = new StringBuilder();
-        if (TimeUtils.isCalendarToday(selectCalendar)){
+        boolean isToday = TimeUtils.isCalendarToday(selectCalendar);
+        calendarDayView.setCurrentTimeLineShow(isToday);
+        if (isToday){
             builder.append(getString(R.string.today) + " ");
         }
         builder.append(LunarUtil.oneDay(selectCalendar.get(java.util.Calendar.YEAR),selectCalendar.get(java.util.Calendar.MONTH)+1,selectCalendar.get(java.util.Calendar.DAY_OF_MONTH)));
