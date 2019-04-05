@@ -94,7 +94,7 @@
             app:selected_theme_color="#36A5F6"
             app:week_background="#ffffff"
             app:week_start_with="sun"
-            app:week_text_color="#999999"
+            app:week_text_color="#333333"
             app:week_view_scrollable="true"
             app:year_view_day_text_color="#333333"
             app:year_view_day_text_size="15sp"

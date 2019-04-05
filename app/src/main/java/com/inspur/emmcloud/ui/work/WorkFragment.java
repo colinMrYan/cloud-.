@@ -47,7 +47,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
-import com.inspur.emmcloud.util.privates.CalendarUtil;
+import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -337,7 +337,7 @@ public class WorkFragment extends BaseFragment {
                 || language.equals("zh-TW")
                 || language.equals("followSys")) {
             ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
-                    .setText(CalendarUtil.getChineseToday()
+                    .setText(LunarUtil.getChineseToday()
                             + TimeUtils.getWeekDay(getContext(), calendar));
         } else if (language.getIso().equals("en-US")) {
             ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))

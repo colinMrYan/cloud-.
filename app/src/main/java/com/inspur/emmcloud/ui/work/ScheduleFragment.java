@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
@@ -27,10 +28,11 @@ import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
-import com.inspur.emmcloud.util.privates.CalendarUtil;
+import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
@@ -74,6 +76,7 @@ public class ScheduleFragment extends BaseFragment implements
     private List<Task> taskList = new ArrayList<>();
     private List<CalendarEvent> calendarEventList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
+    private TextView scheduleSumText;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -149,47 +152,19 @@ public class ScheduleFragment extends BaseFragment implements
         calendarViewExpandImg = rootView.findViewById(R.id.iv_calendar_view_expand);
         calendarViewExpandImg.setOnClickListener(this);
         calendarDayView = rootView.findViewById(R.id.calendar_day_view);
+        scheduleSumText = rootView.findViewById(R.id.tv_schedule_sum);
         calendarDayView.setOnEventClickListener(new CalendarDayView.OnEventClickListener() {
             @Override
             public void onEventClick(Event event) {
             }
         });
-        onCalendarSelect(java.util.Calendar.getInstance(),false);
+        LogUtils.jasonDebug(calendarView.getSelectedCalendar().getLunar());
+      //  onCalendarSelect(java.util.Calendar.getInstance(),false);
         initData();
+        onCalendarSelect(calendarView.getSelectedCalendar(),false);
 
     }
 
-
-    private List<Event> getEventList(){
-        List<Event> eventList = new ArrayList<>();
-        java.util.Calendar eventStartCalendar =java.util.Calendar.getInstance();
-        java.util.Calendar eventEndCalendar =java.util.Calendar.getInstance();
-        eventStartCalendar.set(java.util.Calendar.HOUR_OF_DAY,8);
-        eventStartCalendar.set(java.util.Calendar.MINUTE,30);
-        eventEndCalendar.set(java.util.Calendar.HOUR_OF_DAY,8);
-        eventEndCalendar.set(java.util.Calendar.MINUTE,35);
-        Event event1 = new Event("1",Event.TYPE_TASK,"关于防范勒索病毒的紧急预警提醒及处理","23:55截止",eventStartCalendar,eventEndCalendar);
-        eventList.add(event1);
-
-       eventStartCalendar =java.util.Calendar.getInstance();
-        eventEndCalendar =java.util.Calendar.getInstance();
-        eventStartCalendar.set(java.util.Calendar.HOUR_OF_DAY,9);
-        eventStartCalendar.set(java.util.Calendar.MINUTE,0);
-        eventEndCalendar.set(java.util.Calendar.HOUR_OF_DAY,10);
-        eventEndCalendar.set(java.util.Calendar.MINUTE,30);
-        Event event2 = new Event("1",Event.TYPE_MEETING,"产品需求讨论","S06楼 N211",eventStartCalendar,eventEndCalendar);
-        eventList.add(event2);
-
-        eventStartCalendar =java.util.Calendar.getInstance();
-        eventEndCalendar =java.util.Calendar.getInstance();
-        eventStartCalendar.set(java.util.Calendar.HOUR_OF_DAY,11);
-        eventStartCalendar.set(java.util.Calendar.MINUTE,30);
-        eventEndCalendar.set(java.util.Calendar.HOUR_OF_DAY,13);
-        eventEndCalendar.set(java.util.Calendar.MINUTE,00);
-        Event event3 = new Event("3",Event.TYPE_CALENDAR,"运动化","",eventStartCalendar,eventEndCalendar);
-        eventList.add(event3);
-        return eventList;
-    }
 
     private void initData() {
         int year = calendarView.getCurYear();
@@ -235,37 +210,26 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public void onCalendarSelect(Calendar calendar, boolean isClick) {
-        java.util.Calendar selectCalendar = java.util.Calendar.getInstance();
+        LogUtils.jasonDebug("onCalendarSelect==================================");
+        selectCalendar = java.util.Calendar.getInstance();
         selectCalendar.set(calendar.getYear(),calendar.getMonth()-1,calendar.getDay(),0,0,0);
         selectCalendar.set(java.util.Calendar.MILLISECOND,0);
-        onCalendarSelect(selectCalendar,isClick);
-    }
-
-    /**
-     * 选中日期
-     * @param calendar
-     * @param isClick
-     */
-    private void onCalendarSelect(java.util.Calendar calendar,boolean isClick){
-        selectCalendar = calendar;
-        setCalendarTime();
+        setSelectCalendarTimeInfo();
         showCalendarEvent();
         getMeetings();
         getMyCalendar();
         getTasks();
     }
 
-    private void setCalendarTime() {
-        String time = TimeUtils.calendar2FormatString(getActivity(), selectCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY_BY_DASH) + "·" +
-                CalendarUtil.getWeekDay(selectCalendar);
-        boolean isToday = TimeUtils.isCalendarToday(selectCalendar);
-        if (isToday) {
-            time = getString(R.string.today) + "·" + time;
-            calendarDayView.setCurrentTimeLineShow(true);
-        }else {
-            calendarDayView.setCurrentTimeLineShow(false);
+    private void setSelectCalendarTimeInfo() {
+        StringBuilder builder = new StringBuilder();
+        if (TimeUtils.isCalendarToday(selectCalendar)){
+            builder.append(getString(R.string.today) + " ");
         }
-        scheduleDataText.setText(time);
+        builder.append(LunarUtil.oneDay(selectCalendar.get(java.util.Calendar.YEAR),selectCalendar.get(java.util.Calendar.MONTH)+1,selectCalendar.get(java.util.Calendar.DAY_OF_MONTH)));
+        builder.append(" ");
+        builder.append(TimeUtils.getWeekDay(MyApplication.getInstance(),selectCalendar));
+        scheduleDataText.setText(builder.toString());
     }
 
     @Override
@@ -278,7 +242,10 @@ public class ScheduleFragment extends BaseFragment implements
         eventList.clear();
         eventList.addAll(Meeting.MeetingList2EventList(meetingList,selectCalendar));
         eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
+        eventList.addAll(CalendarEvent.calendarEvent2EventList(calendarEventList,selectCalendar));
         calendarDayView.setEventList(eventList,selectCalendar);
+        int eventListSize = eventList.size();
+        scheduleSumText.setText(eventListSize>0?eventListSize+"项日程":"");
     }
 
     @Override
