@@ -29,21 +29,6 @@
             android:text="@string/calendar"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
-
-        <TextView
-            android:id="@+id/tv_save"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:text="@string/save"
-            android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
 
     <LinearLayout

@@ -73,6 +73,10 @@ public class CalendarTypeSelectActivity extends BaseActivity {
                 selectPosition = position;
                 calendarAdapter.notifyDataSetChanged();
                 calendar = calendarList.get(position);
+                Intent intent = new Intent();
+                intent.putExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE, calendar);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }
@@ -80,12 +84,6 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_save:
-                Intent intent = new Intent();
-                intent.putExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE, calendar);
-                setResult(RESULT_OK, intent);
                 finish();
                 break;
             default:
