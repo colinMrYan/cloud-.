@@ -20,15 +20,16 @@ import org.xutils.view.annotation.ViewInject;
 /**
  * Created by libaochao on 2019/3/29.
  */
-@ContentView(R.layout.activity_calendar_alert_time)
+@ContentView(R.layout.activity_schedule_alert_time)
 public class ScheduleAlertTimeActivity extends BaseActivity {
     @ViewInject(R.id.lv_alert_time)
     ListView alertTimeListView;
     @ViewInject(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
+    public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
 
     String alertTime = "";
-    private  Adapter adapter;
+    private Adapter adapter;
     private int selectPosition = -1;
 
     @Override
@@ -41,12 +42,8 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 getString(R.string.calendar_thirty_minite_ago),
                 getString(R.string.calendar_one_hour_ago),
                 getString(R.string.calendar_one_day_ago)};
-        if (getIntent().getExtras().containsKey("alertTime")) {
-            alertTime = getIntent().getExtras().getString("alertTime");
-        } else {
-            alertTime = getString(R.string.calendar_no_alert);
-            selectPosition = -1;
-        }
+        alertTime = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME) ?
+                getIntent().getExtras().getString(EXTRA_SCHEDULE_ALERT_TIME) : getString(R.string.calendar_no_alert);
         if (!alertTime.equals(getString(R.string.calendar_no_alert))) {
             noAlertSelectImage.setVisibility(View.GONE);
             for (int i = 0; i < alertTimeArray.length; i++) {
@@ -58,7 +55,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         } else {
             noAlertSelectImage.setVisibility(View.VISIBLE);
         }
-        adapter = new  Adapter(alertTimeArray);
+        adapter = new Adapter(alertTimeArray);
         alertTimeListView.setAdapter(adapter);
         alertTimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -69,7 +66,6 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 selectPosition = position;
                 adapter.notifyDataSetChanged();
                 alertTime = alertTimeArray[position];
-                returnData();
             }
         });
     }
@@ -84,6 +80,8 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 noAlertSelectImage.setVisibility(View.VISIBLE);
                 selectPosition = -1;
                 alertTime = getString(R.string.calendar_no_alert);
+                break;
+            case R.id.tv_save:
                 returnData();
                 break;
             default:
@@ -91,9 +89,12 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 返回数据
+     */
     public void returnData() {
         Intent intent = new Intent();
-        intent.putExtra("alertTime", alertTime);
+        intent.putExtra(EXTRA_SCHEDULE_ALERT_TIME, alertTime);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -127,7 +128,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.item_alert_time, null);
+            convertView = vi.inflate(R.layout.schedule_alert_time, null);
             TextView timeText = convertView
                     .findViewById(R.id.tv_alert_time);
             ImageView selectImg = convertView
