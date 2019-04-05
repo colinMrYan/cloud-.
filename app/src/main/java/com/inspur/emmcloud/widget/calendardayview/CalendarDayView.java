@@ -37,6 +37,7 @@ public class CalendarDayView extends RelativeLayout {
     private static  final int TIME_HOUR_HEIGHT = DensityUtil.dip2px(MyApplication.getInstance(), 40);
     private static final int EVENTT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
     private LinearLayout timeHourLayout;
+    private Calendar selectCalendar;
 
     public CalendarDayView(Context context) {
         this(context, null);
@@ -73,7 +74,8 @@ public class CalendarDayView extends RelativeLayout {
         currentTimeLineLayout = view.findViewById(R.id.tl_current_time_line);
     }
 
-    public void setEventList(List<Event> eventList) {
+    public void setEventList(List<Event> eventList,Calendar selectCalendar) {
+        this.selectCalendar = selectCalendar;
         this.eventList = eventList;
         initTimeHourRow();
         showEventList();
@@ -109,10 +111,9 @@ public class CalendarDayView extends RelativeLayout {
         List<MatheSet> matheSetList = new ArrayList<>();
 
         for (Event event : eventList) {
-            event.getEventStartTime().get(Calendar.HOUR_OF_DAY);
-            int startHour = event.getEventStartTime().get(Calendar.HOUR_OF_DAY);
-            int endHour = event.getEventEndTime().get(Calendar.HOUR_OF_DAY);
-            int endMin = event.getEventEndTime().get(Calendar.MINUTE);
+            int startHour = event.getDayEventStartTime(selectCalendar).get(Calendar.HOUR_OF_DAY);
+            int endHour = event.getDayEventEndTime(selectCalendar).get(Calendar.HOUR_OF_DAY);
+            int endMin =event.getDayEventEndTime(selectCalendar).get(Calendar.MINUTE);
             if (endMin == 0) {
                 endHour = endHour - 1;
             }
@@ -178,7 +179,7 @@ public class CalendarDayView extends RelativeLayout {
                     if (event1.getIndex() < 0 && event2.getIndex() >= 0) {
                         return 1;
                     }
-                    return event2.getDurationInMillSeconds() >= event1.getDurationInMillSeconds() ? 1 : 0;
+                    return event2.getDayDurationInMillSeconds(selectCalendar) >= event1.getDayDurationInMillSeconds(selectCalendar) ? 1 : 0;
                 }
             });
             List<Event> currentHourStartEventList = new ArrayList<>();
@@ -203,20 +204,20 @@ public class CalendarDayView extends RelativeLayout {
                 if (event.getIndex() < 0) {
                     event.setIndex(i);
                     int eventWidth = timeHourRow.getEventWidth();
-                    int eventHeight = (int) (event.getDurationInMillSeconds() * DensityUtil.dip2px(getContext(), 40) / 3600000);
+                    int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * DensityUtil.dip2px(getContext(), 40) / 3600000);
                     int eventMinHeight = DensityUtil.dip2px(MyApplication.getInstance(),18);
                     if (eventHeight<eventMinHeight){
                         eventHeight = eventMinHeight;
                     }
                     int maginLeft = EVENTT_GAP * i + eventWidth * i;
-                    Calendar startTime = event.getEventStartTime();
+                    Calendar startTime = event.getDayEventStartTime(selectCalendar);
                     Calendar dayStartTime = (Calendar) startTime.clone();
                     dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
                     dayStartTime.set(Calendar.MINUTE, 0);
-                    int maginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * DensityUtil.dip2px(getContext(), 40) / 3600000);
+                    int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * DensityUtil.dip2px(getContext(), 40) / 3600000);
                     RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
                             eventHeight);
-                    eventLayoutParams.setMargins(maginLeft, maginTop, 0, 0);
+                    eventLayoutParams.setMargins(maginLeft, marginTop, 0, 0);
                     setEventLayout(event, eventLayoutParams);
                 }
 
@@ -230,15 +231,15 @@ public class CalendarDayView extends RelativeLayout {
         ImageView eventImg = eventView.findViewById(R.id.iv_event);
         TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
         TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
-        int eventImgResId = -1;
+        int eventIconResId = -1;
         if (event.getEventType().equals(Event.TYPE_CALENDAR)) {
-            eventImgResId = R.drawable.ic_schedule_event_calendar;
+            eventIconResId = R.drawable.ic_schedule_event_calendar;
         } else if (event.getEventType().equals(Event.TYPE_MEETING)) {
-            eventImgResId = R.drawable.ic_schedule_event_meeing;
+            eventIconResId = R.drawable.ic_schedule_event_meeing;
         } else {
-            eventImgResId = R.drawable.ic_schedule_event_task;
+            eventIconResId = R.drawable.ic_schedule_event_task;
         }
-        eventImg.setImageResource(eventImgResId);
+        eventImg.setImageResource(eventIconResId);
         eventTitleEvent.setText(event.getEventTitle());
         eventSubtitleEvent.setText(event.getEventSubTitle());
         eventLayout.addView(eventView, eventLayoutParams);

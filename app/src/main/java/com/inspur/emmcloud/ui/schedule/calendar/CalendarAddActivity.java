@@ -312,7 +312,7 @@ public class CalendarAddActivity extends BaseActivity {
             correctedCalendarTime();
             calEvent = ((calEvent == null) ? new CalendarEvent() : calEvent);
             calEvent.setTitle(title);
-            calEvent.setAllday(isAllDay);
+            calEvent.setAllDay(isAllDay);
             calEvent.setState("ACTIVED");
             calEvent.setStartDate(TimeUtils
                     .localCalendar2UTCCalendar(startCalendar));

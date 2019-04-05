@@ -1,7 +1,11 @@
 package com.inspur.emmcloud.widget.calendardayview;
 
 
+import com.inspur.emmcloud.util.privates.TimeUtils;
+
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by chenmch on 2019/3/29.
@@ -18,6 +22,7 @@ public class Event {
     public Calendar eventStartTime;
     public Calendar eventEndTime;
     private int index = -1;
+    private boolean isAllDay = false;
     public Event(String eventId,String eventType,String eventTitle,String eventSubTitle,Calendar eventStartTime,Calendar eventEndTime){
         this.eventId = eventId;
         this.eventType  = eventType;
@@ -84,5 +89,44 @@ public class Event {
     }
     public long getDurationInMillSeconds() {
         return eventEndTime.getTimeInMillis() - eventStartTime.getTimeInMillis();
+    }
+
+    public Calendar getDayEventStartTime(Calendar selectCalendar){
+        if (!TimeUtils.isSameDay(eventStartTime,selectCalendar)){
+            return TimeUtils.getDayBeginCalendar(selectCalendar);
+        }
+        return eventStartTime;
+    }
+
+    public Calendar getDayEventEndTime(Calendar selectCalendar){
+        if (!TimeUtils.isSameDay(eventEndTime,selectCalendar)){
+            return TimeUtils.getDayEndCalendar(selectCalendar);
+        }
+        return eventEndTime;
+    }
+
+    public long getDayDurationInMillSeconds(Calendar selectCalendar) {
+
+        return getDayEventEndTime(selectCalendar).getTimeInMillis() - getDayEventStartTime(selectCalendar).getTimeInMillis();
+    }
+
+    public boolean isAllDay() {
+        return isAllDay;
+    }
+
+    public void setAllDay(boolean allDay) {
+        isAllDay = allDay;
+    }
+
+    public static List<Event> removeEventByType(List<Event> eventList, String eventType){
+        if (eventList.size()>0){
+            Iterator<Event> iterator = eventList.iterator();
+            while (iterator.hasNext()){
+                if (iterator.next().getEventType().equals(eventType)){
+                    iterator.remove();
+                }
+            }
+        }
+        return eventList;
     }
 }
