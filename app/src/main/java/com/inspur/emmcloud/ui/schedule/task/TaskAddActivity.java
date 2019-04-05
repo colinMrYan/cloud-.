@@ -382,6 +382,7 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            final int num=i;
             PictureHolder pictureHolder=new PictureHolder();
             if(view==null){
                 view= View.inflate(TaskAddActivity.this,R.layout.item_attachments_abstract,null);
@@ -400,7 +401,8 @@ public class TaskAddActivity extends BaseActivity {
             pictureHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LogUtils.LbcDebug("删除该item并刷新");
+                   pictureJsonAttachments.remove(num);
+                   attachmentPictureAdapter.notifyDataSetChanged();
                 }
             });
             return view;
