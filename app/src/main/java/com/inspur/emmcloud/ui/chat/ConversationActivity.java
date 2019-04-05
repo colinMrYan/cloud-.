@@ -48,7 +48,7 @@ import com.inspur.emmcloud.interf.ResultCallback;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
@@ -1623,7 +1623,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void addTextToSchedule(String content) {
         Intent intent = new Intent();
         intent.putExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE, content);
-        intent.setClass(ConversationActivity.this, CalEventAddActivity.class);
+        intent.setClass(ConversationActivity.this, CalendarAddActivity.class);
         startActivity(intent);
     }
 

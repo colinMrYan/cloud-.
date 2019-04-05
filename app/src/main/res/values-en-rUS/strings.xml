@@ -353,12 +353,16 @@
 
     <!-- 日程 -->
     <string name="schedule_event_alert">Schedule reminder</string>
+    <string name="schedule_calendar_add">Add schedule</string>
+    <string name="schedule_calendar_detail">Schedule detail</string>
     <string name="schedule_setting_list_view">List view</string>
     <string name="schedule_setting_day_view">Day View</string>
     <string name="schedule_setting_divide_group">Divide groups</string>
     <string name="schedule_setting_quarter">Quarter</string>
     <string name="schedule_setting_month">Month</string>
     <string name="schedule_setting_view">View</string>
+    <string name="schedule_calendar_input_content_hint">Please enter the schedule content...</string>
+    <string name="schedule_calendar_time_alert">End time cannot be earlier than start time</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

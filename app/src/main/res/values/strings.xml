@@ -359,6 +359,8 @@
     <!-- 日程 -->
     <string name="schedule_event_alert">日程提醒</string>
     <string name="schedule_calendar">日历</string>
+    <string name="schedule_calendar_add">添加日程</string>
+    <string name="schedule_calendar_detail">日程详情</string>
     <string name="schedule_calendar_company">公司日历</string>
     <string name="schedule_setting_list_view">列表视图</string>
     <string name="schedule_setting_day_view">日视图</string>
@@ -366,6 +368,8 @@
     <string name="schedule_setting_quarter">季度</string>
     <string name="schedule_setting_month">月度</string>
     <string name="schedule_setting_view">视图</string>
+    <string name="schedule_calendar_input_content_hint">请输入日程内容...</string>
+    <string name="schedule_calendar_time_alert">结束时间不能早于起始时间</string>
 
 
     <!-- 发现部分 -->

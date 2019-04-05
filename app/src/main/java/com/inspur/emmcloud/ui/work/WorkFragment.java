@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.WorkSetting;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
@@ -592,7 +593,7 @@ public class WorkFragment extends BaseFragment {
                 public void onClick(View v) {
                     if (id.equals(TYPE_CALENDAR)) {
                         recordUserClickWorkFunction("calendar");
-                        IntentUtils.startActivity(getActivity(), CalEventAddActivity.class);
+                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class);
                     } else if (id.equals(TYPE_MEETING)) {
                         recordUserClickWorkFunction("meeting");
                         IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
@@ -719,7 +720,7 @@ public class WorkFragment extends BaseFragment {
             if (type.equals(TYPE_CALENDAR)) {
                 bundle.putSerializable("calEvent",
                         calEventList.get(position));
-                IntentUtils.startActivity(getActivity(), CalEventAddActivity.class, bundle);
+                IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
                 recordUserClickWorkFunction("calendar");
             } else if (type.equals(TYPE_TASK)) {
                 bundle.putSerializable("task",

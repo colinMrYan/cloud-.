@@ -58,34 +58,27 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/rl_task_input_content"
+            <EditText
+                android:id="@+id/et_input_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/et_input_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:background="#FFFFFF"
-                    android:gravity="top|left"
-                    android:hint="请输入任务内容..."
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp" />
-            </RelativeLayout>
+                android:layout_height="100dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="#FFFFFF"
+                android:gravity="top|left"
+                android:hint="请输入任务内容..."
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
 
             <RelativeLayout
-                android:id="@+id/rl_task_priority"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rl_task_input_content"
                 android:layout_marginTop="10dp"
                 android:background="#FFFFFF">
 
@@ -118,11 +111,16 @@
                     app:scv_TextSize="13sp" />
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_marginLeft="15dp"
+                android:background="@color/color_list_divider" />
+
             <RelativeLayout
                 android:id="@+id/rl_task_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rl_task_priority"
                 android:layout_marginTop="10dp"
                 android:background="#FFFFFF"
                 android:onClick="onClick"
@@ -135,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="所属项目"
+                    android:text="类别"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -163,15 +161,14 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="7dp"
-                    android:src="@drawable/icon_schedule_enter" />
+                    android:src="@drawable/icon_contact_right_arrow" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_above="@id/rl_task_manager"
                 android:layout_marginLeft="15dp"
-                android:background="#DDDDDD" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_task_manager"
@@ -194,6 +191,24 @@
                     android:textSize="16sp" />
 
                 <ImageView
+                    android:id="@+id/circleImageView_manager_head"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/tv_manger_num"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_manger_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/iv_task_manager_arrow"
+                    android:text="0人"
+                    android:visibility="gone" />
+
+                <ImageView
                     android:id="@+id/iv_task_manager_add"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -208,21 +223,19 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="7dp"
-                    android:src="@drawable/icon_schedule_enter" />
+                    android:src="@drawable/icon_contact_right_arrow" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_above="@id/rl_task_parter"
                 android:layout_marginLeft="15dp"
-                android:background="#DDDDDD" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_task_parter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rl_task_manager"
                 android:background="#FFFFFF"
                 android:onClick="onClick"
                 android:paddingLeft="16dp"
@@ -237,6 +250,45 @@
                     android:text="参与人"
                     android:textColor="#333333"
                     android:textSize="16sp" />
+
+                <com.inspur.emmcloud.widget.CircleTextImageView
+                    android:id="@+id/circleImageView_parter_head_one"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/circleImageView_parter_head_two"
+                    android:src="@drawable/default_image"
+                    android:visibility="gone"/>
+
+                <com.inspur.emmcloud.widget.CircleTextImageView
+                    android:id="@+id/circleImageView_parter_head_two"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/circleImageView_parter_head_three"
+                    android:src="@drawable/default_image"
+                    android:visibility="gone"/>
+
+                <com.inspur.emmcloud.widget.CircleTextImageView
+                    android:id="@+id/circleImageView_parter_head_three"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/tv_parter_num"
+                    android:src="@drawable/default_image"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tv_parter_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/iv_task_parter_arrow"
+                    android:text="0人"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/iv_task_parter_add"
@@ -253,28 +305,19 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="7dp"
-                    android:src="@drawable/icon_schedule_enter" />
+                    android:src="@drawable/icon_contact_right_arrow" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_above="@id/rl_task_manager"
                 android:layout_marginLeft="15dp"
-                android:background="#DDDDDD" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/rl_task_parter"
-                android:layout_marginLeft="15dp"
-                android:background="#DDDDDD" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_deadline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rl_task_parter"
                 android:layout_marginTop="10dp"
                 android:background="#FFFFFF"
                 android:paddingBottom="11dp"
@@ -303,22 +346,20 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="7dp"
-                    android:src="@drawable/icon_schedule_enter" />
+                    android:src="@drawable/icon_contact_right_arrow" />
             </RelativeLayout>
 
             <View
-                android:id="@+id/rl_state_top_line"
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/rl_deadline"
                 android:layout_marginLeft="15dp"
-                android:background="#DDDDDD" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rl_state_top_line"
                 android:background="#FFFFFF"
                 android:paddingBottom="11dp"
                 android:paddingLeft="16dp"
@@ -348,22 +389,63 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:paddingLeft="7dp"
-                    android:src="@drawable/icon_schedule_enter" />
+                    android:src="@drawable/icon_contact_right_arrow" />
             </RelativeLayout>
 
             <View
-                android:id="@+id/v_top_more_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/rl_deadline"
+                android:layout_marginLeft="15dp"
+                android:background="@color/color_list_divider" />
+
+            <RelativeLayout
+                android:id="@+id/rl_task_end_alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="11dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="结束提醒"
+                    android:textColor="#333333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_end_task_alert_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/iv_task_end_alert_enter"
+                    android:text="提前30分钟"
+                    android:textColor="#888888"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/iv_task_end_alert_enter"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="7dp"
+                    android:src="@drawable/icon_contact_right_arrow" />
+            </RelativeLayout>
+
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/rl_state"
                 android:layout_marginLeft="15dp"
-                android:background="#DDDDDD" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/rl_more"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/v_top_more_line"
                 android:layout_marginTop="10dp"
                 android:background="#FFFFFF"
                 android:paddingBottom="11dp"
@@ -389,20 +471,17 @@
             </RelativeLayout>
 
             <View
-                android:id="@+id/v_attachment_topline"
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_below="@id/rl_more"
                 android:layout_marginLeft="15dp"
-                android:background="#DDDDDD" />
+                android:background="@color/color_list_divider"/>
 
             <RelativeLayout
                 android:id="@+id/rl_attachments_pictures"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/v_attachment_topline"
-                android:onClick="onClick"
                 android:background="#FFFFFF"
+                android:onClick="onClick"
                 android:paddingBottom="11dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
@@ -425,6 +504,13 @@
                     android:src="@drawable/icon_schedule_add" />
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/rl_deadline"
+                android:layout_marginLeft="15dp"
+                android:background="@color/color_list_divider" />
+
             <ListView
                 android:id="@+id/lv_attachment_abstract_picture"
                 android:layout_width="match_parent"
@@ -437,11 +523,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/lv_attachment_abstract_picture"
                 android:background="#FFFFFF"
+                android:onClick="onClick"
                 android:paddingBottom="11dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="11dp"
-                android:onClick="onClick">
+                android:paddingTop="11dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -459,12 +545,19 @@
                     android:src="@drawable/icon_schedule_add" />
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_below="@id/rl_deadline"
+                android:layout_marginLeft="15dp"
+                android:background="@color/color_list_divider" />
+
             <ListView
                 android:id="@+id/lv_attachment_abstract_other"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_attachments_others"></ListView>
-        </RelativeLayout>
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>
