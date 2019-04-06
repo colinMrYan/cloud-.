@@ -7,17 +7,19 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
@@ -30,6 +32,7 @@ import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -78,8 +81,10 @@ public class ScheduleFragment extends BaseFragment implements
     private List<CalendarEvent> calendarEventList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private TextView scheduleSumText;
+    private Boolean isEventShowTypeList;
     private ScrollView eventScrollView;
-    private ListView eventListView;
+    private RecyclerView eventRecyclerView;
+    private ScheduleEventListAdapter scheduleEventListAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -161,6 +166,15 @@ public class ScheduleFragment extends BaseFragment implements
             public void onEventClick(Event event) {
             }
         });
+        isEventShowTypeList = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_CALENDAR_EVENT_SHOW_TYPE
+                , CalendarSettingActivity.SHOW_TYPE_DAY_VIEW).equals(CalendarSettingActivity.SHOW_TYPE_LIST);
+        eventRecyclerView = rootView.findViewById(R.id.recycler_view_event);
+        eventRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        eventScrollView = rootView.findViewById(R.id.scroll_view_event);
+        eventRecyclerView.setVisibility(isEventShowTypeList?View.VISIBLE:View.GONE);
+        scheduleEventListAdapter = new ScheduleEventListAdapter(getActivity());
+        eventRecyclerView.setAdapter(scheduleEventListAdapter);
+        eventScrollView.setVisibility(isEventShowTypeList?View.GONE:View.VISIBLE);
         initData();
         onCalendarSelect(calendarView.getSelectedCalendar(),false);
 
@@ -245,7 +259,12 @@ public class ScheduleFragment extends BaseFragment implements
         eventList.addAll(Meeting.MeetingList2EventList(meetingList,selectCalendar));
         eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
         eventList.addAll(CalendarEvent.calendarEvent2EventList(calendarEventList,selectCalendar));
-        calendarDayView.setEventList(eventList,selectCalendar);
+        if (isEventShowTypeList){
+            scheduleEventListAdapter.setEventList(selectCalendar,eventList);
+            scheduleEventListAdapter.notifyDataSetChanged();
+        }else {
+            calendarDayView.setEventList(eventList,selectCalendar);
+        }
         int eventListSize = eventList.size();
         scheduleSumText.setText(eventListSize>0?eventListSize+"项日程":"");
     }

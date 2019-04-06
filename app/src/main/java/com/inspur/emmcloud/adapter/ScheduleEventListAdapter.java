@@ -27,10 +27,14 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
     private OnItemClickLister onItemClickLister;
     private Calendar selectCalendar;
 
-    public ScheduleEventListAdapter(Context context,List<Event> eventList){
+    public ScheduleEventListAdapter(Context context){
         this.context = context;
-        this.eventList = eventList;
+    }
+
+    public void setEventList(Calendar selectCalendar,List<Event> eventList){
         this.selectCalendar = selectCalendar;
+        this.eventList.clear();
+        this.eventList.addAll(eventList);
     }
 
     @Override
@@ -45,28 +49,35 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         Event event = eventList.get(position);
         holder.eventTileText.setText(event.getEventTitle());
 
-        int eventImgResId;
         String startTime="";
         String endTime="";
         if (event.getEventType().equals(Event.TYPE_CALENDAR)) {
-            eventImgResId = R.drawable.ic_schedule_event_calendar;
-            endTime="截止";
+            holder.eventPositionText.setVisibility(View.GONE);
+            startTime = TimeUtils.calendar2FormatString(context,event.getDayEventStartTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
+            endTime = TimeUtils.calendar2FormatString(context,event.getDayEventEndTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
         } else if (event.getEventType().equals(Event.TYPE_MEETING)) {
-            eventImgResId = R.drawable.ic_schedule_event_meeing;
-            startTime = TimeUtils.calendar2FormatString(context,event.getEventStartTime(),TimeUtils.FORMAT_HOUR_MINUTE);
-            endTime = TimeUtils.calendar2FormatString(context,event.getEventEndTime(),TimeUtils.FORMAT_HOUR_MINUTE);
+            holder.eventPositionText.setVisibility(View.VISIBLE);
+            holder.eventPositionText.setText("会议地点："+event.getEventSubTitle());
+            startTime = TimeUtils.calendar2FormatString(context,event.getDayEventStartTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
+            endTime = TimeUtils.calendar2FormatString(context,event.getDayEventEndTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
         } else {
-            eventImgResId = R.drawable.ic_schedule_event_task;
+            holder.eventPositionText.setVisibility(View.GONE);
+            if (TimeUtils.isSameDay(event.getEventEndTime(),selectCalendar)){
+                startTime = context.getString(R.string.today);
+            }else {
+                startTime = TimeUtils.calendar2FormatString(context,event.getEventEndTime(),TimeUtils.FORMAT_MONTH_DAY);
+            }
             endTime="截止";
         }
-        holder.eventImg.setImageResource(eventImgResId);
+        holder.eventImg.setImageResource(event.getEventIconResId());
         holder.eventStartTimeText.setText(startTime);
+        holder.eventEndTimeText.setText(endTime);
     }
 
 
     @Override
     public int getItemCount() {
-        return 0;
+        return eventList.size();
     }
 
     public void setOnItemClickLister(OnItemClickLister onItemClickLister){

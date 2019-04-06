@@ -295,14 +295,7 @@ public class LunarUtil {
     }
 
     public static String oneDay(int year, int month, int day) {
-        Calendar today = Calendar.getInstance(Locale.SIMPLIFIED_CHINESE);
-        int y, m, d, h, mi, s;
-        Calendar cal = Calendar.getInstance();
-        y = cal.get(Calendar.YEAR);
-        m = cal.get(Calendar.MONTH);
-        m = m + 1;
-        d = cal.get(Calendar.DATE);
-        long[] l = calElement(y, m, d);
+        long[] l = calElement(year, month, day);
         StringBuffer sToday = new StringBuffer();
         try {
             sToday.append("农历 ");
@@ -341,39 +334,6 @@ public class LunarUtil {
         }
     }
 
-    public static String getDate() {
-        Calendar today = Calendar.getInstance(Locale.SIMPLIFIED_CHINESE);
-
-        int y, m, d, h, mi, s;
-        Calendar cal = Calendar.getInstance();
-        y = cal.get(Calendar.YEAR);
-        m = cal.get(Calendar.MONTH);
-        m = m + 1;
-        d = cal.get(Calendar.DATE);
-
-        long[] l = calElement(y, m, d);
-        StringBuffer sToday = new StringBuffer();
-        try {
-            sToday.append(y);
-            sToday.append("-");
-            sToday.append(m);
-            sToday.append("-");
-            sToday.append(d);
-            return sToday.toString();
-        } finally {
-            sToday = null;
-        }
-    }
-
-    /**
-     * 农历日历工具使用演示
-     *
-     * @param args
-     */
-    // public static void main(String[] args) {
-    // System.out.println(today());
-    // System.out.println(oneDay(1989, 9, 10));
-    // }
     public static String getWeekDay(Calendar c) {
         if (c == null) {
             return MyApplication.getInstance().getString(R.string.monday);

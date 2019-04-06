@@ -101,7 +101,7 @@
             app:year_view_month_text_color="#ff0000"
             app:year_view_month_text_size="15sp"
             app:current_day_text_color="#36A5F6"
-            app:current_day_lunar_text_color="#999999"
+            app:current_day_lunar_text_color="#36A5F6"
             app:year_view_scheme_color="#f17706" />
 
         <com.inspur.emmcloud.widget.CalendarLinearLayout
@@ -156,8 +156,8 @@
             <ScrollView
                 android:id="@+id/scroll_view_event"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:background="@color/white">
                 <com.inspur.emmcloud.widget.calendardayview.CalendarDayView
                     android:id="@+id/calendar_day_view"
@@ -165,11 +165,12 @@
                     android:layout_height="wrap_content">
                 </com.inspur.emmcloud.widget.calendardayview.CalendarDayView>
             </ScrollView>
-            <ListView
-                android:id="@+id/lv_event"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_event"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </ListView>
+                android:layout_height="0dp">
+            </android.support.v7.widget.RecyclerView>
 
         </com.inspur.emmcloud.widget.CalendarLinearLayout>
     </com.inspur.emmcloud.widget.calendarview.CalendarLayout>
