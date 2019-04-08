@@ -43,6 +43,30 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
+    <ScrollView
+        android:layout_below="@id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_project_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:hint="请输入项目标题"
+                android:textColorHint="#999999"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5sp"/>
+            <com.inspur.emmcloud.widget.ScrollViewWithListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+
+        </LinearLayout>
+    </ScrollView>
 
 
 </RelativeLayout>
