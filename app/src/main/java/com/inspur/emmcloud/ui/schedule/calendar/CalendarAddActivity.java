@@ -318,8 +318,8 @@ public class CalendarAddActivity extends BaseActivity {
                     .localCalendar2UTCCalendar(startCalendar));
             calEvent.setEndDate(TimeUtils
                     .localCalendar2UTCCalendar(endCalendar));
-            addCalendarStr = JSONUtils.toJSONString(calEvent);
             calEvent.setCalendar(myCalendar);
+            addCalendarStr = JSONUtils.toJSONString(calEvent);
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
                 updateCalEvent();
             } else {
