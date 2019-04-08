@@ -27,7 +27,6 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -49,7 +48,6 @@ public class TaskListFragment extends Fragment {
     private ListView taskListView;
     private TaskListAdapter adapter;
     private WorkAPIService apiService;
-    private LoadingDialog loadingDialog;
     private int nowIndex = 0;
     private ArrayList<Task> taskList = new ArrayList<Task>();
     @ViewInject(R.id.refresh_layout)
@@ -112,7 +110,6 @@ public class TaskListFragment extends Fragment {
         initPullRefreshLayout();
         taskListView.setOnItemClickListener(new OnTaskClickListener());
 //        taskListView.setOnItemLongClickListener(new OnTaskLongClickListener());
-        loadingDialog = new LoadingDialog(getActivity());
         getCurrentTaskList(true);
     }
 
@@ -159,7 +156,7 @@ public class TaskListFragment extends Fragment {
      */
     protected void getFocusedTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show(isDialogShow);
+            swipeRefreshLayout.setRefreshing(true);
             apiService.getFocusedTasks(orderBy, orderType);
         }
     }
@@ -171,7 +168,7 @@ public class TaskListFragment extends Fragment {
      */
     protected void getInvolvedTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show(isDialogShow);
+            swipeRefreshLayout.setRefreshing(true);
             apiService.getInvolvedTasks(orderBy, orderType);
         }
     }
@@ -183,7 +180,7 @@ public class TaskListFragment extends Fragment {
      */
     protected void getMineTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show(isDialogShow);
+            swipeRefreshLayout.setRefreshing(true);
             apiService.getRecentTasks(orderBy, orderType);
         }
     }
@@ -196,7 +193,7 @@ public class TaskListFragment extends Fragment {
      */
     protected void deleteTasks(int position) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show();
+            swipeRefreshLayout.setRefreshing(true);
             apiService.deleteTasks(taskList.get(position).getId());
             deletePosition = position;
         }
@@ -309,9 +306,7 @@ public class TaskListFragment extends Fragment {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setRefreshing(false);
             noResultText.setVisibility(View.GONE);
             Task task = new Task();
 //            taskResult.setTitle(messionAddEdit.getText().toString());
@@ -326,18 +321,14 @@ public class TaskListFragment extends Fragment {
 
         @Override
         public void returnCreateTaskFail(String error, int errorCode) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
             super.returnRecentTasksSuccess(getTaskListResult);
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setRefreshing(false);
             String userId = ((MyApplication) getActivity().getApplicationContext()).getUid();
             String chooseTags = PreferencesUtils.getString(
@@ -353,18 +344,14 @@ public class TaskListFragment extends Fragment {
 
         @Override
         public void returnRecentTasksFail(String error, int errorCode) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnDeleteTaskSuccess() {
             super.returnDeleteTaskSuccess();
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setRefreshing(false);
             if (deletePosition != -1) {
                 taskList.remove(deletePosition);
                 adapter.notifyDataSetChanged();
@@ -377,9 +364,7 @@ public class TaskListFragment extends Fragment {
 
         @Override
         public void returnDeleteTaskFail(String error, int errorCode) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
