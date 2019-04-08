@@ -318,9 +318,9 @@ public class CalendarAddActivity extends BaseActivity {
                     .localCalendar2UTCCalendar(startCalendar));
             calEvent.setEndDate(TimeUtils
                     .localCalendar2UTCCalendar(endCalendar));
-            calEvent.setCalendar(myCalendar);
+            calEvent.setCalendar(null);
             addCalendarStr = JSONUtils.toJSONString(calEvent);
-            LogUtils.LbcDebug("data::"+addCalendarStr);
+            calEvent.setCalendar(myCalendar);
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
                 updateCalEvent();
             } else {
