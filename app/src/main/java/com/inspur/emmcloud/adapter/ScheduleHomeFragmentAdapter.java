@@ -10,11 +10,11 @@ import java.util.List;
  * Created by yufuchang on 2019/3/29.
  */
 
-public class AllScheduleFragmentAdapter extends FragmentStatePagerAdapter {
+public class ScheduleHomeFragmentAdapter extends FragmentStatePagerAdapter {
     //存放fragment的集合
     private List<Fragment> mFragments;
 
-    public AllScheduleFragmentAdapter(FragmentManager fm, List<Fragment> mFragments) {
+    public ScheduleHomeFragmentAdapter(FragmentManager fm, List<Fragment> mFragments) {
         super(fm);
         this.mFragments = mFragments;
     }

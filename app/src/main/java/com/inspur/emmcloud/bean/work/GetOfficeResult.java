@@ -47,7 +47,7 @@ public class GetOfficeResult {
         private String uid = "";
         private String buidingName = "";
         private String buildings = "";
-        private Location location;
+        private MeetingLocation location;
 
         public Office(JSONObject jsonObject) {
             try {
@@ -80,7 +80,7 @@ public class GetOfficeResult {
 
                     if (jsonBuilding.has("location")) {
                         JSONObject jsonLoc = jsonBuilding.getJSONObject("location");
-                        location = new Location(jsonLoc);
+                        location = new MeetingLocation(jsonLoc);
                     }
 
                 }
@@ -98,11 +98,11 @@ public class GetOfficeResult {
             this.officeId = officeid;
         }
 
-        public Location getLocation() {
+        public MeetingLocation getLocation() {
             return location;
         }
 
-        public void setLocation(Location location) {
+        public void setLocation(MeetingLocation location) {
             this.location = location;
         }
 

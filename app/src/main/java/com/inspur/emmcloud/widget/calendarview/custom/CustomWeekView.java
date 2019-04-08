@@ -111,9 +111,6 @@ public class CustomWeekView extends WeekView {
     protected void onPreviewHook() {
         mSolarTermTextPaint.setTextSize(mCurMonthLunarTextPaint.getTextSize());
         mRadius = Math.min(mItemWidth, mItemHeight) / 13 * 5;
-        LogUtils.jasonDebug("mItemWidth="+mItemWidth);
-        LogUtils.jasonDebug("mItemHeight="+mItemHeight);
-        LogUtils.jasonDebug("mRadius="+mRadius);
     }
 
 

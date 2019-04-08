@@ -16,6 +16,7 @@
 package com.inspur.emmcloud.widget.calendarview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -61,7 +62,12 @@ public class WeekBar extends LinearLayout {
      */
     protected void setTextColor(int color) {
         for (int i = 0; i < getChildCount(); i++) {
-            ((TextView) getChildAt(i)).setTextColor(color);
+            if (i==0 ||i==6){
+                ((TextView) getChildAt(i)).setTextColor(Color.parseColor("#999999"));
+            }else {
+                ((TextView) getChildAt(i)).setTextColor(color);
+            }
+
         }
     }
 
