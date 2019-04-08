@@ -7,14 +7,16 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
+import com.inspur.emmcloud.widget.ClearEditText;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -45,19 +47,18 @@ public class AllTaskListFragment extends Fragment{
     private ViewPager taskViewPager;
     @ViewInject(R.id.v_all_task)
     private View allTaskView;
-    @ViewInject(R.id.tv_schedule_all)
-    private TextView allTaskText;
-    @ViewInject(R.id.rl_search_layout)
-    private RelativeLayout searchRelativeLayout;
     @ViewInject(R.id.rl_all_task)
     private RelativeLayout allTaskLayout;
+    @ViewInject(R.id.ev_search)
+    private ClearEditText searchEditText;
     private TaskListFragment allTaskListFragment,mineTaskListFragment,involvedTaskListFragment,focusedTaskListFragment,allReadyDoneTaskListFragment;
     private AllTaskFragmentAdapter adapter;
+    private int lastTaskPosition = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
+        initFragmentList();
     }
 
     @Override
@@ -66,8 +67,6 @@ public class AllTaskListFragment extends Fragment{
         injected = true;
         return x.view().inject(this, inflater, container);
     }
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -78,8 +77,8 @@ public class AllTaskListFragment extends Fragment{
         initViews();
     }
 
-    private void initData() {
-        List<Fragment> list = new ArrayList<Fragment>();
+    private void initFragmentList() {
+        List<TaskListFragment> list = new ArrayList<TaskListFragment>();
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         Bundle bundle = new Bundle();
         bundle.putInt(MY_TASK_TYPE,MY_MINE);
@@ -132,6 +131,8 @@ public class AllTaskListFragment extends Fragment{
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
+
+
                 if(position == 0){
                     taskViewPager.setCurrentItem(position + 1);
                 }
@@ -146,6 +147,10 @@ public class AllTaskListFragment extends Fragment{
 
             @Override
             public void onPageSelected(int position) {
+                if(lastTaskPosition != position){
+                    setSearchState(lastTaskPosition);
+                    lastTaskPosition = position;
+                }
                 if(position > 0){
                     tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#36A5F6"));
                     tabLayoutSchedule.getTabAt(position - 1).select();
@@ -158,7 +163,6 @@ public class AllTaskListFragment extends Fragment{
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
@@ -172,6 +176,30 @@ public class AllTaskListFragment extends Fragment{
         });
         //将适配器和ViewPager结合
         taskViewPager.setAdapter(adapter);
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ((AllTaskFragmentAdapter)taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    /**
+     * 根据滑动状态改变搜索框和展示数据状态
+     */
+    private void setSearchState(int lastTaskPosition) {
+        searchEditText.setText("");
+        ((AllTaskFragmentAdapter)taskViewPager.getAdapter()).getTaskListFragment().get(lastTaskPosition).setSearchContent("");
     }
 
 

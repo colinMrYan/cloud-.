@@ -62,4 +62,9 @@ public class TaskListAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void setAndChangeData(ArrayList<Task> taskList){
+        this.taskList = taskList;
+        notifyDataSetChanged();
+    }
+
 }

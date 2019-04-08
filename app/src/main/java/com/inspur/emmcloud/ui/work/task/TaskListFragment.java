@@ -62,6 +62,8 @@ public class TaskListFragment extends Fragment {
     private TextView noResultText;
     private int deletePosition = -1;
     private boolean isNeedRefresh = false;
+    private String searchContent = "";
+    private ArrayList<Task> searchTaskList = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,6 +80,30 @@ public class TaskListFragment extends Fragment {
         initViews();
     }
 
+    /**
+     * 传入搜索内容
+     * @param searchContent
+     */
+    public void setSearchContent(String searchContent){
+        this.searchContent = searchContent;
+        if(adapter != null){
+            searchTaskListBySearchContent();
+        }
+    }
+
+    /**
+     * 根据搜索内容搜索列表
+     */
+    private void searchTaskListBySearchContent() {
+        searchTaskList.clear();
+        for(Task task:taskList){
+            if(task.getTitle().contains(searchContent)){
+                searchTaskList.add(task);
+            }
+        }
+        adapter.setAndChangeData(searchTaskList);
+    }
+
     private void initViews() {
         nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
         apiService = new WorkAPIService(getActivity());
@@ -87,7 +113,7 @@ public class TaskListFragment extends Fragment {
         taskListView.setOnItemClickListener(new OnTaskClickListener());
 //        taskListView.setOnItemLongClickListener(new OnTaskLongClickListener());
         loadingDialog = new LoadingDialog(getActivity());
-        getCurrentTaskList();
+        getCurrentTaskList(true);
     }
 
     /**
@@ -106,20 +132,20 @@ public class TaskListFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getCurrentTaskList();
+                getCurrentTaskList(false);
             }
         });
     }
 
-    private void getCurrentTaskList(){
+    private void getCurrentTaskList(boolean isDialogShow){
         nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
         if (NetUtils.isNetworkConnected(getActivity())) {
             if (nowIndex == AllTaskListFragment.MY_MINE) {
-                getMineTasks(true);
+                getMineTasks(isDialogShow);
             } else if (nowIndex == AllTaskListFragment.MY_INVOLVED) {
-                getInvolvedTasks(true);
+                getInvolvedTasks(isDialogShow);
             } else if (nowIndex == AllTaskListFragment.MY_FOCUSED) {
-                getFocusedTasks(true);
+                getFocusedTasks(isDialogShow);
             }
         } else {
             swipeRefreshLayout.setRefreshing(false);
