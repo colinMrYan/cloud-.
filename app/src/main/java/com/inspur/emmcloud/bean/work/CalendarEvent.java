@@ -21,7 +21,7 @@ public class CalendarEvent implements Serializable, Comparator {
     private String title;
     private String owner;
     private String location;
-    private boolean AllDay;
+    private boolean allday;
     private Calendar startDate;
     private Calendar endDate;
     private MyCalendar calendar;
@@ -37,16 +37,16 @@ public class CalendarEvent implements Serializable, Comparator {
         creationDate = TimeUtils.timeLong2Calendar(creationDateLong);
         Long lastUpdateLong = JSONUtils.getLong(obj, "lastUpdate", 0L);
         lastUpdate = TimeUtils.timeLong2Calendar(lastUpdateLong);
-        AllDay = JSONUtils.getBoolean(obj,"allday",false);
+        allday = JSONUtils.getBoolean(obj,"allday",false);
         Long startDateLong = JSONUtils.getLong(obj, "startDate", 0L);
         startDate = TimeUtils.timeLong2Calendar(startDateLong);
-        if (AllDay){
+        if (allday){
             startDate = TimeUtils.getDayBeginCalendar(startDate);
         }
         Long endDateLong = JSONUtils.getLong(obj, "endDate", 0L);
         if (endDateLong == 0){
             endDate = TimeUtils.getDayEndCalendar(startDate);
-        }else if(AllDay){
+        }else if(allday){
             endDate = TimeUtils.timeLong2Calendar(endDateLong);
             endDate= TimeUtils.getDayEndCalendar(endDate);
         }
@@ -153,11 +153,11 @@ public class CalendarEvent implements Serializable, Comparator {
     }
 
     public boolean getAllDay() {
-        return AllDay;
+        return allday;
     }
 
     public void setAllDay(boolean allDay) {
-        this.AllDay = allDay;
+        this.allday = allDay;
     }
     public Calendar getStartDate() {
         return startDate;
