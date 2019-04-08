@@ -31,7 +31,6 @@ import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -222,21 +221,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         selectCalendar.set(calendar.getYear(),calendar.getMonth()-1,calendar.getDay(),0,0,0);
         selectCalendar.set(java.util.Calendar.MILLISECOND,0);
         setSelectCalendarTimeInfo();
-        showCalendarEvent();
-        getMeetings();
-        getMyCalendar();
-        getTasks();
-    }
-
-    /**
-     * 选中日期
-     *
-     * @param calendar
-     * @param isClick
-     */
-    private void onCalendarSelect(java.util.Calendar calendar, boolean isClick) {
-        selectCalendar = calendar;
-        setCalendarTime();
         showCalendarEvent();
         getMeetings();
         getMyCalendar();
