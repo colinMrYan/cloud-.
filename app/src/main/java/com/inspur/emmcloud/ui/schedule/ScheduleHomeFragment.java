@@ -1,8 +1,7 @@
-package com.inspur.emmcloud.ui.work;
+package com.inspur.emmcloud.ui.schedule;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -14,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
@@ -29,29 +27,31 @@ import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by yufuchang on 2019/3/28.
  */
-public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener {
+@ContentView(R.layout.fragment_schedule_home)
+public class ScheduleHomeFragment extends ScheduleBaseFragment implements View.OnClickListener {
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
-    private View rootView;
     private TabLayout tabLayout;
     private ImageButton backToToDayImgBtn;
     private CustomScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
-    private ScheduleFragment meetingFragment;
+    private MeetingFragment meetingFragment;
     private AllTaskListFragment allTaskFragment;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        rootView = getLayoutInflater().inflate(R.layout.fragment_schedule_home, null);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view,savedInstanceState);
         initView();
 
     }
@@ -60,15 +60,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setFragmentStatusBarWhite();
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_schedule_home, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
+        return super.onCreateView(inflater,container,savedInstanceState);
     }
 
     /**
@@ -108,7 +100,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
-        meetingFragment = new ScheduleFragment();
+        meetingFragment = new MeetingFragment();
         allTaskFragment = new AllTaskListFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
@@ -227,7 +219,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
 
-    @Override
+    @Event(value = {R.id.ibt_add,R.id.ibt_back_to_today})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ibt_add:

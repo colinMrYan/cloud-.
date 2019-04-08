@@ -1,11 +1,10 @@
-package com.inspur.emmcloud.ui.work;
+package com.inspur.emmcloud.ui.schedule;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,7 +28,6 @@ import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -47,8 +45,11 @@ import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,7 @@ import java.util.Map;
  * Created by yufuchang on 2019/2/18.
  */
 
+@ContentView(R.layout.fragment_schedule)
 public class ScheduleFragment extends ScheduleBaseFragment implements
         CalendarView.OnCalendarSelectListener,
         CalendarView.OnYearChangeListener,
@@ -64,28 +66,39 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
+
+    @ViewInject(R.id.calendar_view_schedule)
     private CalendarView calendarView;
+    @ViewInject(R.id.calendar_layout_schedule)
     private CalendarLayout calendarLayout;
+    @ViewInject(R.id.tv_schedule_date)
     private TextView scheduleDataText;
+    @ViewInject(R.id.iv_calendar_view_expand)
     private ImageView calendarViewExpandImg;
+
+    @ViewInject(R.id.calendar_day_view)
+    private CalendarDayView calendarDayView;
+
+    @ViewInject(R.id.tv_schedule_sum)
+    private TextView scheduleSumText;
+    @ViewInject(R.id.scroll_view_event)
+    private ScrollView eventScrollView;
+    @ViewInject(R.id.recycler_view_event)
+    private RecyclerView eventRecyclerView;
+    private ScheduleEventListAdapter scheduleEventListAdapter;
+    private Boolean isEventShowTypeList;
     private WorkAPIService apiService;
     private List<String> calendarIdList = new ArrayList<>();
-    private CalendarDayView calendarDayView;
     private BroadcastReceiver meetingAndTaskReceiver;
-    private java.util.Calendar selectCalendar;
+    private Calendar selectCalendar;
     private List<Meeting> meetingList = new ArrayList<>();
     private List<Task> taskList = new ArrayList<>();
     private List<CalendarEvent> calendarEventList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
-    private TextView scheduleSumText;
-    private Boolean isEventShowTypeList;
-    private ScrollView eventScrollView;
-    private RecyclerView eventRecyclerView;
-    private ScheduleEventListAdapter scheduleEventListAdapter;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+       super.onViewCreated(view,savedInstanceState);
         EventBus.getDefault().register(this);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -93,10 +106,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         registerWorkNotifyReceiver();
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_schedule;
-    }
 
     /**
      * 注册刷新任务和会议的广播
@@ -137,16 +146,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     private void initView() {
-        calendarView = rootView.findViewById(R.id.calendar_view_schedule);
-        calendarLayout = rootView.findViewById(R.id.calendar_layout_schedule);
         calendarLayout.setExpandListener(this);
         calendarView.setOnCalendarSelectListener(this);
         calendarView.setOnYearChangeListener(this);
-        scheduleDataText = rootView.findViewById(R.id.tv_schedule_date);
-        calendarViewExpandImg = rootView.findViewById(R.id.iv_calendar_view_expand);
         calendarViewExpandImg.setOnClickListener(this);
-        calendarDayView = rootView.findViewById(R.id.calendar_day_view);
-        scheduleSumText = rootView.findViewById(R.id.tv_schedule_sum);
         calendarDayView.setOnEventClickListener(new CalendarDayView.OnEventClickListener() {
             @Override
             public void onEventClick(Event event) {
@@ -154,9 +157,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         });
         isEventShowTypeList = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_CALENDAR_EVENT_SHOW_TYPE
                 , CalendarSettingActivity.SHOW_TYPE_DAY_VIEW).equals(CalendarSettingActivity.SHOW_TYPE_LIST);
-        eventRecyclerView = rootView.findViewById(R.id.recycler_view_event);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        eventScrollView = rootView.findViewById(R.id.scroll_view_event);
         eventRecyclerView.setVisibility(isEventShowTypeList?View.VISIBLE:View.GONE);
         scheduleEventListAdapter = new ScheduleEventListAdapter(getActivity());
         eventRecyclerView.setAdapter(scheduleEventListAdapter);
@@ -217,9 +218,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     @Override
     public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
 
-        selectCalendar = java.util.Calendar.getInstance();
+        selectCalendar = Calendar.getInstance();
         selectCalendar.set(calendar.getYear(),calendar.getMonth()-1,calendar.getDay(),0,0,0);
-        selectCalendar.set(java.util.Calendar.MILLISECOND,0);
+        selectCalendar.set(Calendar.MILLISECOND,0);
         setSelectCalendarTimeInfo();
         showCalendarEvent();
         getMeetings();
@@ -234,7 +235,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if (isToday){
             builder.append(getString(R.string.today) + " ");
         }
-        builder.append(LunarUtil.oneDay(selectCalendar.get(java.util.Calendar.YEAR),selectCalendar.get(java.util.Calendar.MONTH)+1,selectCalendar.get(java.util.Calendar.DAY_OF_MONTH)));
+        builder.append(LunarUtil.oneDay(selectCalendar.get(Calendar.YEAR),selectCalendar.get(Calendar.MONTH)+1,selectCalendar.get(Calendar.DAY_OF_MONTH)));
         builder.append(" ");
         builder.append(TimeUtils.getWeekDay(MyApplication.getInstance(),selectCalendar));
         scheduleDataText.setText(builder.toString());
@@ -321,14 +322,14 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void getCalEventsForTwoDays() {
         if (calendarIdList.size() > 0) {
             if (NetUtils.isNetworkConnected(getActivity())) {
-                java.util.Calendar afterCalendar = java.util.Calendar.getInstance();
-                java.util.Calendar beforeCalendar = java.util.Calendar.getInstance();
-                beforeCalendar.set(beforeCalendar.get(java.util.Calendar.YEAR),
-                        beforeCalendar.get(java.util.Calendar.MONTH),
-                        beforeCalendar.get(java.util.Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
-                afterCalendar.set(afterCalendar.get(java.util.Calendar.YEAR),
-                        afterCalendar.get(java.util.Calendar.MONTH),
-                        afterCalendar.get(java.util.Calendar.DAY_OF_MONTH), 0, 0, 0);
+                Calendar afterCalendar = Calendar.getInstance();
+                Calendar beforeCalendar = Calendar.getInstance();
+                beforeCalendar.set(beforeCalendar.get(Calendar.YEAR),
+                        beforeCalendar.get(Calendar.MONTH),
+                        beforeCalendar.get(Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
+                afterCalendar.set(afterCalendar.get(Calendar.YEAR),
+                        afterCalendar.get(Calendar.MONTH),
+                        afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
                 afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
                 beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
                 apiService.getAllCalEvents(calendarIdList, afterCalendar,
