@@ -309,7 +309,7 @@ public class CalendarAddActivity extends BaseActivity {
             if (!isAbleSaveAndTips(title, startCalendar, endCalendar)) {
                 return;
             }
-            correctedCalendarTime();
+            //correctedCalendarTime();
             calEvent = ((calEvent == null) ? new CalendarEvent() : calEvent);
             calEvent.setTitle(title);
             calEvent.setAllDay(isAllDay);
@@ -318,7 +318,6 @@ public class CalendarAddActivity extends BaseActivity {
                     .localCalendar2UTCCalendar(startCalendar));
             calEvent.setEndDate(TimeUtils
                     .localCalendar2UTCCalendar(endCalendar));
-            calEvent.setCalendar(null);
             addCalendarStr = JSONUtils.toJSONString(calEvent);
             calEvent.setCalendar(myCalendar);
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
