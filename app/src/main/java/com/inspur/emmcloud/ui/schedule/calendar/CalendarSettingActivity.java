@@ -85,8 +85,6 @@ public class CalendarSettingActivity extends BaseActivity {
                             Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
                 }
                 break;
-            case R.id.tv_save:
-                break;
             default:
                 break;
         }

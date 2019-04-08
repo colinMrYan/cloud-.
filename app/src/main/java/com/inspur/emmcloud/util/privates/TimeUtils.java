@@ -45,6 +45,7 @@ public class TimeUtils {
     public static final int FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE = 6;
     public static final int FORMAT_YEAR_MONTH = 7;
     public static final int FORMAT_YEAR_MONTH_DAY_BY_DASH = 8;
+    public static final int FORMAT_MONTH_DAY_HOUR_MINUTE = 9;
 
     private static final int WEEK_MONDAY = 2;
     private static final int WEEK_TUESDAY = 3;
@@ -85,6 +86,9 @@ public class TimeUtils {
                 break;
             case FORMAT_YEAR_MONTH_DAY_BY_DASH:
                 pattern = context.getString(R.string.format_year_month_day_by_dash);
+                break;
+            case FORMAT_MONTH_DAY_HOUR_MINUTE:
+                pattern = context.getString(R.string.format_month_day_hour_minute);
                 break;
             default:
                 break;

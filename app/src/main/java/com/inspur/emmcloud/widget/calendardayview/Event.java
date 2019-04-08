@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.widget.calendardayview;
 
 
+import android.content.Context;
+
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.Calendar;
@@ -128,5 +131,32 @@ public class Event {
             }
         }
         return eventList;
+    }
+
+    public int getEventIconResId(){
+        int eventIconResId = -1;
+        if (getEventType().equals(Event.TYPE_CALENDAR)) {
+            eventIconResId = R.drawable.ic_schedule_event_calendar;
+        } else if (getEventType().equals(Event.TYPE_MEETING)) {
+            eventIconResId = R.drawable.ic_schedule_event_meeing;
+        } else {
+            eventIconResId = R.drawable.ic_schedule_event_task;
+        }
+        return eventIconResId;
+    }
+
+    public String getShowEventSubTitle(Context context,Calendar selectCalendar){
+        String showEventSubTitle = "";
+        if (getEventType().equals(Event.TYPE_MEETING)) {
+            showEventSubTitle = "会议地点："+getEventSubTitle();
+        } else {
+            if (TimeUtils.isSameDay(selectCalendar,getEventEndTime())){
+                showEventSubTitle = context.getString(R.string.today);
+            }else {
+                showEventSubTitle = TimeUtils.calendar2FormatString(context,getEventEndTime(),TimeUtils.FORMAT_MONTH_DAY);
+            }
+
+        }
+        return showEventSubTitle;
     }
 }

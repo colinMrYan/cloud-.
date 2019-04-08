@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.work;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
@@ -244,8 +243,7 @@ public class Task implements Serializable {
         List<Event> eventList = new ArrayList<>();
         for (Task task : taskList) {
             if (TimeUtils.isSameDay(selectCalendar, task.getCreationDate()) || TimeUtils.isSameDay(selectCalendar, task.getDueDate())) {
-                String eventSubTitle = TimeUtils.calendar2FormatString(MyApplication.getInstance(), task.getDueDate(), TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE) + "截止";
-                Event event = new Event(task.getId(), Event.TYPE_TASK, task.getTitle(), eventSubTitle, task.getCreationDate(), task.getDueDate());
+                Event event = new Event(task.getId(), Event.TYPE_TASK, task.getTitle(), "", task.getCreationDate(), task.getDueDate());
                 eventList.add(event);
             }
 
