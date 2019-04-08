@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 
 
@@ -48,7 +47,6 @@ public class CalendarLinearLayout extends LinearLayout implements CalendarLayout
         }
 
         if (recyclerView != null && recyclerView.getVisibility() == VISIBLE){
-            LogUtils.jasonDebug("recyclerView.computeVerticalScrollOffset()=="+recyclerView.computeVerticalScrollOffset());
             return recyclerView.computeVerticalScrollOffset() == 0;
         }
         return false;

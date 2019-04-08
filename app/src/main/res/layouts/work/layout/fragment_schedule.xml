@@ -1,51 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context="com.inspur.emmcloud.MainActivity"
-    tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/rl_tool"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/header_height"
-        android:background="?attr/header_bg"
-        android:visibility="gone">
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout_schedule"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"
-            app:tabSelectedTextColor="@color/black"
-            app:tabTextAppearance="@style/ScheduleTabLayoutTextStyle"
-            app:tabTextColor="#888888" />
-
-        <ImageView
-            android:id="@+id/iv_add"
-            android:layout_width="46dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:paddingLeft="8dp"
-            android:paddingRight="16dp"
-            android:scaleType="centerInside"
-            android:src="?attr/ic_add" />
-
-
-    </RelativeLayout>
 
     <EditText
-        android:id="@+id/ev_schedule_search"
+        android:id="@+id/et_schedule_search"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_gravity="center"
@@ -65,7 +29,7 @@
         android:background="#ffffff"
         android:orientation="vertical"
         app:calendar_content_view_id="@+id/ll_date_and_arrow"
-        app:default_status="shrink">
+        app:default_status="expand">
 
         <com.inspur.emmcloud.widget.calendarview.CalendarView
             android:id="@+id/calendar_view_schedule"
@@ -75,33 +39,32 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             app:calendar_height="50dp"
+            app:current_day_lunar_text_color="#36A5F6"
+            app:current_day_text_color="#36A5F6"
             app:current_month_lunar_text_color="#999999"
             app:current_month_text_color="#333333"
             app:lunar_text_size="10sp"
             app:max_year="2099"
             app:min_year="1900"
-            app:default_status="expand"
+            app:month_view="com.inspur.emmcloud.widget.calendarview.custom.CustomMonthView"
             app:month_view_show_mode="mode_all"
             app:other_month_lunar_text_color="#999999"
             app:other_month_text_color="#999999"
-            app:week_view="com.inspur.emmcloud.widget.calendarview.custom.CustomWeekView"
-            app:month_view="com.inspur.emmcloud.widget.calendarview.custom.CustomMonthView"
+            app:scheme_lunar_text_color="#999999"
             app:scheme_text_color="#333"
             app:scheme_theme_color="#128c4b"
-            app:scheme_lunar_text_color="#999999"
             app:selected_lunar_text_color="#FFFFFF"
             app:selected_text_color="#FFFFFF"
             app:selected_theme_color="#36A5F6"
             app:week_background="#ffffff"
             app:week_start_with="sun"
             app:week_text_color="#333333"
+            app:week_view="com.inspur.emmcloud.widget.calendarview.custom.CustomWeekView"
             app:week_view_scrollable="true"
             app:year_view_day_text_color="#333333"
             app:year_view_day_text_size="15sp"
             app:year_view_month_text_color="#ff0000"
             app:year_view_month_text_size="15sp"
-            app:current_day_text_color="#36A5F6"
-            app:current_day_lunar_text_color="#36A5F6"
             app:year_view_scheme_color="#f17706" />
 
         <com.inspur.emmcloud.widget.CalendarLinearLayout
@@ -122,21 +85,23 @@
                     android:layout_height="30dp"
                     android:layout_centerHorizontal="true"
                     android:padding="5dp"
-                    android:src="@drawable/ic_schedule_down" />
+                    android:src="@drawable/ic_schedule_up" />
+
                 <View
                     android:id="@+id/view_space"
-                    android:layout_below="@id/iv_calendar_view_expand"
                     android:layout_width="match_parent"
-                    android:background="@color/content_bg"
-                    android:layout_height="10dp"></View>
+                    android:layout_height="10dp"
+                    android:layout_below="@id/iv_calendar_view_expand"
+                    android:background="@color/content_bg"></View>
+
                 <TextView
                     android:id="@+id/tv_schedule_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/view_space"
-                    android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
+                    android:paddingTop="10dp"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
@@ -146,9 +111,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/view_space"
-                    android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:paddingRight="17dp"
+                    android:paddingTop="10dp"
                     android:textColor="#333333"
                     android:textSize="15sp" />
             </RelativeLayout>
@@ -159,18 +124,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/white">
+
                 <com.inspur.emmcloud.widget.calendardayview.CalendarDayView
                     android:id="@+id/calendar_day_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </com.inspur.emmcloud.widget.calendardayview.CalendarDayView>
+                    android:layout_height="wrap_content"></com.inspur.emmcloud.widget.calendardayview.CalendarDayView>
             </ScrollView>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view_event"
-                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
-            </android.support.v7.widget.RecyclerView>
+                android:layout_height="0dp"
+                android:layout_weight="1"></android.support.v7.widget.RecyclerView>
 
         </com.inspur.emmcloud.widget.CalendarLinearLayout>
     </com.inspur.emmcloud.widget.calendarview.CalendarLayout>

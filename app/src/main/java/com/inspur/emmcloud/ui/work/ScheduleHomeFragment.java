@@ -16,9 +16,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.AllScheduleFragmentAdapter;
+import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * Created by yufuchang on 2019/3/28.
  */
-public class AllScheduleFragment extends BaseFragment implements View.OnClickListener {
+public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
@@ -49,7 +50,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rootView = getLayoutInflater().inflate(R.layout.fragment_all_schedule, null);
+        rootView = getLayoutInflater().inflate(R.layout.fragment_schedule_home, null);
         initView();
 
     }
@@ -59,7 +60,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         setFragmentStatusBarWhite();
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_all_schedule, container,
+            rootView = inflater.inflate(R.layout.fragment_schedule_home, container,
                     false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
@@ -106,7 +107,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
 
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
-        meetingFragment = new ScheduleFragment();
+        meetingFragment = new MeetingFragment();
         taskFragment = new ScheduleFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
@@ -114,7 +115,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
         list.add(taskFragment);
 
         //初始化adapter
-        AllScheduleFragmentAdapter adapter = new AllScheduleFragmentAdapter(getActivity().getSupportFragmentManager(), list);
+        ScheduleHomeFragmentAdapter adapter = new ScheduleHomeFragmentAdapter(getActivity().getSupportFragmentManager(), list);
         //将适配器和ViewPager结合
         allScheduleFragmentViewPager.setAdapter(adapter);
 
@@ -214,7 +215,7 @@ public class AllScheduleFragment extends BaseFragment implements View.OnClickLis
             case 1:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, "预定会议室"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, "历史会议"));
                 break;
             case 2:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));

@@ -39,7 +39,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_event_list_item,null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_event_list_item_view,null);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
