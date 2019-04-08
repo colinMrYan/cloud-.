@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.MyCalendar;
@@ -34,6 +35,8 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_calendar_setting)
 public class CalendarSettingActivity extends BaseActivity {
+    public static final String SHOW_TYPE_LIST =  "show_type_list";
+    public static final String SHOW_TYPE_DAY_VIEW =  "show_type_day_view";
     @ViewInject(R.id.listview_list_calendars)
     private ScrollViewWithListView calendarsListView;
     @ViewInject(R.id.iv_list_view_select)
@@ -50,9 +53,8 @@ public class CalendarSettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        String viewDisplayType = PreferencesUtils.getString(
-                getApplicationContext(), Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
-        boolean isListView = viewDisplayType.equals(Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
+        String viewDisplayType = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
+        boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
         calendarsList = MyCalendarCacheUtils.getAllMyCalendarList(this);
@@ -72,7 +74,7 @@ public class CalendarSettingActivity extends BaseActivity {
                     listSelectImageView.setVisibility(View.VISIBLE);
                     daySelectImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
-                            Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_LISTVIEW);
+                            Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_LIST);
                 }
                 break;
             case R.id.rl_day_view:
@@ -80,10 +82,8 @@ public class CalendarSettingActivity extends BaseActivity {
                     daySelectImageView.setVisibility(View.VISIBLE);
                     listSelectImageView.setVisibility(View.INVISIBLE);
                     PreferencesUtils.putString(getApplicationContext(),
-                            Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE, Constant.PREF_SCHEDULE_CALENDAR_VIEW_DISPLAY_TYPE_DAYVIEW);
+                            Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
                 }
-                break;
-            case R.id.tv_save:
                 break;
             default:
                 break;

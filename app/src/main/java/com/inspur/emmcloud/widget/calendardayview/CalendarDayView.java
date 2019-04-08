@@ -27,8 +27,8 @@ import java.util.List;
  */
 
 public class CalendarDayView extends RelativeLayout {
-    private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
-            "16", "17", "18", "19", "20", "21", "22", "23"};
+    private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3",
+            "4", "5", "6", "7", "8", "9", "10", "10"};
     private List<TimeHourRow> timeHourRowList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private RelativeLayout eventLayout;
@@ -67,8 +67,15 @@ public class CalendarDayView extends RelativeLayout {
         for (int i = 0; i < dayHourTimes.length; i++) {
             View hourLayout = LayoutInflater.from(getContext()).inflate(R.layout.calendar_day_view_hour, null, false);
             hourLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,TIME_HOUR_HEIGHT));
-            TextView textView = hourLayout.findViewById(R.id.tv_hour);
-            textView.setText(dayHourTimes[i]);
+            TextView hourText = hourLayout.findViewById(R.id.tv_hour);
+            hourText.setText(dayHourTimes[i]);
+            TextView amText = hourLayout.findViewById(R.id.tv_am);
+            if (i==7){
+                amText.setText("上午");
+            }else if(i==13){
+                amText.setText("下午");
+            }
+
             timeHourLayout.addView(hourLayout);
         }
         currentTimeLineLayout = view.findViewById(R.id.tl_current_time_line);
@@ -200,7 +207,6 @@ public class CalendarDayView extends RelativeLayout {
             }
             for (int i = 0; i < eventList.size(); i++) {
                 Event event = eventList.get(i);
-
                 if (event.getIndex() < 0) {
                     event.setIndex(i);
                     int eventWidth = timeHourRow.getEventWidth();
@@ -231,17 +237,9 @@ public class CalendarDayView extends RelativeLayout {
         ImageView eventImg = eventView.findViewById(R.id.iv_event);
         TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
         TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
-        int eventIconResId = -1;
-        if (event.getEventType().equals(Event.TYPE_CALENDAR)) {
-            eventIconResId = R.drawable.ic_schedule_event_calendar;
-        } else if (event.getEventType().equals(Event.TYPE_MEETING)) {
-            eventIconResId = R.drawable.ic_schedule_event_meeing;
-        } else {
-            eventIconResId = R.drawable.ic_schedule_event_task;
-        }
-        eventImg.setImageResource(eventIconResId);
+        eventImg.setImageResource(event.getEventIconResId());
         eventTitleEvent.setText(event.getEventTitle());
-        eventSubtitleEvent.setText(event.getEventSubTitle());
+        eventSubtitleEvent.setText(event.getShowEventSubTitle(getContext(),selectCalendar)+"截止");
         eventLayout.addView(eventView, eventLayoutParams);
 
         eventView.setOnClickListener(new OnClickListener() {

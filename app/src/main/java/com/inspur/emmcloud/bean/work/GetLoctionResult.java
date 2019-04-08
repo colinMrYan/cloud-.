@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class GetLoctionResult {
-    private ArrayList<Location> locationList = new ArrayList<Location>();
+    private ArrayList<MeetingLocation> locationList = new ArrayList<MeetingLocation>();
 
     public GetLoctionResult(String response) {
         try {
@@ -14,18 +14,18 @@ public class GetLoctionResult {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject jsonLocation = null;
                 jsonLocation = array.getJSONObject(i);
-                locationList.add(new Location(jsonLocation));
+                locationList.add(new MeetingLocation(jsonLocation));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<Location> getLocList() {
+    public ArrayList<MeetingLocation> getLocList() {
         return locationList;
     }
 
-    public void setLocList(ArrayList<Location> locList) {
+    public void setLocList(ArrayList<MeetingLocation> locList) {
         this.locationList = locList;
     }
 
