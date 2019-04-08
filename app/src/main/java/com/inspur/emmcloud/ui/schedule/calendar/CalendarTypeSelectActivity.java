@@ -33,6 +33,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
 
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
+    MyCalendar calendar;
     private int selectPosition = -1;
 
     @Override
@@ -51,10 +52,10 @@ public class CalendarTypeSelectActivity extends BaseActivity {
                 calendarList.add(myCalendar);
             }
         }
-        if (getIntent().hasExtra("selectCalendar")) {
-            MyCalendar selectCalendar = (MyCalendar) getIntent().getExtras().getSerializable("selectCalendar");
+        if (getIntent().hasExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT)) {
+            calendar = (MyCalendar) getIntent().getExtras().getSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT);
             for (int i = 0; i < calendarList.size(); i++) {
-                if (calendarList.get(i).getId().equals(selectCalendar.getId())) {
+                if (calendarList.get(i).getId().equals(calendar.getId())) {
                     selectPosition = i;
                     break;
                 }
@@ -71,9 +72,9 @@ public class CalendarTypeSelectActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 selectPosition = position;
                 calendarAdapter.notifyDataSetChanged();
-                MyCalendar calendar = calendarList.get(position);
+                calendar = calendarList.get(position);
                 Intent intent = new Intent();
-                intent.putExtra("result", calendar);
+                intent.putExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE, calendar);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -113,7 +114,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.item_calendar_type_select, null);
+            convertView = vi.inflate(R.layout.schedule_calendar_type_select, null);
             TextView textView = convertView.findViewById(R.id.tv_calendar_name);
             MyCalendar calendar = calendarList.get(position);
             ImageView calSelectImg = convertView.findViewById(R.id.iv_calendar_select);

@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.bean.work;
 
 
+import com.inspur.emmcloud.util.common.JSONUtils;
+
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -33,24 +35,12 @@ public class MyCalendar implements Serializable {
 
     public MyCalendar(JSONObject obj) {
         try {
-            if (obj.has("id")) {
-                id = obj.getString("id");
-            }
-            if (obj.has("name")) {
-                name = obj.getString("name");
-            }
-            if (obj.has("color")) {
-                color = obj.getString("color");
-            }
-            if (obj.has("owner")) {
-                owner = obj.getString("owner");
-            }
-            if (obj.has("state")) {
-                state = obj.getString("state");
-            }
-            if (obj.has("community")) {
-                community = obj.getBoolean("community");
-            }
+           id=JSONUtils.getString(obj,"id","");
+           name=JSONUtils.getString(obj,"name","");
+           color=JSONUtils.getString(obj,"color","");
+           owner=JSONUtils.getString(obj,"owner","");
+           state=JSONUtils.getString(obj,"state","");
+           community=JSONUtils.getBoolean(obj,"community",false);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -60,24 +50,12 @@ public class MyCalendar implements Serializable {
     public MyCalendar(String response) {
         try {
             JSONObject obj = new JSONObject(response);
-            if (obj.has("id")) {
-                id = obj.getString("id");
-            }
-            if (obj.has("name")) {
-                name = obj.getString("name");
-            }
-            if (obj.has("color")) {
-                color = obj.getString("color");
-            }
-            if (obj.has("owner")) {
-                owner = obj.getString("owner");
-            }
-            if (obj.has("state")) {
-                state = obj.getString("state");
-            }
-            if (obj.has("community")) {
-                community = obj.getBoolean("community");
-            }
+            id=JSONUtils.getString(obj,"id","");
+            name=JSONUtils.getString(obj,"name","");
+            color=JSONUtils.getString(obj,"color","");
+            owner=JSONUtils.getString(obj,"owner","");
+            state=JSONUtils.getString(obj,"state","");
+            community=JSONUtils.getBoolean(obj,"community",false);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

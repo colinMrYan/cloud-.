@@ -57,6 +57,10 @@ public class DataTimePickerDialog {
         datePicker = inflate.findViewById(R.id.datePicker_no_head);
         resizePikcer(datePicker);
         hideDatePickerHeader(datePicker);
+        int year=resultCalendar.get(Calendar.YEAR);
+        int monthOfYear=resultCalendar.get(Calendar.MONTH);
+        int dayOfMonth=resultCalendar.get(Calendar.DAY_OF_MONTH);
+        datePicker.init(year,monthOfYear,dayOfMonth,null);
         relativeLayout = inflate.findViewById(R.id.rl_select_time);
         timeTextView = inflate.findViewById(R.id.tv_time);
         String hourMinute= TimeUtils.calendar2FormatString(context,resultCalendar,TimeUtils.FORMAT_HOUR_MINUTE);
@@ -64,7 +68,7 @@ public class DataTimePickerDialog {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(context,TimePickerDialog.THEME_HOLO_LIGHT,new TimePickerDialog.OnTimeSetListener() {
+                new TimePickerDialog(context,R.style.DateTimePickerTimeTheme,new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

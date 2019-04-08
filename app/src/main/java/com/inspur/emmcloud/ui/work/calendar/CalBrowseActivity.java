@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.widget.calendarlistview.DatePickerController;
 import com.inspur.emmcloud.widget.calendarlistview.DayPickerView;
@@ -51,7 +52,7 @@ public class CalBrowseActivity extends BaseActivity implements
 //			startActivity(intent);
 //			break;
             case R.id.add_event_text:
-                intent.setClass(CalBrowseActivity.this, CalEventAddActivity.class);
+                intent.setClass(CalBrowseActivity.this, CalendarAddActivity.class);
                 startActivity(intent);
                 break;
             default:
