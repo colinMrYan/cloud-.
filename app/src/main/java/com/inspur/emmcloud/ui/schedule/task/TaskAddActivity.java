@@ -133,6 +133,7 @@ public class TaskAddActivity extends BaseActivity {
         attachmentPicturesList.setAdapter(attachmentPictureAdapter);
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(this);
+        apiService.setAPIInterface(new TaskAddActivity.WebService());
     }
 
     private void initView() {
@@ -241,7 +242,7 @@ public class TaskAddActivity extends BaseActivity {
         String taskContent= contentInputEdit.getText().toString();
         if(NetUtils.isNetworkConnected(this))
           loadingDlg.show();
-        apiService.createTasks(StringUtils.isBlank(taskContent)?"":taskContent);
+        apiService.createTasks(StringUtils.isBlank(taskContent)?"李宝超的测试（default）":taskContent);
     }
 
     /**
