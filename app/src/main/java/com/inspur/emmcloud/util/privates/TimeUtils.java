@@ -88,7 +88,8 @@ public class TimeUtils {
                 pattern = context.getString(R.string.format_year_month_day_by_dash);
                 break;
             case FORMAT_MONTH_DAY_HOUR_MINUTE:
-                pattern = context.getString(R.string.format_month_day_hour_minute);
+                pattern = context
+                        .getString(R.string.format_month_day_hour_minute);
                 break;
             default:
                 break;

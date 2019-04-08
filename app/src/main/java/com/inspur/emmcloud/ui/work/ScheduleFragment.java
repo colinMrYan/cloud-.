@@ -31,7 +31,6 @@ import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -41,9 +40,9 @@ import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
-import com.inspur.emmcloud.widget.calendarview.Calendar;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
+import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -176,24 +175,24 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void initData() {
         int year = calendarView.getCurYear();
         int month = calendarView.getCurMonth();
-        Map<String, Calendar> map = new HashMap<>();
-        map.put(getSchemeCalendar(year, month, 3,0xff36A5F6 , "休").toString(),
+        Map<String, EmmCalendar> map = new HashMap<>();
+        map.put(getSchemeCalendar(year, month, 3, 0xff36A5F6, "休").toString(),
                 getSchemeCalendar(year, month, 3, 0xff36A5F6, "休"));
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         calendarView.setSchemeDate(map);
     }
 
-    private Calendar getSchemeCalendar(int year, int month, int day, int color, String text) {
-        Calendar calendar = new Calendar();
-        calendar.setYear(year);
-        calendar.setMonth(month);
-        calendar.setDay(day);
-        calendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
-        calendar.setScheme(text);
-        calendar.addScheme(new Calendar.Scheme());
-        calendar.addScheme(0xFF36A5F6, "假");
-        calendar.addScheme(0xFF36A5F6, "节");
-        return calendar;
+    private EmmCalendar getSchemeCalendar(int year, int month, int day, int color, String text) {
+        EmmCalendar emmCalendar = new EmmCalendar();
+        emmCalendar.setYear(year);
+        emmCalendar.setMonth(month);
+        emmCalendar.setDay(day);
+        emmCalendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
+        emmCalendar.setScheme(text);
+        emmCalendar.addScheme(new EmmCalendar.Scheme());
+        emmCalendar.addScheme(0xFF36A5F6, "假");
+        emmCalendar.addScheme(0xFF36A5F6, "节");
+        return emmCalendar;
     }
 
     /**
@@ -211,24 +210,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     @Override
-    public void onCalendarOutOfRange(Calendar calendar) {
+    public void onCalendarOutOfRange(EmmCalendar calendar) {
 
     }
 
     @Override
-    public void onCalendarSelect(Calendar calendar, boolean isClick) {
-//        calendarView.post(new Runnable() {
-//            @Override
-//            public void run() {
-                LogUtils.jasonDebug("calendarView==null========="+(calendarView==null));
-                LogUtils.jasonDebug("calendarView.getMonthViewPager()==null========="+(calendarView.getMonthViewPager()==null));
-                LogUtils.jasonDebug("calendarView.getCurrentMonthCalendars()==null========="+(calendarView.getCurrentMonthCalendars()==null));
-                LogUtils.jasonDebug("size="+calendarView.getCurrentMonthCalendars().get(0).getDay());
-//            }
-//        });
+    public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
 
-//        LogUtils.jasonDebug("size="+calendarView.getCurrentMonthCalendars().get(0).getDay());
-//        LogUtils.jasonDebug("00000000000000000000000000000000");
         selectCalendar = java.util.Calendar.getInstance();
         selectCalendar.set(calendar.getYear(),calendar.getMonth()-1,calendar.getDay(),0,0,0);
         selectCalendar.set(java.util.Calendar.MILLISECOND,0);

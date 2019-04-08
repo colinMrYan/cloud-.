@@ -4,17 +4,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.inspur.emmcloud.ui.work.task.TaskListFragment;
+
 import java.util.List;
 
 /**
- * Created by yufuchang on 2019/3/29.
+ * Created by yufuchang on 2019/4/4.
  */
 
-public class ScheduleHomeFragmentAdapter extends FragmentStatePagerAdapter {
+public class AllTaskFragmentAdapter extends FragmentStatePagerAdapter {
     //存放fragment的集合
-    private List<Fragment> mFragments;
+    private List<TaskListFragment> mFragments;
 
-    public ScheduleHomeFragmentAdapter(FragmentManager fm, List<Fragment> mFragments) {
+    public AllTaskFragmentAdapter(FragmentManager fm, List<TaskListFragment> mFragments) {
         super(fm);
         this.mFragments = mFragments;
     }
@@ -27,5 +29,9 @@ public class ScheduleHomeFragmentAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return mFragments.size();
+    }
+
+    public List<TaskListFragment> getTaskListFragment(){
+        return mFragments;
     }
 }

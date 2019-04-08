@@ -1,11 +1,11 @@
 package com.inspur.emmcloud.bean.work;
 
-import com.inspur.emmcloud.widget.calendarview.Calendar;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * Created by chenmch on 2019/4/6.

@@ -349,8 +349,14 @@
     <string name="work_info_text">Info bar</string>
     <string name="time">Time</string>
     <string name="work_search_hint">Search calendars, tasks</string>
-    <string name="work_mession">Mission</string>
+    <string name="work_mession">Task</string>
     <string name="work_schedule">Schedule</string>
+    <string name="work_task_mine">Created</string>
+    <string name="work_task_involved">Involved</string>
+    <string name="work_task_focused">Focused</string>
+    <string name="work_task_done">Finished</string>
+    <string name="work_task_all">Whole</string>
+    <string name="work_task_end">%1$s End</string>
 
     <!-- 日程 -->
     <string name="schedule_event_alert">Schedule reminder</string>

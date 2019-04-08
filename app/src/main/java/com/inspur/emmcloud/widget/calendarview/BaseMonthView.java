@@ -83,12 +83,12 @@ public abstract class BaseMonthView extends BaseView {
         if (mItems.contains(mDelegate.getCurrentDay())) {
             mCurrentItem = mItems.indexOf(mDelegate.getCurrentDay());
         } else {
-            mCurrentItem = mItems.indexOf(mDelegate.mSelectedCalendar);
+            mCurrentItem = mItems.indexOf(mDelegate.mSelectedEmmCalendar);
         }
 
         if (mCurrentItem > 0 &&
                 mDelegate.mCalendarInterceptListener != null &&
-                mDelegate.mCalendarInterceptListener.onCalendarIntercept(mDelegate.mSelectedCalendar)) {
+                mDelegate.mCalendarInterceptListener.onCalendarIntercept(mDelegate.mSelectedEmmCalendar)) {
             mCurrentItem = -1;
         }
 
@@ -106,7 +106,7 @@ public abstract class BaseMonthView extends BaseView {
      *
      * @return return
      */
-    protected Calendar getIndex() {
+    protected EmmCalendar getIndex() {
         int indexX = (int) mX / mItemWidth;
         if (indexX >= 7) {
             indexX = 6;
@@ -121,10 +121,10 @@ public abstract class BaseMonthView extends BaseView {
     /**
      * 记录已经选择的日期
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      */
-    final void setSelectedCalendar(Calendar calendar) {
-        mCurrentItem = mItems.indexOf(calendar);
+    final void setSelectedCalendar(EmmCalendar emmCalendar) {
+        mCurrentItem = mItems.indexOf(emmCalendar);
     }
 
 
@@ -169,7 +169,7 @@ public abstract class BaseMonthView extends BaseView {
         if (mItems == null)
             return;
         if (mItems.contains(mDelegate.getCurrentDay())) {
-            for (Calendar a : mItems) {//添加操作
+            for (EmmCalendar a : mItems) {//添加操作
                 a.setCurrentDay(false);
             }
             int index = mItems.indexOf(mDelegate.getCurrentDay());
@@ -182,11 +182,11 @@ public abstract class BaseMonthView extends BaseView {
     /**
      * 获取选中的下标
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 获取选中的下标
      */
-    protected final int getSelectedIndex(Calendar calendar) {
-        return mItems.indexOf(calendar);
+    protected final int getSelectedIndex(EmmCalendar emmCalendar) {
+        return mItems.indexOf(emmCalendar);
     }
 
     @Override

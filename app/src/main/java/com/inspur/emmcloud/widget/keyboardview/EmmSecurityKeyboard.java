@@ -182,12 +182,12 @@ public class EmmSecurityKeyboard extends PopupWindow {
                     R.xml.emm_keyboard_english_land);
             keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number_land);
             keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift_land);
-            randomKeysForOnce();
+            initKeys();
         } else {
             keyboardLetter = new Keyboard(context, R.xml.emm_keyboard_english);
             keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number);
             keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift);
-            randomKeysForOnce();
+            initKeys();
         }
         keyboardView = mainView.findViewById(R.id.keyboard_view);
         switch (configuration.getDefaultKeyboardType().getCode()) {
@@ -332,11 +332,11 @@ public class EmmSecurityKeyboard extends PopupWindow {
         }
     }
 
-    private void randomKeysForOnce() {
+    private void initKeys() {
         EmmCreateKeyList.initLetters(letterList);
 //        randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
         EmmCreateKeyList.initNumbers(numberList);
-        randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
+//        randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
     }
 
     /**
