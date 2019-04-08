@@ -36,6 +36,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -120,7 +121,6 @@ public class TaskAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadingDlg = new LoadingDialog(this);
         initData();
         initView();
     }
@@ -131,6 +131,8 @@ public class TaskAddActivity extends BaseActivity {
         taskParters = new ArrayList<>();
         attachmentPictureAdapter=new AttachmentPictureAdapter();
         attachmentPicturesList.setAdapter(attachmentPictureAdapter);
+        loadingDlg = new LoadingDialog(this);
+        apiService = new WorkAPIService(this);
     }
 
     private void initView() {
@@ -142,6 +144,7 @@ public class TaskAddActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_save:
+                createTask();
                 break;
             case R.id.tv_cancel:
                 finish();
@@ -233,10 +236,19 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
+    /**创建任务*/
+    private void createTask(){
+        String taskContent= contentInputEdit.getText().toString();
+        if(NetUtils.isNetworkConnected(this))
+          loadingDlg.show();
+        apiService.createTasks(StringUtils.isBlank(taskContent)?"":taskContent);
+    }
+
     /**
      * 显示管理者头像
      */
     private void showManagerImage() {
+        initManagerUI();
         if (taskManger.size() < 1) {
             return;
         }
@@ -250,12 +262,21 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     /**
+     * 负责人UI初始化*/
+    private void initManagerUI(){
+        managerAddImageView.setVisibility(View.VISIBLE);
+        managerHeadImageView.setVisibility(View.GONE);
+        managerNumText.setVisibility(View.GONE);
+    }
+
+    /**
      * 显示参与者头像
      */
     private void showPartersImage() {
         List<String> partersImageUrl = new ArrayList<>();
         ImageView[] ImageList = {parterHeadOneImageView, parterHeadTwoImageView, parterHeadThreeImageView};
         int taskPartersNum = taskParters.size();
+        initParterUI(ImageList);
         if (taskPartersNum < 1) {
             return;
         }
@@ -265,13 +286,21 @@ public class TaskAddActivity extends BaseActivity {
             String parterId = taskParters.get(i).getId();
             String parterImageUrl = APIUri.getUserIconUrl(this, parterId);
             partersImageUrl.add(parterImageUrl);
+            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[i], partersImageUrl.get(i), R.drawable.default_image, this, 15);
+            ImageList[i].setVisibility(View.VISIBLE);
         }
         parterNumText.setText(taskPartersNum + "人");
         parterNumText.setVisibility(View.VISIBLE);
         parterAddImageView.setVisibility(View.GONE);
-        for (int j = 0; j < partersImageUrl.size(); j++) {
-            ImageDisplayUtils.getInstance().displayRoundedImage(ImageList[j], partersImageUrl.get(j), R.drawable.default_image, this, 15);
-            ImageList[j].setVisibility(View.VISIBLE);
+    }
+
+    /**参与者UI初始化
+     * @param imageViews  */
+    private void initParterUI(ImageView[] imageViews){
+        parterNumText.setVisibility(View.GONE);
+        parterAddImageView.setVisibility(View.VISIBLE);/**参与者UI 初始化*/
+        for(int j=0;j<3;j++){
+            imageViews[j].setVisibility(View.GONE);
         }
     }
 
@@ -281,13 +310,11 @@ public class TaskAddActivity extends BaseActivity {
      * @param data
      */
     private void sendFileMsg(Intent data) {
-        LogUtils.LbcDebug("sendFileMsg");
         ChatAPIService apiService = new ChatAPIService(TaskAddActivity.this);
         apiService.setAPIInterface(new TaskAddActivity.WebService());
         Uri uri = data.getData();
         String filePath = GetPathFromUri4kitkat.getPathByUri(this, uri);
         File tempFile = new File(filePath);
-        LogUtils.LbcDebug("FilePath::"+tempFile);
         if (TextUtils.isEmpty(FileUtils.getSuffix(tempFile))) {
             ToastUtils.show(this, getString(R.string.not_support_upload));
             return;
@@ -442,15 +469,16 @@ public class TaskAddActivity extends BaseActivity {
             if (loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            Task taskResult = new Task();
+            taskResult = new Task();
             taskResult.setTitle(contentInputEdit.getText().toString());
             taskResult.setId(getTaskAddResult.getId());
             taskResult.setOwner(PreferencesUtils.getString(
                     TaskAddActivity.this, "userID"));
             taskResult.setState("ACTIVED");
             //调用创建任务成功
-            for (int i = 0; i < pictureJsonAttachments.size(); i++) {
-                apiService.addAttachments(getTaskAddResult.getId(), pictureAttachments.get(i).toString());
+            for (int i = 0; i <1; i++) {
+                loadingDlg.show();
+                apiService.addAttachments(getTaskAddResult.getId(), pictureJsonAttachments.get(i).toString());
             }
         }
 
@@ -509,7 +537,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpLoadResFileSuccess(
                 GetFileUploadResult getFileUploadResult, String fakeMessageId) {
-            LogUtils.LbcDebug("sendFileMsg7777777777777");
+            LogUtils.LbcDebug("发送附件到服务端成功");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -557,7 +585,7 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAddAttachMentSuccess(Attachment attachment) {
-            LogUtils.LbcDebug("sendFileMsg1234567");
+            LogUtils.LbcDebug("sendFileMsg1234567111111111");
             super.returnAddAttachMentSuccess(attachment);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
