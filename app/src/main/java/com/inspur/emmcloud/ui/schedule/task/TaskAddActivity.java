@@ -38,6 +38,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -97,12 +98,15 @@ public class TaskAddActivity extends BaseActivity {
     private TextView taskAlertTimeView;
     @ViewInject(R.id.lv_attachment_abstract_picture)
     private ListView attachmentPicturesList;
+    @ViewInject(R.id.lv_attachment_abstract_other)
+    private ListView attachmentOthersList;
 
 
     private static final int MANGER_REQUEST_CODE = 1;
     private static final int ALBUM_REQUEST_CODE = 2;
     private static final int PARTER_REQUEST_CODE = 3;
     private static final int ALERT_TIME_REQUEST_CODE = 4;
+    private static final int ATTACHMENT_REQUEST_CODE = 5;
 
 
     private WorkAPIService apiService;
@@ -116,7 +120,7 @@ public class TaskAddActivity extends BaseActivity {
     private List<SearchModel> taskParters;
     private Calendar deadLineCalendar;
     private AttachmentPictureAdapter attachmentPictureAdapter;
-
+    private AttachmentOthersAdapter attachmentOtherAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +131,13 @@ public class TaskAddActivity extends BaseActivity {
 
     private void initData() {
         pictureJsonAttachments = new ArrayList<>();
+        otherJsonAttachments = new ArrayList<>();
         taskManger = new ArrayList<>();
         taskParters = new ArrayList<>();
         attachmentPictureAdapter = new AttachmentPictureAdapter();
         attachmentPicturesList.setAdapter(attachmentPictureAdapter);
+        attachmentOtherAdapter= new AttachmentOthersAdapter();
+        attachmentOthersList.setAdapter(attachmentOtherAdapter);
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(this);
         apiService.setAPIInterface(new TaskAddActivity.WebService());
@@ -145,12 +152,13 @@ public class TaskAddActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_save:
-                createTask();
+               // createTask();
                 break;
             case R.id.tv_cancel:
                 finish();
                 break;
             case R.id.rl_task_type:
+
                 break;
             case R.id.rl_task_manager:
                 intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
@@ -205,6 +213,7 @@ public class TaskAddActivity extends BaseActivity {
                 startActivityForResult(photoPickerIntent, ALBUM_REQUEST_CODE);
                 break;
             case R.id.rl_attachments_others:
+                AppUtils.openFileSystem(TaskAddActivity.this, ATTACHMENT_REQUEST_CODE);
                 break;
         }
     }
@@ -391,7 +400,7 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
-    private class PictureHolder {
+    private class AttachmentHolder {
         public ImageView attachmentImageView;
         public TextView attachmentNameText;
         public TextView attachmentStateText;
@@ -421,7 +430,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             final int num = i;
-            PictureHolder pictureHolder = new PictureHolder();
+            AttachmentHolder pictureHolder = new AttachmentHolder();
             if (view == null) {
                 view = View.inflate(TaskAddActivity.this, R.layout.item_attachments_abstract, null);
                 pictureHolder.attachmentDeleteImageView = view.findViewById(R.id.iv_delete_attachemnt);
@@ -430,7 +439,7 @@ public class TaskAddActivity extends BaseActivity {
                 pictureHolder.attachmentStateText = view.findViewById(R.id.tv_attachemnt_upload_state);
                 view.setTag(pictureHolder);
             } else {
-                pictureHolder = (PictureHolder) view.getTag();
+                pictureHolder = (AttachmentHolder) view.getTag();
             }
             String pictureUri = JSONUtils.getString(pictureJsonAttachments.get(i), "uri", "");
             LogUtils.LbcDebug("pictureUri:::" + pictureUri);
@@ -450,7 +459,7 @@ public class TaskAddActivity extends BaseActivity {
     /**
      * 文本 Adapter
      */
-    public class attachmentOthersAdapter extends BaseAdapter {
+    public class AttachmentOthersAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -469,7 +478,30 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            return null;
+            final int num = i;
+            AttachmentHolder otherHolder = new AttachmentHolder();
+            if (view == null) {
+                view = View.inflate(TaskAddActivity.this, R.layout.item_attachments_abstract, null);
+                otherHolder.attachmentDeleteImageView = view.findViewById(R.id.iv_delete_attachemnt);
+                otherHolder.attachmentImageView = view.findViewById(R.id.iv_attachemnt_img);
+                otherHolder.attachmentNameText = view.findViewById(R.id.tv_add_attachment_name);
+                otherHolder.attachmentStateText = view.findViewById(R.id.tv_attachemnt_upload_state);
+                view.setTag(otherHolder);
+            } else {
+                otherHolder = (AttachmentHolder) view.getTag();
+            }
+            String pictureUri = JSONUtils.getString(pictureJsonAttachments.get(i), "uri", "");
+            LogUtils.LbcDebug("pictureUri:::" + pictureUri);
+            ImageDisplayUtils.getInstance().displayImage(otherHolder.attachmentImageView, pictureUri, R.drawable.default_image);
+            otherHolder.attachmentNameText.setText(JSONUtils.getString(pictureJsonAttachments.get(i), "name", ""));
+            otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pictureJsonAttachments.remove(num);
+                    attachmentPictureAdapter.notifyDataSetChanged();
+                }
+            });
+            return view;
         }
     }
 
@@ -546,22 +578,21 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpLoadResFileSuccess(
                 GetFileUploadResult getFileUploadResult, String fakeMessageId) {
-            LogUtils.LbcDebug("发送附件到服务端成功");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-//            isRefreshList = true;
             JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
-            pictureJsonAttachments.add(jsonAttachment);
-
+            if(JSONUtils.getString(jsonAttachment,"type","").equals("IMAGE")){
+                pictureJsonAttachments.add(jsonAttachment);
+            }else{
+                otherJsonAttachments.add(jsonAttachment);
+            }
             attachmentPictureAdapter.notifyDataSetChanged();
-            //addAttachMents(jsonAttachment);
-            //初始化图片
+            attachmentOtherAdapter.notifyDataSetChanged();
         }
 
         @Override
         public void returnUpLoadResFileFail(String error, int errorCode, String temp) {
-            LogUtils.LbcDebug("sendFileMsg88888888888888");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -570,7 +601,6 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAttachmentSuccess(Task taskResult) {
-            LogUtils.LbcDebug("sendFileMsg999999999999");
             super.returnAttachmentSuccess(taskResult);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
@@ -585,7 +615,6 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAttachmentFail(String error, int errorCode) {
-            LogUtils.LbcDebug("sendFileMsg9999999888888888");
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -594,7 +623,6 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAddAttachMentSuccess(Attachment attachment) {
-            LogUtils.LbcDebug("sendFileMsg1234567111111111");
             super.returnAddAttachMentSuccess(attachment);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
