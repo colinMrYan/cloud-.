@@ -112,12 +112,12 @@ public class TaskAddActivity extends BaseActivity {
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult;
-    private List<Attachment> pictureAttachments;
-    private List<Attachment> otherAttachments;
-    private List<JSONObject> pictureJsonAttachments;
-    private List<JSONObject> otherJsonAttachments;
-    private List<SearchModel> taskManger;
-    private List<SearchModel> taskParters;
+    private List<Attachment> pictureAttachments=new ArrayList<>();
+    private List<Attachment> otherAttachments=new ArrayList<>();
+    private List<JSONObject> pictureJsonAttachments=new ArrayList<>();
+    private List<JSONObject> otherJsonAttachments=new ArrayList<>();
+    private List<SearchModel> taskManger=new ArrayList<>();
+    private List<SearchModel> taskParters=new ArrayList<>();
     private Calendar deadLineCalendar;
     private AttachmentPictureAdapter attachmentPictureAdapter;
     private AttachmentOthersAdapter attachmentOtherAdapter;
@@ -582,6 +582,7 @@ public class TaskAddActivity extends BaseActivity {
                 loadingDlg.dismiss();
             }
             JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
+            LogUtils.LbcDebug("jsonAttachment:::"+jsonAttachment.toString());
             if(JSONUtils.getString(jsonAttachment,"type","").equals("IMAGE")){
                 pictureJsonAttachments.add(jsonAttachment);
             }else{
