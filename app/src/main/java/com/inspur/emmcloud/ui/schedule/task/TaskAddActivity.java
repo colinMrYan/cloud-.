@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -62,7 +63,7 @@ import java.util.List;
 /**
  * Created by libaochao on 2019/3/28.
  */
-@ContentView(R.layout.activity_add_task)
+@ContentView(R.layout.activity_task_add)
 public class TaskAddActivity extends BaseActivity {
     @ViewInject(R.id.et_input_content)
     private EditText contentInputEdit;
@@ -100,6 +101,8 @@ public class TaskAddActivity extends BaseActivity {
     private ListView attachmentPicturesList;
     @ViewInject(R.id.lv_attachment_abstract_other)
     private ListView attachmentOthersList;
+    @ViewInject(R.id.ll_more_content)
+    private LinearLayout moreContentLayout;
 
 
     private static final int MANGER_REQUEST_CODE = 1;
@@ -112,12 +115,12 @@ public class TaskAddActivity extends BaseActivity {
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult;
-    private List<Attachment> pictureAttachments=new ArrayList<>();
-    private List<Attachment> otherAttachments=new ArrayList<>();
-    private List<JSONObject> pictureJsonAttachments=new ArrayList<>();
-    private List<JSONObject> otherJsonAttachments=new ArrayList<>();
-    private List<SearchModel> taskManger=new ArrayList<>();
-    private List<SearchModel> taskParters=new ArrayList<>();
+    private List<Attachment> pictureAttachments = new ArrayList<>();
+    private List<Attachment> otherAttachments = new ArrayList<>();
+    private List<JSONObject> pictureJsonAttachments = new ArrayList<>();
+    private List<JSONObject> otherJsonAttachments = new ArrayList<>();
+    private List<SearchModel> taskManger = new ArrayList<>();
+    private List<SearchModel> taskParters = new ArrayList<>();
     private Calendar deadLineCalendar;
     private AttachmentPictureAdapter attachmentPictureAdapter;
     private AttachmentOthersAdapter attachmentOtherAdapter;
@@ -136,7 +139,7 @@ public class TaskAddActivity extends BaseActivity {
         taskParters = new ArrayList<>();
         attachmentPictureAdapter = new AttachmentPictureAdapter();
         attachmentPicturesList.setAdapter(attachmentPictureAdapter);
-        attachmentOtherAdapter= new AttachmentOthersAdapter();
+        attachmentOtherAdapter = new AttachmentOthersAdapter();
         attachmentOthersList.setAdapter(attachmentOtherAdapter);
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(this);
@@ -152,13 +155,14 @@ public class TaskAddActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_save:
-               // createTask();
+                // createTask();
                 break;
             case R.id.tv_cancel:
                 finish();
                 break;
             case R.id.rl_task_type:
-
+                intent.setClass(this,TaskTagsManageActivity.class);
+                startActivityForResult(intent,1);
                 break;
             case R.id.rl_task_manager:
                 intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
@@ -206,6 +210,7 @@ public class TaskAddActivity extends BaseActivity {
                 startActivityForResult(intent, ALERT_TIME_REQUEST_CODE);
                 break;
             case R.id.rl_more:
+                moreContentLayout.setVisibility(moreContentLayout.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 break;
             case R.id.rl_attachments_pictures:
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
@@ -520,7 +525,7 @@ public class TaskAddActivity extends BaseActivity {
             taskResult.setState("ACTIVED");
             //调用创建任务成功
             loadingDlg.show();
-            for(int i=0;i<pictureJsonAttachments.size();i++){
+            for (int i = 0; i < pictureJsonAttachments.size(); i++) {
                 apiService.addAttachments(getTaskAddResult.getId(), pictureJsonAttachments.get(i).toString());
             }
         }
@@ -582,10 +587,10 @@ public class TaskAddActivity extends BaseActivity {
                 loadingDlg.dismiss();
             }
             JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
-            LogUtils.LbcDebug("jsonAttachment:::"+jsonAttachment.toString());
-            if(JSONUtils.getString(jsonAttachment,"type","").equals("IMAGE")){
+            LogUtils.LbcDebug("jsonAttachment:::" + jsonAttachment.toString());
+            if (JSONUtils.getString(jsonAttachment, "type", "").equals("IMAGE")) {
                 pictureJsonAttachments.add(jsonAttachment);
-            }else{
+            } else {
                 otherJsonAttachments.add(jsonAttachment);
             }
             attachmentPictureAdapter.notifyDataSetChanged();

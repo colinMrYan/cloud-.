@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,12 +47,19 @@ public class TaskTagsManageActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
+                finish();
                 break;
             case R.id.ibt_add:
+                Intent intent =new Intent();
+                intent.setClass(this,TaskTagAddActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
         }
+    }
+
+    private void startActivityForResult(Intent intent) {
     }
 
     /***/

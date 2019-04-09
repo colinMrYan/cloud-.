@@ -912,6 +912,14 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.schedule.task.TaskTagAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.task.TaskTagsManageActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
