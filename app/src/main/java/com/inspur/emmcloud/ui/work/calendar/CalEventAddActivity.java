@@ -143,7 +143,7 @@ public class CalEventAddActivity extends BaseActivity {
                 addText.setVisibility(View.GONE);
             }
             addText.setText(getString(R.string.calendar_adjust));
-            isAllDay = calEvent.getAllDay();
+            isAllDay = calEvent.isAllday();
             allDaySwitch.setOpened(isAllDay);
             startCalendar = calEvent.getStartDate();
             endCalendar = calEvent.getEndDate();
@@ -272,7 +272,7 @@ public class CalEventAddActivity extends BaseActivity {
                     }
                     if (getIntent().hasExtra("calEvent")) {
                         calEvent.setTitle(title);
-                        calEvent.setAllDay(isAllDay);
+                        calEvent.setAllday(isAllDay);
                         calEvent.setStartDate(TimeUtils
                                 .localCalendar2UTCCalendar(startCalendar));
                         calEvent.setCalendar(calendar);
@@ -380,7 +380,7 @@ public class CalEventAddActivity extends BaseActivity {
         // TODO Auto-generated method stub
         addCalendarEvent = new CalendarEvent();
         addCalendarEvent.setTitle(title);
-        addCalendarEvent.setAllDay(isAllDay);
+        addCalendarEvent.setAllday( isAllDay);
         addCalendarEvent.setStartDate(TimeUtils
                 .localCalendar2UTCCalendar(startCalendar));
         addCalendarEvent.setState("ACTIVED");

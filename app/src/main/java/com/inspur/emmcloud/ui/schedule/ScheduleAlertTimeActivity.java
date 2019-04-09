@@ -80,6 +80,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 noAlertSelectImage.setVisibility(View.VISIBLE);
                 selectPosition = -1;
                 alertTime = getString(R.string.calendar_no_alert);
+                adapter.notifyDataSetChanged();
                 break;
             case R.id.tv_save:
                 returnData();

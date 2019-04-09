@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.work;
 
+import com.inspur.emmcloud.util.common.JSONUtils;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -14,22 +16,10 @@ public class TaskColorTag implements Serializable {
     public TaskColorTag(JSONObject jsonObject) {
 
         try {
-            if (jsonObject.has("id")) {
-                this.id = jsonObject.getString("id");
-            }
-
-            if (jsonObject.has("title")) {
-                this.title = jsonObject.getString("title");
-            }
-
-            if (jsonObject.has("color")) {
-                this.color = jsonObject.getString("color");
-            }
-
-            if (jsonObject.has("owner")) {
-                this.owner = jsonObject.getString("owner");
-
-            }
+            this.id= JSONUtils.getString(jsonObject,"id","");
+            this.title=JSONUtils.getString(jsonObject,"title","");
+            this.color=JSONUtils.getString(jsonObject,"color","");
+            this.owner=JSONUtils.getString(jsonObject,"owner","");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -807,7 +807,7 @@ public class TimeUtils {
         String timeSelection = "";
         Calendar startDate = calendarEvent.getStartDate();
         Calendar endDate = calendarEvent.getEndDate();
-        boolean isAllday = calendarEvent.getAllDay();
+        boolean isAllday = calendarEvent.isAllday();
         if (isAllday) {
             timeSelection = context.getString(R.string.all_day);
         } else if (startDate == null || endDate == null) {
