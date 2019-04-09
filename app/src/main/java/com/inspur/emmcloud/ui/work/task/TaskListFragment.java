@@ -43,25 +43,28 @@ import java.util.List;
  */
 @ContentView(R.layout.fragment_task_list)
 public class TaskListFragment extends Fragment {
-    private boolean injected = false;
+
     @ViewInject(R.id.lv_task)
     private ListView taskListView;
-    private TaskListAdapter adapter;
-    private WorkAPIService apiService;
-    private int nowIndex = 0;
-    private ArrayList<Task> taskList = new ArrayList<Task>();
     @ViewInject(R.id.refresh_layout)
     private SwipeRefreshLayout swipeRefreshLayout;
-    private String orderBy = "PRIORITY";
-    private String orderType = "ASC";
     @ViewInject(R.id.ll_no_search_result)
     private LinearLayout noSearchResultLayout;
     @ViewInject(R.id.tv_no_result)
     private TextView noResultText;
+    private boolean injected = false;
+    private String orderBy = "PRIORITY";
+    private String orderType = "ASC";
     private int deletePosition = -1;
     private boolean isNeedRefresh = false;
     private String searchContent = "";
     private ArrayList<Task> searchTaskList = new ArrayList<>();
+    private TaskListAdapter adapter;
+    private WorkAPIService apiService;
+    private int nowIndex = 0;
+    private ArrayList<Task> taskList = new ArrayList<Task>();
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
