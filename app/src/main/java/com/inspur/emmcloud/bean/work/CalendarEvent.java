@@ -159,7 +159,6 @@ public class CalendarEvent implements Serializable, Comparator {
     public void setAllday(boolean allday) {
         this.allday = allday;
     }
-
     public Calendar getStartDate() {
         return startDate;
     }
