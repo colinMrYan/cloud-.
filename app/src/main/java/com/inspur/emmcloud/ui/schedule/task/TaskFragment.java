@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.ui.work.task;
+package com.inspur.emmcloud.ui.schedule.task;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,7 +31,7 @@ import java.util.List;
  * 工作主页面下任务页面
  */
 @ContentView(R.layout.fragment_all_task_list)
-public class AllTaskListFragment extends Fragment{
+public class TaskFragment extends Fragment{
 
     public static final String MY_TASK_TYPE = "task_type";
     public static final int MY_MINE = 0;
@@ -40,7 +40,6 @@ public class AllTaskListFragment extends Fragment{
     public static final int MY_DONE = 3;
     public static final int MY_ALL = 4;
     private static final int MESSION_SET = 5;
-    private boolean injected = false;
     @ViewInject(R.id.tl_schedule_task)
     private TabLayout tabLayoutSchedule;
     @ViewInject(R.id.viewpager_calendar_holder)
@@ -51,6 +50,7 @@ public class AllTaskListFragment extends Fragment{
     private RelativeLayout allTaskLayout;
     @ViewInject(R.id.ev_search)
     private ClearEditText searchEditText;
+    private boolean injected = false;
     private TaskListFragment allTaskListFragment,mineTaskListFragment,involvedTaskListFragment,focusedTaskListFragment,allReadyDoneTaskListFragment;
     private AllTaskFragmentAdapter adapter;
     private int lastTaskPosition = 0;
@@ -77,9 +77,12 @@ public class AllTaskListFragment extends Fragment{
         initViews();
     }
 
+    /**
+     * 初始化任务列表，并传入type类型
+     */
     private void initFragmentList() {
-        List<TaskListFragment> list = new ArrayList<TaskListFragment>();
         //建一个存放fragment的集合，并且把新的fragment放到集合中
+        List<TaskListFragment> list = new ArrayList<TaskListFragment>();
         Bundle bundle = new Bundle();
         bundle.putInt(MY_TASK_TYPE,MY_MINE);
         allTaskListFragment = new TaskListFragment();

@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.ui.work.task;
+package com.inspur.emmcloud.ui.schedule.task;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
+import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -106,7 +107,7 @@ public class TaskListFragment extends Fragment {
     }
 
     private void initViews() {
-        nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
+        nowIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         getOrder();
@@ -138,13 +139,13 @@ public class TaskListFragment extends Fragment {
     }
 
     private void getCurrentTaskList(boolean isDialogShow){
-        nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
+        nowIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         if (NetUtils.isNetworkConnected(getActivity())) {
-            if (nowIndex == AllTaskListFragment.MY_MINE) {
+            if (nowIndex == TaskFragment.MY_MINE) {
                 getMineTasks(isDialogShow);
-            } else if (nowIndex == AllTaskListFragment.MY_INVOLVED) {
+            } else if (nowIndex == TaskFragment.MY_INVOLVED) {
                 getInvolvedTasks(isDialogShow);
-            } else if (nowIndex == AllTaskListFragment.MY_FOCUSED) {
+            } else if (nowIndex == TaskFragment.MY_FOCUSED) {
                 getFocusedTasks(isDialogShow);
             }
         } else {
