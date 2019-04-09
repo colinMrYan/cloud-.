@@ -21,7 +21,7 @@ public class CalendarEvent implements Serializable, Comparator {
     private String title;
     private String owner;
     private String location;
-    private boolean isAllDay;
+    private boolean allday;
     private Calendar startDate;
     private Calendar endDate;
     private MyCalendar calendar;
@@ -37,16 +37,16 @@ public class CalendarEvent implements Serializable, Comparator {
         creationDate = TimeUtils.timeLong2Calendar(creationDateLong);
         Long lastUpdateLong = JSONUtils.getLong(obj, "lastUpdate", 0L);
         lastUpdate = TimeUtils.timeLong2Calendar(lastUpdateLong);
-        isAllDay = JSONUtils.getBoolean(obj,"allday",false);
+        allday = JSONUtils.getBoolean(obj,"allday",false);
         Long startDateLong = JSONUtils.getLong(obj, "startDate", 0L);
         startDate = TimeUtils.timeLong2Calendar(startDateLong);
-        if (isAllDay){
+        if (allday){
             startDate = TimeUtils.getDayBeginCalendar(startDate);
         }
         Long endDateLong = JSONUtils.getLong(obj, "endDate", 0L);
         if (endDateLong == 0){
             endDate = TimeUtils.getDayEndCalendar(startDate);
-        }else if(isAllDay){
+        }else if(allday){
             endDate = TimeUtils.timeLong2Calendar(endDateLong);
             endDate= TimeUtils.getDayEndCalendar(endDate);
         }
@@ -75,7 +75,7 @@ public class CalendarEvent implements Serializable, Comparator {
                     eventEndTime = dayEndCalendar;
                 }
                 Event event = new Event(calendarEvent.getId(), Event.TYPE_CALENDAR, calendarEvent.getTitle(), "", eventStartTime, eventEndTime);
-                    event.setAllDay(calendarEvent.getAllDay());
+                    event.setAllDay(calendarEvent.isAllday());
                 eventList.add(event);
             }
         }
@@ -152,12 +152,12 @@ public class CalendarEvent implements Serializable, Comparator {
         this.location = location;
     }
 
-    public boolean getAllDay() {
-        return isAllDay;
+    public boolean isAllday() {
+        return allday;
     }
 
-    public void setAllDay(boolean allDay) {
-        this.isAllDay = allDay;
+    public void setAllday(boolean allday) {
+        this.allday = allday;
     }
     public Calendar getStartDate() {
         return startDate;

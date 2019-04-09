@@ -220,7 +220,7 @@ public class CalendarAddActivity extends BaseActivity {
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
             calEvent = (CalendarEvent) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            isAllDay = calEvent.getAllDay();
+            isAllDay = calEvent.isAllday();
             startCalendar = calEvent.getStartDate();
             endCalendar = calEvent.getEndDate();
             contentText = calEvent.getTitle();
@@ -309,10 +309,10 @@ public class CalendarAddActivity extends BaseActivity {
             if (!isAbleSaveAndTips(title, startCalendar, endCalendar)) {
                 return;
             }
-            correctedCalendarTime();
+            //correctedCalendarTime();
             calEvent = ((calEvent == null) ? new CalendarEvent() : calEvent);
             calEvent.setTitle(title);
-            calEvent.setAllDay(isAllDay);
+            calEvent.setAllday(isAllDay);
             calEvent.setState("ACTIVED");
             calEvent.setStartDate(TimeUtils
                     .localCalendar2UTCCalendar(startCalendar));
