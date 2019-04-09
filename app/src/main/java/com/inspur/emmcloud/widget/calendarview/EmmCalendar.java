@@ -25,7 +25,7 @@ import java.util.List;
  * 日历对象、
  */
 @SuppressWarnings("all")
-public final class Calendar implements Serializable, Comparable<Calendar> {
+public final class EmmCalendar implements Serializable, Comparable<EmmCalendar> {
     private static final long serialVersionUID = 141315161718191143L;
 
 
@@ -119,7 +119,7 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
     /**
      * 获取完整的农历日期
      */
-    private Calendar lunarCalendar;
+    private EmmCalendar lunarEmmCalendar;
 
 
     public int getYear() {
@@ -252,12 +252,12 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
         this.week = week;
     }
 
-    public Calendar getLunarCalendar() {
-        return lunarCalendar;
+    public EmmCalendar getLunarEmmCalendar() {
+        return lunarEmmCalendar;
     }
 
-    public void setLunarCalendar(Calendar lunarCakendar) {
-        this.lunarCalendar = lunarCakendar;
+    public void setLunarEmmCalendar(EmmCalendar lunarCakendar) {
+        this.lunarEmmCalendar = lunarCakendar;
     }
 
     public String getSolarTerm() {
@@ -314,34 +314,34 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
     /**
      * 是否是相同月份
      *
-     * @param calendar 日期
+     * @param emmCalendar 日期
      * @return 是否是相同月份
      */
-    public boolean isSameMonth(Calendar calendar) {
-        return year == calendar.getYear() && month == calendar.getMonth();
+    public boolean isSameMonth(EmmCalendar emmCalendar) {
+        return year == emmCalendar.getYear() && month == emmCalendar.getMonth();
     }
 
     /**
      * 比较日期
      *
-     * @param calendar 日期
+     * @param emmCalendar 日期
      * @return -1 0 1
      */
-    public int compareTo(Calendar calendar) {
-        if (calendar == null) {
+    public int compareTo(EmmCalendar emmCalendar) {
+        if (emmCalendar == null) {
             return 1;
         }
-        return toString().compareTo(calendar.toString());
+        return toString().compareTo(emmCalendar.toString());
     }
 
     /**
      * 运算差距多少天
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 运算差距多少天
      */
-    public final int differ(Calendar calendar) {
-        return CalendarUtil.differ(this, calendar);
+    public final int differ(EmmCalendar emmCalendar) {
+        return CalendarUtil.differ(this, emmCalendar);
     }
 
     /**
@@ -368,8 +368,8 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
 
     @Override
     public boolean equals(Object o) {
-        if (o != null && o instanceof Calendar) {
-            if (((Calendar) o).getYear() == year && ((Calendar) o).getMonth() == month && ((Calendar) o).getDay() == day)
+        if (o != null && o instanceof EmmCalendar) {
+            if (((EmmCalendar) o).getYear() == year && ((EmmCalendar) o).getMonth() == month && ((EmmCalendar) o).getDay() == day)
                 return true;
         }
         return super.equals(o);
@@ -389,13 +389,13 @@ public final class Calendar implements Serializable, Comparable<Calendar> {
 //        return result;
 //    }
 
-    final void mergeScheme(Calendar calendar, String defaultScheme) {
-        if (calendar == null)
+    final void mergeScheme(EmmCalendar emmCalendar, String defaultScheme) {
+        if (emmCalendar == null)
             return;
-        setScheme(TextUtils.isEmpty(calendar.getScheme()) ?
-                defaultScheme : calendar.getScheme());
-        setSchemeColor(calendar.getSchemeColor());
-        setSchemes(calendar.getSchemes());
+        setScheme(TextUtils.isEmpty(emmCalendar.getScheme()) ?
+                defaultScheme : emmCalendar.getScheme());
+        setSchemeColor(emmCalendar.getSchemeColor());
+        setSchemes(emmCalendar.getSchemes());
     }
 
     final void clearScheme() {

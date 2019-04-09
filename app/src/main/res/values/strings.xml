@@ -356,6 +356,12 @@
     <string name="work_search_hint">搜索日历、任务</string>
     <string name="work_mession">任务</string>
     <string name="work_schedule">日程</string>
+    <string name="work_task_mine">我创建的</string>
+    <string name="work_task_involved">我参与的</string>
+    <string name="work_task_focused">我关注的</string>
+    <string name="work_task_done">已完成的</string>
+    <string name="work_task_all">全部</string>
+    <string name="work_task_end">%1$s 截止</string>
 
     <!-- 日程 -->
     <string name="schedule_event_alert">日程提醒</string>

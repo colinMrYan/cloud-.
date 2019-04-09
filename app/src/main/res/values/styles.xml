@@ -387,6 +387,10 @@
     <style name="ScheduleTabLayoutTextStyle">
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="ScheduleTaskTabLayoutTextStyle">
+        <item name="android:textSize">13sp</item>
+    </style>
     <style name="DateTimePickerDateTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
