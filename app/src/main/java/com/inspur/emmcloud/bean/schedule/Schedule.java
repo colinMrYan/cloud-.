@@ -1,5 +1,8 @@
-package com.inspur.emmcloud.bean.work;
+package com.inspur.emmcloud.bean.schedule;
 
+
+import com.inspur.emmcloud.bean.schedule.meeting.Location;
+import com.inspur.emmcloud.bean.work.RemindEvent;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -181,5 +184,17 @@ public class Schedule implements Serializable{
 
     public Location getScheduleLocationObj() {
         return scheduleLocationObj;
+    }
+
+    public void setStartTimeCalendar(Calendar startTimeCalendar) {
+        this.startTimeCalendar = startTimeCalendar;
+    }
+
+    public void setEndTimeCalendar(Calendar endTimeCalendar) {
+        this.endTimeCalendar = endTimeCalendar;
+    }
+
+    public void setScheduleLocationObj(Location scheduleLocationObj) {
+        this.scheduleLocationObj = scheduleLocationObj;
     }
 }

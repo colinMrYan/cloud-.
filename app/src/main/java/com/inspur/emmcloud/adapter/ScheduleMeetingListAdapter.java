@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.work.Meeting;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
@@ -45,21 +45,21 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Meeting meeting = meetingList.get(position);
-        Calendar startCalendar =meeting.getFromCalendar();
-        Calendar endCalendar = meeting.getToCalendar();
-        holder.titleText.setText(meeting.getTopic());
+        Calendar startCalendar =meeting.getStartTimeCalendar();
+        Calendar endCalendar = meeting.getEndTimeCalendar();
+        holder.titleText.setText(meeting.getTitle());
         String startTime = TimeUtils.Calendar2TimeString(startCalendar,TimeUtils.getFormat(context,TimeUtils.FORMAT_HOUR_MINUTE));
         String endTime = TimeUtils.Calendar2TimeString(endCalendar,TimeUtils.getFormat(context,TimeUtils.FORMAT_HOUR_MINUTE));
         holder.timeText.setText(startTime+"-"+endTime);
-        holder.subtitleText.setText(meeting.getLocation());
+        holder.subtitleText.setText(meeting.getScheduleLocationObj().getDisplayName());
         StringBuilder dateBuilder = new StringBuilder();
         dateBuilder.append( TimeUtils.Calendar2TimeString(startCalendar,TimeUtils.getFormat(context,TimeUtils.FORMAT_MONTH_DAY)));
         if (TimeUtils.isSameDay(startCalendar,endCalendar)){
-
             dateBuilder.append(TimeUtils.getWeekDay(context,startCalendar));
         }else {
             dateBuilder.append("  ").append( TimeUtils.Calendar2TimeString(endCalendar,TimeUtils.getFormat(context,TimeUtils.FORMAT_MONTH_DAY)));
         }
+        holder.dateText.setText(dateBuilder.toString());
     }
 
 

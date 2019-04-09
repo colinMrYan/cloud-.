@@ -27,8 +27,10 @@ import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
 
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +39,17 @@ import java.util.List;
  * Created by yufuchang on 2019/3/28.
  */
 @ContentView(R.layout.fragment_schedule_home)
-public class ScheduleHomeFragment extends ScheduleBaseFragment implements View.OnClickListener {
+public class ScheduleHomeFragment extends ScheduleBaseFragment{
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
+    @ViewInject(R.id.tab_layout_schedule)
     private TabLayout tabLayout;
+    @ViewInject(R.id.view_pager_all_schedule)
+    private CustomScrollViewPager viewPager;
+    @ViewInject(R.id.ibt_back_to_today)
     private ImageButton backToToDayImgBtn;
-    private CustomScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private AllTaskListFragment allTaskFragment;
@@ -74,12 +79,8 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment implements View.O
 
     private void initView() {
         initTabLayout();
-        rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
-        backToToDayImgBtn = rootView.findViewById(R.id.ibt_back_to_today);
-        backToToDayImgBtn.setOnClickListener(this);
-        allScheduleFragmentViewPager = rootView.findViewById(R.id.view_pager_all_schedule);
-        allScheduleFragmentViewPager.setScrollable(false);
-        allScheduleFragmentViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.setScrollable(false);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -110,12 +111,11 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment implements View.O
         //初始化adapter
         ScheduleHomeFragmentAdapter adapter = new ScheduleHomeFragmentAdapter(getActivity().getSupportFragmentManager(), list);
         //将适配器和ViewPager结合
-        allScheduleFragmentViewPager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);
 
     }
 
     private void initTabLayout() {
-        tabLayout = rootView.findViewById(R.id.tab_layout_schedule);
         int[] tabTitleResIds = {R.string.work_schedule, R.string.work_meeting_text, R.string.work_mession};
         for (int i = 0; i < tabTitleResIds.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -129,8 +129,8 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment implements View.O
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                if (allScheduleFragmentViewPager != null) {
-                    allScheduleFragmentViewPager.setCurrentItem(position);
+                if (viewPager != null) {
+                    viewPager.setCurrentItem(position);
                 }
                 backToToDayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
                 updateTabLayoutTextStatus(tab, true);
@@ -183,7 +183,7 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment implements View.O
                         IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
                         break;
                     case 5:
-                        if (allScheduleFragmentViewPager.getCurrentItem() == 0) {
+                        if (viewPager.getCurrentItem() == 0) {
                             IntentUtils.startActivity(getActivity(), CalendarSettingActivity.class);
                         }
                         break;
@@ -197,7 +197,7 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment implements View.O
 
     private List<MenuItem> getAddMenuList() {
         List<MenuItem> menuItemList = new ArrayList<>();
-        switch (allScheduleFragmentViewPager.getCurrentItem()) {
+        switch (viewPager.getCurrentItem()) {
             case 0:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_calendar, 1, "新建日程"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));
@@ -219,15 +219,13 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment implements View.O
     }
 
 
-    @Event(value = {R.id.ibt_add,R.id.ibt_back_to_today})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_add:
-                showAddPopMenu(view);
-                break;
-            case R.id.ibt_back_to_today:
-                scheduleFragment.setScheduleBackToToday();
-                break;
-        }
+    @Event(value = R.id.ibt_add)
+    private void onAddBtnClick(View view) throws DbException {
+        showAddPopMenu(view);
+    }
+
+    @Event(value = R.id.ibt_back_to_today)
+    private void onBackToTodayBtnClick(View view) throws DbException {
+        scheduleFragment.setScheduleBackToToday();
     }
 }
