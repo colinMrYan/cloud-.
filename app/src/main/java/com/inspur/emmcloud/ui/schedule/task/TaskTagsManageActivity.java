@@ -43,7 +43,6 @@ public class TaskTagsManageActivity extends BaseActivity {
         taskManageTagsList.setAdapter(taskTagsAdapter);
     }
 
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
@@ -54,7 +53,6 @@ public class TaskTagsManageActivity extends BaseActivity {
                 break;
         }
     }
-
 
     /***/
     private class ManageTagsHolder {

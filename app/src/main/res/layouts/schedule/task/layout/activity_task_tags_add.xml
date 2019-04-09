@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/content_bg">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -52,21 +53,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
-                android:id="@+id/et_project_name"
+                android:id="@+id/et_tag_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:hint="请输入项目标题"
-                android:textColorHint="#999999"/>
+                android:textColorHint="#999999"
+                android:background="#FFFFFF"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
+                android:layout_marginLeft="16dp"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5sp"/>
+            <TextView
+                android:text="标签颜色"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#999999"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:background="#FFFFFF"/>
             <com.inspur.emmcloud.widget.ScrollViewWithListView
+                android:id="@+id/lv_tag_color"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ScrollViewWithListView>
-
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+            <TextView
+                android:id="@+id/tv_delecte_tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FF4242 "
+                android:textSize="16sp"
+                android:paddingTop="11dp"
+                android:text="删除标签"
+                android:gravity="center"
+                android:paddingBottom="11dp"
+                android:onClick="onClick"
+                android:layout_marginTop="10dp"
+                android:background="#FFFFFF"/>
         </LinearLayout>
     </ScrollView>
-
 
 </RelativeLayout>

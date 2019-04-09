@@ -75,7 +75,7 @@ public class CalendarEvent implements Serializable, Comparator {
                     eventEndTime = dayEndCalendar;
                 }
                 Event event = new Event(calendarEvent.getId(), Event.TYPE_CALENDAR, calendarEvent.getTitle(), "", eventStartTime, eventEndTime);
-                    event.setAllDay(calendarEvent.getAllDay());
+                    event.setAllDay(calendarEvent.isAllday());
                 eventList.add(event);
             }
         }
@@ -152,13 +152,14 @@ public class CalendarEvent implements Serializable, Comparator {
         this.location = location;
     }
 
-    public boolean getAllDay() {
+    public boolean isAllday() {
         return allday;
     }
 
-    public void setAllDay(boolean allDay) {
-        this.allday = allDay;
+    public void setAllday(boolean allday) {
+        this.allday = allday;
     }
+
     public Calendar getStartDate() {
         return startDate;
     }
