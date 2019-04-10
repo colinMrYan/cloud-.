@@ -33,6 +33,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -41,6 +42,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -74,6 +76,10 @@ public class TaskAddActivity extends BaseActivity {
     private ImageView taskTypeTapImage;
     @ViewInject(R.id.tv_task_type_name)
     private TextView taskTypeNameText;
+    @ViewInject(R.id.ll_single_tag)
+    LinearLayout singleTagLayout;
+    @ViewInject(R.id.ll_tags)
+    LinearLayout tagsLayout;
     @ViewInject(R.id.tv_deadline_time)
     private TextView deadlineTimeText;
     @ViewInject(R.id.tv_deadline_time)
@@ -257,7 +263,23 @@ public class TaskAddActivity extends BaseActivity {
                     break;
                 case CLASS_TAG_REQUEST_CODE:
                     taskColorTags=(ArrayList<TaskColorTag>)data.getSerializableExtra(TaskTagsManageActivity.EXTRA_TAGS);
-                    LogUtils.LbcDebug("返回类型::::"+taskColorTags.size());
+                    if(taskColorTags.size()==1){
+                        singleTagLayout.setVisibility(View.VISIBLE);
+                        tagsLayout.setVisibility(View.GONE);
+                        taskTypeTapImage.setImageResource(CalendarColorUtils.getColorCircleImage(taskColorTags.get(0).getColor()));
+                        taskTypeNameText.setText(taskColorTags.get(0).getTitle());
+                    }else if(taskColorTags.size()>1){
+                        singleTagLayout.setVisibility(View.GONE);
+                        tagsLayout.setVisibility(View.VISIBLE);
+                        int widthAndHigh = DensityUtil.dip2px(this,8);
+                        for (int i=0;i<taskColorTags.size();i++){
+                            View view=new View(this);
+                            view.setLayoutParams(new ViewGroup.LayoutParams(widthAndHigh,widthAndHigh));
+                            view.setBackgroundResource(CalendarColorUtils.getColorCircleImage(taskColorTags.get(i).getColor()));
+                            tagsLayout.addView(view);
+                        }
+
+                }
                     break;
             }
         }
