@@ -95,7 +95,8 @@
                 android:paddingBottom="11dp"
                 android:onClick="onClick"
                 android:layout_marginTop="10dp"
-                android:background="#FFFFFF"/>
+                android:background="#FFFFFF"
+                android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 

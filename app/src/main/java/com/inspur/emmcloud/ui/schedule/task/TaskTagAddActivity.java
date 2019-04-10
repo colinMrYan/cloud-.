@@ -12,10 +12,18 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.TagColorBean;
+import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -36,9 +44,12 @@ public class TaskTagAddActivity extends BaseActivity {
     TextView tagNameEdit;
 
     private List<TagColorBean> tagColorBeans = new ArrayList<>();
-    private int selectIndex = -1;
+    private int selectIndex = 0;
     private ColorTagAdapter colorTagAdapter = new ColorTagAdapter();
     private ArrayList<String> messionTagList;
+    private LoadingDialog loadingDialog;
+    private WorkAPIService workAPIService;
+    private TaskColorTag taskColorTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,25 +78,27 @@ public class TaskTagAddActivity extends BaseActivity {
                 colorTagAdapter.notifyDataSetChanged();
             }
         });
-        String deleteTagName = getIntent().getStringExtra("title");
         String userId = ((MyApplication) getApplicationContext()).getUid();
         messionTagList = JSONUtils.JSONArray2List(PreferencesUtils.getString(TaskTagAddActivity.this, MyApplication.getInstance().getTanent() + userId + "messionTags", ""), new ArrayList<String>());
-        if (getIntent().hasExtra("color")) {
-          String  color = getIntent().getStringExtra("color");
-           selectIndex = getTagColorIndex(tagColorBeans,color);
+        if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS)) {
+            taskColorTag = (TaskColorTag) getIntent().getSerializableExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS);
+            selectIndex = getTagColorIndex(tagColorBeans, taskColorTag.getColor());
+            tagNameEdit.setText(taskColorTag.getTitle());
+            delecteTagText.setVisibility(View.VISIBLE);
         }
-        if (getIntent().hasExtra("title")) {
-          String title = getIntent().getStringExtra("title");
-            tagNameEdit.setText(title);
-        }
+
         tagColorList.setAdapter(colorTagAdapter);
+        loadingDialog = new LoadingDialog(TaskTagAddActivity.this);
+        workAPIService = new WorkAPIService(this);
+        workAPIService.setAPIInterface(new WebService());
     }
 
-    private int getTagColorIndex( List<TagColorBean> tagColorBeans,String color){
-        int tagIndex=-1;
-        for(int i=0;i<tagColorBeans.size();i++){
-          if(tagColorBeans.get(i).getColor().equals(color))
-              return i;
+
+    private int getTagColorIndex(List<TagColorBean> tagColorBeans, String color) {
+        int tagIndex = -1;
+        for (int i = 0; i < tagColorBeans.size(); i++) {
+            if (tagColorBeans.get(i).getColor().equals(color))
+                return i;
         }
         return tagIndex;
     }
@@ -94,8 +107,32 @@ public class TaskTagAddActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_save:
+                //存储条件，网络及名称不能为空
+                String title = tagNameEdit.getText().toString();
+                if (!NetUtils.isNetworkConnected(this)) {
+                    ToastUtils.show(this, "网络无法连接");
+                    return;
+                }
+                if (StringUtils.isBlank(title)) {
+                    ToastUtils.show(this, "标签名称不能为空");
+                    return;
+                }
+                //一种是新建；第二种是更新
+                if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS)) {
+                    String userId = PreferencesUtils.getString(
+                            TaskTagAddActivity.this, "userID");
+                    workAPIService.changeTag(taskColorTag.getId(), title, tagColorBeans.get(selectIndex).getColor(), userId);
+                } else {
+                    workAPIService.createTag(title, tagColorBeans.get(selectIndex).getColor());
+                }
                 break;
             case R.id.tv_delecte_tag:
+                if (!NetUtils.isNetworkConnected(this)) {
+                    ToastUtils.show(this, "无法连接网络");
+                    return;
+                }
+                if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS))
+                workAPIService.deleteTag(taskColorTag.getId());
                 break;
             case R.id.ibt_back:
                 finish();
@@ -104,6 +141,7 @@ public class TaskTagAddActivity extends BaseActivity {
                 break;
         }
     }
+
 
     class ColorTagHolder {
         public TextView colorNameText;
@@ -149,6 +187,39 @@ public class TaskTagAddActivity extends BaseActivity {
 
             return view;
         }
+    }
+
+
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnDeleteTagSuccess() {
+            super.returnDeleteTagSuccess();
+            LoadingDialog.dimissDlg(loadingDialog);
+
+            // saveTagsAfterDelete();
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void returnDeleteTagFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDialog);
+            WebServiceMiddleUtils.hand(TaskTagAddActivity.this, error, errorCode);
+        }
+
+        @Override
+        public void returnCreateTagSuccess() {
+            super.returnCreateTagSuccess();
+            LoadingDialog.dimissDlg(loadingDialog);
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void returnCreateTagFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(TaskTagAddActivity.this, error, errorCode);
+        }
+
     }
 
 

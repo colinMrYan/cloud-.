@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/content_bg"
@@ -48,5 +49,27 @@
         android:id="@+id/lv_task_manage_tags"
         android:layout_below="@id/rl_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:dividerHeight="0.5px"
+        android:background="#FFFFFF"
+        android:paddingLeft="16dp"></ListView>
+    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+        android:id="@+id/bt_add_tags"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp"
+        android:elevation="1dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="确认添加"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:qmui_backgroundColor="#36A5F6"
+        app:qmui_borderWidth="0dp"
+        app:qmui_isRadiusAdjustBounds="true"/>
 </RelativeLayout>

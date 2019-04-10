@@ -162,7 +162,7 @@
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -224,7 +224,7 @@
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -306,7 +306,7 @@
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -350,7 +350,7 @@
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -392,7 +392,7 @@
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -436,7 +436,7 @@
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="2dp"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 

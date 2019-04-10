@@ -27,6 +27,7 @@ import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -110,6 +111,7 @@ public class TaskAddActivity extends BaseActivity {
     private static final int PARTER_REQUEST_CODE = 3;
     private static final int ALERT_TIME_REQUEST_CODE = 4;
     private static final int ATTACHMENT_REQUEST_CODE = 5;
+    public static final int CLASS_TAG_REQUEST_CODE = 6;
 
 
     private WorkAPIService apiService;
@@ -121,6 +123,7 @@ public class TaskAddActivity extends BaseActivity {
     private List<JSONObject> otherJsonAttachments = new ArrayList<>();
     private List<SearchModel> taskManger = new ArrayList<>();
     private List<SearchModel> taskParters = new ArrayList<>();
+    private ArrayList<TaskColorTag> taskColorTags=new ArrayList<>();
     private Calendar deadLineCalendar;
     private AttachmentPictureAdapter attachmentPictureAdapter;
     private AttachmentOthersAdapter attachmentOtherAdapter;
@@ -144,6 +147,10 @@ public class TaskAddActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(this);
         apiService.setAPIInterface(new TaskAddActivity.WebService());
+        //判断是否为新建任务
+        if(true){
+
+        }
     }
 
     private void initView() {
@@ -162,7 +169,8 @@ public class TaskAddActivity extends BaseActivity {
                 break;
             case R.id.rl_task_type:
                 intent.setClass(this,TaskTagsManageActivity.class);
-                startActivityForResult(intent,1);
+                intent.putExtra(TaskTagsManageActivity.EXTRA_TAGS,taskColorTags);
+                startActivityForResult(intent,CLASS_TAG_REQUEST_CODE);
                 break;
             case R.id.rl_task_manager:
                 intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
@@ -246,6 +254,10 @@ public class TaskAddActivity extends BaseActivity {
                 case ALERT_TIME_REQUEST_CODE:
                     String alertData = data.getStringExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
                     taskAlertTimeView.setText(alertData);
+                    break;
+                case CLASS_TAG_REQUEST_CODE:
+                    taskColorTags=(ArrayList<TaskColorTag>)data.getSerializableExtra(TaskTagsManageActivity.EXTRA_TAGS);
+                    LogUtils.LbcDebug("返回类型::::"+taskColorTags.size());
                     break;
             }
         }
