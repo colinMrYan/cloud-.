@@ -1,85 +1,48 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.work.MessionSetModel;
-import com.inspur.emmcloud.bean.work.TaskColorTag;
-import com.inspur.emmcloud.ui.work.task.MessionFinishListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionTagsManageActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.tag.Tag;
-import com.inspur.emmcloud.widget.tag.TagListView;
-import com.inspur.emmcloud.widget.tag.TagView;
+
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yufuchang on 2019/4/9.
  */
-
+@ContentView(R.layout.activity_task_set)
 public class TaskSetActivity extends BaseActivity{
 
-    private static final int TAG_MANAGE = 0;
-    private final List<Tag> allTags = new ArrayList<Tag>();
-    private ListView setListView, setOrderListView;
-    private TagListView tagListView;
-    private ArrayList<MessionSetModel> messionSetModel = new ArrayList<MessionSetModel>();
-    private ArrayList<MessionSetModel> messionSetOrderModel = new ArrayList<MessionSetModel>();
-    private WorkAPIService apiService;
-    private LoadingDialog loadingDialog;
+    @ViewInject(R.id.lv_task_list)
+    private ListView setListView;
+    private ArrayList<MessionSetModel> taskSetModel = new ArrayList<MessionSetModel>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_set);
         initViews();
-        getTags();
-    }
-
-    /**
-     * 获取tags
-     */
-    private void getTags() {
-        if (NetUtils.isNetworkConnected(TaskSetActivity.this)) {
-            loadingDialog.show();
-            apiService.getTags();
-        }
     }
 
     /**
      * 初始化views
      */
     private void initViews() {
-        apiService = new WorkAPIService(TaskSetActivity.this);
-        apiService.setAPIInterface(new WebService());
-        loadingDialog = new LoadingDialog(TaskSetActivity.this);
         final SetAdapter setAdapter = new SetAdapter();
-        final SetOrderAdapter setOrderAdapter = new SetOrderAdapter();
-        setListView = (ListView) findViewById(R.id.mession_set_list);
-        setOrderListView = (ListView) findViewById(R.id.mession_setorder_list);
         setListView.setAdapter(setAdapter);
-        setOrderListView.setAdapter(setOrderAdapter);
         initFirstOrder();
         setListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -98,103 +61,16 @@ public class TaskSetActivity extends BaseActivity{
             }
         });
 
-        setOrderListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                if (position == 0) {
-                    PreferencesUtils.putString(TaskSetActivity.this,
-                            "order_type", "DESC");
-                } else if (position == 1) {
-                    PreferencesUtils.putString(TaskSetActivity.this,
-                            "order_type", "ASC");
-                }
-                PreferencesUtils.putInt(TaskSetActivity.this, "order",
-                        position);
-                setOrderAdapter.notifyDataSetChanged();
-            }
-        });
 
         MessionSetModel levelModel = new MessionSetModel("");
         levelModel.setContent(getString(R.string.mession_set_level));
         levelModel.setShow("1");
-        messionSetModel.add(levelModel);
+        taskSetModel.add(levelModel);
 
         MessionSetModel timeModel = new MessionSetModel("");
         timeModel.setContent(getString(R.string.mession_set_time));
-        messionSetModel.add(timeModel);
+        taskSetModel.add(timeModel);
 
-        MessionSetModel ascModel = new MessionSetModel("");
-        ascModel.setContent(getString(R.string.mession_set_asc));
-        ascModel.setShow("1");
-        messionSetOrderModel.add(ascModel);
-
-        MessionSetModel descModel = new MessionSetModel("");
-        descModel.setContent(getString(R.string.mession_set_desc));
-        messionSetOrderModel.add(descModel);
-        RelativeLayout manageLayout = (RelativeLayout) findViewById(R.id.mession_manage_layout);
-        manageLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(TaskSetActivity.this,
-                        MessionTagsManageActivity.class);
-                startActivityForResult(intent, TAG_MANAGE);
-            }
-        });
-        tagListView = (TagListView) findViewById(R.id.mession_tagview);
-        tagListView.setOnTagClickListener(new TagListView.OnTagClickListener() {
-            @Override
-            public void onTagClick(TagView tagView, Tag tag) {
-                // String tagStr = "";
-                tagView.setCheckEnable(true);
-                if (allTags.get(tag.getId()).isChecked()) {
-                    tagView.setChecked(true);
-                    allTags.get(tag.getId()).setChecked(true);
-                    ArrayList<String> tagList = new ArrayList<String>();
-                    for (int i = 0; i < allTags.size(); i++) {
-                        if (tagListView.getViewByTag(allTags.get(i))
-                                .isChecked()) {
-                            // tagStr = tagStr + allTags.get(i).getTitle() +
-                            // ":";
-                            tagList.add(allTags.get(i).getTitle());
-                        }
-                    }
-                    saveChoosedTagList(tagList);
-                } else {
-                    tagView.setChecked(false);
-                    allTags.get(tag.getId()).setChecked(false);
-                    ArrayList<String> tagList = new ArrayList<String>();
-                    // tagStr = "";
-                    for (int i = 0; i < allTags.size(); i++) {
-                        if (tagListView.getViewByTag(allTags.get(i))
-                                .isChecked()) {
-                            // tagStr = tagStr + allTags.get(i).getTitle() +
-                            // ":";
-                            tagList.add(allTags.get(i).getTitle());
-                        }
-                    }
-                    saveChoosedTagList(tagList);
-                }
-
-            }
-        });
-    }
-
-    /**
-     * 保存TagList
-     *
-     * @param tagList
-     */
-    protected void saveChoosedTagList(ArrayList<String> tagList) {
-        String userId = ((MyApplication) getApplicationContext()).getUid();
-        if (tagList.size() > 0) {
-            PreferencesUtils.putString(TaskSetActivity.this, MyApplication.getInstance().getTanent()
-                    + userId + "chooseTags", JSONUtils.toJSONString(tagList));
-        } else {
-            PreferencesUtils.putString(TaskSetActivity.this, MyApplication.getInstance().getTanent()
-                    + userId + "chooseTags", "");
-        }
     }
 
     /**
@@ -209,63 +85,18 @@ public class TaskSetActivity extends BaseActivity{
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            // refreshTagListView();
-            getTags();
-        }
-    }
-
-    /**
-     * 初始化标签
-     */
-    private void refreshTagListView() {
-        // setUpData();
-        tagListView.setTags(allTags);
-        String userId = ((MyApplication) getApplicationContext()).getUid();
-        String choosenTags = PreferencesUtils.getString(
-                TaskSetActivity.this, MyApplication.getInstance().getTanent() + userId
-                        + "chooseTags", "");
-        ArrayList<String> chooseTagList = JSONUtils.JSONArray2List(choosenTags, new ArrayList<String>());
-        if (chooseTagList.size() > 0) {
-            for (int i = 0; i < chooseTagList.size(); i++) {
-                for (int j = 0; j < allTags.size(); j++) {
-                    if (chooseTagList.get(i).equals(allTags.get(j).getTitle())) {
-                        try {
-                            tagListView.getViewByTag(allTags.get(j))
-                                    .setCheckEnable(true);
-                            tagListView.getViewByTag(allTags.get(j))
-                                    .setChecked(true);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            PreferencesUtils
-                                    .putString(TaskSetActivity.this,
-                                            MyApplication.getInstance().getTanent() + userId
-                                                    + "chooseTags", "");
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
                 setResult(RESULT_OK);
                 finish();
                 break;
-            case R.id.mession_settiing_txt:
+            case R.id.tv_task_save:
                 setResult(RESULT_OK);
                 finish();
                 break;
-            case R.id.mession_finish_layout:
-                Intent intent = new Intent();
-                intent.setClass(TaskSetActivity.this,
-                        MessionFinishListActivity.class);
-                startActivity(intent);
+            case R.id.rl_task_manager:
+                IntentUtils.startActivity(this, MessionTagsManageActivity.class);
                 break;
             default:
                 break;
@@ -278,43 +109,10 @@ public class TaskSetActivity extends BaseActivity{
         finish();
     }
 
-    /**
-     * 排序设置
-     *
-     * @param imageView
-     * @param position
-     * @param positionChoose
-     */
-    public void handleImage(ImageView imageView, int position,
-                            int positionChoose) {
-        if (position == positionChoose) {
-            imageView.setVisibility(View.VISIBLE);
-        } else {
-            imageView.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 处理设置标签
-     */
-    private void handleSetTags(ArrayList<TaskColorTag> tags) {
-        allTags.clear();
-        for (int i = 0; i < tags.size(); i++) {
-            Tag tag = new Tag();
-            TaskColorTag taskColorTag = tags.get(i);
-            tag.setId(i);
-            tag.setChecked(true);
-            tag.setTagId(taskColorTag.getId());
-            tag.setTitle(taskColorTag.getTitle());
-            allTags.add(tag);
-        }
-        refreshTagListView();
-    }
-
     class SetAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return messionSetModel.size();
+            return taskSetModel.size();
         }
 
         @Override
@@ -332,70 +130,20 @@ public class TaskSetActivity extends BaseActivity{
             int positionChoose = PreferencesUtils.getInt(
                     TaskSetActivity.this, "setorder", -1);
             convertView = LayoutInflater.from(TaskSetActivity.this).inflate(
-                    R.layout.meession_taglist_item, null);
-            ((TextView) (convertView.findViewById(R.id.mession_set_text)))
-                    .setText(messionSetModel.get(position).getContent());
+                    R.layout.task_set_item, null);
+            if(position == 0){
+                convertView.findViewById(R.id.v_head_line).setVisibility(View.GONE);
+            }
+            ((TextView) (convertView.findViewById(R.id.tv_task_set)))
+                    .setText(taskSetModel.get(position).getContent());
             if (position == positionChoose) {
-                convertView.findViewById(R.id.mession_ring_img)
+                convertView.findViewById(R.id.iv_selected)
                         .setVisibility(View.VISIBLE);
             } else {
-                convertView.findViewById(R.id.mession_ring_img)
+                convertView.findViewById(R.id.iv_selected)
                         .setVisibility(View.GONE);
             }
             return convertView;
-        }
-
-    }
-
-    class SetOrderAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return messionSetOrderModel.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            int positionChoose = PreferencesUtils.getInt(
-                    TaskSetActivity.this, "order");
-            convertView = LayoutInflater.from(TaskSetActivity.this).inflate(
-                    R.layout.meession_taglist_item, null);
-            ((TextView) (convertView.findViewById(R.id.mession_set_text)))
-                    .setText(messionSetOrderModel.get(position).getContent());
-            ImageView imageView = (ImageView) convertView
-                    .findViewById(R.id.mession_ring_img);
-            handleImage(imageView, position, positionChoose);
-            return convertView;
-        }
-
-    }
-
-    class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnGetTagResultSuccess(GetTagResult getTagResult) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            ArrayList<TaskColorTag> tags = getTagResult.getArrayList();
-            handleSetTags(tags);
-        }
-
-        @Override
-        public void returnGetTagResultFail(String error, int errorCode) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            WebServiceMiddleUtils.hand(TaskSetActivity.this, error, errorCode);
         }
     }
 }
