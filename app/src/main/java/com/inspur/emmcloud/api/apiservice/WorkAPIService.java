@@ -1549,7 +1549,7 @@ public class WorkAPIService {
                 + "?";
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("owner", newOwner);
+        params.addQueryStringParameter("owner", newOwner);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override

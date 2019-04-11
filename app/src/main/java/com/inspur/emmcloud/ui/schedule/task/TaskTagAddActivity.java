@@ -93,7 +93,6 @@ public class TaskTagAddActivity extends BaseActivity {
         workAPIService.setAPIInterface(new WebService());
     }
 
-
     private int getTagColorIndex(List<TagColorBean> tagColorBeans, String color) {
         int tagIndex = -1;
         for (int i = 0; i < tagColorBeans.size(); i++) {
@@ -102,7 +101,6 @@ public class TaskTagAddActivity extends BaseActivity {
         }
         return tagIndex;
     }
-
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -132,7 +130,7 @@ public class TaskTagAddActivity extends BaseActivity {
                     return;
                 }
                 if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS))
-                workAPIService.deleteTag(taskColorTag.getId());
+                    workAPIService.deleteTag(taskColorTag.getId());
                 break;
             case R.id.ibt_back:
                 finish();
@@ -141,7 +139,6 @@ public class TaskTagAddActivity extends BaseActivity {
                 break;
         }
     }
-
 
     class ColorTagHolder {
         public TextView colorNameText;
@@ -184,11 +181,9 @@ public class TaskTagAddActivity extends BaseActivity {
             colorTagHolder.colorNameText.setText(tagColorBeans.get(i).getContent());
             colorTagHolder.colorFlagImage.setImageResource(CalendarColorUtils.getColorCircleImage(tagColorBeans.get(i).getColor()));
             colorTagHolder.colorSelectImage.setVisibility(i == selectIndex ? View.VISIBLE : View.GONE);
-
             return view;
         }
     }
-
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -221,6 +216,5 @@ public class TaskTagAddActivity extends BaseActivity {
         }
 
     }
-
 
 }
