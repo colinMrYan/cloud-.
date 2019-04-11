@@ -169,7 +169,9 @@ public class TaskFragment extends Fragment{
 //                    tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#00ffffff"));
 //                    allTaskView.setBackgroundColor(Color.parseColor("#36A5F6"));
 //                }
+                searchEditText.setText("");
                 tabLayoutSchedule.getTabAt(position).select();
+                ((AllTaskFragmentAdapter)taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setNowIndex(position);
             }
 
             @Override
