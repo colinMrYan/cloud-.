@@ -24,7 +24,7 @@
         android:layout_marginRight="20dp"
         android:textSize="16sp"/>
     <TextView
-        android:id="@+id/tv_upload_state"
+        android:id="@+id/tv_attachemnt_upload_state"
         android:layout_below="@id/tv_add_attachment_name"
         android:layout_toRightOf="@id/iv_attachemnt_img"
         android:layout_toLeftOf="@id/iv_delete_attachemnt"
@@ -43,5 +43,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_width="21.2dp"
-        android:layout_height="21.2dp" />
+        android:layout_height="21.2dp"
+        android:src="@drawable/icon_receiver_delete"/>
 </RelativeLayout>
