@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,14 +82,14 @@ public class TaskFragment extends Fragment{
     private void initFragmentList() {
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         List<TaskListFragment> list = new ArrayList<TaskListFragment>();
-        Bundle bundle = new Bundle();
-        bundle.putInt(MY_TASK_TYPE,MY_MINE);
-        allTaskListFragment = new TaskListFragment();
-        allTaskListFragment.setArguments(bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putInt(MY_TASK_TYPE,MY_MINE);
+//        allTaskListFragment = new TaskListFragment();
+//        allTaskListFragment.setArguments(bundle);
         Bundle bundleMine = new Bundle();
         bundleMine.putInt(MY_TASK_TYPE,MY_MINE);
         mineTaskListFragment = new TaskListFragment();
-        mineTaskListFragment.setArguments(bundle);
+        mineTaskListFragment.setArguments(bundleMine);
         Bundle bundleInvolved = new Bundle();
         bundleInvolved.putInt(MY_TASK_TYPE,MY_INVOLVED);
         involvedTaskListFragment = new TaskListFragment();
@@ -100,11 +99,11 @@ public class TaskFragment extends Fragment{
         focusedTaskListFragment = new TaskListFragment();
         focusedTaskListFragment.setArguments(bundleFocused);
         Bundle bundleDone = new Bundle();
-        bundleDone.putInt(MY_TASK_TYPE,MY_MINE);
+        bundleDone.putInt(MY_TASK_TYPE,MY_DONE);
         allReadyDoneTaskListFragment = new TaskListFragment();
-        allReadyDoneTaskListFragment.setArguments(bundle);
+        allReadyDoneTaskListFragment.setArguments(bundleDone);
 
-        list.add(allTaskListFragment);
+//        list.add(allTaskListFragment);
         list.add(mineTaskListFragment);
         list.add(involvedTaskListFragment);
         list.add(focusedTaskListFragment);
@@ -115,16 +114,24 @@ public class TaskFragment extends Fragment{
 
 
     private void initViews() {
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_mine),getIsSelect(0));
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_involved),getIsSelect(1));
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused),getIsSelect(2));
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_done),getIsSelect(3));
+        //带“全部”代码
+//        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_mine),getIsSelect(0));
+//        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_involved),getIsSelect(1));
+//        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused),getIsSelect(2));
+//        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_done),getIsSelect(3));
+
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_mine),true);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_involved),false);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused),false);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_done),false);
 
         tabLayoutSchedule.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int index = tab.getPosition();
-                taskViewPager.setCurrentItem(index + 1);
+                //带“全部”代码
+//                int index = tab.getPosition();
+//                taskViewPager.setCurrentItem(index + 1);
+                taskViewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -133,12 +140,12 @@ public class TaskFragment extends Fragment{
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-
-
-                if(position == 0){
-                    taskViewPager.setCurrentItem(position + 1);
-                }
+                //带“全部”代码
+//                int position = tab.getPosition();
+//                if(position == 0){
+//                    taskViewPager.setCurrentItem(position + 1);
+//                }
+                taskViewPager.setCurrentItem(tab.getPosition());
             }
         });
 
@@ -150,18 +157,19 @@ public class TaskFragment extends Fragment{
 
             @Override
             public void onPageSelected(int position) {
-                if(lastTaskPosition != position){
-                    setSearchState(lastTaskPosition);
-                    lastTaskPosition = position;
-                }
-                if(position > 0){
-                    tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#36A5F6"));
-                    tabLayoutSchedule.getTabAt(position - 1).select();
-                    allTaskView.setBackgroundColor(Color.parseColor("#00ffffff"));
-                }else{
-                    tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#00ffffff"));
-                    allTaskView.setBackgroundColor(Color.parseColor("#36A5F6"));
-                }
+//                if(lastTaskPosition != position){
+//                    setSearchState(lastTaskPosition);
+//                    lastTaskPosition = position;
+//                }
+//                if(position > 0){
+//                    tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#36A5F6"));
+//                    tabLayoutSchedule.getTabAt(position - 1).select();
+//                    allTaskView.setBackgroundColor(Color.parseColor("#00ffffff"));
+//                }else{
+//                    tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#00ffffff"));
+//                    allTaskView.setBackgroundColor(Color.parseColor("#36A5F6"));
+//                }
+                tabLayoutSchedule.getTabAt(position).select();
             }
 
             @Override
@@ -169,14 +177,15 @@ public class TaskFragment extends Fragment{
             }
         });
 
-        allTaskLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#00ffffff"));
-                allTaskView.setBackgroundColor(Color.parseColor("#36A5F6"));
-                taskViewPager.setCurrentItem(0);
-            }
-        });
+        //有“全部”的代码
+//        allTaskLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#00ffffff"));
+//                allTaskView.setBackgroundColor(Color.parseColor("#36A5F6"));
+//                taskViewPager.setCurrentItem(0);
+//            }
+//        });
         //将适配器和ViewPager结合
         taskViewPager.setAdapter(adapter);
         searchEditText.addTextChangedListener(new TextWatcher() {
