@@ -81,7 +81,7 @@ public class LoadingDialog extends Dialog {
 
     @Override
     public void show() {
-        if (context != null) {
+        if (context != null && !isShowing()) {
             super.show();
         }
 

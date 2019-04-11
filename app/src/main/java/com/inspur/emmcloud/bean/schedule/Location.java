@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.bean.schedule.meeting;
+package com.inspur.emmcloud.bean.schedule;
 
 import org.json.JSONObject;
 

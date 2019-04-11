@@ -16,16 +16,16 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.work.GetIsAdmin;
 import com.inspur.emmcloud.bean.work.GetLoctionResult;
 import com.inspur.emmcloud.bean.work.GetMeetingListResult;
-import com.inspur.emmcloud.bean.work.GetMeetingRoomsResult;
+import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.work.GetOfficeResult;
 import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
@@ -135,13 +135,13 @@ public class WorkAPIService {
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface
-                        .returnMeetingRoomsSuccess(new GetMeetingRoomsResult(new String(arg0)));
+                        .returnMeetingRoomListSuccess(new GetMeetingRoomListResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMeetingRoomsFail(error, responseCode);
+                apiInterface.returnMeetingRoomListFail(error, responseCode);
             }
         });
     }
@@ -151,22 +151,22 @@ public class WorkAPIService {
      *
      * @param start
      * @param end
-     * @param commonOfficeIdList
-     * @param isFilte
+     * @param officeIdList
+     * @param isFilter
      */
-    public void getFiltMeetingRooms(final long start, final long end,
-                                    final List<String> commonOfficeIdList, final boolean isFilte) {
+    public void getMeetingRoomList(final long start, final long end,
+                                   final List<String> officeIdList, final boolean isFilter) {
         String baseUrl = APIUri.getMeetingRoomsUrl() + "?";
-        if (isFilte) {
+        if (isFilter) {
             baseUrl = baseUrl + "startWebSocket=" + start + "&end=" + end;
         } else {
             baseUrl = baseUrl + "startWebSocket=" + "&end=";
         }
-        baseUrl = baseUrl + "&isIdle=" + isFilte;
-        for (int j = 0; j < commonOfficeIdList.size(); j++) {
-            baseUrl = baseUrl + "&oids=" + commonOfficeIdList.get(j);
+        baseUrl = baseUrl + "&isIdle=" + isFilter;
+        for (int j = 0; j < officeIdList.size(); j++) {
+            baseUrl = baseUrl + "&oids=" + officeIdList.get(j);
         }
-        if (commonOfficeIdList.size() == 0) {
+        if (officeIdList.size() == 0) {
             baseUrl = baseUrl + "&oids=";
         }
         final String completeUrl = baseUrl;
@@ -179,8 +179,8 @@ public class WorkAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getFiltMeetingRooms(start, end, commonOfficeIdList,
-                                isFilte);
+                        getMeetingRoomList(start, end, officeIdList,
+                                isFilter);
                     }
 
                     @Override
@@ -195,14 +195,14 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMeetingRoomsSuccess(
-                        new GetMeetingRoomsResult(new String(arg0)), isFilte);
+                apiInterface.returnMeetingRoomListSuccess(
+                        new GetMeetingRoomListResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMeetingRoomsFail(error, responseCode);
+                apiInterface.returnMeetingRoomListFail(error, responseCode);
             }
         });
     }
@@ -638,7 +638,7 @@ public class WorkAPIService {
     /**
      * 获取常用办公地点
      */
-    public void getOffice() {
+    public void getOfficeList() {
         final String completeUrl = APIUri.getOfficeUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -647,14 +647,13 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface
-                        .returnOfficeResultSuccess(new GetOfficeResult(new String(arg0)));
+                apiInterface.returnOfficeListResultSuccess(new GetOfficeListResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnOfficeResultFail(error, responseCode);
+                apiInterface.returnOfficeListResultFail(error, responseCode);
             }
 
             @Override
@@ -662,7 +661,7 @@ public class WorkAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getOffice();
+                        getOfficeList();
                     }
 
                     @Override

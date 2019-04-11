@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingListAdapter;
-import com.inspur.emmcloud.bean.schedule.meeting.Location;
+import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;

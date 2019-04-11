@@ -17,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
@@ -207,7 +208,7 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment{
             case 1:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, "预定会议室"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, "历史会议"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_meeting_history, 5, "历史会议"));
                 break;
             case 2:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));

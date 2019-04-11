@@ -62,6 +62,7 @@ public class Constant {
     public static final String PREF_MINE_USER_MENUS = "mine_user_menus";
 
     public static final String PREF_CALENDAR_EVENT_SHOW_TYPE = "calendar_event_show_type";
+    public static final String PREF_MEETING_OFFICE_ID_LIST = "meeting_office_id_list";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

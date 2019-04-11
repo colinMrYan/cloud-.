@@ -29,7 +29,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/icon_arrow_right" />
+            android:src="@drawable/ic_arrow_right" />
     </RelativeLayout>
 
 </RelativeLayout>

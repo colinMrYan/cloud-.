@@ -44,7 +44,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.DataTimePickerDialog;
+import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
 
@@ -179,8 +179,8 @@ public class TaskAddActivity extends BaseActivity {
                 startActivityForResult(intent, PARTER_REQUEST_CODE);
                 break;
             case R.id.rl_deadline:
-                DataTimePickerDialog dataTimePickerDialog = new DataTimePickerDialog(this);
-                dataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
+                DateTimePickerDialog dataTimePickerDialog = new DateTimePickerDialog(this);
+                dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
                     @Override
                     public void positiveListener(Calendar calendar) {
                         deadLineCalendar = calendar;

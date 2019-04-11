@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.schedule;
 
 
-import com.inspur.emmcloud.bean.schedule.meeting.Location;
 import com.inspur.emmcloud.bean.work.RemindEvent;
 
 import org.xutils.db.annotation.Column;

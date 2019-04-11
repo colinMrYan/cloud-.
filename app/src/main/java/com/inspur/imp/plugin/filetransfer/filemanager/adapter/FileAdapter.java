@@ -57,7 +57,7 @@ public class FileAdapter extends RecyclerViewAdapter {
             fileHolder.fileChildCount.setText(context.getString(R.string.file) + ": " + fileBean.getChildCount());
 
             fileHolder.fileSize.setVisibility(View.GONE);
-            fileHolder.dir_enter_image.setImageResource(R.drawable.icon_arrow_right);
+            fileHolder.dir_enter_image.setImageResource(R.drawable.ic_arrow_right);
 
         } else {
             fileHolder.fileChildCount.setVisibility(View.GONE);
