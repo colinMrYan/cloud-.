@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
@@ -26,7 +25,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,8 +64,7 @@ public class CalendarSettingActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
-                returnCalList();
-                finish();
+                onBackPressed();
                 break;
             case R.id.rl_list_view:
                 if (listSelectImageView.getVisibility() != View.VISIBLE) {
@@ -90,18 +87,12 @@ public class CalendarSettingActivity extends BaseActivity {
         }
     }
 
-    private void returnCalList() {
-        // TODO Auto-generated method stub
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_DATA_CHANGED, ""));
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_SCHEDULE_CALENDAR_SETTING_CALENDARLIST, (Serializable) calendarsList);
-        setResult(RESULT_OK, intent);
-    }
 
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        returnCalList();
+        //通知其他页面日历设置发生改变
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, ""));
         super.onBackPressed();
     }
 

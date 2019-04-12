@@ -92,6 +92,8 @@ public final class EmmCalendar implements Serializable, Comparable<EmmCalendar> 
      * using addScheme(int schemeColor,String scheme); multi scheme
      */
     private String scheme;
+    //是否显示下方的标记
+    private boolean isShowSchemePoint = true;
 
     /**
      * 各种自定义标记颜色、没有则选择默认颜色，如果使用多标记，请使用下面API
@@ -351,6 +353,14 @@ public final class EmmCalendar implements Serializable, Comparable<EmmCalendar> 
      */
     public boolean isAvailable() {
         return year > 0 & month > 0 & day > 0 & day <= 31 & month <= 12 & year >= 1900 & year <= 2099;
+    }
+
+    public void setShowSchemePoint(boolean isShowSchemePoint){
+        this.isShowSchemePoint = isShowSchemePoint;
+    }
+
+    public boolean getShowSchemePoint(){
+        return isShowSchemePoint;
     }
 
     /**

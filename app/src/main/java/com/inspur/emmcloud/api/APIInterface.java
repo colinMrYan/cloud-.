@@ -829,6 +829,6 @@ public interface APIInterface {
 
     void returnUserCardMenusFail(String error, int errorCode);
 
-    void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,Calendar endCalendar);
+    void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList);
     void returnScheduleListFail(String error, int errorCode);
 }

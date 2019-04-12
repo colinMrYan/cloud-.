@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import com.inspur.emmcloud.widget.calendarview.MonthView;
 
@@ -121,10 +122,13 @@ public class CustomMonthView extends MonthView {
 
     @Override
     protected void onDrawScheme(Canvas canvas, EmmCalendar calendar, int x, int y) {
-
-        mPointPaint.setColor(0xFF95B0C5);
-        canvas.drawCircle(x + mItemWidth / 2, y + mItemHeight - 3 * mPadding- mPointRadius, mPointRadius, mPointPaint);
-    }
+        LogUtils.jasonDebug("0000"+calendar.toString());
+        if (calendar.getShowSchemePoint()){
+            LogUtils.jasonDebug("11111111111");
+            mPointPaint.setColor(0xFF95B0C5);
+            canvas.drawCircle(x + mItemWidth / 2, y + mItemHeight - 3 * mPadding- mPointRadius, mPointRadius, mPointPaint);
+        }
+       }
 
     @Override
     protected void onDrawText(Canvas canvas, EmmCalendar calendar, int x, int y, boolean hasScheme, boolean isSelected) {

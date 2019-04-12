@@ -413,7 +413,7 @@ public class CalendarAddActivity extends BaseActivity {
      * @param
      */
     public void sendCalendarEventNotification() {
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_DATA_CHANGED, ""));
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, ""));
     }
 
     /**

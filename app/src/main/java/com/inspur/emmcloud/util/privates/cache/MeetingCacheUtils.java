@@ -25,6 +25,17 @@ public class MeetingCacheUtils {
         }
     }
 
+    public static void removeMeetingList(Context context,List<String> meetingIdList){
+        try {
+            if (meetingIdList.size()>0){
+                DbCacheUtils.getDb(context).delete(Meeting.class,WhereBuilder.b("id","in",meetingIdList));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
     public static List<Meeting> getMeetingList(final Context context, Calendar startTime, Calendar endTime) {
         List<Meeting> meetingList = null;
         try {
