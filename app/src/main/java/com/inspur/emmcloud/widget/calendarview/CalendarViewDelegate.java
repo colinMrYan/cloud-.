@@ -327,7 +327,7 @@ final class CalendarViewDelegate {
 
         mSchemeText = array.getString(R.styleable.CalendarView_scheme_text);
         if (TextUtils.isEmpty(mSchemeText)) {
-            mSchemeText = "记";
+            mSchemeText = "";
         }
 
         mMonthViewScrollable = array.getBoolean(R.styleable.CalendarView_month_view_scrollable, true);

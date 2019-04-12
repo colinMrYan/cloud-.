@@ -123,9 +123,10 @@ public class CustomWeekView extends WeekView {
 
     @Override
     protected void onDrawScheme(Canvas canvas, EmmCalendar calendar, int x) {
-
-        mPointPaint.setColor(0xFF95B0C5);
-        canvas.drawCircle(x + mItemWidth / 2, mItemHeight - mPointRadius, mPointRadius, mPointPaint);
+        if (calendar.getShowSchemePoint()) {
+            mPointPaint.setColor(0xFF95B0C5);
+            canvas.drawCircle(x + mItemWidth / 2, mItemHeight - mPointRadius, mPointRadius, mPointPaint);
+        }
     }
 
     @Override

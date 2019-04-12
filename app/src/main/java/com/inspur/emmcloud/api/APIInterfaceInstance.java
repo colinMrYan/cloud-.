@@ -1973,7 +1973,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar) {
+    public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
     }
 
     @Override
