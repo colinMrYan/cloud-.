@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
@@ -27,45 +28,45 @@ import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
 
-import org.xutils.ex.DbException;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by yufuchang on 2019/3/28.
  */
-@ContentView(R.layout.fragment_schedule_home)
-public class ScheduleHomeFragment extends ScheduleBaseFragment{
+public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener{
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
-    @ViewInject(R.id.tab_layout_schedule)
+    private View rootView;
     private TabLayout tabLayout;
-    @ViewInject(R.id.view_pager_all_schedule)
     private CustomScrollViewPager viewPager;
-    @ViewInject(R.id.ibt_back_to_today)
     private ImageButton backToToDayImgBtn;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private AllTaskListFragment allTaskFragment;
-
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view,savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
         initView();
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setFragmentStatusBarWhite();
-        return super.onCreateView(inflater,container,savedInstanceState);
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_message, container,
+                    false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
     }
 
     /**
@@ -78,7 +79,12 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment{
     }
 
     private void initView() {
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
+        backToToDayImgBtn = rootView.findViewById(R.id.ibt_back_to_today);
+        backToToDayImgBtn.setOnClickListener(this);
+        rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         initTabLayout();
+        viewPager = rootView.findViewById(R.id.view_pager_all_schedule);
         viewPager.setScrollable(false);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -116,6 +122,7 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment{
     }
 
     private void initTabLayout() {
+        tabLayout = rootView.findViewById(R.id.tab_layout_schedule);
         int[] tabTitleResIds = {R.string.work_schedule, R.string.work_meeting_text, R.string.work_mession};
         for (int i = 0; i < tabTitleResIds.length; i++) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -218,14 +225,16 @@ public class ScheduleHomeFragment extends ScheduleBaseFragment{
         return menuItemList;
     }
 
-
-    @Event(value = R.id.ibt_add)
-    private void onAddBtnClick(View view) throws DbException {
-        showAddPopMenu(view);
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.ibt_add:
+                showAddPopMenu(view);
+                break;
+            case R.id.ibt_back_to_today:
+                scheduleFragment.setScheduleBackToToday();
+                break;
+        }
     }
 
-    @Event(value = R.id.ibt_back_to_today)
-    private void onBackToTodayBtnClick(View view) throws DbException {
-        scheduleFragment.setScheduleBackToToday();
-    }
 }

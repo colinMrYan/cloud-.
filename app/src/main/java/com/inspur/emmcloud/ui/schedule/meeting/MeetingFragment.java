@@ -8,18 +8,15 @@ import android.view.View;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingListAdapter;
-import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
-import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -49,30 +46,30 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
     }
 
     private void initData(){
-        for (int i = 0;i<10;i++){
-            Meeting meeting = new Meeting();
-            meeting.setTitle("2018年财年宣贯会，总结2018年公司业绩");
-            meeting.setId(System.currentTimeMillis()+"");
-            Calendar startCalendar = Calendar.getInstance();
-            startCalendar.set(Calendar.HOUR_OF_DAY,8);
-            startCalendar.set(Calendar.MINUTE,30);
-            meeting.setStartTimeCalendar(startCalendar);
-            Calendar endCalendar = Calendar.getInstance();
-            startCalendar.set(Calendar.HOUR_OF_DAY,10);
-            startCalendar.set(Calendar.MINUTE,00);
-            meeting.setEndTimeCalendar(endCalendar);
-
-            JSONObject locationObj = new JSONObject();
-            try {
-                locationObj.put("displayName","S06栋");
-            }catch (Exception e){
-                e.printStackTrace();
-
-            }
-            Location location = new Location(locationObj);
-            meeting.setScheduleLocationObj(location);
-            meetingList.add(meeting);
-        }
+//        for (int i = 0;i<10;i++){
+//            Meeting meeting = new Meeting();
+//            meeting.setTitle("2018年财年宣贯会，总结2018年公司业绩");
+//            meeting.setId(System.currentTimeMillis()+"");
+//            Calendar startCalendar = Calendar.getInstance();
+//            startCalendar.set(Calendar.HOUR_OF_DAY,8);
+//            startCalendar.set(Calendar.MINUTE,30);
+//            meeting.setStartTimeCalendar(startCalendar);
+//            Calendar endCalendar = Calendar.getInstance();
+//            startCalendar.set(Calendar.HOUR_OF_DAY,10);
+//            startCalendar.set(Calendar.MINUTE,00);
+//            meeting.setEndTimeCalendar(endCalendar);
+//
+//            JSONObject locationObj = new JSONObject();
+//            try {
+//                locationObj.put("displayName","S06栋");
+//            }catch (Exception e){
+//                e.printStackTrace();
+//
+//            }
+//            Location location = new Location(locationObj);
+//            meeting.setScheduleLocationObj(location);
+//            meetingList.add(meeting);
+//        }
         scheduleMeetingListAdapter.setMeetingList(meetingList);
     }
 

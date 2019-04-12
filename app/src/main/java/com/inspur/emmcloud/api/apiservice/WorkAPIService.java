@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
@@ -68,8 +69,7 @@ public class WorkAPIService {
      */
     public void getMeetings(final int day) {
         final String completeUrl = APIUri.getMeetingsUrl() + "?day=" + day;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -110,8 +110,7 @@ public class WorkAPIService {
      */
     public void getMeetingRooms() {
         final String completeUrl = APIUri.getMeetingRoomsUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -170,7 +169,7 @@ public class WorkAPIService {
             baseUrl = baseUrl + "&oids=";
         }
         final String completeUrl = baseUrl;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
@@ -221,7 +220,7 @@ public class WorkAPIService {
         final String completeUrl = APIUri.getMeetingRootUrl()
                 + "/room/booking/history?uid=" + uid
                 + "&page=" + page + "&limit=" + limit + "&keyword=" + keyword;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         //params.addParameter("keyword", keyword);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
@@ -266,7 +265,7 @@ public class WorkAPIService {
     public void getIsAdmin(final String cid) {
 
         final String completeUrl = APIUri.getMeetingIsAdminUrl() + "?cid=" + cid;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
@@ -326,7 +325,7 @@ public class WorkAPIService {
                               final List<SearchModel> pids, final String attendant,
                               final String id) {
         final String completeUrl = APIUri.getBookingRoomUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         try {
             JSONObject bookingParam = new JSONObject();
@@ -424,7 +423,7 @@ public class WorkAPIService {
                                final String[] cids, final List<SearchModel> pids,
                                final String attendant) {
         final String completeUrl = APIUri.getBookingRoomUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         try {
             JSONObject bookingParamObj = new JSONObject();
@@ -503,7 +502,7 @@ public class WorkAPIService {
      */
     public void getRoomMeetingList(final String bid) {
         final String completeUrl = APIUri.getRoomMeetingListUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("bid", bid);
         params.setRequestTracker(new RequestTracker() {
@@ -599,7 +598,7 @@ public class WorkAPIService {
      */
     public void getLoction() {
         final String completeUrl = APIUri.getLoctionUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
@@ -640,7 +639,7 @@ public class WorkAPIService {
      */
     public void getOfficeList() {
         final String completeUrl = APIUri.getOfficeUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
@@ -684,7 +683,7 @@ public class WorkAPIService {
      */
     public void creatOffice(final String name, final String buildingId) {
         final String completeUrl = APIUri.addOfficeUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         JSONObject jsonBuild = new JSONObject();
         JSONObject jsonObject = new JSONObject();
@@ -739,7 +738,7 @@ public class WorkAPIService {
     public void deleteMeeting(final String rid) {
         final String completeUrl;
         completeUrl = APIUri.getDeleteMeetingUrl() + "?rid=" + rid;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
@@ -781,7 +780,7 @@ public class WorkAPIService {
      */
     public void deleteOffice(final String buildingId, final int position) {
         final String completeUrl = APIUri.addOfficeUrl() + "?id=" + buildingId;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
@@ -828,7 +827,7 @@ public class WorkAPIService {
      */
     public void getRecentTasks(final String orderBy, final String orderType) {
         final String completeUrl = APIUri.getToDoRecentUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
         params.addParameter("order_type", orderType);
@@ -874,7 +873,7 @@ public class WorkAPIService {
      */
     public void getTask(final String id) {
         final String completeUrl = APIUri.getTasksList(id);
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
@@ -918,7 +917,7 @@ public class WorkAPIService {
      */
     public void getAllTasks(final int page, final int limit, final String state) {
         final String completeUrl = APIUri.getCreateTaskUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addHeader("Accept", "application/json");
         params.addParameter("page", page);
@@ -962,7 +961,7 @@ public class WorkAPIService {
      */
     public void getInvolvedTasks(final String orderBy, final String orderType) {
         final String completeUrl = APIUri.getInvolvedTasksUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
         params.addParameter("order_type", orderType);
@@ -1004,7 +1003,7 @@ public class WorkAPIService {
      */
     public void getFocusedTasks(final String orderBy, final String orderType) {
         final String completeUrl = APIUri.getFocusedTasksUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
         params.addParameter("order_type", orderType);
@@ -1046,7 +1045,7 @@ public class WorkAPIService {
      */
     public void createTasks(final String mession) {
         final String completeUrl = APIUri.getCreateTaskUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("title", mession);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
@@ -1091,7 +1090,7 @@ public class WorkAPIService {
      */
     public void deleteTasks(final String id) {
         final String completeUrl = APIUri.getCreateTaskUrl() + "/" + id;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
@@ -1131,7 +1130,7 @@ public class WorkAPIService {
      */
     public void getTodayTasks() {
         final String completeUrl = APIUri.getTodayTaskUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
@@ -1174,7 +1173,7 @@ public class WorkAPIService {
      */
     public void getSigleTask(final String id) {
         final String completeUrl = APIUri.getCreateTaskUrl() + "/" + id;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
@@ -1216,7 +1215,7 @@ public class WorkAPIService {
      */
     public void updateTask(final String taskJson, final int position) {
         final String completeUrl = APIUri.getCreateTaskUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(taskJson);
         params.setAsJsonContent(true);
@@ -1262,7 +1261,7 @@ public class WorkAPIService {
     public void inviteMateForTask(final String taskId, final JSONArray uidArray) {
         final String completeUrl = APIUri.getCreateTaskUrl() + "/" + taskId
                 + "/mates";
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(uidArray.toString());
         params.setAsJsonContent(true);
@@ -1309,7 +1308,7 @@ public class WorkAPIService {
     public void deleteMateForTask(final String taskId, final JSONArray uidArray) {
         final String completeUrl = APIUri.getCreateTaskUrl() + "/" + taskId
                 + "/mates";
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(uidArray.toString());
         params.setAsJsonContent(true);
@@ -1351,7 +1350,7 @@ public class WorkAPIService {
      */
     public void getTags() {
         final String completeUrl = APIUri.getTagUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addHeader("Accept", "application/json");
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
@@ -1408,7 +1407,7 @@ public class WorkAPIService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(jsonObject.toString());
         params.setAsJsonContent(true);
@@ -1453,7 +1452,7 @@ public class WorkAPIService {
      */
     public void deleteTag(final String id) {
         final String completeUrl = APIUri.getTagUrl() + "/" + id;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
 
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
@@ -1498,7 +1497,7 @@ public class WorkAPIService {
      */
     public void createTag(final String title, final String color) {
         final String completeUrl = APIUri.getTagUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("title", title);
         params.addParameter("color", color);
@@ -1546,7 +1545,7 @@ public class WorkAPIService {
 
         final String completeUrl = APIUri.getChangeMessionOwnerUrl() + id
                 + "?";
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("owner", newOwner);
         HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
@@ -1592,7 +1591,7 @@ public class WorkAPIService {
      */
     public void addAttachments(final String id, final String attachments) {
         final String completeUrl = APIUri.getAddAttachmentsUrl(id);
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         try {
             JSONObject jsonObject = new JSONObject(attachments);
@@ -1645,7 +1644,7 @@ public class WorkAPIService {
      */
     public void deleteAttachments(final String id, final String attachments, final int position) {
         final String completeUrl = APIUri.getAddAttachmentsUrl(id);
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         try {
             JSONArray jsonArray = new JSONArray();
@@ -1699,7 +1698,7 @@ public class WorkAPIService {
      */
     public void getMyCalendar(final int page, final int limit) {
         final String completeUrl = APIUri.getCalendarUrl() + "/calendar";
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("page", page);
         params.addParameter("limit", limit);
@@ -1747,7 +1746,7 @@ public class WorkAPIService {
     public void delelteCalendarById(final String id) {
         final String completeUrl = APIUri.getCalendarUrl() + "/calendar/"
                 + id;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
@@ -1790,7 +1789,7 @@ public class WorkAPIService {
      */
     public void updateCalendar(final String calendarJson) {
         final String completeUrl = APIUri.getCalendarUrl() + "/calendar";
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.setAsJsonContent(true);
         params.setBodyContent(calendarJson);
@@ -1838,7 +1837,7 @@ public class WorkAPIService {
 
         final String completeUrl = APIUri.getCalendarUrl() + "/calendar/"
                 + calendarId + "/event";
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(eventJson);
         params.setAsJsonContent(true);
@@ -1884,7 +1883,7 @@ public class WorkAPIService {
 
         final String completeUrl = APIUri.getCalendarUrl()
                 + "/calendar/event";
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(calEventJson);
         params.setAsJsonContent(true);
@@ -1938,7 +1937,7 @@ public class WorkAPIService {
                                 final int limit, final int page, final boolean isRefresh) {
         String url = APIUri.getCalendarUrl() + "/calendar/events?";
         final String completeUrl = url;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         for (int i = 0; i < calendarIdList.size(); i++) {
             params.addQueryStringParameter("id", calendarIdList.get(i));
@@ -2001,7 +2000,7 @@ public class WorkAPIService {
     public void deleteCalEvent(final String calEventId) {
         final String completeUrl = APIUri.getCalendarUrl()
                 + "/calendar/event/" + calEventId;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
+        RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
@@ -2044,7 +2043,7 @@ public class WorkAPIService {
      */
     public void saveWorkPortletConfig(final String configJSon) {
         final String url = APIUri.saveAppConfigUrl("WorkPortlet");
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setBodyContent(configJSon);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
             @Override
@@ -2074,6 +2073,50 @@ public class WorkAPIService {
                         oauthCallBack, requestTime);
             }
 
+        });
+    }
+
+    /**
+     * 获取日程列表（日程和会议）
+     * @param startTime
+     * @param endTime
+     * @param taskLastTime
+     */
+    public void getScheduleList(final Calendar startTime,final Calendar endTime,final long calendarLastTime,final long meetingLastTime,final long taskLastTime){
+        final String url = APIUri.getScheduleListUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.addQueryStringParameter("startTime",startTime.getTimeInMillis()+"");
+        params.addQueryStringParameter("endTime",endTime.getTimeInMillis()+"");
+        params.addQueryStringParameter("calendarLastTime",calendarLastTime+"");
+        params.addQueryStringParameter("meetingLastTime",meetingLastTime+"");
+        params.addQueryStringParameter("taskLastTime",taskLastTime+"");
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnScheduleListSuccess(new GetScheduleListResult(new String(arg0)),startTime,endTime);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnScheduleListFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getScheduleList(startTime,endTime,calendarLastTime,meetingLastTime,taskLastTime);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
         });
     }
 }

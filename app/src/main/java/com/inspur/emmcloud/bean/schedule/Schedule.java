@@ -2,12 +2,18 @@ package com.inspur.emmcloud.bean.schedule;
 
 
 import com.inspur.emmcloud.bean.work.RemindEvent;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.widget.calendardayview.Event;
 
+import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by chenmch on 2019/4/6.
@@ -15,39 +21,62 @@ import java.util.Calendar;
 @Table(name = "Schedule")
 public class Schedule implements Serializable{
     @Column(name = "id", isId = true)
-    private String id;// 唯一标识
+    private String id="";// 唯一标识
     @Column(name = "title")
-    private String title ;//日程标题
-    @Column(name = "calendarType")
-    private String calendarType;//日程类型（出差、会议等，可以自定义）
+    private String title="" ;//日程标题
+    @Column(name = "type")
+    private String type= "";//日程类型（出差、会议等，可以自定义）
     @Column(name = "owner")
-    private String owner;//创建人的inspurId
+    private String owner="";//创建人的inspurId
     @Column(name = "startTime")
-    private long startTime;//开始时间
+    private long startTime=0L;//开始时间
     @Column(name = "endTime")
-    private long endTime;// 结束时间
+    private long endTime=0L;// 结束时间
     @Column(name = "creationTime")
-    private long creationTime;//创建时间
+    private long creationTime=0L;//创建时间
     @Column(name = "lastTime")
-    private long lastTime;// 最后修改时间
-    private Calendar startTimeCalendar;//开始时间
-    private Calendar endTimeCalendar;// 结束时间
-    private Calendar creationTimeCalendar;//创建时间
-    private Calendar lastTimeCalendar;// 最后修改时间
+    private long lastTime=0L;// 最后修改时间
     @Column(name = "isAllDay")
-    private Boolean isAllDay;//是否全天
+    private Boolean isAllDay=false;//是否全天
     @Column(name = "isCommunity")
-    private Boolean isCommunity;//是否公开（别人可以关注你的日程，此属性决定了当前日程是否对别人可见）
+    private Boolean isCommunity=false;//是否公开（别人可以关注你的日程，此属性决定了当前日程是否对别人可见）
     @Column(name = "syncToLocal")
-    private Boolean syncToLocal ;//是否将日程信息同步到 移动设备日历里边。
+    private Boolean syncToLocal=false ;//是否将日程信息同步到 移动设备日历里边。
     @Column(name = "remindEvent")
-    private String remindEvent;
-    private RemindEvent remindEventObj;   //（详见RemindEvent 对象描述）， 日程的提醒信息，如果此属性为 null，表示该日程不需要提醒。
+    private String remindEvent="";
     @Column(name = "state")
-    private int state;//日程的状态，客户端暂时可忽略该属性
+    private int state=-1;//日程的状态，客户端暂时可忽略该属性
     @Column(name = "location")
-    private String location;
-    private Location scheduleLocationObj;
+    private String location="";
+    @Column(name = "note")
+    private String note="";
+    @Column(name = "participants")
+    private String participants="";
+
+    public Schedule(){
+
+    }
+    public Schedule(JSONObject object){
+        id = JSONUtils.getString(object,"id","");
+        title  = JSONUtils.getString(object,"title ","");
+        type = JSONUtils.getString(object,"type","");
+        owner = JSONUtils.getString(object,"owner","");
+        startTime = JSONUtils.getLong(object,"startTime",0L);
+        endTime = JSONUtils.getLong(object,"endTime",0L);
+        creationTime = JSONUtils.getLong(object,"creationTime",0L);
+        lastTime = JSONUtils.getLong(object,"lastTime",0L);
+        isAllDay = JSONUtils.getBoolean(object,"isAllDay",false);
+        isCommunity = JSONUtils.getBoolean(object,"isCommunity",false);
+        syncToLocal = JSONUtils.getBoolean(object,"syncToLocal",false);
+        remindEvent = JSONUtils.getString(object,"remindEvent","");
+        state = JSONUtils.getInt(object,"state",-1);
+        location  = JSONUtils.getString(object,"location ","");
+        participants  = JSONUtils.getString(object,"participants ","");
+        note = JSONUtils.getString(object,"note","");
+    }
+
+
+    private List<String> getParticipantList = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -65,12 +94,12 @@ public class Schedule implements Serializable{
         this.title = title;
     }
 
-    public String getCalendarType() {
-        return calendarType;
+    public String getType() {
+        return type;
     }
 
-    public void setCalendarType(String calendarType) {
-        this.calendarType = calendarType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getOwner() {
@@ -113,6 +142,26 @@ public class Schedule implements Serializable{
         this.lastTime = lastTime;
     }
 
+    public Calendar getStartTimeCalendar() {
+        return TimeUtils.timeLong2Calendar(startTime);
+    }
+
+
+    public Calendar getEndTimeCalendar() {
+        return TimeUtils.timeLong2Calendar(endTime);
+    }
+
+
+    public Calendar getCreationTimeCalendar() {
+        return TimeUtils.timeLong2Calendar(creationTime);
+    }
+
+
+    public Calendar getLastTimeCalendar() {
+        return TimeUtils.timeLong2Calendar(lastTime);
+    }
+
+
     public Boolean getAllDay() {
         return isAllDay;
     }
@@ -145,6 +194,11 @@ public class Schedule implements Serializable{
         this.remindEvent = remindEvent;
     }
 
+    public RemindEvent getRemindEventObj() {
+        return new RemindEvent(remindEvent);
+    }
+
+
     public int getState() {
         return state;
     }
@@ -161,39 +215,52 @@ public class Schedule implements Serializable{
         this.location = location;
     }
 
-    public Calendar getStartTimeCalendar() {
-        return startTimeCalendar;
-    }
-
-    public Calendar getEndTimeCalendar() {
-        return endTimeCalendar;
-    }
-
-    public Calendar getCreationTimeCalendar() {
-        return creationTimeCalendar;
-    }
-
-    public Calendar getLastTimeCalendar() {
-        return lastTimeCalendar;
-    }
-
-    public RemindEvent getRemindEventObj() {
-        return remindEventObj;
-    }
-
     public Location getScheduleLocationObj() {
-        return scheduleLocationObj;
+        return new Location(location);
     }
 
-    public void setStartTimeCalendar(Calendar startTimeCalendar) {
-        this.startTimeCalendar = startTimeCalendar;
+
+    public String getNote() {
+        return note;
     }
 
-    public void setEndTimeCalendar(Calendar endTimeCalendar) {
-        this.endTimeCalendar = endTimeCalendar;
+    public void setNote(String note) {
+        this.note = note;
     }
 
-    public void setScheduleLocationObj(Location scheduleLocationObj) {
-        this.scheduleLocationObj = scheduleLocationObj;
+    public String getParticipants() {
+        return participants;
     }
+
+    public void setParticipants(String participants) {
+        this.participants = participants;
+    }
+
+    public List<String> getGetParticipantList() {
+        return JSONUtils.parseArray(participants,String.class);
+    }
+
+    public static List<Event> calendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
+        List<Event> eventList = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            Calendar scheduleStartTime =  schedule.getStartTimeCalendar();
+            Calendar scheduleEndTime = schedule.getEndTimeCalendar();
+            if (TimeUtils.isContainTargentCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime)) {
+                Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
+                Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
+                if (scheduleStartTime.before(dayBeginCalendar)) {
+                    scheduleStartTime = dayBeginCalendar;
+                }
+                if (scheduleEndTime.after(dayEndCalendar)) {
+                    scheduleEndTime = dayEndCalendar;
+                }
+                Event event = new Event(schedule.getId(), Event.TYPE_CALENDAR,schedule.getTitle(),schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime,schedule);
+                event.setAllDay(schedule.getAllDay());
+                eventList.add(event);
+            }
+        }
+        return eventList;
+    }
+
+
 }

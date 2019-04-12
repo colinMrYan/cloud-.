@@ -2,7 +2,8 @@ package com.inspur.emmcloud.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by yufuchang on 2019/3/29.
  */
 
-public class ScheduleHomeFragmentAdapter extends FragmentStatePagerAdapter {
+public class ScheduleHomeFragmentAdapter extends FragmentPagerAdapter {
     //存放fragment的集合
     private List<Fragment> mFragments;
 
@@ -27,5 +28,10 @@ public class ScheduleHomeFragmentAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return mFragments.size();
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+//        super.destroyItem(container, position, object);
     }
 }

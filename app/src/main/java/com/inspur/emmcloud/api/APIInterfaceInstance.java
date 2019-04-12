@@ -78,6 +78,7 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
@@ -103,6 +104,7 @@ import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
@@ -1948,5 +1950,13 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUserCardMenusFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar) {
+    }
+
+    @Override
+    public void returnScheduleListFail(String error, int errorCode) {
     }
 }
