@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 public class CalendarColorUtils {
     public static int getColor(Context context, String color) {
@@ -42,10 +41,11 @@ public class CalendarColorUtils {
 			displayColor = R.drawable.icon_purple_circle;
 		} else if (color.equals( "BROWN" )) {
 			displayColor = R.drawable.icon_brown_circle;
-		} else {
+		} else if (color.equals( "RED" )) {
+            displayColor = R.drawable.icon_red_circle;
+        } else {
 			displayColor = R.drawable.icon_blue_circle;
 		}
-		LogUtils.LbcDebug( "displayColor"+displayColor );
 		return displayColor;
 	}
 }

@@ -15,8 +15,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
@@ -28,6 +28,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -38,6 +39,7 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by libaochao on 2019/3/29.
@@ -91,11 +93,10 @@ public class CalendarAddActivity extends BaseActivity {
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
-    private CalendarEvent calEvent;
+    private Schedule scheduleEvent=new Schedule();
     private MyCalendar myCalendar;
     private Boolean isAllDay = false;
     private Boolean isEditable = true;
-    private String addCalendarStr;
     private DateTimePickerDialog startDataTimePickerDialog;
     private DateTimePickerDialog endDataTimePickerDialog;
     private Calendar startCalendar;
@@ -176,6 +177,35 @@ public class CalendarAddActivity extends BaseActivity {
     }
 
     /**
+     * 初始化日期数据
+     */
+    private void initDate() {
+        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
+            isEditable = false;
+            scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+            isAllDay = scheduleEvent.getAllDay();
+            startCalendar = scheduleEvent.getStartTimeCalendar();
+            endCalendar = scheduleEvent.getEndTimeCalendar();
+            contentText = scheduleEvent.getTitle();
+            List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
+            String calendartype = scheduleEvent.getType();
+            for (int i = 0; i < allCalendarList.size(); i++) {
+                if (calendartype.equals(allCalendarList.get(i).getId())) {
+                    myCalendar = allCalendarList.get(i);
+                }
+            }
+        }else{
+            startCalendar = Calendar.getInstance();
+            endCalendar = (Calendar) startCalendar.clone();
+            if (!isAllDay) {
+                endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+            }
+           // scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
+        }
+        intervalMin = (int) getIntervalMin();
+    }
+
+    /**
      * 通过EditAble  设置可点击性
      *
      * @param isEditable 是否可编辑
@@ -188,6 +218,22 @@ public class CalendarAddActivity extends BaseActivity {
         endTimeLayout.setClickable(isEditable);
         alertTimeLayout.setClickable(isEditable);
         saveText.setText(isEditable ? getString(R.string.save) : getString(R.string.calendar_adjust));
+    }
+
+
+    /**
+     * 设置事件的初始开始和结束时间
+     */
+    private void initStartEndTimeView() {
+        // TODO Auto-generated method stub
+        String startDateStr = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+        String startTimeStr = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+        String endDateStr = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+        String endTimeStr = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+        startDateText.setText(startDateStr);
+        startTimeText.setText(isAllDay ? TimeUtils.getWeekDay(this, startCalendar) : startTimeStr);
+        endDateText.setText(endDateStr);
+        endTimeText.setText(isAllDay ? TimeUtils.getWeekDay(this, endCalendar) : endTimeStr);
     }
 
     /**
@@ -211,46 +257,6 @@ public class CalendarAddActivity extends BaseActivity {
         String endTime = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         startTimeText.setText(IsAllday ? TimeUtils.getWeekDay(this, startCalendar) : startTime);
         endTimeText.setText(IsAllday ? TimeUtils.getWeekDay(this, endCalendar) : endTime);
-    }
-
-    /**
-     * 初始化日期数据
-     */
-    private void initDate() {
-        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
-            isEditable = false;
-            calEvent = (CalendarEvent) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            isAllDay = calEvent.isAllday();
-            startCalendar = calEvent.getStartDate();
-            endCalendar = calEvent.getEndDate();
-            contentText = calEvent.getTitle();
-            myCalendar = calEvent.getCalendar();
-        }
-        if (startCalendar == null) {
-            startCalendar = Calendar.getInstance();
-        }
-        if (endCalendar == null) {
-            endCalendar = (Calendar) startCalendar.clone();
-            if (!isAllDay) {
-                endCalendar.add(Calendar.HOUR_OF_DAY, 1);
-            }
-        }
-        intervalMin = (int) getIntervalMin();
-    }
-
-    /**
-     * 设置事件的初始开始和结束时间
-     */
-    private void initStartEndTimeView() {
-        // TODO Auto-generated method stub
-        String startDateStr = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-        String startTimeStr = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
-        String endDateStr = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-        String endTimeStr = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
-        startDateText.setText(startDateStr);
-        startTimeText.setText(isAllDay ? TimeUtils.getWeekDay(this, startCalendar) : startTimeStr);
-        endDateText.setText(endDateStr);
-        endTimeText.setText(isAllDay ? TimeUtils.getWeekDay(this, endCalendar) : endTimeStr);
     }
 
     /**
@@ -309,17 +315,12 @@ public class CalendarAddActivity extends BaseActivity {
             if (!isAbleSaveAndTips(title, startCalendar, endCalendar)) {
                 return;
             }
-            //correctedCalendarTime();
-            calEvent = ((calEvent == null) ? new CalendarEvent() : calEvent);
-            calEvent.setTitle(title);
-            calEvent.setAllday(isAllDay);
-            calEvent.setState("ACTIVED");
-            calEvent.setStartDate(TimeUtils
-                    .localCalendar2UTCCalendar(startCalendar));
-            calEvent.setEndDate(TimeUtils
-                    .localCalendar2UTCCalendar(endCalendar));
-            addCalendarStr = JSONUtils.toJSONString(calEvent);
-            calEvent.setCalendar(myCalendar);
+            scheduleEvent.setTitle(title);
+            scheduleEvent.setAllDay(isAllDay);
+            scheduleEvent.setState(-1);
+            scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
+            scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
+            scheduleEvent.setType(myCalendar.getId());
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
                 updateCalEvent();
             } else {
@@ -363,8 +364,10 @@ public class CalendarAddActivity extends BaseActivity {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            String calEventJson = JSONUtils.toJSONString(calEvent);
-            apiService.updateCalEvent(calEventJson);
+            scheduleEvent.setLastTime(System.currentTimeMillis());
+            String scheduleJson = JSONUtils.toJSONString(scheduleEvent);
+            LogUtils.LbcDebug("update Schedule::"+scheduleJson);
+            apiService.updateSchedule(scheduleJson);
         }
     }
 
@@ -375,7 +378,12 @@ public class CalendarAddActivity extends BaseActivity {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            apiService.addCalEvent(myCalendar.getId(), addCalendarStr);
+            long createTime = System.currentTimeMillis();
+            scheduleEvent.setCreationTime(createTime);
+            scheduleEvent.setLastTime(createTime);
+          String addScheduleStr = JSONUtils.toJSONString(scheduleEvent);
+            LogUtils.LbcDebug("add  Schedule::"+addScheduleStr);
+            apiService.addSchedule(addScheduleStr);
         }
 
     }
@@ -419,53 +427,53 @@ public class CalendarAddActivity extends BaseActivity {
     /**
      * */
     private class WebService extends APIInterfaceInstance {
+
         @Override
-        public void returnAddCalEventSuccess(GetIDResult getIDResult) {
-            // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+        public void returnAddScheduleSuccess(GetIDResult getIDResult) {
+            super.returnAddScheduleSuccess(getIDResult);
+            LoadingDialog.dimissDlg(loadingDlg);
             ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
-            calEvent.setId(getIDResult.getId());
+            scheduleEvent.setId(getIDResult.getId());
             sendCalendarEventNotification();
             Intent intent = new Intent();
-            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_ADD_EVENT, calEvent);
+            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_ADD_EVENT, scheduleEvent);
             setResult(RESULT_OK, intent);
+            LogUtils.LbcDebug("add Schedule Success");
             finish();
         }
 
         @Override
-        public void returnAddCalEventFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
+        public void returnAddScheduleFail(String error, int errorCode) {
+            super.returnAddScheduleFail(error, errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
+            LogUtils.LbcDebug("add Schedule Fail");
         }
 
         @Override
-        public void returnUpdateCalEventSuccess() {
-            // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+        public void returnUpdateScheduleSuccess() {
+            super.returnUpdateScheduleSuccess();
+            LoadingDialog.dimissDlg(loadingDlg);
             sendCalendarEventNotification();
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.modify_success));
             Intent intent = new Intent();
-            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_EVENT, calEvent);
-            LogUtils.debug("jason", "title=" + calEvent.getTitle());
+            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
+            LogUtils.LbcDebug("title=" + scheduleEvent.getTitle());
             setResult(RESULT_OK, intent);
+            LogUtils.LbcDebug("update Schedule Success");
             //更新系日历事件
             finish();
         }
 
         @Override
-        public void returnUpdateCalEventFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+        public void returnUpdateScheduleFail(String error, int errorCode) {
+            super.returnUpdateScheduleFail(error, errorCode);
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
+            LogUtils.LbcDebug("update Schedule Fail");
         }
+
 
     }
 

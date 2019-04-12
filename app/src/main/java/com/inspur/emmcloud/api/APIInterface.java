@@ -424,6 +424,14 @@ public interface APIInterface {
 
     void returnChangeMessionTagFail(String error, int errorCode);
 
+    void returnDelTaskTagSuccess();
+
+    void returnDelTaskTagFail(String error, int errorCode);
+
+    void returnAddTaskTagSuccess();
+
+    void returnAddTaskTagFail(String error, int errorCode);
+
     void returnDeleteOfficeSuccess(int position);
 
     void returnDeleteOfficeFail(String error, int errorCode);
@@ -831,4 +839,10 @@ public interface APIInterface {
 
     void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,Calendar endCalendar);
     void returnScheduleListFail(String error, int errorCode);
+    void returnAddScheduleSuccess(GetIDResult getIDResult);
+    void returnAddScheduleFail(String error, int errorCode);
+    void returnUpdateScheduleSuccess();
+    void returnUpdateScheduleFail(String error, int errorCode);
+    void returnDeleteScheduleSuccess();
+    void returnDeleteScheduleFail(String error, int errorCode);
 }
