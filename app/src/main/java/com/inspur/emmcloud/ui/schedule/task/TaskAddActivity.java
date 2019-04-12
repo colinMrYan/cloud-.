@@ -125,7 +125,7 @@ public class TaskAddActivity extends BaseActivity {
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
-    private Task taskResult=new Task();
+    private Task taskResult = new Task();
     private List<Attachment> pictureAttachments = new ArrayList<>();
     private List<Attachment> otherAttachments = new ArrayList<>();
     private List<Attachment> attachments = new ArrayList<>();
@@ -139,6 +139,7 @@ public class TaskAddActivity extends BaseActivity {
     private AttachmentOthersAdapter attachmentOtherAdapter;
 
     private String attachemntLocalPath = "";
+    private Boolean isEditable= true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +164,7 @@ public class TaskAddActivity extends BaseActivity {
         if (getIntent().hasExtra("task")) {
             taskResult = (Task) getIntent().getSerializableExtra("task");
             taskColorTags = (ArrayList<TaskColorTag>) taskResult.getTags();
+            isEditable=false;
         }
     }
 
@@ -633,10 +635,23 @@ public class TaskAddActivity extends BaseActivity {
             }
             //更新Task
             if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
-                LogUtils.LbcDebug("111111111111111111111111111111111111111111111111111111");
                 String taskData = uploadTaskData();
                 LogUtils.LbcDebug("taskData：：：" + taskData);
                 apiService.updateTask(taskData, -1);
+            }
+
+            //更新Task
+            if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
+                if (getIntent().hasExtra("task")) {
+                    apiService.deleteTaskTags(taskResult.getId());
+                }else{
+                    List<String> tagsIdList=new ArrayList<>();
+                    for(int i=0;i<taskColorTags.size();i++){
+                        tagsIdList.add(taskColorTags.get(i).getId());
+                    }
+                    apiService.addTaskTags(taskResult.getId(),JSONUtils.toJSONString(tagsIdList));
+                }
+
             }
         }
 
@@ -826,6 +841,40 @@ public class TaskAddActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(TaskAddActivity.this, error, errorCode);
         }
 
+        @Override
+        public void returnDelelteCalendarByIdSuccess() {
+            super.returnDelelteCalendarByIdSuccess();
+        }
+
+        @Override
+        public void returnAddTaskTagSuccess() {
+            super.returnAddTaskTagSuccess();
+            LogUtils.LbcDebug("add Task Tags Success");
+        }
+
+        @Override
+        public void returnAddTaskTagFail(String error, int errorCode) {
+            super.returnAddTaskTagFail(error, errorCode);
+            LogUtils.LbcDebug("add Task Tags Fails");
+        }
+
+        @Override
+        public void returnDelTaskTagSuccess() {
+            super.returnDelTaskTagSuccess();
+            List<String> tagsIdList=new ArrayList<>();
+            for(int i=0;i<taskColorTags.size();i++){
+                tagsIdList.add(taskColorTags.get(i).getId());
+            }
+            String colorData=JSONUtils.toJSONString(tagsIdList);
+            apiService.addTaskTags(taskResult.getId(),colorData);
+            LogUtils.LbcDebug("del Task Tags Success");
+        }
+
+        @Override
+        public void returnDelTaskTagFail(String error, int errorCode) {
+            super.returnDelTaskTagFail(error, errorCode);
+            LogUtils.LbcDebug("del Task Tags Fail");
+        }
     }
 
     /**

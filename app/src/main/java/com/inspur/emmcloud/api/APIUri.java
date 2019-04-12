@@ -1381,14 +1381,6 @@ public class APIUri {
     }
 
     /**
-     * 获取工作中的tags
-     *
-     * */
-    public static String getTaskTagsUrl(String taskId) {
-        return getToDoBaseUrl() +taskId+"/tags";
-    }
-
-    /**
      * 获取所有task
      *
      * @param id
@@ -1731,4 +1723,21 @@ public class APIUri {
     public static String getDelScheduleUrl(String scheduleId){
         return  "http://172.31.2.36:88/api/schedule/v6.0/calendar/remove/"+scheduleId;
     }
+
+    /**
+     * 获取删除工作中的tags
+     *
+     * */
+    public static String getDelTaskTagsUrl(String taskId) {
+        return getToDoBaseUrl() +taskId+"/tags";
+    }
+
+    /**
+     * 获取删除工作中的tags
+     *
+     * */
+    public static String getAddTaskTagsUrl(String taskId) {
+        return getToDoBaseUrl()+taskId+"/tags";
+    }
+
 }
