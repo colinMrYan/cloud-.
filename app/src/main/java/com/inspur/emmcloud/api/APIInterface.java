@@ -422,6 +422,14 @@ public interface APIInterface {
 
     void returnChangeMessionTagFail(String error, int errorCode);
 
+    void returnDelMessionTagSuccess();
+
+    void returnDelMessionTagFail(String error, int errorCode);
+
+    void returnAddMessionTagSuccess();
+
+    void returnAddMessionTagFail(String error, int errorCode);
+
     void returnDeleteOfficeSuccess(int position);
 
     void returnDeleteOfficeFail(String error, int errorCode);

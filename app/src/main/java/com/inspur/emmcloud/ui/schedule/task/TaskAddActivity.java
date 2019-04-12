@@ -125,10 +125,10 @@ public class TaskAddActivity extends BaseActivity {
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
-    private Task taskResult;
+    private Task taskResult=new Task();
     private List<Attachment> pictureAttachments = new ArrayList<>();
     private List<Attachment> otherAttachments = new ArrayList<>();
-    private List<Attachment>  attachments     =new ArrayList<>();
+    private List<Attachment> attachments = new ArrayList<>();
     private List<JsonAttachmentAndUri> pictureJsonAttachments = new ArrayList<>();
     private List<JsonAttachmentAndUri> otherJsonAttachments = new ArrayList<>();
     private List<SearchModel> taskManger = new ArrayList<>();
@@ -161,17 +161,17 @@ public class TaskAddActivity extends BaseActivity {
         apiService.setAPIInterface(new TaskAddActivity.WebService());
         //判断是否为新建任务
         if (getIntent().hasExtra("task")) {
-          taskResult=(Task)getIntent().getSerializableExtra("task");
-          taskColorTags= (ArrayList<TaskColorTag>) taskResult.getTags();
+            taskResult = (Task) getIntent().getSerializableExtra("task");
+            taskColorTags = (ArrayList<TaskColorTag>) taskResult.getTags();
         }
     }
 
     private void initView() {
-        if(taskResult!=null){
+        if (getIntent().hasExtra("task")) {
             contentInputEdit.setText(taskResult.getTitle());
             segmentControlView.setSelectedIndex(taskResult.getPriority());
             setTaskColorTags();
-            LogUtils.LbcDebug("taskResult.toString()"+JSONUtils.toJSONString(taskResult));
+            LogUtils.LbcDebug("taskResult.toString()" + JSONUtils.toJSONString(taskResult));
         }
     }
 
@@ -255,7 +255,7 @@ public class TaskAddActivity extends BaseActivity {
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case ALBUM_REQUEST_CODE:
-                    updateAttachment(  data,true);
+                    updateAttachment(data, true);
                     break;
                 case MANGER_REQUEST_CODE:
                     taskManger = (List<SearchModel>) data
@@ -276,13 +276,13 @@ public class TaskAddActivity extends BaseActivity {
                     setTaskColorTags();
                     break;
                 case ATTACHMENT_REQUEST_CODE:
-                    updateAttachment(data,false);
+                    updateAttachment(data, false);
                     break;
             }
         }
     }
 
-    private void setTaskColorTags(){
+    private void setTaskColorTags() {
         if (taskColorTags.size() == 1) {
             singleTagLayout.setVisibility(View.VISIBLE);
             tagsLayout.setVisibility(View.GONE);
@@ -304,11 +304,13 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
-    /**上传附件公共函数*/
-    private void updateAttachment( Intent data,boolean isPictureAttach){
+    /**
+     * 上传附件公共函数
+     */
+    private void updateAttachment(Intent data, boolean isPictureAttach) {
         ChatAPIService apiService = new ChatAPIService(TaskAddActivity.this);
         apiService.setAPIInterface(new TaskAddActivity.WebService());
-        sendFileMsg(data,isPictureAttach);
+        sendFileMsg(data, isPictureAttach);
     }
 
     /**
@@ -316,16 +318,16 @@ public class TaskAddActivity extends BaseActivity {
      *
      * @param data
      */
-    private void sendFileMsg(Intent data,boolean isPictureAttachment) {
+    private void sendFileMsg(Intent data, boolean isPictureAttachment) {
         ChatAPIService apiService = new ChatAPIService(TaskAddActivity.this);
         apiService.setAPIInterface(new TaskAddActivity.WebService());
         String filePath;
-        if(isPictureAttachment){
+        if (isPictureAttachment) {
             Uri uri = data.getData();
             filePath = GetPathFromUri4kitkat.getPathByUri(this, uri);
-        }else{
+        } else {
             ArrayList<String> pathList = data.getStringArrayListExtra("pathList");
-            filePath=pathList.get(0);
+            filePath = pathList.get(0);
         }
         attachemntLocalPath = filePath;
         File tempFile = new File(filePath);
@@ -344,11 +346,11 @@ public class TaskAddActivity extends BaseActivity {
      */
     private void createTask() {
         String taskContent = contentInputEdit.getText().toString();
-        if (NetUtils.isNetworkConnected(this)&& !StringUtils.isBlank(taskContent)) {
+        if (NetUtils.isNetworkConnected(this) && !StringUtils.isBlank(taskContent)) {
             loadingDlg.show();
             apiService.createTasks(taskContent);
-        }else{
-            ToastUtils.show(this,"网络异常或标题为空");
+        } else {
+            ToastUtils.show(this, "网络异常或标题为空");
         }
     }
 
@@ -490,7 +492,9 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
-    /**附件holder*/
+    /**
+     * 附件holder
+     */
     private class AttachmentHolder {
         public ImageView attachmentImageView;
         public TextView attachmentNameText;
@@ -616,25 +620,25 @@ public class TaskAddActivity extends BaseActivity {
                 apiService.addAttachments(getTaskAddResult.getId(), otherJsonAttachments.get(i).getJsonAttachemnt().toString());
             }
             //添加Parter
-            if(NetUtils.isNetworkConnected(TaskAddActivity.this)&&taskParters.size()>0){
+            if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskParters.size() > 0) {
                 JSONArray addMembers = new JSONArray();
-                for(int i=0;i<taskParters.size();i++){
+                for (int i = 0; i < taskParters.size(); i++) {
                     addMembers.put(taskParters.get(i).getId());
                 }
-               apiService.inviteMateForTask(getTaskAddResult.getId(), addMembers);
+                apiService.inviteMateForTask(getTaskAddResult.getId(), addMembers);
             }
             //更改Manager
-            if(NetUtils.isNetworkConnected(TaskAddActivity.this)&&taskManger.size()>0){
-                apiService.changeMessionOwner(taskResult.getId(),taskManger.get(0).getId(),taskManger.get(0).getName());
+            if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskManger.size() > 0) {
+                apiService.changeMessionOwner(taskResult.getId(), taskManger.get(0).getId(), taskManger.get(0).getName());
             }
             //更新Task
-            if(NetUtils.isNetworkConnected(TaskAddActivity.this)){
+            if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
                 LogUtils.LbcDebug("111111111111111111111111111111111111111111111111111111");
-                String taskData=uploadTaskData();
-                LogUtils.LbcDebug("taskData：：："+taskData);
-                apiService.updateTask(taskData,-1);
+                String taskData = uploadTaskData();
+                LogUtils.LbcDebug("taskData：：：" + taskData);
+                apiService.updateTask(taskData, -1);
             }
-            }
+        }
 
         @Override
         public void returnCreateTaskFail(String error, int errorCode) {
@@ -646,7 +650,7 @@ public class TaskAddActivity extends BaseActivity {
         public void returnInviteMateForTaskSuccess(String subject) {
             LoadingDialog.dimissDlg(loadingDlg);
             LogUtils.LbcDebug("添加Parter 成功");
-             taskResult.setSubject(new TaskSubject(subject));
+            taskResult.setSubject(new TaskSubject(subject));
         }
 
         @Override
@@ -718,7 +722,7 @@ public class TaskAddActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            attachments=taskResult.getAttachments();
+            attachments = taskResult.getAttachments();
             attachments.add(attachment);
             taskResult.setAttachments(attachments);
             LogUtils.LbcDebug("return Add Attachments");
@@ -824,7 +828,9 @@ public class TaskAddActivity extends BaseActivity {
 
     }
 
-    /**附件对象及Uri*/
+    /**
+     * 附件对象及Uri
+     */
     public class JsonAttachmentAndUri {
         private JSONObject jsonAttachemnt;
         private String uri;
@@ -852,41 +858,44 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
-    /**获取文件类型对应的图标*/
-    public int getFileIconByType(String fileType){
-        int icId=0;
-        switch (fileType){
+    /**
+     * 获取文件类型对应的图标
+     */
+    public int getFileIconByType(String fileType) {
+        int icId = 0;
+        switch (fileType) {
             case "TEXT":
-                icId=R.drawable.ic_volume_file_typ_txt;
+                icId = R.drawable.ic_volume_file_typ_txt;
                 break;
             case "MS_WORD":
-                icId=R.drawable.ic_volume_file_typ_word;
+                icId = R.drawable.ic_volume_file_typ_word;
                 break;
             case "MS_EXCEL":
-                icId=R.drawable.ic_volume_file_typ_excel;
+                icId = R.drawable.ic_volume_file_typ_excel;
                 break;
             case "MS_PPT":
-                icId=R.drawable.ic_volume_file_typ_ppt;
+                icId = R.drawable.ic_volume_file_typ_ppt;
                 break;
             default:
-                icId=R.drawable.ic_volume_file_typ_unknown;
+                icId = R.drawable.ic_volume_file_typ_unknown;
                 break;
         }
         return icId;
     }
 
-    /**上传任务数据*/
-    private String uploadTaskData(){
+    /**
+     * 上传任务数据
+     */
+    private String uploadTaskData() {
         String title = contentInputEdit.getText().toString();
         int priority = segmentControlView.getSelectedIndex();
         taskResult.setTitle(title);
         taskResult.setPriority(priority);
+        taskResult.setTags(taskColorTags);
         if (deadLineCalendar != null)
             taskResult.setDueDate(TimeUtils.localCalendar2UTCCalendar(deadLineCalendar));
         String taskJson = JSONUtils.toJSONString(taskResult);
-        LogUtils.LbcDebug("taskJson"+taskJson);
+        LogUtils.LbcDebug("taskJson" + taskJson);
         return taskJson;
     }
-
-
 }

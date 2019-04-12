@@ -1488,7 +1488,6 @@ public class WorkAPIService {
                 apiInterface.returnDeleteTagFail(error, responseCode);
             }
         });
-
     }
 
     /**
@@ -1536,6 +1535,86 @@ public class WorkAPIService {
         });
     }
 
+    /**
+     *删除任务中的标签
+     **/
+    public void deleteTaskTags(final String taskId){
+        final String completeUrl = APIUri.getTaskTagsUrl(taskId);
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteTag(taskId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteTagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteTagFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 添加任务中的标签*
+     */
+    public void  addTaskTags(final String taskId, final String colorTags){
+        final String completeUrl = APIUri.getTaskTagsUrl(taskId);
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("tags", colorTags);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addTaskTags(  taskId,  colorTags);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateTagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateTagFail(error, responseCode);
+            }
+        });
+    }
 
     /**
      * 修改任务所有人

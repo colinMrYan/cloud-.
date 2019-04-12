@@ -1381,6 +1381,14 @@ public class APIUri {
     }
 
     /**
+     * 获取工作中的tags
+     *
+     * */
+    public static String getTaskTagsUrl(String taskId) {
+        return getToDoBaseUrl() +taskId+"/tags";
+    }
+
+    /**
      * 获取所有task
      *
      * @param id
