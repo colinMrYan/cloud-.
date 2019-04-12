@@ -2,6 +2,7 @@ package com.inspur.imp.plugin.window;
 
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -15,12 +16,14 @@ import java.util.List;
  * Created by yufuchang on 2018/7/20.
  */
 
-public class WindowService extends ImpPlugin {
+public class WindowService extends ImpPlugin implements OnKeyDownListener {
+
+    private String onBackKeyDownCallback;
     @Override
     public void execute(String action, JSONObject paramsObject) {
         switch (action) {
             case "open":
-                UriUtils.openUrl(getActivity(), JSONUtils.getString(paramsObject, "url", ""), JSONUtils.getString(paramsObject, "title", ""));
+                openUrl(paramsObject);
                 break;
             case "setTitles":
                 showDropTitle(paramsObject);
@@ -28,9 +31,33 @@ public class WindowService extends ImpPlugin {
             case "setMenus":
                 showMenus(paramsObject);
                 break;
+            case "onBackKeyDown":
+                onBackKeyDown(paramsObject);
+                break;
             default:
                 showCallIMPMethodErrorDlg();
                 break;
+        }
+    }
+
+    private void openUrl(JSONObject paramsObject) {
+        String url = JSONUtils.getString(paramsObject, "url", "");
+        String title = JSONUtils.getString(paramsObject, "title", "");
+        boolean isHaveNavBar = JSONUtils.getBoolean(paramsObject, "isHaveNavbar", true);
+        UriUtils.openUrl(getActivity(), url, title, isHaveNavBar);
+    }
+
+    private void onBackKeyDown(JSONObject paramsObject){
+        onBackKeyDownCallback = JSONUtils.getString(paramsObject,"callback","");
+       if (getImpCallBackInterface() != null){
+           getImpCallBackInterface().setOnKeyDownListener(WindowService.this);
+       }
+    }
+
+    @Override
+    public void onBackKeyDown() {
+        if (!StringUtils.isBlank(onBackKeyDownCallback)){
+            WindowService.this.jsCallback(onBackKeyDownCallback);
         }
     }
 
@@ -66,4 +93,5 @@ public class WindowService extends ImpPlugin {
     public void onDestroy() {
 
     }
+
 }
