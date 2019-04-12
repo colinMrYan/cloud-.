@@ -1486,6 +1486,7 @@ public class WorkAPIService {
                 apiInterface.returnDeleteTagFail(error, responseCode);
             }
         });
+
     }
 
     /**

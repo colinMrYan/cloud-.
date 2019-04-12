@@ -93,11 +93,10 @@ public class CalendarAddActivity extends BaseActivity {
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
-    private Schedule scheduleEvent;
+    private Schedule scheduleEvent=new Schedule();
     private MyCalendar myCalendar;
     private Boolean isAllDay = false;
     private Boolean isEditable = true;
-    private String addScheduleStr;
     private DateTimePickerDialog startDataTimePickerDialog;
     private DateTimePickerDialog endDataTimePickerDialog;
     private Calendar startCalendar;
@@ -195,15 +194,13 @@ public class CalendarAddActivity extends BaseActivity {
                     myCalendar = allCalendarList.get(i);
                 }
             }
-        }
-        if (startCalendar == null) {
+        }else{
             startCalendar = Calendar.getInstance();
-        }
-        if (endCalendar == null) {
             endCalendar = (Calendar) startCalendar.clone();
             if (!isAllDay) {
                 endCalendar.add(Calendar.HOUR_OF_DAY, 1);
             }
+           // scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
         }
         intervalMin = (int) getIntervalMin();
     }
@@ -318,15 +315,12 @@ public class CalendarAddActivity extends BaseActivity {
             if (!isAbleSaveAndTips(title, startCalendar, endCalendar)) {
                 return;
             }
-            //correctedCalendarTime();
-            scheduleEvent = ((scheduleEvent == null) ? new Schedule() : scheduleEvent);
             scheduleEvent.setTitle(title);
             scheduleEvent.setAllDay(isAllDay);
             scheduleEvent.setState(-1);
             scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
             scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
             scheduleEvent.setType(myCalendar.getId());
-            addScheduleStr = JSONUtils.toJSONString(scheduleEvent);
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
                 updateCalEvent();
             } else {
@@ -370,6 +364,7 @@ public class CalendarAddActivity extends BaseActivity {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
+            scheduleEvent.setLastTime(System.currentTimeMillis());
             String scheduleJson = JSONUtils.toJSONString(scheduleEvent);
             LogUtils.LbcDebug("update Schedule::"+scheduleJson);
             apiService.updateSchedule(scheduleJson);
@@ -383,6 +378,10 @@ public class CalendarAddActivity extends BaseActivity {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
+            long createTime = System.currentTimeMillis();
+            scheduleEvent.setCreationTime(createTime);
+            scheduleEvent.setLastTime(createTime);
+          String addScheduleStr = JSONUtils.toJSONString(scheduleEvent);
             LogUtils.LbcDebug("add  Schedule::"+addScheduleStr);
             apiService.addSchedule(addScheduleStr);
         }

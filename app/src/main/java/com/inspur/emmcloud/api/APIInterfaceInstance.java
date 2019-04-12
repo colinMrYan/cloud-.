@@ -1045,22 +1045,22 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDelMessionTagSuccess() {
+    public void returnDelTaskTagSuccess() {
 
     }
 
     @Override
-    public void returnDelMessionTagFail(String error, int errorCode) {
+    public void returnDelTaskTagFail(String error, int errorCode) {
 
     }
 
     @Override
-    public void returnAddMessionTagSuccess() {
+    public void returnAddTaskTagSuccess() {
 
     }
 
     @Override
-    public void returnAddMessionTagFail(String error, int errorCode) {
+    public void returnAddTaskTagFail(String error, int errorCode) {
 
     }
 
