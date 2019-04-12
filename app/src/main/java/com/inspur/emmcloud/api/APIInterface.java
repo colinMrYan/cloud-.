@@ -839,4 +839,10 @@ public interface APIInterface {
 
     void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,Calendar endCalendar);
     void returnScheduleListFail(String error, int errorCode);
+    void returnAddScheduleSuccess(GetIDResult getIDResult);
+    void returnAddScheduleFail(String error, int errorCode);
+    void returnUpdateScheduleSuccess();
+    void returnUpdateScheduleFail(String error, int errorCode);
+    void returnDeleteScheduleSuccess();
+    void returnDeleteScheduleFail(String error, int errorCode);
 }

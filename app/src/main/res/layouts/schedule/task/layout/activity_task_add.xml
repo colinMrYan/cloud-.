@@ -185,7 +185,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -239,7 +239,7 @@
                     android:layout_height="16dp"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/iv_task_manager_arrow"
-                    android:src="@drawable/icon_schedule_add" />
+                    android:src="@drawable/ic_schedule_add" />
 
                 <ImageView
                     android:id="@+id/iv_task_manager_arrow"
@@ -248,7 +248,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -322,7 +322,7 @@
                     android:layout_height="16dp"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/iv_task_parter_arrow"
-                    android:src="@drawable/icon_schedule_add" />
+                    android:src="@drawable/ic_schedule_add" />
 
                 <ImageView
                     android:id="@+id/iv_task_parter_arrow"
@@ -331,7 +331,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -375,7 +375,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -418,7 +418,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -462,7 +462,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="2dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -538,7 +538,7 @@
                         android:layout_height="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/icon_schedule_add" />
+                        android:src="@drawable/ic_schedule_add" />
                 </RelativeLayout>
 
                 <View
@@ -577,7 +577,7 @@
                         android:layout_height="16dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/icon_schedule_add" />
+                        android:src="@drawable/ic_schedule_add" />
                 </RelativeLayout>
 
                 <View

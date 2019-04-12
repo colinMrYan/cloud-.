@@ -1044,6 +1044,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
+    @Override
+    public void returnDelMessionTagSuccess() {
+
+    }
+
+    @Override
+    public void returnDelMessionTagFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnAddMessionTagSuccess() {
+
+    }
+
+    @Override
+    public void returnAddMessionTagFail(String error, int errorCode) {
+
+    }
+
 
     @Override
     public void returnDeleteOfficeSuccess(int position) {
@@ -1958,5 +1978,39 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnScheduleListFail(String error, int errorCode) {
+    }
+
+    public APIInterfaceInstance() {
+        super();
+    }
+
+    @Override
+    public void returnAddScheduleSuccess(GetIDResult getIDResult) {
+
+    }
+
+    @Override
+    public void returnAddScheduleFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnUpdateScheduleSuccess() {
+
+    }
+
+    @Override
+    public void returnUpdateScheduleFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnDeleteScheduleSuccess() {
+
+    }
+
+    @Override
+    public void returnDeleteScheduleFail(String error, int errorCode) {
+
     }
 }
