@@ -734,7 +734,12 @@ public class ImpFragment extends ImpBaseFragment {
                     setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                     break;
                 case R.id.ibt_back:
-                    onBackKeyDown();
+                    if (webView.canGoBack()) {
+                        webView.goBack();// 返回上一页面
+                        setGoBackTitle();
+                    } else {
+                        finishActivity();
+                    }
                     break;
                 case R.id.imp_close_btn:
                     finishActivity();
