@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -32,6 +33,7 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -78,7 +80,14 @@ public class IndexActivity extends IndexBaseActivity {
         initView();
         getInitData();
         startService();
+        getNaviTabData();
         EventBus.getDefault().register(this);
+    }
+
+    private void getNaviTabData() {
+        AppAPIService appAPIService = new AppAPIService(this);
+        appAPIService.setAPIInterface(new WebService());
+        appAPIService.getAppNaviTabs();
     }
 
     /**
@@ -622,7 +631,17 @@ public class IndexActivity extends IndexBaseActivity {
         public void returnAppTabAutoFail(String error, int errorCode) {
         }
 
+        @Override
+        public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
+            super.returnNaviBarModelSuccess(naviBarModel);
+            LogUtils.YfcDebug("navibarModel："+naviBarModel.getNaviBarPayload().getDefaultScheme());
+            LogUtils.YfcDebug("navibarModel："+naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size());
+        }
 
+        @Override
+        public void returnNaviBarModelFail(String error, int errorCode) {
+            super.returnNaviBarModelFail(error, errorCode);
+        }
     }
 
 }

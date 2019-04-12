@@ -87,6 +87,7 @@ import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
@@ -1949,5 +1950,15 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUserCardMenusFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
+
+    }
+
+    @Override
+    public void returnNaviBarModelFail(String error, int errorCode) {
+
     }
 }

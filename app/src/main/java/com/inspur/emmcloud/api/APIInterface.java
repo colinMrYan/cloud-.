@@ -86,6 +86,7 @@ import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
@@ -826,4 +827,7 @@ public interface APIInterface {
     void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult);
 
     void returnUserCardMenusFail(String error, int errorCode);
+
+    void returnNaviBarModelSuccess(NaviBarModel naviBarModel);
+    void returnNaviBarModelFail(String error, int errorCode);
 }
