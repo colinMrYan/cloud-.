@@ -662,6 +662,8 @@
     <string name="mine_theme_grey">优雅灰</string>
     <string name="mine_theme_blue">商务蓝</string>
 
+    <string name="mine_tab_layout">布局切换</string>
+
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">请输入新密码</string>
     <string name="modify_input_confirm_passord">请输入确认密码</string>

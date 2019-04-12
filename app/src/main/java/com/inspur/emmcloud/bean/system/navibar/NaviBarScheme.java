@@ -16,11 +16,13 @@ import java.util.List;
 public class NaviBarScheme {
     private String name = "";
     private String defaultTab = "";
+    private NaviBarTitleResult naviBarTitleResult;
     private List<MainTabResult> mainTabResultList = new ArrayList<>();
 
     public NaviBarScheme(String naviBarScheme) {
         this.name = JSONUtils.getString(naviBarScheme, "name", "");
         this.defaultTab = JSONUtils.getString(naviBarScheme, "defaultTab", "");
+        this.naviBarTitleResult = new NaviBarTitleResult(JSONUtils.getString(naviBarScheme,"title",""));
         JSONArray jsonArray = JSONUtils.getJSONArray(naviBarScheme, "tabs", new JSONArray());
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -53,5 +55,13 @@ public class NaviBarScheme {
 
     public void setMainTabResultList(List<MainTabResult> mainTabResultList) {
         this.mainTabResultList = mainTabResultList;
+    }
+
+    public NaviBarTitleResult getNaviBarTitleResult() {
+        return naviBarTitleResult;
+    }
+
+    public void setNaviBarTitleResult(NaviBarTitleResult naviBarTitleResult) {
+        this.naviBarTitleResult = naviBarTitleResult;
     }
 }

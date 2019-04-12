@@ -255,6 +255,9 @@ public class SettingActivity extends BaseActivity {
             case R.id.rl_setting_switch_theme:
                 IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
                 break;
+            case R.id.rl_setting_switch_tablayout:
+                IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);
+                break;
             default:
                 break;
         }

@@ -130,10 +130,12 @@ import com.inspur.emmcloud.util.common.JSONUtils;
         }
         }*/
 public class NaviBarModel {
+    private String response = "";
     private String command = "";
     private String version = "";
     private NaviBarPayload naviBarPayload;
     public NaviBarModel(String response){
+        this.response = response;
         this.command = JSONUtils.getString(response,"command","");
         this.version = JSONUtils.getString(response,"version","");
         this.naviBarPayload = new NaviBarPayload(JSONUtils.getString(response,"payload",""));
@@ -161,5 +163,13 @@ public class NaviBarModel {
 
     public void setNaviBarPayload(NaviBarPayload naviBarPayload) {
         this.naviBarPayload = naviBarPayload;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 }

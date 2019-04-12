@@ -33,7 +33,6 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -634,8 +633,7 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
             super.returnNaviBarModelSuccess(naviBarModel);
-            LogUtils.YfcDebug("navibarModel："+naviBarModel.getNaviBarPayload().getDefaultScheme());
-            LogUtils.YfcDebug("navibarModel："+naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size());
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
         }
 
         @Override
