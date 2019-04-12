@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
@@ -67,14 +67,13 @@ public class TaskListAdapter extends BaseAdapter {
             relativeLayout.setLayoutParams(params);
             deadLineText.setVisibility(View.GONE);
         }
-        if (taskList.get(position).getTags().size() > 0) {
-            MessionTagColorUtils.setTagColorImg((ImageView)convertView.findViewById(R.id.iv_task_color),
-                    taskList.get(position).getTags().get(0).getColor());
+        if (task.getTags().size() > 0) {
+            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getColorCircleImage(task.getTags().get(0).getColor()));
         } else {
             // 如果没有tag，显示默认tag
-            MessionTagColorUtils.setTagColorImg((ImageView)convertView.findViewById(R.id.iv_task_color), "YELLOW");
+            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getColorCircleImage("BLUE"));
         }
-//        ((ImageView)convertView.findViewById(R.id.iv_task_color)).setImageResource(R.drawable.tuesday);
+        convertView.findViewById(R.id.iv_task_level).setVisibility(task.getPriority() == 2 ?View.VISIBLE:View.GONE);
         return convertView;
     }
 

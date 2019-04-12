@@ -171,7 +171,7 @@ public class TaskFragment extends Fragment{
 //                }
                 searchEditText.setText("");
                 tabLayoutSchedule.getTabAt(position).select();
-                ((AllTaskFragmentAdapter)taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setNowIndex(position);
+                ((AllTaskFragmentAdapter)taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
             }
 
             @Override

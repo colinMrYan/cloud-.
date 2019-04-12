@@ -31,6 +31,14 @@
             android:layout_toRightOf="@id/iv_task_color"
             android:textColor="#333333"
             android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/iv_task_level"
+            android:layout_width="10dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_task_level"/>
     </RelativeLayout>
 
     <TextView

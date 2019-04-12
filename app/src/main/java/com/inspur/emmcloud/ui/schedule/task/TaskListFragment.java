@@ -58,7 +58,7 @@ public class TaskListFragment extends Fragment {
     private ArrayList<Task> uiTaskList = new ArrayList<>();
     private TaskListAdapter adapter;
     private WorkAPIService apiService;
-    private int nowIndex = 0;
+    private int currentIndex = 0;
     private ArrayList<Task> taskList = new ArrayList<Task>();
     private boolean isPullUp =false;
     private int page = 0;
@@ -95,11 +95,11 @@ public class TaskListFragment extends Fragment {
 
     /**
      * 告知Fragment当前索引
-     * @param nowIndex
+     * @param currentIndex
      */
-    public void setNowIndex(int nowIndex){
-        this.nowIndex = nowIndex;
-        swipeRefreshLayout.setCanLoadMore(nowIndex == TaskFragment.MY_DONE);
+    public void setCurrentIndex(int currentIndex){
+        this.currentIndex = currentIndex;
+        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
     }
 
     /**
@@ -116,7 +116,7 @@ public class TaskListFragment extends Fragment {
     }
 
     private void initViews() {
-        nowIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
+        currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         getOrder();
@@ -142,7 +142,7 @@ public class TaskListFragment extends Fragment {
      */
     private void initPullRefreshLayout() {
         //已完成页面设置可以上拉加载
-        swipeRefreshLayout.setCanLoadMore(nowIndex == TaskFragment.MY_DONE);
+        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -153,7 +153,7 @@ public class TaskListFragment extends Fragment {
                 }else{
                     swipeRefreshLayout.setLoading(false);
                 }
-                swipeRefreshLayout.setCanLoadMore(nowIndex == TaskFragment.MY_DONE);
+                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
             }
         });
         swipeRefreshLayout.setOnLoadListener(new MySwipeRefreshLayout.OnLoadListener() {
@@ -170,15 +170,15 @@ public class TaskListFragment extends Fragment {
     }
 
     private void getCurrentTaskList(boolean isDialogShow){
-        nowIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
+        currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         if (NetUtils.isNetworkConnected(getActivity())) {
-            if (nowIndex == TaskFragment.MY_MINE) {
+            if (currentIndex == TaskFragment.MY_MINE) {
                 getMineTasks(isDialogShow);
-            } else if (nowIndex == TaskFragment.MY_INVOLVED) {
+            } else if (currentIndex == TaskFragment.MY_INVOLVED) {
                 getInvolvedTasks(isDialogShow);
-            } else if (nowIndex == TaskFragment.MY_FOCUSED) {
+            } else if (currentIndex == TaskFragment.MY_FOCUSED) {
                 getFocusedTasks(isDialogShow);
-            }else if(nowIndex == TaskFragment.MY_DONE){
+            }else if(currentIndex == TaskFragment.MY_DONE){
                 getAllFinishTasks(isDialogShow);
             }
         } else {
@@ -255,7 +255,7 @@ public class TaskListFragment extends Fragment {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        final int position, long id) {
-            if (nowIndex == 0 || nowIndex == 1) {
+            if (currentIndex == 0 || currentIndex == 1) {
                 new MyQMUIDialog.MessageDialogBuilder(getActivity())
                         .setMessage(R.string.mession_set_finish)
                         .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
@@ -288,7 +288,7 @@ public class TaskListFragment extends Fragment {
                                 long id) {
             Intent intent = new Intent();
             intent.putExtra("task", uiTaskList.get(position));
-            intent.putExtra("tabIndex", nowIndex);
+            intent.putExtra("tabIndex", currentIndex);
             intent.setClass(getActivity(),
                     MessionDetailActivity.class);
             startActivityForResult(intent, 0);
@@ -305,7 +305,7 @@ public class TaskListFragment extends Fragment {
                 swipeRefreshLayout.setLoading(false);
                 page = page + 1;
                 taskList.addAll(getTaskListResult.getTaskList());
-                swipeRefreshLayout.setCanLoadMore(nowIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size()>=12);
+                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size()>=12);
             } else {
                 swipeRefreshLayout.setRefreshing(false);
                 taskList = getTaskListResult.getTaskList();
