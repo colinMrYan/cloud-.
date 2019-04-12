@@ -328,7 +328,7 @@
                         style="@style/arrow_right"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/icon_arrow_right" />
+                        android:src="@drawable/ic_arrow_right" />
 
                     <TextView
                         android:id="@+id/repeat_text"
@@ -378,7 +378,7 @@
                         style="@style/arrow_right"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/icon_arrow_right" />
+                        android:src="@drawable/ic_arrow_right" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -486,7 +486,7 @@
                         style="@style/arrow_right"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/icon_arrow_right" />
+                        android:src="@drawable/ic_arrow_right" />
 
                     <TextView
                         android:id="@+id/alert_text"

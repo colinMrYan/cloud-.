@@ -30,6 +30,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -1495,6 +1496,15 @@ public class CalendarView extends FrameLayout {
         mDelegate.updateCurrentDay();
         mMonthPager.updateCurrentDate();
         mWeekPager.updateCurrentDate();
+    }
+
+    public List<EmmCalendar> getCurrentPageCalendars(){
+        LogUtils.jasonDebug("mParentLayout.isExpand()="+mParentLayout.isExpand());
+        if (mParentLayout.isExpand()){
+            return  getCurrentMonthCalendars();
+        }else {
+            return getCurrentWeekCalendars();
+        }
     }
 
     /**

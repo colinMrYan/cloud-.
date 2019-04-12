@@ -127,7 +127,7 @@
             android:layout_centerHorizontal="true" />
 
         <RelativeLayout
-            android:id="@+id/rl_start_time"
+            android:id="@+id/ll_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -177,7 +177,7 @@
                 android:id="@+id/rl_end_big_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/rl_end_time">
+                android:layout_alignBottom="@id/ll_end_time">
 
                 <ImageView
                     android:layout_width="11dp"
@@ -186,7 +186,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_end_time"
+                android:id="@+id/ll_end_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"

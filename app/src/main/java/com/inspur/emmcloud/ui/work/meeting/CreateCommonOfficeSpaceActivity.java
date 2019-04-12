@@ -18,8 +18,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.work.GetLoctionResult;
-import com.inspur.emmcloud.bean.work.MeetingLocation;
-import com.inspur.emmcloud.bean.work.OfficeBuilding;
+import com.inspur.emmcloud.bean.schedule.meeting.OfficeLocation;
+import com.inspur.emmcloud.bean.schedule.meeting.OfficeBuilding;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -42,7 +42,7 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private WorkAPIService apiService;
     private CreateBuildingAdapter adapter;
-    private List<MeetingLocation> locationList = new ArrayList<MeetingLocation>();
+    private List<OfficeLocation> locationList = new ArrayList<OfficeLocation>();
     private List<String> allCommonBuildingIdList = new ArrayList<String>();
 
     @Override

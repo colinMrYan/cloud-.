@@ -857,6 +857,15 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".ui.schedule.meeting.MeetingAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingRoomListActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.work.meeting.MyCommonOfficeActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />

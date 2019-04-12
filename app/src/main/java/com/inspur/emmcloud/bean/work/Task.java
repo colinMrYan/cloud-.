@@ -243,7 +243,7 @@ public class Task implements Serializable {
         List<Event> eventList = new ArrayList<>();
         for (Task task : taskList) {
             if (TimeUtils.isSameDay(selectCalendar, task.getCreationDate()) || TimeUtils.isSameDay(selectCalendar, task.getDueDate())) {
-                Event event = new Event(task.getId(), Event.TYPE_TASK, task.getTitle(), "", task.getCreationDate(), task.getDueDate());
+                Event event = new Event(task.getId(), Event.TYPE_TASK, task.getTitle(), "", task.getCreationDate(), task.getDueDate(),task);
                 eventList.add(event);
             }
 

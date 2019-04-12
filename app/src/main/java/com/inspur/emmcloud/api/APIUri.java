@@ -1716,4 +1716,7 @@ public class APIUri {
         return MyApplication.getInstance().getCloudId() + "oauth2.0/profile";
     }
 
+    public static String getScheduleListUrl(){
+        return  "http://172.31.2.36:88/api/schedule/v6.0/calendar/GetList?";
+    }
 }

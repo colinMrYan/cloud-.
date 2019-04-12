@@ -199,7 +199,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
-                        android:src="@drawable/icon_arrow_right" />
+                        android:src="@drawable/ic_arrow_right" />
 
                     <com.inspur.emmcloud.widget.NoScrollGridView
                         android:id="@+id/gv_member"
@@ -260,7 +260,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -296,7 +296,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <LinearLayout

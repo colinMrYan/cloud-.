@@ -28,7 +28,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.DataTimePickerDialog;
+import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -72,9 +72,9 @@ public class CalendarAddActivity extends BaseActivity {
     private TextView titleText;
     @ViewInject(R.id.rl_calendar_type)
     private RelativeLayout calendarTypeLayout;
-    @ViewInject(R.id.rl_start_time)
+    @ViewInject(R.id.ll_start_time)
     private RelativeLayout startTimeLayout;
-    @ViewInject(R.id.rl_end_time)
+    @ViewInject(R.id.ll_end_time)
     private RelativeLayout endTimeLayout;
     @ViewInject(R.id.rl_alert_time)
     private RelativeLayout alertTimeLayout;
@@ -96,8 +96,8 @@ public class CalendarAddActivity extends BaseActivity {
     private Boolean isAllDay = false;
     private Boolean isEditable = true;
     private String addCalendarStr;
-    private DataTimePickerDialog startDataTimePickerDialog;
-    private DataTimePickerDialog endDataTimePickerDialog;
+    private DateTimePickerDialog startDataTimePickerDialog;
+    private DateTimePickerDialog endDataTimePickerDialog;
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText;
@@ -125,9 +125,9 @@ public class CalendarAddActivity extends BaseActivity {
                 timeTextextChangeByIsAllday(isAllDay);
             }
         });
-        startDataTimePickerDialog = new DataTimePickerDialog(this);
-        endDataTimePickerDialog = new DataTimePickerDialog(this);
-        startDataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
+        startDataTimePickerDialog = new DateTimePickerDialog(this);
+        endDataTimePickerDialog = new DateTimePickerDialog(this);
+        startDataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
             @Override
             public void positiveListener(Calendar calendar) {
                 startCalendar = calendar;
@@ -145,7 +145,7 @@ public class CalendarAddActivity extends BaseActivity {
 
             }
         });
-        endDataTimePickerDialog.setDataTimePickerDialogListener(new DataTimePickerDialog.TimePickerDialogInterface() {
+        endDataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
             @Override
             public void positiveListener(Calendar calendar) {
                 if (calendar.before(startCalendar)) {
@@ -280,10 +280,10 @@ public class CalendarAddActivity extends BaseActivity {
                 }
                 startActivityForResult(intent, CAL_TYPE_REQUEST_CODE);
                 break;
-            case R.id.rl_start_time:
+            case R.id.ll_start_time:
                 startDataTimePickerDialog.showDatePickerDialog(isAllDay, startCalendar);
                 break;
-            case R.id.rl_end_time:
+            case R.id.ll_end_time:
                 endDataTimePickerDialog.showDatePickerDialog(isAllDay, endCalendar);
                 break;
             case R.id.rl_alert_time:
