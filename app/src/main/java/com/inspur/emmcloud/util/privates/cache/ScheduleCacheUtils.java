@@ -16,9 +16,8 @@ import java.util.List;
 
 public class ScheduleCacheUtils {
 
-    public static void saveScheduleList(final Context context, final List<Schedule> scheduleList) {
+    public static void saveScheduleList(Context context,  List<Schedule> scheduleList) {
         try {
-
             DbCacheUtils.getDb(context).saveOrUpdate(scheduleList); // 存储消息
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -26,7 +25,18 @@ public class ScheduleCacheUtils {
         }
     }
 
-    public static List<Schedule> getScheduleList(final Context context, Calendar startTime, Calendar endTime) {
+    public static void removeScheduleList(Context context,List<String> scheduleIdList){
+        try {
+            if (scheduleIdList.size()>0){
+                DbCacheUtils.getDb(context).delete(Schedule.class,WhereBuilder.b("id","in",scheduleIdList));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public static List<Schedule> getScheduleList(Context context, Calendar startTime, Calendar endTime) {
         List<Schedule> scheduleList = null;
         try {
             long startTimeLong = startTime.getTimeInMillis();
@@ -34,12 +44,12 @@ public class ScheduleCacheUtils {
             scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("startTime", ">", startTimeLong)
                     .and("endTime", "<", endTimeLong)).or(WhereBuilder.b("startTime", "<=", startTimeLong)
                     .and("endTime", ">", endTimeLong)).or(WhereBuilder.b("startTime", "<=", endTimeLong)
-                    .and("endTime", ">=", endTimeLong)).orderBy("lastTime",true).findAll();
+                    .and("endTime", ">=", endTimeLong)).orderBy("lastTime", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        if (scheduleList == null){
+        if (scheduleList == null) {
             scheduleList = new ArrayList<>();
         }
         return scheduleList;
