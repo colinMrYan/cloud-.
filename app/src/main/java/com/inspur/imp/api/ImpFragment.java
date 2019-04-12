@@ -36,6 +36,7 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -54,6 +55,7 @@ import com.inspur.imp.plugin.filetransfer.FileTransferService;
 import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
 import com.inspur.imp.plugin.window.DropItemTitle;
+import com.inspur.imp.plugin.window.OnKeyDownListener;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -98,6 +100,7 @@ public class ImpFragment extends ImpBaseFragment {
     private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
     private Adapter dropTitleAdapter;
     private ImpCallBackInterface impCallBackInterface;
+    private OnKeyDownListener onKeyDownListener;
 
 
     @Override
@@ -394,6 +397,11 @@ public class ImpFragment extends ImpBaseFragment {
                 ImpFragment.this.optionMenuList = optionMenuList;
                 initHeaderOptionMenu();
             }
+
+            @Override
+            public void setOnKeyDownListener(OnKeyDownListener onKeyDownListener) {
+                ImpFragment.this.onKeyDownListener = onKeyDownListener;
+            }
         };
     }
 
@@ -440,12 +448,16 @@ public class ImpFragment extends ImpBaseFragment {
     /**
      * 返回
      */
-    public boolean goBack() {
-        if (webView.canGoBack()) {
-            webView.goBack();// 返回上一页面
-            setGoBackTitle();
-        } else {
-            finishActivity();
+    public boolean onBackKeyDown() {
+        if (ImpFragment.this.onKeyDownListener != null){
+            ImpFragment.this.onKeyDownListener.onBackKeyDown();
+        }else {
+            if (webView.canGoBack()) {
+                webView.goBack();// 返回上一页面
+                setGoBackTitle();
+            } else {
+                finishActivity();
+            }
         }
         return true;
     }
@@ -722,7 +734,7 @@ public class ImpFragment extends ImpBaseFragment {
                     setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                     break;
                 case R.id.ibt_back:
-                    goBack();
+                    onBackKeyDown();
                     break;
                 case R.id.imp_close_btn:
                     finishActivity();
