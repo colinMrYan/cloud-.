@@ -59,7 +59,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_meeting_history"
+            android:src="@drawable/ic_schedule_meeting_history"
             android:tint="?attr/header_text_color" />
     </RelativeLayout>
 
@@ -76,8 +76,7 @@
             android:id="@+id/expandable_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
+            android:divider="#00000000"
             android:listSelector="#00000000" />
 
     </android.support.v4.widget.SwipeRefreshLayout>

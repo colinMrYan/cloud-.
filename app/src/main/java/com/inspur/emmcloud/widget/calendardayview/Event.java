@@ -26,13 +26,15 @@ public class Event {
     public Calendar eventEndTime;
     private int index = -1;
     private boolean isAllDay = false;
-    public Event(String eventId,String eventType,String eventTitle,String eventSubTitle,Calendar eventStartTime,Calendar eventEndTime){
+    private Object eventObj;
+    public Event(String eventId,String eventType,String eventTitle,String eventSubTitle,Calendar eventStartTime,Calendar eventEndTime,Object eventObj){
         this.eventId = eventId;
         this.eventType  = eventType;
         this.eventTitle = eventTitle;
         this.eventSubTitle = eventSubTitle;
         this.eventStartTime = eventStartTime;
         this.eventEndTime = eventEndTime;
+        this.eventObj = eventObj;
     }
 
     public int getIndex() {
@@ -111,6 +113,14 @@ public class Event {
     public long getDayDurationInMillSeconds(Calendar selectCalendar) {
 
         return getDayEventEndTime(selectCalendar).getTimeInMillis() - getDayEventStartTime(selectCalendar).getTimeInMillis();
+    }
+
+    public Object getEventObj() {
+        return eventObj;
+    }
+
+    public void setEventObj(Object eventObj) {
+        this.eventObj = eventObj;
     }
 
     public boolean isAllDay() {

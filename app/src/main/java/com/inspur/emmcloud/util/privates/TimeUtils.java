@@ -3,11 +3,9 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.widget.Chronometer;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.text.ParseException;
@@ -255,20 +253,6 @@ public class TimeUtils {
         // }
         return d;
 
-    }
-
-    /**
-     * 获取今天的起始时间
-     *
-     * @return
-     */
-    public static long getDayBegin() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.MILLISECOND, 001);
-        return cal.getTimeInMillis();
     }
 
     /**
@@ -1084,8 +1068,8 @@ public class TimeUtils {
     /**
      * 判断两个Calendar是否同一天
      *
-     * @param calDateA
-     * @param calDateB
+     * @param calendarA
+     * @param calendarB
      * @return
      */
     public static boolean isSameDay(Calendar calendarA, Calendar calendarB) {
