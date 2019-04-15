@@ -27,7 +27,7 @@ import java.util.List;
  * Created by libaochao on 2019/3/1.
  */
 
-public class DataTimePickerDialog {
+public class DateTimePickerDialog {
     private Context context;
     private AlertDialog.Builder alertDialog;
     private TimePickerDialogInterface timePickerDialogInterface;
@@ -37,7 +37,7 @@ public class DataTimePickerDialog {
     private Calendar resultCalendar;
     private TextView timeTextView;
 
-    public DataTimePickerDialog(Context context) {
+    public DateTimePickerDialog(Context context) {
         super();
         this.context = context;
         resultCalendar = Calendar.getInstance();

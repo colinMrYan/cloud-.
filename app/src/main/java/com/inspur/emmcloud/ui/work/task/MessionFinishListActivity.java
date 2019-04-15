@@ -24,7 +24,7 @@ import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
+import com.inspur.emmcloud.util.privates.TaskTagColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
@@ -162,7 +162,7 @@ public class MessionFinishListActivity extends BaseActivity implements
             ((TextView) convertView.findViewById(R.id.mession_text))
                     .setText(taskList.get(position).getTitle());
             if (taskList.get(position).getTags().size() > 0) {
-                MessionTagColorUtils.setTagColorImg((ImageView) convertView
+                TaskTagColorUtils.setTagColorImg((ImageView) convertView
                                 .findViewById(R.id.mession_color),
                         taskList.get(position).getTags().get(0).getColor());
             }

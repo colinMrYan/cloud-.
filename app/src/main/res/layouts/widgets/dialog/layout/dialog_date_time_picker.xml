@@ -16,7 +16,7 @@
         android:calendarViewShown="false" />
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5sp"
+        android:layout_height="0.5px"
         android:background="#DDDDDD"></View>
     <RelativeLayout
         android:id="@+id/rl_select_time"
@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:textSize="@dimen/header_function_textsize"
             android:text="24:00"
-            android:textColor="#588ce6"></TextView>
+            android:textColor="#36A5F6"></TextView>
 
         <ImageView
             android:id="@+id/iv_time"
@@ -50,7 +50,7 @@
             android:id="@+id/v_time_bottom_line"
             android:layout_below="@id/iv_time"
             android:layout_width="match_parent"
-            android:layout_height="0.5sp"
+            android:layout_height="0.5px"
             android:background="#DDDDDD"></View>
     </RelativeLayout>
 </LinearLayout>

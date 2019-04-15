@@ -34,7 +34,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
+import com.inspur.emmcloud.util.privates.TaskTagColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
@@ -427,12 +427,12 @@ public class MessionListActivity extends BaseActivity {
             ((TextView) convertView.findViewById(R.id.mession_text))
                     .setText(taskList.get(position).getTitle());
             if (taskList.get(position).getTags().size() > 0) {
-                MessionTagColorUtils.setTagColorImg((ImageView) convertView
+                TaskTagColorUtils.setTagColorImg((ImageView) convertView
                                 .findViewById(R.id.mession_color),
                         taskList.get(position).getTags().get(0).getColor());
             } else {
                 // 如果没有tag，显示默认tag
-                MessionTagColorUtils.setTagColorImg((ImageView) convertView
+                TaskTagColorUtils.setTagColorImg((ImageView) convertView
                         .findViewById(R.id.mession_color), "YELLOW");
             }
             if (taskList.get(position).getPriority() == 1) {

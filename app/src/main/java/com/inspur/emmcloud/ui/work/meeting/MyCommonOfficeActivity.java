@@ -18,8 +18,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetOfficeResult;
-import com.inspur.emmcloud.bean.work.GetOfficeResult.Office;
+import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -107,7 +106,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
     private void getOffice() {
         if (NetUtils.isNetworkConnected(MyCommonOfficeActivity.this)) {
             loadingDialog.show();
-            apiService.getOffice();
+            apiService.getOfficeList();
         }
     }
 
@@ -206,11 +205,11 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         List<String> newSelectOfficeList = new ArrayList<String>();
         for (int i = 0; i < originCommonOfficeList.size(); i++) {
             Office office = originCommonOfficeList.get(i);
-            if (selectOfficeIdList.contains(office.getOfficeId())) {
-                newSelectOfficeList.add(office.getOfficeId());
+            if (selectOfficeIdList.contains(office.getId())) {
+                newSelectOfficeList.add(office.getId());
             }
-            allCommonOfficeIdList.add(office.getOfficeId());
-            allCommonBuildingIdList.add(office.getBuildingId());
+            allCommonOfficeIdList.add(office.getId());
+            allCommonBuildingIdList.add(office.getId());
         }
         selectOfficeIdList = newSelectOfficeList;
         //当第一次如果没有勾选任何常用办公地点，怎默认全勾选
@@ -266,7 +265,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
                 Iterator<Office> iter = officeListNet.iterator();
                 while (iter.hasNext()) {
                     Office office = iter.next();
-                    if (office.getOfficeId().equals(officeId)) {
+                    if (office.getId().equals(officeId)) {
                         allOfficeList.add(office);
                         iter.remove();
                     }
@@ -285,12 +284,12 @@ public class MyCommonOfficeActivity extends BaseActivity implements
      * @param position
      */
     public void handleClickEvent(int position) {
-        String officeId = commonOfficeList.get(position).getOfficeId();
+        String officeId = commonOfficeList.get(position).getId();
         if (!selectOfficeIdList.contains(officeId)) {
             selectOfficeIdList.add(officeId);
             List<String> newSelectOfficeIdList = new ArrayList<String>();
             for (int i = 0; i < originCommonOfficeList.size(); i++) {
-                String id = originCommonOfficeList.get(i).getOfficeId();
+                String id = originCommonOfficeList.get(i).getId();
                 if (selectOfficeIdList.contains(id)) {
                     newSelectOfficeIdList.add(id);
                 }
@@ -317,12 +316,12 @@ public class MyCommonOfficeActivity extends BaseActivity implements
             LogUtils.debug("jason", "selectOfficeIdList" + i + "=" + selectOfficeIdList.get(i));
         }
         LogUtils.debug("jason", "id=" + commonOfficeList.get(position)
-                .getOfficeId());
+                .getId());
         if (isOrdering) {
 
             imageView.setVisibility(View.GONE);
         } else if (selectOfficeIdList.contains(commonOfficeList.get(position)
-                .getOfficeId())) {
+                .getId())) {
             imageView.setVisibility(View.VISIBLE);
         } else {
             imageView.setVisibility(View.GONE);
@@ -368,11 +367,10 @@ public class MyCommonOfficeActivity extends BaseActivity implements
             convertView = LayoutInflater.from(MyCommonOfficeActivity.this)
                     .inflate(R.layout.my_common_office_item, null);
             ((TextView) convertView.findViewById(R.id.my_common_office_floor))
-                    .setText(commonOfficeList.get(position).getBuidingName());
+                    .setText(commonOfficeList.get(position).getOfficeBuilding().getName());
             ((TextView) convertView
                     .findViewById(R.id.my_common_office_building))
-                    .setText(commonOfficeList.get(position).getLocation()
-                            .getName());
+                    .setText(commonOfficeList.get(position).getOfficeLocation().getName());
             ImageView handleImg = (ImageView) convertView
                     .findViewById(R.id.my_common_office_handle);
             ImageView selectImage = (ImageView) convertView
@@ -402,25 +400,25 @@ public class MyCommonOfficeActivity extends BaseActivity implements
      * 会议返回结果
      */
     class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnOfficeResultSuccess(GetOfficeResult getOfficeResult) {
-
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            setOfficeList(getOfficeResult.getOfficeList());
-            myCommonOfficeAdapter = new MyCommonOfficeAdapter();
-            dragSortListView.setAdapter(myCommonOfficeAdapter);
-            myCommonOfficeAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void returnOfficeResultFail(String error, int errorCode) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            WebServiceMiddleUtils.hand(MyCommonOfficeActivity.this, error, errorCode);
-        }
+//        @Override
+//        public void returnOfficeListResultSuccess(GetOfficeResult getOfficeResult) {
+//
+//            if (loadingDialog != null && loadingDialog.isShowing()) {
+//                loadingDialog.dismiss();
+//            }
+//            setOfficeList(getOfficeResult.getOfficeList());
+//            myCommonOfficeAdapter = new MyCommonOfficeAdapter();
+//            dragSortListView.setAdapter(myCommonOfficeAdapter);
+//            myCommonOfficeAdapter.notifyDataSetChanged();
+//        }
+//
+//        @Override
+//        public void returnOfficeListResultFail(String error, int errorCode) {
+//            if (loadingDialog != null && loadingDialog.isShowing()) {
+//                loadingDialog.dismiss();
+//            }
+//            WebServiceMiddleUtils.hand(MyCommonOfficeActivity.this, error, errorCode);
+//        }
 
         @Override
         public void returnDeleteOfficeSuccess(int position) {
@@ -480,7 +478,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
             if (NetUtils.isNetworkConnected(MyCommonOfficeActivity.this)) {
                 loadingDialog.show();
                 apiService.deleteOffice(originCommonOfficeList.get(position)
-                        .getOfficeId(), position);
+                        .getId(), position);
             }
         }
 

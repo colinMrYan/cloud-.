@@ -1484,9 +1484,9 @@
     <!--日历字符串资源结束-->
 
     <string-array name="segment_control_items">
-        <item>高</item>
-        <item>中</item>
         <item>低</item>
+        <item>中</item>
+        <item>高</item>
     </string-array>
 
 

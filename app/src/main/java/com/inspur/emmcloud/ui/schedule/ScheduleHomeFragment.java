@@ -1,8 +1,7 @@
-package com.inspur.emmcloud.ui.work;
+package com.inspur.emmcloud.ui.schedule;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -19,9 +18,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
-import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
+import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
+import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
@@ -34,33 +35,32 @@ import java.util.List;
 /**
  * Created by yufuchang on 2019/3/28.
  */
-public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener {
+public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener{
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
     private View rootView;
     private TabLayout tabLayout;
+    private CustomScrollViewPager viewPager;
     private ImageButton backToToDayImgBtn;
-    private CustomScrollViewPager allScheduleFragmentViewPager;
     private ScheduleFragment scheduleFragment;
-    private ScheduleFragment meetingFragment;
-    private AllTaskListFragment allTaskFragment;
-
+    private MeetingFragment meetingFragment;
+    private TaskFragment taskFragment;
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        rootView = getLayoutInflater().inflate(R.layout.fragment_schedule_home, null);
         initView();
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setFragmentStatusBarWhite();
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_schedule_home, container,
+            rootView = inflater.inflate(R.layout.fragment_message, container,
                     false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
@@ -80,13 +80,14 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void initView() {
-        initTabLayout();
-        rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
         backToToDayImgBtn = rootView.findViewById(R.id.ibt_back_to_today);
         backToToDayImgBtn.setOnClickListener(this);
-        allScheduleFragmentViewPager = rootView.findViewById(R.id.view_pager_all_schedule);
-        allScheduleFragmentViewPager.setScrollable(false);
-        allScheduleFragmentViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
+        initTabLayout();
+        viewPager = rootView.findViewById(R.id.view_pager_all_schedule);
+        viewPager.setScrollable(false);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -107,17 +108,17 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
-        meetingFragment = new ScheduleFragment();
-        allTaskFragment = new AllTaskListFragment();
+        meetingFragment = new MeetingFragment();
+        taskFragment = new TaskFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
         list.add(meetingFragment);
-        list.add(allTaskFragment);
+        list.add(taskFragment);
 
         //初始化adapter
         ScheduleHomeFragmentAdapter adapter = new ScheduleHomeFragmentAdapter(getActivity().getSupportFragmentManager(), list);
         //将适配器和ViewPager结合
-        allScheduleFragmentViewPager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);
 
     }
 
@@ -136,8 +137,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-                if (allScheduleFragmentViewPager != null) {
-                    allScheduleFragmentViewPager.setCurrentItem(position);
+                if (viewPager != null) {
+                    viewPager.setCurrentItem(position);
                 }
                 backToToDayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
                 updateTabLayoutTextStatus(tab, true);
@@ -187,11 +188,13 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         break;
                     case 4:
                         recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                        IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
+                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class);
                         break;
                     case 5:
-                        if (allScheduleFragmentViewPager.getCurrentItem() == 0) {
+                        if (viewPager.getCurrentItem() == 0) {
                             IntentUtils.startActivity(getActivity(), CalendarSettingActivity.class);
+                        }else if(viewPager.getCurrentItem() == 2){
+                            IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
                         }
                         break;
                 }
@@ -204,7 +207,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
     private List<MenuItem> getAddMenuList() {
         List<MenuItem> menuItemList = new ArrayList<>();
-        switch (allScheduleFragmentViewPager.getCurrentItem()) {
+        switch (viewPager.getCurrentItem()) {
             case 0:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_calendar, 1, "新建日程"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));
@@ -215,7 +218,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             case 1:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, "预定会议室"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, "历史会议"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_meeting_history, 5, "历史会议"));
                 break;
             case 2:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));
@@ -225,10 +228,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         return menuItemList;
     }
 
-
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        switch (view.getId()){
             case R.id.ibt_add:
                 showAddPopMenu(view);
                 break;
@@ -237,4 +239,5 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                 break;
         }
     }
+
 }

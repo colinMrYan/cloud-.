@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.bean.work;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,7 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.List;
 
 public class Meeting implements Serializable, Comparator {
     private String meetingId = "";
@@ -42,7 +39,6 @@ public class Meeting implements Serializable, Comparator {
             }
             if (obj.has("from")) {
                 this.from = obj.getString("from");
-                LogUtils.jasonDebug("from="+from);
             }
             if (obj.has("to")) {
                 this.to = obj.getString("to");
@@ -212,48 +208,6 @@ public class Meeting implements Serializable, Comparator {
         return TimeUtils.timeString2Calendar(to);
     }
 
-//    public static List<Event> MeetingList2EventList(List<Meeting> meetingList){
-//        List<Event> eventList = new ArrayList<>();
-//        for (Meeting meeting:meetingList){
-//            Calendar eventStartTime = TimeUtils.timeString2Calendar(meeting.getFrom());
-//            Calendar eventEndTime = TimeUtils.timeString2Calendar(meeting.getTo());
-//            Event event = new Event(meeting.getMeetingId(),Event.TYPE_MEETING,meeting.getTopic(),meeting.getLocation(),eventStartTime,eventEndTime);
-//            eventList.add(event);
-//        }
-//        return eventList;
-//    }
-
-    public static List<Event> MeetingList2EventList(List<Meeting> meetingList,Calendar selectCalendar){
-        List<Event> eventList = new ArrayList<>();
-        for (Meeting meeting:meetingList){
-           if (TimeUtils.isContainTargentCalendarDay(selectCalendar,meeting.getFromCalendar(),meeting.getToCalendar())){
-               Calendar eventStartTime = meeting.getFromCalendar();
-               Calendar eventEndTime = meeting.getToCalendar();
-               Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
-               Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
-               if (eventStartTime.before(dayBeginCalendar)){
-                   eventStartTime = dayBeginCalendar;
-               }
-               if (eventEndTime.after(dayEndCalendar)){
-                   eventEndTime = dayEndCalendar;
-               }
-               Event event = new Event(meeting.getMeetingId(),Event.TYPE_MEETING,meeting.getTopic(),meeting.getLocation(),eventStartTime,eventEndTime);
-               if (!eventStartTime.after(dayBeginCalendar) && !eventEndTime.before(dayEndCalendar)){
-                   event.setAllDay(true);
-               }
-               eventList.add(event);
-           }
-        }
-        return eventList;
-    }
-
-
-    public Event Meeting2Event(){
-        Calendar eventStartTime = getFromCalendar();
-        Calendar eventEndTime = getToCalendar();
-        Event event = new Event(getMeetingId(),Event.TYPE_MEETING,topic,location,eventStartTime,eventEndTime);
-        return event;
-    }
 
     @Override
     public int compare(Object lhs, Object rhs) {

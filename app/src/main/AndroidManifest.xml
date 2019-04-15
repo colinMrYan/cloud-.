@@ -863,6 +863,15 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".ui.schedule.meeting.MeetingAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingRoomListActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.work.meeting.MyCommonOfficeActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -915,6 +924,18 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.schedule.task.TaskAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.task.TaskTagAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.task.TaskTagsManageActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.task.TaskSetActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
