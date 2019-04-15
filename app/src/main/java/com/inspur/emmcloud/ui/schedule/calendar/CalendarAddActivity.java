@@ -21,7 +21,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -362,14 +361,17 @@ public class CalendarAddActivity extends BaseActivity {
     /**
      * 更新日程
      */
-    private void updateCalEvent() {
+    private void updateCalEvent()  {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            try {
+                scheduleEvent.setLastTime(System.currentTimeMillis());
+                LogUtils.LbcDebug("update Schedule::"+scheduleEvent.getCalendarEventJsonStr());
+                apiService.updateSchedule(scheduleEvent.getCalendarEventJsonStr());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             loadingDlg.show();
-            scheduleEvent.setLastTime(System.currentTimeMillis());
-            String scheduleJson = JSONUtils.toJSONString(scheduleEvent);
-            LogUtils.LbcDebug("update Schedule::"+scheduleJson);
-            apiService.updateSchedule(scheduleJson);
         }
     }
 
@@ -379,15 +381,14 @@ public class CalendarAddActivity extends BaseActivity {
     private void addCalEvent() {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show();
-            long createTime = System.currentTimeMillis();
-            scheduleEvent.setCreationTime(createTime);
-            scheduleEvent.setLastTime(createTime);
-          String addScheduleStr = JSONUtils.toJSONString(scheduleEvent);
-            LogUtils.LbcDebug("add  Schedule::"+addScheduleStr);
-            apiService.addSchedule(addScheduleStr);
+            try {
+                loadingDlg.show();
+                LogUtils.LbcDebug("Add Calendar"+scheduleEvent.getCalendarEventJsonStr());
+                apiService.addSchedule(scheduleEvent.getCalendarEventJsonStr());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
-
     }
 
     @Override
