@@ -102,7 +102,7 @@
             <ImageView
                 style="@style/arrow_right"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_arrow_right" />
+                android:src="@drawable/ic_arrow_right" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>
