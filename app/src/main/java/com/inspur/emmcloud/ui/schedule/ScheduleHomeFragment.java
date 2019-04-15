@@ -23,8 +23,6 @@ import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
-import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
@@ -48,7 +46,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private ImageButton backToToDayImgBtn;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
-    private TaskFragment allTaskFragment;
+    private TaskFragment taskFragment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -111,11 +109,11 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
         meetingFragment = new MeetingFragment();
-        allTaskFragment = new TaskFragment();
+        taskFragment = new TaskFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
         list.add(meetingFragment);
-        list.add(allTaskFragment);
+        list.add(taskFragment);
 
         //初始化adapter
         ScheduleHomeFragmentAdapter adapter = new ScheduleHomeFragmentAdapter(getActivity().getSupportFragmentManager(), list);
