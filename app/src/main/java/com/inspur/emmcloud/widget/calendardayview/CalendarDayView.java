@@ -239,9 +239,12 @@ public class CalendarDayView extends RelativeLayout {
         TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
         eventImg.setImageResource(event.getEventIconResId());
         eventTitleEvent.setText(event.getEventTitle());
-        eventSubtitleEvent.setText(event.getShowEventSubTitle(getContext(),selectCalendar)+"截止");
+        String subTitle = event.getShowEventSubTitle(getContext(),selectCalendar);
+        if (event.getEventType().equals(Event.TYPE_TASK)){
+            subTitle+="截止";
+        }
+        eventSubtitleEvent.setText(subTitle);
         eventLayout.addView(eventView, eventLayoutParams);
-
         eventView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

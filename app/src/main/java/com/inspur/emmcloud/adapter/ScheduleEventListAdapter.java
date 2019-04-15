@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
@@ -37,6 +38,10 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         this.eventList.addAll(eventList);
     }
 
+    public void setOnItemClickLister(){
+        this.onItemClickLister  = onItemClickLister;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_event_list_item_view,null);
@@ -57,7 +62,9 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
             endTime = TimeUtils.calendar2FormatString(context,event.getDayEventEndTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
         } else if (event.getEventType().equals(Event.TYPE_MEETING)) {
             holder.eventPositionText.setVisibility(View.VISIBLE);
-            holder.eventPositionText.setText("会议地点："+event.getEventSubTitle());
+            if (!StringUtils.isBlank(event.getEventSubTitle())){
+                holder.eventPositionText.setText("会议地点："+event.getEventSubTitle());
+            }
             startTime = TimeUtils.calendar2FormatString(context,event.getDayEventStartTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
             endTime = TimeUtils.calendar2FormatString(context,event.getDayEventEndTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
         } else {
@@ -80,8 +87,6 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         return eventList.size();
     }
 
-    public void setOnItemClickLister(OnItemClickLister onItemClickLister){
-    }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView eventImg;
