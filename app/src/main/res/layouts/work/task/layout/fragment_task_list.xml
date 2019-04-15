@@ -26,7 +26,7 @@
                 android:layout_height="match_parent"
                 android:dividerHeight="0.5dp"
                 android:divider="@color/color_list_divider"
-                android:transcriptMode="normal" />
+                 />
         </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
         <TextView
             android:id="@+id/tv_no_result"

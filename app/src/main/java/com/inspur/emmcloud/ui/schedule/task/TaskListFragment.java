@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.ui.work.task;
+package com.inspur.emmcloud.ui.schedule.task;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,21 +14,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.TaskListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -38,33 +38,35 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yufuchang on 2019/4/1.
  */
 @ContentView(R.layout.fragment_task_list)
 public class TaskListFragment extends Fragment {
-    private boolean injected = false;
+
     @ViewInject(R.id.lv_task)
     private ListView taskListView;
-    private TaskListAdapter adapter;
-    private WorkAPIService apiService;
-    private LoadingDialog loadingDialog;
-    private int nowIndex = 0;
-    private ArrayList<Task> taskList = new ArrayList<Task>();
     @ViewInject(R.id.refresh_layout)
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private String orderBy = "PRIORITY";
-    private String orderType = "ASC";
+    private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.ll_no_search_result)
     private LinearLayout noSearchResultLayout;
     @ViewInject(R.id.tv_no_result)
     private TextView noResultText;
+    private boolean injected = false;
+    private String orderBy = "PRIORITY";
+    private String orderType = "ASC";
     private int deletePosition = -1;
-    private boolean isNeedRefresh = false;
     private String searchContent = "";
-    private ArrayList<Task> searchTaskList = new ArrayList<>();
+    private ArrayList<Task> uiTaskList = new ArrayList<>();
+    private TaskListAdapter adapter;
+    private WorkAPIService apiService;
+    private int currentIndex = 0;
+    private ArrayList<Task> taskList = new ArrayList<Task>();
+    private boolean isPullUp =false;
+    private int page = 0;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,6 +88,8 @@ public class TaskListFragment extends Fragment {
      * @param searchContent
      */
     public void setSearchContent(String searchContent){
+        swipeRefreshLayout.setCanLoadMore(StringUtils.isBlank(searchContent));
+        swipeRefreshLayout.setEnabled(StringUtils.isBlank(searchContent));
         this.searchContent = searchContent;
         if(adapter != null){
             searchTaskListBySearchContent();
@@ -93,27 +97,37 @@ public class TaskListFragment extends Fragment {
     }
 
     /**
+     * 告知Fragment当前索引
+     * @param currentIndex
+     */
+    public void setCurrentIndex(int currentIndex){
+        this.currentIndex = currentIndex;
+        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+    }
+
+    /**
      * 根据搜索内容搜索列表
      */
     private void searchTaskListBySearchContent() {
-        searchTaskList.clear();
+        uiTaskList.clear();
         for(Task task:taskList){
             if(task.getTitle().contains(searchContent)){
-                searchTaskList.add(task);
+                uiTaskList.add(task);
             }
         }
-        adapter.setAndChangeData(searchTaskList);
+        adapter.setAndChangeData(uiTaskList);
     }
 
     private void initViews() {
-        nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
+        currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         getOrder();
         initPullRefreshLayout();
         taskListView.setOnItemClickListener(new OnTaskClickListener());
+        adapter = new TaskListAdapter(getActivity(),uiTaskList);
+        taskListView.setAdapter(adapter);
 //        taskListView.setOnItemLongClickListener(new OnTaskLongClickListener());
-        loadingDialog = new LoadingDialog(getActivity());
         getCurrentTaskList(true);
     }
 
@@ -130,23 +144,45 @@ public class TaskListFragment extends Fragment {
      * 初始化PullRefreshLayout
      */
     private void initPullRefreshLayout() {
+        //已完成页面设置可以上拉加载
+        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getCurrentTaskList(false);
+                isPullUp = false;
+                page = 0;
+                if(NetUtils.isNetworkConnected(getActivity())){
+                    getCurrentTaskList(false);
+                }else{
+                    swipeRefreshLayout.setLoading(false);
+                }
+                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+            }
+        });
+        swipeRefreshLayout.setOnLoadListener(new MySwipeRefreshLayout.OnLoadListener() {
+            @Override
+            public void onLoadMore() {
+                if (NetUtils.isNetworkConnected(getActivity())) {
+                    apiService.getAllTasks(page, 12, "REMOVED");
+                    isPullUp = true;
+                } else {
+                    swipeRefreshLayout.setLoading(false);
+                }
             }
         });
     }
 
     private void getCurrentTaskList(boolean isDialogShow){
-        nowIndex = getArguments().getInt(AllTaskListFragment.MY_TASK_TYPE,AllTaskListFragment.MY_MINE);
+        currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         if (NetUtils.isNetworkConnected(getActivity())) {
-            if (nowIndex == AllTaskListFragment.MY_MINE) {
+            if (currentIndex == TaskFragment.MY_MINE) {
                 getMineTasks(isDialogShow);
-            } else if (nowIndex == AllTaskListFragment.MY_INVOLVED) {
+            } else if (currentIndex == TaskFragment.MY_INVOLVED) {
                 getInvolvedTasks(isDialogShow);
-            } else if (nowIndex == AllTaskListFragment.MY_FOCUSED) {
+            } else if (currentIndex == TaskFragment.MY_FOCUSED) {
                 getFocusedTasks(isDialogShow);
+            }else if(currentIndex == TaskFragment.MY_DONE){
+                getAllFinishTasks(isDialogShow);
             }
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -160,7 +196,7 @@ public class TaskListFragment extends Fragment {
      */
     protected void getFocusedTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show(isDialogShow);
+            swipeRefreshLayout.setRefreshing(true);
             apiService.getFocusedTasks(orderBy, orderType);
         }
     }
@@ -172,7 +208,7 @@ public class TaskListFragment extends Fragment {
      */
     protected void getInvolvedTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show(isDialogShow);
+            swipeRefreshLayout.setRefreshing(true);
             apiService.getInvolvedTasks(orderBy, orderType);
         }
     }
@@ -184,8 +220,18 @@ public class TaskListFragment extends Fragment {
      */
     protected void getMineTasks(boolean isDialogShow) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show(isDialogShow);
+            swipeRefreshLayout.setRefreshing(true);
             apiService.getRecentTasks(orderBy, orderType);
+        }
+    }
+
+    /**
+     * 获取所有任务
+     */
+    private void getAllFinishTasks(boolean isDialogShow) {
+        if (NetUtils.isNetworkConnected(getActivity())) {
+            swipeRefreshLayout.setRefreshing(true);
+            apiService.getAllTasks(0, 12, "REMOVED");
         }
     }
 
@@ -197,66 +243,12 @@ public class TaskListFragment extends Fragment {
      */
     protected void deleteTasks(int position) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show();
-            apiService.deleteTasks(taskList.get(position).getId());
+            swipeRefreshLayout.setRefreshing(true);
+            apiService.deleteTasks(uiTaskList.get(position).getId());
             deletePosition = position;
         }
     }
 
-    /**
-     * 处理
-     *
-     * @param chooseTags
-     */
-    public void handleResultUI(ArrayList<String> chooseTags) {
-        if (taskList.size() == 0 && chooseTags.size() == 0) {
-            noResultText.setVisibility(View.VISIBLE);
-        } else {
-            swipeRefreshLayout.setRefreshing(false);
-            noResultText.setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 整理任务列表
-     *
-     * @param getTaskListResult
-     * @param chooseTagList
-     * @return
-     */
-    public ArrayList<Task> handleTaskList(
-            GetTaskListResult getTaskListResult, ArrayList<String> chooseTagList) {
-        // String[] tags = chooseTags.split(":");
-        if (chooseTagList.size() == 0) {
-            noSearchResultLayout.setVisibility(View.GONE);
-            swipeRefreshLayout.setRefreshing(false);
-            taskList = getTaskListResult.getTaskList();
-        } else {
-            taskList = new ArrayList<Task>();
-            int taskSize = getTaskListResult.getTaskList().size();
-            int chooseTagLength = chooseTagList.size();
-            for (int i = 0; i < taskSize; i++) {
-                // 一个任务里的所有标签
-                List<TaskColorTag> taskColorTags = getTaskListResult
-                        .getTaskList().get(i).getTags();
-                ArrayList<String> taskColorList = new ArrayList<String>();
-                for (int k = 0; k < taskColorTags.size(); k++) {
-                    taskColorList.add(taskColorTags.get(k).getTitle());
-                }
-                // 如果任务里的标签包含所有已选中标签
-                if (taskColorList.containsAll(chooseTagList)) {
-                    taskList.add(getTaskListResult.getTaskList().get(i));
-                }
-            }
-            if (taskList.size() == 0) {
-                noResultText.setVisibility(View.VISIBLE);
-                noSearchResultLayout.setVisibility(View.VISIBLE);
-            } else {
-                noSearchResultLayout.setVisibility(View.GONE);
-            }
-        }
-        return taskList;
-    }
 
 
     /**
@@ -266,7 +258,7 @@ public class TaskListFragment extends Fragment {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        final int position, long id) {
-            if (nowIndex == 0 || nowIndex == 1) {
+            if (currentIndex == 0 || currentIndex == 1) {
                 new MyQMUIDialog.MessageDialogBuilder(getActivity())
                         .setMessage(R.string.mession_set_finish)
                         .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
@@ -298,8 +290,8 @@ public class TaskListFragment extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             Intent intent = new Intent();
-            intent.putExtra("task", taskList.get(position));
-            intent.putExtra("tabIndex", nowIndex);
+            intent.putExtra("task", uiTaskList.get(position));
+            intent.putExtra("tabIndex", currentIndex);
             intent.setClass(getActivity(),
                     TaskAddActivity.class);
             startActivityForResult(intent, 0);
@@ -308,79 +300,48 @@ public class TaskListFragment extends Fragment {
 
 
     class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            noResultText.setVisibility(View.GONE);
-            Task task = new Task();
-//            taskResult.setTitle(messionAddEdit.getText().toString());
-            task.setId(getTaskAddResult.getId());
-            task.setOwner(PreferencesUtils.getString(
-                    getActivity(), "userID"));
-            task.setState("ACTIVED");
-            taskList.add(task);
-            adapter.notifyDataSetChanged();
-            isNeedRefresh = true;
-        }
-
-        @Override
-        public void returnCreateTaskFail(String error, int errorCode) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-        }
 
         @Override
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
             super.returnRecentTasksSuccess(getTaskListResult);
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
+            if (isPullUp) {
+                swipeRefreshLayout.setLoading(false);
+                page = page + 1;
+                taskList.addAll(getTaskListResult.getTaskList());
+                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size()>=12);
+            } else {
+                swipeRefreshLayout.setRefreshing(false);
+                taskList = getTaskListResult.getTaskList();
             }
-            swipeRefreshLayout.setRefreshing(false);
-            String userId = ((MyApplication) getActivity().getApplicationContext()).getUid();
-            String chooseTags = PreferencesUtils.getString(
-                    getActivity(), MyApplication.getInstance().getTanent() + userId
-                            + "chooseTags", "");
-            ArrayList<String> chooseTagList = JSONUtils.JSONArray2List(chooseTags, new ArrayList<String>());
-            handleTaskList(getTaskListResult, chooseTagList);
-            handleResultUI(chooseTagList);
-            adapter = new TaskListAdapter(getActivity(),taskList);
-            taskListView.setAdapter(adapter);
-//            adapter.notifyDataSetChanged();
+            noResultText.setVisibility(taskList.size()>0?View.GONE:View.VISIBLE);
+            uiTaskList.clear();
+            uiTaskList.addAll(taskList);
+            adapter.setAndChangeData(uiTaskList);
         }
 
         @Override
         public void returnRecentTasksFail(String error, int errorCode) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setLoading(false);
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnDeleteTaskSuccess() {
             super.returnDeleteTaskSuccess();
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setRefreshing(false);
             if (deletePosition != -1) {
-                taskList.remove(deletePosition);
+                uiTaskList.remove(deletePosition);
                 adapter.notifyDataSetChanged();
             }
-            if (taskList.size() == 0) {
+            if (uiTaskList.size() == 0) {
                 noResultText.setVisibility(View.VISIBLE);
             }
-            isNeedRefresh = true;
         }
 
         @Override
         public void returnDeleteTaskFail(String error, int errorCode) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 

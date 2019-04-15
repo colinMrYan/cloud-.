@@ -19,6 +19,7 @@
             android:id="@+id/rl_all_task"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:paddingLeft="16dp">
             <TextView
                 android:id="@+id/tv_schedule_all"
@@ -42,6 +43,7 @@
             android:id="@+id/v_schedule_line"
             android:layout_width="1dp"
             android:layout_height="14dp"
+            android:visibility="gone"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toRightOf="@id/rl_all_task"
@@ -52,6 +54,7 @@
             android:id="@+id/tl_schedule_task"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
             android:layout_toRightOf="@+id/v_schedule_line"
             app:tabGravity="fill"
             app:tabMode="scrollable"

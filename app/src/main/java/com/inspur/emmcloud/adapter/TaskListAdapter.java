@@ -6,10 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
@@ -51,14 +54,26 @@ public class TaskListAdapter extends BaseAdapter {
         Task task = taskList.get(position);
         ((TextView) convertView.findViewById(R.id.tv_task_name))
                 .setText(task.getTitle());
-        ((TextView) convertView.findViewById(R.id.tv_task_deadline))
-                .setText(context.getString(R.string.work_task_end,TimeUtils.calendar2FormatString(context,
-                        task.getCreationDate(),
-                        TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
-
-        ((TextView) convertView.findViewById(R.id.tv_task_from))
-                .setText("我创建的");
-        ((ImageView)convertView.findViewById(R.id.iv_task_color)).setImageResource(R.drawable.tuesday);
+        String deadLine = TimeUtils.calendar2FormatString(context,
+                task.getDueDate(),TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
+        TextView deadLineText = convertView.findViewById(R.id.tv_task_deadline);
+        if(!StringUtils.isBlank(deadLine)){
+            deadLineText.setVisibility(View.VISIBLE);
+            deadLineText.setText(context.getString(R.string.work_task_end,deadLine));
+        }else{
+            RelativeLayout relativeLayout = convertView.findViewById(R.id.ll_category_title);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
+            relativeLayout.setLayoutParams(params);
+            deadLineText.setVisibility(View.GONE);
+        }
+        if (task.getTags().size() > 0) {
+            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getColorCircleImage(task.getTags().get(0).getColor()));
+        } else {
+            // 如果没有tag，显示默认tag
+            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getColorCircleImage("BLUE"));
+        }
+        convertView.findViewById(R.id.iv_task_level).setVisibility(task.getPriority() == 2 ?View.VISIBLE:View.GONE);
         return convertView;
     }
 
