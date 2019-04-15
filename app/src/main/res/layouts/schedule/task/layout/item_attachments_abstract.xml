@@ -9,7 +9,8 @@
          android:id="@+id/iv_attachemnt_img"
          android:layout_width="48dp"
          android:layout_height="48dp"
-         android:layout_centerVertical="true"/>
+         android:layout_centerVertical="true"
+         android:scaleType="fitXY"/>
     <TextView
         android:id="@+id/tv_add_attachment_name"
         android:text="文件名称及后缀"

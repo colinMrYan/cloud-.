@@ -21,6 +21,9 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
+import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
+import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
+import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -45,7 +48,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private ImageButton backToToDayImgBtn;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
-    private AllTaskListFragment allTaskFragment;
+    private TaskFragment allTaskFragment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -108,7 +111,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         //建一个存放fragment的集合，并且把新的fragment放到集合中
         scheduleFragment = new ScheduleFragment();
         meetingFragment = new MeetingFragment();
-        allTaskFragment = new AllTaskListFragment();
+        allTaskFragment = new TaskFragment();
         List<Fragment> list = new ArrayList<Fragment>();
         list.add(scheduleFragment);
         list.add(meetingFragment);
@@ -192,6 +195,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                     case 5:
                         if (viewPager.getCurrentItem() == 0) {
                             IntentUtils.startActivity(getActivity(), CalendarSettingActivity.class);
+                        }else if(viewPager.getCurrentItem() == 2){
+                            IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
                         }
                         break;
                 }
