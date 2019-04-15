@@ -399,7 +399,7 @@
     </style>
 
     <style name="DateTimeAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
-        <item name="android:textColor">#111</item>
+        <item name="android:textColor">#36A5F6</item>
         <item name="android:typeface">monospace</item>
         <item name="android:textSize">15sp</item>
     </style>

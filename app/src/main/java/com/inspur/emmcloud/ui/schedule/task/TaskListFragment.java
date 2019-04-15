@@ -21,6 +21,9 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
+import com.inspur.emmcloud.bean.work.TaskColorTag;
+import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -290,7 +293,7 @@ public class TaskListFragment extends Fragment {
             intent.putExtra("task", uiTaskList.get(position));
             intent.putExtra("tabIndex", currentIndex);
             intent.setClass(getActivity(),
-                    MessionDetailActivity.class);
+                    TaskAddActivity.class);
             startActivityForResult(intent, 0);
         }
     }

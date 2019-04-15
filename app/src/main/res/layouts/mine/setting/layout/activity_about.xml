@@ -92,7 +92,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="15dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
 
@@ -125,7 +125,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="15dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -157,7 +157,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="15dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
 
@@ -190,7 +190,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="15dp"
-                    android:src="@drawable/icon_arrow_right" />
+                    android:src="@drawable/ic_arrow_right" />
             </RelativeLayout>
 
         </LinearLayout>

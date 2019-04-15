@@ -29,7 +29,7 @@
         android:background="#ffffff"
         android:orientation="vertical"
         app:calendar_content_view_id="@+id/ll_date_and_arrow"
-        app:default_status="expand">
+        app:default_status="shrink">
 
         <com.inspur.emmcloud.widget.calendarview.CalendarView
             android:id="@+id/calendar_view_schedule"
@@ -85,7 +85,7 @@
                     android:layout_height="30dp"
                     android:layout_centerHorizontal="true"
                     android:padding="5dp"
-                    android:src="@drawable/ic_schedule_up" />
+                    android:src="@drawable/ic_schedule_down" />
 
                 <View
                     android:id="@+id/view_space"
