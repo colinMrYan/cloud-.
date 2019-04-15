@@ -11,6 +11,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
@@ -200,7 +201,7 @@ public class CalendarAddActivity extends BaseActivity {
             if (!isAllDay) {
                 endCalendar.add(Calendar.HOUR_OF_DAY, 1);
             }
-           // scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
+         scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
         }
         intervalMin = (int) getIntervalMin();
     }
