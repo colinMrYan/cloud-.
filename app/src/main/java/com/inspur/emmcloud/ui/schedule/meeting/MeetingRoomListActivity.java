@@ -12,7 +12,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
@@ -62,7 +62,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private Calendar endTimeCalendar;
 //    private LoadingDialog loadingDlg;
     private WebService webService;
-    private WorkAPIService apiService;
+    private ScheduleApiService apiService;
     private List<String> officeIdList = new ArrayList<>();
     private List<MeetingRoomArea> meetingRoomAreaList = new ArrayList<>();
     private MeetingRoomAdapter meetingRoomAdapter;
@@ -87,7 +87,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         meetingRoomAdapter = new MeetingRoomAdapter(MeetingRoomListActivity.this);
         expandableListView.setAdapter(meetingRoomAdapter);
         webService = new WebService();
-        apiService = new WorkAPIService(this);
+        apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(webService);
     }
 

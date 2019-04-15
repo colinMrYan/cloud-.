@@ -38,7 +38,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         this.eventList.addAll(eventList);
     }
 
-    public void setOnItemClickLister(){
+    public void setOnItemClickLister(OnItemClickLister onItemClickLister){
         this.onItemClickLister  = onItemClickLister;
     }
 
@@ -109,13 +109,13 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         @Override
         public void onClick(View view) {
             if (onItemClickLister != null){
-                onItemClickLister.onItemClick(view,getAdapterPosition());
+                onItemClickLister.onItemClick(view,getAdapterPosition(),eventList.get(getAdapterPosition()));
             }
 
         }
     }
 
     public interface OnItemClickLister{
-        void onItemClick(View view, int position);
+        void onItemClick(View view, int position,Event event);
     }
 }
