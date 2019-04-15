@@ -11,16 +11,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
+import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -102,6 +103,7 @@ public class CalendarAddActivity extends BaseActivity {
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText;
+    RemindEvent remindEvent=new RemindEvent();
 
     private int intervalMin = 0;
 
@@ -115,7 +117,7 @@ public class CalendarAddActivity extends BaseActivity {
      * 初始化View
      */
     private void initView() {
-        initDate();
+        initData();
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(getApplicationContext());
         apiService.setAPIInterface(new WebService());
@@ -173,13 +175,14 @@ public class CalendarAddActivity extends BaseActivity {
         calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
         calenderTypeTipLayout.setVisibility(isEditable ? View.GONE : View.VISIBLE);
         initStartEndTimeView();
+        alertText.setText(remindEvent.getRemindType());
         setViewIsEditable(isEditable);
     }
 
     /**
      * 初始化日期数据
      */
-    private void initDate() {
+    private void initData() {
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
@@ -194,13 +197,15 @@ public class CalendarAddActivity extends BaseActivity {
                     myCalendar = allCalendarList.get(i);
                 }
             }
+            remindEvent =new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(),"remindType",""),
+                    JSONUtils.getInt(scheduleEvent.getRemindEvent(),"advanceTimeSpan",-1));
         }else{
             startCalendar = Calendar.getInstance();
             endCalendar = (Calendar) startCalendar.clone();
             if (!isAllDay) {
                 endCalendar.add(Calendar.HOUR_OF_DAY, 1);
             }
-         scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
+           // scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
         }
         intervalMin = (int) getIntervalMin();
     }
@@ -361,14 +366,14 @@ public class CalendarAddActivity extends BaseActivity {
     /**
      * 更新日程
      */
-    private void updateCalEvent()  {
+    private void updateCalEvent() {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 scheduleEvent.setLastTime(System.currentTimeMillis());
-                LogUtils.LbcDebug("update Schedule::"+scheduleEvent.getCalendarEventJsonStr());
+                LogUtils.LbcDebug("update Schedule::" + scheduleEvent.getCalendarEventJsonStr());
                 apiService.updateSchedule(scheduleEvent.getCalendarEventJsonStr());
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             loadingDlg.show();
@@ -383,9 +388,9 @@ public class CalendarAddActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 loadingDlg.show();
-                LogUtils.LbcDebug("Add Calendar"+scheduleEvent.getCalendarEventJsonStr());
+                LogUtils.LbcDebug("Add Calendar" + scheduleEvent.getCalendarEventJsonStr());
                 apiService.addSchedule(scheduleEvent.getCalendarEventJsonStr());
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -409,8 +414,8 @@ public class CalendarAddActivity extends BaseActivity {
                     calenderTypeTipLayout.setVisibility(View.VISIBLE);
                     break;
                 case CAL_ALERT_TIME_REQUEST_CODE:
-                    String alertTime = data.getStringExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
-                    alertText.setText(alertTime);
+                    remindEvent = (RemindEvent)data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
+                    alertText.setText(remindEvent.getRemindType());
                     break;
                 default:
                     break;

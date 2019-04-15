@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.schedule.RemindEvent;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -31,7 +32,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     String alertTime = "";
     private Adapter adapter;
     private int selectPosition = -1;
-
+   int[] alertTimeIntArray = {-1,0, 10 * 60, 20 * 60, 20 * 60, 60 * 60, 24 * 3600};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 getString(R.string.calendar_thirty_minite_ago),
                 getString(R.string.calendar_one_hour_ago),
                 getString(R.string.calendar_one_day_ago)};
+
         alertTime = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME) ?
                 getIntent().getExtras().getString(EXTRA_SCHEDULE_ALERT_TIME) : getString(R.string.calendar_no_alert);
         if (!alertTime.equals(getString(R.string.calendar_no_alert))) {
@@ -95,7 +97,8 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
      */
     public void returnData() {
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_SCHEDULE_ALERT_TIME, alertTime);
+        RemindEvent remindEvent=new RemindEvent(alertTime,alertTimeIntArray[selectPosition+1]);
+        intent.putExtra(EXTRA_SCHEDULE_ALERT_TIME, remindEvent);
         setResult(RESULT_OK, intent);
         finish();
     }
