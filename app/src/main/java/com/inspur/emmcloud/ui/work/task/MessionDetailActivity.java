@@ -50,7 +50,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
+import com.inspur.emmcloud.util.privates.TaskTagColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -184,7 +184,7 @@ public class MessionDetailActivity extends BaseActivity {
             int tagSize = tagList.size() > 3 ? 3 : tagList.size();
             for (int i = 0; i < tagSize; i++) {
                 tagImgs[i].setVisibility(View.VISIBLE);
-                MessionTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
+                TaskTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
                         .getColor());
             }
         }
@@ -479,7 +479,7 @@ public class MessionDetailActivity extends BaseActivity {
         }
         for (int i = 0; i < tagNumber; i++) {
             tagImgs[i].setVisibility(View.VISIBLE);
-            MessionTagColorUtils.setTagColorImg(tagImgs[i], addTags.get(i).getColor());
+            TaskTagColorUtils.setTagColorImg(tagImgs[i], addTags.get(i).getColor());
         }
         tagList.clear();
         tagList.addAll(addTags);
