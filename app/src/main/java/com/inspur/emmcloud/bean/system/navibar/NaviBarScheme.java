@@ -7,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yufuchang on 2019/4/12.
@@ -17,7 +16,7 @@ public class NaviBarScheme {
     private String name = "";
     private String defaultTab = "";
     private NaviBarTitleResult naviBarTitleResult;
-    private List<MainTabResult> mainTabResultList = new ArrayList<>();
+    private ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
 
     public NaviBarScheme(String naviBarScheme) {
         this.name = JSONUtils.getString(naviBarScheme, "name", "");
@@ -49,11 +48,11 @@ public class NaviBarScheme {
         this.defaultTab = defaultTab;
     }
 
-    public List<MainTabResult> getMainTabResultList() {
+    public ArrayList<MainTabResult> getMainTabResultList() {
         return mainTabResultList;
     }
 
-    public void setMainTabResultList(List<MainTabResult> mainTabResultList) {
+    public void setMainTabResultList(ArrayList<MainTabResult> mainTabResultList) {
         this.mainTabResultList = mainTabResultList;
     }
 

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -81,6 +82,8 @@ public class SettingActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     @ViewInject(R.id.tv_setting_theme_name)
     private TextView themeNameText;
+    @ViewInject(R.id.rl_setting_switch_tablayout)
+    private RelativeLayout switchTabLayout;
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @Override
@@ -165,6 +168,8 @@ public class SettingActivity extends BaseActivity {
             experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
         }
         themeNameText.setText(ThemeSwitchActivity.getThemeName());
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
+        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>0?View.VISIBLE:View.GONE);
     }
 
     private void setWebAutoRotateState() {

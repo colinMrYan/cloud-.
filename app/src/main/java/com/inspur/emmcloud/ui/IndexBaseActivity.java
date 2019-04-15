@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabTitleResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
@@ -46,6 +47,7 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
@@ -157,13 +159,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         TabBean[] tabBeans = null;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
                 Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-        if (!StringUtils.isBlank(appTabs)) {
+        ArrayList<MainTabResult> mainTabResultList = getMainTabList();
+        if (mainTabResultList.size() > 0) {
             Configuration config = getResources().getConfiguration();
             String environmentLanguage = config.locale.getLanguage();
-            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
-            // 发送到MessageFragment
-            EventBus.getDefault().post(getAppMainTabResult);
-            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
+//            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
+//            // 发送到MessageFragment
+//            EventBus.getDefault().post(getAppMainTabResult);
+//            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
             if (mainTabResultList.size() > 0) {
                 tabBeans = new TabBean[mainTabResultList.size()];
                 for (int i = 0; i < mainTabResultList.size(); i++) {
@@ -222,6 +225,27 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         }
         showTabs(tabBeans);
     }
+
+    private ArrayList<MainTabResult> getMainTabList() {
+        ArrayList<MainTabResult> mainTabResultList = null;
+        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_INDEX, -1);
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
+
+        if(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() >= currentThemeNo){
+            LogUtils.YfcDebug("走自定义");
+            mainTabResultList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(currentThemeNo).getMainTabResultList();
+        }else{
+            LogUtils.YfcDebug("走原来数据");
+            String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
+                    Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
+            // 发送到MessageFragment
+            EventBus.getDefault().post(getAppMainTabResult);
+            mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
+        }
+        return mainTabResultList;
+    }
+
 
     // 显示icon本地映射
     private int getIconFromLocalByIco(String icon) {
