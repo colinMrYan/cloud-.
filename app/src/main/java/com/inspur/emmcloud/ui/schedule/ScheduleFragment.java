@@ -12,7 +12,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
@@ -20,8 +20,9 @@ import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -54,7 +55,7 @@ import java.util.Map;
 @ContentView(R.layout.fragment_schedule)
 public class ScheduleFragment extends ScheduleBaseFragment implements
         CalendarView.OnCalendarSelectListener,
-        CalendarLayout.CalendarExpandListener, View.OnClickListener {
+        CalendarLayout.CalendarExpandListener, View.OnClickListener,CalendarDayView.OnEventClickListener,ScheduleEventListAdapter.OnItemClickLister {
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
@@ -79,11 +80,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private RecyclerView eventRecyclerView;
     private ScheduleEventListAdapter scheduleEventListAdapter;
     private Boolean isEventShowTypeList;
-    private WorkAPIService apiService;
+    private ScheduleApiService apiService;
     private Calendar selectCalendar;
-    //    private List<Meeting> meetingList = new ArrayList<>();
-//    private List<Task> taskList = new ArrayList<>();
-//    private List<CalendarEvent> calendarEventList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private Calendar pageStartCalendar = Calendar.getInstance();
     private Calendar pageEndCalendar = Calendar.getInstance();
@@ -94,7 +92,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         EventBus.getDefault().register(this);
-        apiService = new WorkAPIService(getActivity());
+        apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
         pageStartCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
         pageEndCalendar = TimeUtils.getDayEndCalendar(Calendar.getInstance());
@@ -116,13 +114,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarLayout.setExpandListener(this);
         calendarView.setOnCalendarSelectListener(this);
         calendarViewExpandImg.setOnClickListener(this);
-        calendarDayView.setOnEventClickListener(new CalendarDayView.OnEventClickListener() {
-            @Override
-            public void onEventClick(Event event) {
-            }
-        });
+        calendarDayView.setOnEventClickListener(this);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         scheduleEventListAdapter = new ScheduleEventListAdapter(getActivity());
+        scheduleEventListAdapter.setOnItemClickLister(this);
         eventRecyclerView.setAdapter(scheduleEventListAdapter);
         setEventShowType();
         calendarView.post(new Runnable() {
@@ -260,9 +255,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH)+1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                LogUtils.jasonDebug("year="+year);
-                LogUtils.jasonDebug("month="+month);
-                LogUtils.jasonDebug("day="+day);
                 map.put(getSchemeCalendar(year, month, day, " ",true).toString(),
                         getSchemeCalendar(year, month, day, " ",true));
             }
@@ -273,9 +265,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH)+1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                LogUtils.jasonDebug("year="+year);
-                LogUtils.jasonDebug("month="+month);
-                LogUtils.jasonDebug("day="+day);
                 map.put(getSchemeCalendar(year, month, day, " ",true).toString(),
                         getSchemeCalendar(year, month, day, " ",true));
             }
@@ -283,6 +272,21 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         calendarView.setSchemeDate(map);
+    }
+
+    private void openEvent(Event event){
+        Bundle bundle = new Bundle();
+        switch (event.getEventType()){
+            case Event.TYPE_MEETING:
+                break;
+            case Event.TYPE_CALENDAR:
+                Schedule schedule = (Schedule) event.getEventObj();
+                bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT,schedule);
+                IntentUtils.startActivity(getActivity(),CalendarAddActivity.class,bundle);
+                break;
+            case Event.TYPE_TASK:
+                break;
+        }
     }
 
     @Override
@@ -294,6 +298,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
     }
 
+    @Override
+    public void onItemClick(View view, int position, Event event) {
+            onEventClick(event);
+    }
+
+    @Override
+    public void onEventClick(Event event) {
+        openEvent(event);
+    }
 
     @Override
     public void onDestroy() {
