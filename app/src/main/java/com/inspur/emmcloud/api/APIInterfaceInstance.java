@@ -1045,27 +1045,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDelTaskTagSuccess() {
-
-    }
-
-    @Override
-    public void returnDelTaskTagFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnAddTaskTagSuccess() {
-
-    }
-
-    @Override
-    public void returnAddTaskTagFail(String error, int errorCode) {
-
-    }
-
-
-    @Override
     public void returnDeleteOfficeSuccess(int position) {
         // TODO Auto-generated method stub
 
@@ -2011,6 +1990,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnDeleteScheduleFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnDelTaskTagSuccess() {
+
+    }
+
+    @Override
+    public void returnDelTaskTagFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnAddTaskTagSuccess() {
+
+    }
+
+    @Override
+    public void returnAddTaskTagFail(String error, int errorCode) {
 
     }
 }
