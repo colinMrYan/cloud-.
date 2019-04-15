@@ -18,9 +18,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.task.AllTaskListFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -187,7 +187,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         break;
                     case 4:
                         recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                        IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
+                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class);
                         break;
                     case 5:
                         if (viewPager.getCurrentItem() == 0) {
