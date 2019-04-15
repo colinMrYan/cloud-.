@@ -173,7 +173,6 @@ public class TaskAddActivity extends BaseActivity {
             contentInputEdit.setText(taskResult.getTitle());
             segmentControlView.setSelectedIndex(taskResult.getPriority());
             setTaskColorTags();
-            LogUtils.LbcDebug("taskResult.toString()" + JSONUtils.toJSONString(taskResult));
         }
     }
 
