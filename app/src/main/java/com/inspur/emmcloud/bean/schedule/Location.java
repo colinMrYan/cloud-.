@@ -13,6 +13,9 @@ public class Location {
     private String building;  //楼号
     private String displayName;// 会议室名，自定义名称存放在 displayName 上
 
+    public Location(){
+
+    }
     public Location(String json) {
         this(JSONUtils.getJSONObject(json));
     }

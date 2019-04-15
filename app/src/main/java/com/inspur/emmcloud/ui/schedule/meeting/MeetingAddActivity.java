@@ -15,6 +15,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -74,6 +75,7 @@ public class MeetingAddActivity extends BaseActivity {
     private List<SearchModel> recorderSearchModelList = new ArrayList<>();
     private List<SearchModel> liaisonSearchModelList = new ArrayList<>();
     private MeetingRoom meetingRoom;
+    private Location location;
 
 
     @Override
@@ -220,6 +222,9 @@ public class MeetingAddActivity extends BaseActivity {
                     meetingRoom = (MeetingRoom)data.getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
                     setMeetingTime();
                     meetingPostionEdit.setText(meetingRoom.getName());
+                    location = new Location();
+                    location.setId(meetingRoom.getId());
+                    location.setBuilding(meetingRoom.get);
                     break;
             }
         }
