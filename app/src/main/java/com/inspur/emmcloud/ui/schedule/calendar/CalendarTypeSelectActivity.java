@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
@@ -31,6 +34,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     @ViewInject(R.id.lv_calendars)
     private ListView calendarListView;
 
+    private WorkAPIService workAPIService;
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
     MyCalendar calendar;
@@ -45,25 +49,11 @@ public class CalendarTypeSelectActivity extends BaseActivity {
 
     private void initView() {
         // TODO Auto-generated method stub
-        List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
-        for (int i = 0; i < allCalendarList.size(); i++) {
-            MyCalendar myCalendar = allCalendarList.get(i);
-            if (!myCalendar.getCommunity()) {
-                calendarList.add(myCalendar);
-            }
-        }
-        if (getIntent().hasExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT)) {
-            calendar = (MyCalendar) getIntent().getExtras().getSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT);
-            for (int i = 0; i < calendarList.size(); i++) {
-                if (calendarList.get(i).getId().equals(calendar.getId())) {
-                    selectPosition = i;
-                    break;
-                }
-            }
-        }
-
         calendarAdapter = new CalendarAdapter();
         calendarListView.setAdapter(calendarAdapter);
+        workAPIService=new WorkAPIService(this);
+        workAPIService.setAPIInterface(new WebService());
+        workAPIService.getMyCalendar(0,30);
         calendarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -130,5 +120,37 @@ public class CalendarTypeSelectActivity extends BaseActivity {
             return convertView;
         }
 
+    }
+
+    /**
+     *拉取Calendar*/
+    class WebService extends APIInterfaceInstance{
+        @Override
+        public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
+            List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
+            for (int i = 0; i < allCalendarList.size(); i++) {
+                MyCalendar myCalendar = allCalendarList.get(i);
+                if (!myCalendar.getCommunity()) {
+                    calendarList.add(myCalendar);
+                }
+            }
+            if (getIntent().hasExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT)) {
+                calendar = (MyCalendar) getIntent().getExtras().getSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT);
+                for (int i = 0; i < calendarList.size(); i++) {
+                    if (calendarList.get(i).getId().equals(calendar.getId())) {
+                        selectPosition = i;
+                        break;
+                    }
+                }
+            }
+            calendarAdapter.notifyDataSetChanged();
+            MyCalendarCacheUtils.saveMyCalendarList(CalendarTypeSelectActivity.this,allCalendarList);
+            super.returnMyCalendarSuccess(getMyCalendarResult);
+        }
+
+        @Override
+        public void returnMyCalendarFail(String error, int errorCode) {
+            super.returnMyCalendarFail(error, errorCode);
+        }
     }
 }
