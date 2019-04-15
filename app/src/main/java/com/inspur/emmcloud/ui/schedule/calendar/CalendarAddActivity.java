@@ -315,6 +315,7 @@ public class CalendarAddActivity extends BaseActivity {
             if (!isAbleSaveAndTips(title, startCalendar, endCalendar)) {
                 return;
             }
+            correctedCalendarTime();
             scheduleEvent.setTitle(title);
             scheduleEvent.setAllDay(isAllDay);
             scheduleEvent.setState(-1);

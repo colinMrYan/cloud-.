@@ -6,6 +6,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -262,5 +263,24 @@ public class Schedule implements Serializable{
         return eventList;
     }
 
+    public static JSONObject getCalendarEventJson() throws JSONException {
+        JSONObject jsonObject= new JSONObject();
+        jsonObject.put("id","");
+        jsonObject.put("title","");
+        jsonObject.put("type","");
+        jsonObject.put("owner","");
+        jsonObject.put("startTime","");
+        jsonObject.put("endTime","");
+        jsonObject.put("creationTime","");
+        jsonObject.put("lastTime","");
+        jsonObject.put("isAllDay","");
+        jsonObject.put("isCommunity","");
+        jsonObject.put("syncToLocal","");
+        jsonObject.put("remindEvent","");
+        jsonObject.put("state","");
+        jsonObject.put("location","");
+        jsonObject.put("participants","");
+        return jsonObject;
+    }
 
 }
