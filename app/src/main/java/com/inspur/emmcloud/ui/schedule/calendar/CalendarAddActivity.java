@@ -105,8 +105,7 @@ public class CalendarAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDate();
-        ;
+        initData();
         initView();
     }
 
@@ -114,7 +113,6 @@ public class CalendarAddActivity extends BaseActivity {
      * 初始化View
      */
     private void initView() {
-        initData();
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(getApplicationContext());
         apiService.setAPIInterface(new WebService());

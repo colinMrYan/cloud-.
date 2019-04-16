@@ -382,8 +382,7 @@ public class MeetingAddActivity extends BaseActivity {
             e.printStackTrace();
         }
         loadingDlg.show();
-        LogUtils.jasonDebug("meeting.toJSOnObject().toString()=" + meeting.toJSOnObject().toString());
-        apiService.addMeeting(meeting.toJSOnObject().toString());
+        apiService.addMeeting(meeting.toJSONObject().toString());
     }
 
 
