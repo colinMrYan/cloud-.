@@ -71,7 +71,7 @@ public class Schedule implements Serializable{
         syncToLocal = JSONUtils.getBoolean(object,"syncToLocal",false);
         remindEvent = JSONUtils.getString(object,"remindEvent","");
         state = JSONUtils.getInt(object,"state",-1);
-        location  = JSONUtils.getString(object,"location ","");
+        location  = JSONUtils.getString(object,"location","");
         participants  = JSONUtils.getString(object,"participants ","");
         note = JSONUtils.getString(object,"note","");
     }

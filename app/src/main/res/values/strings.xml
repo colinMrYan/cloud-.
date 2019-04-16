@@ -833,6 +833,13 @@
     <string name="meeting_room_ilegal_time">时间非法，请检查</string>
     <string name="meeting_room_time_late">开始时间不能早于当前时间</string>
 
+
+    <string name="meeting_detail_time">时间：%1$s</string>
+    <string name="meeting_detail_remind">提醒：%1$s</string>
+    <string name="meeting_detail_create">%1$s 创建</string>
+    <string name="meeting_detail_attendee">参会人:%1$s</string>
+    <string name="meeting_detail_record_holder">会议记录人:%1$s</string>
+
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部门信息缺失</string>
     <string name="meeting_time_earlier_than_permission">预定时间早于规定时间（现在）</string>
