@@ -1,9 +1,14 @@
 package com.inspur.emmcloud.bean.schedule.meeting;
 
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.jsoup.helper.StringUtil;
 import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
@@ -36,5 +41,40 @@ public class Meeting extends Schedule {
             }
         }
         return eventList;
+    }
+
+    public JSONObject toJSOnObject(){
+        JSONObject obj = new JSONObject();
+        try {
+            if (!StringUtils.isBlank(getId())){
+                obj.put("id",getId());
+            }
+            obj.put("title",getTitle());
+            obj.put("type",getType());
+            obj.put("owner",getOwner());
+            obj.put("startTime",getStartTime());
+            obj.put("endTime",getEndTime());
+            obj.put("isAllDay",false);
+            obj.put("isCommunity",false);
+            obj.put("syncToLocal",false);
+            obj.put("isAllDay",false);
+            obj.put("note",getNote());
+            if (!StringUtil.isBlank(getRemindEvent())){
+                JSONObject remindEventObj = new JSONObject(getRemindEvent());
+                obj.put("remindEvent",remindEventObj);
+            }
+            LogUtils.jasonDebug("getLocation()="+getLocation());
+            if (!StringUtil.isBlank(getLocation())){
+                JSONObject locationObj = new JSONObject(getLocation());
+                obj.put("location",locationObj);
+            }
+            if (!StringUtil.isBlank(getParticipants())){
+                JSONArray participantsArray = new JSONArray(getParticipants());
+                obj.put("participants",participantsArray);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return obj;
     }
 }

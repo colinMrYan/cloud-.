@@ -380,7 +380,7 @@ public class ScheduleApiService {
     /**
      * 获取园区
      */
-    public void getMeetingLoction() {
+    public void getMeetingLocation() {
         final String completeUrl = APIUri.getLoctionUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
@@ -391,7 +391,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getMeetingLoction();
+                        getMeetingLocation();
                     }
 
                     @Override
@@ -475,7 +475,7 @@ public class ScheduleApiService {
     /**
      * 删除常用办公地点
      *
-     * @param building
+     * @param office
      */
     public void deleteMeetingOffice(final Office office) {
         final String completeUrl = APIUri.addOfficeUrl() + "?id=" + office.getId();
@@ -512,5 +512,47 @@ public class ScheduleApiService {
             }
         });
 
+    }
+
+    /**
+     * 添加会议室
+     * @param meetingJson
+     */
+    public void addMeeting(final String meetingJson ){
+        final String completeUrl = APIUri.getAddMeetingUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.setBodyContent(meetingJson);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addMeeting(meetingJson);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddMeetingSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddMeetingFail(error, responseCode);
+            }
+        });
     }
 }

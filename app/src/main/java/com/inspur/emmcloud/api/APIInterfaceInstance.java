@@ -2010,4 +2010,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnAddTaskTagFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnAddMeetingSuccess() {
+
+    }
+
+    @Override
+    public void returnAddMeetingFail(String error, int errorCode) {
+
+    }
 }

@@ -51,7 +51,7 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
         String startTime = TimeUtils.Calendar2TimeString(startCalendar,TimeUtils.getFormat(context,TimeUtils.FORMAT_HOUR_MINUTE));
         String endTime = TimeUtils.Calendar2TimeString(endCalendar,TimeUtils.getFormat(context,TimeUtils.FORMAT_HOUR_MINUTE));
         holder.timeText.setText(startTime+"-"+endTime);
-        holder.subtitleText.setText(meeting.getScheduleLocationObj().getDisplayName());
+        holder.displayNameText.setText(meeting.getScheduleLocationObj().getDisplayName());
         StringBuilder dateBuilder = new StringBuilder();
         dateBuilder.append( TimeUtils.Calendar2TimeString(startCalendar,TimeUtils.getFormat(context,TimeUtils.FORMAT_MONTH_DAY)));
         if (TimeUtils.isSameDay(startCalendar,endCalendar)){
@@ -60,6 +60,7 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
             dateBuilder.append("  ").append( TimeUtils.Calendar2TimeString(endCalendar,TimeUtils.getFormat(context,TimeUtils.FORMAT_MONTH_DAY)));
         }
         holder.dateText.setText(dateBuilder.toString());
+        holder.buildingText.setText(meeting.getScheduleLocationObj().getBuilding());
     }
 
 
@@ -75,9 +76,9 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView iconImg;
         private TextView titleText;
-        private TextView subtitleText;
+        private TextView displayNameText;
         private TextView timeText;
-        private TextView locationText;
+        private TextView buildingText;
         private TextView dateText;
 
         public ViewHolder(View convertView){
@@ -85,9 +86,9 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
             itemView.setOnClickListener(this);
             iconImg = convertView.findViewById(R.id.icon_image);
             titleText = convertView.findViewById(R.id.tv_title);
-            subtitleText = convertView.findViewById(R.id.tv_subtitle);
+            displayNameText = convertView.findViewById(R.id.tv_display_name);
             timeText = convertView.findViewById(R.id.tv_time);
-            locationText = convertView.findViewById(R.id.tv_event_title);
+            buildingText = convertView.findViewById(R.id.tv_event_title);
             dateText = convertView.findViewById(R.id.tv_date);
 
 

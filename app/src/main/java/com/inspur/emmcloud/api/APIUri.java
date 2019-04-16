@@ -1724,6 +1724,9 @@ public class APIUri {
         return  "http://172.31.2.36:88/api/schedule/v6.0/calendar/remove/"+scheduleId;
     }
 
+    public static String getAddMeetingUrl(){
+        return  "http://172.31.2.36:88/api/schedule/v6.0/meeting/add";
+    }
     /**
      * 获取删除工作中的tags
      *

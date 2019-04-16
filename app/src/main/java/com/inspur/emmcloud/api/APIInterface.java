@@ -847,4 +847,7 @@ public interface APIInterface {
     void returnUpdateScheduleFail(String error, int errorCode);
     void returnDeleteScheduleSuccess();
     void returnDeleteScheduleFail(String error, int errorCode);
+    void returnAddMeetingSuccess();
+    void returnAddMeetingFail(String error, int errorCode);
+
 }

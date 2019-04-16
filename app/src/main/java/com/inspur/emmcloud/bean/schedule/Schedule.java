@@ -6,6 +6,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -71,7 +72,7 @@ public class Schedule implements Serializable{
         syncToLocal = JSONUtils.getBoolean(object,"syncToLocal",false);
         remindEvent = JSONUtils.getString(object,"remindEvent","");
         state = JSONUtils.getInt(object,"state",-1);
-        location  = JSONUtils.getString(object,"location ","");
+        location  = JSONUtils.getString(object,"location","");
         participants  = JSONUtils.getString(object,"participants ","");
         note = JSONUtils.getString(object,"note","");
     }
@@ -161,6 +162,40 @@ public class Schedule implements Serializable{
 
     public Calendar getLastTimeCalendar() {
         return TimeUtils.timeLong2Calendar(lastTime);
+    }
+
+    public List<Participant> getCommonParticipantList(){
+        List<Participant> participantList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(participants,new JSONArray());
+        for (int i=0;i<array.length();i++){
+            Participant participant = new Participant(JSONUtils.getJSONObject(array,i,new JSONObject()));
+            if (participant.getRole().equals(Participant.TYPE_COMMON)){
+                participantList.add(participant);
+            }
+        }
+        return participantList;
+    }
+    public List<Participant> getRecorderParticipantList(){
+        List<Participant> participantList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(participants,new JSONArray());
+        for (int i=0;i<array.length();i++){
+            Participant participant = new Participant(JSONUtils.getJSONObject(array,i,new JSONObject()));
+            if (participant.getRole().equals(Participant.TYPE_RECORDER)){
+                participantList.add(participant);
+            }
+        }
+        return participantList;
+    }
+    public List<Participant> getRoleParticipantList(){
+        List<Participant> participantList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(participants,new JSONArray());
+        for (int i=0;i<array.length();i++){
+            Participant participant = new Participant(JSONUtils.getJSONObject(array,i,new JSONObject()));
+            if (participant.getRole().equals(Participant.TYPE_CONTACT)){
+                participantList.add(participant);
+            }
+        }
+        return participantList;
     }
     //为了支持跨天，支持特定日期当天的会议开始时间
     public Calendar getDayStartTimeCalendar(Calendar calendar){

@@ -70,7 +70,7 @@ import cn.carbs.android.segmentcontrolview.library.SegmentControlView;
  */
 @ContentView(R.layout.activity_task_add)
 public class TaskAddActivity extends BaseActivity {
-    @ViewInject(R.id.et_input_content)
+    @ViewInject(R.id.et_input_title)
     private EditText contentInputEdit;
     @ViewInject(R.id.segment_control)
     private SegmentControl segmentControl;

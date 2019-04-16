@@ -115,7 +115,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     private void getMeetingLocation(){
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
             loadingDlg.show();
-            apiService.getMeetingLoction();
+            apiService.getMeetingLocation();
         }
     }
 

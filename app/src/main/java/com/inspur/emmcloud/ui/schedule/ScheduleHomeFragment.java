@@ -60,7 +60,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                              Bundle savedInstanceState) {
         setFragmentStatusBarWhite();
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_message, container,
+            rootView = inflater.inflate(R.layout.fragment_schedule_home, container,
                     false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();

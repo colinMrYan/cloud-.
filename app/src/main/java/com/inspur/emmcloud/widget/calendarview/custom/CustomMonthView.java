@@ -122,9 +122,7 @@ public class CustomMonthView extends MonthView {
 
     @Override
     protected void onDrawScheme(Canvas canvas, EmmCalendar calendar, int x, int y) {
-        LogUtils.jasonDebug("0000"+calendar.toString());
         if (calendar.getShowSchemePoint()){
-            LogUtils.jasonDebug("11111111111");
             mPointPaint.setColor(0xFF95B0C5);
             canvas.drawCircle(x + mItemWidth / 2, y + mItemHeight - 3 * mPadding- mPointRadius, mPointRadius, mPointPaint);
         }

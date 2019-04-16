@@ -48,7 +48,7 @@ import java.util.List;
 public class CalendarAddActivity extends BaseActivity {
     @ViewInject(R.id.tv_save)
     private TextView saveText;
-    @ViewInject(R.id.et_input_content)
+    @ViewInject(R.id.et_input_title)
     private EditText inputContentEdit;
     @ViewInject(R.id.switch_all_day)
     private Switch allDaySwitch;
