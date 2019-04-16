@@ -11,11 +11,13 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.MessionSetModel;
-import com.inspur.emmcloud.ui.work.task.MessionTagsManageActivity;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -27,6 +29,14 @@ import java.util.ArrayList;
 @ContentView(R.layout.activity_task_set)
 public class TaskSetActivity extends BaseActivity{
 
+    public static final String TASK_ORDER_BY = "order_by";
+    public static final String TASK_ORDER_TYPE = "order_type";
+    public static final String TASK_ORDER_TYPE_ASC = "ASC";
+    public static final String TASK_ORDER_TYPE_DESC = "DESC";
+    public static final String TASK_SET_ORDER = "setorder";
+    public static final String TASK_ORDER = "order";
+    public static final String TASK_ORDER_PRIORITY = "PRIORITY";
+    public static final String TASK_ORDER_DUE_DATE = "DUE_DATE";
     @ViewInject(R.id.lv_task_list)
     private ListView setListView;
     private ArrayList<MessionSetModel> taskSetModel = new ArrayList<MessionSetModel>();
@@ -50,18 +60,17 @@ public class TaskSetActivity extends BaseActivity{
                                     int position, long id) {
                 if (position == 0) {
                     PreferencesUtils.putString(TaskSetActivity.this,
-                            "order_by", "PRIORITY");
+                            TASK_ORDER_BY, TASK_ORDER_PRIORITY);
                 } else if (position == 1) {
                     PreferencesUtils.putString(TaskSetActivity.this,
-                            "order_by", "DUE_DATE");
+                            TASK_ORDER_BY, TASK_ORDER_DUE_DATE);
                 }
-                PreferencesUtils.putInt(TaskSetActivity.this, "setorder",
+                PreferencesUtils.putInt(TaskSetActivity.this, TASK_SET_ORDER,
                         position);
                 setAdapter.notifyDataSetChanged();
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TASK_ORDER_CHANGE));
             }
         });
-
-
         MessionSetModel levelModel = new MessionSetModel("");
         levelModel.setContent(getString(R.string.mession_set_level));
         levelModel.setShow("1");
@@ -77,11 +86,11 @@ public class TaskSetActivity extends BaseActivity{
      * 第一次进入时没有order配置
      */
     private void initFirstOrder() {
-        if (PreferencesUtils.getInt(TaskSetActivity.this, "setorder", -1) == -1) {
-            PreferencesUtils.putInt(TaskSetActivity.this, "setorder", 0);
+        if (PreferencesUtils.getInt(TaskSetActivity.this, TASK_SET_ORDER, -1) == -1) {
+            PreferencesUtils.putInt(TaskSetActivity.this, TASK_SET_ORDER, 0);
         }
-        if (PreferencesUtils.getInt(TaskSetActivity.this, "order", -1) == -1) {
-            PreferencesUtils.putInt(TaskSetActivity.this, "order", 0);
+        if (PreferencesUtils.getInt(TaskSetActivity.this, TASK_ORDER, -1) == -1) {
+            PreferencesUtils.putInt(TaskSetActivity.this, TASK_ORDER, 0);
         }
     }
 
@@ -96,7 +105,7 @@ public class TaskSetActivity extends BaseActivity{
                 finish();
                 break;
             case R.id.rl_task_manager:
-                IntentUtils.startActivity(this, MessionTagsManageActivity.class);
+                IntentUtils.startActivity(this, TaskTagsManageActivity.class);
                 break;
             default:
                 break;
@@ -127,22 +136,11 @@ public class TaskSetActivity extends BaseActivity{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            int positionChoose = PreferencesUtils.getInt(
-                    TaskSetActivity.this, "setorder", -1);
-            convertView = LayoutInflater.from(TaskSetActivity.this).inflate(
-                    R.layout.task_set_item, null);
-            if(position == 0){
-                convertView.findViewById(R.id.v_head_line).setVisibility(View.GONE);
-            }
-            ((TextView) (convertView.findViewById(R.id.tv_task_set)))
-                    .setText(taskSetModel.get(position).getContent());
-            if (position == positionChoose) {
-                convertView.findViewById(R.id.iv_selected)
-                        .setVisibility(View.VISIBLE);
-            } else {
-                convertView.findViewById(R.id.iv_selected)
-                        .setVisibility(View.GONE);
-            }
+            int positionChoose = PreferencesUtils.getInt(TaskSetActivity.this, TASK_SET_ORDER, -1);
+            convertView = LayoutInflater.from(TaskSetActivity.this).inflate(R.layout.task_set_item, null);
+            convertView.findViewById(R.id.v_head_line).setVisibility(position == 0?View.GONE:View.VISIBLE);
+            ((TextView) (convertView.findViewById(R.id.tv_task_set))).setText(taskSetModel.get(position).getContent());
+            convertView.findViewById(R.id.iv_selected).setVisibility(position == positionChoose?View.VISIBLE:View.GONE);
             return convertView;
         }
     }

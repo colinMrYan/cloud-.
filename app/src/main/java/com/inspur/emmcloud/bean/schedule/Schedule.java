@@ -322,24 +322,25 @@ public class Schedule implements Serializable{
         return eventList;
     }
 
-    public static JSONObject getCalendarEventJson() throws JSONException {
+    public   String  getCalendarEventJsonStr() throws JSONException {
         JSONObject jsonObject= new JSONObject();
-        jsonObject.put("id","");
-        jsonObject.put("title","");
-        jsonObject.put("type","");
-        jsonObject.put("owner","");
-        jsonObject.put("startTime","");
-        jsonObject.put("endTime","");
-        jsonObject.put("creationTime","");
-        jsonObject.put("lastTime","");
-        jsonObject.put("isAllDay","");
-        jsonObject.put("isCommunity","");
-        jsonObject.put("syncToLocal","");
-        jsonObject.put("remindEvent","");
-        jsonObject.put("state","");
-        jsonObject.put("location","");
-        jsonObject.put("participants","");
-        return jsonObject;
+        jsonObject.put("id",id);
+        jsonObject.put("title",title);
+        jsonObject.put("type",type);
+        jsonObject.put("owner",owner);
+        jsonObject.put("startTime",startTime);
+        jsonObject.put("endTime",endTime);
+        jsonObject.put("creationTime",creationTime);
+        jsonObject.put("lastTime",lastTime);
+        jsonObject.put("isAllDay",isAllDay);
+        jsonObject.put("isCommunity",isCommunity);
+        jsonObject.put("syncToLocal",syncToLocal);
+        jsonObject.put("remindEvent",remindEvent);
+        jsonObject.put("state",state);
+        jsonObject.put("location",location);
+        jsonObject.put("participants",participants);
+        jsonObject.put("note",note);
+        return jsonObject.toString();
     }
 
 }
