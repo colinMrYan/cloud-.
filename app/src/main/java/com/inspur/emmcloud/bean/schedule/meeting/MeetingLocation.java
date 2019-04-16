@@ -14,28 +14,27 @@ public class MeetingLocation implements Serializable {
     private String name = "";
     private List<Building> officeBuildingList = new ArrayList<>();
 
-    public MeetingLocation(){
+    public MeetingLocation() {
 
     }
 
     public MeetingLocation(JSONObject obj) {
-        id = JSONUtils.getString(obj,"id","");
-        name = JSONUtils.getString(obj,"name","");
-        JSONArray array = JSONUtils.getJSONArray(obj,"buildings",new JSONArray());
-        for (int i=0;i<array.length();i++){
-            Building officeBuilding = new Building(JSONUtils.getJSONObject(array,i,new JSONObject()));
+        id = JSONUtils.getString(obj, "id", "");
+        name = JSONUtils.getString(obj, "name", "");
+        JSONArray array = JSONUtils.getJSONArray(obj, "buildings", new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            Building officeBuilding = new Building(JSONUtils.getJSONObject(array, i, new JSONObject()));
             officeBuildingList.add(officeBuilding);
         }
-    }
-
-    public void setOfficeBuildingList(List<Building> officeBuildingList) {
-        this.officeBuildingList = officeBuildingList;
     }
 
     public List<Building> getOfficeBuildingList() {
         return officeBuildingList;
     }
 
+    public void setOfficeBuildingList(List<Building> officeBuildingList) {
+        this.officeBuildingList = officeBuildingList;
+    }
 
     public String getId() {
         return id;

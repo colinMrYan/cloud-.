@@ -47,7 +47,16 @@ import java.util.List;
  * Created by libaochao on 2019/3/29.
  */
 @ContentView(R.layout.activity_calendar_add)
-public class CalendarAddActivity extends BaseActivity  {
+public class CalendarAddActivity extends BaseActivity {
+    public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
+    public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
+    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
+    public static final String EXTRA_SCHEDULE_CALENDAR_ADD_EVENT = "schedule_calendar_add_event";
+    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT = "schedule_calendar_type_select";
+    private static final int CAL_TYPE_REQUEST_CODE = 1;
+    private static final int REPEAT_TYPE_REQUEST_CODE = 2;
+    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
+    RemindEvent remindEvent = new RemindEvent();
     @ViewInject(R.id.tv_save)
     private TextView saveText;
     @ViewInject(R.id.et_input_title)
@@ -82,17 +91,6 @@ public class CalendarAddActivity extends BaseActivity  {
     private RelativeLayout endTimeLayout;
     @ViewInject(R.id.rl_alert_time)
     private RelativeLayout alertTimeLayout;
-
-    private static final int CAL_TYPE_REQUEST_CODE = 1;
-    private static final int REPEAT_TYPE_REQUEST_CODE = 2;
-    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
-
-    public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
-    public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
-    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
-    public static final String EXTRA_SCHEDULE_CALENDAR_ADD_EVENT = "schedule_calendar_add_event";
-    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT = "schedule_calendar_type_select";
-
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Schedule scheduleEvent = new Schedule();
@@ -102,14 +100,13 @@ public class CalendarAddActivity extends BaseActivity  {
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText;
-    RemindEvent remindEvent = new RemindEvent();
-
     private int intervalMin = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDate();;
+        initDate();
+        ;
         initView();
     }
 
@@ -240,7 +237,7 @@ public class CalendarAddActivity extends BaseActivity  {
 
     public void onClick(View v) {
         Intent intent = new Intent();
-        DateTimePickerDialog dataTimePickerDialog=new DateTimePickerDialog(this);
+        DateTimePickerDialog dataTimePickerDialog = new DateTimePickerDialog(this);
         switch (v.getId()) {
             case R.id.tv_cancel:
                 finish();
@@ -431,6 +428,35 @@ public class CalendarAddActivity extends BaseActivity  {
     }
 
     /**
+     * 获取间隔时间 单位Min（分钟）
+     */
+    private long getIntervalMin() {
+        long interval = 0;
+        if (isAllDay) {
+            long remainder = endCalendar.getTimeInMillis() % (1000 * 24 * 3600);
+            interval = (remainder + (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis())) / (1000 * 24 * 3600);
+            interval = interval * 24 * 60;
+        } else {
+            interval = (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis() + 1) / (1000 * 60);
+        }
+        return interval;
+    }
+
+    /**
+     * 上传日历时间秒毫秒单位清零矫正，allday 重设时间
+     */
+    private void correctedCalendarTime() {
+        if (isAllDay) {
+            startCalendar = TimeUtils.getDayBeginCalendar(startCalendar);
+            endCalendar = TimeUtils.getDayEndCalendar(endCalendar);
+        }
+        startCalendar.set(Calendar.SECOND, 0);
+        startCalendar.set(Calendar.MILLISECOND, 0);
+        endCalendar.set(Calendar.SECOND, 0);
+        endCalendar.set(Calendar.MILLISECOND, 0);
+    }
+
+    /**
      * */
     private class WebService extends APIInterfaceInstance {
 
@@ -481,35 +507,6 @@ public class CalendarAddActivity extends BaseActivity  {
         }
 
 
-    }
-
-    /**
-     * 获取间隔时间 单位Min（分钟）
-     */
-    private long getIntervalMin() {
-        long interval = 0;
-        if (isAllDay) {
-            long remainder = endCalendar.getTimeInMillis() % (1000 * 24 * 3600);
-            interval = (remainder + (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis())) / (1000 * 24 * 3600);
-            interval = interval * 24 * 60;
-        } else {
-            interval = (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis() + 1) / (1000 * 60);
-        }
-        return interval;
-    }
-
-    /**
-     * 上传日历时间秒毫秒单位清零矫正，allday 重设时间
-     */
-    private void correctedCalendarTime() {
-        if (isAllDay) {
-            startCalendar = TimeUtils.getDayBeginCalendar(startCalendar);
-            endCalendar = TimeUtils.getDayEndCalendar(endCalendar);
-        }
-        startCalendar.set(Calendar.SECOND, 0);
-        startCalendar.set(Calendar.MILLISECOND, 0);
-        endCalendar.set(Calendar.SECOND, 0);
-        endCalendar.set(Calendar.MILLISECOND, 0);
     }
 
 }

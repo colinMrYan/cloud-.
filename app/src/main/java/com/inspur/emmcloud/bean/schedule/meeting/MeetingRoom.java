@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MeetingRoom implements Serializable{
+public class MeetingRoom implements Serializable {
 
     private String id;
     private String name;
@@ -22,28 +22,29 @@ public class MeetingRoom implements Serializable{
     private ArrayList<Integer> busyDegreeList = new ArrayList<>();
     private Building building;
 
-    public MeetingRoom(){
+    public MeetingRoom() {
     }
+
     public MeetingRoom(JSONObject obj) {
-        id = JSONUtils.getString(obj,"id","");
-        name = JSONUtils.getString(obj,"name","");
-        admin = JSONUtils.getString(obj,"admin","");
-        galleryful = JSONUtils.getInt(obj,"galleryful",-1);
-        maxAhead = JSONUtils.getInt(obj,"maxAhead",0);
-        maxDuration = JSONUtils.getString(obj,"maxDuration","");
-        light = JSONUtils.getString(obj,"light","");
-        equipmentList = JSONUtils.getStringList(obj,"equipments",new ArrayList<String>());
-        JSONArray array = JSONUtils.getJSONArray(obj,"busyDegree",new JSONArray());
-        for (int i=0;i<array.length();i++){
+        id = JSONUtils.getString(obj, "id", "");
+        name = JSONUtils.getString(obj, "name", "");
+        admin = JSONUtils.getString(obj, "admin", "");
+        galleryful = JSONUtils.getInt(obj, "galleryful", -1);
+        maxAhead = JSONUtils.getInt(obj, "maxAhead", 0);
+        maxDuration = JSONUtils.getString(obj, "maxDuration", "");
+        light = JSONUtils.getString(obj, "light", "");
+        equipmentList = JSONUtils.getStringList(obj, "equipments", new ArrayList<String>());
+        JSONArray array = JSONUtils.getJSONArray(obj, "busyDegree", new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
             try {
                 busyDegreeList.add(array.getInt(i));
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
-        shortName = JSONUtils.getString(obj,"shortname","");
-        JSONObject buildingObj = JSONUtils.getJSONObject(obj,"building",new JSONObject());
+        shortName = JSONUtils.getString(obj, "shortname", "");
+        JSONObject buildingObj = JSONUtils.getJSONObject(obj, "building", new JSONObject());
         building = new Building(buildingObj);
     }
 

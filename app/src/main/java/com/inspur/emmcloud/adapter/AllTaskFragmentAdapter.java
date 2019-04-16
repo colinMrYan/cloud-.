@@ -31,7 +31,7 @@ public class AllTaskFragmentAdapter extends FragmentPagerAdapter {
         return taskListFragmentList.size();
     }
 
-    public List<TaskListFragment> getTaskListFragment(){
+    public List<TaskListFragment> getTaskListFragment() {
         return taskListFragmentList;
     }
 }

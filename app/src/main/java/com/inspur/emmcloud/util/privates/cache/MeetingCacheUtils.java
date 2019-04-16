@@ -25,12 +25,12 @@ public class MeetingCacheUtils {
         }
     }
 
-    public static void removeMeetingList(Context context,List<String> meetingIdList){
+    public static void removeMeetingList(Context context, List<String> meetingIdList) {
         try {
-            if (meetingIdList.size()>0){
-                DbCacheUtils.getDb(context).delete(Meeting.class,WhereBuilder.b("id","in",meetingIdList));
+            if (meetingIdList.size() > 0) {
+                DbCacheUtils.getDb(context).delete(Meeting.class, WhereBuilder.b("id", "in", meetingIdList));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -44,12 +44,12 @@ public class MeetingCacheUtils {
             meetingList = DbCacheUtils.getDb(context).selector(Meeting.class).where(WhereBuilder.b("startTime", ">", startTimeLong)
                     .and("endTime", "<", endTimeLong)).or(WhereBuilder.b("startTime", "<=", startTimeLong)
                     .and("endTime", ">", endTimeLong)).or(WhereBuilder.b("startTime", "<=", endTimeLong)
-                    .and("endTime", ">=", endTimeLong)).orderBy("lastTime",true).findAll();
+                    .and("endTime", ">=", endTimeLong)).orderBy("lastTime", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        if (meetingList == null){
+        if (meetingList == null) {
             meetingList = new ArrayList<>();
         }
         return meetingList;

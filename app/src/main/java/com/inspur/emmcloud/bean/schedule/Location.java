@@ -10,13 +10,14 @@ import org.jsoup.helper.StringUtil;
  */
 
 public class Location {
-    private String id="";//可选的， 地点唯一标识，如果没有ID ，表示地点是手输的
-    private String building="";  //楼号
-    private String displayName="";// 会议室名，自定义名称存放在 displayName 上
+    private String id = "";//可选的， 地点唯一标识，如果没有ID ，表示地点是手输的
+    private String building = "";  //楼号
+    private String displayName = "";// 会议室名，自定义名称存放在 displayName 上
 
-    public Location(){
+    public Location() {
 
     }
+
     public Location(String json) {
         this(JSONUtils.getJSONObject(json));
     }
@@ -49,17 +50,18 @@ public class Location {
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
-    public JSONObject toJSONObject(){
+
+    public JSONObject toJSONObject() {
         JSONObject object = new JSONObject();
         try {
-            if (!StringUtil.isBlank(id)){
-                object.put("id",id);
+            if (!StringUtil.isBlank(id)) {
+                object.put("id", id);
             }
-            object.put("displayName",displayName);
-            if (!StringUtil.isBlank(building)){
-                object.put("building",building);
+            object.put("displayName", displayName);
+            if (!StringUtil.isBlank(building)) {
+                object.put("building", building);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return object;

@@ -60,7 +60,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private TextView endTimeText;
     private Calendar startTimeCalendar;
     private Calendar endTimeCalendar;
-//    private LoadingDialog loadingDlg;
+    //    private LoadingDialog loadingDlg;
     private WebService webService;
     private ScheduleApiService apiService;
     private List<String> officeIdList = new ArrayList<>();
@@ -101,16 +101,16 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
         MeetingRoom meetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_START_TIME,startTimeCalendar);
-        intent.putExtra(EXTRA_END_TIME,endTimeCalendar);
-        intent.putExtra(EXTRA_MEETING_ROOM,meetingRoom);
-        setResult(RESULT_OK,intent);
+        intent.putExtra(EXTRA_START_TIME, startTimeCalendar);
+        intent.putExtra(EXTRA_END_TIME, endTimeCalendar);
+        intent.putExtra(EXTRA_MEETING_ROOM, meetingRoom);
+        setResult(RESULT_OK, intent);
         finish();
         return false;
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
                 break;
@@ -207,11 +207,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
         if (officeIdListJson == null) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                if (!swipeRefreshLayout.isRefreshing()){
+                if (!swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(true);
                 }
                 apiService.getOfficeList();
-            }else {
+            } else {
                 swipeRefreshLayout.setRefreshing(false);
             }
         } else {
@@ -222,11 +222,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 
     private void getMeetingRoomList() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if (!swipeRefreshLayout.isRefreshing()){
+            if (!swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(true);
             }
             apiService.getMeetingRoomList(startTimeCalendar.getTimeInMillis(), endTimeCalendar.getTimeInMillis(), officeIdList, true);
-        }else {
+        } else {
             swipeRefreshLayout.setRefreshing(false);
         }
     }

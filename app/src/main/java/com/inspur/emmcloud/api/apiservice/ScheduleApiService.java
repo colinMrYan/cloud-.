@@ -64,7 +64,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnScheduleListSuccess(new GetScheduleListResult(new String(arg0)),
-                        startTime, endTime,calendarIdList,meetingIdList,taskIdList);
+                        startTime, endTime, calendarIdList, meetingIdList, taskIdList);
             }
 
             @Override
@@ -78,7 +78,7 @@ public class ScheduleApiService {
                     @Override
                     public void reExecute() {
                         getScheduleList(startTime, endTime, calendarLastTime, meetingLastTime,
-                                taskLastTime,calendarIdList,meetingIdList,taskIdList);
+                                taskLastTime, calendarIdList, meetingIdList, taskIdList);
                     }
 
                     @Override
@@ -141,7 +141,7 @@ public class ScheduleApiService {
      * @param isFilter
      */
     public void getMeetingRoomList(final long start, final long end, final List<String> officeIdList,
-            final boolean isFilter) {
+                                   final boolean isFilter) {
         String baseUrl = APIUri.getMeetingRoomsUrl() + "?";
         if (isFilter) {
             baseUrl = baseUrl + "startWebSocket=" + start + "&end=" + end;
@@ -407,7 +407,6 @@ public class ScheduleApiService {
     }
 
 
-
     /**
      * 删除会议
      *
@@ -417,7 +416,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getMeetingDeleteUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        params.addQueryStringParameter("rid",meeting.getId());
+        params.addQueryStringParameter("rid", meeting.getId());
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -557,7 +556,7 @@ public class ScheduleApiService {
     public void getIsMeetingAdmin(final String uid) {
         final String completeUrl = APIUri.getMeetingIsAdminUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        params.addQueryStringParameter("cid",uid);
+        params.addQueryStringParameter("cid", uid);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -635,6 +634,7 @@ public class ScheduleApiService {
 
     /**
      * 添加常用办公地点
+     *
      * @param building
      */
     public void addMeetingOffice(final Building building) {
@@ -674,7 +674,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAddMeetingOfficeSuccess(new Office(new String(arg0)),building);
+                apiInterface.returnAddMeetingOfficeSuccess(new Office(new String(arg0)), building);
             }
 
             @Override
@@ -730,9 +730,10 @@ public class ScheduleApiService {
 
     /**
      * 添加会议室
+     *
      * @param meetingJson
      */
-    public void addMeeting(final String meetingJson ){
+    public void addMeeting(final String meetingJson) {
         final String completeUrl = APIUri.getAddMeetingUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(meetingJson);

@@ -197,7 +197,7 @@ public abstract class RangeWeekView extends BaseWeekView {
      * 绘制选中的日期
      *
      * @param canvas         canvas
-     * @param emmCalendar       日历日历calendar
+     * @param emmCalendar    日历日历calendar
      * @param x              日历Card x起点坐标
      * @param hasScheme      hasScheme 非标记的日期
      * @param isSelectedPre  上一个日期是否选中
@@ -210,10 +210,10 @@ public abstract class RangeWeekView extends BaseWeekView {
     /**
      * 绘制标记的日期
      *
-     * @param canvas     canvas
-     * @param emmCalendar   日历calendar
-     * @param x          日历Card x起点坐标
-     * @param isSelected 是否选中
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param isSelected  是否选中
      */
     protected abstract void onDrawScheme(Canvas canvas, EmmCalendar emmCalendar, int x, boolean isSelected);
 
@@ -221,11 +221,11 @@ public abstract class RangeWeekView extends BaseWeekView {
     /**
      * 绘制日历文本
      *
-     * @param canvas     canvas
-     * @param emmCalendar   日历calendar
-     * @param x          日历Card x起点坐标
-     * @param hasScheme  是否是标记的日期
-     * @param isSelected 是否选中
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param hasScheme   是否是标记的日期
+     * @param isSelected  是否选中
      */
     protected abstract void onDrawText(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme, boolean isSelected);
 }

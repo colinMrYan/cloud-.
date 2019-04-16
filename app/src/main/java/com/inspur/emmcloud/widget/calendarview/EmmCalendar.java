@@ -355,12 +355,12 @@ public final class EmmCalendar implements Serializable, Comparable<EmmCalendar> 
         return year > 0 & month > 0 & day > 0 & day <= 31 & month <= 12 & year >= 1900 & year <= 2099;
     }
 
-    public void setShowSchemePoint(boolean isShowSchemePoint){
-        this.isShowSchemePoint = isShowSchemePoint;
+    public boolean getShowSchemePoint() {
+        return isShowSchemePoint;
     }
 
-    public boolean getShowSchemePoint(){
-        return isShowSchemePoint;
+    public void setShowSchemePoint(boolean isShowSchemePoint) {
+        this.isShowSchemePoint = isShowSchemePoint;
     }
 
     /**

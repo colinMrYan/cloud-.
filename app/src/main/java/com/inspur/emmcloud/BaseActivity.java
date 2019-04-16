@@ -72,30 +72,30 @@ public class BaseActivity extends Activity {
     protected void setTheme() {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
-            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            switch (currentThemeNo) {
-                case 1:
-                    setTheme(R.style.AppTheme_1);
-                    break;
-                case 2:
-                    setTheme(R.style.AppTheme_2);
-                    break;
-                default:
-                    setTheme(R.style.AppTheme_0);
-                    break;
-            }
+        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        switch (currentThemeNo) {
+            case 1:
+                setTheme(R.style.AppTheme_1);
+                break;
+            case 2:
+                setTheme(R.style.AppTheme_2);
+                break;
+            default:
+                setTheme(R.style.AppTheme_0);
+                break;
+        }
     }
 
     private void setStatus() {
         String className = this.getClass().getCanonicalName();
         boolean isContain = Arrays.asList(classNames).contains(className);
-        int navigationBarColor =R.color.white;
+        int navigationBarColor = R.color.white;
         if (!isContain) {
             int statusBarColor = ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
-            boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true,1.0f).statusBarDarkFont(isStatusBarDarkFont,0.2f).init();
-        }else {
-            ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true,1.0f).init();
+            boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
+            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
+        } else {
+            ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
         }
     }
 

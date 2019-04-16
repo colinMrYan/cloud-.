@@ -239,7 +239,7 @@ public class SegmentControl extends View {
 
 
         if (mTexts != null && mTexts.length > 0) {
-            Log.d("lbc",mTexts+"66666666666666666666666");
+            Log.d("lbc", mTexts + "66666666666666666666666");
 
             if (mCacheBounds == null || mCacheBounds.length != mTexts.length) {
                 mCacheBounds = new Rect[mTexts.length];
@@ -309,7 +309,7 @@ public class SegmentControl extends View {
 
             switch (heightMode) {
                 case MeasureSpec.AT_MOST:
-                    Log.d("lbc","heightMode::"+" MeasureSpec.AT_MOST");
+                    Log.d("lbc", "heightMode::" + " MeasureSpec.AT_MOST");
                     if (mDirection == Direction.VERTICAL) {
                         if (heightSize <= mSingleChildHeight * mTexts.length) {
                             mSingleChildHeight = heightSize / mTexts.length;
@@ -319,21 +319,21 @@ public class SegmentControl extends View {
                         }
                     } else {
                         height = heightSize <= mSingleChildHeight ? heightSize : mSingleChildHeight;
-                        Log.d("lbc","11111111111"+"heighSize"+heightSize+"  SingChildHeight:"+mSingleChildHeight);
+                        Log.d("lbc", "11111111111" + "heighSize" + heightSize + "  SingChildHeight:" + mSingleChildHeight);
                     }
                     break;
                 case MeasureSpec.EXACTLY:
-                    Log.d("lbc","heightMode::"+" MeasureSpec.EXACTLY");
+                    Log.d("lbc", "heightMode::" + " MeasureSpec.EXACTLY");
                     height = heightSize;
-                    Log.d("lbc","222222222hightSize");
+                    Log.d("lbc", "222222222hightSize");
                     break;
                 case MeasureSpec.UNSPECIFIED:
-                    Log.d("lbc","heightMode::"+" MeasureSpec.UNSPECIFIEDT");
+                    Log.d("lbc", "heightMode::" + " MeasureSpec.UNSPECIFIEDT");
                     if (mDirection == Direction.VERTICAL) {
                         height = mSingleChildHeight * mTexts.length;
                     } else {
                         height = heightSize <= mSingleChildHeight ? heightSize : mSingleChildHeight;
-                        Log.d("lbc","heightSize:"+heightSize+"mSingleChildHeight::"+mSingleChildHeight);
+                        Log.d("lbc", "heightSize:" + heightSize + "mSingleChildHeight::" + mSingleChildHeight);
                     }
                     break;
             }

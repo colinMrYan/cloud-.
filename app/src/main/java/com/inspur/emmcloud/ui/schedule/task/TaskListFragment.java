@@ -66,7 +66,7 @@ public class TaskListFragment extends Fragment {
     private ScheduleApiService apiService;
     private int currentIndex = 0;
     private ArrayList<Task> taskList = new ArrayList<Task>();
-    private boolean isPullUp =false;
+    private boolean isPullUp = false;
     private int page = 0;
 
 
@@ -104,22 +104,24 @@ public class TaskListFragment extends Fragment {
 
     /**
      * 传入搜索内容
+     *
      * @param searchContent
      */
-    public void setSearchContent(String searchContent){
+    public void setSearchContent(String searchContent) {
         swipeRefreshLayout.setCanLoadMore(StringUtils.isBlank(searchContent));
         swipeRefreshLayout.setEnabled(StringUtils.isBlank(searchContent));
         this.searchContent = searchContent;
-        if(adapter != null){
+        if (adapter != null) {
             searchTaskListBySearchContent();
         }
     }
 
     /**
      * 告知Fragment当前索引
+     *
      * @param currentIndex
      */
-    public void setCurrentIndex(int currentIndex){
+    public void setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;
         swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
     }
@@ -129,8 +131,8 @@ public class TaskListFragment extends Fragment {
      */
     private void searchTaskListBySearchContent() {
         uiTaskList.clear();
-        for(Task task:taskList){
-            if(task.getTitle().contains(searchContent)){
+        for (Task task : taskList) {
+            if (task.getTitle().contains(searchContent)) {
                 uiTaskList.add(task);
             }
         }
@@ -144,7 +146,7 @@ public class TaskListFragment extends Fragment {
         getTaskOrder();
         initPullRefreshLayout();
         taskListView.setOnItemClickListener(new OnTaskClickListener());
-        adapter = new TaskListAdapter(getActivity(),uiTaskList);
+        adapter = new TaskListAdapter(getActivity(), uiTaskList);
         taskListView.setAdapter(adapter);
 //        taskListView.setOnItemLongClickListener(new OnTaskLongClickListener());
         getCurrentTaskList();
@@ -170,9 +172,9 @@ public class TaskListFragment extends Fragment {
             public void onRefresh() {
                 isPullUp = false;
                 page = 0;
-                if(NetUtils.isNetworkConnected(getActivity())){
+                if (NetUtils.isNetworkConnected(getActivity())) {
                     getCurrentTaskList();
-                }else{
+                } else {
                     swipeRefreshLayout.setLoading(false);
                 }
                 swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
@@ -191,7 +193,7 @@ public class TaskListFragment extends Fragment {
         });
     }
 
-    private void getCurrentTaskList(){
+    private void getCurrentTaskList() {
         currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         if (NetUtils.isNetworkConnected(getActivity())) {
             if (currentIndex == TaskFragment.MY_MINE) {
@@ -200,7 +202,7 @@ public class TaskListFragment extends Fragment {
                 getInvolvedTasks();
             } else if (currentIndex == TaskFragment.MY_FOCUSED) {
                 getFocusedTasks();
-            }else if(currentIndex == TaskFragment.MY_DONE){
+            } else if (currentIndex == TaskFragment.MY_DONE) {
                 getAllFinishTasks();
             }
         } else {
@@ -210,7 +212,6 @@ public class TaskListFragment extends Fragment {
 
     /**
      * 获取关注的任务
-     *
      */
     protected void getFocusedTasks() {
         if (NetUtils.isNetworkConnected(getActivity())) {
@@ -221,7 +222,6 @@ public class TaskListFragment extends Fragment {
 
     /**
      * 获取我参与的任务
-     *
      */
     protected void getInvolvedTasks() {
         if (NetUtils.isNetworkConnected(getActivity())) {
@@ -232,7 +232,6 @@ public class TaskListFragment extends Fragment {
 
     /**
      * 获取我的任务
-     *
      */
     protected void getMineTasks() {
         if (NetUtils.isNetworkConnected(getActivity())) {
@@ -263,6 +262,12 @@ public class TaskListFragment extends Fragment {
             apiService.setTaskFinishById(uiTaskList.get(position).getId());
             deletePosition = position;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -312,13 +317,6 @@ public class TaskListFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-
     class WebService extends APIInterfaceInstance {
 
         @Override
@@ -328,12 +326,12 @@ public class TaskListFragment extends Fragment {
                 swipeRefreshLayout.setLoading(false);
                 page = page + 1;
                 taskList.addAll(getTaskListResult.getTaskList());
-                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size()>=12);
+                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size() >= 12);
             } else {
                 swipeRefreshLayout.setRefreshing(false);
                 taskList = getTaskListResult.getTaskList();
             }
-            noResultText.setVisibility(taskList.size()>0?View.GONE:View.VISIBLE);
+            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
             uiTaskList.clear();
             uiTaskList.addAll(taskList);
             adapter.setAndChangeData(uiTaskList);

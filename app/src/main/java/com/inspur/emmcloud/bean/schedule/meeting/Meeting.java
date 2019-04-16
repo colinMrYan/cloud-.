@@ -24,7 +24,7 @@ public class Meeting extends Schedule {
     public static List<Event> meetingEvent2EventList(List<Meeting> meetingList, Calendar selectCalendar) {
         List<Event> eventList = new ArrayList<>();
         for (Meeting meeting : meetingList) {
-            Calendar meetingStartTime =  meeting.getStartTimeCalendar();
+            Calendar meetingStartTime = meeting.getStartTimeCalendar();
             Calendar meetingEndTime = meeting.getEndTimeCalendar();
             if (TimeUtils.isContainTargetCalendarDay(selectCalendar, meetingStartTime, meetingEndTime)) {
                 Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
@@ -35,7 +35,7 @@ public class Meeting extends Schedule {
                 if (meetingEndTime.after(dayEndCalendar)) {
                     meetingEndTime = dayEndCalendar;
                 }
-                Event event = new Event(meeting.getId(), Event.TYPE_MEETING,meeting.getTitle(),meeting.getScheduleLocationObj().getDisplayName(), meetingStartTime, meetingEndTime,meeting);
+                Event event = new Event(meeting.getId(), Event.TYPE_MEETING, meeting.getTitle(), meeting.getScheduleLocationObj().getDisplayName(), meetingStartTime, meetingEndTime, meeting);
                 event.setAllDay(meeting.getAllDay());
                 eventList.add(event);
             }
@@ -43,36 +43,36 @@ public class Meeting extends Schedule {
         return eventList;
     }
 
-    public JSONObject toJSOnObject(){
+    public JSONObject toJSOnObject() {
         JSONObject obj = new JSONObject();
         try {
-            if (!StringUtils.isBlank(getId())){
-                obj.put("id",getId());
+            if (!StringUtils.isBlank(getId())) {
+                obj.put("id", getId());
             }
-            obj.put("title",getTitle());
-            obj.put("type",getType());
-            obj.put("owner",getOwner());
-            obj.put("startTime",getStartTime());
-            obj.put("endTime",getEndTime());
-            obj.put("isAllDay",false);
-            obj.put("isCommunity",false);
-            obj.put("syncToLocal",false);
-            obj.put("isAllDay",false);
-            obj.put("note",getNote());
-            if (!StringUtil.isBlank(getRemindEvent())){
+            obj.put("title", getTitle());
+            obj.put("type", getType());
+            obj.put("owner", getOwner());
+            obj.put("startTime", getStartTime());
+            obj.put("endTime", getEndTime());
+            obj.put("isAllDay", false);
+            obj.put("isCommunity", false);
+            obj.put("syncToLocal", false);
+            obj.put("isAllDay", false);
+            obj.put("note", getNote());
+            if (!StringUtil.isBlank(getRemindEvent())) {
                 JSONObject remindEventObj = new JSONObject(getRemindEvent());
-                obj.put("remindEvent",remindEventObj);
+                obj.put("remindEvent", remindEventObj);
             }
-            LogUtils.jasonDebug("getLocation()="+getLocation());
-            if (!StringUtil.isBlank(getLocation())){
+            LogUtils.jasonDebug("getLocation()=" + getLocation());
+            if (!StringUtil.isBlank(getLocation())) {
                 JSONObject locationObj = new JSONObject(getLocation());
-                obj.put("location",locationObj);
+                obj.put("location", locationObj);
             }
-            if (!StringUtil.isBlank(getParticipants())){
+            if (!StringUtil.isBlank(getParticipants())) {
                 JSONArray participantsArray = new JSONArray(getParticipants());
-                obj.put("participants",participantsArray);
+                obj.put("participants", participantsArray);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return obj;

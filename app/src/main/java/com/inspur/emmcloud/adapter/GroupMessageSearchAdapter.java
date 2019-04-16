@@ -26,7 +26,7 @@ import java.util.List;
  * Created by yufuchang on 2019/3/5.
  */
 
-public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessageSearchAdapter.GroupMessageHolder>{
+public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessageSearchAdapter.GroupMessageHolder> {
 
 
     private Context context;
@@ -35,9 +35,10 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
     private String keyWords = "";
     private String keyWordsColor = "#36A5F6";
 
-    public GroupMessageSearchAdapter(Context context){
+    public GroupMessageSearchAdapter(Context context) {
         this.context = context;
     }
+
     @NonNull
     @Override
     public GroupMessageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,7 +49,7 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
     @Override
     public void onBindViewHolder(@NonNull GroupMessageHolder holder, int position) {
         final UIMessage uiMessage = groupUIMessageList.get(position);
-        ImageDisplayUtils.getInstance().displayImage(holder.headImg,uiMessage.getSenderPhotoUrl(),R.drawable.icon_person_default);
+        ImageDisplayUtils.getInstance().displayImage(holder.headImg, uiMessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
         holder.groupMessageUserNameText.setText(groupUIMessageList.get(position).getSenderName());
         holder.groupMessageContentText.setText(getContent(uiMessage.getMessage()));
         String messageSendTime = TimeUtils.getChannelMsgDisplayTime(context, uiMessage.getCreationDate());
@@ -63,25 +64,25 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
 
     private Spanned getContent(Message message) {
         String type = message.getType();
-        Spanned text = null ;
+        Spanned text = null;
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 String textContent = ChatMsgContentUtils.mentionsAndUrl2Span(context,
                         message.getMsgContentTextPlain().getText(),
                         message.getMsgContentTextPlain().getMentionsMap()).toString();
-                text = StringUtils.getHtmlString(textContent,keyWordsColor,keyWords) ;
+                text = StringUtils.getHtmlString(textContent, keyWordsColor, keyWords);
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 String markDownContent = ChatMsgContentUtils.mentionsAndUrl2Span(context,
                         message.getMsgContentTextMarkdown().getText(),
                         message.getMsgContentTextMarkdown().getMentionsMap()).toString();
-                text = StringUtils.getHtmlString(markDownContent,keyWordsColor,keyWords);
+                text = StringUtils.getHtmlString(markDownContent, keyWordsColor, keyWords);
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 String commentContent = ChatMsgContentUtils.mentionsAndUrl2Span(context,
                         message.getMsgContentComment().getText(),
                         message.getMsgContentComment().getMentionsMap()).toString();
-                text = StringUtils.getHtmlString(commentContent,keyWordsColor,keyWords) ;
+                text = StringUtils.getHtmlString(commentContent, keyWordsColor, keyWords);
                 break;
         }
         return text;
@@ -92,17 +93,17 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
         return groupUIMessageList.size();
     }
 
-    public void setAndRefreshAdapter(List<Message> groupMessageList,String keyWords){
+    public void setAndRefreshAdapter(List<Message> groupMessageList, String keyWords) {
         this.keyWords = keyWords;
         groupUIMessageList = UIMessage.MessageList2UIMessageList(groupMessageList);
         notifyDataSetChanged();
     }
 
-    public void setGroupMessageSearchListener(GroupMessageSearchListener listener){
+    public void setGroupMessageSearchListener(GroupMessageSearchListener listener) {
         this.listener = listener;
     }
 
-    public interface GroupMessageSearchListener{
+    public interface GroupMessageSearchListener {
         void onItemClick(UIMessage uiMessage);
     }
 
@@ -112,6 +113,7 @@ public class GroupMessageSearchAdapter extends RecyclerView.Adapter<GroupMessage
         TextView groupMessageContentText;
         TextView groupMessageTimeText;
         RelativeLayout groupMessageLayout;
+
         public GroupMessageHolder(View itemView) {
             super(itemView);
             headImg = itemView.findViewById(R.id.iv_group_message_search_head);

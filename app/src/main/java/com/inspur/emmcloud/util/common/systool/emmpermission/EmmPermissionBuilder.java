@@ -67,7 +67,7 @@ public abstract class EmmPermissionBuilder<T extends EmmPermissionBuilder> {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
         EmmPermissionActivity.startActivity(context, intent, listener);
-        EmmPermissionBase.setFirstRequest(context,permissions);
+        EmmPermissionBase.setFirstRequest(context, permissions);
     }
 
     public T setPermissionListener(EmmPermissionListener listener) {

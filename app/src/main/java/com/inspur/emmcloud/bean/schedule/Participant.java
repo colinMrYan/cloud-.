@@ -15,13 +15,15 @@ public class Participant {
     private String id;
     private String name;
     private String role;//common,普通参与者,recorder, 记录人,contact,联系人
-    public Participant(){
+
+    public Participant() {
 
     }
-    public Participant(JSONObject obj){
-        this.id = JSONUtils.getString(obj,"id","");
-        this.name = JSONUtils.getString(obj,"name","");
-        this.role = JSONUtils.getString(obj,"role","");
+
+    public Participant(JSONObject obj) {
+        this.id = JSONUtils.getString(obj, "id", "");
+        this.name = JSONUtils.getString(obj, "name", "");
+        this.role = JSONUtils.getString(obj, "role", "");
     }
 
     public String getId() {
@@ -48,13 +50,13 @@ public class Participant {
         this.role = role;
     }
 
-    public JSONObject toJSONObject(){
+    public JSONObject toJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("id",id);
-            obj.put("name",name);
-            obj.put("role",role);
-        }catch (Exception e){
+            obj.put("id", id);
+            obj.put("name", name);
+            obj.put("role", role);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return obj;

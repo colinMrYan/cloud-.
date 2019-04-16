@@ -1975,8 +1975,7 @@ public class WorkAPIService {
     }
 
 
-
-    public void addSchedule(final String schedule ){
+    public void addSchedule(final String schedule) {
         final String completeUrl = APIUri.getAddScheduleUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
@@ -2015,7 +2014,7 @@ public class WorkAPIService {
         });
     }
 
-    public void updateSchedule(final String schedule){
+    public void updateSchedule(final String schedule) {
         final String completeUrl = APIUri.getUpdateScheduleUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
@@ -2054,7 +2053,7 @@ public class WorkAPIService {
         });
     }
 
-    public void delSchedule(final String scheduleId){
+    public void delSchedule(final String scheduleId) {
         final String completeUrl = APIUri.getUpdateScheduleUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
@@ -2088,15 +2087,15 @@ public class WorkAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDeleteScheduleFail(error,responseCode);
+                apiInterface.returnDeleteScheduleFail(error, responseCode);
             }
         });
     }
 
     /**
-     *删除任务中的标签
+     * 删除任务中的标签
      **/
-    public void deleteTaskTags(final String taskId){
+    public void deleteTaskTags(final String taskId) {
         final String completeUrl = APIUri.getDelTaskTagsUrl(taskId);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -2128,7 +2127,7 @@ public class WorkAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDelTaskTagFail(error,responseCode);
+                apiInterface.returnDelTaskTagFail(error, responseCode);
             }
         });
     }
@@ -2136,9 +2135,9 @@ public class WorkAPIService {
     /**
      * 添加任务中的标签*
      */
-    public void  addTaskTags(final String taskId, final String tagsIdJSON){
+    public void addTaskTags(final String taskId, final String tagsIdJSON) {
         final String completeUrl = APIUri.getAddTaskTagsUrl(taskId);
-        LogUtils.LbcDebug("colorTags::"+tagsIdJSON);
+        LogUtils.LbcDebug("colorTags::" + tagsIdJSON);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(tagsIdJSON);
@@ -2150,7 +2149,7 @@ public class WorkAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        addTaskTags(  taskId,  tagsIdJSON);
+                        addTaskTags(taskId, tagsIdJSON);
                     }
 
                     @Override
@@ -2177,7 +2176,7 @@ public class WorkAPIService {
     }
 
 
-    private void addMeeting(){
+    private void addMeeting() {
 
     }
 

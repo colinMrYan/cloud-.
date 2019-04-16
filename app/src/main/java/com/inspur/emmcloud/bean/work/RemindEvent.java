@@ -11,12 +11,13 @@ import org.json.JSONObject;
 public class RemindEvent {
     private int advanceTimeSpan; //提前多久提醒，单位是 秒
     private String remindType;
-    public RemindEvent(String json){
+
+    public RemindEvent(String json) {
         this(JSONUtils.getJSONObject(json));
     }
 
-    public RemindEvent(JSONObject obj){
-        advanceTimeSpan = JSONUtils.getInt(obj,"advanceTimeSpan",-1);
-        remindType = JSONUtils.getString(obj,"remindType","");
+    public RemindEvent(JSONObject obj) {
+        advanceTimeSpan = JSONUtils.getInt(obj, "advanceTimeSpan", -1);
+        remindType = JSONUtils.getString(obj, "remindType", "");
     }
 }

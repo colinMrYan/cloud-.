@@ -16,10 +16,10 @@ public class TaskColorTag implements Serializable {
     public TaskColorTag(JSONObject jsonObject) {
 
         try {
-            this.id= JSONUtils.getString(jsonObject,"id","");
-            this.title=JSONUtils.getString(jsonObject,"title","");
-            this.color=JSONUtils.getString(jsonObject,"color","");
-            this.owner=JSONUtils.getString(jsonObject,"owner","");
+            this.id = JSONUtils.getString(jsonObject, "id", "");
+            this.title = JSONUtils.getString(jsonObject, "title", "");
+            this.color = JSONUtils.getString(jsonObject, "color", "");
+            this.owner = JSONUtils.getString(jsonObject, "owner", "");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

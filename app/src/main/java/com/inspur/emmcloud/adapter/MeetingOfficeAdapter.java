@@ -27,13 +27,14 @@ import java.util.List;
 public class MeetingOfficeAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<MeetingLocation> locationList = new ArrayList<>();
-    private List<Office> officeList= new ArrayList<>();
-    public MeetingOfficeAdapter(Context context,List<Office> officeList){
+    private List<Office> officeList = new ArrayList<>();
+
+    public MeetingOfficeAdapter(Context context, List<Office> officeList) {
         this.context = context;
         this.officeList = officeList;
     }
 
-    public void setData(List<MeetingLocation> locationList){
+    public void setData(List<MeetingLocation> locationList) {
         this.locationList = locationList;
         notifyDataSetChanged();
     }
@@ -47,6 +48,7 @@ public class MeetingOfficeAdapter extends BaseExpandableListAdapter {
     public int getChildrenCount(int groupPosition) {
         return locationList.get(groupPosition).getOfficeBuildingList().size();
     }
+
     @Override
     public Object getGroup(int groupPosition) {
         return null;
@@ -75,14 +77,14 @@ public class MeetingOfficeAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        ExpandableListView  expandableListView = (ExpandableListView) parent;
+        ExpandableListView expandableListView = (ExpandableListView) parent;
         expandableListView.expandGroup(groupPosition);
         TextView textView = new TextView(context);
-        int paddingLeft = DensityUtil.dip2px(context,16);
-        int paddingTop = paddingLeft/2;
-        textView.setPadding(paddingLeft,paddingTop,0,paddingTop);
+        int paddingLeft = DensityUtil.dip2px(context, 16);
+        int paddingTop = paddingLeft / 2;
+        textView.setPadding(paddingLeft, paddingTop, 0, paddingTop);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         textView.setTextColor(Color.parseColor("#999999"));
         textView.setText(locationList.get(groupPosition).getName());
         return textView;
@@ -95,17 +97,17 @@ public class MeetingOfficeAdapter extends BaseExpandableListAdapter {
         Building building = locationList.get(groupPosition).getOfficeBuildingList().get(childPosition);
         convertView = LayoutInflater.from(context).inflate(
                 R.layout.meeting_location_expandale_child_item, null);
-        TextView nameText =convertView.findViewById(R.id.tv_name);
+        TextView nameText = convertView.findViewById(R.id.tv_name);
         ImageView selectImg = convertView.findViewById(R.id.iv_select);
         nameText.setText(building.getName());
         boolean isSelect = false;
-        for (Office office:officeList){
-            if (office.getOfficeBuilding().getId().equals(building.getId())){
+        for (Office office : officeList) {
+            if (office.getOfficeBuilding().getId().equals(building.getId())) {
                 isSelect = true;
                 break;
             }
         }
-        selectImg.setImageResource(isSelect?R.drawable.ic_select_yes:R.drawable.ic_select_no);
+        selectImg.setImageResource(isSelect ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         return convertView;
     }
 

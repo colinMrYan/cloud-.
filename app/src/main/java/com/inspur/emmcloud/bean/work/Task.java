@@ -121,11 +121,21 @@ public class Task implements Serializable {
 
     }
 
+    public static List<Event> taskList2EventList(List<Task> taskList, Calendar selectCalendar) {
+        List<Event> eventList = new ArrayList<>();
+        for (Task task : taskList) {
+            if (TimeUtils.isSameDay(selectCalendar, task.getCreationDate()) || TimeUtils.isSameDay(selectCalendar, task.getDueDate())) {
+                Event event = new Event(task.getId(), Event.TYPE_TASK, task.getTitle(), "", task.getCreationDate(), task.getDueDate(), task);
+                eventList.add(event);
+            }
+
+        }
+        return eventList;
+    }
 
     public List<TaskColorTag> getTags() {
         return tags;
     }
-
 
     public void setTags(List<TaskColorTag> tags) {
         this.tags = tags;
@@ -224,7 +234,6 @@ public class Task implements Serializable {
         this.taskSubject = list;
     }
 
-
     public TaskSubject getSubject() {
         return subject;
     }
@@ -237,18 +246,6 @@ public class Task implements Serializable {
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher isNum = pattern.matcher(str);
         return isNum.matches();
-    }
-
-    public static List<Event> taskList2EventList(List<Task> taskList, Calendar selectCalendar) {
-        List<Event> eventList = new ArrayList<>();
-        for (Task task : taskList) {
-            if (TimeUtils.isSameDay(selectCalendar, task.getCreationDate()) || TimeUtils.isSameDay(selectCalendar, task.getDueDate())) {
-                Event event = new Event(task.getId(), Event.TYPE_TASK, task.getTitle(), "", task.getCreationDate(), task.getDueDate(),task);
-                eventList.add(event);
-            }
-
-        }
-        return eventList;
     }
 
     @Override

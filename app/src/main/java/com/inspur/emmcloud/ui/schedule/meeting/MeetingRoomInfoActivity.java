@@ -54,6 +54,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
 
     private static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     private static final int REQUEST_MEETING_INFO = 1;
+    private final String dayStartTime = "08:00";
+    private final String dayEndTime = "18:00";
     private MeetingRoom meetingRoom;
     @ViewInject(R.id.tv_meeting_room_name)
     private TextView meetingRoomNameText;
@@ -71,9 +73,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private TextView peopleNumText;
     @ViewInject(R.id.ll_equipment)
     private LinearLayout equipmentLayout;
-
-    private final String dayStartTime = "08:00";
-    private final String dayEndTime = "18:00";
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private int viewPagerIndex = 0;
@@ -173,7 +172,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                     .findViewById(R.id.meeting_list);
             List<MeetingSchedule> meetingScheduleList = allDaysMeetingScheduleList
                     .get(i);
-            meetingListView.setAdapter(new ScheduleMeetingRoomDurationAdapter(this,meetingScheduleList));
+            meetingListView.setAdapter(new ScheduleMeetingRoomDurationAdapter(this, meetingScheduleList));
 
         }
         viewPager.setAdapter(new MyViewPagerAdapter(this, viewList));
@@ -298,7 +297,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             calendar.add(Calendar.DAY_OF_YEAR, i);
             HashSet<Long> set = new HashSet<>();
             for (Meeting meeting : allMeetingList) {
-                if (TimeUtils.isContainTargetCalendarDay(calendar, meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar())){
+                if (TimeUtils.isContainTargetCalendarDay(calendar, meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar())) {
                     dayMeetingList.add(meeting);
                     long meetingFromLong = meeting.getDayStartTime(calendar);
                     long meetingToLong = meeting.getDayEndTime(calendar);
@@ -418,11 +417,11 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         }
     }
 
-    private void getMeetingList(){
+    private void getMeetingList() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             Calendar startCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
             Calendar endCalendar = (Calendar) startCalendar.clone();
-            endCalendar.add(Calendar.DAY_OF_YEAR,2);
+            endCalendar.add(Calendar.DAY_OF_YEAR, 2);
             apiService.getScheduleList(startCalendar, endCalendar,
                     0, 0, 0, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
             loadingDlg.show();
@@ -449,8 +448,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                                               Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
             List<Meeting> meetingList = getScheduleListResult.getMeetingList();
             allMeetingList.clear();
-            for (Meeting meeting:meetingList){
-                if (meeting.getScheduleLocationObj().getId().equals(meetingRoom.getId())){
+            for (Meeting meeting : meetingList) {
+                if (meeting.getScheduleLocationObj().getId().equals(meetingRoom.getId())) {
                     allMeetingList.add(meeting);
                 }
             }

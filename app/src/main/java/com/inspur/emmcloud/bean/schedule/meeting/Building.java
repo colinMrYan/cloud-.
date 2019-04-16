@@ -12,19 +12,19 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class Building implements Serializable{
+public class Building implements Serializable {
     private String id = "";
     private String name = "";
     private MeetingLocation location;
 
-    public Building(){
+    public Building() {
 
     }
 
     public Building(JSONObject obj) {
-        id = JSONUtils.getString(obj,"id","");
-        name = JSONUtils.getString(obj,"name","");
-        JSONObject officeLocationObj = JSONUtils.getJSONObject(obj,"location",new JSONObject());
+        id = JSONUtils.getString(obj, "id", "");
+        name = JSONUtils.getString(obj, "name", "");
+        JSONObject officeLocationObj = JSONUtils.getJSONObject(obj, "location", new JSONObject());
         location = new MeetingLocation(officeLocationObj);
     }
 
@@ -32,20 +32,20 @@ public class Building implements Serializable{
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public MeetingLocation getLocation() {
-        return location;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public MeetingLocation getLocation() {
+        return location;
     }
 
     public void setLocation(MeetingLocation location) {

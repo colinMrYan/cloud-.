@@ -11,6 +11,7 @@ public class TaskTagColorUtils {
     public static final String TASK_TAG_COLOR_PINK = "PINK";
     public static final String TASK_TAG_COLOR_YELLOW = "YELLOW";
     public static final String TASK_TAG_COLOR_PURPLE = "PURPLE";
+
     public static void setTagColorImg(ImageView imageView, String color) {
         if (color.equals(TASK_TAG_COLOR_ORANGE)) {
             imageView.setImageResource(R.drawable.icon_orange_circle);

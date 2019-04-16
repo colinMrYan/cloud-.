@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ScheduleCacheUtils {
 
-    public static void saveScheduleList(Context context,  List<Schedule> scheduleList) {
+    public static void saveScheduleList(Context context, List<Schedule> scheduleList) {
         try {
             DbCacheUtils.getDb(context).saveOrUpdate(scheduleList); // 存储消息
         } catch (Exception e) {
@@ -25,12 +25,12 @@ public class ScheduleCacheUtils {
         }
     }
 
-    public static void removeScheduleList(Context context,List<String> scheduleIdList){
+    public static void removeScheduleList(Context context, List<String> scheduleIdList) {
         try {
-            if (scheduleIdList.size()>0){
-                DbCacheUtils.getDb(context).delete(Schedule.class,WhereBuilder.b("id","in",scheduleIdList));
+            if (scheduleIdList.size() > 0) {
+                DbCacheUtils.getDb(context).delete(Schedule.class, WhereBuilder.b("id", "in", scheduleIdList));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

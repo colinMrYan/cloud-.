@@ -16,7 +16,8 @@ public class RemindEvent implements Serializable {
     private int advanceTimeSpan = 0;
     private String remindType = "";
 
-    public RemindEvent(){}
+    public RemindEvent() {
+    }
 
     public RemindEvent(JSONObject object) {
         advanceTimeSpan = JSONUtils.getInt(object, "advanceTimeSpan", 0);

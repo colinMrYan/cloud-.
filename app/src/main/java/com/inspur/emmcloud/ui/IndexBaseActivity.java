@@ -274,7 +274,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                 Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                                 intent.setData(Uri.parse("package:" + context.getPackageName()));
                                 startActivity(intent);
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                             }

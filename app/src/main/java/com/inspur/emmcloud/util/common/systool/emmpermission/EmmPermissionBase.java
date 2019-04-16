@@ -26,6 +26,7 @@ public abstract class EmmPermissionBase {
 
     /**
      * 判断一组权限是否授予，传入string数组
+     *
      * @param context
      * @param permissions
      * @return
@@ -41,6 +42,7 @@ public abstract class EmmPermissionBase {
 
     /**
      * 判断权限一个权限是否被拒绝
+     *
      * @param context
      * @param permission
      * @return
@@ -51,6 +53,7 @@ public abstract class EmmPermissionBase {
 
     /**
      * 判断一个权限是否被授予
+     *
      * @param context
      * @param permission
      * @return
@@ -61,6 +64,7 @@ public abstract class EmmPermissionBase {
 
     /**
      * 获取传入权限中被拒绝的权限
+     *
      * @param context
      * @param permissions
      * @return
@@ -77,6 +81,7 @@ public abstract class EmmPermissionBase {
 
     /**
      * 获取传入权限中被授予权限的列表
+     *
      * @param context
      * @param permissions
      * @return
@@ -93,6 +98,7 @@ public abstract class EmmPermissionBase {
 
     /**
      * 判断是否永久拒绝不再提醒
+     *
      * @param activity
      * @param permissions
      * @return

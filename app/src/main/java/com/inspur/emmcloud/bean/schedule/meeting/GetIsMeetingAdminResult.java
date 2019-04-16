@@ -7,7 +7,7 @@ public class GetIsMeetingAdminResult {
     private boolean isAdmin = false;
 
     public GetIsMeetingAdminResult(String response) {
-        isAdmin = JSONUtils.getBoolean(response,"isAdmin",false);
+        isAdmin = JSONUtils.getBoolean(response, "isAdmin", false);
     }
 
     public boolean isAdmin() {

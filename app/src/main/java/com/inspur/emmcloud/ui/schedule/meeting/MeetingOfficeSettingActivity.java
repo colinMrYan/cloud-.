@@ -33,7 +33,7 @@ import java.util.List;
  */
 
 @ContentView(R.layout.activity_meeting_office_setting)
-public class MeetingOfficeSettingActivity extends BaseActivity implements ExpandableListView.OnChildClickListener{
+public class MeetingOfficeSettingActivity extends BaseActivity implements ExpandableListView.OnChildClickListener {
     @ViewInject(R.id.expandable_listView)
     private ExpandableListView expandableListView;
     private LoadingDialog loadingDlg;
@@ -41,7 +41,8 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     private List<MeetingLocation> locationList = new ArrayList<>();
     private MeetingOfficeAdapter adapter;
     private List<Office> officeList = new ArrayList<>();
-    private List<String> officeIdList= new ArrayList<>();
+    private List<String> officeIdList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,19 +52,19 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         getMeetingLocation();
     }
 
-    private void initView(){
-        loadingDlg= new LoadingDialog(this);
+    private void initView() {
+        loadingDlg = new LoadingDialog(this);
         expandableListView.setGroupIndicator(null);
         expandableListView.setVerticalScrollBarEnabled(false);
         expandableListView.setHeaderDividersEnabled(false);
         expandableListView.setOnChildClickListener(this);
-        adapter = new MeetingOfficeAdapter(this,officeList);
+        adapter = new MeetingOfficeAdapter(this, officeList);
         expandableListView.setAdapter(adapter);
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
     }
 
-    private void getMyMeetingOfficeIdList(){
+    private void getMyMeetingOfficeIdList() {
         String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
         if (officeIdListJson != null) {
             officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
@@ -74,17 +75,17 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         Building building = locationList.get(groupPosition).getOfficeBuildingList().get(childPosition);
         Office office = getBuildingOfOffice(building);
-        if (office != null){
+        if (office != null) {
             deleteOffice(office);
-        }else {
+        } else {
             addOffice(building);
         }
         return false;
     }
 
-    private Office getBuildingOfOffice(Building building){
-        for (Office office:officeList){
-            if (office.getOfficeBuilding().getId().equals(building.getId())){
+    private Office getBuildingOfOffice(Building building) {
+        for (Office office : officeList) {
+            if (office.getOfficeBuilding().getId().equals(building.getId())) {
                 return office;
             }
         }
@@ -92,9 +93,8 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     }
 
 
-
-    public void onClick(View view){
-        if (view.getId() == R.id.ibt_back){
+    public void onClick(View view) {
+        if (view.getId() == R.id.ibt_back) {
             onBackPressed();
         }
     }
@@ -105,40 +105,40 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         finish();
     }
 
-    private void getOfficeList(){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void getOfficeList() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             apiService.getOfficeList();
         }
     }
 
-    private void getMeetingLocation(){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void getMeetingLocation() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             apiService.getMeetingLocation();
         }
     }
 
-    private void addOffice(Building building){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void addOffice(Building building) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             apiService.addMeetingOffice(building);
         }
     }
 
 
-    private void deleteOffice(Office office){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void deleteOffice(Office office) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
             apiService.deleteMeetingOffice(office);
         }
     }
 
-    private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnLocationResultSuccess(GetLocationResult getLocationResult) {
-           LoadingDialog.dimissDlg(loadingDlg);
-           locationList = getLocationResult.getLocList();
+            LoadingDialog.dimissDlg(loadingDlg);
+            locationList = getLocationResult.getLocList();
             adapter.setData(locationList);
 
         }

@@ -18,7 +18,7 @@ public class ScheduleMeetingRoomDurationAdapter extends BaseAdapter {
     private Context context;
     private List<MeetingSchedule> meetingScheduleList = new ArrayList<>();
 
-    public ScheduleMeetingRoomDurationAdapter(Context context,List<MeetingSchedule> meetingScheduleList) {
+    public ScheduleMeetingRoomDurationAdapter(Context context, List<MeetingSchedule> meetingScheduleList) {
         this.meetingScheduleList = meetingScheduleList;
     }
 

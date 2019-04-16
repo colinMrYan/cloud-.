@@ -380,7 +380,7 @@ public class CalEventAddActivity extends BaseActivity {
         // TODO Auto-generated method stub
         addCalendarEvent = new CalendarEvent();
         addCalendarEvent.setTitle(title);
-        addCalendarEvent.setAllday( isAllDay);
+        addCalendarEvent.setAllday(isAllDay);
         addCalendarEvent.setStartDate(TimeUtils
                 .localCalendar2UTCCalendar(startCalendar));
         addCalendarEvent.setState("ACTIVED");

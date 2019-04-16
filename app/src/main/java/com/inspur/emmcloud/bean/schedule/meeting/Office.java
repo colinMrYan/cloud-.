@@ -12,17 +12,17 @@ public class Office {
     private String id = "";
     private String floor = "";
     private String name = "";
-    private Building officeBuilding ;
+    private Building officeBuilding;
 
-    public Office(String response){
+    public Office(String response) {
         this(JSONUtils.getJSONObject(response));
     }
 
-    public Office(JSONObject obj){
-        id = JSONUtils.getString(obj,"id","");
-        floor = JSONUtils.getString(obj,"floor","");
-        name = JSONUtils.getString(obj,"name","");
-        JSONObject officeBuildingObj = JSONUtils.getJSONObject(obj,"building",new JSONObject());
+    public Office(JSONObject obj) {
+        id = JSONUtils.getString(obj, "id", "");
+        floor = JSONUtils.getString(obj, "floor", "");
+        name = JSONUtils.getString(obj, "name", "");
+        JSONObject officeBuildingObj = JSONUtils.getJSONObject(obj, "building", new JSONObject());
         officeBuilding = new Building(officeBuildingObj);
     }
 

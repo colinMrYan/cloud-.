@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by yufuchang on 2019/3/28.
  */
-public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener{
+public class ScheduleHomeFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
@@ -47,6 +47,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -158,6 +159,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
     /**
      * 更新TabLayout文字状态-选中状态和未选中状态
+     *
      * @param tab
      * @param isSelect
      */
@@ -193,7 +195,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                     case 5:
                         if (viewPager.getCurrentItem() == 0) {
                             IntentUtils.startActivity(getActivity(), CalendarSettingActivity.class);
-                        }else if(viewPager.getCurrentItem() == 2){
+                        } else if (viewPager.getCurrentItem() == 2) {
                             IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
                         }
                         break;
@@ -230,7 +232,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.ibt_add:
                 showAddPopMenu(view);
                 break;

@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import com.inspur.emmcloud.widget.calendarview.MonthView;
 
@@ -105,12 +104,23 @@ public class CustomMonthView extends MonthView {
 
     }
 
+    /**
+     * dp转px
+     *
+     * @param context context
+     * @param dpValue dp
+     * @return px
+     */
+    private static int dipToPx(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
     @Override
     protected void onPreviewHook() {
         mSolarTermTextPaint.setTextSize(mCurMonthLunarTextPaint.getTextSize());
         mRadius = Math.min(mItemWidth, mItemHeight) / 13 * 5;
     }
-
 
     @Override
     protected boolean onDrawSelected(Canvas canvas, EmmCalendar calendar, int x, int y, boolean hasScheme) {
@@ -122,20 +132,20 @@ public class CustomMonthView extends MonthView {
 
     @Override
     protected void onDrawScheme(Canvas canvas, EmmCalendar calendar, int x, int y) {
-        if (calendar.getShowSchemePoint()){
+        if (calendar.getShowSchemePoint()) {
             mPointPaint.setColor(0xFF95B0C5);
-            canvas.drawCircle(x + mItemWidth / 2, y + mItemHeight - 3 * mPadding- mPointRadius, mPointRadius, mPointPaint);
+            canvas.drawCircle(x + mItemWidth / 2, y + mItemHeight - 3 * mPadding - mPointRadius, mPointRadius, mPointPaint);
         }
-       }
+    }
 
     @Override
     protected void onDrawText(Canvas canvas, EmmCalendar calendar, int x, int y, boolean hasScheme, boolean isSelected) {
         int cx = x + mItemWidth / 2;
-        int top = y - (int)(mItemHeight / 5.5);
-        String day =calendar.isCurrentDay()?"今":String.valueOf(calendar.getDay());
+        int top = y - (int) (mItemHeight / 5.5);
+        String day = calendar.isCurrentDay() ? "今" : String.valueOf(calendar.getDay());
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius, y + mPadding + mSchemeBaseLine+dipToPx(getContext(),6), mTextPaint);
+            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius, y + mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
         }
 
         if (isSelected) {
@@ -156,20 +166,8 @@ public class CustomMonthView extends MonthView {
 
             canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + y + mItemHeight / 15,
                     calendar.isCurrentDay() ? mCurDayLunarTextPaint :
-                            calendar.isCurrentMonth() ? !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint  :
+                            calendar.isCurrentMonth() ? !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint :
                                     mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
         }
-    }
-
-    /**
-     * dp转px
-     *
-     * @param context context
-     * @param dpValue dp
-     * @return px
-     */
-    private static int dipToPx(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 }

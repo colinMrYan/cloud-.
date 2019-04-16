@@ -744,20 +744,20 @@ public class MeetingDetailActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingDetailActivity.this,new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        beginCalendar.set(year, monthOfYear, dayOfMonth);
-                        endCalendar.set(year, monthOfYear, dayOfMonth);
-                        beginDateText.setText(TimeUtils.calendar2FormatString(
-                                MeetingDetailActivity.this, beginCalendar,
-                                TimeUtils.FORMAT_MONTH_DAY));
-                        endDateText.setText(TimeUtils.calendar2FormatString(
-                                MeetingDetailActivity.this, beginCalendar,
-                                TimeUtils.FORMAT_MONTH_DAY));
-                    }
-                }, year, month, day);
+                MeetingDetailActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                beginCalendar.set(year, monthOfYear, dayOfMonth);
+                endCalendar.set(year, monthOfYear, dayOfMonth);
+                beginDateText.setText(TimeUtils.calendar2FormatString(
+                        MeetingDetailActivity.this, beginCalendar,
+                        TimeUtils.FORMAT_MONTH_DAY));
+                endDateText.setText(TimeUtils.calendar2FormatString(
+                        MeetingDetailActivity.this, beginCalendar,
+                        TimeUtils.FORMAT_MONTH_DAY));
+            }
+        }, year, month, day);
         datePickerDialog.show();
     }
 

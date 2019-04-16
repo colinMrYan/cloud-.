@@ -25,6 +25,7 @@ public class Meeting implements Serializable, Comparator {
     private ArrayList<Room> rooms = new ArrayList<Room>();
     private ArrayList<String> participants = new ArrayList<String>();
     private String bookDate = "";
+
     public Meeting() {
 
     }
@@ -200,11 +201,11 @@ public class Meeting implements Serializable, Comparator {
         this.location = location;
     }
 
-    public Calendar getFromCalendar(){
+    public Calendar getFromCalendar() {
         return TimeUtils.timeString2Calendar(from);
     }
 
-    public Calendar getToCalendar(){
+    public Calendar getToCalendar() {
         return TimeUtils.timeString2Calendar(to);
     }
 

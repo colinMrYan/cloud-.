@@ -353,7 +353,7 @@ public class MeetingAddActivity extends BaseActivity {
         meeting.setEndTime(endTimeCalendar.getTimeInMillis());
         meeting.setNote(note);
         meeting.setLocation(location.toJSONObject().toString());
-        LogUtils.jasonDebug("location.toJSONObject().toString()="+location.toJSONObject().toString());
+        LogUtils.jasonDebug("location.toJSONObject().toString()=" + location.toJSONObject().toString());
         JSONArray array = new JSONArray();
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {
@@ -382,7 +382,7 @@ public class MeetingAddActivity extends BaseActivity {
             e.printStackTrace();
         }
         loadingDlg.show();
-        LogUtils.jasonDebug("meeting.toJSOnObject().toString()="+meeting.toJSOnObject().toString());
+        LogUtils.jasonDebug("meeting.toJSOnObject().toString()=" + meeting.toJSOnObject().toString());
         apiService.addMeeting(meeting.toJSOnObject().toString());
     }
 
@@ -413,7 +413,7 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnAddMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED,null));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
         }
 
         @Override

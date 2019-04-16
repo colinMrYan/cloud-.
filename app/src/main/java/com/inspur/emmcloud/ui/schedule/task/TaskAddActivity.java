@@ -75,6 +75,16 @@ import cn.carbs.android.segmentcontrolview.library.SegmentControlView;
  */
 @ContentView(R.layout.activity_task_add)
 public class TaskAddActivity extends BaseActivity {
+    public static final int CLASS_TAG_REQUEST_CODE = 6;
+    private static final int MANGER_REQUEST_CODE = 1;
+    private static final int ALBUM_REQUEST_CODE = 2;
+    private static final int PARTER_REQUEST_CODE = 3;
+    private static final int ALERT_TIME_REQUEST_CODE = 4;
+    private static final int ATTACHMENT_REQUEST_CODE = 5;
+    @ViewInject(R.id.ll_single_tag)
+    LinearLayout singleTagLayout;
+    @ViewInject(R.id.ll_tags)
+    LinearLayout tagsLayout;
     @ViewInject(R.id.et_input_title)
     private EditText contentInputEdit;
     @ViewInject(R.id.segment_control)
@@ -83,10 +93,6 @@ public class TaskAddActivity extends BaseActivity {
     private ImageView taskTypeTapImage;
     @ViewInject(R.id.tv_task_type_name)
     private TextView taskTypeNameText;
-    @ViewInject(R.id.ll_single_tag)
-    LinearLayout singleTagLayout;
-    @ViewInject(R.id.ll_tags)
-    LinearLayout tagsLayout;
     @ViewInject(R.id.tv_deadline_time)
     private TextView deadlineTimeText;
     @ViewInject(R.id.tv_deadline_time)
@@ -121,15 +127,6 @@ public class TaskAddActivity extends BaseActivity {
     private SegmentControlView segmentControlView;
     @ViewInject(R.id.tv_title)
     private TextView titleText;
-
-    private static final int MANGER_REQUEST_CODE = 1;
-    private static final int ALBUM_REQUEST_CODE = 2;
-    private static final int PARTER_REQUEST_CODE = 3;
-    private static final int ALERT_TIME_REQUEST_CODE = 4;
-    private static final int ATTACHMENT_REQUEST_CODE = 5;
-    public static final int CLASS_TAG_REQUEST_CODE = 6;
-
-
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult = new Task();
@@ -173,15 +170,15 @@ public class TaskAddActivity extends BaseActivity {
             taskColorTags = (ArrayList<TaskColorTag>) taskResult.getTags();
             isCreateTask = false;
             List<Attachment> attachments = taskResult.getAttachments();
-            LogUtils.LbcDebug("attachments"+JSONUtils.toJSONString(attachments));
+            LogUtils.LbcDebug("attachments" + JSONUtils.toJSONString(attachments));
             for (int i = 0; i < attachments.size(); i++) {
                 if (attachments.get(i).getCategory().equals("IMAGE")) {
                     pictureAttachments.add(attachments.get(i));
-                   // JSONUtils.getJSONObject(JSONUtils.toJSONString(attachments.get(i)));
-                    JSONUtils.getString(JSONUtils.getJSONObject(JSONUtils.toJSONString(attachments.get(i))),"uri","ces");
-                    LogUtils.LbcDebug("Uri:::"+JSONUtils.toJSONString(attachments.get(i)));
-                  // JsonAttachmentAndUri jsonAttachmentAndUri = new JsonAttachmentAndUri(attachments.get(i),)
-                  // pictureJsonAttachments.add()
+                    // JSONUtils.getJSONObject(JSONUtils.toJSONString(attachments.get(i)));
+                    JSONUtils.getString(JSONUtils.getJSONObject(JSONUtils.toJSONString(attachments.get(i))), "uri", "ces");
+                    LogUtils.LbcDebug("Uri:::" + JSONUtils.toJSONString(attachments.get(i)));
+                    // JsonAttachmentAndUri jsonAttachmentAndUri = new JsonAttachmentAndUri(attachments.get(i),)
+                    // pictureJsonAttachments.add()
                     ///
                     String fileName = attachments.get(i).getName();
                     final String fileUri = attachments.get(i).getUri();
@@ -190,7 +187,7 @@ public class TaskAddActivity extends BaseActivity {
                     final String downlaodSource = APIUri.getPreviewUrl(fileUri);
                     if (FileUtils.isFileExist(fileUri)) {
                     } else if (FileUtils.isFileExist(target)) {
-                       //如果存在文件
+                        //如果存在文件
                     } else {
                         //如果不存在文件，进行下载，下载成功后刷新列表UI
                         APIDownloadCallBack downLoadallback = new APIDownloadCallBack(TaskAddActivity.this, downlaodSource) {
@@ -207,8 +204,8 @@ public class TaskAddActivity extends BaseActivity {
 
                             @Override
                             public void callbackSuccess(File file) {
-                             attachmentPictureAdapter.notifyDataSetChanged();
-                             attachmentOtherAdapter.notifyDataSetChanged();
+                                attachmentPictureAdapter.notifyDataSetChanged();
+                                attachmentOtherAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -223,16 +220,13 @@ public class TaskAddActivity extends BaseActivity {
                         };
                         new DownLoaderUtils().startDownLoad(downlaodSource, target,
                                 downLoadallback);
-                }
+                    }
                 } else {
                     otherAttachments.add(attachments.get(i));
                 }
             }
         }
     }
-
-
-
 
 
     private void initView() {
@@ -583,6 +577,47 @@ public class TaskAddActivity extends BaseActivity {
             loadingDlg.show();
             apiService.addAttachments(taskResult.getId(), jsonAttachment.toString());
         }
+    }
+
+    /**
+     * 获取文件类型对应的图标
+     */
+    public int getFileIconByType(String fileType) {
+        int icId = 0;
+        switch (fileType) {
+            case "TEXT":
+                icId = R.drawable.ic_volume_file_typ_txt;
+                break;
+            case "MS_WORD":
+                icId = R.drawable.ic_volume_file_typ_word;
+                break;
+            case "MS_EXCEL":
+                icId = R.drawable.ic_volume_file_typ_excel;
+                break;
+            case "MS_PPT":
+                icId = R.drawable.ic_volume_file_typ_ppt;
+                break;
+            default:
+                icId = R.drawable.ic_volume_file_typ_unknown;
+                break;
+        }
+        return icId;
+    }
+
+    /**
+     * 上传任务数据
+     */
+    private String uploadTaskData() {
+        String title = contentInputEdit.getText().toString();
+        int priority = segmentControlView.getSelectedIndex();
+        taskResult.setTitle(title);
+        taskResult.setPriority(priority);
+        taskResult.setTags(taskColorTags);
+        if (deadLineCalendar != null)
+            taskResult.setDueDate(TimeUtils.localCalendar2UTCCalendar(deadLineCalendar));
+        String taskJson = JSONUtils.toJSONString(taskResult);
+        LogUtils.LbcDebug("taskJson" + taskJson);
+        return taskJson;
     }
 
     /**
@@ -1009,46 +1044,5 @@ public class TaskAddActivity extends BaseActivity {
         public void setNew(boolean aNew) {
             isNew = aNew;
         }
-    }
-
-    /**
-     * 获取文件类型对应的图标
-     */
-    public int getFileIconByType(String fileType) {
-        int icId = 0;
-        switch (fileType) {
-            case "TEXT":
-                icId = R.drawable.ic_volume_file_typ_txt;
-                break;
-            case "MS_WORD":
-                icId = R.drawable.ic_volume_file_typ_word;
-                break;
-            case "MS_EXCEL":
-                icId = R.drawable.ic_volume_file_typ_excel;
-                break;
-            case "MS_PPT":
-                icId = R.drawable.ic_volume_file_typ_ppt;
-                break;
-            default:
-                icId = R.drawable.ic_volume_file_typ_unknown;
-                break;
-        }
-        return icId;
-    }
-
-    /**
-     * 上传任务数据
-     */
-    private String uploadTaskData() {
-        String title = contentInputEdit.getText().toString();
-        int priority = segmentControlView.getSelectedIndex();
-        taskResult.setTitle(title);
-        taskResult.setPriority(priority);
-        taskResult.setTags(taskColorTags);
-        if (deadLineCalendar != null)
-            taskResult.setDueDate(TimeUtils.localCalendar2UTCCalendar(deadLineCalendar));
-        String taskJson = JSONUtils.toJSONString(taskResult);
-        LogUtils.LbcDebug("taskJson" + taskJson);
-        return taskJson;
     }
 }

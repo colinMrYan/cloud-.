@@ -277,21 +277,21 @@ public class MeetingBookingActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingBookingActivity.this,new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        isSetTime = true;
-                        meetingBeginCalendar.set(year, monthOfYear, dayOfMonth);
-                        meetingEndCalendar.set(year, monthOfYear, dayOfMonth);
-                        meetingBeginDateText.setText(TimeUtils.calendar2FormatString(
-                                MeetingBookingActivity.this, meetingBeginCalendar,
-                                TimeUtils.FORMAT_MONTH_DAY));
-                        meetingEndDateText.setText(TimeUtils.calendar2FormatString(
-                                MeetingBookingActivity.this, meetingEndCalendar,
-                                TimeUtils.FORMAT_MONTH_DAY));
-                    }
-                }, meetingBeginCalendar.get(Calendar.YEAR), meetingBeginCalendar.get(Calendar.MONTH), meetingBeginCalendar.get(Calendar.DAY_OF_MONTH));
+                MeetingBookingActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                isSetTime = true;
+                meetingBeginCalendar.set(year, monthOfYear, dayOfMonth);
+                meetingEndCalendar.set(year, monthOfYear, dayOfMonth);
+                meetingBeginDateText.setText(TimeUtils.calendar2FormatString(
+                        MeetingBookingActivity.this, meetingBeginCalendar,
+                        TimeUtils.FORMAT_MONTH_DAY));
+                meetingEndDateText.setText(TimeUtils.calendar2FormatString(
+                        MeetingBookingActivity.this, meetingEndCalendar,
+                        TimeUtils.FORMAT_MONTH_DAY));
+            }
+        }, meetingBeginCalendar.get(Calendar.YEAR), meetingBeginCalendar.get(Calendar.MONTH), meetingBeginCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 

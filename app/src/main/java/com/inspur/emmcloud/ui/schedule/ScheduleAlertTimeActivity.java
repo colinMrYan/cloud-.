@@ -23,13 +23,12 @@ import org.xutils.view.annotation.ViewInject;
  */
 @ContentView(R.layout.activity_schedule_alert_time)
 public class ScheduleAlertTimeActivity extends BaseActivity {
+    public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
+    public static String EXTRA_SCHEDULE_IS_ALL_DAY = "schedule_is_all_day";
     @ViewInject(R.id.lv_alert_time)
     ListView alertTimeListView;
     @ViewInject(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
-    public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
-    public static String EXTRA_SCHEDULE_IS_ALL_DAY = "schedule_is_all_day";
-
     String alertTime = "";
     private Adapter adapter;
     private int selectPosition = -1;

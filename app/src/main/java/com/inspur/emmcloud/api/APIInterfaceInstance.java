@@ -110,6 +110,10 @@ import java.util.Calendar;
 import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
+    public APIInterfaceInstance() {
+        super();
+    }
+
     @Override
     public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
     }
@@ -153,7 +157,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnOauthSigninFail(String error, int errorCode) {
         // TODO Auto-generated method stub
     }
-
 
     @Override
     public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {
@@ -322,7 +325,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
     @Override
     public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
         // TODO Auto-generated method stub
@@ -356,7 +358,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
 
     }
-
 
     @Override
     public void returnModifyUserInfoSucces(GetBoolenResult getBoolenResult) {
@@ -836,7 +837,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
     @Override
     public void returnAttachmentSuccess(Task taskResult) {
         // TODO Auto-generated method stub
@@ -1075,16 +1075,13 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
     }
 
-
     @Override
     public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, int page) {
     }
 
-
     @Override
     public void returnLanguageSuccess(GetLanguageResult getLanguageResult) {
     }
-
 
     @Override
     public void returnLanguageFail(String error, int errorCode) {
@@ -1123,7 +1120,6 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnRobotByIdFail(String error, int errorCode) {
     }
-
 
     @Override
     public void returnResetPasswordSuccess() {
@@ -1368,7 +1364,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
     }
 
-
     @Override
     public void returnUploadPositionSuccess() {
     }
@@ -1485,7 +1480,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnRemoveShareVolumeFail(String error, int errorCode) {
     }
 
-
     @Override
     public void returnFaceSettingSuccess(GetFaceSettingResult getFaceSettingResult) {
     }
@@ -1557,7 +1551,6 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnVolumeGroupContainMeFail(String error, int errorCode) {
     }
-
 
     @Override
     public void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult) {
@@ -1955,10 +1948,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnScheduleListFail(String error, int errorCode) {
-    }
-
-    public APIInterfaceInstance() {
-        super();
     }
 
     @Override

@@ -55,22 +55,22 @@ public class IntentUtils {
         }
     }
 
-	public static void startActivity(Activity context,String scheme) {
-		try {
+    public static void startActivity(Activity context, String scheme) {
+        try {
 //			Uri uri = Uri.parse("scheme://host/path?param1=abc&param2=cde");
-			Uri uri = Uri.parse(scheme);
-			Intent intent = new Intent();
-			intent.setAction(Intent.ACTION_VIEW);
-			intent.setData(uri);
-			PackageManager packageManager= context.getPackageManager();
-			ComponentName componentName=intent.resolveActivity(packageManager);
-			if (componentName!=null){
-				context.startActivity(intent);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            Uri uri = Uri.parse(scheme);
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(uri);
+            PackageManager packageManager = context.getPackageManager();
+            ComponentName componentName = intent.resolveActivity(packageManager);
+            if (componentName != null) {
+                context.startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 //	/**

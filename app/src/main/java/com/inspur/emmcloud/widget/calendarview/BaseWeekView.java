@@ -59,7 +59,7 @@ public abstract class BaseWeekView extends BaseView {
      * 周视图切换点击默认位置
      *
      * @param emmCalendar calendar
-     * @param isNotice isNotice
+     * @param isNotice    isNotice
      */
     final void performClickCalendar(EmmCalendar emmCalendar, boolean isNotice) {
         if (mParentLayout == null || mDelegate.mInnerListener == null || mItems == null || mItems.size() == 0) {

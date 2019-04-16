@@ -27,10 +27,12 @@ import java.util.List;
 public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
     private List<MeetingRoomArea> meetingRoomAreaList = new ArrayList<>();
     private Context context;
-    public ScheduleMeetingRoomAdapter(Context context){
+
+    public ScheduleMeetingRoomAdapter(Context context) {
         this.context = context;
     }
-    public void setData(List<MeetingRoomArea> meetingRoomAreaList ){
+
+    public void setData(List<MeetingRoomArea> meetingRoomAreaList) {
         this.meetingRoomAreaList.clear();
         this.meetingRoomAreaList.addAll(meetingRoomAreaList);
         notifyDataSetChanged();
@@ -76,11 +78,11 @@ public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
         ExpandableListView expandableListView = (ExpandableListView) parent;
         expandableListView.expandGroup(groupPosition);
         TextView textView = new TextView(context);
-        int paddingLeft = DensityUtil.dip2px(context,16);
-        int paddingTop = paddingLeft/2;
-        textView.setPadding(paddingLeft,paddingTop,0,paddingTop);
+        int paddingLeft = DensityUtil.dip2px(context, 16);
+        int paddingTop = paddingLeft / 2;
+        textView.setPadding(paddingLeft, paddingTop, 0, paddingTop);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         textView.setTextColor(Color.parseColor("#999999"));
         textView.setText(meetingRoomAreaList.get(groupPosition).getName());
         return textView;
@@ -89,70 +91,70 @@ public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         MeetingRoom meetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
-        convertView = LayoutInflater.from(context).inflate(R.layout.meeting_room_expandale_child_item,null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.meeting_room_expandale_child_item, null);
         TextView nameText = convertView.findViewById(R.id.tv_name);
         TextView statusText = convertView.findViewById(R.id.tv_status);
         ImageView statusPointImg = convertView.findViewById(R.id.iv_status_point);
         TextView peopleNumText = convertView.findViewById(R.id.tv_people_num);
         LinearLayout equipmentLayout = convertView.findViewById(R.id.ll_equipment);
         LinearLayout dayStatusLayout = convertView.findViewById(R.id.ll_day_status);
-        showMeetingRoomEquipment(equipmentLayout,meetingRoom.getEquipmentList());
-        showMeetingRoomDayStatus(dayStatusLayout,meetingRoom.getBusyDegreeList());
+        showMeetingRoomEquipment(equipmentLayout, meetingRoom.getEquipmentList());
+        showMeetingRoomDayStatus(dayStatusLayout, meetingRoom.getBusyDegreeList());
         View dividerView = convertView.findViewById(R.id.view_divider);
-        dividerView.setVisibility(isLastChild?View.GONE:View.VISIBLE);
+        dividerView.setVisibility(isLastChild ? View.GONE : View.VISIBLE);
         nameText.setText(meetingRoom.getName());
-        peopleNumText.setText(meetingRoom.getGalleryful()+"");
+        peopleNumText.setText(meetingRoom.getGalleryful() + "");
         boolean isInMeeting = meetingRoom.getLight().equals("RED");
-            statusText.setText(isInMeeting?"会议中":"空闲");
-            statusPointImg.setImageResource(isInMeeting?R.drawable.ic_schedule_meeting_room_busy:R.drawable.ic_schedule_meeting_room_free);
-            statusText.setTextColor(Color.parseColor(isInMeeting?"#FF0000":"#7ED321"));
+        statusText.setText(isInMeeting ? "会议中" : "空闲");
+        statusPointImg.setImageResource(isInMeeting ? R.drawable.ic_schedule_meeting_room_busy : R.drawable.ic_schedule_meeting_room_free);
+        statusText.setTextColor(Color.parseColor(isInMeeting ? "#FF0000" : "#7ED321"));
         return convertView;
     }
 
-    private void showMeetingRoomDayStatus(LinearLayout dayStatusLayout, List<Integer> busyDegressList){
+    private void showMeetingRoomDayStatus(LinearLayout dayStatusLayout, List<Integer> busyDegressList) {
         dayStatusLayout.removeAllViews();
-        for(Integer degree:busyDegressList){
+        for (Integer degree : busyDegressList) {
             ImageView imageView = new ImageView(context);
-            int height = DensityUtil.dip2px(context,17);
-            int marginLeft = DensityUtil.dip2px(context,10);
+            int height = DensityUtil.dip2px(context, 17);
+            int marginLeft = DensityUtil.dip2px(context, 10);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(height, height);
-            params.setMargins(marginLeft,0,0,0);
+            params.setMargins(marginLeft, 0, 0, 0);
             imageView.setLayoutParams(params);
-            if (degree<40){
+            if (degree < 40) {
                 imageView.setImageResource(R.drawable.ic_schedule_meeting_room_status_empty);
-            }else if(degree>70){
+            } else if (degree > 70) {
                 imageView.setImageResource(R.drawable.ic_schedule_meeting_room_status_full);
-            }else {
+            } else {
                 imageView.setImageResource(R.drawable.ic_schedule_meeting_room_status_half);
             }
             dayStatusLayout.addView(imageView);
         }
     }
 
-    private void showMeetingRoomEquipment( LinearLayout equipmentLayout,List<String> equipmentList){
-        for (String equipment:equipmentList){
+    private void showMeetingRoomEquipment(LinearLayout equipmentLayout, List<String> equipmentList) {
+        for (String equipment : equipmentList) {
             int equipmentResId = -1;
-            switch (equipment){
+            switch (equipment) {
                 case "PROJECTOR":
-                    equipmentResId =R.drawable.ic_schedule_meeting_room_equipment_projector;
+                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_projector;
                     break;
                 case "WHITE_BOARD":
-                    equipmentResId =R.drawable.ic_schedule_meeting_room_equipment_white_borad;
+                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_white_borad;
                     break;
                 case "CONFERENCE_PHONE":
-                    equipmentResId =R.drawable.ic_schedule_meeting_room_equipment_conference_phone;
+                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_conference_phone;
                     break;
                 case "WIFI":
-                    equipmentResId =R.drawable.ic_schedule_meeting_room_equipment_wifi;
+                    equipmentResId = R.drawable.ic_schedule_meeting_room_equipment_wifi;
                     break;
-                 default:
-                     continue;
+                default:
+                    continue;
             }
             ImageView imageView = new ImageView(context);
-            int height = DensityUtil.dip2px(context,17);
-            int marginLeft = DensityUtil.dip2px(context,10);
+            int height = DensityUtil.dip2px(context, 17);
+            int marginLeft = DensityUtil.dip2px(context, 10);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(height, height);
-            params.setMargins(marginLeft,0,0,0);
+            params.setMargins(marginLeft, 0, 0, 0);
             imageView.setLayoutParams(params);
             imageView.setImageResource(equipmentResId);
             equipmentLayout.addView(imageView);
