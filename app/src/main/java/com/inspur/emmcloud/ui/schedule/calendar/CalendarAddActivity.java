@@ -133,9 +133,10 @@ public class CalendarAddActivity extends BaseActivity  {
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
         titleText.setText(isEditable ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
-
-        calendarTypeNameText.setText(isEditable ? "" : "我的日历");
-        calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
+        if(myCalendar!=null){
+             calendarTypeNameText.setText(isEditable ? "" : myCalendar.getName());
+             calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
+        }
         calenderTypeTipLayout.setVisibility(isEditable ? View.GONE : View.VISIBLE);
         initStartEndTimeView();
         alertText.setText(remindEvent.getRemindType());
@@ -149,6 +150,7 @@ public class CalendarAddActivity extends BaseActivity  {
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+            LogUtils.LbcDebug("传:::"+JSONUtils.toJSONString(scheduleEvent));
             isAllDay = scheduleEvent.getAllDay();
             startCalendar = scheduleEvent.getStartTimeCalendar();
             endCalendar = scheduleEvent.getEndTimeCalendar();
