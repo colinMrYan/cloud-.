@@ -11,12 +11,12 @@ import com.inspur.emmcloud.adapter.MeetingOfficeAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
+import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingLocation;
-import com.inspur.emmcloud.bean.work.GetAddOfficeResult;
+import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -32,20 +32,22 @@ import java.util.List;
  * Created by chenmch on 2019/4/15.
  */
 
-@ContentView(R.layout.activity_meeting_office_add)
-public class MeetingOfficeAddActivity extends BaseActivity implements ExpandableListView.OnChildClickListener{
+@ContentView(R.layout.activity_meeting_office_setting)
+public class MeetingOfficeSettingActivity extends BaseActivity implements ExpandableListView.OnChildClickListener{
     @ViewInject(R.id.expandable_listView)
     private ExpandableListView expandableListView;
     private LoadingDialog loadingDlg;
     private ScheduleApiService apiService;
     private List<MeetingLocation> locationList = new ArrayList<>();
     private MeetingOfficeAdapter adapter;
+    private List<Office> officeList = new ArrayList<>();
     private List<String> officeIdList= new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getMyMeetingOfficeIdList();
         initView();
+        getOfficeList();
         getMeetingLocation();
     }
 
@@ -55,7 +57,7 @@ public class MeetingOfficeAddActivity extends BaseActivity implements Expandable
         expandableListView.setVerticalScrollBarEnabled(false);
         expandableListView.setHeaderDividersEnabled(false);
         expandableListView.setOnChildClickListener(this);
-        adapter = new MeetingOfficeAdapter(this,officeIdList);
+        adapter = new MeetingOfficeAdapter(this,officeList);
         expandableListView.setAdapter(adapter);
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
@@ -63,7 +65,6 @@ public class MeetingOfficeAddActivity extends BaseActivity implements Expandable
 
     private void getMyMeetingOfficeIdList(){
         String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
-        LogUtils.jasonDebug("officeIdListJson=="+officeIdListJson);
         if (officeIdListJson != null) {
             officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
         }
@@ -72,20 +73,42 @@ public class MeetingOfficeAddActivity extends BaseActivity implements Expandable
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         Building building = locationList.get(groupPosition).getOfficeBuildingList().get(childPosition);
-        boolean isSelect = officeIdList.contains(building.getId());
-        if (isSelect){
-            deleteOffice(building);
+        Office office = getBuildingOfOffice(building);
+        if (office != null){
+            deleteOffice(office);
         }else {
             addOffice(building);
         }
         return false;
     }
 
+    private Office getBuildingOfOffice(Building building){
+        for (Office office:officeList){
+            if (office.getOfficeBuilding().getId().equals(building.getId())){
+                return office;
+            }
+        }
+        return null;
+    }
+
 
 
     public void onClick(View view){
         if (view.getId() == R.id.ibt_back){
-            finish();
+            onBackPressed();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private void getOfficeList(){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            loadingDlg.show();
+            apiService.getOfficeList();
         }
     }
 
@@ -104,10 +127,10 @@ public class MeetingOfficeAddActivity extends BaseActivity implements Expandable
     }
 
 
-    private void deleteOffice(Building building){
+    private void deleteOffice(Office office){
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
             loadingDlg.show();
-            apiService.deleteMeetingOffice(building);
+            apiService.deleteMeetingOffice(office);
         }
     }
 
@@ -123,13 +146,14 @@ public class MeetingOfficeAddActivity extends BaseActivity implements Expandable
         @Override
         public void returnLocationResultFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MeetingOfficeAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(MeetingOfficeSettingActivity.this, error, errorCode);
         }
 
         @Override
-        public void returnAddMeetingOfficeSuccess(GetAddOfficeResult getCreateOfficeResult, Building building) {
+        public void returnAddMeetingOfficeSuccess(Office office, Building building) {
             LoadingDialog.dimissDlg(loadingDlg);
-            officeIdList.add(building.getId());
+            officeIdList.add(office.getId());
+            officeList.add(office);
             PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
             adapter.notifyDataSetChanged();
         }
@@ -137,13 +161,14 @@ public class MeetingOfficeAddActivity extends BaseActivity implements Expandable
         @Override
         public void returnAddMeetingOfficeFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MeetingOfficeAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(MeetingOfficeSettingActivity.this, error, errorCode);
         }
 
         @Override
-        public void returnDeleteOfficeSuccess(Building building) {
+        public void returnDeleteOfficeSuccess(Office office) {
             LoadingDialog.dimissDlg(loadingDlg);
-            officeIdList.remove(building.getId());
+            officeList.remove(office);
+            officeIdList.remove(office.getId());
             PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
             adapter.notifyDataSetChanged();
         }
@@ -151,7 +176,22 @@ public class MeetingOfficeAddActivity extends BaseActivity implements Expandable
         @Override
         public void returnDeleteOfficeFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MeetingOfficeAddActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(MeetingOfficeSettingActivity.this, error, errorCode);
+        }
+
+        @Override
+        public void returnOfficeListResultSuccess(GetOfficeListResult getOfficeListResult) {
+            officeList.clear();
+            officeList.addAll(getOfficeListResult.getOfficeList());
+            officeIdList = getOfficeListResult.getOfficeIdList();
+            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
+            adapter.notifyDataSetChanged();
+        }
+
+
+        @Override
+        public void returnOfficeListResultFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(MeetingOfficeSettingActivity.this, error, errorCode);
         }
     }
 }

@@ -79,8 +79,10 @@ import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
+import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
@@ -92,8 +94,6 @@ import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
-import com.inspur.emmcloud.bean.work.GetAddOfficeResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingReplyResult;
@@ -302,7 +302,7 @@ public interface APIInterface {
 
     void returnOfficeListResultFail(String error, int errorCode);
 
-    void returnAddMeetingOfficeSuccess(GetAddOfficeResult getCreateOfficeResult, Building building);
+    void returnAddMeetingOfficeSuccess(Office office, Building building);
 
     void returnAddMeetingOfficeFail(String error, int errorCode);
 
@@ -434,7 +434,7 @@ public interface APIInterface {
 
     void returnAddTaskTagFail(String error, int errorCode);
 
-    void returnDeleteOfficeSuccess(Building building);
+    void returnDeleteOfficeSuccess(Office office);
 
     void returnDeleteOfficeFail(String error, int errorCode);
 

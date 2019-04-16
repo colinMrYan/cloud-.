@@ -13,7 +13,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.work.GetAddOfficeResult;
+import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
@@ -460,7 +460,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAddMeetingOfficeSuccess(new GetAddOfficeResult(new String(arg0)),building);
+                apiInterface.returnAddMeetingOfficeSuccess(new Office(new String(arg0)),building);
             }
 
             @Override
@@ -477,8 +477,8 @@ public class ScheduleApiService {
      *
      * @param building
      */
-    public void deleteMeetingOffice(final Building building) {
-        final String completeUrl = APIUri.addOfficeUrl() + "?id=" + building.getId();
+    public void deleteMeetingOffice(final Office office) {
+        final String completeUrl = APIUri.addOfficeUrl() + "?id=" + office.getId();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
@@ -487,7 +487,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        deleteMeetingOffice(building);
+                        deleteMeetingOffice(office);
                     }
 
                     @Override
@@ -502,7 +502,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDeleteOfficeSuccess(building);
+                apiInterface.returnDeleteOfficeSuccess(office);
             }
 
             @Override

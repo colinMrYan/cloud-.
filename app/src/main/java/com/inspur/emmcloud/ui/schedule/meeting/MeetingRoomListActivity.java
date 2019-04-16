@@ -18,8 +18,6 @@ import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.work.meeting.CreateCommonOfficeSpaceActivity;
-import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -47,7 +45,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public static final String EXTRA_END_TIME = "extra_end_time";
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     public static final String EXTRA_MEETING_ROOM_BILDING_NAME = "extra_meeting_room_building_name";
-    private static final int REQUEST_CREATE_OFFICE = 1;
+    private static final int REQUEST_MEETING_OFFICE_SETTING = 1;
     @ViewInject(R.id.swipe_refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.expandable_list_view)
@@ -117,7 +115,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                 finish();
                 break;
             case R.id.ibt_config:
-                IntentUtils.startActivity(this,MeetingOfficeAddActivity.class);
+                setMeetingOffice();
                 break;
             case R.id.ll_start_time:
                 showTimeSelectDialog(true);
@@ -191,15 +189,15 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CREATE_OFFICE) {
-
+            if (requestCode == REQUEST_MEETING_OFFICE_SETTING) {
+                getOfficeList();
             }
         }
     }
 
-    private void createOffice() {
-        Intent intent = new Intent(this, CreateCommonOfficeSpaceActivity.class);
-        startActivityForResult(intent, REQUEST_CREATE_OFFICE);
+    private void setMeetingOffice() {
+        Intent intent = new Intent(this, MeetingOfficeSettingActivity.class);
+        startActivityForResult(intent, REQUEST_MEETING_OFFICE_SETTING);
     }
 
     /**
@@ -256,7 +254,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                 getMeetingRoomList();
             } else {
                 swipeRefreshLayout.setRefreshing(false);
-                createOffice();
+                setMeetingOffice();
             }
         }
 
