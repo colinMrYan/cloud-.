@@ -1,0 +1,59 @@
+package com.inspur.emmcloud.bean.schedule;
+
+import com.inspur.emmcloud.util.common.JSONUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+
+/**
+ * Created by libaochao on 2019/4/15.
+ */
+
+
+public class RemindEvent implements Serializable {
+    private int advanceTimeSpan = 0;
+    private String remindType = "";
+
+    public RemindEvent() {
+    }
+
+    public RemindEvent(JSONObject object) {
+        advanceTimeSpan = JSONUtils.getInt(object, "advanceTimeSpan", 0);
+        remindType = JSONUtils.getString(object, "remindType", "");
+    }
+
+    public RemindEvent(String remindType, int advanceTimeSpan) {
+        this.remindType = remindType;
+        this.advanceTimeSpan = advanceTimeSpan;
+    }
+
+    public int getAdvanceTimeSpan() {
+        return advanceTimeSpan;
+    }
+
+    public void setAdvanceTimeSpan(int advanceTimeSpan) {
+        this.advanceTimeSpan = advanceTimeSpan;
+    }
+
+    public String getRemindType() {
+        return remindType;
+    }
+
+    public void setRemindType(String remindType) {
+        this.remindType = remindType;
+    }
+
+    public String getRemindEventIsonStr() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("advanceTimeSpan", advanceTimeSpan);
+            jsonObject.put("remindType", remindType);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+}
+

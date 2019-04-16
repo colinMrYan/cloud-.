@@ -78,7 +78,11 @@ import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.Building;
+import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
@@ -90,9 +94,7 @@ import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
-import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
-import com.inspur.emmcloud.bean.work.GetIsAdmin;
-import com.inspur.emmcloud.bean.work.GetLoctionResult;
+import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
@@ -292,17 +294,17 @@ public interface APIInterface {
 
     void returnUploadExceptionFail(String error, int errorCode);
 
-    void returnLoctionResultSuccess(GetLoctionResult getLoctionResult);
+    void returnLocationResultSuccess(GetLocationResult getLoctionResult);
 
-    void returnLoctionResultFail(String error, int errorCode);
+    void returnLocationResultFail(String error, int errorCode);
 
     void returnOfficeListResultSuccess(GetOfficeListResult getOfficeListResult);
 
     void returnOfficeListResultFail(String error, int errorCode);
 
-    void returnCreatOfficeSuccess(GetCreateOfficeResult getCreateOfficeResult);
+    void returnAddMeetingOfficeSuccess(Office office, Building building);
 
-    void returnCreatOfficeFail(String error, int errorCode);
+    void returnAddMeetingOfficeFail(String error, int errorCode);
 
     void returnAddMembersSuccess(ChannelGroup channelGroup);
 
@@ -402,11 +404,11 @@ public interface APIInterface {
 
     void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity);
 
-    void retrunTripArriveFail(String error, int errorCode);
+    void returnTripArriveFail(String error, int errorCode);
 
-    void returnDelMeetingSuccess();
+    void returnDeleteMeetingSuccess(Meeting meeting);
 
-    void returnDelMeetingFail(String error, int errorCode);
+    void returnDeleteMeetingFail(String error, int errorCode);
 
     void returnDelMembersSuccess(ChannelGroup channelGroup);
 
@@ -432,7 +434,7 @@ public interface APIInterface {
 
     void returnAddTaskTagFail(String error, int errorCode);
 
-    void returnDeleteOfficeSuccess(int position);
+    void returnDeleteOfficeSuccess(Office office);
 
     void returnDeleteOfficeFail(String error, int errorCode);
 
@@ -440,9 +442,9 @@ public interface APIInterface {
 
     void returnKnowledgeListFail(String error, int errorCode);
 
-    void returnIsAdminSuccess(GetIsAdmin getIsAdmin);
+    void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin);
 
-    void returnIsAdminFail(String error, int errorCode);
+    void returnIsMeetingAdminFail(String error, int errorCode);
 
     void returnLanguageSuccess(GetLanguageResult getLanguageResult);
 
@@ -837,12 +839,24 @@ public interface APIInterface {
 
     void returnUserCardMenusFail(String error, int errorCode);
 
-    void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList);
+    void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar, Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList);
+
     void returnScheduleListFail(String error, int errorCode);
+
     void returnAddScheduleSuccess(GetIDResult getIDResult);
+
     void returnAddScheduleFail(String error, int errorCode);
+
     void returnUpdateScheduleSuccess();
+
     void returnUpdateScheduleFail(String error, int errorCode);
+
     void returnDeleteScheduleSuccess();
+
     void returnDeleteScheduleFail(String error, int errorCode);
+
+    void returnAddMeetingSuccess();
+
+    void returnAddMeetingFail(String error, int errorCode);
+
 }

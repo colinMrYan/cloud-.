@@ -744,20 +744,20 @@ public class MeetingDetailActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingDetailActivity.this,new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        beginCalendar.set(year, monthOfYear, dayOfMonth);
-                        endCalendar.set(year, monthOfYear, dayOfMonth);
-                        beginDateText.setText(TimeUtils.calendar2FormatString(
-                                MeetingDetailActivity.this, beginCalendar,
-                                TimeUtils.FORMAT_MONTH_DAY));
-                        endDateText.setText(TimeUtils.calendar2FormatString(
-                                MeetingDetailActivity.this, beginCalendar,
-                                TimeUtils.FORMAT_MONTH_DAY));
-                    }
-                }, year, month, day);
+                MeetingDetailActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                beginCalendar.set(year, monthOfYear, dayOfMonth);
+                endCalendar.set(year, monthOfYear, dayOfMonth);
+                beginDateText.setText(TimeUtils.calendar2FormatString(
+                        MeetingDetailActivity.this, beginCalendar,
+                        TimeUtils.FORMAT_MONTH_DAY));
+                endDateText.setText(TimeUtils.calendar2FormatString(
+                        MeetingDetailActivity.this, beginCalendar,
+                        TimeUtils.FORMAT_MONTH_DAY));
+            }
+        }, year, month, day);
         datePickerDialog.show();
     }
 
@@ -798,8 +798,7 @@ public class MeetingDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnDelMeetingSuccess() {
-            super.returnDelMeetingSuccess();
+        public void returnDeleteMeetingSuccess(com.inspur.emmcloud.bean.schedule.meeting.Meeting meeting) {
             if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
@@ -809,7 +808,7 @@ public class MeetingDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnDelMeetingFail(String error, int errorCode) {
+        public void returnDeleteMeetingFail(String error, int errorCode) {
             if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }

@@ -160,7 +160,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileOperationDropDownImg.setVisibility((isStatusNomal && isShowFileOperationDropDownImg) ? View.VISIBLE : View.GONE);
         if (isMultiselect && isStatusNomal) {
             holder.fileSelcetImg.setVisibility(View.VISIBLE);
-            holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_volume_file_select_yes : R.drawable.ic_volume_file_select_no);
+            holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         } else {
             holder.fileSelcetImg.setVisibility(View.GONE);
         }

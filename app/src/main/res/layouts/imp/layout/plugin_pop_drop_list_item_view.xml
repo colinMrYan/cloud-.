@@ -35,7 +35,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="16dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_volume_file_select_yes" />
+        android:src="@drawable/ic_select_yes" />
     <View
         android:background="@color/color_list_divider"
         android:layout_below="@id/tv_name_tips"

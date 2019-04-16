@@ -89,11 +89,11 @@ public class DropPopMenu {
         mIndicatorToContainerMinMargin = dip2px(mContext, INDICATOR_TO_CONTAINER_MIN_MARGIN);
         mMarginScreen = dip2px(mContext, MARGIN_SCREEN);
 
-        mIconTextMargin = dip2px(mContext,16);
-        mHorizontalMargin = dip2px(mContext,15);
-        mIconWidth = dip2px(mContext,22);
-        mItemHeight = dip2px(mContext,44);
-        mTextSize=sp2px(mContext,16);
+        mIconTextMargin = dip2px(mContext, 16);
+        mHorizontalMargin = dip2px(mContext, 15);
+        mIconWidth = dip2px(mContext, 22);
+        mItemHeight = dip2px(mContext, 44);
+        mTextSize = sp2px(mContext, 16);
         mScreenHeight = getScreenHeight(mContext);
     }
 
@@ -308,16 +308,6 @@ public class DropPopMenu {
         mContainerLayout.setLayoutParams(containerParams);
     }
 
-    private class PopOnDismissListener implements PopupWindow.OnDismissListener {
-        @Override
-        public void onDismiss() {
-            setBackgroundAlpha(1f);
-            if (mOnDismissListener != null) {
-                mOnDismissListener.onDismiss();
-            }
-        }
-    }
-
     public void setOnDismissListener(PopupWindow.OnDismissListener listener) {
         mOnDismissListener = listener;
     }
@@ -385,6 +375,24 @@ public class DropPopMenu {
         return list.size();
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem);
+    }
+
+    private class PopOnDismissListener implements PopupWindow.OnDismissListener {
+        @Override
+        public void onDismiss() {
+            setBackgroundAlpha(1f);
+            if (mOnDismissListener != null) {
+                mOnDismissListener.onDismiss();
+            }
+        }
+    }
+
     private class DropPopMenuAdapter extends BaseAdapter {
 
         @Override
@@ -442,14 +450,6 @@ public class DropPopMenu {
                 textTv = (TextView) view.findViewById(R.id.tv_text);
             }
         }
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mOnItemClickListener = listener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem);
     }
 
 }

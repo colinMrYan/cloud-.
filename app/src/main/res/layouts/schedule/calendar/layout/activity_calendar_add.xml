@@ -59,7 +59,7 @@
         android:layout_below="@id/rl_header">
 
         <EditText
-            android:id="@+id/et_input_content"
+            android:id="@+id/et_input_title"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_alignParentLeft="true"
@@ -277,7 +277,7 @@
             android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="2dp"
             android:src="@drawable/ic_arrow_right" />
     </RelativeLayout>
 
@@ -308,14 +308,14 @@
             android:paddingTop="10dp"
             android:text="@string/schedule_event_alert"
             android:textColor="#FF333333"
-            android:textSize="@dimen/content_normal_textsize" />
+            android:textSize="16sp" />
         <ImageView
             android:id="@+id/iv_alert_time_arrow"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="2dp"
             android:src="@drawable/ic_arrow_right" />
 
         <TextView
@@ -332,7 +332,7 @@
             android:paddingTop="8dp"
             android:text="@string/calendar_no_alert"
             android:textColor="#888888"
-            android:textSize="@dimen/content_normal_textsize" />
+            android:textSize="16sp" />
     </RelativeLayout>
     <View
         android:id="@+id/v_repeat_top_line"
@@ -370,7 +370,7 @@
             android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="2dp"
             android:src="@drawable/ic_arrow_right" />
         <TextView
             android:id="@+id/tv_repeat_text"

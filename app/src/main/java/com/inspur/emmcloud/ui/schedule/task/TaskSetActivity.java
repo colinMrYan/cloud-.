@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * Created by yufuchang on 2019/4/9.
  */
 @ContentView(R.layout.activity_task_set)
-public class TaskSetActivity extends BaseActivity{
+public class TaskSetActivity extends BaseActivity {
 
     public static final String TASK_ORDER_BY = "order_by";
     public static final String TASK_ORDER_TYPE = "order_type";
@@ -138,9 +138,9 @@ public class TaskSetActivity extends BaseActivity{
         public View getView(int position, View convertView, ViewGroup parent) {
             int positionChoose = PreferencesUtils.getInt(TaskSetActivity.this, TASK_SET_ORDER, -1);
             convertView = LayoutInflater.from(TaskSetActivity.this).inflate(R.layout.task_set_item, null);
-            convertView.findViewById(R.id.v_head_line).setVisibility(position == 0?View.GONE:View.VISIBLE);
+            convertView.findViewById(R.id.v_head_line).setVisibility(position == 0 ? View.GONE : View.VISIBLE);
             ((TextView) (convertView.findViewById(R.id.tv_task_set))).setText(taskSetModel.get(position).getContent());
-            convertView.findViewById(R.id.iv_selected).setVisibility(position == positionChoose?View.VISIBLE:View.GONE);
+            convertView.findViewById(R.id.iv_selected).setVisibility(position == positionChoose ? View.VISIBLE : View.GONE);
             return convertView;
         }
     }

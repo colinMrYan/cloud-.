@@ -34,8 +34,8 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.bean.work.TaskSubject;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -672,19 +672,19 @@ public class MessionDetailActivity extends BaseActivity {
             Locale locale = getResources().getConfiguration().locale;
             Locale.setDefault(locale);
             MyDatePickerDialog dialog = new MyDatePickerDialog(
-                    MessionDetailActivity.this,new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year,
-                                              int monthOfYear, int dayOfMonth) {
-                            messionEndTime.setText(year + "-"
-                                    + (monthOfYear + 1) + "-" + dayOfMonth);
-                            dueDate = Calendar.getInstance();
-                            dueDate.set(Calendar.YEAR, year);
-                            dueDate.set(Calendar.MONTH, monthOfYear);
-                            dueDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                            task.setDueDate(dueDate);
-                        }
-                    }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                    MessionDetailActivity.this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    messionEndTime.setText(year + "-"
+                            + (monthOfYear + 1) + "-" + dayOfMonth);
+                    dueDate = Calendar.getInstance();
+                    dueDate.set(Calendar.YEAR, year);
+                    dueDate.set(Calendar.MONTH, monthOfYear);
+                    dueDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    task.setDueDate(dueDate);
+                }
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH));
             dialog.show();
         }

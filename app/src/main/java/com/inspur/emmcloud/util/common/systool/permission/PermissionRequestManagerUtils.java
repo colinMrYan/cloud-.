@@ -7,10 +7,10 @@ import android.text.TextUtils;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionListener;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermission;
 import com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionBase;
+import com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionListener;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.util.ArrayList;
@@ -114,7 +114,7 @@ public class PermissionRequestManagerUtils {
      * @return
      */
     public boolean isHasPermission(Context context, String permission) {
-        return EmmPermissionBase.isGranted(context,permission);
+        return EmmPermissionBase.isGranted(context, permission);
     }
 
     /**
@@ -125,7 +125,7 @@ public class PermissionRequestManagerUtils {
      * @return
      */
     public boolean isHasPermission(Context context, String[] permissions) {
-        return EmmPermissionBase.isGranted(context,permissions);
+        return EmmPermissionBase.isGranted(context, permissions);
     }
 
     private String[] stringList2StringArray(List<String> permissionList) {
@@ -138,8 +138,6 @@ public class PermissionRequestManagerUtils {
         List<String> permissionNameList = Permissions.transformText(context, permissionList);
         return context.getString(R.string.permission_grant_fail, AppUtils.getAppName(context), TextUtils.join(" ", permissionNameList));
     }
-
-
 
 
 }

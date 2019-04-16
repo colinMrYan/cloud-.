@@ -202,7 +202,7 @@ public class FindAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.retrunTripArriveFail(error, responseCode);
+                apiInterface.returnTripArriveFail(error, responseCode);
             }
         });
     }

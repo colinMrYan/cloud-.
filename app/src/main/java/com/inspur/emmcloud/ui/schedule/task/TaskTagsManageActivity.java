@@ -35,12 +35,10 @@ import java.util.ArrayList;
  */
 @ContentView(R.layout.activity_task_manage)
 public class TaskTagsManageActivity extends BaseActivity {
-    @ViewInject(R.id.lv_task_manage_tags)
-    private ListView taskManageTagsList;
-
     public static String EXTRA_TAGS = "tags";
     public static String EXTRA_DELETE_TAGS = "tags";
-
+    @ViewInject(R.id.lv_task_manage_tags)
+    private ListView taskManageTagsList;
     private TaskTagsAdapter taskTagsAdapter;
     private LoadingDialog loadingDialog;
     private ArrayList<TaskColorTag> allTags = new ArrayList<TaskColorTag>();

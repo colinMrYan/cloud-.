@@ -69,16 +69,16 @@ public class BaseFragmentActivity extends FragmentActivity {
         boolean isContain = Arrays.asList(classNames).contains(className);
         if (!isContain) {
             int statusBarColor = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
-            int navigationBarColor =R.color.white;
-            boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true,1.0f).statusBarDarkFont(isStatusBarDarkFont,0.2f).init();
+            int navigationBarColor = R.color.white;
+            boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
+            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
         }
     }
 
-    protected void setNavigationBarColor(int color){
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+    protected void setNavigationBarColor(int color) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setNavigationBarColor(ContextCompat.getColor(MyApplication.getInstance(),color));
+            getWindow().setNavigationBarColor(ContextCompat.getColor(MyApplication.getInstance(), color));
         }
     }
 

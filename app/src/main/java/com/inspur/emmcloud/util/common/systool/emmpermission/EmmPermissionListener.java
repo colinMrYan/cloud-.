@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface EmmPermissionListener {
 
-  void onPermissionGranted(List<String> grantPermissions);
+    void onPermissionGranted(List<String> grantPermissions);
 
-  void onPermissionDenied(List<String> deniedPermissions);
+    void onPermissionDenied(List<String> deniedPermissions);
 
 }

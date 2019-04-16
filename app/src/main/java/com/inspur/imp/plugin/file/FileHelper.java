@@ -113,7 +113,7 @@ public class FileHelper {
         return uriString;
     }
     /*
-	 * @description 在安卓的目录下有一个MIMEType来管理mimeType可以读取的文件类型，如text/plain即处理文件.txt格式的文件
+     * @description 在安卓的目录下有一个MIMEType来管理mimeType可以读取的文件类型，如text/plain即处理文件.txt格式的文件
 	 * 
 	 * @param path传入可用的路径，解析出相应的扩展名
 	 * 

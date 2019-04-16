@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.schedule.RemindEvent;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -22,15 +23,18 @@ import org.xutils.view.annotation.ViewInject;
  */
 @ContentView(R.layout.activity_schedule_alert_time)
 public class ScheduleAlertTimeActivity extends BaseActivity {
+    public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
+    public static String EXTRA_SCHEDULE_IS_ALL_DAY = "schedule_is_all_day";
     @ViewInject(R.id.lv_alert_time)
     ListView alertTimeListView;
     @ViewInject(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
-    public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
-
     String alertTime = "";
     private Adapter adapter;
     private int selectPosition = -1;
+    private String[] alertTimeString = {};
+    private int[] alertTimeInt = {};
+    private boolean isAllDay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +46,24 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 getString(R.string.calendar_thirty_minite_ago),
                 getString(R.string.calendar_one_hour_ago),
                 getString(R.string.calendar_one_day_ago)};
+        final String[] allDayAlertTimeArray = {
+                getString(R.string.schedule_alert_time_occur),
+                getString(R.string.schedule_alert_time_before_one_day),
+                getString(R.string.schedule_alert_time_before_two_day),
+                getString(R.string.schedule_alert_time_before_a_week)};
+        int[] alertTimeIntArray = {-1, 0, 10 * 60, 20 * 60, 20 * 60, 60 * 60, 24 * 3600};
+        int[] alertTimeAllDayIntArray = {-1, -9 * 3600, 15 * 3600, (15 + 1 * 24) * 3600, (15 + 6 * 24) * 3600};
         alertTime = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME) ?
                 getIntent().getExtras().getString(EXTRA_SCHEDULE_ALERT_TIME) : getString(R.string.calendar_no_alert);
+        //获取Allday值
+        isAllDay = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_IS_ALL_DAY) ?
+                getIntent().getExtras().getBoolean(EXTRA_SCHEDULE_IS_ALL_DAY) : false;
+        alertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
+        alertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
         if (!alertTime.equals(getString(R.string.calendar_no_alert))) {
             noAlertSelectImage.setVisibility(View.GONE);
-            for (int i = 0; i < alertTimeArray.length; i++) {
-                if (alertTimeArray[i].equals(alertTime)) {
+            for (int i = 0; i < alertTimeString.length; i++) {
+                if (alertTimeString[i].equals(alertTime)) {
                     selectPosition = i;
                     break;
                 }
@@ -55,7 +71,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         } else {
             noAlertSelectImage.setVisibility(View.VISIBLE);
         }
-        adapter = new Adapter(alertTimeArray);
+        adapter = new Adapter(alertTimeString);
         alertTimeListView.setAdapter(adapter);
         alertTimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,7 +81,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 noAlertSelectImage.setVisibility(View.GONE);
                 selectPosition = position;
                 adapter.notifyDataSetChanged();
-                alertTime = alertTimeArray[position];
+                alertTime = alertTimeString[position];
             }
         });
     }
@@ -95,11 +111,14 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
      */
     public void returnData() {
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_SCHEDULE_ALERT_TIME, alertTime);
+        RemindEvent remindEvent = new RemindEvent(alertTime, alertTimeInt[selectPosition + 1]);
+        intent.putExtra(EXTRA_SCHEDULE_ALERT_TIME, remindEvent);
         setResult(RESULT_OK, intent);
         finish();
     }
 
+
+    /***/
     private class Adapter extends BaseAdapter {
         private String[] alertTimeArray;
 

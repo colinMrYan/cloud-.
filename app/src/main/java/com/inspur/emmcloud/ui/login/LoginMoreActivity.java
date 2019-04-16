@@ -31,12 +31,11 @@ import org.xutils.view.annotation.ViewInject;
 @ContentView(R.layout.activity_login_more)
 public class LoginMoreActivity extends BaseActivity {
 
+    private static final int SCAN_LOGIN_ENTERPRISE_INFO = 5;
     @ViewInject(R.id.tv_current_enterprise_name)
     private TextView currentEnterpriseNameText;
-
     @ViewInject(R.id.ll_reset_enterprise)
     private LinearLayout resetEnterpriseLayout;
-    private static final int SCAN_LOGIN_ENTERPRISE_INFO = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

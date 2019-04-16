@@ -139,7 +139,7 @@
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
     <string name="modify_group_name">群名片</string>
-    <string name="choose_common_office">添加常用办公地点</string>
+    <string name="choose_common_office">常用办公地点</string>
     <string name="please_click_choosing_time">请点击选择时间</string>
     <string name="meeting_room">会议室</string>
     <string name="building">建筑</string>
@@ -377,7 +377,10 @@
     <string name="schedule_setting_view">视图</string>
     <string name="schedule_calendar_input_content_hint">请输入日程内容...</string>
     <string name="schedule_calendar_time_alert">结束时间不能早于起始时间</string>
-
+    <string name="schedule_alert_time_occur">日程当天 (上午9时)</string>
+    <string name="schedule_alert_time_before_one_day">1天前（上午9时）</string>
+    <string name="schedule_alert_time_before_two_day">2天前（上午9时）</string>
+    <string name="schedule_alert_time_before_a_week">一周前</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>

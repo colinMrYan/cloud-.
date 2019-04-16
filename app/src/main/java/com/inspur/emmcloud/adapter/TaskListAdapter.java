@@ -24,10 +24,12 @@ import java.util.ArrayList;
 public class TaskListAdapter extends BaseAdapter {
     private ArrayList<Task> taskList = new ArrayList<Task>();
     private Context context;
-    public TaskListAdapter(Context context , ArrayList<Task> taskList){
+
+    public TaskListAdapter(Context context, ArrayList<Task> taskList) {
         this.taskList = taskList;
         this.context = context;
     }
+
     @Override
     public int getCount() {
         if (taskList != null && taskList.size() > 0) {
@@ -55,12 +57,12 @@ public class TaskListAdapter extends BaseAdapter {
         ((TextView) convertView.findViewById(R.id.tv_task_name))
                 .setText(task.getTitle());
         String deadLine = TimeUtils.calendar2FormatString(context,
-                task.getDueDate(),TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
+                task.getDueDate(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         TextView deadLineText = convertView.findViewById(R.id.tv_task_deadline);
-        if(!StringUtils.isBlank(deadLine)){
+        if (!StringUtils.isBlank(deadLine)) {
             deadLineText.setVisibility(View.VISIBLE);
-            deadLineText.setText(context.getString(R.string.work_task_end,deadLine));
-        }else{
+            deadLineText.setText(context.getString(R.string.work_task_end, deadLine));
+        } else {
             RelativeLayout relativeLayout = convertView.findViewById(R.id.ll_category_title);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             params.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -73,11 +75,11 @@ public class TaskListAdapter extends BaseAdapter {
             // 如果没有tag，显示默认tag
             ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getColorCircleImage("BLUE"));
         }
-        convertView.findViewById(R.id.iv_task_level).setVisibility(task.getPriority() == 2 ?View.VISIBLE:View.GONE);
+        convertView.findViewById(R.id.iv_task_level).setVisibility(task.getPriority() == 2 ? View.VISIBLE : View.GONE);
         return convertView;
     }
 
-    public void setAndChangeData(ArrayList<Task> taskList){
+    public void setAndChangeData(ArrayList<Task> taskList) {
         this.taskList = taskList;
         notifyDataSetChanged();
     }

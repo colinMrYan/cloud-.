@@ -9,11 +9,11 @@ import java.util.List;
 
 public class TimeHourRow {
     private int id = 0;
-    private  int eventWidth =0;
+    private int eventWidth = 0;
     private List<Event> eventList = new ArrayList<>();
 
-    public TimeHourRow(int id, int maxWidth){
-        this.id= id;
+    public TimeHourRow(int id, int maxWidth) {
+        this.id = id;
         this.eventWidth = maxWidth;
     }
 
@@ -32,7 +32,6 @@ public class TimeHourRow {
     public void setId(int id) {
         this.id = id;
     }
-
 
 
     public List<Event> getEventList() {

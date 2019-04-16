@@ -31,13 +31,12 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_calendar_type_select)
 public class CalendarTypeSelectActivity extends BaseActivity {
+    MyCalendar calendar;
     @ViewInject(R.id.lv_calendars)
     private ListView calendarListView;
-
     private WorkAPIService workAPIService;
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
-    MyCalendar calendar;
     private int selectPosition = -1;
 
     @Override
@@ -51,9 +50,9 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         // TODO Auto-generated method stub
         calendarAdapter = new CalendarAdapter();
         calendarListView.setAdapter(calendarAdapter);
-        workAPIService=new WorkAPIService(this);
+        workAPIService = new WorkAPIService(this);
         workAPIService.setAPIInterface(new WebService());
-        workAPIService.getMyCalendar(0,30);
+        workAPIService.getMyCalendar(0, 30);
         calendarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -123,8 +122,9 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     }
 
     /**
-     *拉取Calendar*/
-    class WebService extends APIInterfaceInstance{
+     * 拉取Calendar
+     */
+    class WebService extends APIInterfaceInstance {
         @Override
         public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
             List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
@@ -144,7 +144,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
                 }
             }
             calendarAdapter.notifyDataSetChanged();
-            MyCalendarCacheUtils.saveMyCalendarList(CalendarTypeSelectActivity.this,allCalendarList);
+            MyCalendarCacheUtils.saveMyCalendarList(CalendarTypeSelectActivity.this, allCalendarList);
             super.returnMyCalendarSuccess(getMyCalendarResult);
         }
 

@@ -8,8 +8,8 @@
     android:orientation="vertical">
 
 
-    <EditText
-        android:id="@+id/et_schedule_search"
+    <TextView
+        android:id="@+id/tv_schedule_search"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_gravity="center"
@@ -20,7 +20,7 @@
         android:gravity="center"
         android:hint="@string/work_search_hint"
         android:textSize="13sp"
-        android:visibility="gone" />
+         />
 
     <com.inspur.emmcloud.widget.calendarview.CalendarLayout
         android:id="@+id/calendar_layout_schedule"
