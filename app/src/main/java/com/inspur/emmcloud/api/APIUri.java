@@ -1214,8 +1214,8 @@ public class APIUri {
      *
      * @return
      */
-    public static String getDeleteMeetingUrl() {
-        return getMeetingBaseUrl() + "room/booking/cancel";
+    public static String getMeetingDeleteUrl() {
+        return getMeetingBaseUrl() + "room/booking/cancel?";
     }
 
     /**
@@ -1270,7 +1270,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingIsAdminUrl() {
-        return getMeetingBaseUrl() + "is_admin";
+        return getMeetingBaseUrl() + "is_admin?";
     }
 
     /**

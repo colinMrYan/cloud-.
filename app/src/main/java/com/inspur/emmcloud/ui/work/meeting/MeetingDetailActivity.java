@@ -798,8 +798,7 @@ public class MeetingDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnDelMeetingSuccess() {
-            super.returnDelMeetingSuccess();
+        public void returnDeleteMeetingSuccess(com.inspur.emmcloud.bean.schedule.meeting.Meeting meeting) {
             if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
@@ -809,7 +808,7 @@ public class MeetingDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnDelMeetingFail(String error, int errorCode) {
+        public void returnDeleteMeetingFail(String error, int errorCode) {
             if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }

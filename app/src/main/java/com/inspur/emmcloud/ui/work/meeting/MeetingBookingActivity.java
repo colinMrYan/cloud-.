@@ -21,7 +21,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.bean.work.GetIsAdmin;
+import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -485,8 +485,8 @@ public class MeetingBookingActivity extends BaseActivity {
         }
 
         @Override
-        public void returnIsAdminSuccess(GetIsAdmin getIsAdmin) {
-            super.returnIsAdminSuccess(getIsAdmin);
+        public void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin) {
+            super.returnIsMeetingAdminSuccess(getIsAdmin);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -495,7 +495,7 @@ public class MeetingBookingActivity extends BaseActivity {
         }
 
         @Override
-        public void returnIsAdminFail(String error, int errorCode) {
+        public void returnIsMeetingAdminFail(String error, int errorCode) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }

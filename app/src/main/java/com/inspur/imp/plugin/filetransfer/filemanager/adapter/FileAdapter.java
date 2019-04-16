@@ -65,7 +65,7 @@ public class FileAdapter extends RecyclerViewAdapter {
             fileHolder.fileSize.setText(FileUtil.sizeToChange(fileBean.getSize()));
             fileHolder.dir_enter_image.setVisibility(maximum == 1 ? View.INVISIBLE : View.VISIBLE);
             boolean isSelected = selectFileBeanList.contains(fileBean);
-            fileHolder.dir_enter_image.setImageResource(isSelected ? R.drawable.ic_volume_file_select_yes : R.drawable.ic_volume_file_select_no);
+            fileHolder.dir_enter_image.setImageResource(isSelected ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         }
 
         //设置图标

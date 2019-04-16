@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MeetingRoomAdapter;
+import com.inspur.emmcloud.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
@@ -45,6 +45,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public static final String EXTRA_START_TIME = "extra_start_time";
     public static final String EXTRA_END_TIME = "extra_end_time";
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
+    public static final String EXTRA_MEETING_ROOM_BILDING_NAME = "extra_meeting_room_building_name";
     private static final int REQUEST_CREATE_OFFICE = 1;
     @ViewInject(R.id.swipe_refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
@@ -65,7 +66,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private ScheduleApiService apiService;
     private List<String> officeIdList = new ArrayList<>();
     private List<MeetingRoomArea> meetingRoomAreaList = new ArrayList<>();
-    private MeetingRoomAdapter meetingRoomAdapter;
+    private ScheduleMeetingRoomAdapter meetingRoomAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         expandableListView.setVerticalScrollBarEnabled(false);
         expandableListView.setHeaderDividersEnabled(false);
         expandableListView.setOnChildClickListener(this);
-        meetingRoomAdapter = new MeetingRoomAdapter(MeetingRoomListActivity.this);
+        meetingRoomAdapter = new ScheduleMeetingRoomAdapter(MeetingRoomListActivity.this);
         expandableListView.setAdapter(meetingRoomAdapter);
         webService = new WebService();
         apiService = new ScheduleApiService(this);

@@ -5,25 +5,34 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OfficeLocation {
+public class MeetingLocation implements Serializable {
     private String id = "";
     private String name = "";
-    private List<OfficeBuilding> officeBuildingList = new ArrayList<>();
+    private List<Building> officeBuildingList = new ArrayList<>();
 
-    public OfficeLocation(JSONObject obj) {
+    public MeetingLocation(){
+
+    }
+
+    public MeetingLocation(JSONObject obj) {
         id = JSONUtils.getString(obj,"id","");
         name = JSONUtils.getString(obj,"name","");
         JSONArray array = JSONUtils.getJSONArray(obj,"buildings",new JSONArray());
         for (int i=0;i<array.length();i++){
-            OfficeBuilding officeBuilding = new OfficeBuilding(JSONUtils.getJSONObject(array,i,new JSONObject()));
+            Building officeBuilding = new Building(JSONUtils.getJSONObject(array,i,new JSONObject()));
             officeBuildingList.add(officeBuilding);
         }
     }
 
-    public List<OfficeBuilding> getOfficeBuildingList() {
+    public void setOfficeBuildingList(List<Building> officeBuildingList) {
+        this.officeBuildingList = officeBuildingList;
+    }
+
+    public List<Building> getOfficeBuildingList() {
         return officeBuildingList;
     }
 

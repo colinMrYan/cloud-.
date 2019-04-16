@@ -39,6 +39,7 @@ import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingRoomInfoActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -815,7 +816,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                     String shortName = meetingAreas.get(groupPosition)
                             .getName();
                     intent.setClass(MeetingRoomListActivity.this,
-                            MeetingsRoomDetailActivity.class);
+                            MeetingRoomInfoActivity.class);
                     intent.putExtra("maxAhead", meetingRoom.getMaxAhead());
                     intent.putExtra("maxDuration", meetingRoom.getMaxDuration());
                     intent.putExtra("roomName", roomName);

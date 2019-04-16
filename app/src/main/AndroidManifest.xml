@@ -827,7 +827,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.work.meeting.MeetingsRoomDetailActivity"
+            android:name=".ui.schedule.meeting.MeetingRoomInfoActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -862,6 +862,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.schedule.meeting.MeetingRoomListActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingOfficeAddActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 

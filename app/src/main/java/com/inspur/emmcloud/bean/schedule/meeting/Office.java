@@ -12,16 +12,14 @@ public class Office {
     private String id = "";
     private String floor = "";
     private String name = "";
-    private OfficeBuilding officeBuilding ;
-    private OfficeLocation officeLocation;
+    private Building officeBuilding ;
+
     public Office(JSONObject obj){
         id = JSONUtils.getString(obj,"id","");
         floor = JSONUtils.getString(obj,"floor","");
         name = JSONUtils.getString(obj,"name","");
         JSONObject officeBuildingObj = JSONUtils.getJSONObject(obj,"building",new JSONObject());
-        officeBuilding = new OfficeBuilding(officeBuildingObj);
-        JSONObject officeLocationObj = JSONUtils.getJSONObject(officeBuildingObj,"location",new JSONObject());
-        officeLocation = new OfficeLocation(officeLocationObj);
+        officeBuilding = new Building(officeBuildingObj);
     }
 
     public String getId() {
@@ -48,19 +46,13 @@ public class Office {
         this.name = name;
     }
 
-    public OfficeBuilding getOfficeBuilding() {
+    public Building getOfficeBuilding() {
         return officeBuilding;
     }
 
-    public void setOfficeBuilding(OfficeBuilding officeBuilding) {
+    public void setOfficeBuilding(Building officeBuilding) {
         this.officeBuilding = officeBuilding;
     }
 
-    public OfficeLocation getOfficeLocation() {
-        return officeLocation;
-    }
 
-    public void setOfficeLocation(OfficeLocation officeLocation) {
-        this.officeLocation = officeLocation;
-    }
 }

@@ -115,6 +115,7 @@ public class Schedule implements Serializable{
         return startTime;
     }
 
+
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
@@ -161,7 +162,30 @@ public class Schedule implements Serializable{
     public Calendar getLastTimeCalendar() {
         return TimeUtils.timeLong2Calendar(lastTime);
     }
+    //为了支持跨天，支持特定日期当天的会议开始时间
+    public Calendar getDayStartTimeCalendar(Calendar calendar){
+        Calendar startTimeCalendar = getStartTimeCalendar();
+        if (!TimeUtils.isSameDay(calendar,startTimeCalendar)){
+            return TimeUtils.getDayBeginCalendar(calendar);
+        }
+        return startTimeCalendar;
+    }
 
+    public Long getDayStartTime(Calendar calendar){
+       return TimeUtils.calendar2TimeLong(getDayStartTimeCalendar(calendar));
+    }
+
+    public Long getDayEndTime(Calendar calendar){
+        return TimeUtils.calendar2TimeLong(getDayEndTimeCalendar(calendar));
+    }
+
+    public Calendar getDayEndTimeCalendar(Calendar calendar){
+        Calendar endTimeCalendar = getEndTimeCalendar();
+        if (!TimeUtils.isSameDay(calendar,endTimeCalendar)){
+            return TimeUtils.getDayEndCalendar(calendar);
+        }
+        return endTimeCalendar;
+    }
 
     public Boolean getAllDay() {
         return isAllDay;
@@ -246,7 +270,7 @@ public class Schedule implements Serializable{
         for (Schedule schedule : scheduleList) {
             Calendar scheduleStartTime =  schedule.getStartTimeCalendar();
             Calendar scheduleEndTime = schedule.getEndTimeCalendar();
-            if (TimeUtils.isContainTargentCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime)) {
+            if (TimeUtils.isContainTargetCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime)) {
                 Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
                 Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
                 if (scheduleStartTime.before(dayBeginCalendar)) {

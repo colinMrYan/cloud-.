@@ -13,18 +13,25 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
+import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -68,6 +75,8 @@ public class MeetingAddActivity extends BaseActivity {
     private EditText notesEdit;
     @ViewInject(R.id.tv_reminder)
     private TextView reminderText;
+    private LoadingDialog loadingDlg;
+    private ScheduleApiService apiService;
     private Calendar startTimeCalendar;
     private Calendar endTimeCalendar;
     private boolean isAllDay = false;
@@ -81,10 +90,14 @@ public class MeetingAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadingDlg = new LoadingDialog(this);
+        apiService = new ScheduleApiService(this);
+        apiService.setAPIInterface(new WebService());
         startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
         endTimeCalendar = (Calendar) startTimeCalendar.clone();
         endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
         setMeetingTime();
+        getIsMeetingAdmin();
     }
 
 
@@ -224,7 +237,7 @@ public class MeetingAddActivity extends BaseActivity {
                     meetingPostionEdit.setText(meetingRoom.getName());
                     location = new Location();
                     location.setId(meetingRoom.getId());
-                    location.setBuilding(meetingRoom.get);
+                    location.setBuilding(meetingRoom.getBuilding().getName());
                     break;
             }
         }
@@ -272,6 +285,32 @@ public class MeetingAddActivity extends BaseActivity {
             layoutParams.setMargins(marginLeft, 0, 0, 0);
             textView.setLayoutParams(layoutParams);
             layout.addView(textView);
+        }
+
+    }
+
+
+    /**
+     * 判断当前用户是否会议室管理员
+     */
+    private void getIsMeetingAdmin() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            apiService.getIsMeetingAdmin(MyApplication.getInstance().getUid());
+        }
+    }
+
+    private class WebService extends APIInterfaceInstance{
+        @Override
+        public void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin) {
+          LoadingDialog.dimissDlg(loadingDlg);
+          PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(),Constant.PREF_IS_MEETING_ADMIN,
+                    getIsAdmin.isAdmin());
+        }
+
+        @Override
+        public void returnIsMeetingAdminFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
         }
 
     }

@@ -830,14 +830,14 @@ public class TimeUtils {
         Calendar startCalendar = timeString2Calendar(dayStartTime,
                 DATE_FORMAT_HOUR_MINUTE);
         int startHour = startCalendar.get(Calendar.HOUR_OF_DAY);
-        int startMinite = startCalendar.get(Calendar.MINUTE);
+        int startMinute = startCalendar.get(Calendar.MINUTE);
 
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
         calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH)
                 + day);
         calendar.set(Calendar.HOUR_OF_DAY, startHour);
-        calendar.set(Calendar.MINUTE, startMinite);
+        calendar.set(Calendar.MINUTE, startMinute);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTimeInMillis();
@@ -1132,7 +1132,7 @@ public class TimeUtils {
      * @param endCalendar
      * @return
      */
-    public static boolean isContainTargentCalendarDay(Calendar targetCalendar,Calendar startCalendar,Calendar endCalendar){
+    public static boolean isContainTargetCalendarDay(Calendar targetCalendar, Calendar startCalendar, Calendar endCalendar){
         Calendar dayBeginCalendar = (Calendar) targetCalendar.clone();
         dayBeginCalendar.set(Calendar.HOUR_OF_DAY,0);
         dayBeginCalendar.set(Calendar.MINUTE,0);
@@ -1205,7 +1205,7 @@ public class TimeUtils {
     public static Calendar getDayEndCalendar(Calendar  calendar){
         Calendar dayBeginCalendar = getDayBeginCalendar(calendar);
         dayBeginCalendar.add(Calendar.DAY_OF_YEAR,1);
-        dayBeginCalendar.add(Calendar.MINUTE,-1);
+        dayBeginCalendar.add(Calendar.MILLISECOND,-1);
         return (Calendar)dayBeginCalendar.clone();
     }
 

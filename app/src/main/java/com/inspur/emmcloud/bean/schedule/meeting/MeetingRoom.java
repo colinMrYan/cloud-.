@@ -16,10 +16,11 @@ public class MeetingRoom implements Serializable{
     private String admin;
     private String light;
     private String shortName = "";
-    private String maxAhead = "";
+    private int maxAhead = 0;
     private String maxDuration = "";
     private ArrayList<String> equipmentList = new ArrayList<>();
     private ArrayList<Integer> busyDegreeList = new ArrayList<>();
+    private Building building;
 
     public MeetingRoom(){
     }
@@ -28,7 +29,7 @@ public class MeetingRoom implements Serializable{
         name = JSONUtils.getString(obj,"name","");
         admin = JSONUtils.getString(obj,"admin","");
         galleryful = JSONUtils.getInt(obj,"galleryful",-1);
-        maxAhead = JSONUtils.getString(obj,"maxAhead","");
+        maxAhead = JSONUtils.getInt(obj,"maxAhead",0);
         maxDuration = JSONUtils.getString(obj,"maxDuration","");
         light = JSONUtils.getString(obj,"light","");
         equipmentList = JSONUtils.getStringList(obj,"equipments",new ArrayList<String>());
@@ -42,6 +43,8 @@ public class MeetingRoom implements Serializable{
 
         }
         shortName = JSONUtils.getString(obj,"shortname","");
+        JSONObject buildingObj = JSONUtils.getJSONObject(obj,"building",new JSONObject());
+        building = new Building(buildingObj);
     }
 
     public String getId() {
@@ -92,11 +95,11 @@ public class MeetingRoom implements Serializable{
         this.shortName = shortName;
     }
 
-    public String getMaxAhead() {
+    public int getMaxAhead() {
         return maxAhead;
     }
 
-    public void setMaxAhead(String maxAhead) {
+    public void setMaxAhead(int maxAhead) {
         this.maxAhead = maxAhead;
     }
 
@@ -122,5 +125,13 @@ public class MeetingRoom implements Serializable{
 
     public void setBusyDegreeList(ArrayList<Integer> busyDegreeList) {
         this.busyDegreeList = busyDegreeList;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
     }
 }

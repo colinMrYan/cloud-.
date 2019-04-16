@@ -24,10 +24,10 @@ import java.util.List;
  * Created by chenmch on 2019/4/10.
  */
 
-public class MeetingRoomAdapter extends BaseExpandableListAdapter {
+public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
     private List<MeetingRoomArea> meetingRoomAreaList = new ArrayList<>();
     private Context context;
-    public MeetingRoomAdapter(Context context){
+    public ScheduleMeetingRoomAdapter(Context context){
         this.context = context;
     }
     public void setData(List<MeetingRoomArea> meetingRoomAreaList ){
