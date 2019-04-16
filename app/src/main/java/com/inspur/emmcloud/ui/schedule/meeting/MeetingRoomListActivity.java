@@ -44,7 +44,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public static final String EXTRA_START_TIME = "extra_start_time";
     public static final String EXTRA_END_TIME = "extra_end_time";
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
-    public static final String EXTRA_MEETING_ROOM_BILDING_NAME = "extra_meeting_room_building_name";
     private static final int REQUEST_MEETING_OFFICE_SETTING = 1;
     @ViewInject(R.id.swipe_refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
