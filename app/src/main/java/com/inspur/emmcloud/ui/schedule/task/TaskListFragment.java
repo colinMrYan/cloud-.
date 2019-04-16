@@ -17,13 +17,11 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.TaskListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
-import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
-import com.inspur.emmcloud.bean.work.TaskColorTag;
-import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -33,6 +31,9 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -45,6 +46,8 @@ import java.util.ArrayList;
 @ContentView(R.layout.fragment_task_list)
 public class TaskListFragment extends Fragment {
 
+    public static final String TASK_TASK_ENTITY = "task";
+    public static final String TASK_CURRENT_INDEX = "tabIndex";
     @ViewInject(R.id.lv_task)
     private ListView taskListView;
     @ViewInject(R.id.refresh_layout)
@@ -60,12 +63,18 @@ public class TaskListFragment extends Fragment {
     private String searchContent = "";
     private ArrayList<Task> uiTaskList = new ArrayList<>();
     private TaskListAdapter adapter;
-    private WorkAPIService apiService;
+    private ScheduleApiService apiService;
     private int currentIndex = 0;
     private ArrayList<Task> taskList = new ArrayList<Task>();
     private boolean isPullUp =false;
     private int page = 0;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,6 +90,16 @@ public class TaskListFragment extends Fragment {
             x.view().inject(this, this.getView());
         }
         initViews();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TASK_ORDER_CHANGE:
+                getTaskOrder();
+                getCurrentTaskList();
+                break;
+        }
     }
 
     /**
@@ -120,25 +139,25 @@ public class TaskListFragment extends Fragment {
 
     private void initViews() {
         currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
-        apiService = new WorkAPIService(getActivity());
+        apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
-        getOrder();
+        getTaskOrder();
         initPullRefreshLayout();
         taskListView.setOnItemClickListener(new OnTaskClickListener());
         adapter = new TaskListAdapter(getActivity(),uiTaskList);
         taskListView.setAdapter(adapter);
 //        taskListView.setOnItemLongClickListener(new OnTaskLongClickListener());
-        getCurrentTaskList(true);
+        getCurrentTaskList();
     }
 
     /**
      * 获取缓存的排序规则
      */
-    private void getOrder() {
-        orderBy = PreferencesUtils.getString(getActivity(), "order_by", "PRIORITY");
-        orderType = PreferencesUtils.getString(getActivity(), "order_type", "DESC");
+    private void getTaskOrder() {
+        orderBy = PreferencesUtils.getString(getActivity(), TaskSetActivity.TASK_ORDER_BY, TaskSetActivity.TASK_ORDER_PRIORITY);
+//        orderType = PreferencesUtils.getString(getActivity(), TaskSetActivity.TASK_ORDER_TYPE, TaskSetActivity.TASK_ORDER_TYPE_DESC);
+        orderType = TaskSetActivity.TASK_ORDER_TYPE_DESC;
     }
-
 
     /**
      * 初始化PullRefreshLayout
@@ -152,7 +171,7 @@ public class TaskListFragment extends Fragment {
                 isPullUp = false;
                 page = 0;
                 if(NetUtils.isNetworkConnected(getActivity())){
-                    getCurrentTaskList(false);
+                    getCurrentTaskList();
                 }else{
                     swipeRefreshLayout.setLoading(false);
                 }
@@ -163,7 +182,7 @@ public class TaskListFragment extends Fragment {
             @Override
             public void onLoadMore() {
                 if (NetUtils.isNetworkConnected(getActivity())) {
-                    apiService.getAllTasks(page, 12, "REMOVED");
+                    apiService.getFinishTasks(page, 12, "REMOVED");
                     isPullUp = true;
                 } else {
                     swipeRefreshLayout.setLoading(false);
@@ -172,17 +191,17 @@ public class TaskListFragment extends Fragment {
         });
     }
 
-    private void getCurrentTaskList(boolean isDialogShow){
+    private void getCurrentTaskList(){
         currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         if (NetUtils.isNetworkConnected(getActivity())) {
             if (currentIndex == TaskFragment.MY_MINE) {
-                getMineTasks(isDialogShow);
+                getMineTasks();
             } else if (currentIndex == TaskFragment.MY_INVOLVED) {
-                getInvolvedTasks(isDialogShow);
+                getInvolvedTasks();
             } else if (currentIndex == TaskFragment.MY_FOCUSED) {
-                getFocusedTasks(isDialogShow);
+                getFocusedTasks();
             }else if(currentIndex == TaskFragment.MY_DONE){
-                getAllFinishTasks(isDialogShow);
+                getAllFinishTasks();
             }
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -192,9 +211,8 @@ public class TaskListFragment extends Fragment {
     /**
      * 获取关注的任务
      *
-     * @param isDialogShow
      */
-    protected void getFocusedTasks(boolean isDialogShow) {
+    protected void getFocusedTasks() {
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFocusedTasks(orderBy, orderType);
@@ -204,9 +222,8 @@ public class TaskListFragment extends Fragment {
     /**
      * 获取我参与的任务
      *
-     * @param isDialogShow
      */
-    protected void getInvolvedTasks(boolean isDialogShow) {
+    protected void getInvolvedTasks() {
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getInvolvedTasks(orderBy, orderType);
@@ -216,22 +233,21 @@ public class TaskListFragment extends Fragment {
     /**
      * 获取我的任务
      *
-     * @param isDialogShow
      */
-    protected void getMineTasks(boolean isDialogShow) {
+    protected void getMineTasks() {
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
-            apiService.getRecentTasks(orderBy, orderType);
+            apiService.getMineTasks(orderBy, orderType);
         }
     }
 
     /**
      * 获取所有任务
      */
-    private void getAllFinishTasks(boolean isDialogShow) {
+    private void getAllFinishTasks() {
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
-            apiService.getAllTasks(0, 12, "REMOVED");
+            apiService.getFinishTasks(0, 12, "REMOVED");
         }
     }
 
@@ -244,12 +260,10 @@ public class TaskListFragment extends Fragment {
     protected void deleteTasks(int position) {
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
-            apiService.deleteTasks(uiTaskList.get(position).getId());
+            apiService.setTaskFinishById(uiTaskList.get(position).getId());
             deletePosition = position;
         }
     }
-
-
 
     /**
      * 长按事件监听
@@ -290,12 +304,18 @@ public class TaskListFragment extends Fragment {
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             Intent intent = new Intent();
-            intent.putExtra("task", uiTaskList.get(position));
-            intent.putExtra("tabIndex", currentIndex);
+            intent.putExtra(TASK_TASK_ENTITY, uiTaskList.get(position));
+            intent.putExtra(TASK_CURRENT_INDEX, currentIndex);
             intent.setClass(getActivity(),
                     TaskAddActivity.class);
             startActivityForResult(intent, 0);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
 
