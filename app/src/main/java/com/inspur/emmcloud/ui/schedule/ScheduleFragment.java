@@ -55,7 +55,7 @@ import java.util.Map;
 @ContentView(R.layout.fragment_schedule)
 public class ScheduleFragment extends ScheduleBaseFragment implements
         CalendarView.OnCalendarSelectListener,
-        CalendarLayout.CalendarExpandListener, View.OnClickListener,CalendarDayView.OnEventClickListener,ScheduleEventListAdapter.OnItemClickLister {
+        CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister {
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
@@ -234,7 +234,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
 //        eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
         eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
-        showCalendarViewEventMark(scheduleList,meetingList);
+        showCalendarViewEventMark(scheduleList, meetingList);
         if (isEventShowTypeList) {
             scheduleEventListAdapter.setEventList(selectCalendar, eventList);
             scheduleEventListAdapter.notifyDataSetChanged();
@@ -245,27 +245,27 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         scheduleSumText.setText(eventListSize > 0 ? eventListSize + "项日程" : "");
     }
 
-    private void showCalendarViewEventMark(List<Schedule> scheduleList,List<Meeting> meetingList) {
+    private void showCalendarViewEventMark(List<Schedule> scheduleList, List<Meeting> meetingList) {
         calendarView.clearSchemeDate();
         Map<String, EmmCalendar> map = new HashMap<>();
-        for (Schedule schedule:scheduleList){
+        for (Schedule schedule : scheduleList) {
             Calendar eventStartDayBeginCalendar = TimeUtils.getDayBeginCalendar(schedule.getStartTimeCalendar());
             for (Calendar calendar = eventStartDayBeginCalendar; calendar.before(schedule.getEndTimeCalendar()); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
                 int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH)+1;
+                int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                map.put(getSchemeCalendar(year, month, day, " ",true).toString(),
-                        getSchemeCalendar(year, month, day, " ",true));
+                map.put(getSchemeCalendar(year, month, day, " ", true).toString(),
+                        getSchemeCalendar(year, month, day, " ", true));
             }
         }
-        for (Meeting meeting:meetingList){
+        for (Meeting meeting : meetingList) {
             Calendar eventStartDayBeginCalendar = TimeUtils.getDayBeginCalendar(meeting.getStartTimeCalendar());
             for (Calendar calendar = eventStartDayBeginCalendar; calendar.before(meeting.getEndTimeCalendar()); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
                 int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH)+1;
+                int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                map.put(getSchemeCalendar(year, month, day, " ",true).toString(),
-                        getSchemeCalendar(year, month, day, " ",true));
+                map.put(getSchemeCalendar(year, month, day, " ", true).toString(),
+                        getSchemeCalendar(year, month, day, " ", true));
             }
         }
 
@@ -273,15 +273,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarView.setSchemeDate(map);
     }
 
-    private void openEvent(Event event){
+    private void openEvent(Event event) {
         Bundle bundle = new Bundle();
-        switch (event.getEventType()){
+        switch (event.getEventType()) {
             case Event.TYPE_MEETING:
                 break;
             case Event.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
-                bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT,schedule);
-                IntentUtils.startActivity(getActivity(),CalendarAddActivity.class,bundle);
+                bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
+                IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
                 break;
             case Event.TYPE_TASK:
                 break;
@@ -299,7 +299,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onItemClick(View view, int position, Event event) {
-            onEventClick(event);
+        onEventClick(event);
     }
 
     @Override

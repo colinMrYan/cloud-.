@@ -34,6 +34,22 @@ public class TitleView extends FrameLayout {
         setClickable(true);
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    public void setDoubleSingleClickListener(DoubleSingleClickListener mDoubleSingleClickListener) {
+        this.mDoubleSingleClickListener = mDoubleSingleClickListener;
+    }
+
+    public interface DoubleSingleClickListener {
+        void onDoubleTap(MotionEvent e);
+
+        void onSingleTapConfirmed(MotionEvent e);
+    }
+
     private final class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
@@ -50,21 +66,5 @@ public class TitleView extends FrameLayout {
             }
             return super.onSingleTapConfirmed(e);
         }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        gestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
-
-    public interface DoubleSingleClickListener {
-        void onDoubleTap(MotionEvent e);
-
-        void onSingleTapConfirmed(MotionEvent e);
-    }
-
-    public void setDoubleSingleClickListener(DoubleSingleClickListener mDoubleSingleClickListener) {
-        this.mDoubleSingleClickListener = mDoubleSingleClickListener;
     }
 }

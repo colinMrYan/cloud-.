@@ -164,10 +164,10 @@ public abstract class WeekView extends BaseWeekView {
     /**
      * 绘制选中的日期
      *
-     * @param canvas    canvas
-     * @param emmCalendar  日历日历calendar
-     * @param x         日历Card x起点坐标
-     * @param hasScheme hasScheme 非标记的日期
+     * @param canvas      canvas
+     * @param emmCalendar 日历日历calendar
+     * @param x           日历Card x起点坐标
+     * @param hasScheme   hasScheme 非标记的日期
      * @return 是否绘制 onDrawScheme
      */
     protected abstract boolean onDrawSelected(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme);
@@ -175,9 +175,9 @@ public abstract class WeekView extends BaseWeekView {
     /**
      * 绘制标记的日期
      *
-     * @param canvas   canvas
+     * @param canvas      canvas
      * @param emmCalendar 日历calendar
-     * @param x        日历Card x起点坐标
+     * @param x           日历Card x起点坐标
      */
     protected abstract void onDrawScheme(Canvas canvas, EmmCalendar emmCalendar, int x);
 
@@ -185,11 +185,11 @@ public abstract class WeekView extends BaseWeekView {
     /**
      * 绘制日历文本
      *
-     * @param canvas     canvas
-     * @param emmCalendar   日历calendar
-     * @param x          日历Card x起点坐标
-     * @param hasScheme  是否是标记的日期
-     * @param isSelected 是否选中
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param hasScheme   是否是标记的日期
+     * @param isSelected  是否选中
      */
     protected abstract void onDrawText(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme, boolean isSelected);
 }

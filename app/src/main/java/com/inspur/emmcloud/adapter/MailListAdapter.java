@@ -98,7 +98,7 @@ public class MailListAdapter extends BaseAdapter {
         viewHolder.timeText.setText(time);
         viewHolder.selectImageView.setVisibility(isSelectMode ? View.VISIBLE : View.GONE);
         boolean isMailSelect = isSelectMode && mailSelectList.contains(mail);
-        viewHolder.selectImageView.setImageResource(isMailSelect ? R.drawable.ic_volume_file_select_yes : R.drawable.ic_volume_file_select_no);
+        viewHolder.selectImageView.setImageResource(isMailSelect ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         return convertView;
     }
 

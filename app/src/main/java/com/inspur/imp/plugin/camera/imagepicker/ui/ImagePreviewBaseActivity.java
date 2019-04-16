@@ -37,7 +37,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 //            getWindow().setAttributes(lp);
 //        }
         setContentView(R.layout.activity_image_preview);
-        ImmersionBar.with(this).statusBarColor(android.R.color.black).navigationBarColor(android.R.color.black).statusBarDarkFont(false,0.2f).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.black).navigationBarColor(android.R.color.black).statusBarDarkFont(false, 0.2f).init();
         mCurrentPosition = getIntent().getIntExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
         mImageItems = (ArrayList<ImageItem>) getIntent().getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
         imagePicker = ImagePicker.getInstance();

@@ -31,7 +31,7 @@ public class DirectoryManager {
         return status;
     }
     /*
-	 * @description 获得用户SD卡上的剩余空间值
+     * @description 获得用户SD卡上的剩余空间值
 	 * 
 	 * @param checkInternal 是否允许应用程序访问内部存储
 	 * @return  在SD卡上的剩余大小，单位是KB

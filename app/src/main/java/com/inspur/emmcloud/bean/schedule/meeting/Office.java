@@ -12,16 +12,18 @@ public class Office {
     private String id = "";
     private String floor = "";
     private String name = "";
-    private OfficeBuilding officeBuilding ;
-    private OfficeLocation officeLocation;
-    public Office(JSONObject obj){
-        id = JSONUtils.getString(obj,"id","");
-        floor = JSONUtils.getString(obj,"floor","");
-        name = JSONUtils.getString(obj,"name","");
-        JSONObject officeBuildingObj = JSONUtils.getJSONObject(obj,"building",new JSONObject());
-        officeBuilding = new OfficeBuilding(officeBuildingObj);
-        JSONObject officeLocationObj = JSONUtils.getJSONObject(officeBuildingObj,"location",new JSONObject());
-        officeLocation = new OfficeLocation(officeLocationObj);
+    private Building officeBuilding;
+
+    public Office(String response) {
+        this(JSONUtils.getJSONObject(response));
+    }
+
+    public Office(JSONObject obj) {
+        id = JSONUtils.getString(obj, "id", "");
+        floor = JSONUtils.getString(obj, "floor", "");
+        name = JSONUtils.getString(obj, "name", "");
+        JSONObject officeBuildingObj = JSONUtils.getJSONObject(obj, "building", new JSONObject());
+        officeBuilding = new Building(officeBuildingObj);
     }
 
     public String getId() {
@@ -48,19 +50,28 @@ public class Office {
         this.name = name;
     }
 
-    public OfficeBuilding getOfficeBuilding() {
+    public Building getOfficeBuilding() {
         return officeBuilding;
     }
 
-    public void setOfficeBuilding(OfficeBuilding officeBuilding) {
+    public void setOfficeBuilding(Building officeBuilding) {
         this.officeBuilding = officeBuilding;
     }
 
-    public OfficeLocation getOfficeLocation() {
-        return officeLocation;
+    /*
+                           * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+                           */
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof Office))
+            return false;
+
+        final Office otherOffice = (Office) other;
+        return getId().equals(otherOffice.getId());
     }
 
-    public void setOfficeLocation(OfficeLocation officeLocation) {
-        this.officeLocation = officeLocation;
-    }
 }

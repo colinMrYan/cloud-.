@@ -69,7 +69,7 @@ public class TriangleIndicatorView extends View {
         return mWidth;
     }
 
-    public int getRealHeight(){
+    public int getRealHeight() {
         return mHeight;
     }
 

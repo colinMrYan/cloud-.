@@ -52,37 +52,37 @@ public class DateTimePickerDialog {
      *
      * @return
      */
-    private View initDatePicker(Boolean isAllDay ) {
+    private View initDatePicker(Boolean isAllDay) {
         View inflate = LayoutInflater.from(context).inflate(R.layout.dialog_date_time_picker, null);
         datePicker = inflate.findViewById(R.id.datePicker_no_head);
         resizePikcer(datePicker);
         hideDatePickerHeader(datePicker);
-        int year=resultCalendar.get(Calendar.YEAR);
-        int monthOfYear=resultCalendar.get(Calendar.MONTH);
-        int dayOfMonth=resultCalendar.get(Calendar.DAY_OF_MONTH);
-        datePicker.init(year,monthOfYear,dayOfMonth,null);
+        int year = resultCalendar.get(Calendar.YEAR);
+        int monthOfYear = resultCalendar.get(Calendar.MONTH);
+        int dayOfMonth = resultCalendar.get(Calendar.DAY_OF_MONTH);
+        datePicker.init(year, monthOfYear, dayOfMonth, null);
         relativeLayout = inflate.findViewById(R.id.rl_select_time);
         timeTextView = inflate.findViewById(R.id.tv_time);
-        String hourMinute= TimeUtils.calendar2FormatString(context,resultCalendar,TimeUtils.FORMAT_HOUR_MINUTE);
+        String hourMinute = TimeUtils.calendar2FormatString(context, resultCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         timeTextView.setText(hourMinute);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(context,R.style.DateTimePickerTimeTheme,new TimePickerDialog.OnTimeSetListener() {
+                new TimePickerDialog(context, R.style.DateTimePickerTimeTheme, new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        resultCalendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
-                        resultCalendar.set(Calendar.MINUTE,minute);
+                        resultCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        resultCalendar.set(Calendar.MINUTE, minute);
                         String sHour = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-                        String sMinute = minute < 10 ? "0" + minute : ""+ minute;
-                        String time =sHour+":"+sMinute;
+                        String sMinute = minute < 10 ? "0" + minute : "" + minute;
+                        String time = sHour + ":" + sMinute;
                         timeTextView.setText(time);
                     }
                 }, resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE), true).show();
             }
         });
-        if(isAllDay){
+        if (isAllDay) {
             relativeLayout.setVisibility(View.GONE);
         }
         return inflate;
@@ -119,11 +119,11 @@ public class DateTimePickerDialog {
     /**
      * 显示日期选择器
      */
-    public void showDatePickerDialog(Boolean isAllday,Calendar orgCalendar) {
+    public void showDatePickerDialog(Boolean isAllday, Calendar orgCalendar) {
         mTag = 1;
-        resultCalendar=orgCalendar;
+        resultCalendar = orgCalendar;
         View view = initDatePicker(isAllday);
-        alertDialog = new AlertDialog.Builder(context,R.style.DateTimeAlertDialog);
+        alertDialog = new AlertDialog.Builder(context, R.style.DateTimeAlertDialog);
         initDialog(view);
         Dialog dialog = alertDialog.create();
         dialog.show();
@@ -174,18 +174,19 @@ public class DateTimePickerDialog {
         }
         return npList;
     }
-    
+
     /**
      * 获取日期选择的值
      */
     private void getDatePickerValue() {
-        resultCalendar.set(Calendar.YEAR,datePicker.getYear());
-        resultCalendar.set(Calendar.MONTH,datePicker.getMonth());
-        resultCalendar.set(Calendar.DAY_OF_MONTH,datePicker.getDayOfMonth());
+        resultCalendar.set(Calendar.YEAR, datePicker.getYear());
+        resultCalendar.set(Calendar.MONTH, datePicker.getMonth());
+        resultCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
     }
 
     /**
-     * 隐藏DatePickerHeader*/
+     * 隐藏DatePickerHeader
+     */
     private void hideDatePickerHeader(DatePicker datePicker) {
         ViewGroup rootView = (ViewGroup) datePicker.getChildAt(0);
         if (rootView == null) {

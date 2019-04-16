@@ -33,12 +33,12 @@ public class TaskCacheUtils {
             taskList = DbCacheUtils.getDb(context).selector(Task.class).where(WhereBuilder.b("startTime", ">", startTime)
                     .and("endTime", "<", endTime)).or(WhereBuilder.b("startTime", "<=", startTime)
                     .and("endTime", ">", endTime)).or(WhereBuilder.b("startTime", "<=", endTime)
-                    .and("endTime", ">=", endTime)).orderBy("lastTime",true).findAll();
+                    .and("endTime", ">=", endTime)).orderBy("lastTime", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        if (taskList == null){
+        if (taskList == null) {
             taskList = new ArrayList<>();
         }
         return taskList;

@@ -187,7 +187,7 @@ public class SettingActivity extends BaseActivity {
             iso = iso.replace("-", "_");
             iso = iso.toLowerCase();
             Integer id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
-            if (id == null){
+            if (id == null) {
                 id = R.drawable.zh_cn;
             }
             //设置语言国旗标志

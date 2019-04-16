@@ -222,6 +222,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
                 ecmChatInputMenu.showSoftInput(false);
                 // TODO Auto-generated method stub
             }
+
             @Override
             public void hideChatInputMenu() {
                 ecmChatInputMenu.setAddMenuLayoutShow(false);

@@ -35,10 +35,11 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
-import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
+import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
+import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingRoomInfoActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -352,40 +353,40 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingRoomListActivity.this,new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        if (beginOrEnd == MEETING_ROOM_BEGIN_DATE) {
-                            beginCalendar.set(Calendar.YEAR, year);
-                            beginCalendar.set(Calendar.MONTH, monthOfYear);
-                            beginCalendar
-                                    .set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                            beginDateText.setText(TimeUtils
-                                    .calendar2FormatString(
-                                            MeetingRoomListActivity.this,
-                                            beginCalendar,
-                                            TimeUtils.FORMAT_YEAR_MONTH_DAY));
-                            if (isFirstTime) {
-                                handleFirstSetTime(true);
-                            }
-                            isHasModifyTime = true;
-                            resetBtn.setTextColor(Color.BLACK);
-                        } else if (beginOrEnd == MEETING_ROOM_END_DATE) {
-                            endCalendar.set(Calendar.YEAR, year);
-                            endCalendar.set(Calendar.MONTH, monthOfYear);
-                            endCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                            endDateText.setText(TimeUtils
-                                    .calendar2FormatString(
-                                            MeetingRoomListActivity.this,
-                                            endCalendar,
-                                            TimeUtils.FORMAT_YEAR_MONTH_DAY));
-                        }
-                        isFirstTime = false;
+                MeetingRoomListActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, monthOfYear, dayOfMonth);
+                if (beginOrEnd == MEETING_ROOM_BEGIN_DATE) {
+                    beginCalendar.set(Calendar.YEAR, year);
+                    beginCalendar.set(Calendar.MONTH, monthOfYear);
+                    beginCalendar
+                            .set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    beginDateText.setText(TimeUtils
+                            .calendar2FormatString(
+                                    MeetingRoomListActivity.this,
+                                    beginCalendar,
+                                    TimeUtils.FORMAT_YEAR_MONTH_DAY));
+                    if (isFirstTime) {
+                        handleFirstSetTime(true);
                     }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                    isHasModifyTime = true;
+                    resetBtn.setTextColor(Color.BLACK);
+                } else if (beginOrEnd == MEETING_ROOM_END_DATE) {
+                    endCalendar.set(Calendar.YEAR, year);
+                    endCalendar.set(Calendar.MONTH, monthOfYear);
+                    endCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    endDateText.setText(TimeUtils
+                            .calendar2FormatString(
+                                    MeetingRoomListActivity.this,
+                                    endCalendar,
+                                    TimeUtils.FORMAT_YEAR_MONTH_DAY));
+                }
+                isFirstTime = false;
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
@@ -815,7 +816,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                     String shortName = meetingAreas.get(groupPosition)
                             .getName();
                     intent.setClass(MeetingRoomListActivity.this,
-                            MeetingsRoomDetailActivity.class);
+                            MeetingRoomInfoActivity.class);
                     intent.putExtra("maxAhead", meetingRoom.getMaxAhead());
                     intent.putExtra("maxDuration", meetingRoom.getMaxDuration());
                     intent.putExtra("roomName", roomName);
