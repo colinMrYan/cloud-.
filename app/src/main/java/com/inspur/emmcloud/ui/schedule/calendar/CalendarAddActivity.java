@@ -109,7 +109,7 @@ public class CalendarAddActivity extends BaseActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDate();;
+        initDate();
         initView();
     }
 
@@ -117,7 +117,6 @@ public class CalendarAddActivity extends BaseActivity  {
      * 初始化View
      */
     private void initView() {
-        initData();
         loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(getApplicationContext());
         apiService.setAPIInterface(new WebService());
@@ -134,7 +133,8 @@ public class CalendarAddActivity extends BaseActivity  {
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
         titleText.setText(isEditable ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
-        calendarTypeNameText.setText(isEditable ? "" : myCalendar.getName());
+
+        calendarTypeNameText.setText(isEditable ? "" : "我的日历");
         calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
         calenderTypeTipLayout.setVisibility(isEditable ? View.GONE : View.VISIBLE);
         initStartEndTimeView();
@@ -145,7 +145,7 @@ public class CalendarAddActivity extends BaseActivity  {
     /**
      * 初始化日期数据
      */
-    private void initData() {
+    private void initDate() {
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
