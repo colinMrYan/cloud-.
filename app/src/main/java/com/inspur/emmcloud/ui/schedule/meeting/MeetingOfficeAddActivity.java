@@ -16,6 +16,7 @@ import com.inspur.emmcloud.bean.work.GetAddOfficeResult;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -62,6 +63,7 @@ public class MeetingOfficeAddActivity extends BaseActivity implements Expandable
 
     private void getMyMeetingOfficeIdList(){
         String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
+        LogUtils.jasonDebug("officeIdListJson=="+officeIdListJson);
         if (officeIdListJson != null) {
             officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
         }

@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.meeting.CreateCommonOfficeSpaceActivity;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -116,6 +117,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                 finish();
                 break;
             case R.id.ibt_config:
+                IntentUtils.startActivity(this,MeetingOfficeAddActivity.class);
                 break;
             case R.id.ll_start_time:
                 showTimeSelectDialog(true);
