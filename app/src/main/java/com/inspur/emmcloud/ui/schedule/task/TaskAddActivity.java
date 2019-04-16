@@ -16,18 +16,21 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.bean.work.TaskSubject;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -42,6 +45,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -52,6 +56,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
@@ -114,6 +119,8 @@ public class TaskAddActivity extends BaseActivity {
     private LinearLayout moreContentLayout;
     @ViewInject(R.id.v_priority)
     private SegmentControlView segmentControlView;
+    @ViewInject(R.id.tv_title)
+    private TextView titleText;
 
     private static final int MANGER_REQUEST_CODE = 1;
     private static final int ALBUM_REQUEST_CODE = 2;
@@ -139,7 +146,7 @@ public class TaskAddActivity extends BaseActivity {
     private AttachmentOthersAdapter attachmentOtherAdapter;
 
     private String attachemntLocalPath = "";
-    private Boolean isEditable= true;
+    private Boolean isCreateTask = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,15 +171,77 @@ public class TaskAddActivity extends BaseActivity {
         if (getIntent().hasExtra("task")) {
             taskResult = (Task) getIntent().getSerializableExtra("task");
             taskColorTags = (ArrayList<TaskColorTag>) taskResult.getTags();
-            isEditable=false;
+            isCreateTask = false;
+            List<Attachment> attachments = taskResult.getAttachments();
+            LogUtils.LbcDebug("attachments"+JSONUtils.toJSONString(attachments));
+            for (int i = 0; i < attachments.size(); i++) {
+                if (attachments.get(i).getCategory().equals("IMAGE")) {
+                    pictureAttachments.add(attachments.get(i));
+                   // JSONUtils.getJSONObject(JSONUtils.toJSONString(attachments.get(i)));
+                    JSONUtils.getString(JSONUtils.getJSONObject(JSONUtils.toJSONString(attachments.get(i))),"uri","ces");
+                    LogUtils.LbcDebug("Uri:::"+JSONUtils.toJSONString(attachments.get(i)));
+                  // JsonAttachmentAndUri jsonAttachmentAndUri = new JsonAttachmentAndUri(attachments.get(i),)
+                  // pictureJsonAttachments.add()
+                    ///
+                    String fileName = attachments.get(i).getName();
+                    final String fileUri = attachments.get(i).getUri();
+                    final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH
+                            + fileName;
+                    final String downlaodSource = APIUri.getPreviewUrl(fileUri);
+                    if (FileUtils.isFileExist(fileUri)) {
+                    } else if (FileUtils.isFileExist(target)) {
+                       //如果存在文件
+                    } else {
+                        //如果不存在文件，进行下载，下载成功后刷新列表UI
+                        APIDownloadCallBack downLoadallback = new APIDownloadCallBack(TaskAddActivity.this, downlaodSource) {
+                            @Override
+                            public void callbackStart() {
+
+                            }
+
+                            @Override
+                            public void callbackLoading(long total, long current,
+                                                        boolean isUploading) {
+
+                            }
+
+                            @Override
+                            public void callbackSuccess(File file) {
+                             attachmentPictureAdapter.notifyDataSetChanged();
+                             attachmentOtherAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void callbackError(Throwable arg0, boolean arg1) {
+
+                            }
+
+                            @Override
+                            public void callbackCanceled(CancelledException e) {
+
+                            }
+                        };
+                        new DownLoaderUtils().startDownLoad(downlaodSource, target,
+                                downLoadallback);
+                }
+                } else {
+                    otherAttachments.add(attachments.get(i));
+                }
+            }
         }
     }
+
+
+
+
 
     private void initView() {
         if (getIntent().hasExtra("task")) {
             contentInputEdit.setText(taskResult.getTitle());
             segmentControlView.setSelectedIndex(taskResult.getPriority());
             setTaskColorTags();
+            titleText.setText("任务详情");
+
         }
     }
 
@@ -180,7 +249,13 @@ public class TaskAddActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_save:
-                createTask();
+                if (!isAbleCreateOrUpdateTask())
+                    return;
+                if (isCreateTask) {
+                    createTask();
+                } else {
+                    updateTask();
+                }
                 break;
             case R.id.tv_cancel:
                 finish();
@@ -343,20 +418,37 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     /**
+     * 添加或者更新Task 有效性检测
+     */
+    private boolean isAbleCreateOrUpdateTask() {
+        if (!NetUtils.isNetworkConnected(this)) {
+            ToastUtils.show(this, "网络不通，请检查网络");
+            return false;
+        } else if (StringUtils.isBlank(contentInputEdit.getText().toString())) {
+            ToastUtils.show(this, "任务标题不可为空");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 创建任务
      */
     private void createTask() {
         String taskContent = contentInputEdit.getText().toString();
-        if (NetUtils.isNetworkConnected(this) && !StringUtils.isBlank(taskContent)) {
-            loadingDlg.show();
-            apiService.createTasks(taskContent);
-        } else {
-            ToastUtils.show(this, "网络异常或标题为空");
-        }
+        loadingDlg.show();
+        apiService.createTasks(taskContent);
     }
 
     /**按照现在的接口创建完任务后要继续通过更新实现*/
 
+
+    /**
+     * 更新任务
+     */
+    private void updateTask() {
+
+    }
 
     /**
      * 显示管理者头像
@@ -632,6 +724,7 @@ public class TaskAddActivity extends BaseActivity {
             if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskManger.size() > 0) {
                 apiService.changeMessionOwner(taskResult.getId(), taskManger.get(0).getId(), taskManger.get(0).getName());
             }
+
             //更新Task
             if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
                 String taskData = uploadTaskData();
@@ -643,15 +736,17 @@ public class TaskAddActivity extends BaseActivity {
             if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
                 if (getIntent().hasExtra("task")) {
                     apiService.deleteTaskTags(taskResult.getId());
-                }else{
-                    List<String> tagsIdList=new ArrayList<>();
-                    for(int i=0;i<taskColorTags.size();i++){
+                } else {
+                    List<String> tagsIdList = new ArrayList<>();
+                    for (int i = 0; i < taskColorTags.size(); i++) {
                         tagsIdList.add(taskColorTags.get(i).getId());
                     }
-                    apiService.addTaskTags(taskResult.getId(),JSONUtils.toJSONString(tagsIdList));
+                    apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
                 }
 
             }
+
+
         }
 
         @Override
@@ -676,7 +771,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
             LoadingDialog.dimissDlg(loadingDlg);
-            //EventBus.getDefault().post(new SimpleEventMessage("refreshTask", "refreshTask"));
+            EventBus.getDefault().post(new SimpleEventMessage("refreshTask", "refreshTask"));
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.mession_saving_success));
             setResult(RESULT_OK);
@@ -697,9 +792,9 @@ public class TaskAddActivity extends BaseActivity {
             JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
             LogUtils.LbcDebug("jsonAttachment::" + jsonAttachment.toString());
             if (JSONUtils.getString(jsonAttachment, "category", "").equals("IMAGE")) {
-                pictureJsonAttachments.add(new JsonAttachmentAndUri(jsonAttachment, attachemntLocalPath));
+                pictureJsonAttachments.add(new JsonAttachmentAndUri(jsonAttachment, attachemntLocalPath, true));
             } else {
-                otherJsonAttachments.add(new JsonAttachmentAndUri(jsonAttachment, attachemntLocalPath));
+                otherJsonAttachments.add(new JsonAttachmentAndUri(jsonAttachment, attachemntLocalPath, true));
             }
             attachmentPictureAdapter.notifyDataSetChanged();
             attachmentOtherAdapter.notifyDataSetChanged();
@@ -860,12 +955,12 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnDelTaskTagSuccess() {
             super.returnDelTaskTagSuccess();
-            List<String> tagsIdList=new ArrayList<>();
-            for(int i=0;i<taskColorTags.size();i++){
+            List<String> tagsIdList = new ArrayList<>();
+            for (int i = 0; i < taskColorTags.size(); i++) {
                 tagsIdList.add(taskColorTags.get(i).getId());
             }
-            String colorData=JSONUtils.toJSONString(tagsIdList);
-            apiService.addTaskTags(taskResult.getId(),colorData);
+            String colorData = JSONUtils.toJSONString(tagsIdList);
+            apiService.addTaskTags(taskResult.getId(), colorData);
             LogUtils.LbcDebug("del Task Tags Success");
         }
 
@@ -882,10 +977,12 @@ public class TaskAddActivity extends BaseActivity {
     public class JsonAttachmentAndUri {
         private JSONObject jsonAttachemnt;
         private String uri;
+        private boolean isNew = true;
 
-        public JsonAttachmentAndUri(JSONObject jsonObject, String Uri) {
+        public JsonAttachmentAndUri(JSONObject jsonObject, String uri, boolean isNew) {
             this.jsonAttachemnt = jsonObject;
-            this.uri = Uri;
+            this.uri = uri;
+            this.isNew = isNew;
             //根据路径组装成uri
         }
 
@@ -903,6 +1000,14 @@ public class TaskAddActivity extends BaseActivity {
 
         public void setUri(String uri) {
             this.uri = uri;
+        }
+
+        public boolean isNew() {
+            return isNew;
+        }
+
+        public void setNew(boolean aNew) {
+            isNew = aNew;
         }
     }
 

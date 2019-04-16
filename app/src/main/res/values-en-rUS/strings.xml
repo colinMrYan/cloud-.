@@ -370,6 +370,10 @@
     <string name="schedule_setting_view">View</string>
     <string name="schedule_calendar_input_content_hint">Please enter the schedule content...</string>
     <string name="schedule_calendar_time_alert">End time cannot be earlier than start time</string>
+    <string name="schedule_alert_time_occur">On day of event(9 AM)</string>
+    <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
+    <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
+    <string name="schedule_alert_time_before_a_week">1 Week before</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

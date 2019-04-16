@@ -11,6 +11,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
@@ -46,7 +47,7 @@ import java.util.List;
  * Created by libaochao on 2019/3/29.
  */
 @ContentView(R.layout.activity_calendar_add)
-public class CalendarAddActivity extends BaseActivity {
+public class CalendarAddActivity extends BaseActivity  {
     @ViewInject(R.id.tv_save)
     private TextView saveText;
     @ViewInject(R.id.et_input_content)
@@ -94,16 +95,14 @@ public class CalendarAddActivity extends BaseActivity {
 
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
-    private Schedule scheduleEvent=new Schedule();
+    private Schedule scheduleEvent = new Schedule();
     private MyCalendar myCalendar;
     private Boolean isAllDay = false;
     private Boolean isEditable = true;
-    private DateTimePickerDialog startDataTimePickerDialog;
-    private DateTimePickerDialog endDataTimePickerDialog;
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText;
-    RemindEvent remindEvent=new RemindEvent();
+    RemindEvent remindEvent = new RemindEvent();
 
     private int intervalMin = 0;
 
@@ -126,45 +125,8 @@ public class CalendarAddActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 isAllDay = b;
                 timeTextextChangeByIsAllday(isAllDay);
-            }
-        });
-        startDataTimePickerDialog = new DateTimePickerDialog(this);
-        endDataTimePickerDialog = new DateTimePickerDialog(this);
-        startDataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
-            @Override
-            public void positiveListener(Calendar calendar) {
-                startCalendar = calendar;
-                String startDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-                startDateText.setText(startDateStr);
-                endCalendar = (Calendar) startCalendar.clone();
-                endCalendar.add(Calendar.MINUTE, intervalMin);
-                String endDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-                endDateText.setText(endDateStr);
-                timeTextextChangeByIsAllday(isAllDay);
-            }
-
-            @Override
-            public void negativeListener(Calendar calendar) {
-
-            }
-        });
-        endDataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
-            @Override
-            public void positiveListener(Calendar calendar) {
-                if (calendar.before(startCalendar)) {
-                    showEndDateErrorRemindDialog();
-                    return;
-                }
-                endCalendar = calendar;
-                String endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-                endDateText.setText(endDataStr);
-                endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
-                endTimeText.setText(isAllDay ? TimeUtils.getWeekDay(CalendarAddActivity.this, endCalendar) : endDataStr);
-                intervalMin = (int) getIntervalMin();
-            }
-
-            @Override
-            public void negativeListener(Calendar calendar) {
+                alertText.setText("");
+                remindEvent = new RemindEvent();
 
             }
         });
@@ -197,15 +159,15 @@ public class CalendarAddActivity extends BaseActivity {
                     myCalendar = allCalendarList.get(i);
                 }
             }
-            remindEvent =new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(),"remindType",""),
-                    JSONUtils.getInt(scheduleEvent.getRemindEvent(),"advanceTimeSpan",-1));
-        }else{
+            remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", ""),
+                    JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1));
+        } else {
             startCalendar = Calendar.getInstance();
             endCalendar = (Calendar) startCalendar.clone();
             if (!isAllDay) {
                 endCalendar.add(Calendar.HOUR_OF_DAY, 1);
             }
-           // scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
+            scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
         }
         intervalMin = (int) getIntervalMin();
     }
@@ -255,7 +217,7 @@ public class CalendarAddActivity extends BaseActivity {
     }
 
     /**
-     * isAllDay change
+     * 全天及非全天UI切换
      */
     private void timeTextextChangeByIsAllday(boolean IsAllday) {
         String startTime = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
@@ -277,6 +239,7 @@ public class CalendarAddActivity extends BaseActivity {
 
     public void onClick(View v) {
         Intent intent = new Intent();
+        DateTimePickerDialog dataTimePickerDialog=new DateTimePickerDialog(this);
         switch (v.getId()) {
             case R.id.tv_cancel:
                 finish();
@@ -292,15 +255,54 @@ public class CalendarAddActivity extends BaseActivity {
                 startActivityForResult(intent, CAL_TYPE_REQUEST_CODE);
                 break;
             case R.id.ll_start_time:
-                startDataTimePickerDialog.showDatePickerDialog(isAllDay, startCalendar);
+                dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
+                    @Override
+                    public void positiveListener(Calendar calendar) {
+                        startCalendar = calendar;
+                        String startDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, startCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                        startDateText.setText(startDateStr);
+                        endCalendar = (Calendar) startCalendar.clone();
+                        endCalendar.add(Calendar.MINUTE, intervalMin);
+                        String endDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                        endDateText.setText(endDateStr);
+                        timeTextextChangeByIsAllday(isAllDay);
+                    }
+
+                    @Override
+                    public void negativeListener(Calendar calendar) {
+
+                    }
+                });
+                dataTimePickerDialog.showDatePickerDialog(isAllDay, startCalendar);
                 break;
             case R.id.ll_end_time:
-                endDataTimePickerDialog.showDatePickerDialog(isAllDay, endCalendar);
+                dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
+                    @Override
+                    public void positiveListener(Calendar calendar) {
+                        if (calendar.before(startCalendar)) {
+                            showEndDateErrorRemindDialog();
+                            return;
+                        }
+                        endCalendar = calendar;
+                        String endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                        endDateText.setText(endDataStr);
+                        endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
+                        endTimeText.setText(isAllDay ? TimeUtils.getWeekDay(CalendarAddActivity.this, endCalendar) : endDataStr);
+                        intervalMin = (int) getIntervalMin();
+                    }
+
+                    @Override
+                    public void negativeListener(Calendar calendar) {
+
+                    }
+                });
+                dataTimePickerDialog.showDatePickerDialog(isAllDay, endCalendar);
                 break;
             case R.id.rl_alert_time:
                 intent.setClass(getApplicationContext(),
                         ScheduleAlertTimeActivity.class);
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, alertText.getText());
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY, isAllDay);
                 startActivityForResult(intent, CAL_ALERT_TIME_REQUEST_CODE);
                 break;
             case R.id.rl_repeat:
@@ -326,7 +328,7 @@ public class CalendarAddActivity extends BaseActivity {
             scheduleEvent.setState(-1);
             scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
             scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
-            scheduleEvent.setType(myCalendar.getId());
+            scheduleEvent.setType("default");
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
                 updateCalEvent();
             } else {
@@ -347,11 +349,6 @@ public class CalendarAddActivity extends BaseActivity {
         if (endCalendar.before(startCalendar)) {
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_start_or_end_time_illegal);
-            return false;
-        }
-        if (myCalendar == null) {
-            ToastUtils.show(getApplicationContext(),
-                    R.string.calendar_select_calendar);
             return false;
         }
         if (title.length() > 64) {
@@ -414,7 +411,7 @@ public class CalendarAddActivity extends BaseActivity {
                     calenderTypeTipLayout.setVisibility(View.VISIBLE);
                     break;
                 case CAL_ALERT_TIME_REQUEST_CODE:
-                    remindEvent = (RemindEvent)data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
+                    remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
                     alertText.setText(remindEvent.getRemindType());
                     break;
                 default:
@@ -505,10 +502,8 @@ public class CalendarAddActivity extends BaseActivity {
      */
     private void correctedCalendarTime() {
         if (isAllDay) {
-            startCalendar.set(Calendar.HOUR_OF_DAY, 0);
-            startCalendar.set(Calendar.MINUTE, 0);
-            endCalendar.set(Calendar.HOUR_OF_DAY, 23);
-            endCalendar.set(Calendar.MINUTE, 59);
+            startCalendar = TimeUtils.getDayBeginCalendar(startCalendar);
+            endCalendar = TimeUtils.getDayEndCalendar(endCalendar);
         }
         startCalendar.set(Calendar.SECOND, 0);
         startCalendar.set(Calendar.MILLISECOND, 0);
