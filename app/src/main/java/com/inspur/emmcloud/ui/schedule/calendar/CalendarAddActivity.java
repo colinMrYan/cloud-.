@@ -371,8 +371,8 @@ public class CalendarAddActivity extends BaseActivity  {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 scheduleEvent.setLastTime(System.currentTimeMillis());
-                LogUtils.LbcDebug("update Schedule::" + scheduleEvent.getCalendarEventJsonStr());
-                apiService.updateSchedule(scheduleEvent.getCalendarEventJsonStr());
+                LogUtils.LbcDebug("update Schedule::" + scheduleEvent.toCalendarEventJson().toString());
+                apiService.updateSchedule(scheduleEvent.toCalendarEventJson().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -388,8 +388,8 @@ public class CalendarAddActivity extends BaseActivity  {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 loadingDlg.show();
-                LogUtils.LbcDebug("Add Calendar" + scheduleEvent.getCalendarEventJsonStr());
-                apiService.addSchedule(scheduleEvent.getCalendarEventJsonStr());
+                LogUtils.LbcDebug("Add Schedule::" + scheduleEvent.toCalendarEventJson().toString());
+                apiService.addSchedule(scheduleEvent.toCalendarEventJson().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -443,10 +443,6 @@ public class CalendarAddActivity extends BaseActivity  {
             ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
             scheduleEvent.setId(getIDResult.getId());
             sendCalendarEventNotification();
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_ADD_EVENT, scheduleEvent);
-            setResult(RESULT_OK, intent);
-            LogUtils.LbcDebug("add Schedule Success");
             finish();
         }
 
@@ -465,10 +461,6 @@ public class CalendarAddActivity extends BaseActivity  {
             sendCalendarEventNotification();
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.modify_success));
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
-            LogUtils.LbcDebug("title=" + scheduleEvent.getTitle());
-            setResult(RESULT_OK, intent);
             LogUtils.LbcDebug("update Schedule Success");
             //更新系日历事件
             finish();

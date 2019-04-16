@@ -22,60 +22,61 @@ import java.util.List;
  * Created by chenmch on 2019/4/6.
  */
 @Table(name = "Schedule")
-public class Schedule implements Serializable{
+public class Schedule implements Serializable {
     @Column(name = "id", isId = true)
-    private String id="";// 唯一标识
+    private String id = "";// 唯一标识
     @Column(name = "title")
-    private String title="" ;//日程标题
+    private String title = "";//日程标题
     @Column(name = "type")
-    private String type= "";//日程类型（出差、会议等，可以自定义）
+    private String type = "";//日程类型（出差、会议等，可以自定义）
     @Column(name = "owner")
-    private String owner="";//创建人的inspurId
+    private String owner = "";//创建人的inspurId
     @Column(name = "startTime")
-    private long startTime=0L;//开始时间
+    private long startTime = 0L;//开始时间
     @Column(name = "endTime")
-    private long endTime=0L;// 结束时间
+    private long endTime = 0L;// 结束时间
     @Column(name = "creationTime")
-    private long creationTime=0L;//创建时间
+    private long creationTime = 0L;//创建时间
     @Column(name = "lastTime")
-    private long lastTime=0L;// 最后修改时间
+    private long lastTime = 0L;// 最后修改时间
     @Column(name = "isAllDay")
-    private Boolean isAllDay=false;//是否全天
+    private Boolean isAllDay = false;//是否全天
     @Column(name = "isCommunity")
-    private Boolean isCommunity=false;//是否公开（别人可以关注你的日程，此属性决定了当前日程是否对别人可见）
+    private Boolean isCommunity = true;//是否公开（别人可以关注你的日程，此属性决定了当前日程是否对别人可见）
     @Column(name = "syncToLocal")
-    private Boolean syncToLocal=false ;//是否将日程信息同步到 移动设备日历里边。
+    private Boolean syncToLocal = false;//是否将日程信息同步到 移动设备日历里边。
     @Column(name = "remindEvent")
-    private String remindEvent="";
+    private String remindEvent = "";
     @Column(name = "state")
-    private int state=-1;//日程的状态，客户端暂时可忽略该属性
+    private int state = -1;//日程的状态，客户端暂时可忽略该属性
     @Column(name = "location")
-    private String location="";
+    private String location = "";
     @Column(name = "note")
-    private String note="";
+    private String note = "";
     @Column(name = "participants")
-    private String participants="";
+    private String participants = "";
 
-    public Schedule(){
+    public Schedule() {
 
     }
-    public Schedule(JSONObject object){
-        id = JSONUtils.getString(object,"id","");
-        title  = JSONUtils.getString(object,"title ","");
-        type = JSONUtils.getString(object,"type","");
-        owner = JSONUtils.getString(object,"owner","");
-        startTime = JSONUtils.getLong(object,"startTime",0L);
-        endTime = JSONUtils.getLong(object,"endTime",0L);
-        creationTime = JSONUtils.getLong(object,"creationTime",0L);
-        lastTime = JSONUtils.getLong(object,"lastTime",0L);
-        isAllDay = JSONUtils.getBoolean(object,"isAllDay",false);
-        isCommunity = JSONUtils.getBoolean(object,"isCommunity",false);
-        syncToLocal = JSONUtils.getBoolean(object,"syncToLocal",false);
-        remindEvent = JSONUtils.getString(object,"remindEvent","");
-        state = JSONUtils.getInt(object,"state",-1);
-        location  = JSONUtils.getString(object,"location ","");
-        participants  = JSONUtils.getString(object,"participants ","");
-        note = JSONUtils.getString(object,"note","");
+
+    public Schedule(JSONObject object) {
+        id = JSONUtils.getString(object, "id", "");
+        title = JSONUtils.getString(object, "title ", "");
+        type = JSONUtils.getString(object, "type", "");
+        owner = JSONUtils.getString(object, "owner", "");
+        startTime = JSONUtils.getLong(object, "startTime", 0L);
+        endTime = JSONUtils.getLong(object, "endTime", 0L);
+        creationTime = JSONUtils.getLong(object, "creationTime", 0L);
+        lastTime = JSONUtils.getLong(object, "lastTime", 0L);
+        isAllDay = JSONUtils.getBoolean(object, "isAllDay", false);
+        isCommunity = JSONUtils.getBoolean(object, "isCommunity", false);
+        syncToLocal = JSONUtils.getBoolean(object, "syncToLocal", false);
+        remindEvent = JSONUtils.getString(object, "remindEvent", "");
+        state = JSONUtils.getInt(object, "state", -1);
+        location = JSONUtils.getString(object, "location ", "");
+        participants = JSONUtils.getString(object, "participants ", "");
+        note = JSONUtils.getString(object, "note", "");
     }
 
 
@@ -240,13 +241,13 @@ public class Schedule implements Serializable{
     }
 
     public List<String> getGetParticipantList() {
-        return JSONUtils.parseArray(participants,String.class);
+        return JSONUtils.parseArray(participants, String.class);
     }
 
     public static List<Event> calendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
         List<Event> eventList = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
-            Calendar scheduleStartTime =  schedule.getStartTimeCalendar();
+            Calendar scheduleStartTime = schedule.getStartTimeCalendar();
             Calendar scheduleEndTime = schedule.getEndTimeCalendar();
             if (TimeUtils.isContainTargentCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime)) {
                 Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
@@ -257,7 +258,7 @@ public class Schedule implements Serializable{
                 if (scheduleEndTime.after(dayEndCalendar)) {
                     scheduleEndTime = dayEndCalendar;
                 }
-                Event event = new Event(schedule.getId(), Event.TYPE_CALENDAR,schedule.getTitle(),schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime,schedule);
+                Event event = new Event(schedule.getId(), Event.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule);
                 event.setAllDay(schedule.getAllDay());
                 eventList.add(event);
             }
@@ -265,34 +266,46 @@ public class Schedule implements Serializable{
         return eventList;
     }
 
-    public   String  getCalendarEventJsonStr() throws JSONException {
-        JSONObject jsonObject= new JSONObject();
-        jsonObject.put("id",id);
-        jsonObject.put("title",title);
-        jsonObject.put("type",type);
-        jsonObject.put("owner",owner);
-        jsonObject.put("startTime",startTime);
-        jsonObject.put("endTime",endTime);
-        jsonObject.put("creationTime",creationTime);
-        jsonObject.put("lastTime",lastTime);
-        jsonObject.put("isAllDay",isAllDay);
-        jsonObject.put("isCommunity",isCommunity);
-        jsonObject.put("syncToLocal",syncToLocal);
-        jsonObject.put("state",state);
-        if(!StringUtils.isBlank(remindEvent)){
-            JSONObject remindJson=JSONUtils.getJSONObject(remindEvent);
-            jsonObject.put("remindEvent",remindJson);
+    public JSONObject toCalendarEventJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        if (!StringUtils.isBlank(id)) {
+            jsonObject.put("id", id);
         }
-        if(!StringUtils.isBlank(location)){
-            JSONObject locationJson=JSONUtils.getJSONObject(location);
-            jsonObject.put("location",locationJson);
+        jsonObject.put("title", title);
+        jsonObject.put("type", type);
+        jsonObject.put("owner", owner);
+        jsonObject.put("startTime", startTime);
+        jsonObject.put("endTime", endTime);
+        if (creationTime != 0) {
+            jsonObject.put("creationTime", creationTime);
         }
-        if(!StringUtils.isBlank(participants)){
-            JSONArray partJsonArray= JSONUtils.getJSONArray(participants,new JSONArray());
-            jsonObject.put("participants",partJsonArray);
+        if (lastTime != 0) {
+            jsonObject.put("lastTime", lastTime);
         }
-        jsonObject.put("note",note);
-        return jsonObject.toString();
+        // jsonObject.put("lastTime",lastTime);
+        jsonObject.put("isAllDay", isAllDay);
+        jsonObject.put("isCommunity", isCommunity);
+        jsonObject.put("syncToLocal", syncToLocal);
+        jsonObject.put("state", state);
+
+        if (!StringUtils.isBlank(remindEvent)) {
+            JSONObject remindJson = JSONUtils.getJSONObject(remindEvent);
+            jsonObject.put("remindEvent", remindJson);
+        }else{
+            jsonObject.put("remindEvent", null);
+        }
+        if (!StringUtils.isBlank(location)) {
+            JSONObject locationJson = JSONUtils.getJSONObject(location);
+            jsonObject.put("location", locationJson);
+        }
+        if (!StringUtils.isBlank(participants)) {
+            JSONArray partJsonArray = JSONUtils.getJSONArray(participants, new JSONArray());
+            jsonObject.put("participants", partJsonArray);
+        }
+
+        jsonObject.put("note", note);
+
+        return jsonObject;
     }
 
 }

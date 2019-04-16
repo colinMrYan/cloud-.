@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
@@ -2075,7 +2076,52 @@ public class WorkAPIService {
         });
     }
 
+    /**
+     * 获取日程列表（日程和会议）
+     *
+     * @param startTime
+     * @param endTime
+     * @param taskLastTime
+     */
+    public void getScheduleList(final Calendar startTime, final Calendar endTime, final long calendarLastTime, final long meetingLastTime, final long taskLastTime, final List<String> calendarIdList, final List<String> meetingIdList, final List<String> taskIdList) {
+        final String url = APIUri.getScheduleListUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.addQueryStringParameter("startTime", startTime.getTimeInMillis() + "");
+        params.addQueryStringParameter("endTime", endTime.getTimeInMillis() + "");
+        params.addQueryStringParameter("calendarLastTime", calendarLastTime + "");
+        params.addQueryStringParameter("meetingLastTime", meetingLastTime + "");
+        params.addQueryStringParameter("taskLastTime", taskLastTime + "");
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnScheduleListSuccess(new GetScheduleListResult(new String(arg0)),
+                        startTime, endTime,calendarIdList,meetingIdList,taskIdList);
+            }
 
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnScheduleListFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getScheduleList(startTime, endTime, calendarLastTime, meetingLastTime,
+                                taskLastTime,calendarIdList,meetingIdList,taskIdList);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
 
     public void addSchedule(final String schedule ){
         final String completeUrl = APIUri.getAddScheduleUrl();
@@ -2275,11 +2321,6 @@ public class WorkAPIService {
                 apiInterface.returnAddTaskTagFail(error, responseCode);
             }
         });
-    }
-
-
-    private void addMeeting(){
-
     }
 
 }
