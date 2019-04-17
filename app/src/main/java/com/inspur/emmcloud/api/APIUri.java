@@ -1732,6 +1732,10 @@ public class APIUri {
         return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetByStartTime?";
     }
 
+    public static String getRoomMeetingListByMeetingRoom(){
+        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetRoomUse?";
+    }
+
     /**
      * 获取删除工作中的tags
      */
