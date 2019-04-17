@@ -58,8 +58,8 @@ public class MeetingDetailActivity extends BaseActivity{
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create,TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         attendeeText.setText(getString(R.string.meeting_detail_attendee,getAttendee()));
-        meetingRecordHolderText.setText(getRecordHolder());
-        meetingConferenceText.setText(getContact());
+        meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder,getRecordHolder()));
+        meetingConferenceText.setText(getString(R.string.meeting_detail_conference,getContact()));
         meetingNoteText.setText(meeting.getNote());
     }
 
@@ -68,16 +68,16 @@ public class MeetingDetailActivity extends BaseActivity{
      * @return
      */
     private String getAttendee() {
-        String attendee = "";
         List<Participant> participantList =  meeting.getCommonParticipantList();
         if(participantList.size() == 0){
-            attendee = "";
+            return  "";
         }else if(participantList.size() == 1){
-            attendee = participantList.get(0).getName();
+            return participantList.get(0).getName();
         }else{
-            attendee = getString(R.string.meeting_detail_attendee_num,participantList.get(0).getName(),participantList.size());
+            return getString(R.string.meeting_detail_attendee_num,
+                    participantList.get(0).getName(),
+                    participantList.size());
         }
-        return attendee;
     }
 
     /**
@@ -86,14 +86,14 @@ public class MeetingDetailActivity extends BaseActivity{
      */
     private String getContact() {
         List<Participant> participantList = meeting.getRoleParticipantList();
-        if(participantList.size()>0){
-            return getString(R.string.meeting_detail_conference,
-                    getString(R.string.meeting_detail_attendee_num,
-                            participantList.get(0).getName(),
-                            participantList.size()));
+        if(participantList.size() == 0){
+            return "";
+        }else if(participantList.size() == 1){
+            return participantList.get(0).getName();
         }else{
-            return getString(R.string.meeting_detail_conference,
-                    "");
+            return getString(R.string.meeting_detail_attendee_num,
+                    participantList.get(0).getName(),
+                    participantList.size());
         }
     }
 
@@ -103,14 +103,14 @@ public class MeetingDetailActivity extends BaseActivity{
      */
     private String getRecordHolder() {
         List<Participant> participantList = meeting.getRecorderParticipantList();
-        if(participantList.size()>0){
-            return getString(R.string.meeting_detail_record_holder,
-                    getString(R.string.meeting_detail_attendee_num,
-                            participantList.get(0).getName(),
-                            participantList.size()));
+        if(participantList.size() == 0){
+            return "";
+        }else if(participantList.size() == 1){
+            return participantList.get(0).getName();
         }else{
-            return getString(R.string.meeting_detail_record_holder,
-                    "");
+            return getString(R.string.meeting_detail_attendee_num,
+                    participantList.get(0).getName(),
+                    participantList.size());
         }
     }
 
