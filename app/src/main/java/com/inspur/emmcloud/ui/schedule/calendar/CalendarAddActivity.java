@@ -332,7 +332,7 @@ public class CalendarAddActivity extends BaseActivity {
             scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
             scheduleEvent.setType("default");
             if(remindEvent.getAdvanceTimeSpan()!=-1){
-                scheduleEvent.setRemindEvent(remindEvent.getRemindEventJson());
+                scheduleEvent.setRemindEvent(remindEvent.toJSONObject().toString());
             }
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
                 updateCalEvent();
