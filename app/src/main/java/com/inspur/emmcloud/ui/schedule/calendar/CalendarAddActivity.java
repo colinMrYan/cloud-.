@@ -56,7 +56,6 @@ public class CalendarAddActivity extends BaseActivity {
     private static final int CAL_TYPE_REQUEST_CODE = 1;
     private static final int REPEAT_TYPE_REQUEST_CODE = 2;
     private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
-    RemindEvent remindEvent = new RemindEvent();
     @ViewInject(R.id.tv_save)
     private TextView saveText;
     @ViewInject(R.id.et_input_title)
