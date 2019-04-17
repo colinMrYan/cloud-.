@@ -20,4 +20,20 @@ public class RemindEvent {
         advanceTimeSpan = JSONUtils.getInt(obj, "advanceTimeSpan", -1);
         remindType = JSONUtils.getString(obj, "remindType", "");
     }
+
+    public int getAdvanceTimeSpan() {
+        return advanceTimeSpan;
+    }
+
+    public void setAdvanceTimeSpan(int advanceTimeSpan) {
+        this.advanceTimeSpan = advanceTimeSpan;
+    }
+
+    public String getRemindType() {
+        return remindType;
+    }
+
+    public void setRemindType(String remindType) {
+        this.remindType = remindType;
+    }
 }
