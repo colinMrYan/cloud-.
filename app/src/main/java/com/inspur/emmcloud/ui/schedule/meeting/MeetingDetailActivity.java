@@ -60,11 +60,15 @@ public class MeetingDetailActivity extends BaseActivity{
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create,TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         attendeeText.setText(getString(R.string.meeting_detail_attendee,getAttendee()));
-        meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder,getRecordHolder()));
-        meetingConferenceText.setText(getString(R.string.meeting_detail_conference,getConference()));
-        meetingNoteText.setText(getString(R.string.meeting_detail_note,meeting.getNote()));
+        meetingRecordHolderText.setText(getRecordHolder());
+        meetingConferenceText.setText(getContact());
+        meetingNoteText.setText(meeting.getNote());
     }
 
+    /**
+     * 获取参会人员
+     * @return
+     */
     private String getAttendee() {
         String attendee = "";
         List<Participant> participantList =  meeting.getCommonParticipantList();
@@ -82,16 +86,12 @@ public class MeetingDetailActivity extends BaseActivity{
      * 获取联络人
      * @return
      */
-    private String getConference() {
-        String recorder = "";
-        List<Participant> participantList =  meeting.getCommonParticipantList();
-        for(Participant participant : participantList){
-            if(participant.getRole().equals(ROLE_RECORDER)){
-                recorder = participant.getName();
-                break;
-            }
-        }
-        return recorder;
+    private String getContact() {
+        List<Participant> participantList = meeting.getRoleParticipantList();
+        return getString(R.string.meeting_detail_conference,
+                getString(R.string.meeting_detail_attendee_num,
+                        participantList.get(0).getName(),
+                        participantList.size()));
     }
 
     /**
@@ -99,17 +99,17 @@ public class MeetingDetailActivity extends BaseActivity{
      * @return
      */
     private String getRecordHolder() {
-        String conference = "";
-        List<Participant> participantList =  meeting.getCommonParticipantList();
-        for(Participant participant : participantList){
-            if(participant.getRole().equals(ROLE_CONTACT)){
-                conference = participant.getName();
-                break;
-            }
-        }
-        return conference;
+        List<Participant> participantList = meeting.getRecorderParticipantList();
+        return getString(R.string.meeting_detail_record_holder,
+                getString(R.string.meeting_detail_attendee_num,
+                        participantList.get(0).getName(),
+                        participantList.size()));
     }
 
+    /**
+     * 获取会议起止时间
+     * @return
+     */
     private String getMeetingTime() {
         String duringTime = "";
         long startTime = meeting.getStartTime();
