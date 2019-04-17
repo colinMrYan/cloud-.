@@ -165,14 +165,13 @@ public class TaskAddActivity extends BaseActivity {
             taskColorTags = (ArrayList<TaskColorTag>) taskResult.getTags();
             isCreateTask = false;
             List<Attachment> attachments = taskResult.getAttachments();
-            LogUtils.LbcDebug("attachments" + JSONUtils.toJSONString(attachments));
             otherAttachments = attachments;
             orgAttachmentSize = otherAttachments.size();
             for(int i=0;i<otherAttachments.size();i++){
-                LogUtils.LbcDebug("test11111111111::"+otherAttachments.get(i).toString());
-                JsonAttachmentAndUri jsonAttachmentAndUri=new JsonAttachmentAndUri(JSONUtils.getJSONObject(otherAttachments.get(i).toString()),"",false);
+                JsonAttachmentAndUri jsonAttachmentAndUri=new JsonAttachmentAndUri(JSONUtils.getJSONObject(JSONUtils.toJSONString(otherAttachments.get(i))),"",false);
                 otherJsonAttachments.add(jsonAttachmentAndUri);
             }
+            LogUtils.LbcDebug("orgNum:::::::::::::::::::::"+orgAttachmentSize);
             getTasks();
 //            for (int i = 0; i < attachments.size(); i++) {
 ////                if (attachments.get(i).getCategory().equals("IMAGE")) {
@@ -716,7 +715,7 @@ public class TaskAddActivity extends BaseActivity {
             otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    otherJsonAttachments.remove(num);
+                    deleteAttachment(num);
                     attachmentOtherAdapter.notifyDataSetChanged();
                 }
             });
@@ -727,8 +726,10 @@ public class TaskAddActivity extends BaseActivity {
     private void deleteAttachment(int currentIndex){
        if(currentIndex<orgAttachmentSize){
            if(NetUtils.isNetworkConnected(this)&&getIntent().hasExtra("task")){
-               apiService.deleteAttachments(taskResult.getId(),attachments.get(currentIndex).getId(),currentIndex);
+               apiService.deleteAttachments(taskResult.getId(),otherAttachments.get(currentIndex).getId(),currentIndex);
            }
+       }else{
+           otherJsonAttachments.remove(currentIndex);
        }
     }
 
@@ -828,6 +829,7 @@ public class TaskAddActivity extends BaseActivity {
                 GetFileUploadResult getFileUploadResult, String fakeMessageId) {
             LoadingDialog.dimissDlg(loadingDlg);
             JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
+            LogUtils.LbcDebug("jsonAttachment"+jsonAttachment.toString());
             otherJsonAttachments.add(new JsonAttachmentAndUri(jsonAttachment, attachemntLocalPath, true));
             attachmentOtherAdapter.notifyDataSetChanged();
         }
@@ -924,10 +926,11 @@ public class TaskAddActivity extends BaseActivity {
         public void returnDelAttachmentSuccess(int position) {
             super.returnDelAttachmentSuccess(position);
             LoadingDialog.dimissDlg(loadingDlg);
+            LogUtils.LbcDebug("delAttachment Success22222222222222222");
             otherAttachments.remove(position);
-            attachments.remove(position);
             otherJsonAttachments.remove(position);
             attachmentOtherAdapter.notifyDataSetChanged();
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
 
         }
 
@@ -1032,9 +1035,6 @@ public class TaskAddActivity extends BaseActivity {
                     ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
                     if (contactUser != null) {
                         SearchModel searchModel = new SearchModel(contactUser);
-//                        selectMemList.add(searchModel);
-//                        deleteMemList.add(searchModel);
-//                        oldMemList.add(searchModel);
                           orgTaskParters.add(searchModel);
                           taskParters.add(searchModel);
                     }
