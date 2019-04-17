@@ -56,7 +56,7 @@ public class EmmPermissionActivity extends AppCompatActivity {
     private String settingButtonText;
     private String deniedCloseButtonText;
     private String rationaleConfirmText;
-//    private boolean isShownRationaleDialog;
+    //    private boolean isShownRationaleDialog;
     private int requestedOrientation;
 
     public static void startActivity(Context context, Intent intent, EmmPermissionListener listener) {
@@ -84,6 +84,7 @@ public class EmmPermissionActivity extends AppCompatActivity {
 
     /**
      * 恢复activity中的数据
+     *
      * @param savedInstanceState
      */
     private void setupFromSavedInstanceState(Bundle savedInstanceState) {
@@ -166,9 +167,9 @@ public class EmmPermissionActivity extends AppCompatActivity {
         }
 
         if (needPermissionList.isEmpty()) {
-            permissionResult(null,new ArrayList<String>());
+            permissionResult(null, new ArrayList<String>());
         } else if (fromOnActivityResult) { //From Setting Activity
-            permissionResult(needPermissionList,new ArrayList<String>());
+            permissionResult(needPermissionList, new ArrayList<String>());
         } else if (needPermissionList.size() == 1 && needPermissionList
                 .contains(Manifest.permission.SYSTEM_ALERT_WINDOW)) {   // window permission deny
             permissionResult(needPermissionList, new ArrayList<String>());
@@ -180,7 +181,7 @@ public class EmmPermissionActivity extends AppCompatActivity {
         }
     }
 
-    private void permissionResult(List<String> deniedPermissionList,List<String> grantPermissionList) {
+    private void permissionResult(List<String> deniedPermissionList, List<String> grantPermissionList) {
         finish();
         overridePendingTransition(0, 0);
         if (permissionListenerStack != null) {
@@ -209,6 +210,7 @@ public class EmmPermissionActivity extends AppCompatActivity {
 
     /**
      * 回收资源时保存
+     *
      * @param outState
      */
     @Override
@@ -230,11 +232,11 @@ public class EmmPermissionActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         List<String> deniedPermissionList = EmmPermissionBase.getDeniedPermissions(this, permissions);
-        List<String> grantPermissionList = EmmPermissionBase.getGrantPermissions(this,permissions);
+        List<String> grantPermissionList = EmmPermissionBase.getGrantPermissions(this, permissions);
         if (deniedPermissionList.isEmpty()) {
-            permissionResult(null,grantPermissionList);
+            permissionResult(null, grantPermissionList);
         } else {
-            showPermissionDenyDialog(deniedPermissionList,grantPermissionList);
+            showPermissionDenyDialog(deniedPermissionList, grantPermissionList);
         }
     }
 
@@ -247,7 +249,7 @@ public class EmmPermissionActivity extends AppCompatActivity {
                 .setNegativeButton(deniedCloseButtonText, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        permissionResult(deniedPermissionList,grantPermissonList);
+                        permissionResult(deniedPermissionList, grantPermissonList);
                     }
                 });
         if (hasSettingButton) {

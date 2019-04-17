@@ -25,7 +25,7 @@ import java.util.List;
 
 @ContentView(R.layout.fragment_schedule_meeting)
 public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefreshLayout.OnRefreshListener
-        ,ScheduleMeetingListAdapter.OnItemClickLister{
+        , ScheduleMeetingListAdapter.OnItemClickLister {
     @ViewInject(R.id.swipe_refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.recycler_view_meeting)
@@ -35,17 +35,17 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view,savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(this);
         meetingRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        scheduleMeetingListAdapter= new ScheduleMeetingListAdapter(getActivity());
+        scheduleMeetingListAdapter = new ScheduleMeetingListAdapter(getActivity());
         meetingRecyclerView.setAdapter(scheduleMeetingListAdapter);
         scheduleMeetingListAdapter.setOnItemClickLister(this);
         initData();
 
     }
 
-    private void initData(){
+    private void initData() {
 //        for (int i = 0;i<10;i++){
 //            Meeting meeting = new Meeting();
 //            meeting.setTitle("2018年财年宣贯会，总结2018年公司业绩");

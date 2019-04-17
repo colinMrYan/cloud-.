@@ -13,10 +13,11 @@ public class GetOfficeResult {
 
     private List<Office> officeList = new ArrayList<>();
     private List<String> officeIdList = new ArrayList<>();
-    public GetOfficeResult(String response){
-        JSONArray array = JSONUtils.getJSONArray(response,new JSONArray());
-        for (int i = 0;i<array.length();i++){
-            Office office = new Office(JSONUtils.getJSONObject(array,i,new JSONObject()));
+
+    public GetOfficeResult(String response) {
+        JSONArray array = JSONUtils.getJSONArray(response, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            Office office = new Office(JSONUtils.getJSONObject(array, i, new JSONObject()));
             String officeId = office.getId();
             officeList.add(office);
             officeIdList.add(officeId);

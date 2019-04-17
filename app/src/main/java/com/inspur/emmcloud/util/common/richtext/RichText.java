@@ -54,6 +54,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     private int count;
     private int loadingCount;
     private SoftReference<SpannableStringBuilder> richText;
+
     RichText(RichTextConfig config, TextView textView) {
         this.config = config;
         this.textViewSoftReference = new SoftReference<>(textView);

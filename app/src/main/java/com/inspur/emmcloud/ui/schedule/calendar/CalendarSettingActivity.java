@@ -33,17 +33,15 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_calendar_setting)
 public class CalendarSettingActivity extends BaseActivity {
-    public static final String SHOW_TYPE_LIST =  "show_type_list";
-    public static final String SHOW_TYPE_DAY_VIEW =  "show_type_day_view";
+    public static final String SHOW_TYPE_LIST = "show_type_list";
+    public static final String SHOW_TYPE_DAY_VIEW = "show_type_day_view";
+    public static String EXTRA_SCHEDULE_CALENDAR_SETTING_CALENDARLIST = "schedule_calendar_setting_calendarlist";
     @ViewInject(R.id.listview_list_calendars)
     private ScrollViewWithListView calendarsListView;
     @ViewInject(R.id.iv_list_view_select)
     private ImageView listSelectImageView;
     @ViewInject(R.id.iv_day_view_select)
     private ImageView daySelectImageView;
-
-    public static String EXTRA_SCHEDULE_CALENDAR_SETTING_CALENDARLIST = "schedule_calendar_setting_calendarlist";
-
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
 

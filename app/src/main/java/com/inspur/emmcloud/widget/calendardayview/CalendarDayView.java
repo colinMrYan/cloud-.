@@ -27,6 +27,8 @@ import java.util.List;
  */
 
 public class CalendarDayView extends RelativeLayout {
+    private static final int TIME_HOUR_HEIGHT = DensityUtil.dip2px(MyApplication.getInstance(), 40);
+    private static final int EVENTT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
     private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3",
             "4", "5", "6", "7", "8", "9", "10", "10"};
     private List<TimeHourRow> timeHourRowList = new ArrayList<>();
@@ -34,8 +36,6 @@ public class CalendarDayView extends RelativeLayout {
     private RelativeLayout eventLayout;
     private OnEventClickListener onEventClickListener;
     private RelativeLayout currentTimeLineLayout;
-    private static  final int TIME_HOUR_HEIGHT = DensityUtil.dip2px(MyApplication.getInstance(), 40);
-    private static final int EVENTT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
     private LinearLayout timeHourLayout;
     private Calendar selectCalendar;
 
@@ -59,20 +59,21 @@ public class CalendarDayView extends RelativeLayout {
 
     /**
      * 初始化24小时时间轴
+     *
      * @param view
      */
     private void initTimeHourLayout(View view) {
         eventLayout = view.findViewById(R.id.rl_event);
-         timeHourLayout = view.findViewById(R.id.ll_time_hour);
+        timeHourLayout = view.findViewById(R.id.ll_time_hour);
         for (int i = 0; i < dayHourTimes.length; i++) {
             View hourLayout = LayoutInflater.from(getContext()).inflate(R.layout.calendar_day_view_hour, null, false);
-            hourLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,TIME_HOUR_HEIGHT));
+            hourLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TIME_HOUR_HEIGHT));
             TextView hourText = hourLayout.findViewById(R.id.tv_hour);
             hourText.setText(dayHourTimes[i]);
             TextView amText = hourLayout.findViewById(R.id.tv_am);
-            if (i==7){
+            if (i == 7) {
                 amText.setText("上午");
-            }else if(i==13){
+            } else if (i == 13) {
                 amText.setText("下午");
             }
 
@@ -81,7 +82,7 @@ public class CalendarDayView extends RelativeLayout {
         currentTimeLineLayout = view.findViewById(R.id.tl_current_time_line);
     }
 
-    public void setEventList(List<Event> eventList,Calendar selectCalendar) {
+    public void setEventList(List<Event> eventList, Calendar selectCalendar) {
         this.selectCalendar = selectCalendar;
         this.eventList = eventList;
         initTimeHourRow();
@@ -90,17 +91,18 @@ public class CalendarDayView extends RelativeLayout {
 
     /**
      * 显示时间轴中当前时间
+     *
      * @param isShow
      */
-    public void setCurrentTimeLineShow(boolean isShow){
-        if (isShow){
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)currentTimeLineLayout.getLayoutParams();
+    public void setCurrentTimeLineShow(boolean isShow) {
+        if (isShow) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) currentTimeLineLayout.getLayoutParams();
             Calendar currentCalendar = Calendar.getInstance();
-            int marginTop = (int)((currentCalendar.get(Calendar.HOUR_OF_DAY)+currentCalendar.get(Calendar.MINUTE)/60.0f)*TIME_HOUR_HEIGHT-DensityUtil.dip2px(MyApplication.getInstance(),3));
-            params.setMargins(DensityUtil.dip2px(getContext(),24),marginTop,0,0);
+            int marginTop = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+            params.setMargins(DensityUtil.dip2px(getContext(), 24), marginTop, 0, 0);
             currentTimeLineLayout.setLayoutParams(params);
             currentTimeLineLayout.setVisibility(VISIBLE);
-        }else {
+        } else {
             currentTimeLineLayout.setVisibility(INVISIBLE);
         }
 
@@ -120,7 +122,7 @@ public class CalendarDayView extends RelativeLayout {
         for (Event event : eventList) {
             int startHour = event.getDayEventStartTime(selectCalendar).get(Calendar.HOUR_OF_DAY);
             int endHour = event.getDayEventEndTime(selectCalendar).get(Calendar.HOUR_OF_DAY);
-            int endMin =event.getDayEventEndTime(selectCalendar).get(Calendar.MINUTE);
+            int endMin = event.getDayEventEndTime(selectCalendar).get(Calendar.MINUTE);
             if (endMin == 0) {
                 endHour = endHour - 1;
             }
@@ -144,6 +146,7 @@ public class CalendarDayView extends RelativeLayout {
 
     /**
      * 设置每个时间段event最大宽度
+     *
      * @param matheSetList
      */
     private void setEventMaxWidth(List<MatheSet> matheSetList) {
@@ -211,8 +214,8 @@ public class CalendarDayView extends RelativeLayout {
                     event.setIndex(i);
                     int eventWidth = timeHourRow.getEventWidth();
                     int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * DensityUtil.dip2px(getContext(), 40) / 3600000);
-                    int eventMinHeight = DensityUtil.dip2px(MyApplication.getInstance(),18);
-                    if (eventHeight<eventMinHeight){
+                    int eventMinHeight = DensityUtil.dip2px(MyApplication.getInstance(), 18);
+                    if (eventHeight < eventMinHeight) {
                         eventHeight = eventMinHeight;
                     }
                     int maginLeft = EVENTT_GAP * i + eventWidth * i;
@@ -239,9 +242,9 @@ public class CalendarDayView extends RelativeLayout {
         TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
         eventImg.setImageResource(event.getEventIconResId());
         eventTitleEvent.setText(event.getEventTitle());
-        String subTitle = event.getShowEventSubTitle(getContext(),selectCalendar);
-        if (event.getEventType().equals(Event.TYPE_TASK)){
-            subTitle+="截止";
+        String subTitle = event.getShowEventSubTitle(getContext(), selectCalendar);
+        if (event.getEventType().equals(Event.TYPE_TASK)) {
+            subTitle += "截止";
         }
         eventSubtitleEvent.setText(subTitle);
         eventLayout.addView(eventView, eventLayoutParams);

@@ -139,7 +139,7 @@
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
     <string name="modify_group_name">群名片</string>
-    <string name="choose_common_office">添加常用办公地点</string>
+    <string name="choose_common_office">常用办公地点</string>
     <string name="please_click_choosing_time">请点击选择时间</string>
     <string name="meeting_room">会议室</string>
     <string name="building">建筑</string>

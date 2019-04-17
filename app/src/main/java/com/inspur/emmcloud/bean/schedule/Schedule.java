@@ -4,9 +4,11 @@ package com.inspur.emmcloud.bean.schedule;
 import com.inspur.emmcloud.bean.work.RemindEvent;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
+import org.json.JSONArray;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +44,7 @@ public class Schedule implements Serializable {
     @Column(name = "isAllDay")
     private Boolean isAllDay = false;//是否全天
     @Column(name = "isCommunity")
-    private Boolean isCommunity = true;//是否公开（别人可以关注你的日程，此属性决定了当前日程是否对别人可见）
+    private Boolean isCommunity = false;//是否公开（别人可以关注你的日程，此属性决定了当前日程是否对别人可见）
     @Column(name = "syncToLocal")
     private Boolean syncToLocal = false;//是否将日程信息同步到 移动设备日历里边。
     @Column(name = "remindEvent")
@@ -55,10 +57,12 @@ public class Schedule implements Serializable {
     private String note = "";
     @Column(name = "participants")
     private String participants = "";
+    private List<String> getParticipantList = new ArrayList<>();
 
     public Schedule() {
 
     }
+
 
     public Schedule(JSONObject object) {
         id = JSONUtils.getString(object, "id", "");
@@ -74,13 +78,32 @@ public class Schedule implements Serializable {
         syncToLocal = JSONUtils.getBoolean(object, "syncToLocal", false);
         remindEvent = JSONUtils.getString(object, "remindEvent", "");
         state = JSONUtils.getInt(object, "state", -1);
-        location = JSONUtils.getString(object, "location ", "");
+        location = JSONUtils.getString(object, "location", "");
         participants = JSONUtils.getString(object, "participants ", "");
         note = JSONUtils.getString(object, "note", "");
     }
 
-
-    private List<String> getParticipantList = new ArrayList<>();
+    public static List<Event> calendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
+        List<Event> eventList = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            Calendar scheduleStartTime = schedule.getStartTimeCalendar();
+            Calendar scheduleEndTime = schedule.getEndTimeCalendar();
+            if (TimeUtils.isContainTargetCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime)) {
+                Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
+                Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
+                if (scheduleStartTime.before(dayBeginCalendar)) {
+                    scheduleStartTime = dayBeginCalendar;
+                }
+                if (scheduleEndTime.after(dayEndCalendar)) {
+                    scheduleEndTime = dayEndCalendar;
+                }
+                Event event = new Event(schedule.getId(), Event.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule);
+                event.setAllDay(schedule.getAllDay());
+                eventList.add(event);
+            }
+        }
+        return eventList;
+    }
 
     public String getId() {
         return id;
@@ -150,21 +173,78 @@ public class Schedule implements Serializable {
         return TimeUtils.timeLong2Calendar(startTime);
     }
 
-
     public Calendar getEndTimeCalendar() {
         return TimeUtils.timeLong2Calendar(endTime);
     }
-
 
     public Calendar getCreationTimeCalendar() {
         return TimeUtils.timeLong2Calendar(creationTime);
     }
 
-
     public Calendar getLastTimeCalendar() {
         return TimeUtils.timeLong2Calendar(lastTime);
     }
 
+    public List<Participant> getCommonParticipantList() {
+        List<Participant> participantList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            Participant participant = new Participant(JSONUtils.getJSONObject(array, i, new JSONObject()));
+            if (participant.getRole().equals(Participant.TYPE_COMMON)) {
+                participantList.add(participant);
+            }
+        }
+        return participantList;
+    }
+
+    public List<Participant> getRecorderParticipantList() {
+        List<Participant> participantList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            Participant participant = new Participant(JSONUtils.getJSONObject(array, i, new JSONObject()));
+            if (participant.getRole().equals(Participant.TYPE_RECORDER)) {
+                participantList.add(participant);
+            }
+        }
+        return participantList;
+    }
+
+    public List<Participant> getRoleParticipantList() {
+        List<Participant> participantList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            Participant participant = new Participant(JSONUtils.getJSONObject(array, i, new JSONObject()));
+            if (participant.getRole().equals(Participant.TYPE_CONTACT)) {
+                participantList.add(participant);
+            }
+        }
+        return participantList;
+    }
+
+    //为了支持跨天，支持特定日期当天的会议开始时间
+    public Calendar getDayStartTimeCalendar(Calendar calendar) {
+        Calendar startTimeCalendar = getStartTimeCalendar();
+        if (!TimeUtils.isSameDay(calendar, startTimeCalendar)) {
+            return TimeUtils.getDayBeginCalendar(calendar);
+        }
+        return startTimeCalendar;
+    }
+
+    public Long getDayStartTime(Calendar calendar) {
+        return TimeUtils.calendar2TimeLong(getDayStartTimeCalendar(calendar));
+    }
+
+    public Long getDayEndTime(Calendar calendar) {
+        return TimeUtils.calendar2TimeLong(getDayEndTimeCalendar(calendar));
+    }
+
+    public Calendar getDayEndTimeCalendar(Calendar calendar) {
+        Calendar endTimeCalendar = getEndTimeCalendar();
+        if (!TimeUtils.isSameDay(calendar, endTimeCalendar)) {
+            return TimeUtils.getDayEndCalendar(calendar);
+        }
+        return endTimeCalendar;
+    }
 
     public Boolean getAllDay() {
         return isAllDay;
@@ -202,7 +282,6 @@ public class Schedule implements Serializable {
         return new RemindEvent(remindEvent);
     }
 
-
     public int getState() {
         return state;
     }
@@ -222,7 +301,6 @@ public class Schedule implements Serializable {
     public Location getScheduleLocationObj() {
         return new Location(location);
     }
-
 
     public String getNote() {
         return note;
@@ -244,26 +322,25 @@ public class Schedule implements Serializable {
         return JSONUtils.parseArray(participants, String.class);
     }
 
-    public static List<Event> calendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
-        List<Event> eventList = new ArrayList<>();
-        for (Schedule schedule : scheduleList) {
-            Calendar scheduleStartTime = schedule.getStartTimeCalendar();
-            Calendar scheduleEndTime = schedule.getEndTimeCalendar();
-            if (TimeUtils.isContainTargentCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime)) {
-                Calendar dayBeginCalendar = TimeUtils.getDayBeginCalendar(selectCalendar);
-                Calendar dayEndCalendar = TimeUtils.getDayEndCalendar(selectCalendar);
-                if (scheduleStartTime.before(dayBeginCalendar)) {
-                    scheduleStartTime = dayBeginCalendar;
-                }
-                if (scheduleEndTime.after(dayEndCalendar)) {
-                    scheduleEndTime = dayEndCalendar;
-                }
-                Event event = new Event(schedule.getId(), Event.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule);
-                event.setAllDay(schedule.getAllDay());
-                eventList.add(event);
-            }
-        }
-        return eventList;
+    public String getCalendarEventJsonStr() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("title", title);
+        jsonObject.put("type", type);
+        jsonObject.put("owner", owner);
+        jsonObject.put("startTime", startTime);
+        jsonObject.put("endTime", endTime);
+        jsonObject.put("creationTime", creationTime);
+        jsonObject.put("lastTime", lastTime);
+        jsonObject.put("isAllDay", isAllDay);
+        jsonObject.put("isCommunity", isCommunity);
+        jsonObject.put("syncToLocal", syncToLocal);
+        jsonObject.put("remindEvent", remindEvent);
+        jsonObject.put("state", state);
+        jsonObject.put("location", location);
+        jsonObject.put("participants", participants);
+        jsonObject.put("note", note);
+        return jsonObject.toString();
     }
 
     public JSONObject toCalendarEventJson() throws JSONException {

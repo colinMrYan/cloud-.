@@ -37,7 +37,7 @@ public class AppService extends ImpPlugin {
 
     // 退出系统
     private void close() {
-        if (!getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())){
+        if (!getActivity().getClass().getSimpleName().equals(IndexActivity.class.getSimpleName())) {
             getActivity().finish();
         }
 

@@ -14,12 +14,12 @@ public class MeetingRoomArea {
     private ArrayList<MeetingRoom> meetingRoomList = new ArrayList<>();
 
     public MeetingRoomArea(JSONObject obj) {
-        id = JSONUtils.getString(obj,"id","");
-        name = JSONUtils.getString(obj,"name","");
-        location = JSONUtils.getString(obj,"location","");
-        JSONArray array = JSONUtils.getJSONArray(obj,"rooms",new JSONArray());
-        for (int i=0;i<array.length();i++){
-            meetingRoomList.add(new MeetingRoom(JSONUtils.getJSONObject(array,i,new JSONObject())));
+        id = JSONUtils.getString(obj, "id", "");
+        name = JSONUtils.getString(obj, "name", "");
+        location = JSONUtils.getString(obj, "location", "");
+        JSONArray array = JSONUtils.getJSONArray(obj, "rooms", new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            meetingRoomList.add(new MeetingRoom(JSONUtils.getJSONObject(array, i, new JSONObject())));
         }
     }
 

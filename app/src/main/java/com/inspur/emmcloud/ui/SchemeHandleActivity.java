@@ -118,8 +118,8 @@ public class SchemeHandleActivity extends Activity {
                 setTheme(R.style.AppTheme_Transparent_0);
                 break;
         }
-        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont,0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true,1.0f).init();
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
+        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     private boolean isLackNecessaryPermission() {

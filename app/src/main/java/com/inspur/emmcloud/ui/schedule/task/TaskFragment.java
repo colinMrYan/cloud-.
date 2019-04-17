@@ -30,7 +30,7 @@ import java.util.List;
  * 工作主页面下任务页面
  */
 @ContentView(R.layout.fragment_all_task_list)
-public class TaskFragment extends Fragment{
+public class TaskFragment extends Fragment {
 
     public static final String MY_TASK_TYPE = "task_type";
     public static final int MY_MINE = 0;
@@ -50,7 +50,7 @@ public class TaskFragment extends Fragment{
     @ViewInject(R.id.ev_search)
     private ClearEditText searchEditText;
     private boolean injected = false;
-    private TaskListFragment allTaskListFragment,mineTaskListFragment,involvedTaskListFragment,focusedTaskListFragment,allReadyDoneTaskListFragment;
+    private TaskListFragment allTaskListFragment, mineTaskListFragment, involvedTaskListFragment, focusedTaskListFragment, allReadyDoneTaskListFragment;
     private AllTaskFragmentAdapter adapter;
     private int lastTaskPosition = 0;
 
@@ -87,19 +87,19 @@ public class TaskFragment extends Fragment{
 //        allTaskListFragment = new TaskListFragment();
 //        allTaskListFragment.setArguments(bundle);
         Bundle bundleMine = new Bundle();
-        bundleMine.putInt(MY_TASK_TYPE,MY_MINE);
+        bundleMine.putInt(MY_TASK_TYPE, MY_MINE);
         mineTaskListFragment = new TaskListFragment();
         mineTaskListFragment.setArguments(bundleMine);
         Bundle bundleInvolved = new Bundle();
-        bundleInvolved.putInt(MY_TASK_TYPE,MY_INVOLVED);
+        bundleInvolved.putInt(MY_TASK_TYPE, MY_INVOLVED);
         involvedTaskListFragment = new TaskListFragment();
         involvedTaskListFragment.setArguments(bundleInvolved);
         Bundle bundleFocused = new Bundle();
-        bundleFocused.putInt(MY_TASK_TYPE,MY_FOCUSED);
+        bundleFocused.putInt(MY_TASK_TYPE, MY_FOCUSED);
         focusedTaskListFragment = new TaskListFragment();
         focusedTaskListFragment.setArguments(bundleFocused);
         Bundle bundleDone = new Bundle();
-        bundleDone.putInt(MY_TASK_TYPE,MY_DONE);
+        bundleDone.putInt(MY_TASK_TYPE, MY_DONE);
         allReadyDoneTaskListFragment = new TaskListFragment();
         allReadyDoneTaskListFragment.setArguments(bundleDone);
 
@@ -120,10 +120,10 @@ public class TaskFragment extends Fragment{
 //        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused),getIsSelect(2));
 //        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_done),getIsSelect(3));
 
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_mine),true);
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_involved),false);
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused),false);
-        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_done),false);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_mine), true);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_involved), false);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused), false);
+        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_done), false);
 
         tabLayoutSchedule.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -171,7 +171,7 @@ public class TaskFragment extends Fragment{
 //                }
                 searchEditText.setText("");
                 tabLayoutSchedule.getTabAt(position).select();
-                ((AllTaskFragmentAdapter)taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
+                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
             }
 
             @Override
@@ -198,7 +198,7 @@ public class TaskFragment extends Fragment{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ((AllTaskFragmentAdapter)taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
+                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
             }
 
             @Override
@@ -213,12 +213,12 @@ public class TaskFragment extends Fragment{
      */
     private void setSearchState(int lastTaskPosition) {
         searchEditText.setText("");
-        ((AllTaskFragmentAdapter)taskViewPager.getAdapter()).getTaskListFragment().get(lastTaskPosition).setSearchContent("");
+        ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(lastTaskPosition).setSearchContent("");
     }
 
 
     public boolean getIsSelect(int i) {
-        if(tabLayoutSchedule.getChildAt(i) != null ){
+        if (tabLayoutSchedule.getChildAt(i) != null) {
             return tabLayoutSchedule.getChildAt(i).isSelected();
         }
         return false;

@@ -74,7 +74,17 @@ import cn.carbs.android.segmentcontrolview.library.SegmentControlView;
  */
 @ContentView(R.layout.activity_task_add)
 public class TaskAddActivity extends BaseActivity {
-    @ViewInject(R.id.et_input_content)
+    public static final int CLASS_TAG_REQUEST_CODE = 6;
+    private static final int MANGER_REQUEST_CODE = 1;
+    private static final int ALBUM_REQUEST_CODE = 2;
+    private static final int PARTER_REQUEST_CODE = 3;
+    private static final int ALERT_TIME_REQUEST_CODE = 4;
+    private static final int ATTACHMENT_REQUEST_CODE = 5;
+    @ViewInject(R.id.ll_single_tag)
+    LinearLayout singleTagLayout;
+    @ViewInject(R.id.ll_tags)
+    LinearLayout tagsLayout;
+    @ViewInject(R.id.et_input_title)
     private EditText contentInputEdit;
     @ViewInject(R.id.segment_control)
     private SegmentControl segmentControl;
@@ -82,10 +92,6 @@ public class TaskAddActivity extends BaseActivity {
     private ImageView taskTypeTapImage;
     @ViewInject(R.id.tv_task_type_name)
     private TextView taskTypeNameText;
-    @ViewInject(R.id.ll_single_tag)
-    LinearLayout singleTagLayout;
-    @ViewInject(R.id.ll_tags)
-    LinearLayout tagsLayout;
     @ViewInject(R.id.tv_deadline_time)
     private TextView deadlineTimeText;
     @ViewInject(R.id.tv_deadline_time)
@@ -120,15 +126,6 @@ public class TaskAddActivity extends BaseActivity {
     private SegmentControlView segmentControlView;
     @ViewInject(R.id.tv_title)
     private TextView titleText;
-
-    private static final int MANGER_REQUEST_CODE = 1;
-    private static final int ALBUM_REQUEST_CODE = 2;
-    private static final int PARTER_REQUEST_CODE = 3;
-    private static final int ALERT_TIME_REQUEST_CODE = 4;
-    private static final int ATTACHMENT_REQUEST_CODE = 5;
-    public static final int CLASS_TAG_REQUEST_CODE = 6;
-
-
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult = new Task();

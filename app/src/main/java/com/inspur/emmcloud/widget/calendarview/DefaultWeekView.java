@@ -53,10 +53,10 @@ public final class DefaultWeekView extends WeekView {
     /**
      * 如果需要点击Scheme没有效果，则return true
      *
-     * @param canvas    canvas
-     * @param emmCalendar  日历日历calendar
-     * @param x         日历Card x起点坐标
-     * @param hasScheme hasScheme 非标记的日期
+     * @param canvas      canvas
+     * @param emmCalendar 日历日历calendar
+     * @param x           日历Card x起点坐标
+     * @param hasScheme   hasScheme 非标记的日期
      * @return true 则绘制onDrawScheme，因为这里背景色不是是互斥的
      */
     @Override

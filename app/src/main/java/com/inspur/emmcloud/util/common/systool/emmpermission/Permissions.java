@@ -2,7 +2,9 @@ package com.inspur.emmcloud.util.common.systool.emmpermission;
 
 
 import android.content.Context;
+
 import com.inspur.emmcloud.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,15 +68,6 @@ public final class Permissions {
     public static final String[] STORAGE = new String[]{
             Permissions.READ_EXTERNAL_STORAGE,
             Permissions.WRITE_EXTERNAL_STORAGE};
-
-
-    public static final class Group {
-        public static final String[] CALENDAR = new String[]{
-                Permissions.READ_CALENDAR,
-                Permissions.WRITE_CALENDAR};
-
-        public static final String[] CAMERA = new String[]{Permissions.CAMERA};
-    }
 
     /**
      * Turn permissions into text.
@@ -164,5 +157,13 @@ public final class Permissions {
             }
         }
         return textList;
+    }
+
+    public static final class Group {
+        public static final String[] CALENDAR = new String[]{
+                Permissions.READ_CALENDAR,
+                Permissions.WRITE_CALENDAR};
+
+        public static final String[] CAMERA = new String[]{Permissions.CAMERA};
     }
 }

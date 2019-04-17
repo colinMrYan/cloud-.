@@ -18,7 +18,8 @@ public class NetWorkStateChangeUtils {
 
 
     private static NetWorkStateChangeUtils netWorkStateChangeUtils;
-    private CheckingNetStateUtils checkingNetStateUtils=new CheckingNetStateUtils( MyApplication.getInstance(), NetUtils.pingUrls );;
+    private CheckingNetStateUtils checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls);
+    ;
 
     private NetWorkStateChangeUtils() {
 
@@ -58,7 +59,7 @@ public class NetWorkStateChangeUtils {
                 WebSocketPush.getInstance().startWebSocket();
             } else if (isAppOnForeground) {
             }
-            if(isAppOnForeground){
+            if (isAppOnForeground) {
                 checkingNetStateUtils.getNetStateResult(5);
             }
         } catch (Exception e) {

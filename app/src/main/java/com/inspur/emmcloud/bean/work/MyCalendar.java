@@ -35,12 +35,12 @@ public class MyCalendar implements Serializable {
 
     public MyCalendar(JSONObject obj) {
         try {
-           id=JSONUtils.getString(obj,"id","");
-           name=JSONUtils.getString(obj,"name","");
-           color=JSONUtils.getString(obj,"color","");
-           owner=JSONUtils.getString(obj,"owner","");
-           state=JSONUtils.getString(obj,"state","");
-           community=JSONUtils.getBoolean(obj,"community",false);
+            id = JSONUtils.getString(obj, "id", "");
+            name = JSONUtils.getString(obj, "name", "");
+            color = JSONUtils.getString(obj, "color", "");
+            owner = JSONUtils.getString(obj, "owner", "");
+            state = JSONUtils.getString(obj, "state", "");
+            community = JSONUtils.getBoolean(obj, "community", false);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -50,12 +50,12 @@ public class MyCalendar implements Serializable {
     public MyCalendar(String response) {
         try {
             JSONObject obj = new JSONObject(response);
-            id=JSONUtils.getString(obj,"id","");
-            name=JSONUtils.getString(obj,"name","");
-            color=JSONUtils.getString(obj,"color","");
-            owner=JSONUtils.getString(obj,"owner","");
-            state=JSONUtils.getString(obj,"state","");
-            community=JSONUtils.getBoolean(obj,"community",false);
+            id = JSONUtils.getString(obj, "id", "");
+            name = JSONUtils.getString(obj, "name", "");
+            color = JSONUtils.getString(obj, "color", "");
+            owner = JSONUtils.getString(obj, "owner", "");
+            state = JSONUtils.getString(obj, "state", "");
+            community = JSONUtils.getBoolean(obj, "community", false);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

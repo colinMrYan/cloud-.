@@ -29,7 +29,7 @@ public class RecycleViewForSizeChange extends RecyclerView {
             @Override
             public void run() {
                 if (getAdapter() != null) {
-                        MoveToPosition(getAdapter().getItemCount() - 1);
+                    MoveToPosition(getAdapter().getItemCount() - 1);
                 }
             }
         }, 50);

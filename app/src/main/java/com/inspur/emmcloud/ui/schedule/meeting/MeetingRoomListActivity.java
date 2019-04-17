@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MeetingRoomAdapter;
+import com.inspur.emmcloud.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
@@ -18,7 +18,6 @@ import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.work.meeting.CreateCommonOfficeSpaceActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -45,7 +44,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public static final String EXTRA_START_TIME = "extra_start_time";
     public static final String EXTRA_END_TIME = "extra_end_time";
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
-    private static final int REQUEST_CREATE_OFFICE = 1;
+    private static final int REQUEST_MEETING_OFFICE_SETTING = 1;
     @ViewInject(R.id.swipe_refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.expandable_list_view)
@@ -60,12 +59,12 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private TextView endTimeText;
     private Calendar startTimeCalendar;
     private Calendar endTimeCalendar;
-//    private LoadingDialog loadingDlg;
+    //    private LoadingDialog loadingDlg;
     private WebService webService;
     private ScheduleApiService apiService;
     private List<String> officeIdList = new ArrayList<>();
     private List<MeetingRoomArea> meetingRoomAreaList = new ArrayList<>();
-    private MeetingRoomAdapter meetingRoomAdapter;
+    private ScheduleMeetingRoomAdapter meetingRoomAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +83,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         expandableListView.setVerticalScrollBarEnabled(false);
         expandableListView.setHeaderDividersEnabled(false);
         expandableListView.setOnChildClickListener(this);
-        meetingRoomAdapter = new MeetingRoomAdapter(MeetingRoomListActivity.this);
+        meetingRoomAdapter = new ScheduleMeetingRoomAdapter(MeetingRoomListActivity.this);
         expandableListView.setAdapter(meetingRoomAdapter);
         webService = new WebService();
         apiService = new ScheduleApiService(this);
@@ -101,20 +100,21 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
         MeetingRoom meetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_START_TIME,startTimeCalendar);
-        intent.putExtra(EXTRA_END_TIME,endTimeCalendar);
-        intent.putExtra(EXTRA_MEETING_ROOM,meetingRoom);
-        setResult(RESULT_OK,intent);
+        intent.putExtra(EXTRA_START_TIME, startTimeCalendar);
+        intent.putExtra(EXTRA_END_TIME, endTimeCalendar);
+        intent.putExtra(EXTRA_MEETING_ROOM, meetingRoom);
+        setResult(RESULT_OK, intent);
         finish();
         return false;
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
                 break;
             case R.id.ibt_config:
+                setMeetingOffice();
                 break;
             case R.id.ll_start_time:
                 showTimeSelectDialog(true);
@@ -188,15 +188,15 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CREATE_OFFICE) {
-
+            if (requestCode == REQUEST_MEETING_OFFICE_SETTING) {
+                getOfficeList();
             }
         }
     }
 
-    private void createOffice() {
-        Intent intent = new Intent(this, CreateCommonOfficeSpaceActivity.class);
-        startActivityForResult(intent, REQUEST_CREATE_OFFICE);
+    private void setMeetingOffice() {
+        Intent intent = new Intent(this, MeetingOfficeSettingActivity.class);
+        startActivityForResult(intent, REQUEST_MEETING_OFFICE_SETTING);
     }
 
     /**
@@ -206,11 +206,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
         if (officeIdListJson == null) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                if (!swipeRefreshLayout.isRefreshing()){
+                if (!swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(true);
                 }
                 apiService.getOfficeList();
-            }else {
+            } else {
                 swipeRefreshLayout.setRefreshing(false);
             }
         } else {
@@ -221,11 +221,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 
     private void getMeetingRoomList() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if (!swipeRefreshLayout.isRefreshing()){
+            if (!swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(true);
             }
             apiService.getMeetingRoomList(startTimeCalendar.getTimeInMillis(), endTimeCalendar.getTimeInMillis(), officeIdList, true);
-        }else {
+        } else {
             swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -253,7 +253,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                 getMeetingRoomList();
             } else {
                 swipeRefreshLayout.setRefreshing(false);
-                createOffice();
+                setMeetingOffice();
             }
         }
 

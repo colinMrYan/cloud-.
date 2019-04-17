@@ -4,16 +4,27 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONObject;
 
-import java.io.Serializable;
-
 /**
- * Created by libaochao on 2019/4/15.
+ * Created by chenmch on 2019/4/16.
  */
 
-public class Participant implements Serializable {
-    private String id = "";
-    private String name = "";
-    private String role = "common";
+public class Participant {
+    public static final String TYPE_COMMON = "common";
+    public static final String TYPE_RECORDER = "recorder";
+    public static final String TYPE_CONTACT = "contact";
+    private String id;
+    private String name;
+    private String role;//common,普通参与者,recorder, 记录人,contact,联系人
+
+    public Participant() {
+
+    }
+
+    public Participant(JSONObject obj) {
+        this.id = JSONUtils.getString(obj, "id", "");
+        this.name = JSONUtils.getString(obj, "name", "");
+        this.role = JSONUtils.getString(obj, "role", "");
+    }
 
     public String getId() {
         return id;
@@ -39,19 +50,15 @@ public class Participant implements Serializable {
         this.role = role;
     }
 
-    public Participant() {
-    }
-
-    public Participant(JSONObject jsonObject) {
-        this.id = JSONUtils.getString(jsonObject, "id", "");
-        this.name = JSONUtils.getString(jsonObject, "name", "");
-        this.role = JSONUtils.getString(jsonObject, "role", "common");
-    }
-
-    public Participant(String id, String name, String role) {
-        this.id = id;
-        this.name = name;
-        this.role = role;
+    public JSONObject toJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("id", id);
+            obj.put("name", name);
+            obj.put("role", role);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 }
-

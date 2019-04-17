@@ -40,7 +40,6 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 
 /**
@@ -108,7 +107,7 @@ public class CalendarLayout extends LinearLayout {
      */
     private int mDefaultStatus;
 
-//       /**
+    //       /**
     //     * 仅日历有效
     //     */
 //    private static final int GESTURE_MODE_ONLY_CALENDAR = 1;
@@ -528,11 +527,10 @@ public class CalendarLayout extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        LogUtils.jasonDebug("00000000000000000000000000000000000000000000000000000000000000");
         mMonthView = (MonthViewPager) findViewById(R.id.vp_month);
         mWeekPager = (WeekViewPager) findViewById(R.id.vp_week);
-        mMonthView.setVisibility((mDefaultStatus == 0)?VISIBLE:GONE);
-        mWeekPager.setVisibility((mDefaultStatus == 0)?GONE:VISIBLE);
+        mMonthView.setVisibility((mDefaultStatus == 0) ? VISIBLE : GONE);
+        mWeekPager.setVisibility((mDefaultStatus == 0) ? GONE : VISIBLE);
         mContentView = (ViewGroup) findViewById(mContentViewId);
         mYearView = (YearViewPager) findViewById(R.id.selectLayout);
         if (mContentView != null) {

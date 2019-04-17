@@ -201,7 +201,7 @@ public class ChannelInfoActivity extends BaseActivity {
         }
         msgInterruptionSwitch.setOnStateChangedListener(onStateChangedListener);
         boolean isChannelSetTop = ChannelOperationCacheUtils.isChannelSetTop(this, cid);
-        if (setTopSwitch.isOpened() != isChannelSetTop){
+        if (setTopSwitch.isOpened() != isChannelSetTop) {
             setTopSwitch.setOpened(isChannelSetTop);
         }
         setTopSwitch.setOnStateChangedListener(onStateChangedListener);

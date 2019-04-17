@@ -243,7 +243,7 @@ public class LanguageSwitchActivity extends BaseActivity {
                 iso = iso.toLowerCase();
                 Integer id = getResources().getIdentifier(iso, "drawable",
                         getApplicationContext().getPackageName());
-                if (id == null){
+                if (id == null) {
                     id = R.drawable.zh_cn;
                 }
                 holder.flagImg.setVisibility(View.VISIBLE);

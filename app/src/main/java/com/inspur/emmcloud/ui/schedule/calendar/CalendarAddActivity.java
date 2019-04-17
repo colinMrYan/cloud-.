@@ -48,9 +48,18 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_calendar_add)
 public class CalendarAddActivity extends BaseActivity {
+    public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
+    public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
+    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
+    public static final String EXTRA_SCHEDULE_CALENDAR_ADD_EVENT = "schedule_calendar_add_event";
+    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT = "schedule_calendar_type_select";
+    private static final int CAL_TYPE_REQUEST_CODE = 1;
+    private static final int REPEAT_TYPE_REQUEST_CODE = 2;
+    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
+    RemindEvent remindEvent = new RemindEvent();
     @ViewInject(R.id.tv_save)
     private TextView saveText;
-    @ViewInject(R.id.et_input_content)
+    @ViewInject(R.id.et_input_title)
     private EditText inputContentEdit;
     @ViewInject(R.id.switch_all_day)
     private Switch allDaySwitch;
@@ -82,17 +91,6 @@ public class CalendarAddActivity extends BaseActivity {
     private RelativeLayout endTimeLayout;
     @ViewInject(R.id.rl_alert_time)
     private RelativeLayout alertTimeLayout;
-
-    private static final int CAL_TYPE_REQUEST_CODE = 1;
-    private static final int REPEAT_TYPE_REQUEST_CODE = 2;
-    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
-
-    public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
-    public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
-    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
-    public static final String EXTRA_SCHEDULE_CALENDAR_ADD_EVENT = "schedule_calendar_add_event";
-    public static final String EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT = "schedule_calendar_type_select";
-
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Schedule scheduleEvent = new Schedule();
