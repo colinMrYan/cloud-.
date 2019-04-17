@@ -101,9 +101,9 @@
                 android:layout_centerVertical="true"
                 android:hint="@string/search"
                 android:background="@null"
-                android:textColor="#000000"
+                android:textColor="#333333"
                 android:imeOptions="actionSearch"
-                android:textSize="@dimen/content_normal_textsize">
+                android:textSize="13sp">
                 <requestFocus />
             </com.inspur.emmcloud.widget.ClearEditText>
         </RelativeLayout>

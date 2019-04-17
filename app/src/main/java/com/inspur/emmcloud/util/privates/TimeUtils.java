@@ -1213,6 +1213,4 @@ public class TimeUtils {
         dayBeginCalendar.add(Calendar.MILLISECOND, -1);
         return (Calendar) dayBeginCalendar.clone();
     }
-
-
 }

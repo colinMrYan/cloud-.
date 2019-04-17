@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -282,6 +283,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         Bundle bundle = new Bundle();
         switch (event.getEventType()) {
             case Event.TYPE_MEETING:
+                Schedule meeting = (Schedule) event.getEventObj();
+                bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+                IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
                 break;
             case Event.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();

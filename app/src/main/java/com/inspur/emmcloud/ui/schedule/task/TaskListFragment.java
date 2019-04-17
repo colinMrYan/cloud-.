@@ -95,6 +95,7 @@ public class TaskListFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TASK_ORDER_CHANGE:
                 getTaskOrder();
                 getCurrentTaskList();
