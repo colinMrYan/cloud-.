@@ -3,9 +3,12 @@ package com.inspur.emmcloud.bean.schedule;
 
 import com.inspur.emmcloud.bean.work.RemindEvent;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
+import org.json.JSONArray;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -338,6 +341,46 @@ public class Schedule implements Serializable {
         jsonObject.put("participants", participants);
         jsonObject.put("note", note);
         return jsonObject.toString();
+    }
+
+    public JSONObject toCalendarEventJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        if (!StringUtils.isBlank(id)) {
+            jsonObject.put("id", id);
+        }
+        jsonObject.put("title", title);
+        jsonObject.put("type", type);
+        jsonObject.put("owner", owner);
+        jsonObject.put("startTime", startTime);
+        jsonObject.put("endTime", endTime);
+        if (creationTime != 0) {
+            jsonObject.put("creationTime", creationTime);
+        }
+        if (lastTime != 0) {
+            jsonObject.put("lastTime", lastTime);
+        }
+        jsonObject.put("isAllDay", isAllDay);
+        jsonObject.put("isCommunity", isCommunity);
+        jsonObject.put("syncToLocal", syncToLocal);
+        jsonObject.put("state", state);
+
+        if (!StringUtils.isBlank(remindEvent)) {
+            JSONObject remindJson = JSONUtils.getJSONObject(remindEvent);
+            jsonObject.put("remindEvent", remindJson);
+        }
+
+        if (!StringUtils.isBlank(location)) {
+            JSONObject locationJson = JSONUtils.getJSONObject(location);
+            jsonObject.put("location", locationJson);
+        }
+        if (!StringUtils.isBlank(participants)) {
+            JSONArray partJsonArray = JSONUtils.getJSONArray(participants, new JSONArray());
+            jsonObject.put("participants", partJsonArray);
+        }
+
+        jsonObject.put("note", note);
+
+        return jsonObject;
     }
 
 }
