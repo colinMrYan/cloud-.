@@ -456,7 +456,6 @@ public class TaskAddActivity extends BaseActivity {
      * 更新任务
      */
     private void updateTask() {
-      //apiService.updateTask();
         //全部删除Parters
         if(!NetUtils.isNetworkConnected(this))
             return;
@@ -472,7 +471,8 @@ public class TaskAddActivity extends BaseActivity {
 
         for(int i=0;i<otherJsonAttachments.size();i++){
             if(otherJsonAttachments.get(i).isNew){
-                apiService.addAttachments(taskResult.getId(),JSONUtils.toJSONString(otherJsonAttachments));
+                LogUtils.LbcDebug("otherJsonAttachments.get(i).isNew");
+                apiService.addAttachments(taskResult.getId(), otherJsonAttachments.get(i).getJsonAttachemnt().toString());
             }
         }
         String taskData = uploadTaskData();
@@ -868,13 +868,14 @@ public class TaskAddActivity extends BaseActivity {
             attachments = taskResult.getAttachments();
             attachments.add(attachment);
             taskResult.setAttachments(attachments);
-            LogUtils.LbcDebug("return Add Attachments");
+            LogUtils.LbcDebug("return Add Attachments 2222222222222222222");
         }
 
         @Override
         public void returnAddAttachMentFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(TaskAddActivity.this, error, errorCode);
+            LogUtils.LbcDebug("return Add Attachments fail111111111111111111");
         }
 
         @Override
@@ -930,6 +931,7 @@ public class TaskAddActivity extends BaseActivity {
             otherAttachments.remove(position);
             otherJsonAttachments.remove(position);
             attachmentOtherAdapter.notifyDataSetChanged();
+            orgAttachmentSize--;
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
 
         }
