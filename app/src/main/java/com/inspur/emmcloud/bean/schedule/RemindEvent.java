@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 public class RemindEvent implements Serializable {
     private int advanceTimeSpan = -1;
-    private String remindType = "";
+    private String remindType = "in_app";
     private String name ="";
 
     public RemindEvent() {

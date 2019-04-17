@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -31,6 +30,7 @@ import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.bean.work.TaskSubject;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -162,13 +162,16 @@ public class TaskAddActivity extends BaseActivity {
         if (getIntent().hasExtra("task")) {
             taskResult = (Task) getIntent().getSerializableExtra("task");
             deadLineCalendar=taskResult.getDueDate();
-            LogUtils.LbcDebug("jie task"+ JSON.toJSONString(taskResult));
             taskColorTags = (ArrayList<TaskColorTag>) taskResult.getTags();
             isCreateTask = false;
             List<Attachment> attachments = taskResult.getAttachments();
-            LogUtils.LbcDebug("attachments" + JSONUtils.toJSONString(attachments));
             otherAttachments = attachments;
             orgAttachmentSize = otherAttachments.size();
+            for(int i=0;i<otherAttachments.size();i++){
+                JsonAttachmentAndUri jsonAttachmentAndUri=new JsonAttachmentAndUri(JSONUtils.getJSONObject(JSONUtils.toJSONString(otherAttachments.get(i))),"",false);
+                otherJsonAttachments.add(jsonAttachmentAndUri);
+            }
+            LogUtils.LbcDebug("orgNum:::::::::::::::::::::"+orgAttachmentSize);
             getTasks();
 //            for (int i = 0; i < attachments.size(); i++) {
 ////                if (attachments.get(i).getCategory().equals("IMAGE")) {
@@ -236,6 +239,7 @@ public class TaskAddActivity extends BaseActivity {
                 deadlineTimeText.setText(TimeUtils.calendar2FormatString(this,deadLineCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             }
         }
+        attachmentOtherAdapter.notifyDataSetChanged();
     }
 
 
@@ -452,7 +456,6 @@ public class TaskAddActivity extends BaseActivity {
      * 更新任务
      */
     private void updateTask() {
-      //apiService.updateTask();
         //全部删除Parters
         if(!NetUtils.isNetworkConnected(this))
             return;
@@ -465,8 +468,14 @@ public class TaskAddActivity extends BaseActivity {
             apiService.deleteMateForTask(taskResult.getId(), dleMembers);
         }
 
+
+        for(int i=0;i<otherJsonAttachments.size();i++){
+            if(otherJsonAttachments.get(i).isNew){
+                LogUtils.LbcDebug("otherJsonAttachments.get(i).isNew");
+                apiService.addAttachments(taskResult.getId(), otherJsonAttachments.get(i).getJsonAttachemnt().toString());
+            }
+        }
         String taskData = uploadTaskData();
-        LogUtils.LbcDebug("taskData：：：" + taskData);
         apiService.updateTask(taskData, -1);
     }
 
@@ -706,12 +715,22 @@ public class TaskAddActivity extends BaseActivity {
             otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    otherJsonAttachments.remove(num);
+                    deleteAttachment(num);
                     attachmentOtherAdapter.notifyDataSetChanged();
                 }
             });
             return view;
         }
+    }
+
+    private void deleteAttachment(int currentIndex){
+       if(currentIndex<orgAttachmentSize){
+           if(NetUtils.isNetworkConnected(this)&&getIntent().hasExtra("task")){
+               apiService.deleteAttachments(taskResult.getId(),otherAttachments.get(currentIndex).getId(),currentIndex);
+           }
+       }else{
+           otherJsonAttachments.remove(currentIndex);
+       }
     }
 
     private class WebService extends APIInterfaceInstance {
@@ -791,7 +810,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage("refreshTask", "refreshTask"));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.mession_saving_success));
             setResult(RESULT_OK);
@@ -810,6 +829,7 @@ public class TaskAddActivity extends BaseActivity {
                 GetFileUploadResult getFileUploadResult, String fakeMessageId) {
             LoadingDialog.dimissDlg(loadingDlg);
             JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
+            LogUtils.LbcDebug("jsonAttachment"+jsonAttachment.toString());
             otherJsonAttachments.add(new JsonAttachmentAndUri(jsonAttachment, attachemntLocalPath, true));
             attachmentOtherAdapter.notifyDataSetChanged();
         }
@@ -848,13 +868,14 @@ public class TaskAddActivity extends BaseActivity {
             attachments = taskResult.getAttachments();
             attachments.add(attachment);
             taskResult.setAttachments(attachments);
-            LogUtils.LbcDebug("return Add Attachments");
+            LogUtils.LbcDebug("return Add Attachments 2222222222222222222");
         }
 
         @Override
         public void returnAddAttachMentFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(TaskAddActivity.this, error, errorCode);
+            LogUtils.LbcDebug("return Add Attachments fail111111111111111111");
         }
 
         @Override
@@ -906,9 +927,12 @@ public class TaskAddActivity extends BaseActivity {
         public void returnDelAttachmentSuccess(int position) {
             super.returnDelAttachmentSuccess(position);
             LoadingDialog.dimissDlg(loadingDlg);
+            LogUtils.LbcDebug("delAttachment Success22222222222222222");
             otherAttachments.remove(position);
             otherJsonAttachments.remove(position);
             attachmentOtherAdapter.notifyDataSetChanged();
+            orgAttachmentSize--;
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
 
         }
 
@@ -1013,9 +1037,6 @@ public class TaskAddActivity extends BaseActivity {
                     ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
                     if (contactUser != null) {
                         SearchModel searchModel = new SearchModel(contactUser);
-//                        selectMemList.add(searchModel);
-//                        deleteMemList.add(searchModel);
-//                        oldMemList.add(searchModel);
                           orgTaskParters.add(searchModel);
                           taskParters.add(searchModel);
                     }
