@@ -23,8 +23,6 @@ import java.util.List;
 @ContentView(R.layout.activity_meeting_detail_new)
 public class MeetingDetailActivity extends BaseActivity{
 
-    private static final String ROLE_RECORDER = "recorder";
-    private static final String ROLE_CONTACT = "contact";
     public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
     @ViewInject(R.id.tv_meeting_title)
     private TextView meetingTitleText;
@@ -88,10 +86,15 @@ public class MeetingDetailActivity extends BaseActivity{
      */
     private String getContact() {
         List<Participant> participantList = meeting.getRoleParticipantList();
-        return getString(R.string.meeting_detail_conference,
-                getString(R.string.meeting_detail_attendee_num,
-                        participantList.get(0).getName(),
-                        participantList.size()));
+        if(participantList.size()>0){
+            return getString(R.string.meeting_detail_conference,
+                    getString(R.string.meeting_detail_attendee_num,
+                            participantList.get(0).getName(),
+                            participantList.size()));
+        }else{
+            return getString(R.string.meeting_detail_conference,
+                    "");
+        }
     }
 
     /**
@@ -100,10 +103,15 @@ public class MeetingDetailActivity extends BaseActivity{
      */
     private String getRecordHolder() {
         List<Participant> participantList = meeting.getRecorderParticipantList();
-        return getString(R.string.meeting_detail_record_holder,
-                getString(R.string.meeting_detail_attendee_num,
-                        participantList.get(0).getName(),
-                        participantList.size()));
+        if(participantList.size()>0){
+            return getString(R.string.meeting_detail_record_holder,
+                    getString(R.string.meeting_detail_attendee_num,
+                            participantList.get(0).getName(),
+                            participantList.size()));
+        }else{
+            return getString(R.string.meeting_detail_record_holder,
+                    "");
+        }
     }
 
     /**
