@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.Participant;
-import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
@@ -44,11 +44,11 @@ public class MeetingDetailActivity extends BaseActivity{
     private TextView meetingConferenceText;
     @ViewInject(R.id.tv_meeting_note)
     private TextView meetingNoteText;
-    private Schedule meeting;
+    private Meeting meeting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        meeting = (Schedule) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
+        meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
         initViews();
     }
 

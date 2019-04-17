@@ -283,7 +283,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         Bundle bundle = new Bundle();
         switch (event.getEventType()) {
             case Event.TYPE_MEETING:
-                Schedule meeting = (Schedule) event.getEventObj();
+                Meeting meeting = (Meeting) event.getEventObj();
                 bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
                 IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
                 break;
