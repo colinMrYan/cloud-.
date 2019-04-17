@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 
@@ -29,42 +30,43 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     ListView alertTimeListView;
     @ViewInject(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
-    String alertTime = "";
+
+    int alertTime = -1;
     private Adapter adapter;
     private int selectPosition = -1;
     private String[] alertTimeString = {};
     private int[] alertTimeInt = {};
     private boolean isAllDay = false;
+    String[] alertTimeArray = {
+            MyApplication.getInstance().getString(R.string.calendar_when_event_occurs),
+            MyApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
+            MyApplication.getInstance().getString(R.string.calendar_twenty_minite_ago),
+            MyApplication.getInstance().getString(R.string.calendar_thirty_minite_ago),
+            MyApplication.getInstance().getString(R.string.calendar_one_hour_ago),
+            MyApplication.getInstance().getString(R.string.calendar_one_day_ago)};
+    String[] allDayAlertTimeArray = {
+            MyApplication.getInstance().getString(R.string.schedule_alert_time_occur),
+            MyApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
+            MyApplication.getInstance().getString(R.string.schedule_alert_time_before_two_day),
+            MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
+    int[] alertTimeIntArray = {-1, 0, 10 * 60, 20 * 60, 20 * 60, 60 * 60, 24 * 3600};
+    int[] alertTimeAllDayIntArray = {-1, -9 * 3600, 15 * 3600, (15 + 1 * 24) * 3600, (15 + 6 * 24) * 3600};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final String[] alertTimeArray = {
-                getString(R.string.calendar_when_event_occurs),
-                getString(R.string.calendar_ten_minite_ago),
-                getString(R.string.calendar_twenty_minite_ago),
-                getString(R.string.calendar_thirty_minite_ago),
-                getString(R.string.calendar_one_hour_ago),
-                getString(R.string.calendar_one_day_ago)};
-        final String[] allDayAlertTimeArray = {
-                getString(R.string.schedule_alert_time_occur),
-                getString(R.string.schedule_alert_time_before_one_day),
-                getString(R.string.schedule_alert_time_before_two_day),
-                getString(R.string.schedule_alert_time_before_a_week)};
-        int[] alertTimeIntArray = {-1, 0, 10 * 60, 20 * 60, 20 * 60, 60 * 60, 24 * 3600};
-        int[] alertTimeAllDayIntArray = {-1, -9 * 3600, 15 * 3600, (15 + 1 * 24) * 3600, (15 + 6 * 24) * 3600};
         alertTime = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME) ?
-                getIntent().getExtras().getString(EXTRA_SCHEDULE_ALERT_TIME) : getString(R.string.calendar_no_alert);
+                getIntent().getExtras().getInt(EXTRA_SCHEDULE_ALERT_TIME) : -1;
         //获取Allday值
         isAllDay = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_IS_ALL_DAY) ?
                 getIntent().getExtras().getBoolean(EXTRA_SCHEDULE_IS_ALL_DAY) : false;
         alertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         alertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
-        if (!alertTime.equals(getString(R.string.calendar_no_alert))) {
+        if (alertTime != -1) {
             noAlertSelectImage.setVisibility(View.GONE);
             for (int i = 0; i < alertTimeString.length; i++) {
-                if (alertTimeString[i].equals(alertTime)) {
-                    selectPosition = i;
+                if (alertTimeInt[i]==alertTime) {
+                    selectPosition = i-1;
                     break;
                 }
             }
@@ -81,7 +83,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 noAlertSelectImage.setVisibility(View.GONE);
                 selectPosition = position;
                 adapter.notifyDataSetChanged();
-                alertTime = alertTimeString[position];
+                alertTime = alertTimeInt[position+1];
             }
         });
     }
@@ -95,7 +97,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
             case R.id.rl_no_alert:
                 noAlertSelectImage.setVisibility(View.VISIBLE);
                 selectPosition = -1;
-                alertTime = getString(R.string.calendar_no_alert);
+                alertTime = -1;
                 adapter.notifyDataSetChanged();
                 break;
             case R.id.tv_save:
@@ -111,7 +113,13 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
      */
     public void returnData() {
         Intent intent = new Intent();
-        RemindEvent remindEvent = new RemindEvent(alertTime, alertTimeInt[selectPosition + 1]);
+        String name = "";
+        if (selectPosition == -1) {
+            name = getString(R.string.calendar_no_alert);
+        } else {
+            name = alertTimeArray[selectPosition];
+        }
+        RemindEvent remindEvent = new RemindEvent("", alertTimeInt[selectPosition + 1], name);
         intent.putExtra(EXTRA_SCHEDULE_ALERT_TIME, remindEvent);
         setResult(RESULT_OK, intent);
         finish();
@@ -161,5 +169,22 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
             }
             return convertView;
         }
+    }
+
+    /**
+     * 根据提前多长时间Int值及 是否 allday 获取相应的名称
+     */
+    public String getAlertTimeNameByTime(int alertTime, boolean isAllDay) {
+        String[] returnAlertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
+        int[] returnAlertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
+        if (alertTime == -1) {
+            return  MyApplication.getInstance().getString(R.string.calendar_no_alert);
+        }
+        for (int i = 0; i < returnAlertTimeInt.length; i++) {
+            if (alertTime == returnAlertTimeInt[i]) {
+                return returnAlertTimeString[i-1];
+            }
+        }
+        return "";
     }
 }

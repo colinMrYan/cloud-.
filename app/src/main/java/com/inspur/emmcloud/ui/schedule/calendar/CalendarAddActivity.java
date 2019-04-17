@@ -136,7 +136,7 @@ public class CalendarAddActivity extends BaseActivity {
         }
         calenderTypeTipLayout.setVisibility(isEditable ? View.GONE : View.VISIBLE);
         initStartEndTimeView();
-        alertText.setText(remindEvent.getRemindType());
+        alertText.setText(remindEvent.getName());
         setViewIsEditable(isEditable);
     }
 
@@ -160,7 +160,8 @@ public class CalendarAddActivity extends BaseActivity {
                 }
             }
             remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", ""),
-                    JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1));
+                    JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
+                    new ScheduleAlertTimeActivity().getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),isAllDay));
         } else {
             startCalendar = Calendar.getInstance();
             endCalendar = (Calendar) startCalendar.clone();
@@ -168,6 +169,7 @@ public class CalendarAddActivity extends BaseActivity {
                 endCalendar.add(Calendar.HOUR_OF_DAY, 1);
             }
             scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
+            remindEvent.setName(new ScheduleAlertTimeActivity().getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(),isAllDay));
         }
         intervalMin = (int) getIntervalMin();
     }
@@ -301,7 +303,7 @@ public class CalendarAddActivity extends BaseActivity {
             case R.id.rl_alert_time:
                 intent.setClass(getApplicationContext(),
                         ScheduleAlertTimeActivity.class);
-                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, alertText.getText());
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME,remindEvent.getAdvanceTimeSpan());
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY, isAllDay);
                 startActivityForResult(intent, CAL_ALERT_TIME_REQUEST_CODE);
                 break;
@@ -412,7 +414,7 @@ public class CalendarAddActivity extends BaseActivity {
                     break;
                 case CAL_ALERT_TIME_REQUEST_CODE:
                     remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
-                    alertText.setText(remindEvent.getRemindType());
+                    alertText.setText(remindEvent.getName());
                     break;
                 default:
                     break;
