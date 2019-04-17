@@ -92,7 +92,7 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
             titleText = convertView.findViewById(R.id.tv_title);
             displayNameText = convertView.findViewById(R.id.tv_display_name);
             timeText = convertView.findViewById(R.id.tv_time);
-            buildingText = convertView.findViewById(R.id.tv_event_title);
+            buildingText = convertView.findViewById(R.id.tv_building);
             dateText = convertView.findViewById(R.id.tv_date);
 
 
