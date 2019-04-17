@@ -58,9 +58,9 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
         StringBuilder dateBuilder = new StringBuilder();
         dateBuilder.append(TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_MONTH_DAY)));
         if (TimeUtils.isSameDay(startCalendar, endCalendar)) {
-            dateBuilder.append(TimeUtils.getWeekDay(context, startCalendar));
+            dateBuilder.append(" ").append(TimeUtils.getWeekDay(context, startCalendar));
         } else {
-            dateBuilder.append("  ").append(TimeUtils.Calendar2TimeString(endCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_MONTH_DAY)));
+            dateBuilder.append(" ").append(TimeUtils.Calendar2TimeString(endCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_MONTH_DAY)));
         }
         holder.dateText.setText(dateBuilder.toString());
         holder.buildingText.setText(meeting.getScheduleLocationObj().getBuilding());

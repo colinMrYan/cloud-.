@@ -451,14 +451,16 @@ public class ScheduleApiService {
 
     /**
      * 获取对应room的会议情况
-     *
-     * @param meetingRoomId
+     * @param roomId
+     * @param startTime
+     * @param endTime
      */
-    public void getRoomMeetingListByMeetingRoom(final String meetingRoomId) {
-        final String completeUrl = APIUri.getRoomMeetingListUrl();
-        RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
-        params.addParameter("bid", meetingRoomId);
+    public void getRoomMeetingListByMeetingRoom(final String roomId, final long startTime, final long endTime) {
+        final String completeUrl = APIUri.getRoomMeetingListByMeetingRoom();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("roomId", roomId);
+        params.addQueryStringParameter("startTime", startTime+"");
+        params.addQueryStringParameter("endTime", endTime+"");
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -466,7 +468,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getRoomMeetingListByMeetingRoom(meetingRoomId);
+                        getRoomMeetingListByMeetingRoom(roomId,startTime,endTime);
                     }
 
                     @Override

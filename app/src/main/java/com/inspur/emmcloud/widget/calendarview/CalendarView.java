@@ -1498,7 +1498,7 @@ public class CalendarView extends FrameLayout {
     }
 
     public List<EmmCalendar> getCurrentPageCalendars() {
-        if (mParentLayout.isExpand()) {
+        if (mParentLayout!=null && mParentLayout.isExpand()) {
             return getCurrentMonthCalendars();
         } else {
             return getCurrentWeekCalendars();

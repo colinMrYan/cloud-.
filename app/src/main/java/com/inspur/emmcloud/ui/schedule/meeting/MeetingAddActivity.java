@@ -26,6 +26,7 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -146,6 +147,7 @@ public class MeetingAddActivity extends BaseActivity {
                 selectContact(REQUEST_SELECT_LIAISON);
                 break;
             case R.id.ll_reminder:
+                setReminder();
                 break;
         }
     }
@@ -190,6 +192,11 @@ public class MeetingAddActivity extends BaseActivity {
         return true;
     }
 
+    private void setReminder(){
+        Intent intent = new Intent(this, ScheduleAlertTimeActivity.class);
+
+    }
+
     private void selectContact(int requestCode) {
         String title = "";
         Intent intent = new Intent();
@@ -228,7 +235,7 @@ public class MeetingAddActivity extends BaseActivity {
                     endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                 } else {
                     if (!calendar.after(startTimeCalendar)) {
-                        showTimeInvaladDlg();
+                        showTimeInvalidDlg();
                         return;
                     }
                 }
@@ -257,7 +264,7 @@ public class MeetingAddActivity extends BaseActivity {
     /**
      * 结束时间早于起始时间提醒
      */
-    private void showTimeInvaladDlg() {
+    private void showTimeInvalidDlg() {
         new QMUIDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
                 .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                     @Override
@@ -294,6 +301,7 @@ public class MeetingAddActivity extends BaseActivity {
                     location = new Location();
                     location.setId(meetingRoom.getId());
                     location.setBuilding(meetingRoom.getBuilding().getName());
+                    location.setDisplayName(meetingRoom.getName());
                     break;
             }
         }
