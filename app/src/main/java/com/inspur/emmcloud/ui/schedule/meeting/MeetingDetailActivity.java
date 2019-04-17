@@ -55,7 +55,7 @@ public class MeetingDetailActivity extends BaseActivity{
     private void initViews() {
         meetingTitleText.setText(meeting.getTitle());
         meetingTimeText.setText(getString(R.string.meeting_detail_time,getMeetingTime()));
-        meetingRemindText.setText(getString(R.string.meeting_detail_remind,new ScheduleAlertTimeActivity().getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(),meeting.getAllDay())));
+        meetingRemindText.setText(getString(R.string.meeting_detail_remind,ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(),meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create,TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));

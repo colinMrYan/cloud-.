@@ -293,7 +293,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/tv_meeting_note"
-                android:layout_alignLeft="@id/tv_meeting_note"
+                android:layout_marginLeft="16dp"
                 android:background="#DDDDDD" />
         </RelativeLayout>
 

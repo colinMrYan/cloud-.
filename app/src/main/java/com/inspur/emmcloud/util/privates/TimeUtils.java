@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.widget.Chronometer;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
@@ -1214,25 +1213,4 @@ public class TimeUtils {
         dayBeginCalendar.add(Calendar.MILLISECOND, -1);
         return (Calendar) dayBeginCalendar.clone();
     }
-
-    public static String getLeftTimeFromMeetingBegin(int time){
-        String tip = MyApplication.getInstance().getString(R.string.meeting_detail_before_beginning);
-        int temp = time / 60;
-        if(temp < 10){
-            tip = MyApplication.getInstance().getString(R.string.meeting_detail_before_beginning);
-        }else if(temp >= 10 && temp < 20){
-            tip = MyApplication.getInstance().getString(R.string.meeting_detail_ten_minutes);
-        }else if(temp >= 20 && temp < 30){
-            tip = MyApplication.getInstance().getString(R.string.meeting_detail_twenty_minutes);
-        }else if(temp >= 30 && temp < 60){
-            tip = MyApplication.getInstance().getString(R.string.meeting_detail_thirty_minutes);
-        }else if(temp >= 60 && temp < 1440){
-            tip = MyApplication.getInstance().getString(R.string.meeting_detail_one_hour);
-        }else if(temp >= 1440){
-            tip = MyApplication.getInstance().getString(R.string.meeting_detail_one_day);;
-        }
-        return tip;
-    }
-
-
 }
