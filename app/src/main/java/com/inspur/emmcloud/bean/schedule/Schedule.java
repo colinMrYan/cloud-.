@@ -376,8 +376,9 @@ public class Schedule implements Serializable {
             jsonObject.put("participants", partJsonArray);
         }
 
-        jsonObject.put("note", note);
-
+        if(!StringUtils.isBlank(note)){
+            jsonObject.put("note", note);
+        }
         return jsonObject;
     }
 

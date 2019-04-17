@@ -884,6 +884,7 @@ public class TaskAddActivity extends BaseActivity {
         public void returnDelTaskMemSuccess() {
             super.returnDelTaskMemSuccess();
             //添加Parter
+            LogUtils.LbcDebug("delet Task Members  success");
             if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskParters.size() > 0) {
                 JSONArray addMembers = new JSONArray();
                 for (int i = 0; i < taskParters.size(); i++) {
@@ -897,6 +898,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnDelTaskMemFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
+            LogUtils.LbcDebug("delet Task Members  Error");
             WebServiceMiddleUtils.hand(TaskAddActivity.this, error, errorCode);
         }
 

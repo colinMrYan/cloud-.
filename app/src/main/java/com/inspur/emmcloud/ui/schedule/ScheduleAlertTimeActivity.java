@@ -37,20 +37,20 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     private String[] alertTimeString = {};
     private int[] alertTimeInt = {};
     private boolean isAllDay = false;
-    String[] alertTimeArray = {
+    static String[] alertTimeArray = {
             MyApplication.getInstance().getString(R.string.calendar_when_event_occurs),
             MyApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
             MyApplication.getInstance().getString(R.string.calendar_twenty_minite_ago),
             MyApplication.getInstance().getString(R.string.calendar_thirty_minite_ago),
             MyApplication.getInstance().getString(R.string.calendar_one_hour_ago),
             MyApplication.getInstance().getString(R.string.calendar_one_day_ago)};
-    String[] allDayAlertTimeArray = {
+    static String[] allDayAlertTimeArray = {
             MyApplication.getInstance().getString(R.string.schedule_alert_time_occur),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_two_day),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
-    int[] alertTimeIntArray = {-1, 0, 10 * 60, 20 * 60, 20 * 60, 60 * 60, 24 * 3600};
-    int[] alertTimeAllDayIntArray = {-1, -9 * 3600, 15 * 3600, (15 + 1 * 24) * 3600, (15 + 6 * 24) * 3600};
+    static int[] alertTimeIntArray = {-1, 0, 10 * 60, 20 * 60, 20 * 60, 60 * 60, 24 * 3600};
+    static int[] alertTimeAllDayIntArray = {-1, -9 * 3600, 15 * 3600, (15 + 1 * 24) * 3600, (15 + 6 * 24) * 3600};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +117,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         if (selectPosition == -1) {
             name = getString(R.string.calendar_no_alert);
         } else {
-            name = alertTimeArray[selectPosition];
+            name = alertTimeString[selectPosition];
         }
         RemindEvent remindEvent = new RemindEvent("", alertTimeInt[selectPosition + 1], name);
         intent.putExtra(EXTRA_SCHEDULE_ALERT_TIME, remindEvent);
@@ -174,7 +174,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     /**
      * 根据提前多长时间Int值及 是否 allday 获取相应的名称
      */
-    public String getAlertTimeNameByTime(int alertTime, boolean isAllDay) {
+   static public String getAlertTimeNameByTime(int alertTime, boolean isAllDay) {
         String[] returnAlertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         int[] returnAlertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
         if (alertTime == -1) {
