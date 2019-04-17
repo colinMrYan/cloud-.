@@ -836,6 +836,27 @@
     <string name="meeting_room_ilegal_time">时间非法，请检查</string>
     <string name="meeting_room_time_late">开始时间不能早于当前时间</string>
 
+    <string name="meeting_detail_time">时间：%1$s</string>
+    <string name="meeting_detail_remind">提醒：%1$s</string>
+    <string name="meeting_detail_create">%1$s 创建</string>
+    <string name="meeting_detail_attendee">参会人:%1$s</string>
+    <string name="meeting_detail_record_holder">会议记录人:%1$s</string>
+    <string name="meeting_detail_conference">会议联络人:%1$s</string>
+    <string name="meeting_detail_note">着装要求:%1$s</string>
+    <string name="meeting_detail_sign">会议签到</string>
+    <string name="meeting_detail_summary">十 添加会议摘要</string>
+    <string name="meeting_detail_change_meeting">修改会议</string>
+    <string name="meeting_detail_show_qrcode">展示签到二维码</string>
+    <string name="meeting_detail_add_participant">添加参会人</string>
+    <string name="meeting_detail_before_beginning">开始前</string>
+    <string name="meeting_detail_ten_minutes">提前10分钟</string>
+    <string name="meeting_detail_twenty_minutes">提前20分钟</string>
+    <string name="meeting_detail_thirty_minutes">提前30分钟</string>
+    <string name="meeting_detail_one_hour">提前一个小时</string>
+    <string name="meeting_detail_one_day">提前一天</string>
+    <string name="meeting_detail_attendee_num">%1$s等%2$d人</string>
+
+
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部门信息缺失</string>
     <string name="meeting_time_earlier_than_permission">预定时间早于规定时间（现在）</string>

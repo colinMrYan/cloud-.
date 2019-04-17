@@ -24,7 +24,7 @@
                 android:id="@+id/lv_task"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:dividerHeight="0.5dp"
+                android:dividerHeight="0.5px"
                 android:divider="@color/color_list_divider"
                  />
         </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
