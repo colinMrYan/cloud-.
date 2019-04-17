@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
         Calendar startCalendar = meeting.getStartTimeCalendar();
         Calendar endCalendar = meeting.getEndTimeCalendar();
         holder.titleText.setText(meeting.getTitle());
+        LogUtils.jasonDebug("meeting.getTitle()="+meeting.toJSOnObject().toString());
+        LogUtils.jasonDebug("meeting.getTitle()="+meeting.getTitle());
         String startTime = TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE));
         String endTime = TimeUtils.Calendar2TimeString(endCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE));
         holder.timeText.setText(startTime + "-" + endTime);
@@ -92,7 +95,7 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
             titleText = convertView.findViewById(R.id.tv_title);
             displayNameText = convertView.findViewById(R.id.tv_display_name);
             timeText = convertView.findViewById(R.id.tv_time);
-            buildingText = convertView.findViewById(R.id.tv_event_title);
+            buildingText = convertView.findViewById(R.id.tv_building);
             dateText = convertView.findViewById(R.id.tv_date);
 
 

@@ -11,11 +11,11 @@ import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
-import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -23,8 +23,6 @@ import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
-import org.xutils.http.app.RequestTracker;
-import org.xutils.http.request.UriRequest;
 
 import java.util.Calendar;
 import java.util.List;
@@ -461,61 +459,6 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("bid", meetingRoomId);
-        params.setRequestTracker(new RequestTracker() {
-
-            @Override
-            public void onWaiting(RequestParams arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onSuccess(UriRequest arg0, Object arg1) {
-                // TODO Auto-generated method stub
-                String result = "";
-                if (arg1 != null) {
-                    result = new String((byte[]) arg1);
-                }
-                apiInterface
-                        .returnMeetingListSuccess(new GetMeetingListResult(result), arg0.getResponseHeader("Date"));
-            }
-
-            @Override
-            public void onStart(RequestParams arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onRequestCreated(UriRequest arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onFinished(UriRequest arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onError(UriRequest arg0, Throwable arg1, boolean arg2) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onCancelled(UriRequest arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onCache(UriRequest arg0, Object arg1) {
-                // TODO Auto-generated method stub
-
-            }
-        });
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -538,6 +481,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
+                apiInterface.returnMeetingListSuccess(new GetMeetingListResult(new String(arg0)));
             }
 
             @Override
@@ -767,6 +711,50 @@ public class ScheduleApiService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnAddMeetingFail(error, responseCode);
+            }
+        });
+    }
+
+
+    /**
+     * 通过开始时间获取会议
+     *
+     * @param startTime
+     */
+    public void getMeetingListByTime(final long startTime) {
+        final String completeUrl = APIUri.getMeetingListByStartTime();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("startTime", startTime+"");
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMeetingListByTime(startTime);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingListSuccess(new GetMeetingListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingListFail(error, responseCode);
             }
         });
     }

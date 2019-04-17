@@ -1,12 +1,19 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.work.MeetingSchedule;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +26,7 @@ public class ScheduleMeetingRoomDurationAdapter extends BaseAdapter {
     private List<MeetingSchedule> meetingScheduleList = new ArrayList<>();
 
     public ScheduleMeetingRoomDurationAdapter(Context context, List<MeetingSchedule> meetingScheduleList) {
+        this.context = context;
         this.meetingScheduleList = meetingScheduleList;
     }
 
@@ -43,52 +51,52 @@ public class ScheduleMeetingRoomDurationAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView,
                         ViewGroup parent) {
-//        // TODO Auto-generated method stub
-//        LayoutInflater vi = LayoutInflater.from(context);
-//        final MeetingSchedule meetingSchedule = meetingScheduleList
-//                .get(position);
-//        SimpleDateFormat format = TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE);
-//        long beginTimeLong = meetingSchedule.getFrom();
-//        long endTimeLong = meetingSchedule.getTo();
-//        String beginTimeString = TimeUtils.getTime(beginTimeLong, format);
-//        String endTimeString = TimeUtils.getTime(endTimeLong, format);
-//        String timeSegment = beginTimeString + "-" + endTimeString;
-//        if (meetingSchedule.getMeeting() == null) {
-//            convertView = vi.inflate(
-//                    R.layout.meeting_no_schedule_item_view, null);
-//            ((TextView) convertView.findViewById(R.id.time_text))
-//                    .setText(timeSegment + " " + getString(R.string.meeting_free));
-//            convertView.findViewById(R.id.meeting_layout)
-//                    .setOnClickListener(new View.OnClickListener() {
-//
-//                        @Override
-//                        public void onClick(View v) {
-//                            // TODO Auto-generated method stub
-//                        }
-//                    });
-//        } else {
-//            final Meeting meeting = meetingSchedule.getMeeting();
-//            convertView = vi.inflate(R.layout.meeting_schedule_item_view,
-//                    null);
-//            ((TextView) convertView.findViewById(R.id.meeting_time_text))
-//                    .setText(timeSegment);
-//            String organizer = ContactUserCacheUtils.getUserName(meeting.getOrganizer());
-//            ((TextView) convertView
-//                    .findViewById(R.id.meeting_order_name_text))
-//                    .setText(organizer);
-//            ((TextView) convertView.findViewById(R.id.meeting_title_text))
-//                    .setText(meeting.getTopic());
-//
-//            convertView.findViewById(R.id.meeting_layout)
-//                    .setOnClickListener(new View.OnClickListener() {
-//
-//                        @Override
-//                        public void onClick(View v) {
-//                            // TODO Auto-generated method stub
-//                            showMeetingInfo(meeting);
-//                        }
-//                    });
-//
+        // TODO Auto-generated method stub
+        LayoutInflater vi = LayoutInflater.from(context);
+        final MeetingSchedule meetingSchedule = meetingScheduleList
+                .get(position);
+        SimpleDateFormat format = TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE);
+        long beginTimeLong = meetingSchedule.getFrom();
+        long endTimeLong = meetingSchedule.getTo();
+        String beginTimeString = TimeUtils.getTime(beginTimeLong, format);
+        String endTimeString = TimeUtils.getTime(endTimeLong, format);
+        String timeSegment = beginTimeString + "-" + endTimeString;
+        if (meetingSchedule.getMeeting() == null) {
+            convertView = vi.inflate(
+                    R.layout.meeting_no_schedule_item_view, null);
+            ((TextView) convertView.findViewById(R.id.time_text))
+                    .setText(timeSegment + " " + context.getString(R.string.meeting_free));
+            convertView.findViewById(R.id.meeting_layout)
+                    .setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                        }
+                    });
+        } else {
+            final Meeting meeting = meetingSchedule.getMeeting();
+            convertView = vi.inflate(R.layout.meeting_schedule_item_view,
+                    null);
+            ((TextView) convertView.findViewById(R.id.meeting_time_text))
+                    .setText(timeSegment);
+            String organizer = ContactUserCacheUtils.getUserName(meeting.getOwner());
+            ((TextView) convertView
+                    .findViewById(R.id.meeting_order_name_text))
+                    .setText(organizer);
+            ((TextView) convertView.findViewById(R.id.meeting_title_text))
+                    .setText(meeting.getTitle());
+
+            convertView.findViewById(R.id.meeting_layout)
+                    .setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            // TODO Auto-generated method stub
+                            //showMeetingInfo(meeting);
+                        }
+                    });
+
 //            convertView.findViewById(R.id.meeting_layout)
 //                    .setOnLongClickListener(new OnLongClickListener() {
 //
@@ -104,7 +112,7 @@ public class ScheduleMeetingRoomDurationAdapter extends BaseAdapter {
 //                        }
 //
 //                    });
-//        }
+        }
         return convertView;
     }
 }

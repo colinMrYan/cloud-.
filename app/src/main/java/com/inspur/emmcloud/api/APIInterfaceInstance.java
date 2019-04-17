@@ -81,6 +81,7 @@ import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
@@ -96,7 +97,6 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
-import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
@@ -612,7 +612,7 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnMeetingListSuccess(
-            GetMeetingListResult getMeetingListResult) {
+            com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult) {
         // TODO Auto-generated method stub
 
     }
@@ -1102,7 +1102,7 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnMeetingListSuccess(
-            GetMeetingListResult getMeetingListResult, String date) {
+            com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult, String date) {
     }
 
     @Override
@@ -2007,6 +2007,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnAddMeetingFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
+
+    }
+
+    @Override
+    public void returnMeetingListByMeetingRoomFail(String error, int errorCode) {
 
     }
 }

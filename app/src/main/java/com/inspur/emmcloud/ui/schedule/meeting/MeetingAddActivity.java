@@ -321,7 +321,7 @@ public class MeetingAddActivity extends BaseActivity {
                 imageView.setLayoutParams(layoutParams);
                 final String uid = searchModelList.get(i).getId();
                 String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
-                ImageDisplayUtils.getInstance().displayRoundedImage(imageView, photoUrl, R.drawable.default_image, this, 15);
+                ImageDisplayUtils.getInstance().displayRoundedImage(imageView, photoUrl, R.drawable.icon_person_default, this, 15);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -382,7 +382,7 @@ public class MeetingAddActivity extends BaseActivity {
             e.printStackTrace();
         }
         loadingDlg.show();
-        apiService.addMeeting(meeting.toJSONObject().toString());
+        apiService.addMeeting(meeting.toJSOnObject().toString());
     }
 
 
@@ -413,6 +413,7 @@ public class MeetingAddActivity extends BaseActivity {
         public void returnAddMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
+            finish();
         }
 
         @Override

@@ -20,10 +20,9 @@ import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.adapter.ScheduleMeetingRoomDurationAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
-import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.MeetingSchedule;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
@@ -52,7 +51,7 @@ import java.util.Locale;
 @ContentView(R.layout.activity_meeting_room_info)
 public class MeetingRoomInfoActivity extends BaseActivity {
 
-    private static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
+    public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     private static final int REQUEST_MEETING_INFO = 1;
     private final String dayStartTime = "08:00";
     private final String dayEndTime = "18:00";
@@ -87,8 +86,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         meetingRoom = (MeetingRoom) getIntent().getExtras().getSerializable(EXTRA_MEETING_ROOM);
         initView();
-//        getMeetingListByMeetingRoom();
-        getMeetingList();
+        getMeetingListByMeetingRoom();
     }
 
     private void initView() {
@@ -338,6 +336,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                         meetingSchedule.setMeeting(meeting);
                 }
             }
+            allDaysMeetingScheduleList.add(dayMeetingScheduleList);
         }
         initListView();
     }
@@ -417,17 +416,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         }
     }
 
-    private void getMeetingList() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            Calendar startCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
-            Calendar endCalendar = (Calendar) startCalendar.clone();
-            endCalendar.add(Calendar.DAY_OF_YEAR, 2);
-            apiService.getScheduleList(startCalendar, endCalendar,
-                    0, 0, 0, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>());
-            loadingDlg.show();
-            apiService.getRoomMeetingListByMeetingRoom(meetingRoom.getId());
-        }
-    }
 
 
     /**
@@ -444,9 +432,9 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
 
         @Override
-        public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,
-                                              Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
-            List<Meeting> meetingList = getScheduleListResult.getMeetingList();
+        public void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            List<Meeting> meetingList = getMeetingListByMeetingRoomResult.getMeetingList();
             allMeetingList.clear();
             for (Meeting meeting : meetingList) {
                 if (meeting.getScheduleLocationObj().getId().equals(meetingRoom.getId())) {
@@ -457,23 +445,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         }
 
         @Override
-        public void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult, String date) {
-            // TODO Auto-generated method stub
+        public void returnMeetingListByMeetingRoomFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-//            beforeDayLayout.setVisibility(View.VISIBLE);
-//            afterDayLayout.setVisibility(View.VISIBLE);
-//            setCurrentCalendar(date);
-//            allMeetingList = getMeetingListResult.getMeetingsList();
-            initData();
-
-        }
-
-        @Override
-        public void returnMeetingListFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
             WebServiceMiddleUtils.hand(MeetingRoomInfoActivity.this, error, errorCode);
         }
 
@@ -493,9 +466,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
 
         @Override
         public void returnDeleteMeetingFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MeetingRoomInfoActivity.this, error, errorCode);
         }
 
