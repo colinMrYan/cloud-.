@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -31,6 +30,7 @@ import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.bean.work.TaskSubject;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -162,13 +162,17 @@ public class TaskAddActivity extends BaseActivity {
         if (getIntent().hasExtra("task")) {
             taskResult = (Task) getIntent().getSerializableExtra("task");
             deadLineCalendar=taskResult.getDueDate();
-            LogUtils.LbcDebug("jie task"+ JSON.toJSONString(taskResult));
             taskColorTags = (ArrayList<TaskColorTag>) taskResult.getTags();
             isCreateTask = false;
             List<Attachment> attachments = taskResult.getAttachments();
             LogUtils.LbcDebug("attachments" + JSONUtils.toJSONString(attachments));
             otherAttachments = attachments;
             orgAttachmentSize = otherAttachments.size();
+            for(int i=0;i<otherAttachments.size();i++){
+                LogUtils.LbcDebug("test11111111111::"+otherAttachments.get(i).toString());
+                JsonAttachmentAndUri jsonAttachmentAndUri=new JsonAttachmentAndUri(JSONUtils.getJSONObject(otherAttachments.get(i).toString()),"",false);
+                otherJsonAttachments.add(jsonAttachmentAndUri);
+            }
             getTasks();
 //            for (int i = 0; i < attachments.size(); i++) {
 ////                if (attachments.get(i).getCategory().equals("IMAGE")) {
@@ -236,6 +240,7 @@ public class TaskAddActivity extends BaseActivity {
                 deadlineTimeText.setText(TimeUtils.calendar2FormatString(this,deadLineCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             }
         }
+        attachmentOtherAdapter.notifyDataSetChanged();
     }
 
 
@@ -465,8 +470,13 @@ public class TaskAddActivity extends BaseActivity {
             apiService.deleteMateForTask(taskResult.getId(), dleMembers);
         }
 
+
+        for(int i=0;i<otherJsonAttachments.size();i++){
+            if(otherJsonAttachments.get(i).isNew){
+                apiService.addAttachments(taskResult.getId(),JSONUtils.toJSONString(otherJsonAttachments));
+            }
+        }
         String taskData = uploadTaskData();
-        LogUtils.LbcDebug("taskData：：：" + taskData);
         apiService.updateTask(taskData, -1);
     }
 
@@ -714,6 +724,14 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
+    private void deleteAttachment(int currentIndex){
+       if(currentIndex<orgAttachmentSize){
+           if(NetUtils.isNetworkConnected(this)&&getIntent().hasExtra("task")){
+               apiService.deleteAttachments(taskResult.getId(),attachments.get(currentIndex).getId(),currentIndex);
+           }
+       }
+    }
+
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
@@ -791,7 +809,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage("refreshTask", "refreshTask"));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.mession_saving_success));
             setResult(RESULT_OK);
@@ -907,6 +925,7 @@ public class TaskAddActivity extends BaseActivity {
             super.returnDelAttachmentSuccess(position);
             LoadingDialog.dimissDlg(loadingDlg);
             otherAttachments.remove(position);
+            attachments.remove(position);
             otherJsonAttachments.remove(position);
             attachmentOtherAdapter.notifyDataSetChanged();
 
