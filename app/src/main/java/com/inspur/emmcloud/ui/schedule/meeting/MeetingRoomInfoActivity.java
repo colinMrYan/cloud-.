@@ -1,16 +1,17 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.bean.work.MeetingSchedule;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -39,14 +41,11 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 
 @ContentView(R.layout.activity_meeting_room_info)
 public class MeetingRoomInfoActivity extends BaseActivity {
@@ -62,16 +61,16 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private TextView meetingRoomFloorText;
     @ViewInject(R.id.view_pager)
     private ViewPager viewPager;
-    @ViewInject(R.id.tv_date)
-    private TextView dateText;
-    @ViewInject(R.id.rl_day_before)
-    private RelativeLayout dayBeforeLayout;
-    @ViewInject(R.id.rl_day_after)
-    private RelativeLayout dayAfterLayout;
     @ViewInject(R.id.tv_people_num)
     private TextView peopleNumText;
     @ViewInject(R.id.ll_equipment)
     private LinearLayout equipmentLayout;
+    @ViewInject(R.id.tv_day_before)
+    private TextView dayBeforeText;
+    @ViewInject(R.id.tv_day)
+    private TextView dayText;
+    @ViewInject(R.id.tv_day_after)
+    private TextView dayAfterText;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private int viewPagerIndex = 0;
@@ -131,29 +130,17 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 从服务器获取当前时间
-     *
-     * @param date
-     */
-    private void setCurrentCalendar(String date) {
-        // TODO Auto-generated method stub
-        try {
-            String pattern = "EEE, dd MMM yyyy HH:mm:ss z";
-            SimpleDateFormat format = new SimpleDateFormat(pattern, Locale.US);
-            Date currentDate = format.parse(date);
-            currentCalendar.setTime(currentDate);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
     private void setSelect() {
-        dayBeforeLayout.setVisibility((viewPagerIndex == 0) ? View.GONE : View.VISIBLE);
-        dayAfterLayout.setVisibility((viewPagerIndex == meetingRoom.getMaxAhead() - 1) ? View.GONE : View.VISIBLE);
-        dateText.setText(TimeUtils.getFormatStringFromTargetTime(
-                MeetingRoomInfoActivity.this, currentCalendar, viewPagerIndex));
+//        if (meetingRoom.getMaxAhead()>2){
+//
+//        }else {
+            dayBeforeText.setText(TimeUtils.getFormatStringFromTargetTime(
+                    MeetingRoomInfoActivity.this, currentCalendar, 0));
+            dayAfterText.setText(TimeUtils.getFormatStringFromTargetTime(
+                    MeetingRoomInfoActivity.this, currentCalendar, 1));
+            dayBeforeText.setTextColor(Color.parseColor((viewPagerIndex == 0)?"#36A5F6":"#333333"));
+            dayAfterText.setTextColor(Color.parseColor((viewPagerIndex == 1)?"#36A5F6":"#333333"));
+//        }
     }
 
     /**
@@ -164,13 +151,29 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         viewList.clear();
         for (int i = 0; i < meetingRoom.getMaxAhead(); i++) {
             View allDayMeetingView = LayoutInflater.from(this).inflate(
-                    R.layout.all_day_meeting_fragment, null);
+                    R.layout.meeting_room_use_day_view, null);
             viewList.add(allDayMeetingView);
             ListView meetingListView = allDayMeetingView
-                    .findViewById(R.id.meeting_list);
-            List<MeetingSchedule> meetingScheduleList = allDaysMeetingScheduleList
+                    .findViewById(R.id.lv_meeting);
+            final List<MeetingSchedule> meetingScheduleList = allDaysMeetingScheduleList
                     .get(i);
             meetingListView.setAdapter(new ScheduleMeetingRoomDurationAdapter(this, meetingScheduleList));
+            meetingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    MeetingSchedule meetingSchedule = meetingScheduleList.get(position);
+                    Meeting meeting = meetingSchedule.getMeeting();
+                    if (meeting == null){
+                        Intent intent = new Intent();
+                        intent.putExtra(MeetingRoomListActivity.EXTRA_START_TIME,TimeUtils.timeLong2Calendar(meetingSchedule.getFrom()));
+                        intent.putExtra(MeetingRoomListActivity.EXTRA_END_TIME,TimeUtils.timeLong2Calendar(meetingSchedule.getTo()));
+                        setResult(RESULT_OK,intent);
+                        finish();
+                    }else {
+
+                    }
+                }
+            });
 
         }
         viewPager.setAdapter(new MyViewPagerAdapter(this, viewList));
@@ -206,17 +209,22 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 finish();
                 break;
 
-            case R.id.rl_day_before:
-                viewPagerIndex--;
-                viewPager.setCurrentItem(viewPagerIndex);
+            case R.id.tv_day_before:
+                viewPagerIndex =0;
+                viewPager.setCurrentItem(0);
+                setSelect();
+                break;
+            case R.id.tv_day:
+                if (meetingRoom.getMaxAhead()>2){
+
+                }
+                break;
+            case R.id.tv_day_after:
+                viewPagerIndex =1;
+                viewPager.setCurrentItem(1);
                 setSelect();
                 break;
 
-            case R.id.rl_day_after:
-                viewPagerIndex++;
-                viewPager.setCurrentItem(viewPagerIndex);
-                setSelect();
-                break;
             default:
                 break;
         }
@@ -295,6 +303,9 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             calendar.add(Calendar.DAY_OF_YEAR, i);
             HashSet<Long> set = new HashSet<>();
             for (Meeting meeting : allMeetingList) {
+                LogUtils.jasonDebug("000="+TimeUtils.calendar2FormatString(MyApplication.getInstance(),calendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+                LogUtils.jasonDebug("111="+TimeUtils.calendar2FormatString(MyApplication.getInstance(),meeting.getStartTimeCalendar(),TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+                LogUtils.jasonDebug("222="+TimeUtils.calendar2FormatString(MyApplication.getInstance(),meeting.getEndTimeCalendar(),TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
                 if (TimeUtils.isContainTargetCalendarDay(calendar, meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar())) {
                     dayMeetingList.add(meeting);
                     long meetingFromLong = meeting.getDayStartTime(calendar);
@@ -342,77 +353,16 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     }
 
     /**
-     * 构造今天和明天会议显示数据
-     */
-    private void initMeetingSchedule(List<List<Meeting>> group) {
-        // TODO Auto-generated method stub
-        allDaysMeetingScheduleList = new ArrayList<List<MeetingSchedule>>();
-        for (int i = 0; i < group.size(); i++) {
-            List<Meeting> dayMeetingList = group.get(i);
-            List<MeetingSchedule> dayMeetingScheduleList = new ArrayList<MeetingSchedule>();
-            HashSet<Long> set = new HashSet<Long>();
-            long dayStartTimeLong = TimeUtils.getTimeLongFromTargetTime(
-                    currentCalendar, i, dayStartTime);
-            long dayEndTimeLong = TimeUtils.getTimeLongFromTargetTime(
-                    currentCalendar, i, dayEndTime);
-
-            boolean isMeetingBeforeDayStartTime = false;
-            boolean isMeetingAfterDayEndTime = false;
-            // 添加所有会议的开头和结尾时间点
-            for (int j = 0; j < dayMeetingList.size(); j++) {
-                long meetingFromLong = dayMeetingList.get(j).getStartTime();
-                long meetingToLong = dayMeetingList.get(j).getEndTime();
-                if (meetingFromLong <= dayStartTimeLong) {
-                    isMeetingBeforeDayStartTime = true;
-                }
-                if (meetingToLong >= dayEndTimeLong) {
-                    isMeetingAfterDayEndTime = true;
-                }
-                set.add(meetingFromLong);
-                set.add(meetingToLong);
-            }
-
-            if (!isMeetingBeforeDayStartTime) {
-                set.add(dayStartTimeLong);
-            }
-            if (!isMeetingAfterDayEndTime) {
-                set.add(dayEndTimeLong);
-            }
-
-            List<Long> listWithoutDup = new ArrayList<>();
-            listWithoutDup.addAll(set);
-            Collections.sort(listWithoutDup);// 排序
-            // 将所有时间点整理成时间片段
-            for (int j = 1; j < listWithoutDup.size(); j++) {
-                MeetingSchedule meetingSchedule = new MeetingSchedule();
-                meetingSchedule.setFrom(listWithoutDup.get(j - 1));
-                meetingSchedule.setTo(listWithoutDup.get(j));
-                dayMeetingScheduleList.add(meetingSchedule);
-            }
-
-            // 给meetingSchedule的meeting 成员变量赋值
-            for (int j = 0; j < dayMeetingScheduleList.size(); j++) {
-                MeetingSchedule meetingSchedule = dayMeetingScheduleList.get(j);
-                for (int k = 0; k < dayMeetingList.size(); k++) {
-                    Meeting meeting = dayMeetingList.get(k);
-                    if (meetingSchedule.getFrom() == meeting.getStartTime())
-                        meetingSchedule.setMeeting(meeting);
-                }
-            }
-            allDaysMeetingScheduleList.add(dayMeetingScheduleList);
-        }
-
-    }
-
-
-    /**
      * 获取此会议室所有的会议
      */
     private void getMeetingListByMeetingRoom() {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            apiService.getRoomMeetingListByMeetingRoom(meetingRoom.getId());
+            Calendar startCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
+            Calendar endCalendar = TimeUtils.getDayEndCalendar(Calendar.getInstance());
+            endCalendar.add(Calendar.DAY_OF_YEAR,meetingRoom.getMaxAhead()-1);
+            apiService.getRoomMeetingListByMeetingRoom(meetingRoom.getId(),startCalendar.getTimeInMillis(),endCalendar.getTimeInMillis());
         }
     }
 
@@ -434,13 +384,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         @Override
         public void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
             LoadingDialog.dimissDlg(loadingDlg);
-            List<Meeting> meetingList = getMeetingListByMeetingRoomResult.getMeetingList();
-            allMeetingList.clear();
-            for (Meeting meeting : meetingList) {
-                if (meeting.getScheduleLocationObj().getId().equals(meetingRoom.getId())) {
-                    allMeetingList.add(meeting);
-                }
-            }
+            allMeetingList = getMeetingListByMeetingRoomResult.getMeetingList();
             initData();
         }
 

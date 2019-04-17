@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,12 +14,17 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -43,6 +49,12 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
     private ScheduleApiService apiService;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -56,9 +68,18 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
+                getMeetingListByStartTime();
+                break;
+        }
+    }
+
     @Override
     public void onItemClick(View view, int position) {
-
+    Meeting meeting = meetingList.get(position);
     }
 
     @Override
@@ -69,6 +90,12 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
     @Event(value = R.id.tv_meeting_search)
     public void onClick(View view) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
 

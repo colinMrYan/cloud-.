@@ -815,7 +815,7 @@ public class TimeUtils {
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
         calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH)
                 + day);
-        SimpleDateFormat format = getFormat(context, FORMAT_YEAR_MONTH_DAY);
+        SimpleDateFormat format = getFormat(context, FORMAT_MONTH_DAY);
         return getTime(calendar.getTimeInMillis(), format);
 
     }
