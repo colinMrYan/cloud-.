@@ -58,6 +58,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         //获取Allday值
         isAllDay = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_IS_ALL_DAY) ?
                 getIntent().getExtras().getBoolean(EXTRA_SCHEDULE_IS_ALL_DAY) : false;
+
         alertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         alertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
         if (!alertTime.equals(getString(R.string.calendar_no_alert))) {

@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.schedule;
 
 
-import com.inspur.emmcloud.bean.work.RemindEvent;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -64,7 +63,7 @@ public class Schedule implements Serializable {
 
     public Schedule(JSONObject object) {
         id = JSONUtils.getString(object, "id", "");
-        title = JSONUtils.getString(object, "title ", "");
+        title = JSONUtils.getString(object, "title", "");
         type = JSONUtils.getString(object, "type", "");
         owner = JSONUtils.getString(object, "owner", "");
         startTime = JSONUtils.getLong(object, "startTime", 0L);
@@ -77,7 +76,7 @@ public class Schedule implements Serializable {
         remindEvent = JSONUtils.getString(object, "remindEvent", "");
         state = JSONUtils.getInt(object, "state", -1);
         location = JSONUtils.getString(object, "location", "");
-        participants = JSONUtils.getString(object, "participants ", "");
+        participants = JSONUtils.getString(object, "participants", "");
         note = JSONUtils.getString(object, "note", "");
     }
 

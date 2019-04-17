@@ -66,6 +66,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private List<String> officeIdList = new ArrayList<>();
     private List<MeetingRoomArea> meetingRoomAreaList = new ArrayList<>();
     private ScheduleMeetingRoomAdapter meetingRoomAdapter;
+    private MeetingRoom selectMeetingRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +100,10 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 
     @Override
     public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
-        MeetingRoom meetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
-        Intent intent = new Intent(MeetingRoomListActivity.this,MeetingRoomInfoActivity.class);
-        intent.putExtra(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM,meetingRoom);
-        startActivityForResult(intent,REQUEST_ENTER_MEETING_ROOM_INFO);
+        selectMeetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
+        Intent intent = new Intent(MeetingRoomListActivity.this, MeetingRoomInfoActivity.class);
+        intent.putExtra(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM, selectMeetingRoom);
+        startActivityForResult(intent, REQUEST_ENTER_MEETING_ROOM_INFO);
 //        Intent intent = new Intent();
 //        intent.putExtra(EXTRA_START_TIME, startTimeCalendar);
 //        intent.putExtra(EXTRA_END_TIME, endTimeCalendar);
@@ -194,6 +195,10 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_MEETING_OFFICE_SETTING) {
                 getOfficeList();
+            } else if (requestCode == REQUEST_ENTER_MEETING_ROOM_INFO) {
+                data.putExtra(EXTRA_MEETING_ROOM, selectMeetingRoom);
+                setResult(RESULT_OK, data);
+                finish();
             }
         }
     }

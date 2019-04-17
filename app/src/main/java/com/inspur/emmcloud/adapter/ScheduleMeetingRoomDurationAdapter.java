@@ -1,20 +1,24 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.work.MeetingSchedule;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -52,66 +56,31 @@ public class ScheduleMeetingRoomDurationAdapter extends BaseAdapter {
     public View getView(final int position, View convertView,
                         ViewGroup parent) {
         // TODO Auto-generated method stub
-        LayoutInflater vi = LayoutInflater.from(context);
-        final MeetingSchedule meetingSchedule = meetingScheduleList
-                .get(position);
-        SimpleDateFormat format = TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE);
-        long beginTimeLong = meetingSchedule.getFrom();
-        long endTimeLong = meetingSchedule.getTo();
-        String beginTimeString = TimeUtils.getTime(beginTimeLong, format);
-        String endTimeString = TimeUtils.getTime(endTimeLong, format);
-        String timeSegment = beginTimeString + "-" + endTimeString;
-        if (meetingSchedule.getMeeting() == null) {
-            convertView = vi.inflate(
-                    R.layout.meeting_no_schedule_item_view, null);
-            ((TextView) convertView.findViewById(R.id.time_text))
-                    .setText(timeSegment + " " + context.getString(R.string.meeting_free));
-            convertView.findViewById(R.id.meeting_layout)
-                    .setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            // TODO Auto-generated method stub
-                        }
-                    });
-        } else {
-            final Meeting meeting = meetingSchedule.getMeeting();
-            convertView = vi.inflate(R.layout.meeting_schedule_item_view,
-                    null);
-            ((TextView) convertView.findViewById(R.id.meeting_time_text))
-                    .setText(timeSegment);
-            String organizer = ContactUserCacheUtils.getUserName(meeting.getOwner());
-            ((TextView) convertView
-                    .findViewById(R.id.meeting_order_name_text))
-                    .setText(organizer);
-            ((TextView) convertView.findViewById(R.id.meeting_title_text))
-                    .setText(meeting.getTitle());
-
-            convertView.findViewById(R.id.meeting_layout)
-                    .setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            // TODO Auto-generated method stub
-                            //showMeetingInfo(meeting);
-                        }
-                    });
-
-//            convertView.findViewById(R.id.meeting_layout)
-//                    .setOnLongClickListener(new OnLongClickListener() {
-//
-//                        @Override
-//                        public boolean onLongClick(View v) {
-//                            if (meetingSchedule.getMeeting().getOrganizer().equals(MyApplication.getInstance().getUid())) {
-//                                boolean isMeetingAdmin = PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
-//                                if (isMeetingAdmin) {
-//                                    showDeleteMeetingDlg(meetingSchedule);
-//                                }
-//                            }
-//                            return true;
-//                        }
-//
-//                    });
+        MeetingSchedule meetingSchedule = meetingScheduleList.get(position);
+        Meeting meeting = meetingSchedule.getMeeting();
+        convertView = LayoutInflater.from(context).inflate(R.layout.meeting_room_info_list_item_view,null);
+        RelativeLayout meetingContentLayout = convertView.findViewById(R.id.rl_meeting_content);
+        LinearLayout meetingAddLayout = convertView.findViewById(R.id.ll_meeting_add);
+        TextView timeText = convertView.findViewById(R.id.tv_time);
+        Calendar StartTimeCalendar = TimeUtils.timeLong2Calendar(meetingSchedule.getFrom());
+        String startTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(),StartTimeCalendar,TimeUtils.DATE_FORMAT_HOUR_MINUTE);
+        Calendar endTimeCalendar = TimeUtils.timeLong2Calendar(meetingSchedule.getTo());
+        String endTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(),endTimeCalendar,TimeUtils.DATE_FORMAT_HOUR_MINUTE);
+        timeText.setText(startTime+"-"+endTime);
+        View flagView = convertView.findViewById(R.id.v_flag);
+        if (meeting == null){
+            timeText.setTextColor(Color.parseColor("#999999"));
+            meetingContentLayout.setVisibility(View.GONE);
+            meetingAddLayout.setVisibility(View.VISIBLE);
+            flagView.setBackgroundColor(Color.parseColor("#36A5F6"));
+        }else {
+            timeText.setTextColor(Color.parseColor("#333333"));
+            meetingContentLayout.setVisibility(View.VISIBLE);
+            meetingAddLayout.setVisibility(View.GONE);
+            String owner = ContactUserCacheUtils.getUserName(meeting.getOwner());
+            ((TextView)convertView.findViewById(R.id.tv_owner)).setText(owner);
+            ((TextView)convertView.findViewById(R.id.tv_title)).setText(meeting.getTitle());
+            flagView.setBackgroundColor(Color.parseColor("#ffffff"));
         }
         return convertView;
     }

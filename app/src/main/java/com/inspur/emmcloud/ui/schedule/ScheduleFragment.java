@@ -23,7 +23,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -104,8 +103,12 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED:
-                LogUtils.jasonDebug("EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED----------------");
                 setEventShowType();
+                showCalendarEvent(true);
+                break;
+            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
+            case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
+            case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
                 break;
         }
@@ -210,7 +213,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void showCalendarEvent(boolean isForceUpdate) {
         List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
         List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
-        boolean isNeedGetDataFromNet =isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
+        boolean isNeedGetDataFromNet = isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
         if (isNeedGetDataFromNet) {
             List<String> scheduleIdList = new ArrayList<>();
             List<String> meetingIdList = new ArrayList<>();
