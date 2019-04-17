@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.TaskListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -305,6 +307,7 @@ public class TaskListFragment extends Fragment {
                                 long id) {
             Intent intent = new Intent();
             intent.putExtra(TASK_TASK_ENTITY, uiTaskList.get(position));
+            LogUtils.LbcDebug("list::"+ JSON.toJSONString(uiTaskList.get(position)));
             intent.putExtra(TASK_CURRENT_INDEX, currentIndex);
             intent.setClass(getActivity(),
                     TaskAddActivity.class);
