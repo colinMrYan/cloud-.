@@ -134,6 +134,7 @@ public class TaskAddActivity extends BaseActivity {
     private List<JsonAttachmentAndUri> otherJsonAttachments = new ArrayList<>();
     private List<SearchModel> taskManger = new ArrayList<>();
     private List<SearchModel> taskParters = new ArrayList<>();
+    private List<SearchModel> orgTaskParters = new ArrayList<>();
     private ArrayList<TaskColorTag> taskColorTags = new ArrayList<>();
     private Calendar deadLineCalendar;
     private AttachmentOthersAdapter attachmentOtherAdapter;
@@ -160,6 +161,7 @@ public class TaskAddActivity extends BaseActivity {
         //判断是否为新建任务
         if (getIntent().hasExtra("task")) {
             taskResult = (Task) getIntent().getSerializableExtra("task");
+            deadLineCalendar=taskResult.getDueDate();
             LogUtils.LbcDebug("jie task"+ JSON.toJSONString(taskResult));
             taskColorTags = (ArrayList<TaskColorTag>) taskResult.getTags();
             isCreateTask = false;
@@ -230,7 +232,9 @@ public class TaskAddActivity extends BaseActivity {
             segmentControlView.setSelectedIndex(taskResult.getPriority());
             setTaskColorTags();
             titleText.setText("任务详情");
-
+            if(deadLineCalendar!=null){
+                deadlineTimeText.setText(TimeUtils.calendar2FormatString(this,deadLineCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+            }
         }
     }
 
@@ -448,7 +452,22 @@ public class TaskAddActivity extends BaseActivity {
      * 更新任务
      */
     private void updateTask() {
+      //apiService.updateTask();
+        //全部删除Parters
+        if(!NetUtils.isNetworkConnected(this))
+            return;
 
+        if (taskParters.size() > 0) {
+            JSONArray dleMembers = new JSONArray();
+            for (int i = 0; i < taskParters.size(); i++) {
+                dleMembers.put(taskParters.get(i).getId());
+            }
+            apiService.deleteMateForTask(taskResult.getId(), dleMembers);
+        }
+
+        String taskData = uploadTaskData();
+        LogUtils.LbcDebug("taskData：：：" + taskData);
+        apiService.updateTask(taskData, -1);
     }
 
     /**
@@ -766,6 +785,9 @@ public class TaskAddActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(TaskAddActivity.this, error, errorCode);
         }
 
+
+
+
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
             LoadingDialog.dimissDlg(loadingDlg);
@@ -841,14 +863,15 @@ public class TaskAddActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             ArrayList<String> memebersIds = new ArrayList<String>();
             memebersIds = handleTaskSearhMembers(getTaskListResult);
-            String memebers = "";
-            int memimg = memebersIds.size();
-            if (memimg > 4) {
-                memimg = 4;
-            }
-            for (int i = 0; i < memimg; i++) {
-                memebers = memebers + ContactUserCacheUtils.getUserName(memebersIds.get(i)) + " ";
-            }
+            showPartersImage();
+//            String memebers = "";
+//            int memimg = memebersIds.size();
+//            if (memimg > 4) {
+//                memimg = 4;
+//            }
+//            for (int i = 0; i < memimg; i++) {
+//                memebers = memebers + ContactUserCacheUtils.getUserName(memebersIds.get(i)) + " ";
+//            }
         }
 
         @Override
@@ -860,9 +883,15 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnDelTaskMemSuccess() {
             super.returnDelTaskMemSuccess();
-            //isRefreshList = true;
+            //添加Parter
+            if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskParters.size() > 0) {
+                JSONArray addMembers = new JSONArray();
+                for (int i = 0; i < taskParters.size(); i++) {
+                    addMembers.put(taskParters.get(i).getId());
+                }
+                apiService.inviteMateForTask(taskResult.getId(), addMembers);
+            }
             LoadingDialog.dimissDlg(loadingDlg);
-            // displayInviteMates();
         }
 
         @Override
@@ -985,6 +1014,7 @@ public class TaskAddActivity extends BaseActivity {
 //                        selectMemList.add(searchModel);
 //                        deleteMemList.add(searchModel);
 //                        oldMemList.add(searchModel);
+                          orgTaskParters.add(searchModel);
                           taskParters.add(searchModel);
                     }
                 }

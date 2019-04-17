@@ -13,8 +13,9 @@ import java.io.Serializable;
 
 
 public class RemindEvent implements Serializable {
-    private int advanceTimeSpan = 0;
+    private int advanceTimeSpan = -1;
     private String remindType = "";
+    private String name ="";
 
     public RemindEvent() {
     }
@@ -24,9 +25,10 @@ public class RemindEvent implements Serializable {
         remindType = JSONUtils.getString(object, "remindType", "");
     }
 
-    public RemindEvent(String remindType, int advanceTimeSpan) {
+    public RemindEvent(String remindType,int advanceTimeSpan,String name) {
         this.remindType = remindType;
         this.advanceTimeSpan = advanceTimeSpan;
+        this.name=name;
     }
 
     public int getAdvanceTimeSpan() {
@@ -39,6 +41,14 @@ public class RemindEvent implements Serializable {
 
     public String getRemindType() {
         return remindType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setRemindType(String remindType) {
