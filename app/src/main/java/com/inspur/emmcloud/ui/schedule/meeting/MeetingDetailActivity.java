@@ -7,8 +7,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.Participant;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
@@ -44,28 +43,38 @@ public class MeetingDetailActivity extends BaseActivity{
     private TextView meetingConferenceText;
     @ViewInject(R.id.tv_meeting_note)
     private TextView meetingNoteText;
-    private Meeting meeting;
+    private Schedule meeting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        meeting = (Meeting) getIntent().getSerializableExtra("");
-        if(meeting == null){
-            meeting = new Meeting();
-        }
+        meeting = (Schedule) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
         initViews();
     }
 
     private void initViews() {
         meetingTitleText.setText(meeting.getTitle());
-        meetingTimeText.setText(getMeetingTime());
-        meetingRemindText.setText(TimeUtils.getLeftTimeFromMeetingBegin(meeting.getRemindEventObj().getAdvanceTimeSpan()));
+        meetingTimeText.setText(getString(R.string.meeting_detail_time,getMeetingTime()));
+        meetingRemindText.setText(getString(R.string.meeting_detail_remind,TimeUtils.getLeftTimeFromMeetingBegin(meeting.getRemindEventObj().getAdvanceTimeSpan())));
 //        meetingDistributionText.setText(meeting.getOwner());
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create,TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
-        attendeeText.setText(getString(R.string.meeting_detail_attendee_num,meeting.getCommonParticipantList().get(0).getName(),meeting.getCommonParticipantList().size()));
-        meetingRecordHolderText.setText(getRecordHolder());
-        meetingConferenceText.setText(getConference());
-        meetingNoteText.setText(meeting.getNote());
+        attendeeText.setText(getString(R.string.meeting_detail_attendee,getAttendee()));
+        meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder,getRecordHolder()));
+        meetingConferenceText.setText(getString(R.string.meeting_detail_conference,getConference()));
+        meetingNoteText.setText(getString(R.string.meeting_detail_note,meeting.getNote()));
+    }
+
+    private String getAttendee() {
+        String attendee = "";
+        List<Participant> participantList =  meeting.getCommonParticipantList();
+        if(participantList.size() == 0){
+            attendee = "";
+        }else if(participantList.size() == 1){
+            attendee = participantList.get(0).getName();
+        }else{
+            attendee = getString(R.string.meeting_detail_attendee_num,participantList.get(0).getName(),participantList.size());
+        }
+        return attendee;
     }
 
     /**
@@ -101,7 +110,22 @@ public class MeetingDetailActivity extends BaseActivity{
     }
 
     private String getMeetingTime() {
-        return  (meeting.getStartTime() + meeting.getEndTime() + "");
+        String duringTime = "";
+        long startTime = meeting.getStartTime();
+        long endTime = meeting.getEndTime();
+        if(TimeUtils.isSameDay(TimeUtils.timeLong2Calendar(startTime),TimeUtils.timeLong2Calendar(endTime))){
+            duringTime = TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(startTime),TimeUtils.FORMAT_MONTH_DAY) + " " +
+                    TimeUtils.getWeekDay(this,TimeUtils.timeLong2Calendar(startTime)) + " " +
+                    TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(startTime),TimeUtils.FORMAT_HOUR_MINUTE) +
+                    " - "+TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(endTime),TimeUtils.FORMAT_HOUR_MINUTE);
+        }else{
+            //先按同一天算
+            duringTime = TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(startTime),TimeUtils.FORMAT_MONTH_DAY) +
+                    TimeUtils.getWeekDay(this,TimeUtils.timeLong2Calendar(startTime)) +
+                    TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(startTime),TimeUtils.FORMAT_HOUR_MINUTE) +
+                    " - "+TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(endTime),TimeUtils.FORMAT_HOUR_MINUTE);
+        }
+        return  duringTime;
     }
 
     public void onClick(View v){
@@ -113,19 +137,14 @@ public class MeetingDetailActivity extends BaseActivity{
                 showDialog();
                 break;
             case R.id.rl_meeting_attendee:
-                LogUtils.YfcDebug("参会人");
                 break;
             case R.id.rl_meeting_record_holder:
-                LogUtils.YfcDebug("会议记录");
                 break;
             case R.id.rl_meeting_conference:
-                LogUtils.YfcDebug("会议联络");
                 break;
             case R.id.rl_meeting_sign:
-                LogUtils.YfcDebug("会议签到");
                 break;
             case R.id.rl_meeting_summary:
-                LogUtils.YfcDebug("会议纪要");
                 break;
         }
     }
