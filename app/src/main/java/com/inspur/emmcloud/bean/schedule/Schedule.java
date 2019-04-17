@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean.schedule;
 
 import com.inspur.emmcloud.bean.work.RemindEvent;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
@@ -376,8 +377,9 @@ public class Schedule implements Serializable {
             jsonObject.put("participants", partJsonArray);
         }
 
-        jsonObject.put("note", note);
-
+        if(!StringUtils.isBlank(note)){
+            jsonObject.put("note", note);
+        }
         return jsonObject;
     }
 
