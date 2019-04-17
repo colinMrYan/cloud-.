@@ -159,7 +159,7 @@ public class CalendarAddActivity extends BaseActivity {
                     myCalendar = allCalendarList.get(i);
                 }
             }
-            remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", ""),
+            remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
                     JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
                      ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),isAllDay));
         } else {
@@ -331,6 +331,9 @@ public class CalendarAddActivity extends BaseActivity {
             scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
             scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
             scheduleEvent.setType("default");
+            if(remindEvent.getAdvanceTimeSpan()!=-1){
+                scheduleEvent.setRemindEvent(remindEvent.getRemindEventJson());
+            }
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
                 updateCalEvent();
             } else {
@@ -414,6 +417,7 @@ public class CalendarAddActivity extends BaseActivity {
                     break;
                 case CAL_ALERT_TIME_REQUEST_CODE:
                     remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
+                    remindEvent.setRemindType("in_app");
                     alertText.setText(remindEvent.getName());
                     break;
                 default:

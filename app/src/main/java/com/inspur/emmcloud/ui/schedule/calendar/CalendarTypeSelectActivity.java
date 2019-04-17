@@ -52,6 +52,11 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         calendarListView.setAdapter(calendarAdapter);
         workAPIService = new WorkAPIService(this);
         workAPIService.setAPIInterface(new WebService());
+        //calendarList = (List<MyCalendar>)
+        calendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
+        if (calendarList.size() > 0) {
+            calendarAdapter.notifyDataSetChanged();
+        }
         workAPIService.getMyCalendar(0, 30);
         calendarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -129,8 +134,16 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
             List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
             for (int i = 0; i < allCalendarList.size(); i++) {
+                boolean isHave = false;
                 MyCalendar myCalendar = allCalendarList.get(i);
-                if (!myCalendar.getCommunity()) {
+                for (int j = 0; j < calendarList.size(); j++) {
+                    if (!myCalendar.getId().equals(calendarList.get(j).getId())) {
+                        continue;
+                    } else {
+                        isHave = true;
+                    }
+                }
+                if (!isHave) {
                     calendarList.add(myCalendar);
                 }
             }
