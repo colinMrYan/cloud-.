@@ -147,6 +147,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
                     calendarList.add(myCalendar);
                 }
             }
+            MyCalendarCacheUtils.saveMyCalendarList(CalendarTypeSelectActivity.this,calendarList);
             if (getIntent().hasExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT)) {
                 calendar = (MyCalendar) getIntent().getExtras().getSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT);
                 for (int i = 0; i < calendarList.size(); i++) {
