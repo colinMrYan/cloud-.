@@ -49,7 +49,7 @@ public class Meeting extends Schedule {
         return eventList;
     }
 
-    public JSONObject toJSOnObject() {
+    public JSONObject toJSONObject() {
         JSONObject obj = new JSONObject();
         try {
             if (!StringUtils.isBlank(getId())) {

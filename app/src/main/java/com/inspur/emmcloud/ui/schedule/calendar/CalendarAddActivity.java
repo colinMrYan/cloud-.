@@ -370,8 +370,8 @@ public class CalendarAddActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 scheduleEvent.setLastTime(System.currentTimeMillis());
-                LogUtils.LbcDebug("update Schedule::" + scheduleEvent.toCalendarEventJson().toString());
-                apiService.updateSchedule(scheduleEvent.toCalendarEventJson().toString());
+                LogUtils.LbcDebug("update Schedule::" + scheduleEvent.toCalendarEventJSONObject().toString());
+                apiService.updateSchedule(scheduleEvent.toCalendarEventJSONObject().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -387,8 +387,8 @@ public class CalendarAddActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 loadingDlg.show();
-                LogUtils.LbcDebug("Add Schedule::" + scheduleEvent.toCalendarEventJson().toString());
-                apiService.addSchedule(scheduleEvent.toCalendarEventJson().toString());
+                LogUtils.LbcDebug("Add Schedule::" + scheduleEvent.toCalendarEventJSONObject().toString());
+                apiService.addSchedule(scheduleEvent.toCalendarEventJSONObject().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
