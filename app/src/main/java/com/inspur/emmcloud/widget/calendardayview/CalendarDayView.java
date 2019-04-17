@@ -30,7 +30,7 @@ public class CalendarDayView extends RelativeLayout {
     private static final int TIME_HOUR_HEIGHT = DensityUtil.dip2px(MyApplication.getInstance(), 40);
     private static final int EVENTT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
     private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3",
-            "4", "5", "6", "7", "8", "9", "10", "10"};
+            "4", "5", "6", "7", "8", "9", "10", "11"};
     private List<TimeHourRow> timeHourRowList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private RelativeLayout eventLayout;
@@ -153,12 +153,12 @@ public class CalendarDayView extends RelativeLayout {
         for (TimeHourRow timeHourRow : timeHourRowList) {
             int timeHourRowEventSize = timeHourRow.getEventList().size();
             if (timeHourRowEventSize > 1) {
-                timeHourRow.setEventWidth((this.getWidth() - timeHourRowEventSize * EVENTT_GAP) / timeHourRowEventSize);
+                timeHourRow.setEventWidth((eventLayout.getWidth() - timeHourRowEventSize * EVENTT_GAP) / timeHourRowEventSize);
             }
         }
 
         for (MatheSet matheSet : matheSetList) {
-            int minChildWidth = this.getWidth();
+            int minChildWidth = eventLayout.getWidth();
             for (int i = (int) matheSet.getStart(); i <= matheSet.getEnd(); i++) {
                 if (minChildWidth > timeHourRowList.get(i).getEventWidth()) {
                     minChildWidth = timeHourRowList.get(i).getEventWidth();
@@ -218,7 +218,7 @@ public class CalendarDayView extends RelativeLayout {
                     if (eventHeight < eventMinHeight) {
                         eventHeight = eventMinHeight;
                     }
-                    int maginLeft = EVENTT_GAP * i + eventWidth * i;
+                    int marginLeft = EVENTT_GAP * i + eventWidth * i;
                     Calendar startTime = event.getDayEventStartTime(selectCalendar);
                     Calendar dayStartTime = (Calendar) startTime.clone();
                     dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -226,7 +226,7 @@ public class CalendarDayView extends RelativeLayout {
                     int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * DensityUtil.dip2px(getContext(), 40) / 3600000);
                     RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
                             eventHeight);
-                    eventLayoutParams.setMargins(maginLeft, marginTop, 0, 0);
+                    eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);
                     setEventLayout(event, eventLayoutParams);
                 }
 

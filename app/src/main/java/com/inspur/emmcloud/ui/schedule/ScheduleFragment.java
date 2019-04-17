@@ -23,6 +23,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -103,8 +104,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
         switch (eventMessage.getAction()) {
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED:
+                LogUtils.jasonDebug("EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED----------------");
                 setEventShowType();
-                showCalendarEvent();
+                showCalendarEvent(true);
                 break;
         }
     }
@@ -185,7 +187,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         EmmCalendar endEmmCalendar = currentPageCalendarList.get(currentPageCalendarList.size() - 1);
         pageStartCalendar.set(startEmmCalendar.getYear(), startEmmCalendar.getMonth() - 1, startEmmCalendar.getDay());
         pageEndCalendar.set(endEmmCalendar.getYear(), endEmmCalendar.getMonth() - 1, endEmmCalendar.getDay());
-        showCalendarEvent();
+        showCalendarEvent(false);
     }
 
     /**
@@ -205,10 +207,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
 
-    private void showCalendarEvent() {
+    private void showCalendarEvent(boolean isForceUpdate) {
         List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
         List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
-        boolean isNeedGetDataFromNet = newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
+        boolean isNeedGetDataFromNet =isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
         if (isNeedGetDataFromNet) {
             List<String> scheduleIdList = new ArrayList<>();
             List<String> meetingIdList = new ArrayList<>();
@@ -348,7 +350,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                     //
                     TaskCacheUtils.saveTaskList(MyApplication.getInstance(), taskList);
                 }
-                showCalendarEvent();
+                showCalendarEvent(false);
             }
 
         }

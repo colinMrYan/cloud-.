@@ -4,11 +4,9 @@ package com.inspur.emmcloud.bean.schedule;
 import com.inspur.emmcloud.bean.work.RemindEvent;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
-import org.json.JSONArray;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
