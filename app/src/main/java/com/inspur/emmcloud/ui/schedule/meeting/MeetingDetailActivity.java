@@ -8,6 +8,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
@@ -54,7 +55,7 @@ public class MeetingDetailActivity extends BaseActivity{
     private void initViews() {
         meetingTitleText.setText(meeting.getTitle());
         meetingTimeText.setText(getString(R.string.meeting_detail_time,getMeetingTime()));
-        meetingRemindText.setText(getString(R.string.meeting_detail_remind,TimeUtils.getLeftTimeFromMeetingBegin(meeting.getRemindEventObj().getAdvanceTimeSpan())));
+        meetingRemindText.setText(getString(R.string.meeting_detail_remind,new ScheduleAlertTimeActivity().getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(),meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create,TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));

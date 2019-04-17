@@ -35,13 +35,19 @@
 
         <ImageView
             android:id="@+id/iv_meeting_detail_more"
-            android:layout_width="38dp"
-            android:layout_height="44dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:clickable="true"
             android:onClick="onClick"
+            android:paddingLeft="13dp"
             android:paddingRight="16dp"
-            android:src="@drawable/iocn_organizational_structure_detail" />
+            android:paddingTop="17dp"
+            android:paddingBottom="17dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_header_option" />
 
     </RelativeLayout>
 
@@ -63,7 +69,7 @@
                 android:layout_height="18dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/icon_username" />
+                android:src="@drawable/ic_schedule_event_meeing" />
 
             <LinearLayout
                 android:layout_width="match_parent"
