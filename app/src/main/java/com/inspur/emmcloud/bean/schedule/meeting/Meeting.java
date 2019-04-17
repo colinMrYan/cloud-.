@@ -1,13 +1,13 @@
 package com.inspur.emmcloud.bean.schedule.meeting;
 
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.helper.StringUtil;
 import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
@@ -20,6 +20,13 @@ import java.util.List;
 
 @Table(name = "Meeting")
 public class Meeting extends Schedule {
+    public Meeting(){
+
+    }
+
+    public Meeting(JSONObject obj){
+        super(obj);
+    }
     public static List<Event> meetingEvent2EventList(List<Meeting> meetingList, Calendar selectCalendar) {
         List<Event> eventList = new ArrayList<>();
         for (Meeting meeting : meetingList) {
@@ -42,7 +49,7 @@ public class Meeting extends Schedule {
         return eventList;
     }
 
-    public JSONObject toJSONObject() {
+    public JSONObject toJSOnObject() {
         JSONObject obj = new JSONObject();
         try {
             if (!StringUtils.isBlank(getId())) {
@@ -58,12 +65,18 @@ public class Meeting extends Schedule {
             obj.put("syncToLocal", false);
             obj.put("isAllDay", false);
             obj.put("note", getNote());
-            JSONObject remindEventObj = JSONUtils.getJSONObject(getRemindEvent());
-            obj.put("remindEvent", remindEventObj);
-            JSONObject locationObj = JSONUtils.getJSONObject(getLocation());
-            obj.put("location", locationObj);
-            JSONArray participantsArray = JSONUtils.getJSONArray(getParticipants(),new JSONArray());
-            obj.put("participants", participantsArray);
+            if (!StringUtil.isBlank(getRemindEvent())) {
+                JSONObject remindEventObj = new JSONObject(getRemindEvent());
+                obj.put("remindEvent", remindEventObj);
+            }
+            if (!StringUtil.isBlank(getLocation())) {
+                JSONObject locationObj = new JSONObject(getLocation());
+                obj.put("location", locationObj);
+            }
+            if (!StringUtil.isBlank(getParticipants())) {
+                JSONArray participantsArray = new JSONArray(getParticipants());
+                obj.put("participants", participantsArray);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

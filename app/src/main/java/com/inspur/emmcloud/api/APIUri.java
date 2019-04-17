@@ -1728,6 +1728,10 @@ public class APIUri {
         return "http://172.31.2.36:88/api/schedule/v6.0/meeting/add";
     }
 
+    public static String getMeetingListByStartTime(){
+        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetByStartTime?";
+    }
+
     /**
      * 获取删除工作中的tags
      */

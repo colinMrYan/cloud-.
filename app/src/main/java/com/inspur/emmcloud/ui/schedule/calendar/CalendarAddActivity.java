@@ -56,7 +56,6 @@ public class CalendarAddActivity extends BaseActivity {
     private static final int CAL_TYPE_REQUEST_CODE = 1;
     private static final int REPEAT_TYPE_REQUEST_CODE = 2;
     private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
-    RemindEvent remindEvent = new RemindEvent();
     @ViewInject(R.id.tv_save)
     private TextView saveText;
     @ViewInject(R.id.et_input_title)
@@ -100,12 +99,14 @@ public class CalendarAddActivity extends BaseActivity {
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText;
+    RemindEvent remindEvent = new RemindEvent();
+
     private int intervalMin = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
+        initDate();
         initView();
     }
 
@@ -129,8 +130,10 @@ public class CalendarAddActivity extends BaseActivity {
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
         titleText.setText(isEditable ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
-        calendarTypeNameText.setText(isEditable ? "" : myCalendar.getName());
-        calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
+        if (myCalendar != null) {
+            calendarTypeNameText.setText(isEditable ? "" : myCalendar.getName());
+            calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
+        }
         calenderTypeTipLayout.setVisibility(isEditable ? View.GONE : View.VISIBLE);
         initStartEndTimeView();
         alertText.setText(remindEvent.getRemindType());
@@ -140,10 +143,11 @@ public class CalendarAddActivity extends BaseActivity {
     /**
      * 初始化日期数据
      */
-    private void initData() {
+    private void initDate() {
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+            LogUtils.LbcDebug("传:::" + JSONUtils.toJSONString(scheduleEvent));
             isAllDay = scheduleEvent.getAllDay();
             startCalendar = scheduleEvent.getStartTimeCalendar();
             endCalendar = scheduleEvent.getEndTimeCalendar();
@@ -364,8 +368,8 @@ public class CalendarAddActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 scheduleEvent.setLastTime(System.currentTimeMillis());
-                LogUtils.LbcDebug("update Schedule::" + scheduleEvent.getCalendarEventJsonStr());
-                apiService.updateSchedule(scheduleEvent.getCalendarEventJsonStr());
+                LogUtils.LbcDebug("update Schedule::" + scheduleEvent.toCalendarEventJson().toString());
+                apiService.updateSchedule(scheduleEvent.toCalendarEventJson().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -381,8 +385,8 @@ public class CalendarAddActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 loadingDlg.show();
-                LogUtils.LbcDebug("Add Calendar" + scheduleEvent.getCalendarEventJsonStr());
-                apiService.addSchedule(scheduleEvent.getCalendarEventJsonStr());
+                LogUtils.LbcDebug("Add Schedule::" + scheduleEvent.toCalendarEventJson().toString());
+                apiService.addSchedule(scheduleEvent.toCalendarEventJson().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -426,6 +430,51 @@ public class CalendarAddActivity extends BaseActivity {
     }
 
     /**
+     * */
+    private class WebService extends APIInterfaceInstance {
+
+        @Override
+        public void returnAddScheduleSuccess(GetIDResult getIDResult) {
+            super.returnAddScheduleSuccess(getIDResult);
+            LoadingDialog.dimissDlg(loadingDlg);
+            ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
+            scheduleEvent.setId(getIDResult.getId());
+            sendCalendarEventNotification();
+            finish();
+        }
+
+        @Override
+        public void returnAddScheduleFail(String error, int errorCode) {
+            super.returnAddScheduleFail(error, errorCode);
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
+            LogUtils.LbcDebug("add Schedule Fail");
+        }
+
+        @Override
+        public void returnUpdateScheduleSuccess() {
+            super.returnUpdateScheduleSuccess();
+            LoadingDialog.dimissDlg(loadingDlg);
+            sendCalendarEventNotification();
+            ToastUtils.show(getApplicationContext(),
+                    getString(R.string.modify_success));
+            LogUtils.LbcDebug("update Schedule Success");
+            //更新系日历事件
+            finish();
+        }
+
+        @Override
+        public void returnUpdateScheduleFail(String error, int errorCode) {
+            super.returnUpdateScheduleFail(error, errorCode);
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
+            LogUtils.LbcDebug("update Schedule Fail");
+        }
+
+
+    }
+
+    /**
      * 获取间隔时间 单位Min（分钟）
      */
     private long getIntervalMin() {
@@ -452,59 +501,6 @@ public class CalendarAddActivity extends BaseActivity {
         startCalendar.set(Calendar.MILLISECOND, 0);
         endCalendar.set(Calendar.SECOND, 0);
         endCalendar.set(Calendar.MILLISECOND, 0);
-    }
-
-    /**
-     * */
-    private class WebService extends APIInterfaceInstance {
-
-        @Override
-        public void returnAddScheduleSuccess(GetIDResult getIDResult) {
-            super.returnAddScheduleSuccess(getIDResult);
-            LoadingDialog.dimissDlg(loadingDlg);
-            ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
-            scheduleEvent.setId(getIDResult.getId());
-            sendCalendarEventNotification();
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_ADD_EVENT, scheduleEvent);
-            setResult(RESULT_OK, intent);
-            LogUtils.LbcDebug("add Schedule Success");
-            finish();
-        }
-
-        @Override
-        public void returnAddScheduleFail(String error, int errorCode) {
-            super.returnAddScheduleFail(error, errorCode);
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
-            LogUtils.LbcDebug("add Schedule Fail");
-        }
-
-        @Override
-        public void returnUpdateScheduleSuccess() {
-            super.returnUpdateScheduleSuccess();
-            LoadingDialog.dimissDlg(loadingDlg);
-            sendCalendarEventNotification();
-            ToastUtils.show(getApplicationContext(),
-                    getString(R.string.modify_success));
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_SCHEDULE_CALENDAR_EVENT, scheduleEvent);
-            LogUtils.LbcDebug("title=" + scheduleEvent.getTitle());
-            setResult(RESULT_OK, intent);
-            LogUtils.LbcDebug("update Schedule Success");
-            //更新系日历事件
-            finish();
-        }
-
-        @Override
-        public void returnUpdateScheduleFail(String error, int errorCode) {
-            super.returnUpdateScheduleFail(error, errorCode);
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
-            LogUtils.LbcDebug("update Schedule Fail");
-        }
-
-
     }
 
 }

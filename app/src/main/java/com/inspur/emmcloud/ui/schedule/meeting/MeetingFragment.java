@@ -6,10 +6,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingListAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
 import org.xutils.view.annotation.ContentView;
@@ -17,6 +24,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -32,6 +40,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
     private RecyclerView meetingRecyclerView;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
     private List<Meeting> meetingList = new ArrayList<>();
+    private ScheduleApiService apiService;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -41,37 +50,11 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
         scheduleMeetingListAdapter = new ScheduleMeetingListAdapter(getActivity());
         meetingRecyclerView.setAdapter(scheduleMeetingListAdapter);
         scheduleMeetingListAdapter.setOnItemClickLister(this);
-        initData();
-
+        apiService =new ScheduleApiService(getActivity());
+        apiService.setAPIInterface(new WebService());
+        getMeetingListByStartTime();
     }
 
-    private void initData() {
-//        for (int i = 0;i<10;i++){
-//            Meeting meeting = new Meeting();
-//            meeting.setTitle("2018年财年宣贯会，总结2018年公司业绩");
-//            meeting.setId(System.currentTimeMillis()+"");
-//            Calendar startCalendar = Calendar.getInstance();
-//            startCalendar.set(Calendar.HOUR_OF_DAY,8);
-//            startCalendar.set(Calendar.MINUTE,30);
-//            meeting.setStartTimeCalendar(startCalendar);
-//            Calendar endCalendar = Calendar.getInstance();
-//            startCalendar.set(Calendar.HOUR_OF_DAY,10);
-//            startCalendar.set(Calendar.MINUTE,00);
-//            meeting.setEndTimeCalendar(endCalendar);
-//
-//            JSONObject locationObj = new JSONObject();
-//            try {
-//                locationObj.put("displayName","S06栋");
-//            }catch (Exception e){
-//                e.printStackTrace();
-//
-//            }
-//            Location location = new Location(locationObj);
-//            meeting.setScheduleLocationObj(location);
-//            meetingList.add(meeting);
-//        }
-        scheduleMeetingListAdapter.setMeetingList(meetingList);
-    }
 
     @Override
     public void onItemClick(View view, int position) {
@@ -85,6 +68,34 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
 
     @Event(value = R.id.tv_meeting_search)
     public void onClick(View view) {
+
+    }
+
+
+    private void getMeetingListByStartTime(){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
+            swipeRefreshLayout.setRefreshing(true);
+            apiService.getMeetingListByTime(startTime);
+        }
+    }
+
+    private class WebService extends APIInterfaceInstance{
+
+
+        @Override
+        public void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult) {
+            meetingList = getMeetingListResult.getMeetingList();
+            scheduleMeetingListAdapter.setMeetingList(meetingList);
+            scheduleMeetingListAdapter.notifyDataSetChanged();
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
+        @Override
+        public void returnMeetingListByMeetingRoomFail(String error, int errorCode) {
+            swipeRefreshLayout.setRefreshing(false);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+        }
 
     }
 }

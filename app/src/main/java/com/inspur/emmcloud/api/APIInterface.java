@@ -80,6 +80,7 @@ import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
@@ -95,7 +96,6 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
-import com.inspur.emmcloud.bean.work.GetMeetingListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
@@ -278,9 +278,9 @@ public interface APIInterface {
 
     void returnUpdateChannelGroupNameFail(String error, int errorCode);
 
-    void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult, String date);
+    void returnMeetingListSuccess(com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult, String date);
 
-    void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult);
+    void returnMeetingListSuccess(com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult);
 
     void returnMeetingListFail(String error, int errorCode);
 
@@ -858,5 +858,8 @@ public interface APIInterface {
     void returnAddMeetingSuccess();
 
     void returnAddMeetingFail(String error, int errorCode);
+
+    void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
+    void returnMeetingListByMeetingRoomFail(String error, int errorCode);
 
 }

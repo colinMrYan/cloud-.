@@ -45,6 +45,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public static final String EXTRA_END_TIME = "extra_end_time";
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     private static final int REQUEST_MEETING_OFFICE_SETTING = 1;
+    private static final int REQUEST_ENTER_MEETING_ROOM_INFO = 2;
     @ViewInject(R.id.swipe_refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.expandable_list_view)
@@ -99,12 +100,15 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     @Override
     public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
         MeetingRoom meetingRoom = meetingRoomAreaList.get(groupPosition).getMeetingRoomList().get(childPosition);
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_START_TIME, startTimeCalendar);
-        intent.putExtra(EXTRA_END_TIME, endTimeCalendar);
-        intent.putExtra(EXTRA_MEETING_ROOM, meetingRoom);
-        setResult(RESULT_OK, intent);
-        finish();
+        Intent intent = new Intent(MeetingRoomListActivity.this,MeetingRoomInfoActivity.class);
+        intent.putExtra(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM,meetingRoom);
+        startActivityForResult(intent,REQUEST_ENTER_MEETING_ROOM_INFO);
+//        Intent intent = new Intent();
+//        intent.putExtra(EXTRA_START_TIME, startTimeCalendar);
+//        intent.putExtra(EXTRA_END_TIME, endTimeCalendar);
+//        intent.putExtra(EXTRA_MEETING_ROOM, meetingRoom);
+//        setResult(RESULT_OK, intent);
+//        finish();
         return false;
     }
 
