@@ -2,7 +2,6 @@ package com.inspur.emmcloud.bean.schedule;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -23,8 +22,8 @@ public class RemindEvent implements Serializable {
         this(JSONUtils.getJSONObject(json));
     }
     public RemindEvent(JSONObject object) {
-        advanceTimeSpan = JSONUtils.getInt(object, "advanceTimeSpan", 0);
-        remindType = JSONUtils.getString(object, "remindType", "");
+        advanceTimeSpan = JSONUtils.getInt(object, "advanceTimeSpan", -1);
+        remindType = JSONUtils.getString(object, "remindType", "in_app");
     }
 
     public RemindEvent(String remindType,int advanceTimeSpan,String name) {
@@ -57,15 +56,18 @@ public class RemindEvent implements Serializable {
         this.remindType = remindType;
     }
 
-    public String getRemindEventIsonStr() {
-        JSONObject jsonObject = new JSONObject();
+    public JSONObject toJSONObject(){
+        JSONObject object = new JSONObject();
         try {
-            jsonObject.put("advanceTimeSpan", advanceTimeSpan);
-            jsonObject.put("remindType", remindType);
-        } catch (JSONException e) {
+            if (advanceTimeSpan != -1){
+                object.put("advanceTimeSpan",advanceTimeSpan);
+            }
+                object.put("remindType",remindType);
+        }catch (Exception e){
             e.printStackTrace();
         }
-        return jsonObject.toString();
+        return  object;
     }
+
 }
 

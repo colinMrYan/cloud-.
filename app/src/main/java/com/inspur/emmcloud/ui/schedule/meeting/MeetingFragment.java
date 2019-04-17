@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -62,7 +63,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
         scheduleMeetingListAdapter = new ScheduleMeetingListAdapter(getActivity());
         meetingRecyclerView.setAdapter(scheduleMeetingListAdapter);
         scheduleMeetingListAdapter.setOnItemClickLister(this);
-        apiService =new ScheduleApiService(getActivity());
+        apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
         getMeetingListByStartTime();
     }
@@ -79,7 +80,10 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
 
     @Override
     public void onItemClick(View view, int position) {
-    Meeting meeting = meetingList.get(position);
+        Meeting meeting = meetingList.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+        IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
     }
 
     @Override
@@ -99,15 +103,15 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
     }
 
 
-    private void getMeetingListByStartTime(){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+    private void getMeetingListByStartTime() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMeetingListByTime(startTime);
         }
     }
 
-    private class WebService extends APIInterfaceInstance{
+    private class WebService extends APIInterfaceInstance {
 
 
         @Override
@@ -121,7 +125,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
         @Override
         public void returnMeetingListByMeetingRoomFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
 
     }

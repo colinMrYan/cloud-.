@@ -340,7 +340,7 @@ public class Schedule implements Serializable {
         return jsonObject.toString();
     }
 
-    public JSONObject toCalendarEventJson() throws JSONException {
+    public JSONObject toCalendarEventJSONObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         if (!StringUtils.isBlank(id)) {
             jsonObject.put("id", id);
