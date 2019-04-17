@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
@@ -49,8 +49,6 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
         Calendar startCalendar = meeting.getStartTimeCalendar();
         Calendar endCalendar = meeting.getEndTimeCalendar();
         holder.titleText.setText(meeting.getTitle());
-        LogUtils.jasonDebug("meeting.getTitle()="+meeting.toJSOnObject().toString());
-        LogUtils.jasonDebug("meeting.getTitle()="+meeting.getTitle());
         String startTime = TimeUtils.Calendar2TimeString(startCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE));
         String endTime = TimeUtils.Calendar2TimeString(endCalendar, TimeUtils.getFormat(context, TimeUtils.FORMAT_HOUR_MINUTE));
         holder.timeText.setText(startTime + "-" + endTime);
@@ -64,6 +62,11 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
         }
         holder.dateText.setText(dateBuilder.toString());
         holder.buildingText.setText(meeting.getScheduleLocationObj().getBuilding());
+        if (StringUtils.isBlank(meeting.getScheduleLocationObj().getId())){
+            holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_out);
+        }else {
+            holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_common);
+        }
     }
 
 
@@ -91,7 +94,7 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
         public ViewHolder(View convertView) {
             super(convertView);
             itemView.setOnClickListener(this);
-            iconImg = convertView.findViewById(R.id.icon_image);
+            iconImg = convertView.findViewById(R.id.iv_icon);
             titleText = convertView.findViewById(R.id.tv_title);
             displayNameText = convertView.findViewById(R.id.tv_display_name);
             timeText = convertView.findViewById(R.id.tv_time);

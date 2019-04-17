@@ -19,6 +19,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
+import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
@@ -64,6 +65,7 @@ public class MeetingAddActivity extends BaseActivity {
     private static final int REQUEST_SELECT_RECORDER = 2;
     private static final int REQUEST_SELECT_LIAISON = 3;
     private static final int REQUEST_SELECT_MEETING_ROOM = 4;
+    private static final int REQUEST_SET_REMENDEVENT = 5;
     @ViewInject(R.id.et_title)
     private EditText titleEdit;
     @ViewInject(R.id.tv_start_date)
@@ -99,6 +101,7 @@ public class MeetingAddActivity extends BaseActivity {
     private String title;
     private String note;
     private String meetingPosition;
+    private RemindEvent remindEvent;
 
 
     @Override
@@ -161,7 +164,7 @@ public class MeetingAddActivity extends BaseActivity {
             return false;
         }
         if (StringUtils.isBlank(meetingPosition)) {
-            ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
+            ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_choosing_room);
             return false;
         }
 
@@ -194,7 +197,13 @@ public class MeetingAddActivity extends BaseActivity {
 
     private void setReminder(){
         Intent intent = new Intent(this, ScheduleAlertTimeActivity.class);
-
+        int advanceTimeSpan = -1;
+        if (remindEvent != null){
+            advanceTimeSpan = remindEvent.getAdvanceTimeSpan();
+        }
+        intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME,advanceTimeSpan);
+        intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY,isAllDay);
+        startActivityForResult(intent,REQUEST_SET_REMENDEVENT);
     }
 
     private void selectContact(int requestCode) {
@@ -303,6 +312,10 @@ public class MeetingAddActivity extends BaseActivity {
                     location.setBuilding(meetingRoom.getBuilding().getName());
                     location.setDisplayName(meetingRoom.getName());
                     break;
+                case REQUEST_SET_REMENDEVENT:
+                    remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
+                    reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(),isAllDay));
+                    break;
             }
         }
 
@@ -361,7 +374,6 @@ public class MeetingAddActivity extends BaseActivity {
         meeting.setEndTime(endTimeCalendar.getTimeInMillis());
         meeting.setNote(note);
         meeting.setLocation(location.toJSONObject().toString());
-        LogUtils.jasonDebug("location.toJSONObject().toString()=" + location.toJSONObject().toString());
         JSONArray array = new JSONArray();
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {
@@ -386,11 +398,16 @@ public class MeetingAddActivity extends BaseActivity {
                 array.put(obj);
             }
             meeting.setParticipants(array.toString());
+            if (remindEvent != null && remindEvent.getAdvanceTimeSpan() != -1){
+                LogUtils.jasonDebug("remindEvent.toJSonObject().toString()="+remindEvent.toJSONObject().toString());
+                meeting.setRemindEvent(remindEvent.toJSONObject().toString());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         loadingDlg.show();
-        apiService.addMeeting(meeting.toJSOnObject().toString());
+        LogUtils.jasonDebug("meeting.toJSonObject().toString()="+meeting.toJSONObject().toString());
+        apiService.addMeeting(meeting.toJSONObject().toString());
     }
 
 

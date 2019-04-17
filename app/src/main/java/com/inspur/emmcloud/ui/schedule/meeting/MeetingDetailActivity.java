@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.Participant;
-import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
@@ -23,8 +23,6 @@ import java.util.List;
 @ContentView(R.layout.activity_meeting_detail_new)
 public class MeetingDetailActivity extends BaseActivity{
 
-    private static final String ROLE_RECORDER = "recorder";
-    private static final String ROLE_CONTACT = "contact";
     public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
     @ViewInject(R.id.tv_meeting_title)
     private TextView meetingTitleText;
@@ -44,11 +42,11 @@ public class MeetingDetailActivity extends BaseActivity{
     private TextView meetingConferenceText;
     @ViewInject(R.id.tv_meeting_note)
     private TextView meetingNoteText;
-    private Schedule meeting;
+    private Meeting meeting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        meeting = (Schedule) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
+        meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
         initViews();
     }
 
@@ -61,37 +59,42 @@ public class MeetingDetailActivity extends BaseActivity{
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         attendeeText.setText(getString(R.string.meeting_detail_attendee,getAttendee()));
         meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder,getRecordHolder()));
-        meetingConferenceText.setText(getString(R.string.meeting_detail_conference,getConference()));
-        meetingNoteText.setText(getString(R.string.meeting_detail_note,meeting.getNote()));
+        meetingConferenceText.setText(getString(R.string.meeting_detail_conference,getContact()));
+        meetingNoteText.setText(meeting.getNote());
     }
 
+    /**
+     * 获取参会人员
+     * @return
+     */
     private String getAttendee() {
-        String attendee = "";
         List<Participant> participantList =  meeting.getCommonParticipantList();
         if(participantList.size() == 0){
-            attendee = "";
+            return  "";
         }else if(participantList.size() == 1){
-            attendee = participantList.get(0).getName();
+            return participantList.get(0).getName();
         }else{
-            attendee = getString(R.string.meeting_detail_attendee_num,participantList.get(0).getName(),participantList.size());
+            return getString(R.string.meeting_detail_attendee_num,
+                    participantList.get(0).getName(),
+                    participantList.size());
         }
-        return attendee;
     }
 
     /**
      * 获取联络人
      * @return
      */
-    private String getConference() {
-        String recorder = "";
-        List<Participant> participantList =  meeting.getCommonParticipantList();
-        for(Participant participant : participantList){
-            if(participant.getRole().equals(ROLE_RECORDER)){
-                recorder = participant.getName();
-                break;
-            }
+    private String getContact() {
+        List<Participant> participantList = meeting.getRoleParticipantList();
+        if(participantList.size() == 0){
+            return "";
+        }else if(participantList.size() == 1){
+            return participantList.get(0).getName();
+        }else{
+            return getString(R.string.meeting_detail_attendee_num,
+                    participantList.get(0).getName(),
+                    participantList.size());
         }
-        return recorder;
     }
 
     /**
@@ -99,17 +102,22 @@ public class MeetingDetailActivity extends BaseActivity{
      * @return
      */
     private String getRecordHolder() {
-        String conference = "";
-        List<Participant> participantList =  meeting.getCommonParticipantList();
-        for(Participant participant : participantList){
-            if(participant.getRole().equals(ROLE_CONTACT)){
-                conference = participant.getName();
-                break;
-            }
+        List<Participant> participantList = meeting.getRecorderParticipantList();
+        if(participantList.size() == 0){
+            return "";
+        }else if(participantList.size() == 1){
+            return participantList.get(0).getName();
+        }else{
+            return getString(R.string.meeting_detail_attendee_num,
+                    participantList.get(0).getName(),
+                    participantList.size());
         }
-        return conference;
     }
 
+    /**
+     * 获取会议起止时间
+     * @return
+     */
     private String getMeetingTime() {
         String duringTime = "";
         long startTime = meeting.getStartTime();

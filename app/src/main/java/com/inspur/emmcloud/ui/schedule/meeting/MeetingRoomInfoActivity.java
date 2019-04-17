@@ -28,7 +28,7 @@ import com.inspur.emmcloud.bean.work.MeetingSchedule;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -170,7 +170,9 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                         setResult(RESULT_OK,intent);
                         finish();
                     }else {
-
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+                        IntentUtils.startActivity(MeetingRoomInfoActivity.this, com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity.class, bundle);
                     }
                 }
             });
@@ -303,9 +305,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             calendar.add(Calendar.DAY_OF_YEAR, i);
             HashSet<Long> set = new HashSet<>();
             for (Meeting meeting : allMeetingList) {
-                LogUtils.jasonDebug("000="+TimeUtils.calendar2FormatString(MyApplication.getInstance(),calendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
-                LogUtils.jasonDebug("111="+TimeUtils.calendar2FormatString(MyApplication.getInstance(),meeting.getStartTimeCalendar(),TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
-                LogUtils.jasonDebug("222="+TimeUtils.calendar2FormatString(MyApplication.getInstance(),meeting.getEndTimeCalendar(),TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
                 if (TimeUtils.isContainTargetCalendarDay(calendar, meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar())) {
                     dayMeetingList.add(meeting);
                     long meetingFromLong = meeting.getDayStartTime(calendar);
