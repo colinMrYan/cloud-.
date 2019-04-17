@@ -282,7 +282,6 @@ public class Schedule implements Serializable {
         if (lastTime != 0) {
             jsonObject.put("lastTime", lastTime);
         }
-        // jsonObject.put("lastTime",lastTime);
         jsonObject.put("isAllDay", isAllDay);
         jsonObject.put("isCommunity", isCommunity);
         jsonObject.put("syncToLocal", syncToLocal);
@@ -291,9 +290,8 @@ public class Schedule implements Serializable {
         if (!StringUtils.isBlank(remindEvent)) {
             JSONObject remindJson = JSONUtils.getJSONObject(remindEvent);
             jsonObject.put("remindEvent", remindJson);
-        }else{
-            jsonObject.put("remindEvent", null);
         }
+
         if (!StringUtils.isBlank(location)) {
             JSONObject locationJson = JSONUtils.getJSONObject(location);
             jsonObject.put("location", locationJson);

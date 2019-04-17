@@ -47,7 +47,7 @@ import java.util.List;
  * Created by libaochao on 2019/3/29.
  */
 @ContentView(R.layout.activity_calendar_add)
-public class CalendarAddActivity extends BaseActivity  {
+public class CalendarAddActivity extends BaseActivity {
     @ViewInject(R.id.tv_save)
     private TextView saveText;
     @ViewInject(R.id.et_input_content)
@@ -133,9 +133,9 @@ public class CalendarAddActivity extends BaseActivity  {
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
         titleText.setText(isEditable ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
-        if(myCalendar!=null){
-             calendarTypeNameText.setText(isEditable ? "" : myCalendar.getName());
-             calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
+        if (myCalendar != null) {
+            calendarTypeNameText.setText(isEditable ? "" : myCalendar.getName());
+            calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
         }
         calenderTypeTipLayout.setVisibility(isEditable ? View.GONE : View.VISIBLE);
         initStartEndTimeView();
@@ -150,7 +150,7 @@ public class CalendarAddActivity extends BaseActivity  {
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            LogUtils.LbcDebug("传:::"+JSONUtils.toJSONString(scheduleEvent));
+            LogUtils.LbcDebug("传:::" + JSONUtils.toJSONString(scheduleEvent));
             isAllDay = scheduleEvent.getAllDay();
             startCalendar = scheduleEvent.getStartTimeCalendar();
             endCalendar = scheduleEvent.getEndTimeCalendar();
@@ -242,7 +242,7 @@ public class CalendarAddActivity extends BaseActivity  {
 
     public void onClick(View v) {
         Intent intent = new Intent();
-        DateTimePickerDialog dataTimePickerDialog=new DateTimePickerDialog(this);
+        DateTimePickerDialog dataTimePickerDialog = new DateTimePickerDialog(this);
         switch (v.getId()) {
             case R.id.tv_cancel:
                 finish();
