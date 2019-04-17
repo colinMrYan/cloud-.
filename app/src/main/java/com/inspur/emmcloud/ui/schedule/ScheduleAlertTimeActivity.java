@@ -49,8 +49,8 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_two_day),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
-    static int[] alertTimeIntArray = {-1, 0, 10 * 60, 20 * 60, 20 * 60, 60 * 60, 24 * 3600};
-    static int[] alertTimeAllDayIntArray = {-1, -9 * 3600, 15 * 3600, (15 + 1 * 24) * 3600, (15 + 6 * 24) * 3600};
+    static int[] alertTimeIntArray = {-1, 0, 600, 1200, 1800, 3600, 86400};
+    static int[] alertTimeAllDayIntArray = {-1, -32400, 54000, 140400, 572400};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +65,8 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         alertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
         if (alertTime != -1) {
             noAlertSelectImage.setVisibility(View.GONE);
-            for (int i = 0; i < alertTimeString.length; i++) {
-                if (alertTimeInt[i]==alertTime) {
+            for (int i = 0; i < alertTimeInt.length; i++) {
+                if (alertTime==alertTimeInt[i]) {
                     selectPosition = i-1;
                     break;
                 }
