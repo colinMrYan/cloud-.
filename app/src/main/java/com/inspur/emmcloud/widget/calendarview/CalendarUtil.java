@@ -113,8 +113,8 @@ final class CalendarUtil {
      * 获取某天在该月的第几周,换言之就是获取这一天在该月视图的第几行,第几周，根据周起始动态获取
      * Test pass，单元测试通过
      *
-     * @param emmCalendar  calendar
-     * @param weekStart 其实星期是哪一天？
+     * @param emmCalendar calendar
+     * @param weekStart   其实星期是哪一天？
      * @return 获取某天在该月的第几周 the week line in MonthView
      */
     static int getWeekFromDayInMonth(EmmCalendar emmCalendar, int weekStart) {
@@ -170,8 +170,8 @@ final class CalendarUtil {
      * 获取日期所在月视图对应的起始偏移量
      * Test pass
      *
-     * @param emmCalendar  calendar
-     * @param weekStart weekStart 星期的起始
+     * @param emmCalendar calendar
+     * @param weekStart   weekStart 星期的起始
      * @return 获取日期所在月视图对应的起始偏移量 the start diff with MonthView
      */
     static int getMonthViewStartDiff(EmmCalendar emmCalendar, int weekStart) {
@@ -193,8 +193,8 @@ final class CalendarUtil {
      * 获取日期所在月份的结束偏移量，用于计算两个年份之间总共有多少周，不用于MonthView
      * Test pass
      *
-     * @param emmCalendar  calendar
-     * @param weekStart weekStart 星期的起始
+     * @param emmCalendar calendar
+     * @param weekStart   weekStart 星期的起始
      * @return 获取日期所在月份的结束偏移量 the end diff in Month not MonthView
      */
     @SuppressWarnings("unused")
@@ -291,8 +291,8 @@ final class CalendarUtil {
      * 获取周视图的切换默认选项位置 WeekView index
      * 测试通过 test pass
      *
-     * @param emmCalendar  calendar
-     * @param weekStart weekStart
+     * @param emmCalendar calendar
+     * @param weekStart   weekStart
      * @return 获取周视图的切换默认选项位置
      */
     static int getWeekViewIndexFromCalendar(EmmCalendar emmCalendar, int weekStart) {
@@ -303,7 +303,7 @@ final class CalendarUtil {
      * 是否在日期范围內
      * 测试通过 test pass
      *
-     * @param emmCalendar     calendar
+     * @param emmCalendar  calendar
      * @param minYear      minYear
      * @param minYearDay   最小年份天
      * @param minYearMonth minYearMonth
@@ -366,7 +366,7 @@ final class CalendarUtil {
      * 用来设置 WeekView currentItem
      * 测试通过 test pass
      *
-     * @param emmCalendar     calendar
+     * @param emmCalendar  calendar
      * @param minYear      minYear 最小年份
      * @param minYearMonth maxYear 最小年份月份
      * @param minYearDay   最小年份天
@@ -444,7 +444,7 @@ final class CalendarUtil {
      * 是否在日期范围内
      *
      * @param emmCalendar calendar
-     * @param delegate delegate
+     * @param delegate    delegate
      * @return 是否在日期范围内
      */
     static boolean isCalendarInRange(EmmCalendar emmCalendar, CalendarViewDelegate delegate) {
@@ -625,9 +625,9 @@ final class CalendarUtil {
     /**
      * 生成周视图的7个item
      *
-     * @param emmCalendar  calendar
-     * @param mDelegate mDelegate
-     * @param weekStart weekStart
+     * @param emmCalendar calendar
+     * @param mDelegate   mDelegate
+     * @param weekStart   weekStart
      * @return 生成周视图的7个item
      */
     static List<EmmCalendar> initCalendarForWeekView(EmmCalendar emmCalendar, CalendarViewDelegate mDelegate, int weekStart) {
@@ -747,7 +747,7 @@ final class CalendarUtil {
      * 根据传入的日期获取边界访问日期，要么最大，要么最小
      *
      * @param emmCalendar calendar
-     * @param delegate delegate
+     * @param delegate    delegate
      * @return 获取边界访问日期
      */
     static EmmCalendar getRangeEdgeCalendar(EmmCalendar emmCalendar, CalendarViewDelegate delegate) {

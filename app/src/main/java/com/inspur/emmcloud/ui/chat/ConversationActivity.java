@@ -431,11 +431,11 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
                 backUiMessage = uiMessage;
-                int[] operationsId= getCardLongClickOperations(uiMessage);
-                if(operationsId.length>0){
-                 showLongClickOperationsDialog(operationsId,ConversationActivity.this,uiMessage);
+                int[] operationsId = getCardLongClickOperations(uiMessage);
+                if (operationsId.length > 0) {
+                    showLongClickOperationsDialog(operationsId, ConversationActivity.this, uiMessage);
                 }
-                 return true;
+                return true;
             }
 
             @Override
@@ -1328,48 +1328,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-    class CacheMessageListThread extends Thread {
-        private List<Message> messageList;
-        private Long targetTime;
-        private int refreshType;
-
-        public CacheMessageListThread(List<Message> messageList, Long targetTime, int refreshType) {
-            this.messageList = messageList;
-            this.targetTime = targetTime;
-            this.refreshType = refreshType;
-        }
-
-        @Override
-        public void run() {
-            if (messageList != null && messageList.size() > 0) {
-                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(), messageList, targetTime, cid, false);
-            }
-            if (handler != null) {
-                android.os.Message message = null;
-                switch (refreshType) {
-                    case REFRESH_HISTORY_MESSAGE:
-                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), 20);
-                        List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
-                        message = handler.obtainMessage(refreshType, historyUIMessageList);
-                        break;
-                    case REFRESH_PUSH_MESSAGE:
-                        List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
-                        List<UIMessage> newUIMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
-                        message = handler.obtainMessage(refreshType, newUIMessageList);
-                        break;
-                    case REFRESH_OFFLINE_MESSAGE:
-                        message = handler.obtainMessage(refreshType, messageList);
-                        break;
-                }
-                message.sendToTarget();
-            }
-        }
-    }
-
-    class WebService extends APIInterfaceInstance {
-
-    }
-
     /**
      * 创建单聊
      *
@@ -1566,9 +1524,9 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void showLongClickOperationsDialog(final int[] operationsId, final Context context, final UIMessage uiMessage) {
         final String[] operations = new String[operationsId.length];
-        for(int i=0;i<operationsId.length;i++){
+        for (int i = 0; i < operationsId.length; i++) {
             String operation = context.getResources().getString(operationsId[i]);
-            operations[i]=operation;
+            operations[i] = operation;
         }
         new QMUIDialog.MenuDialogBuilder(context)
                 .addItems(operations, new DialogInterface.OnClickListener() {
@@ -1607,7 +1565,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                 .create(R.style.QMUI_Dialog).show();
     }
 
-
     /**
      * 文本复制到剪切板
      */
@@ -1641,5 +1598,47 @@ public class ConversationActivity extends ConversationBaseActivity {
         intent.setClass(context,
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
+    }
+
+    class CacheMessageListThread extends Thread {
+        private List<Message> messageList;
+        private Long targetTime;
+        private int refreshType;
+
+        public CacheMessageListThread(List<Message> messageList, Long targetTime, int refreshType) {
+            this.messageList = messageList;
+            this.targetTime = targetTime;
+            this.refreshType = refreshType;
+        }
+
+        @Override
+        public void run() {
+            if (messageList != null && messageList.size() > 0) {
+                MessageCacheUtil.handleRealMessage(MyApplication.getInstance(), messageList, targetTime, cid, false);
+            }
+            if (handler != null) {
+                android.os.Message message = null;
+                switch (refreshType) {
+                    case REFRESH_HISTORY_MESSAGE:
+                        List<Message> historyMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, uiMessageList.get(0).getMessage().getCreationDate(), 20);
+                        List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
+                        message = handler.obtainMessage(refreshType, historyUIMessageList);
+                        break;
+                    case REFRESH_PUSH_MESSAGE:
+                        List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
+                        List<UIMessage> newUIMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+                        message = handler.obtainMessage(refreshType, newUIMessageList);
+                        break;
+                    case REFRESH_OFFLINE_MESSAGE:
+                        message = handler.obtainMessage(refreshType, messageList);
+                        break;
+                }
+                message.sendToTarget();
+            }
+        }
+    }
+
+    class WebService extends APIInterfaceInstance {
+
     }
 }

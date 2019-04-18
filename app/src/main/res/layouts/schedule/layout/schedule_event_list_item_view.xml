@@ -3,20 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:paddingBottom="11dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
     android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/iv_event"
         android:layout_width="18dp"
         android:layout_height="18dp"
+        android:paddingLeft="16dp"
         android:layout_marginRight="16dp" />
 
     <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingRight="16dp"
         android:layout_toRightOf="@id/iv_event"
         android:orientation="vertical">
         <RelativeLayout
@@ -56,4 +56,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
+    <View
+        android:layout_below="@id/ll_content"
+        android:background="@color/color_list_divider"
+        android:layout_marginTop="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"></View>
 </RelativeLayout>

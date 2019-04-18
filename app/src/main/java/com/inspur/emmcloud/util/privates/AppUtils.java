@@ -43,9 +43,9 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -158,8 +158,8 @@ public class AppUtils {
             final ContentResolver cr = context.getContentResolver();
             String AUTHORITY = "com.android.launcher2.settings";
             final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/favorites?notify=true");
-            Cursor c = cr.query(CONTENT_URI, new String[] { "title", "iconResource" }, "title=?",
-                    new String[] { context.getString(R.string.app_name) }, null);
+            Cursor c = cr.query(CONTENT_URI, new String[]{"title", "iconResource"}, "title=?",
+                    new String[]{context.getString(R.string.app_name)}, null);
 
             if (c != null && c.getCount() > 0) {
                 isInstallShortcut = true;
@@ -887,18 +887,18 @@ public class AppUtils {
         String pushProvider = "";
         String pushFlag = AppUtils.getPushFlag(context);
         switch (pushFlag) {
-        case Constant.HUAWEI_FLAG:
-            pushProvider = "com.hicloud.push";
-            break;
-        case Constant.XIAOMI_FLAG:
-            pushProvider = "com.xiaomi.xmpush";
-            break;
-        case Constant.MEIZU_FLAG:
-            pushProvider = "com.meizu.api-push";
-            break;
-        default:
-            pushProvider = "cn.jpush";
-            break;
+            case Constant.HUAWEI_FLAG:
+                pushProvider = "com.hicloud.push";
+                break;
+            case Constant.XIAOMI_FLAG:
+                pushProvider = "com.xiaomi.xmpush";
+                break;
+            case Constant.MEIZU_FLAG:
+                pushProvider = "com.meizu.api-push";
+                break;
+            default:
+                pushProvider = "cn.jpush";
+                break;
         }
         return pushProvider;
     }

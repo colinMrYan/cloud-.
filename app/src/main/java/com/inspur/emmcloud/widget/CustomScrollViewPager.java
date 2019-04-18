@@ -17,7 +17,7 @@ public class CustomScrollViewPager extends ViewPager {
         super(context);
     }
 
-    public CustomScrollViewPager(@NonNull Context context,  AttributeSet attrs) {
+    public CustomScrollViewPager(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

@@ -12,9 +12,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
@@ -33,19 +37,18 @@ import java.util.List;
  */
 @ContentView(R.layout.activity_calendar_setting)
 public class CalendarSettingActivity extends BaseActivity {
-    public static final String SHOW_TYPE_LIST =  "show_type_list";
-    public static final String SHOW_TYPE_DAY_VIEW =  "show_type_day_view";
+    public static final String SHOW_TYPE_LIST = "show_type_list";
+    public static final String SHOW_TYPE_DAY_VIEW = "show_type_day_view";
+    public static String EXTRA_SCHEDULE_CALENDAR_SETTING_CALENDARLIST = "schedule_calendar_setting_calendarlist";
     @ViewInject(R.id.listview_list_calendars)
     private ScrollViewWithListView calendarsListView;
     @ViewInject(R.id.iv_list_view_select)
     private ImageView listSelectImageView;
     @ViewInject(R.id.iv_day_view_select)
     private ImageView daySelectImageView;
-
-    public static String EXTRA_SCHEDULE_CALENDAR_SETTING_CALENDARLIST = "schedule_calendar_setting_calendarlist";
-
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
+    private WorkAPIService workAPIService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +58,20 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
+        workAPIService = new WorkAPIService(this);
+        workAPIService.setAPIInterface(new WebService());
+        calendarsList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
         calendarsList = MyCalendarCacheUtils.getAllMyCalendarList(this);
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
+        getCalendarType();
     }
 
+    private void getCalendarType() {
+        if (NetUtils.isNetworkConnected(this)) {
+            workAPIService.getMyCalendar(0, 30);
+        }
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -152,6 +164,25 @@ public class CalendarSettingActivity extends BaseActivity {
             calendarHolder.calendarStyleColorView.setBackgroundResource(CalendarColorUtils.getColorCircleImage(calendar.getColor()));
             calendarHolder.calendarNameText.setText(calendar.getName());
             return convertView;
+        }
+    }
+
+    /**
+     * 拉取Calendar
+     */
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
+            List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
+            calendarsList.clear();
+            calendarsList.addAll(allCalendarList);
+            MyCalendarCacheUtils.saveMyCalendarList(CalendarSettingActivity.this, calendarsList);
+            calendarAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void returnMyCalendarFail(String error, int errorCode) {
+            super.returnMyCalendarFail(error, errorCode);
         }
     }
 

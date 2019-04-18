@@ -13,20 +13,40 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.schedule.Location;
+import com.inspur.emmcloud.bean.schedule.Participant;
+import com.inspur.emmcloud.bean.schedule.RemindEvent;
+import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -45,8 +65,9 @@ public class MeetingAddActivity extends BaseActivity {
     private static final int REQUEST_SELECT_RECORDER = 2;
     private static final int REQUEST_SELECT_LIAISON = 3;
     private static final int REQUEST_SELECT_MEETING_ROOM = 4;
-    @ViewInject(R.id.et_input_content)
-    private EditText inputContentEdit;
+    private static final int REQUEST_SET_REMENDEVENT = 5;
+    @ViewInject(R.id.et_title)
+    private EditText titleEdit;
     @ViewInject(R.id.tv_start_date)
     private TextView startDateText;
     @ViewInject(R.id.tv_start_time)
@@ -56,7 +77,7 @@ public class MeetingAddActivity extends BaseActivity {
     @ViewInject(R.id.tv_end_time)
     private TextView endTimeText;
     @ViewInject(R.id.et_meeting_position)
-    private ClearEditText meetingPostionEdit;
+    private ClearEditText meetingPositionEdit;
     @ViewInject(R.id.ll_attendee)
     private LinearLayout attendeeLayout;
     @ViewInject(R.id.ll_recorder)
@@ -67,6 +88,8 @@ public class MeetingAddActivity extends BaseActivity {
     private EditText notesEdit;
     @ViewInject(R.id.tv_reminder)
     private TextView reminderText;
+    private LoadingDialog loadingDlg;
+    private ScheduleApiService apiService;
     private Calendar startTimeCalendar;
     private Calendar endTimeCalendar;
     private boolean isAllDay = false;
@@ -74,15 +97,24 @@ public class MeetingAddActivity extends BaseActivity {
     private List<SearchModel> recorderSearchModelList = new ArrayList<>();
     private List<SearchModel> liaisonSearchModelList = new ArrayList<>();
     private MeetingRoom meetingRoom;
+    private Location location;
+    private String title;
+    private String note;
+    private String meetingPosition;
+    private RemindEvent remindEvent;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadingDlg = new LoadingDialog(this);
+        apiService = new ScheduleApiService(this);
+        apiService.setAPIInterface(new WebService());
         startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
         endTimeCalendar = (Calendar) startTimeCalendar.clone();
         endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
         setMeetingTime();
+        getIsMeetingAdmin();
     }
 
 
@@ -92,6 +124,9 @@ public class MeetingAddActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_save:
+                if (isInputValid()) {
+                    addMeeting();
+                }
                 break;
             case R.id.ll_start_time:
                 showTimeSelectDialog(true);
@@ -115,8 +150,60 @@ public class MeetingAddActivity extends BaseActivity {
                 selectContact(REQUEST_SELECT_LIAISON);
                 break;
             case R.id.ll_reminder:
+                setReminder();
                 break;
         }
+    }
+
+
+    private boolean isInputValid() {
+        title = titleEdit.getText().toString();
+        meetingPosition = meetingPositionEdit.getText().toString();
+        if (StringUtils.isBlank(title)) {
+            ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
+            return false;
+        }
+        if (StringUtils.isBlank(meetingPosition)) {
+            ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_choosing_room);
+            return false;
+        }
+
+
+        if (attendeeSearchModelList.size() == 0) {
+            ToastUtils.show(MyApplication.getInstance(), R.string.meeting_invating_members);
+            return false;
+        }
+        if (title.length() > 128) {
+            ToastUtils.show(getApplicationContext(),
+                    getString(R.string.meeting_topic_too_long));
+            return false;
+        }
+        note = notesEdit.getText().toString();
+        if (!StringUtils.isBlank(note) && note.length() > 127) {
+            ToastUtils.show(getApplicationContext(),
+                    getString(R.string.meeting_notice_too_long));
+            return false;
+        }
+        if (location == null) {
+            location = new Location();
+        }
+
+        if (!location.getDisplayName().equals(meetingPosition)) {
+            location.setDisplayName(meetingPosition);
+            location.setId("");
+        }
+        return true;
+    }
+
+    private void setReminder(){
+        Intent intent = new Intent(this, ScheduleAlertTimeActivity.class);
+        int advanceTimeSpan = -1;
+        if (remindEvent != null){
+            advanceTimeSpan = remindEvent.getAdvanceTimeSpan();
+        }
+        intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME,advanceTimeSpan);
+        intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY,isAllDay);
+        startActivityForResult(intent,REQUEST_SET_REMENDEVENT);
     }
 
     private void selectContact(int requestCode) {
@@ -157,7 +244,7 @@ public class MeetingAddActivity extends BaseActivity {
                     endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                 } else {
                     if (!calendar.after(startTimeCalendar)) {
-                        showTimeInvaladDlg();
+                        showTimeInvalidDlg();
                         return;
                     }
                 }
@@ -186,7 +273,7 @@ public class MeetingAddActivity extends BaseActivity {
     /**
      * 结束时间早于起始时间提醒
      */
-    private void showTimeInvaladDlg() {
+    private void showTimeInvalidDlg() {
         new QMUIDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
                 .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                     @Override
@@ -217,9 +304,17 @@ public class MeetingAddActivity extends BaseActivity {
                 case REQUEST_SELECT_MEETING_ROOM:
                     startTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
                     endTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
-                    meetingRoom = (MeetingRoom)data.getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+                    meetingRoom = (MeetingRoom) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
                     setMeetingTime();
-                    meetingPostionEdit.setText(meetingRoom.getName());
+                    meetingPositionEdit.setText(meetingRoom.getName());
+                    location = new Location();
+                    location.setId(meetingRoom.getId());
+                    location.setBuilding(meetingRoom.getBuilding().getName());
+                    location.setDisplayName(meetingRoom.getName());
+                    break;
+                case REQUEST_SET_REMENDEVENT:
+                    remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
+                    reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(),isAllDay));
                     break;
             }
         }
@@ -247,7 +342,7 @@ public class MeetingAddActivity extends BaseActivity {
                 imageView.setLayoutParams(layoutParams);
                 final String uid = searchModelList.get(i).getId();
                 String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
-                ImageDisplayUtils.getInstance().displayRoundedImage(imageView, photoUrl, R.drawable.default_image, this, 15);
+                ImageDisplayUtils.getInstance().displayRoundedImage(imageView, photoUrl, R.drawable.icon_person_default, this, 15);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -269,5 +364,87 @@ public class MeetingAddActivity extends BaseActivity {
             layout.addView(textView);
         }
 
+    }
+
+    private void addMeeting() {
+        Meeting meeting = new Meeting();
+        meeting.setTitle(title);
+        meeting.setType("meeting");
+        meeting.setStartTime(startTimeCalendar.getTimeInMillis());
+        meeting.setEndTime(endTimeCalendar.getTimeInMillis());
+        meeting.setNote(note);
+        meeting.setLocation(location.toJSONObject().toString());
+        JSONArray array = new JSONArray();
+        try {
+            for (SearchModel searchModel : attendeeSearchModelList) {
+                JSONObject obj = new JSONObject();
+                obj.put("id", searchModel.getId());
+                obj.put("name", searchModel.getName());
+                obj.put("role", Participant.TYPE_COMMON);
+                array.put(obj);
+            }
+            for (SearchModel searchModel : recorderSearchModelList) {
+                JSONObject obj = new JSONObject();
+                obj.put("id", searchModel.getId());
+                obj.put("name", searchModel.getName());
+                obj.put("role", Participant.TYPE_RECORDER);
+                array.put(obj);
+            }
+            for (SearchModel searchModel : liaisonSearchModelList) {
+                JSONObject obj = new JSONObject();
+                obj.put("id", searchModel.getId());
+                obj.put("name", searchModel.getName());
+                obj.put("role", Participant.TYPE_CONTACT);
+                array.put(obj);
+            }
+            meeting.setParticipants(array.toString());
+            if (remindEvent != null && remindEvent.getAdvanceTimeSpan() != -1){
+                LogUtils.jasonDebug("remindEvent.toJSonObject().toString()="+remindEvent.toJSONObject().toString());
+                meeting.setRemindEvent(remindEvent.toJSONObject().toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        loadingDlg.show();
+        LogUtils.jasonDebug("meeting.toJSonObject().toString()="+meeting.toJSONObject().toString());
+        apiService.addMeeting(meeting.toJSONObject().toString());
+    }
+
+
+    /**
+     * 判断当前用户是否会议室管理员
+     */
+    private void getIsMeetingAdmin() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            apiService.getIsMeetingAdmin(MyApplication.getInstance().getUid());
+        }
+    }
+
+    private class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                    getIsAdmin.isAdmin());
+        }
+
+        @Override
+        public void returnIsMeetingAdminFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+        }
+
+        @Override
+        public void returnAddMeetingSuccess() {
+            LoadingDialog.dimissDlg(loadingDlg);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
+            finish();
+        }
+
+        @Override
+        public void returnAddMeetingFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+        }
     }
 }

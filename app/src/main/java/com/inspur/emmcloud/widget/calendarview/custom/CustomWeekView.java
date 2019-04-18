@@ -105,13 +105,23 @@ public class CustomWeekView extends WeekView {
         mSchemeBasicPaint.setMaskFilter(new BlurMaskFilter(28, BlurMaskFilter.Blur.SOLID));
     }
 
+    /**
+     * dp转px
+     *
+     * @param context context
+     * @param dpValue dp
+     * @return px
+     */
+    private static int dipToPx(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
 
     @Override
     protected void onPreviewHook() {
         mSolarTermTextPaint.setTextSize(mCurMonthLunarTextPaint.getTextSize());
         mRadius = Math.min(mItemWidth, mItemHeight) / 13 * 5;
     }
-
 
     @Override
     protected boolean onDrawSelected(Canvas canvas, EmmCalendar calendar, int x, boolean hasScheme) {
@@ -132,11 +142,11 @@ public class CustomWeekView extends WeekView {
     @Override
     protected void onDrawText(Canvas canvas, EmmCalendar calendar, int x, boolean hasScheme, boolean isSelected) {
         int cx = x + mItemWidth / 2;
-        int top = -(int)(mItemHeight / 5.5);
-        String day =calendar.isCurrentDay()?"今":String.valueOf(calendar.getDay());
-        if(hasScheme){
+        int top = -(int) (mItemHeight / 5.5);
+        String day = calendar.isCurrentDay() ? "今" : String.valueOf(calendar.getDay());
+        if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius, mPadding + mSchemeBaseLine+dipToPx(getContext(),6 ), mTextPaint);
+            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius, mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
         }
         if (isSelected) {
             canvas.drawText(day, cx, mTextBaseLine + top,
@@ -160,17 +170,5 @@ public class CustomWeekView extends WeekView {
                                     calendar.isCurrentMonth() ?
                                             mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
         }
-    }
-
-    /**
-     * dp转px
-     *
-     * @param context context
-     * @param dpValue dp
-     * @return px
-     */
-    private static int dipToPx(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 }

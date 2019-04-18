@@ -34,18 +34,18 @@ public class CalendarEvent implements Serializable, Comparator {
         creationDate = TimeUtils.timeLong2Calendar(creationDateLong);
         Long lastUpdateLong = JSONUtils.getLong(obj, "lastUpdate", 0L);
         lastUpdate = TimeUtils.timeLong2Calendar(lastUpdateLong);
-        allday = JSONUtils.getBoolean(obj,"allday",false);
+        allday = JSONUtils.getBoolean(obj, "allday", false);
         Long startDateLong = JSONUtils.getLong(obj, "startDate", 0L);
         startDate = TimeUtils.timeLong2Calendar(startDateLong);
-        if (allday){
+        if (allday) {
             startDate = TimeUtils.getDayBeginCalendar(startDate);
         }
         Long endDateLong = JSONUtils.getLong(obj, "endDate", 0L);
-        if (endDateLong == 0){
+        if (endDateLong == 0) {
             endDate = TimeUtils.getDayEndCalendar(startDate);
-        }else if(allday){
+        } else if (allday) {
             endDate = TimeUtils.timeLong2Calendar(endDateLong);
-            endDate= TimeUtils.getDayEndCalendar(endDate);
+            endDate = TimeUtils.getDayEndCalendar(endDate);
         }
         endDate = TimeUtils.timeLong2Calendar(endDateLong);
         state = JSONUtils.getString(obj, "state", "");
@@ -55,7 +55,6 @@ public class CalendarEvent implements Serializable, Comparator {
         JSONObject calendarObj = JSONUtils.getJSONObject(obj, "calendar", new JSONObject());
         calendar = new MyCalendar(calendarObj);
     }
-
 
 
     public MyCalendar getCalendar() {
@@ -135,6 +134,7 @@ public class CalendarEvent implements Serializable, Comparator {
     public void setAllday(boolean allday) {
         this.allday = allday;
     }
+
     public Calendar getStartDate() {
         return startDate;
     }

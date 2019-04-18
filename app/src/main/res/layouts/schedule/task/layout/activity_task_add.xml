@@ -65,7 +65,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/et_input_content"
+                android:id="@+id/et_input_title"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_alignParentLeft="true"
@@ -522,7 +522,8 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:paddingTop="11dp">
+                    android:paddingTop="11dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -551,7 +552,8 @@
                     android:id="@+id/lv_attachment_abstract_picture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/rl_attachments_pictures" />
+                    android:layout_below="@id/rl_attachments_pictures"
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     android:id="@+id/rl_attachments_others"
@@ -591,7 +593,9 @@
                     android:id="@+id/lv_attachment_abstract_other"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/rl_attachments_others"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:layout_below="@id/rl_attachments_others"
+                    android:background="#FFFFFF"
+                    android:dividerHeight="0.5px"></com.inspur.emmcloud.widget.ScrollViewWithListView>
             </LinearLayout>
 
         </LinearLayout>

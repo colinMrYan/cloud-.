@@ -40,7 +40,7 @@ public class CheckingNetStateUtils {
             super.handleMessage(msg);
         }
     };
-
+    private List<PingUrlAndConnectState> pingUrlAndConnectStates = new ArrayList<>();
     /**
      * 发送最终的网络异常状态
      */
@@ -58,9 +58,6 @@ public class CheckingNetStateUtils {
         }
     };
 
-
-    private List<PingUrlAndConnectState> pingUrlAndConnectStates = new ArrayList<>();
-
     public CheckingNetStateUtils(Context context) {
         this.context = context;
     }
@@ -77,8 +74,8 @@ public class CheckingNetStateUtils {
     /**
      * 获取网络状态最终结果并显示于UI
      */
-    public void getNetStateResult( int timeout) {
-       final String action = Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT;
+    public void getNetStateResult(int timeout) {
+        final String action = Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT;
         Context context = MyApplication.getInstance();
         ConnectivityManager conMan = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -135,7 +135,7 @@
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
     <string name="modify_group_name">群名片</string>
-    <string name="choose_common_office">添加常用辦公地點</string>
+    <string name="choose_common_office">常用辦公地點</string>
     <string name="please_click_choosing_time">請點擊選擇時間</string>
     <string name="meeting_room">會議室</string>
     <string name="building">建築</string>
@@ -378,6 +378,12 @@
     <string name="schedule_setting_view">視圖</string>
     <string name="schedule_calendar_input_content_hint">請輸入日程內容...</string>
     <string name="schedule_calendar_time_alert">結束時間不能早於起始時間</string>
+    <string name="schedule_alert_time_occur">日程當天（上午9時）</string>
+    <string name="schedule_alert_time_before_one_day">1天前（上午9時）</string>
+    <string name="schedule_alert_time_before_two_day">2天前（上午9時）</string>
+    <string name="schedule_alert_time_before_a_week">一周前</string>
+
+
     <!-- 發現部分 -->
     <string name="find">發現</string>
     <string name="travel_analysis">差旅分析</string>
@@ -846,6 +852,25 @@
     <string name="meeting_expired_booking_history_immutable">過期的會議室預定不可更改</string>
     <string name="meeting_user_profile_missing">用戶資訊缺失 </string>
     <string name="meeting_department_booking_times_over_run">用戶部門資訊缺失</string>
+
+    <string name="meeting_detail_time">時間：%1$s</string>
+    <string name="meeting_detail_remind">提醒：%1$s</string>
+    <string name="meeting_detail_create">%1$s 創建</string>
+    <string name="meeting_detail_attendee">參會人:%1$s</string>
+    <string name="meeting_detail_record_holder">會議記錄人:%1$s</string>
+    <string name="meeting_detail_conference">會議聯絡人:%1$s</string>
+    <string name="meeting_detail_note">著裝要求:%1$s</string>
+    <string name="meeting_detail_sign">會議簽到</string>
+    <string name="meeting_detail_summary">十 添加會議摘要</string>
+    <string name="meeting_detail_change_meeting">修改會議</string>
+    <string name="meeting_detail_show_qrcode">展示簽到二維碼</string>
+    <string name="meeting_detail_add_participant">添加參會人</string>
+    <string name="meeting_detail_before_beginning">開始前</string>
+    <string name="meeting_detail_ten_minutes">提前10分鐘</string>
+    <string name="meeting_detail_twenty_minutes">提前20分鐘</string>
+    <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
+    <string name="meeting_detail_one_hour">提前一個小時</string>
+
 
     <!-- 日曆 -->
     <string name="calendar_detail">日曆詳情</string>

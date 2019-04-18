@@ -722,6 +722,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.schedule.meeting.MeetingDetailActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.work.meeting.MeetingRoomListActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -833,7 +837,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.work.meeting.MeetingsRoomDetailActivity"
+            android:name=".ui.schedule.meeting.MeetingRoomInfoActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -868,6 +872,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.schedule.meeting.MeetingRoomListActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingOfficeSettingActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 

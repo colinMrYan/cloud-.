@@ -3,15 +3,20 @@ package com.inspur.emmcloud.bean.schedule;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONObject;
+import org.jsoup.helper.StringUtil;
 
 /**
  * Created by chenmch on 2019/4/6.
  */
 
 public class Location {
-    private String id;//可选的， 地点唯一标识，如果没有ID ，表示地点是手输的
-    private String building;  //楼号
-    private String displayName;// 会议室名，自定义名称存放在 displayName 上
+    private String id = "";//可选的， 地点唯一标识，如果没有ID ，表示地点是手输的
+    private String building = "";  //楼号
+    private String displayName = "";// 会议室名，自定义名称存放在 displayName 上
+
+    public Location() {
+
+    }
 
     public Location(String json) {
         this(JSONUtils.getJSONObject(json));
@@ -28,6 +33,7 @@ public class Location {
     }
 
     public void setId(String id) {
+        this.id = id;
     }
 
     public String getBuilding() {
@@ -44,5 +50,21 @@ public class Location {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject object = new JSONObject();
+        try {
+            if (!StringUtil.isBlank(id)) {
+                object.put("id", id);
+            }
+            object.put("displayName", displayName);
+            if (!StringUtil.isBlank(building)) {
+                object.put("building", building);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return object;
     }
 }

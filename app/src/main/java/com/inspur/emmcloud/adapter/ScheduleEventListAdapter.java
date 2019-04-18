@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
@@ -27,19 +28,23 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
     private OnItemClickLister onItemClickLister;
     private Calendar selectCalendar;
 
-    public ScheduleEventListAdapter(Context context){
+    public ScheduleEventListAdapter(Context context) {
         this.context = context;
     }
 
-    public void setEventList(Calendar selectCalendar,List<Event> eventList){
+    public void setEventList(Calendar selectCalendar, List<Event> eventList) {
         this.selectCalendar = selectCalendar;
         this.eventList.clear();
         this.eventList.addAll(eventList);
     }
 
+    public void setOnItemClickLister(OnItemClickLister onItemClickLister) {
+        this.onItemClickLister = onItemClickLister;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_event_list_item_view,null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_event_list_item_view, null);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -49,25 +54,27 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         Event event = eventList.get(position);
         holder.eventTileText.setText(event.getEventTitle());
 
-        String startTime="";
-        String endTime="";
+        String startTime = "";
+        String endTime = "";
         if (event.getEventType().equals(Event.TYPE_CALENDAR)) {
             holder.eventPositionText.setVisibility(View.GONE);
-            startTime = TimeUtils.calendar2FormatString(context,event.getDayEventStartTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
-            endTime = TimeUtils.calendar2FormatString(context,event.getDayEventEndTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
+            startTime = TimeUtils.calendar2FormatString(context, event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+            endTime = TimeUtils.calendar2FormatString(context, event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
         } else if (event.getEventType().equals(Event.TYPE_MEETING)) {
             holder.eventPositionText.setVisibility(View.VISIBLE);
-            holder.eventPositionText.setText("会议地点："+event.getEventSubTitle());
-            startTime = TimeUtils.calendar2FormatString(context,event.getDayEventStartTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
-            endTime = TimeUtils.calendar2FormatString(context,event.getDayEventEndTime(selectCalendar),TimeUtils.FORMAT_HOUR_MINUTE);
+            if (!StringUtils.isBlank(event.getEventSubTitle())) {
+                holder.eventPositionText.setText("会议地点：" + event.getEventSubTitle());
+            }
+            startTime = TimeUtils.calendar2FormatString(context, event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+            endTime = TimeUtils.calendar2FormatString(context, event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
         } else {
             holder.eventPositionText.setVisibility(View.GONE);
-            if (TimeUtils.isSameDay(event.getEventEndTime(),selectCalendar)){
+            if (TimeUtils.isSameDay(event.getEventEndTime(), selectCalendar)) {
                 startTime = context.getString(R.string.today);
-            }else {
-                startTime = TimeUtils.calendar2FormatString(context,event.getEventEndTime(),TimeUtils.FORMAT_MONTH_DAY);
+            } else {
+                startTime = TimeUtils.calendar2FormatString(context, event.getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY);
             }
-            endTime="截止";
+            endTime = "截止";
         }
         holder.eventImg.setImageResource(event.getEventIconResId());
         holder.eventStartTimeText.setText(startTime);
@@ -80,7 +87,9 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         return eventList.size();
     }
 
-    public void setOnItemClickLister(OnItemClickLister onItemClickLister){
+
+    public interface OnItemClickLister {
+        void onItemClick(View view, int position, Event event);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -90,7 +99,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         private TextView eventTileText;
         private TextView eventPositionText;
 
-        public ViewHolder(View convertView){
+        public ViewHolder(View convertView) {
             super(convertView);
             itemView.setOnClickListener(this);
             eventImg = convertView.findViewById(R.id.iv_event);
@@ -101,16 +110,13 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
 
 
         }
+
         @Override
         public void onClick(View view) {
-            if (onItemClickLister != null){
-                onItemClickLister.onItemClick(view,getAdapterPosition());
+            if (onItemClickLister != null) {
+                onItemClickLister.onItemClick(view, getAdapterPosition(), eventList.get(getAdapterPosition()));
             }
 
         }
-    }
-
-    public interface OnItemClickLister{
-        void onItemClick(View view, int position);
     }
 }

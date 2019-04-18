@@ -13,12 +13,12 @@ import java.util.List;
 
 public class PVCollectModelCacheUtils {
 
-    public static void saveCollectModel(String functionID, String functionType){
+    public static void saveCollectModel(String functionID, String functionType) {
         PVCollectModel pvCollectModel = new PVCollectModel(functionID, functionType);
-        saveCollectModel(MyApplication.getInstance(),pvCollectModel);
+        saveCollectModel(MyApplication.getInstance(), pvCollectModel);
     }
 
-    private static void saveCollectModel(final Context context,final PVCollectModel collectModel) {
+    private static void saveCollectModel(final Context context, final PVCollectModel collectModel) {
         new Thread(new Runnable() {
             @Override
             public void run() {

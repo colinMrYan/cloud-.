@@ -2,11 +2,11 @@ package com.inspur.emmcloud.bean.work;
 
 import org.json.JSONObject;
 
-public class GetCreateOfficeResult {
+public class GetAddOfficeResult {
 
     private String id;
 
-    public GetCreateOfficeResult(String response) {
+    public GetAddOfficeResult(String response) {
         try {
             JSONObject obj = new JSONObject(response);
             if (obj.has("id")) {

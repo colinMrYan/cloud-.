@@ -17,6 +17,7 @@ public class CalendarLinearLayout extends LinearLayout implements CalendarLayout
 
     private ScrollView scrollView;
     private RecyclerView recyclerView;
+
     public CalendarLinearLayout(Context context) {
         super(context);
     }
@@ -32,21 +33,21 @@ public class CalendarLinearLayout extends LinearLayout implements CalendarLayout
      */
     @Override
     public boolean isScrollToTop() {
-        if(scrollView == null){
+        if (scrollView == null) {
             if (getChildCount() > 1 && getChildAt(1) instanceof ScrollView) {
                 scrollView = (ScrollView) getChildAt(1);
             }
         }
-        if(recyclerView == null){
+        if (recyclerView == null) {
             if (getChildCount() > 2 && getChildAt(2) instanceof RecyclerView) {
                 recyclerView = (RecyclerView) getChildAt(2);
             }
         }
-        if (scrollView != null && scrollView.getVisibility() == VISIBLE){
+        if (scrollView != null && scrollView.getVisibility() == VISIBLE) {
             return scrollView.getScrollY() == 0;
         }
 
-        if (recyclerView != null && recyclerView.getVisibility() == VISIBLE){
+        if (recyclerView != null && recyclerView.getVisibility() == VISIBLE) {
             return recyclerView.computeVerticalScrollOffset() == 0;
         }
         return false;

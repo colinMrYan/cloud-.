@@ -105,7 +105,7 @@ public class XFJsonParser {
             JSONObject transResult = joResult.optJSONObject("trans_result");
             ret.append(transResult.optString(key));
             /*JSONArray words = joResult.getJSONArray("results");
-			for (int i = 0; i < words.length(); i++) {
+            for (int i = 0; i < words.length(); i++) {
 				JSONObject obj = words.getJSONObject(i);
 				ret.append(obj.getString(key));
 			}*/

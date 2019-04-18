@@ -79,7 +79,12 @@ import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.Building;
+import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
@@ -92,10 +97,7 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
-import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
-import com.inspur.emmcloud.bean.work.GetIsAdmin;
-import com.inspur.emmcloud.bean.work.GetLoctionResult;
-import com.inspur.emmcloud.bean.work.GetMeetingListResult;
+import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.bean.work.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
@@ -109,6 +111,10 @@ import java.util.Calendar;
 import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
+    public APIInterfaceInstance() {
+        super();
+    }
+
     @Override
     public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
     }
@@ -152,7 +158,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnOauthSigninFail(String error, int errorCode) {
         // TODO Auto-generated method stub
     }
-
 
     @Override
     public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {
@@ -321,7 +326,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
     @Override
     public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
         // TODO Auto-generated method stub
@@ -355,7 +359,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
 
     }
-
 
     @Override
     public void returnModifyUserInfoSucces(GetBoolenResult getBoolenResult) {
@@ -610,7 +613,7 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnMeetingListSuccess(
-            GetMeetingListResult getMeetingListResult) {
+            com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult) {
         // TODO Auto-generated method stub
 
     }
@@ -646,13 +649,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnLoctionResultSuccess(GetLoctionResult getLoctionResult) {
+    public void returnLocationResultSuccess(GetLocationResult getLoctionResult) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnLoctionResultFail(String error, int errorCode) {
+    public void returnLocationResultFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -669,14 +672,12 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCreatOfficeSuccess(
-            GetCreateOfficeResult getCreateOfficeResult) {
-        // TODO Auto-generated method stub
+    public void returnAddMeetingOfficeSuccess(Office office, Building building) {
 
     }
 
     @Override
-    public void returnCreatOfficeFail(String error, int errorCode) {
+    public void returnAddMeetingOfficeFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
@@ -837,7 +838,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
     @Override
     public void returnAttachmentSuccess(Task taskResult) {
         // TODO Auto-generated method stub
@@ -979,21 +979,19 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void retrunTripArriveFail(String error, int errorCode) {
+    public void returnTripArriveFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnDelMeetingSuccess() {
+    public void returnDeleteMeetingSuccess(Meeting meeting) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
-    public void returnDelMeetingFail(String error, int errorCode) {
+    public void returnDeleteMeetingFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -1046,7 +1044,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDeleteOfficeSuccess(int position) {
+    public void returnDeleteOfficeSuccess(Office office) {
         // TODO Auto-generated method stub
 
     }
@@ -1069,25 +1067,22 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnIsAdminSuccess(GetIsAdmin getIsAdmin) {
+    public void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin) {
         // TODO Auto-generated method stub
     }
 
     @Override
-    public void returnIsAdminFail(String error, int errorCode) {
+    public void returnIsMeetingAdminFail(String error, int errorCode) {
         // TODO Auto-generated method stub
     }
-
 
     @Override
     public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, int page) {
     }
 
-
     @Override
     public void returnLanguageSuccess(GetLanguageResult getLanguageResult) {
     }
-
 
     @Override
     public void returnLanguageFail(String error, int errorCode) {
@@ -1108,7 +1103,7 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnMeetingListSuccess(
-            GetMeetingListResult getMeetingListResult, String date) {
+            com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult, String date) {
     }
 
     @Override
@@ -1126,7 +1121,6 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnRobotByIdFail(String error, int errorCode) {
     }
-
 
     @Override
     public void returnResetPasswordSuccess() {
@@ -1371,7 +1365,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
     }
 
-
     @Override
     public void returnUploadPositionSuccess() {
     }
@@ -1488,7 +1481,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnRemoveShareVolumeFail(String error, int errorCode) {
     }
 
-
     @Override
     public void returnFaceSettingSuccess(GetFaceSettingResult getFaceSettingResult) {
     }
@@ -1560,7 +1552,6 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnVolumeGroupContainMeFail(String error, int errorCode) {
     }
-
 
     @Override
     public void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult) {
@@ -1960,10 +1951,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnScheduleListFail(String error, int errorCode) {
     }
 
-    public APIInterfaceInstance() {
-        super();
-    }
-
     @Override
     public void returnAddScheduleSuccess(GetIDResult getIDResult) {
 
@@ -2011,6 +1998,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnAddTaskTagFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnAddMeetingSuccess() {
+
+    }
+
+    @Override
+    public void returnAddMeetingFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
+
+    }
+
+    @Override
+    public void returnMeetingListByMeetingRoomFail(String error, int errorCode) {
 
     }
 

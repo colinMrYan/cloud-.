@@ -1225,8 +1225,8 @@ public class APIUri {
      *
      * @return
      */
-    public static String getDeleteMeetingUrl() {
-        return getMeetingBaseUrl() + "room/booking/cancel";
+    public static String getMeetingDeleteUrl() {
+        return getMeetingBaseUrl() + "room/booking/cancel?";
     }
 
     /**
@@ -1281,7 +1281,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingIsAdminUrl() {
-        return getMeetingBaseUrl() + "is_admin";
+        return getMeetingBaseUrl() + "is_admin?";
     }
 
     /**
@@ -1719,36 +1719,46 @@ public class APIUri {
         return MyApplication.getInstance().getCloudId() + "oauth2.0/profile";
     }
 
-    public static String getScheduleListUrl(){
-        return  "http://172.31.2.36:88/api/schedule/v6.0/calendar/GetList?";
+    public static String getScheduleListUrl() {
+        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/GetList?";
     }
 
-    public static String getAddScheduleUrl(){
-        return  "http://172.31.2.36:88/api/schedule/v6.0/calendar/add";
+    public static String getAddScheduleUrl() {
+        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/add";
     }
 
-    public static String getUpdateScheduleUrl(){
-        return  "http://172.31.2.36:88/api/schedule/v6.0/calendar/update";
+    public static String getUpdateScheduleUrl() {
+        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/update";
     }
 
-    public static String getDelScheduleUrl(String scheduleId){
-        return  "http://172.31.2.36:88/api/schedule/v6.0/calendar/remove/"+scheduleId;
+    public static String getDelScheduleUrl(String scheduleId) {
+        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/remove/" + scheduleId;
+    }
+
+    public static String getAddMeetingUrl() {
+        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/add";
+    }
+
+    public static String getMeetingListByStartTime(){
+        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetByStartTime?";
+    }
+
+    public static String getRoomMeetingListByMeetingRoom(){
+        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
     /**
      * 获取删除工作中的tags
-     *
-     * */
+     */
     public static String getDelTaskTagsUrl(String taskId) {
-        return getToDoBaseUrl() +taskId+"/tags";
+        return getToDoBaseUrl() + taskId + "/tags";
     }
 
     /**
      * 获取删除工作中的tags
-     *
-     * */
+     */
     public static String getAddTaskTagsUrl(String taskId) {
-        return getToDoBaseUrl()+taskId+"/tags";
+        return getToDoBaseUrl() + taskId + "/tags";
     }
 
 }

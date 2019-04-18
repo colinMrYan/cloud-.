@@ -45,7 +45,7 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
-            android:text="@string/send"
+            android:text="@string/ok"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
@@ -63,7 +63,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/et_input_content"
+                android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="@android:color/white"
@@ -197,7 +197,7 @@
                 <LinearLayout
                     android:id="@+id/ll_add_position"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="44dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
@@ -233,6 +233,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:onClick="onClick"
                 android:background="@android:color/white"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -262,7 +263,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
-                    android:onClick="onClick"
                     android:orientation="horizontal"
                     android:paddingLeft="5dp"
                     android:paddingRight="16dp">
@@ -293,6 +293,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
+                android:onClick="onClick"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -321,7 +322,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
-                    android:onClick="onClick"
                     android:orientation="horizontal"
                     android:paddingLeft="5dp"
                     android:paddingRight="16dp">
@@ -352,6 +352,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
+                android:onClick="onClick"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -380,7 +381,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
-                    android:onClick="onClick"
                     android:orientation="horizontal"
                     android:paddingLeft="5dp"
                     android:paddingRight="16dp">

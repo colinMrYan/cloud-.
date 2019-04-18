@@ -307,11 +307,11 @@ public class ImpFragment extends ImpBaseFragment {
         dropTitlePopupWindow.showAsDropDown(headerLayout);
     }
 
-    private void setDropItemTitleSelect(int position){
-        if (dropItemTitleList != null && position <dropItemTitleList.size()){
-            if (position == -1){
-                for (int i=0;i<dropItemTitleList.size();i++){
-                    if (dropItemTitleList.get(i).isSelected()){
+    private void setDropItemTitleSelect(int position) {
+        if (dropItemTitleList != null && position < dropItemTitleList.size()) {
+            if (position == -1) {
+                for (int i = 0; i < dropItemTitleList.size(); i++) {
+                    if (dropItemTitleList.get(i).isSelected()) {
                         position = i;
                         break;
                     }
@@ -399,8 +399,8 @@ public class ImpFragment extends ImpBaseFragment {
 
     private void setHeaderTitleTextDropImg() {
         boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
-        int dropUpRes = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.plugin_ic_header_title_drop_up);
-        int dropDownRes = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.plugin_ic_header_title_drop_down);
+        int dropUpRes = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.plugin_ic_header_title_drop_up);
+        int dropDownRes = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.plugin_ic_header_title_drop_down);
         Drawable drawable = ContextCompat.getDrawable(MyApplication.getInstance(), isDropTitlePopShow ? dropUpRes : dropDownRes);
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         headerText.setCompoundDrawables(null, null, drawable, null);

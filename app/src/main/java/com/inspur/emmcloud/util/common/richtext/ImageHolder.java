@@ -33,6 +33,7 @@ public class ImageHolder {
     private boolean isGif;
     private BorderHolder borderHolder;
     private int configHashCode = 0;
+
     public ImageHolder(String source, int position, RichTextConfig config) {
         this(source, position);
         this.autoPlay = config.autoPlay;
@@ -53,6 +54,7 @@ public class ImageHolder {
         configHashCode = config.hashCode();
         generateKey();
     }
+
     private ImageHolder(String source, int position) {
         this.source = source;
         this.position = position;

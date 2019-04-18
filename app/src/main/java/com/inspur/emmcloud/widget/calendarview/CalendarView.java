@@ -30,7 +30,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -1498,11 +1497,10 @@ public class CalendarView extends FrameLayout {
         mWeekPager.updateCurrentDate();
     }
 
-    public List<EmmCalendar> getCurrentPageCalendars(){
-        LogUtils.jasonDebug("mParentLayout.isExpand()="+mParentLayout.isExpand());
-        if (mParentLayout.isExpand()){
-            return  getCurrentMonthCalendars();
-        }else {
+    public List<EmmCalendar> getCurrentPageCalendars() {
+        if (mParentLayout!=null && mParentLayout.isExpand()) {
+            return getCurrentMonthCalendars();
+        } else {
             return getCurrentWeekCalendars();
         }
     }
@@ -1614,7 +1612,7 @@ public class CalendarView extends FrameLayout {
          * 月视图点击
          *
          * @param emmCalendar calendar
-         * @param isClick  是否是点击
+         * @param isClick     是否是点击
          */
         void onMonthDateSelected(EmmCalendar emmCalendar, boolean isClick);
 
@@ -1622,7 +1620,7 @@ public class CalendarView extends FrameLayout {
          * 周视图点击
          *
          * @param emmCalendar calendar
-         * @param isClick  是否是点击
+         * @param isClick     是否是点击
          */
         void onWeekDateSelected(EmmCalendar emmCalendar, boolean isClick);
     }
@@ -1643,7 +1641,7 @@ public class CalendarView extends FrameLayout {
         /**
          * 选择范围超出范围
          *
-         * @param emmCalendar        calendar
+         * @param emmCalendar     calendar
          * @param isOutOfMinRange 是否小于最小范围，否则为最大范围
          */
         void onSelectOutOfRange(EmmCalendar emmCalendar, boolean isOutOfMinRange);
@@ -1652,7 +1650,7 @@ public class CalendarView extends FrameLayout {
          * 日期选择事件
          *
          * @param emmCalendar calendar
-         * @param isEnd    是否结束
+         * @param isEnd       是否结束
          */
         void onCalendarRangeSelect(EmmCalendar emmCalendar, boolean isEnd);
     }
@@ -1673,7 +1671,7 @@ public class CalendarView extends FrameLayout {
         /**
          * 多选超出大小
          *
-         * @param maxSize  最大大小
+         * @param maxSize     最大大小
          * @param emmCalendar calendar
          */
         void onMultiSelectOutOfSize(EmmCalendar emmCalendar, int maxSize);
@@ -1682,8 +1680,8 @@ public class CalendarView extends FrameLayout {
          * 多选事件
          *
          * @param emmCalendar calendar
-         * @param curSize  curSize
-         * @param maxSize  maxSize
+         * @param curSize     curSize
+         * @param maxSize     maxSize
          */
         void onCalendarMultiSelect(EmmCalendar emmCalendar, int curSize, int maxSize);
     }
@@ -1704,7 +1702,7 @@ public class CalendarView extends FrameLayout {
          * 日期选择事件
          *
          * @param emmCalendar calendar
-         * @param isClick  isClick
+         * @param isClick     isClick
          */
         void onCalendarSelect(EmmCalendar emmCalendar, boolean isClick);
     }

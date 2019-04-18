@@ -4,6 +4,7 @@ package com.inspur.emmcloud.widget.calendardayview;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.Calendar;
@@ -17,8 +18,8 @@ import java.util.List;
 public class Event {
     public static final String TYPE_MEETING = "event_meeting";
     public static final String TYPE_CALENDAR = "event_calendar";
-    public static final String TYPE_TASK= "event_task";
-    public  String eventId;
+    public static final String TYPE_TASK = "event_task";
+    public String eventId;
     public String eventType;
     public String eventTitle;
     public String eventSubTitle;
@@ -27,14 +28,27 @@ public class Event {
     private int index = -1;
     private boolean isAllDay = false;
     private Object eventObj;
-    public Event(String eventId,String eventType,String eventTitle,String eventSubTitle,Calendar eventStartTime,Calendar eventEndTime,Object eventObj){
+
+    public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj) {
         this.eventId = eventId;
-        this.eventType  = eventType;
+        this.eventType = eventType;
         this.eventTitle = eventTitle;
         this.eventSubTitle = eventSubTitle;
         this.eventStartTime = eventStartTime;
         this.eventEndTime = eventEndTime;
         this.eventObj = eventObj;
+    }
+
+    public static List<Event> removeEventByType(List<Event> eventList, String eventType) {
+        if (eventList.size() > 0) {
+            Iterator<Event> iterator = eventList.iterator();
+            while (iterator.hasNext()) {
+                if (iterator.next().getEventType().equals(eventType)) {
+                    iterator.remove();
+                }
+            }
+        }
+        return eventList;
     }
 
     public int getIndex() {
@@ -92,19 +106,20 @@ public class Event {
     public void setEventEndTime(Calendar eventEndTime) {
         this.eventEndTime = eventEndTime;
     }
+
     public long getDurationInMillSeconds() {
         return eventEndTime.getTimeInMillis() - eventStartTime.getTimeInMillis();
     }
 
-    public Calendar getDayEventStartTime(Calendar selectCalendar){
-        if (!TimeUtils.isSameDay(eventStartTime,selectCalendar)){
+    public Calendar getDayEventStartTime(Calendar selectCalendar) {
+        if (!TimeUtils.isSameDay(eventStartTime, selectCalendar)) {
             return TimeUtils.getDayBeginCalendar(selectCalendar);
         }
         return eventStartTime;
     }
 
-    public Calendar getDayEventEndTime(Calendar selectCalendar){
-        if (!TimeUtils.isSameDay(eventEndTime,selectCalendar)){
+    public Calendar getDayEventEndTime(Calendar selectCalendar) {
+        if (!TimeUtils.isSameDay(eventEndTime, selectCalendar)) {
             return TimeUtils.getDayEndCalendar(selectCalendar);
         }
         return eventEndTime;
@@ -131,19 +146,7 @@ public class Event {
         isAllDay = allDay;
     }
 
-    public static List<Event> removeEventByType(List<Event> eventList, String eventType){
-        if (eventList.size()>0){
-            Iterator<Event> iterator = eventList.iterator();
-            while (iterator.hasNext()){
-                if (iterator.next().getEventType().equals(eventType)){
-                    iterator.remove();
-                }
-            }
-        }
-        return eventList;
-    }
-
-    public int getEventIconResId(){
+    public int getEventIconResId() {
         int eventIconResId = -1;
         if (getEventType().equals(Event.TYPE_CALENDAR)) {
             eventIconResId = R.drawable.ic_schedule_event_calendar;
@@ -155,15 +158,17 @@ public class Event {
         return eventIconResId;
     }
 
-    public String getShowEventSubTitle(Context context,Calendar selectCalendar){
+    public String getShowEventSubTitle(Context context, Calendar selectCalendar) {
         String showEventSubTitle = "";
         if (getEventType().equals(Event.TYPE_MEETING)) {
-            showEventSubTitle = "会议地点："+getEventSubTitle();
+            if (!StringUtils.isBlank(getEventSubTitle())) {
+                showEventSubTitle = "会议地点：" + getEventSubTitle();
+            }
         } else {
-            if (TimeUtils.isSameDay(selectCalendar,getEventEndTime())){
+            if (TimeUtils.isSameDay(selectCalendar, getEventEndTime())) {
                 showEventSubTitle = context.getString(R.string.today);
-            }else {
-                showEventSubTitle = TimeUtils.calendar2FormatString(context,getEventEndTime(),TimeUtils.FORMAT_MONTH_DAY);
+            } else {
+                showEventSubTitle = TimeUtils.calendar2FormatString(context, getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY);
             }
 
         }
