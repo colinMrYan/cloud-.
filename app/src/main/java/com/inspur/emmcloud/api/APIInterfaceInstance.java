@@ -107,6 +107,26 @@ import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
     @Override
+    public void returnOauthSignInSuccess(GetLoginResult getLoginResult) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void returnOauthSignInFail(String error, int errorCode, String headerLimitRemaining, String headerRetryAfter) {
+
+    }
+
+    @Override
+    public void returnRefreshTokenSuccess(GetLoginResult getLoginResult) {
+
+    }
+
+    @Override
+    public void returnRefreshTokenFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
     }
 
@@ -139,17 +159,6 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnBindingDeviceListFail(String error, int errorCode) {
     }
-
-    @Override
-    public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnOauthSigninFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
 
     @Override
     public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {

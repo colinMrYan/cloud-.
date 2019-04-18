@@ -68,7 +68,7 @@ public class ShortCutFunctionActivity extends BaseActivity {
 //
 //    private class WebService extends APIInterfaceInstance {
 //        @Override
-//        public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
+//        public void returnOauthSignInSuccess(GetLoginResult getLoginResult) {
 //            // TODO Auto-generated method stub
 //            if(loadingDialog != null && loadingDialog.isShowing()){
 //                loadingDialog.dismiss();
@@ -83,7 +83,7 @@ public class ShortCutFunctionActivity extends BaseActivity {
 //        }
 //
 //        @Override
-//        public void returnOauthSigninFail(String error,int errorCode) {
+//        public void returnOauthSignInFail(String error,int errorCode) {
 //            // TODO Auto-generated method stub
 //            LogUtils.YfcDebug("请求失败导致授权过期");
 //            if(loadingDialog != null && loadingDialog.isShowing()){

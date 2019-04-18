@@ -259,7 +259,7 @@ public class MyFragmentTabHost extends TabHost
         if (mAttached) {
             final FragmentTransaction ft = doTabChanged(tabId, null);
             if (ft != null) {
-                ft.commit();
+                ft.commitAllowingStateLoss();
             }
         }
         if (mOnTabChangeListener != null) {
