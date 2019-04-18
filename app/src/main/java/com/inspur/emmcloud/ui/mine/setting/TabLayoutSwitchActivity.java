@@ -16,13 +16,16 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+
+import java.util.List;
 
 /**
  * Created by yufuchang on 2019/4/12.
@@ -45,13 +48,12 @@ public class TabLayoutSwitchActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_INDEX, 0);
-                if (currentThemeNo != i) {
-                    PreferencesUtils.putInt(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_INDEX, i);
-                    Intent intent = new Intent(TabLayoutSwitchActivity.this,
-                            IndexActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+                String selectedTabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(i).getName();
+                if(!currentTabLayoutName.equals(selectedTabLayoutName)){
+                    PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,selectedTabLayoutName);
+                    Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
             }
@@ -97,9 +99,27 @@ public class TabLayoutSwitchActivity extends BaseActivity {
                     themeNameText.setText(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(i).getNaviBarTitleResult().getZhHans());
                     break;
             }
-            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_INDEX, 0);
-            selectImg.setVisibility((currentThemeNo == i) ? View.VISIBLE : View.INVISIBLE);
+            selectImg.setVisibility(getSelectedShow(i));
             return view;
         }
+    }
+
+    /**
+     * 根据listView的位置设置选中状态的标识是否显示
+     * @param index
+     * @return
+     */
+    private int getSelectedShow(int index) {
+        List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        if(StringUtils.isBlank(currentTabLayoutName)){
+            currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
+        }
+        for(int i = 0; i < naviBarSchemeList.size(); i++){
+            if(naviBarSchemeList.get(i).getName().equals(currentTabLayoutName) && index == i){
+                return View.VISIBLE;
+            }
+        }
+        return View.GONE;
     }
 }

@@ -6,8 +6,12 @@ import android.content.res.Configuration;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +23,8 @@ import java.util.List;
 public class AppTabUtils {
     public static String getTabTitle(Context context, String tabKey, String tabCompont) {
         String appTabs = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-        ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
+//        ArrayList<MainTabResult> tabList = new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
+        ArrayList<MainTabResult> tabList = getMainTabList(context);
         String tabCompontText = !StringUtils.isBlank(tabCompont) ? tabCompont : getCompont(tabKey);
         MainTabResult tab = getTabByTabKey(tabList, tabCompontText);
         if (tab == null) {
@@ -37,6 +42,28 @@ public class AppTabUtils {
         } else {
             return tab.getMainTabTitleResult().getZhHans();
         }
+    }
+
+    private static ArrayList<MainTabResult> getMainTabList(Context context) {
+        ArrayList<MainTabResult> mainTabResultList = null;
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(context,Constant.APP_TAB_LAYOUT_NAME,"");
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(context,Constant.APP_TAB_LAYOUT_DATA,""));
+        List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
+        for (int i = 0; i < naviBarSchemeList.size(); i++) {
+            if(naviBarSchemeList.get(i).getName().equals(currentTabLayoutName)){
+                mainTabResultList = naviBarSchemeList.get(i).getMainTabResultList();
+            }
+        }
+        if(mainTabResultList == null){
+            String appTabs = PreferencesByUserAndTanentUtils.getString(context,
+                    Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
+            // 发送到MessageFragment
+            EventBus.getDefault().post(getAppMainTabResult);
+            mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
+        }
+
+        return mainTabResultList;
     }
 
 

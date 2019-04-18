@@ -79,7 +79,6 @@ public class IndexActivity extends IndexBaseActivity {
         initView();
         getInitData();
         startService();
-        getNaviTabData();
         EventBus.getDefault().register(this);
     }
 
@@ -334,6 +333,7 @@ public class IndexActivity extends IndexBaseActivity {
             public void getClientIdSuccess(String clientId) {
                 boolean isMainTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
                 if (isMainTabUpdate) {
+                    getNaviTabData();
                     getTabInfo();
                 }
                 boolean isSplashUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);

@@ -30,7 +30,6 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -291,7 +290,6 @@ public class AppAPIService {
      */
     public void getAppNaviTabs() {
         final String completeUrl = APIUri.getAppNaviTabs();
-        LogUtils.YfcDebug("completeUrl:"+completeUrl);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
             @Override
@@ -312,13 +310,11 @@ public class AppAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("返回成功："+new String(arg0));
                 apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("返回失败"+error+responseCode);
                 apiInterface.returnNaviBarModelFail(error,responseCode);
             }
         });

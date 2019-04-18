@@ -49,7 +49,7 @@ public class Constant {
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
     public static final String PREF_APP_THEME = "app_theme_num_v1";
-    public static final String APP_TAB_LAYOUT_INDEX = "app_tab_layout_index";
+    public static final String APP_TAB_LAYOUT_NAME = "app_tab_layout_name";
     public static final String APP_TAB_LAYOUT_DATA = "app_tab_layout_data";
     public static final String PREF_LOGIN_USERNAME = "userName";
     public static final String PREF_LOGIN_PASSWORD = "password";

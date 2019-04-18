@@ -654,6 +654,8 @@
     <string name="mine_theme_grey">Grey</string>
     <string name="mine_theme_blue">Blue</string>
 
+    <string name="mine_tab_layout">Layout Switching</string>
+
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
     <string name="modify_input_confirm_passord">Enter confirm password</string>

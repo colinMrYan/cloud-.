@@ -666,6 +666,8 @@
     <string name="mine_theme_grey">優雅灰</string>
     <string name="mine_theme_blue">商務藍</string>
 
+    <string name="mine_tab_layout">佈局切換</string>
+
 
     <!-- 修改密碼部分 -->
     <string name="modify_input_user_new_password">請輸入新密碼</string>

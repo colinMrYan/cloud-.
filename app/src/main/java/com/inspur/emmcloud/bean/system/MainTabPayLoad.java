@@ -21,6 +21,8 @@ public class MainTabPayLoad {
     private String state;
     private String name;
 
+    public MainTabPayLoad(){}
+
     public MainTabPayLoad(JSONObject jsonObject) {
         this.version = JSONUtils.getString(jsonObject, "version", "");
         JSONArray jsonArray = JSONUtils.getJSONArray(jsonObject, "tabs", new JSONArray());

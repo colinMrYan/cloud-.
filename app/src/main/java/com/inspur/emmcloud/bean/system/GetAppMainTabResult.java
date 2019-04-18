@@ -14,6 +14,8 @@ public class GetAppMainTabResult {
     private String command;
     private MainTabPayLoad mainTabPayLoad;
 
+    public GetAppMainTabResult(){}
+
     public GetAppMainTabResult(String response) {
         this.command = JSONUtils.getString(response, "command", "");
         this.response = response;

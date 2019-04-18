@@ -210,7 +210,8 @@
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
                     android:textColor="#888888"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    />
 
                 <ImageView
                     android:id="@+id/tv_setting_switch_tab_arrow"
