@@ -49,15 +49,14 @@ import java.util.List;
  * Created by libaochao on 2019/3/29.
  */
 @ContentView(R.layout.activity_calendar_add)
-public class CalendarAddActivity extends BaseActivity {
+public class CalendarAddActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
     public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
-    public static final String EXTRA_SCHEDULE_CALENDAR_ADD_EVENT = "schedule_calendar_add_event";
     public static final String EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT = "schedule_calendar_type_select";
-    private static final int CAL_TYPE_REQUEST_CODE = 1;
-    private static final int REPEAT_TYPE_REQUEST_CODE = 2;
-    private static final int CAL_ALERT_TIME_REQUEST_CODE = 3;
+    private static final int REQUEST_CAL_TYPE = 1;
+    private static final int REQUEST_REPEAT_TYPE = 2;
+    private static final int REQUEST_CAL_ALERT_TIME = 3;
     @ViewInject(R.id.tv_save)
     private TextView saveText;
     @ViewInject(R.id.et_input_title)
@@ -116,6 +115,8 @@ public class CalendarAddActivity extends BaseActivity {
      * 初始化View
      */
     private void initView() {
+        loadingDlg = new LoadingDialog(this);
+        allDaySwitch.setOnCheckedChangeListener(this);
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
         titleText.setText(isEditable ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
@@ -133,19 +134,9 @@ public class CalendarAddActivity extends BaseActivity {
      * 初始化日期数据
      */
     private void initData() {
-        loadingDlg = new LoadingDialog(this);
         apiService = new WorkAPIService(getApplicationContext());
         apiService.setAPIInterface(new WebService());
-        allDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                isAllDay = b;
-                timeTextextChangeByIsAllday(isAllDay);
-                alertText.setText("");
-                remindEvent = new RemindEvent();
 
-            }
-        });
         if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
             contentText = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
         }
@@ -176,6 +167,14 @@ public class CalendarAddActivity extends BaseActivity {
             remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
         }
         intervalMin = (int) getIntervalMin();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        isAllDay = b;
+        timeTextextChangeByIsAllday(isAllDay);
+        alertText.setText("");
+        remindEvent = new RemindEvent();
     }
 
     /**
@@ -258,7 +257,7 @@ public class CalendarAddActivity extends BaseActivity {
                 if (myCalendar != null) {
                     intent.putExtra(EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT, myCalendar);
                 }
-                startActivityForResult(intent, CAL_TYPE_REQUEST_CODE);
+                startActivityForResult(intent, REQUEST_CAL_TYPE);
                 break;
             case R.id.ll_start_time:
                 dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
@@ -309,7 +308,7 @@ public class CalendarAddActivity extends BaseActivity {
                         ScheduleAlertTimeActivity.class);
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, remindEvent.getAdvanceTimeSpan());
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY, isAllDay);
-                startActivityForResult(intent, CAL_ALERT_TIME_REQUEST_CODE);
+                startActivityForResult(intent, REQUEST_CAL_ALERT_TIME);
                 break;
             case R.id.rl_repeat:
                 break;
@@ -320,34 +319,36 @@ public class CalendarAddActivity extends BaseActivity {
      * 存储日历事件
      */
     private void saveCalendarEvent() {
-        if (isEditable == false) {
+        if (!isEditable) {
             isEditable = true;
             setViewIsEditable(isEditable);
-            return;
-        }
-        if (!isAbleSaveAndTips())
-            return;
-        correctedCalendarTime();
-        scheduleEvent.setTitle(contentText);
-        scheduleEvent.setAllDay(isAllDay);
-        scheduleEvent.setState(-1);
-        scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
-        scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
-        scheduleEvent.setType(myCalendar != null ? myCalendar.getId() : "default");
-        if (remindEvent.getAdvanceTimeSpan() != -1) {
-            scheduleEvent.setRemindEvent(remindEvent.toJSONObject().toString());
-        }
-        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
-            updateCalEvent();
         } else {
-            addCalEvent();
+            if (!checkingSaveCalendarEventAvaliable())
+                return;
+            correctedCalendarTime();
+            scheduleEvent.setTitle(contentText);
+            scheduleEvent.setAllDay(isAllDay);
+            scheduleEvent.setState(-1);
+            scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
+            scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
+            scheduleEvent.setType(myCalendar != null ? myCalendar.getId() : "default");
+            if (remindEvent.getAdvanceTimeSpan() != -1) {
+                scheduleEvent.setRemindEvent(remindEvent.toJSONObject().toString());
+            }
+            if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
+                updateCalEvent();
+            } else {
+                addCalEvent();
+            }
         }
+
+
     }
 
     /**
      * 能否保存提示
      */
-    private boolean isAbleSaveAndTips() {
+    private boolean checkingSaveCalendarEventAvaliable() {
         contentText = inputContentEdit.getText().toString();
         if (StringUtils.isBlank(contentText)) {
             ToastUtils.show(getApplicationContext(),
@@ -367,38 +368,6 @@ public class CalendarAddActivity extends BaseActivity {
         return true;
     }
 
-    /**
-     * 更新日程
-     */
-    private void updateCalEvent() {
-        // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            try {
-                scheduleEvent.setLastTime(System.currentTimeMillis());
-                LogUtils.LbcDebug("update Schedule::" + scheduleEvent.toCalendarEventJSONObject().toString());
-                apiService.updateSchedule(scheduleEvent.toCalendarEventJSONObject().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            loadingDlg.show();
-        }
-    }
-
-    /**
-     * 添加事件
-     */
-    private void addCalEvent() {
-        // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            try {
-                loadingDlg.show();
-                LogUtils.LbcDebug("Add Schedule::" + scheduleEvent.toCalendarEventJSONObject().toString());
-                apiService.addSchedule(scheduleEvent.toCalendarEventJSONObject().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -406,18 +375,18 @@ public class CalendarAddActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REPEAT_TYPE_REQUEST_CODE:
+                case REQUEST_REPEAT_TYPE:
                     String calendarType = data.getStringExtra(EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME);
                     repeatText.setText(calendarType);
                     break;
-                case CAL_TYPE_REQUEST_CODE:
+                case REQUEST_CAL_TYPE:
                     myCalendar = (MyCalendar) data.getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_TYPE);
                     calendarTypeLayout.setVisibility(View.VISIBLE);
                     calendarTypeNameText.setText(myCalendar.getName());
                     calendarTypeFlagImage.setImageResource(CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
                     calenderTypeTipLayout.setVisibility(View.VISIBLE);
                     break;
-                case CAL_ALERT_TIME_REQUEST_CODE:
+                case REQUEST_CAL_ALERT_TIME:
                     remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
                     remindEvent.setRemindType("in_app");
                     alertText.setText(remindEvent.getName());
@@ -438,7 +407,63 @@ public class CalendarAddActivity extends BaseActivity {
     }
 
     /**
-     * */
+     * 获取间隔时间 单位Min（分钟）
+     */
+    private long getIntervalMin() {
+        long interval = 0;
+        if (isAllDay) {
+            long remainder = endCalendar.getTimeInMillis() % (1000 * 24 * 3600);
+            interval = (remainder + (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis())) / (1000 * 24 * 3600);
+            interval = interval * 24 * 60;
+        } else {
+            interval = (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis() + 1) / (1000 * 60);
+        }
+        return interval;
+    }
+
+    /**
+     * 上传日历时间秒毫秒单位清零矫正，allday 重设时间
+     */
+    private void correctedCalendarTime() {
+        if (isAllDay) {
+            startCalendar = TimeUtils.getDayBeginCalendar(startCalendar);
+            endCalendar = TimeUtils.getDayEndCalendar(endCalendar);
+        }
+        startCalendar.set(Calendar.SECOND, 0);
+        startCalendar.set(Calendar.MILLISECOND, 0);
+        endCalendar.set(Calendar.SECOND, 0);
+        endCalendar.set(Calendar.MILLISECOND, 0);
+    }
+
+    /**
+     * 更新日程
+     */
+    private void updateCalEvent() {
+        // TODO Auto-generated method stub
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            scheduleEvent.setLastTime(System.currentTimeMillis());
+            apiService.updateSchedule(scheduleEvent.toCalendarEventJSONObject().toString());
+        }
+    }
+
+    /**
+     * 添加事件
+     */
+    private void addCalEvent() {
+        // TODO Auto-generated method stub
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            try {
+                loadingDlg.show();
+                LogUtils.LbcDebug("Add Schedule::" + scheduleEvent.toCalendarEventJSONObject().toString());
+                apiService.addSchedule(scheduleEvent.toCalendarEventJSONObject().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     private class WebService extends APIInterfaceInstance {
 
         @Override
@@ -491,33 +516,5 @@ public class CalendarAddActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 获取间隔时间 单位Min（分钟）
-     */
-    private long getIntervalMin() {
-        long interval = 0;
-        if (isAllDay) {
-            long remainder = endCalendar.getTimeInMillis() % (1000 * 24 * 3600);
-            interval = (remainder + (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis())) / (1000 * 24 * 3600);
-            interval = interval * 24 * 60;
-        } else {
-            interval = (endCalendar.getTimeInMillis() - startCalendar.getTimeInMillis() + 1) / (1000 * 60);
-        }
-        return interval;
-    }
-
-    /**
-     * 上传日历时间秒毫秒单位清零矫正，allday 重设时间
-     */
-    private void correctedCalendarTime() {
-        if (isAllDay) {
-            startCalendar = TimeUtils.getDayBeginCalendar(startCalendar);
-            endCalendar = TimeUtils.getDayEndCalendar(endCalendar);
-        }
-        startCalendar.set(Calendar.SECOND, 0);
-        startCalendar.set(Calendar.MILLISECOND, 0);
-        endCalendar.set(Calendar.SECOND, 0);
-        endCalendar.set(Calendar.MILLISECOND, 0);
-    }
 
 }
