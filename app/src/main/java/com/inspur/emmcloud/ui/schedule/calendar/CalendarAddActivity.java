@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
@@ -40,6 +41,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -94,13 +96,13 @@ public class CalendarAddActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private Schedule scheduleEvent = new Schedule();
     private MyCalendar myCalendar;
+    private List<MyCalendar> calendarsList = new ArrayList<>();
     private Boolean isAllDay = false;
     private Boolean isEditable = true;
     private Calendar startCalendar;
     private Calendar endCalendar;
-    private String contentText="";
+    private String contentText = "";
     RemindEvent remindEvent = new RemindEvent();
-
     private int intervalMin = 0;
 
     @Override
@@ -114,19 +116,6 @@ public class CalendarAddActivity extends BaseActivity {
      * 初始化View
      */
     private void initView() {
-        loadingDlg = new LoadingDialog(this);
-        apiService = new WorkAPIService(getApplicationContext());
-        apiService.setAPIInterface(new WebService());
-        allDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                isAllDay = b;
-                timeTextextChangeByIsAllday(isAllDay);
-                alertText.setText("");
-                remindEvent = new RemindEvent();
-
-            }
-        });
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
         titleText.setText(isEditable ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
@@ -144,8 +133,21 @@ public class CalendarAddActivity extends BaseActivity {
      * 初始化日期数据
      */
     private void initData() {
-        if(getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)){
-            contentText=getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
+        loadingDlg = new LoadingDialog(this);
+        apiService = new WorkAPIService(getApplicationContext());
+        apiService.setAPIInterface(new WebService());
+        allDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isAllDay = b;
+                timeTextextChangeByIsAllday(isAllDay);
+                alertText.setText("");
+                remindEvent = new RemindEvent();
+
+            }
+        });
+        if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
+            contentText = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
         }
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
@@ -164,7 +166,7 @@ public class CalendarAddActivity extends BaseActivity {
             remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
                     JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
                     ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay));
-        }  else {
+        } else {
             startCalendar = Calendar.getInstance();
             endCalendar = (Calendar) startCalendar.clone();
             if (!isAllDay) {
@@ -321,34 +323,33 @@ public class CalendarAddActivity extends BaseActivity {
         if (isEditable == false) {
             isEditable = true;
             setViewIsEditable(isEditable);
+            return;
+        }
+        if (!isAbleSaveAndTips())
+            return;
+        correctedCalendarTime();
+        scheduleEvent.setTitle(contentText);
+        scheduleEvent.setAllDay(isAllDay);
+        scheduleEvent.setState(-1);
+        scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
+        scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
+        scheduleEvent.setType(myCalendar != null ? myCalendar.getId() : "default");
+        if (remindEvent.getAdvanceTimeSpan() != -1) {
+            scheduleEvent.setRemindEvent(remindEvent.toJSONObject().toString());
+        }
+        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
+            updateCalEvent();
         } else {
-            String title = inputContentEdit.getText().toString();
-            if (!isAbleSaveAndTips(title, startCalendar, endCalendar)) {
-                return;
-            }
-            correctedCalendarTime();
-            scheduleEvent.setTitle(title);
-            scheduleEvent.setAllDay(isAllDay);
-            scheduleEvent.setState(-1);
-            scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
-            scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
-            scheduleEvent.setType("default");
-            if (remindEvent.getAdvanceTimeSpan() != -1) {
-                scheduleEvent.setRemindEvent(remindEvent.toJSONObject().toString());
-            }
-            if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
-                updateCalEvent();
-            } else {
-                addCalEvent();
-            }
+            addCalEvent();
         }
     }
 
     /**
      * 能否保存提示
      */
-    private boolean isAbleSaveAndTips(String title, Calendar startCalendar, Calendar endCalendar) {
-        if (StringUtils.isBlank(title)) {
+    private boolean isAbleSaveAndTips() {
+        contentText = inputContentEdit.getText().toString();
+        if (StringUtils.isBlank(contentText)) {
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_please_input_title);
             return false;
@@ -358,14 +359,13 @@ public class CalendarAddActivity extends BaseActivity {
                     R.string.calendar_start_or_end_time_illegal);
             return false;
         }
-        if (title.length() > 64) {
+        if (contentText.length() > 64) {
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_tilte_cannot_exceed_64);
             return false;
         }
         return true;
     }
-
 
     /**
      * 更新日程
@@ -466,7 +466,6 @@ public class CalendarAddActivity extends BaseActivity {
             sendCalendarEventNotification();
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.modify_success));
-            LogUtils.LbcDebug("update Schedule Success");
             //更新系日历事件
             finish();
         }
@@ -476,10 +475,20 @@ public class CalendarAddActivity extends BaseActivity {
             super.returnUpdateScheduleFail(error, errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
-            LogUtils.LbcDebug("update Schedule Fail");
         }
 
+        @Override
+        public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
+            List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
+            calendarsList.clear();
+            calendarsList.addAll(allCalendarList);
+            MyCalendarCacheUtils.saveMyCalendarList(CalendarAddActivity.this, calendarsList);
+        }
 
+        @Override
+        public void returnMyCalendarFail(String error, int errorCode) {
+            super.returnMyCalendarFail(error, errorCode);
+        }
     }
 
     /**
