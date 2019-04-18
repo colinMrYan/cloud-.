@@ -1579,6 +1579,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void addTextToSchedule(String content) {
         Intent intent = new Intent();
+        LogUtils.LbcDebug("content::"+content);
         intent.putExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE, content);
         intent.setClass(ConversationActivity.this, CalendarAddActivity.class);
         startActivity(intent);

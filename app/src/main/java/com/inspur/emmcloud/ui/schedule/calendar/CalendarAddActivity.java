@@ -98,7 +98,7 @@ public class CalendarAddActivity extends BaseActivity {
     private Boolean isEditable = true;
     private Calendar startCalendar;
     private Calendar endCalendar;
-    private String contentText;
+    private String contentText="";
     RemindEvent remindEvent = new RemindEvent();
 
     private int intervalMin = 0;
@@ -106,7 +106,7 @@ public class CalendarAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDate();
+        initData();
         initView();
     }
 
@@ -143,11 +143,13 @@ public class CalendarAddActivity extends BaseActivity {
     /**
      * 初始化日期数据
      */
-    private void initDate() {
+    private void initData() {
+        if(getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)){
+            contentText=getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
+        }
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            LogUtils.LbcDebug("传:::" + JSONUtils.toJSONString(scheduleEvent));
             isAllDay = scheduleEvent.getAllDay();
             startCalendar = scheduleEvent.getStartTimeCalendar();
             endCalendar = scheduleEvent.getEndTimeCalendar();
@@ -161,15 +163,15 @@ public class CalendarAddActivity extends BaseActivity {
             }
             remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
                     JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
-                     ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),isAllDay));
-        } else {
+                    ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay));
+        }  else {
             startCalendar = Calendar.getInstance();
             endCalendar = (Calendar) startCalendar.clone();
             if (!isAllDay) {
                 endCalendar.add(Calendar.HOUR_OF_DAY, 1);
             }
             scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
-            remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(),isAllDay));
+            remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
         }
         intervalMin = (int) getIntervalMin();
     }
@@ -303,7 +305,7 @@ public class CalendarAddActivity extends BaseActivity {
             case R.id.rl_alert_time:
                 intent.setClass(getApplicationContext(),
                         ScheduleAlertTimeActivity.class);
-                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME,remindEvent.getAdvanceTimeSpan());
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, remindEvent.getAdvanceTimeSpan());
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY, isAllDay);
                 startActivityForResult(intent, CAL_ALERT_TIME_REQUEST_CODE);
                 break;
@@ -331,7 +333,7 @@ public class CalendarAddActivity extends BaseActivity {
             scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
             scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
             scheduleEvent.setType("default");
-            if(remindEvent.getAdvanceTimeSpan()!=-1){
+            if (remindEvent.getAdvanceTimeSpan() != -1) {
                 scheduleEvent.setRemindEvent(remindEvent.toJSONObject().toString());
             }
             if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
