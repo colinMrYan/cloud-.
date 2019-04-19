@@ -813,7 +813,7 @@ public class TaskAddActivity extends BaseActivity {
             super.returnGetTasksSuccess(getTaskListResult);
             LoadingDialog.dimissDlg(loadingDlg);
             ArrayList<String> memebersIds = new ArrayList<String>();
-            memebersIds = handleTaskSearhMembers(getTaskListResult);
+            memebersIds = handleTaskSearchMembers(getTaskListResult);
             showParticipantImage();
         }
 
@@ -928,7 +928,7 @@ public class TaskAddActivity extends BaseActivity {
      * @param getTaskListResult
      * @return
      */
-    public ArrayList<String> handleTaskSearhMembers(
+    public ArrayList<String> handleTaskSearchMembers(
             GetTaskListResult getTaskListResult) {
         ArrayList<String> membersIds = new ArrayList<String>();
         for (int i = 0; i < getTaskListResult.getTaskList().size(); i++) {
