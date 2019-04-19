@@ -1631,7 +1631,7 @@ public class APIUri {
      */
     public static String getAgoraUrl() {
 //        return MyApplication.getInstance().getClusterEmm()+"";
-        return "http://172.31.2.36:88/api/sys/v6.0/voice/create";
+        return "http://emm.inspur.com/api/sys/v6.0/voice/create";
     }
 
     /**
@@ -1640,7 +1640,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraJoinChannelSuccessUrl() {
-        return "http://172.31.2.36:88/api/sys/v6.0/voice/join/";
+        return "http://emm.inspur.com/api/sys/v6.0/voice/join/";
     }
 
     /**
@@ -1649,7 +1649,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraChannelInfoUrl() {
-        return "http://172.31.2.36:88/api/sys/v6.0/voice/";
+        return "http://emm.inspur.com/api/sys/v6.0/voice/";
     }
 
     /**
@@ -1658,7 +1658,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraRefuseChannelUrl() {
-        return "http://172.31.2.36:88/api/sys/v6.0/voice/refuse/";
+        return "http://emm.inspur.com/api/sys/v6.0/voice/refuse/";
     }
 
     /**
@@ -1667,7 +1667,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraLeaveChannelUrl() {
-        return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
+        return "http://emm.inspur.com/api/sys/v6.0/voice/leave/";
     }
 
     /**
@@ -1732,19 +1732,19 @@ public class APIUri {
     }
 
     public static String getDelScheduleUrl(String scheduleId) {
-        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/remove/" + scheduleId;
+        return "http://emm.inspur.com/api/schedule/v6.0/calendar/remove/" + scheduleId;
     }
 
     public static String getAddMeetingUrl() {
-        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/add";
+        return "http://emm.inspur.com/api/schedule/v6.0/meeting/add";
     }
 
     public static String getMeetingListByStartTime(){
-        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetByStartTime?";
+        return "http://emm.inspur.com/api/schedule/v6.0/meeting/GetByStartTime?";
     }
 
     public static String getRoomMeetingListByMeetingRoom(){
-        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetRoomUse?";
+        return "http://emm.inspur.com/api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
     /**
