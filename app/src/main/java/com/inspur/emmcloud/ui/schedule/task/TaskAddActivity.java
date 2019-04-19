@@ -126,7 +126,6 @@ public class TaskAddActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private Task taskResult = new Task();
 
-    private List<Attachment> attachments = new ArrayList<>();
     private List<JsonAttachmentAndUri> jsonAttachmentList = new ArrayList<>();
     private List<SearchModel> taskMangerList = new ArrayList<>();
     private List<SearchModel> taskParticipantList = new ArrayList<>();
@@ -219,7 +218,7 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     private void initView() {
-        if (getIntent().hasExtra("task")) {
+        if (!isCreateTask) {
             contentInputEdit.setText(taskResult.getTitle());
             segmentControlView.setSelectedIndex(taskResult.getPriority());
             setTaskColorTags();
@@ -662,11 +661,11 @@ public class TaskAddActivity extends BaseActivity {
 
     private void deleteAttachment(int currentIndex) {
         if (NetUtils.isNetworkConnected(this)) {
-            if (getIntent().hasExtra("task")) {
-                apiService.deleteAttachments(taskResult.getId(), taskResult.getAttachments().get(currentIndex).getId(), currentIndex);
-            } else {
+            if (isCreateTask) {
                 jsonAttachmentList.remove(currentIndex);
                 attachmentOtherAdapter.notifyDataSetChanged();
+            } else {
+                apiService.deleteAttachments(taskResult.getId(), taskResult.getAttachments().get(currentIndex).getId(), currentIndex);
             }
         }
     }
@@ -702,13 +701,12 @@ public class TaskAddActivity extends BaseActivity {
             //更新Task
             if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
                 String taskData = uploadTaskData();
-                LogUtils.LbcDebug("taskData：：：" + taskData);
                 apiService.updateTask(taskData, -1);
             }
 
             //更新Task
             if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
-                if (getIntent().hasExtra("task")) {
+                if (!isCreateTask) {
                     apiService.deleteTaskTags(taskResult.getId());
                 } else {
                     List<String> tagsIdList = new ArrayList<>();
@@ -781,7 +779,7 @@ public class TaskAddActivity extends BaseActivity {
         public void returnAttachmentSuccess(Task taskResult) {
             super.returnAttachmentSuccess(taskResult);
             LoadingDialog.dimissDlg(loadingDlg);
-            attachments = taskResult.getAttachments();
+            List<Attachment> attachments = taskResult.getAttachments();
             taskResult.setAttachments(attachments);
             ToastUtils.show(TaskAddActivity.this,
                     getString(R.string.mession_upload_attachment_success));
@@ -797,7 +795,7 @@ public class TaskAddActivity extends BaseActivity {
         public void returnAddAttachMentSuccess(Attachment attachment) {
             super.returnAddAttachMentSuccess(attachment);
             LoadingDialog.dimissDlg(loadingDlg);
-            attachments = taskResult.getAttachments();
+            List<Attachment> attachments = taskResult.getAttachments();
             attachments.add(attachment);
             taskResult.setAttachments(attachments);
         }
@@ -844,7 +842,6 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnDelAttachmentSuccess(int position) {
-            super.returnDelAttachmentSuccess(position);
             LoadingDialog.dimissDlg(loadingDlg);
             List<Attachment> attachments = taskResult.getAttachments();
             attachments.remove(position);
@@ -863,9 +860,8 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnChangeMessionOwnerSuccess(String managerName) {
-            super.returnChangeMessionOwnerSuccess(managerName);
-            taskResult.setOwner(managerName);
             LoadingDialog.dimissDlg(loadingDlg);
+            taskResult.setOwner(managerName);
         }
 
         @Override
@@ -877,7 +873,6 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnChangeMessionTagSuccess() {
-            super.returnChangeMessionTagSuccess();
             LoadingDialog.dimissDlg(loadingDlg);
         }
 
@@ -895,13 +890,11 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnAddTaskTagSuccess() {
             super.returnAddTaskTagSuccess();
-            LogUtils.LbcDebug("add Task Tags Success");
         }
 
         @Override
         public void returnAddTaskTagFail(String error, int errorCode) {
             super.returnAddTaskTagFail(error, errorCode);
-            LogUtils.LbcDebug("add Task Tags Fails");
         }
 
         @Override
