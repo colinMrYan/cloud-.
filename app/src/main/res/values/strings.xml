@@ -666,6 +666,7 @@
     <string name="mine_theme_blue">商务蓝</string>
 
     <string name="mine_tab_layout">布局切换</string>
+    <string name="mine_tab_layout_switch">是否切换为：%1$s</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">请输入新密码</string>
