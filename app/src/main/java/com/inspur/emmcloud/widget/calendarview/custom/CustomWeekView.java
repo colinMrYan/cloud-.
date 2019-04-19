@@ -146,7 +146,7 @@ public class CustomWeekView extends WeekView {
         String day = calendar.isCurrentDay() ? "今" : String.valueOf(calendar.getDay());
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius, mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
+            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius-dipToPx(getContext(), 1.5f), mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
         }
         if (isSelected) {
             canvas.drawText(day, cx, mTextBaseLine + top,

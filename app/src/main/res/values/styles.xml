@@ -21,6 +21,8 @@
         <item name="qmui_dialog_title_margin_top">20dp</item>
         <item name="qmui_config_color_blue">@color/transparent</item>
         <item name="colorAccent">#36A5F6</item>
+        <item name="android:textColorPrimary">#333333</item>
+        <item name="android:textColorSecondary">#333333</item>
     </style>
     <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">#C8C7CC</item>

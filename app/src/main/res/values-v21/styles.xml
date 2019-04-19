@@ -12,9 +12,11 @@
         <item name="qmui_dialog_content_list_item_height">44dp</item>
         <item name="qmui_dialog_content_padding_top">10dp</item>
         <item name="qmui_dialog_title_margin_top">20dp</item>
-        <item name="qmui_config_color_blue">#36A5F6</item>
+        <!--<item name="qmui_config_color_blue">#36A5F6</item>-->
         <item name="colorAccent">#36A5F6</item>
         <item name="android:navigationBarColor" >@color/white</item>
+        <item name="android:textColorPrimary">#333333</item>
+        <item name="android:textColorSecondary">#333333</item>
     </style>
 
 </resources>

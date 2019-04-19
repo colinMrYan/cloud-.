@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.Task;
@@ -27,7 +28,9 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.TaskCacheUtils;
@@ -61,6 +64,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
 
+
     @ViewInject(R.id.calendar_view_schedule)
     private CalendarView calendarView;
     @ViewInject(R.id.calendar_layout_schedule)
@@ -88,6 +92,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar pageEndCalendar = Calendar.getInstance();
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
+    private List<Holiday> holidayList= new ArrayList<>();
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -97,6 +102,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         apiService.setAPIInterface(new WebService());
         pageStartCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
         pageEndCalendar = TimeUtils.getDayEndCalendar(Calendar.getInstance());
+        holidayList = HolidayCacheUtils.getHolidayList(MyApplication.getInstance());
         initView();
     }
 
@@ -111,6 +117,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
+
                 break;
         }
     }
@@ -145,12 +152,16 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         eventScrollView.setVisibility(isEventShowTypeList ? View.GONE : View.VISIBLE);
     }
 
-    private EmmCalendar getSchemeCalendar(int year, int month, int day, String text, boolean isShowSchemePoint) {
+    private EmmCalendar getSchemeCalendar(int year, int month, int day, String text, boolean isShowSchemePoint,boolean isDuty) {
         EmmCalendar emmCalendar = new EmmCalendar();
         emmCalendar.setYear(year);
         emmCalendar.setMonth(month);
         emmCalendar.setDay(day);
-        emmCalendar.setSchemeColor(0xff36A5F6);//如果单独标记颜色、则会使用这个颜色
+
+        if (!StringUtils.isBlank(text)){
+            emmCalendar.setSchemeColor(isDuty?0xfff0906b:0xff36A5F6);
+        }
+        //如果单独标记颜色、则会使用这个颜色
         emmCalendar.setScheme(text);
         emmCalendar.setShowSchemePoint(isShowSchemePoint);
         return emmCalendar;
@@ -211,6 +222,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
 
+    /**
+     * 显示event事件
+     * @param isForceUpdate  是否强制刷新数据
+      */
     private void showCalendarEvent(boolean isForceUpdate) {
         List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
         List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
@@ -251,17 +266,39 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         scheduleSumText.setText(eventListSize > 0 ? eventListSize + "项日程" : "");
     }
 
+    /**
+     * 展示日历事件标志
+     * @param scheduleList
+     * @param meetingList
+     */
     private void showCalendarViewEventMark(List<Schedule> scheduleList, List<Meeting> meetingList) {
         calendarView.clearSchemeDate();
         Map<String, EmmCalendar> map = new HashMap<>();
+        for (Holiday holiday:holidayList){
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(holiday.getYear(),holiday.getMonth()-1,holiday.getDay(),0,0,0);
+            calendar.set(Calendar.MILLISECOND,0);
+            if (calendar.before(pageEndCalendar) && !calendar.before(pageStartCalendar)){
+                map.put(getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.isDuty()?"班":"休", false,holiday.isDuty()).toString(),
+                        getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(),holiday.isDuty()?"班":"休", false,holiday.isDuty()));
+            }
+        }
+
         for (Schedule schedule : scheduleList) {
             Calendar eventStartDayBeginCalendar = TimeUtils.getDayBeginCalendar(schedule.getStartTimeCalendar());
             for (Calendar calendar = eventStartDayBeginCalendar; calendar.before(schedule.getEndTimeCalendar()); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                map.put(getSchemeCalendar(year, month, day, " ", true).toString(),
-                        getSchemeCalendar(year, month, day, " ", true));
+                EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, " ", true,false);
+                EmmCalendar existEmmCalendar = map.get(emmCalendar.toString());
+                if (existEmmCalendar == null){
+                    existEmmCalendar = emmCalendar;
+                }else {
+                    existEmmCalendar.setShowSchemePoint(true);
+                }
+
+                map.put(existEmmCalendar.toString(),existEmmCalendar);
             }
         }
         for (Meeting meeting : meetingList) {
@@ -270,13 +307,21 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                map.put(getSchemeCalendar(year, month, day, " ", true).toString(),
-                        getSchemeCalendar(year, month, day, " ", true));
+                EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, " ", true,false);
+                EmmCalendar existEmmCalendar = map.get(emmCalendar.toString());
+                if (existEmmCalendar == null){
+                    existEmmCalendar = emmCalendar;
+                }else {
+                    existEmmCalendar.setShowSchemePoint(true);
+                }
+
+                map.put(existEmmCalendar.toString(),existEmmCalendar);
             }
         }
-
-        //此方法在巨大的数据量上不影响遍历性能，推荐使用
         calendarView.setSchemeDate(map);
+
+
+
     }
 
     private void openEvent(Event event) {
