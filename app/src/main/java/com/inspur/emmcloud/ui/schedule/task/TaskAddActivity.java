@@ -57,7 +57,6 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.SegmentControl;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -91,28 +90,22 @@ public class TaskAddActivity extends BaseActivity {
     LinearLayout tagsLayout;
     @ViewInject(R.id.et_input_title)
     private EditText contentInputEdit;
-    @ViewInject(R.id.segment_control)
-    private SegmentControl segmentControl;
     @ViewInject(R.id.iv_task_type_tap)
     private ImageView taskTypeTapImage;
     @ViewInject(R.id.tv_task_type_name)
     private TextView taskTypeNameText;
     @ViewInject(R.id.tv_deadline_time)
     private TextView deadlineTimeText;
-    @ViewInject(R.id.tv_deadline_time)
-    private TextView stateText;
-    @ViewInject(R.id.iv_more)
-    private ImageView moreImage;
     @ViewInject(R.id.iv_parter_head_three)
-    private ImageView parterHeadThreeImageView;
+    private ImageView participantHeadThreeImageView;
     @ViewInject(R.id.iv_parter_head_two)
-    private ImageView parterHeadTwoImageView;
+    private ImageView participantHeadTwoImageView;
     @ViewInject(R.id.iv_parter_head_one)
-    private ImageView parterHeadOneImageView;
+    private ImageView participantHeadOneImageView;
     @ViewInject(R.id.iv_task_parter_add)
-    private ImageView parterAddImageView;
+    private ImageView participantAddImageView;
     @ViewInject(R.id.tv_parter_num)
-    private TextView parterNumText;
+    private TextView participantNumText;
     @ViewInject(R.id.iv_manager_head)
     private ImageView managerHeadImageView;
     @ViewInject(R.id.tv_manager_num)
@@ -121,8 +114,6 @@ public class TaskAddActivity extends BaseActivity {
     private ImageView managerAddImageView;
     @ViewInject(R.id.tv_end_task_alert_time)
     private TextView taskAlertTimeView;
-    @ViewInject(R.id.lv_attachment_abstract_picture)
-    private ListView attachmentPicturesList;
     @ViewInject(R.id.lv_attachment_abstract_other)
     private ListView attachmentOthersList;
     @ViewInject(R.id.ll_more_content)
@@ -514,7 +505,7 @@ public class TaskAddActivity extends BaseActivity {
      */
     private void showPartersImage() {
         List<String> partersImageUrl = new ArrayList<>();
-        ImageView[] ImageList = {parterHeadOneImageView, parterHeadTwoImageView, parterHeadThreeImageView};
+        ImageView[] ImageList = {participantHeadOneImageView, participantHeadTwoImageView, participantHeadThreeImageView};
         int taskPartersNum = taskParticipantList.size();
         initParterUI(ImageList);
         if (taskPartersNum < 1) {
@@ -537,9 +528,9 @@ public class TaskAddActivity extends BaseActivity {
                 }
             });
         }
-        parterNumText.setText(taskPartersNum + "人");
-        parterNumText.setVisibility(View.VISIBLE);
-        parterAddImageView.setVisibility(View.GONE);
+        participantNumText.setText(taskPartersNum + "人");
+        participantNumText.setVisibility(View.VISIBLE);
+        participantAddImageView.setVisibility(View.GONE);
     }
 
     /**
@@ -548,8 +539,8 @@ public class TaskAddActivity extends BaseActivity {
      * @param imageViews
      */
     private void initParterUI(ImageView[] imageViews) {
-        parterNumText.setVisibility(View.GONE);
-        parterAddImageView.setVisibility(View.VISIBLE);/**参与者UI 初始化*/
+        participantNumText.setVisibility(View.GONE);
+        participantAddImageView.setVisibility(View.VISIBLE);/**参与者UI 初始化*/
         for (int j = 0; j < 3; j++) {
             imageViews[j].setVisibility(View.GONE);
         }
@@ -644,8 +635,8 @@ public class TaskAddActivity extends BaseActivity {
                 otherHolder = (AttachmentHolder) view.getTag();
             }
 
-            otherHolder.attachmentImageView.setImageResource(getFileIconByType(JSONUtils.getString(otherJsonAttachments.get(i).getJsonAttachemnt(), "type", "")));
-            otherHolder.attachmentNameText.setText(JSONUtils.getString(otherJsonAttachments.get(i).getJsonAttachemnt(), "name", ""));
+            otherHolder.attachmentImageView.setImageResource(getFileIconByType(JSONUtils.getString(otherJsonAttachments.get(i).getJsonAttachment(), "type", "")));
+            otherHolder.attachmentNameText.setText(JSONUtils.getString(otherJsonAttachments.get(i).getJsonAttachment(), "name", ""));
             otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -677,7 +668,7 @@ public class TaskAddActivity extends BaseActivity {
             taskResult.setState("ACTIVED");
             //调用创建任务成功
             for (int i = 0; i < otherJsonAttachments.size(); i++) {
-                apiService.addAttachments(getTaskAddResult.getId(), otherJsonAttachments.get(i).getJsonAttachemnt().toString());
+                apiService.addAttachments(getTaskAddResult.getId(), otherJsonAttachments.get(i).getJsonAttachment().toString());
             }
             //添加Parter
             if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskParticipantList.size() > 0) {
@@ -960,23 +951,23 @@ public class TaskAddActivity extends BaseActivity {
      * 附件对象及Uri
      */
     public class JsonAttachmentAndUri {
-        private JSONObject jsonAttachemnt;
+        private JSONObject jsonAttachment;
         private String uri;
         private boolean isNew = true;
 
         public JsonAttachmentAndUri(JSONObject jsonObject, String uri, boolean isNew) {
-            this.jsonAttachemnt = jsonObject;
+            this.jsonAttachment = jsonObject;
             this.uri = uri;
             this.isNew = isNew;
             //根据路径组装成uri
         }
 
-        public JSONObject getJsonAttachemnt() {
-            return jsonAttachemnt;
+        public JSONObject getJsonAttachment() {
+            return jsonAttachment;
         }
 
-        public void setJsonAttachemnt(JSONObject jsonAttachemnt) {
-            this.jsonAttachemnt = jsonAttachemnt;
+        public void setJsonAttachment(JSONObject jsonAttachemnt) {
+            this.jsonAttachment = jsonAttachemnt;
         }
 
         public String getUri() {
