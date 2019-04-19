@@ -76,7 +76,8 @@
                 android:hint="请输入任务内容..."
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:paddingTop="14dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
