@@ -576,7 +576,7 @@
                         android:textSize="16sp" />
 
                     <ImageView
-                        android:id="@+id/iv_attachemnt_add"
+                        android:id="@+id/iv_attachment_add"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_alignParentRight="true"
