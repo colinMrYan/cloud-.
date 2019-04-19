@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="添加任务"
+            android:text="@string/schedule_task_add"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
@@ -73,7 +73,7 @@
                 android:layout_alignParentTop="true"
                 android:background="#FFFFFF"
                 android:gravity="top|left"
-                android:hint="请输入任务内容..."
+                android:hint="@string/schedule_task_content_hint"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:textSize="16sp"
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16sp"
-                    android:text="优先级"
+                    android:text="@string/schedule_task_priority"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -140,7 +140,7 @@
                     android:layout_alignParentTop="true"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="类别"
+                    android:text="@string/schedule_task_category"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -175,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="10dp"
-                        android:text="未分类"
+                        android:text="@string/schedule_task_category_no"
                         android:textColor="#888888"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -212,7 +212,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="负责人"
+                    android:text="@string/schedule_task_manager"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -231,7 +231,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/iv_task_manager_arrow"
-                    android:text="0人"
+                    android:text="@string/schedule_task_manager_num_0"
                     android:textColor="#888888"
                     android:visibility="gone" />
 
@@ -260,7 +260,7 @@
                 android:background="@color/color_list_divider" />
 
             <RelativeLayout
-                android:id="@+id/rl_task_parter"
+                android:id="@+id/rl_task_participant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
@@ -269,65 +269,65 @@
                 android:paddingRight="16dp">
 
                 <TextView
-                    android:id="@+id/tv_task_parter"
+                    android:id="@+id/tv_task_participant"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="参与人"
+                    android:text="@string/schedule_task_participant"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView
-                    android:id="@+id/iv_parter_head_three"
+                    android:id="@+id/iv_participant_head_three"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/iv_parter_head_two"
+                    android:layout_toLeftOf="@id/iv_participant_head_two"
                     android:src="@drawable/default_image"
                     android:visibility="gone" />
 
                 <ImageView
-                    android:id="@+id/iv_parter_head_two"
+                    android:id="@+id/iv_participant_head_two"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/iv_parter_head_one"
+                    android:layout_toLeftOf="@id/iv_participant_head_one"
                     android:src="@drawable/default_image"
                     android:visibility="gone" />
 
                 <ImageView
-                    android:id="@+id/iv_parter_head_one"
+                    android:id="@+id/iv_participant_head_one"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/tv_parter_num"
+                    android:layout_toLeftOf="@id/tv_participant_num"
                     android:src="@drawable/default_image"
                     android:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/tv_parter_num"
+                    android:id="@+id/tv_participant_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/iv_task_parter_arrow"
-                    android:text="0人"
+                    android:layout_toLeftOf="@id/iv_task_participant_arrow"
+                    android:text="@string/schedule_task_participant_num_0"
                     android:textColor="#888888"
                     android:visibility="gone" />
 
                 <ImageView
-                    android:id="@+id/iv_task_parter_add"
+                    android:id="@+id/iv_task_participant_add"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/iv_task_parter_arrow"
+                    android:layout_toLeftOf="@id/iv_task_participant_arrow"
                     android:src="@drawable/ic_schedule_add" />
 
                 <ImageView
-                    android:id="@+id/iv_task_parter_arrow"
+                    android:id="@+id/iv_task_participant_arrow"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_alignParentRight="true"
@@ -400,7 +400,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="状态"
+                    android:text="@string/schedule_task_state"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -409,7 +409,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/iv_state_enter"
-                    android:text="进行中"
+                    android:text="@string/schedule_task_state_active"
                     android:textColor="#36A5F6"
                     android:textSize="16sp" />
 
@@ -444,7 +444,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="结束提醒"
+                    android:text="@string/schedule_task_deadline"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -453,7 +453,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@id/iv_task_end_alert_enter"
-                    android:text="无提醒"
+                    android:text="@string/calendar_no_alert"
                     android:textColor="#888888"
                     android:textSize="16sp" />
 
@@ -489,7 +489,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="更多"
+                    android:text="@string/schedule_task_more"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
@@ -571,7 +571,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="附件"
+                        android:text="@string/schedule_task_attachment"
                         android:textColor="#333333"
                         android:textSize="16sp" />
 

@@ -96,15 +96,15 @@ public class TaskAddActivity extends BaseActivity {
     private TextView taskTypeNameText;
     @ViewInject(R.id.tv_deadline_time)
     private TextView deadlineTimeText;
-    @ViewInject(R.id.iv_parter_head_three)
+    @ViewInject(R.id.iv_participant_head_three)
     private ImageView participantHeadThreeImageView;
-    @ViewInject(R.id.iv_parter_head_two)
+    @ViewInject(R.id.iv_participant_head_two)
     private ImageView participantHeadTwoImageView;
-    @ViewInject(R.id.iv_parter_head_one)
+    @ViewInject(R.id.iv_participant_head_one)
     private ImageView participantHeadOneImageView;
-    @ViewInject(R.id.iv_task_parter_add)
+    @ViewInject(R.id.iv_task_participant_add)
     private ImageView participantAddImageView;
-    @ViewInject(R.id.tv_parter_num)
+    @ViewInject(R.id.tv_participant_num)
     private TextView participantNumText;
     @ViewInject(R.id.iv_manager_head)
     private ImageView managerHeadImageView;
@@ -130,7 +130,7 @@ public class TaskAddActivity extends BaseActivity {
     private List<SearchModel> taskMangerList = new ArrayList<>();
     private List<SearchModel> taskParticipantList = new ArrayList<>();
     private List<SearchModel> orgTaskParticipantList = new ArrayList<>();
-    private List<TaskColorTag> taskColorTags = new ArrayList<>();
+    private List<TaskColorTag> taskColorTagList = new ArrayList<>();
     private Calendar deadLineCalendar;
     private AttachmentAdapter attachmentOtherAdapter;
     private String attachmentLocalPath = "";
@@ -157,7 +157,7 @@ public class TaskAddActivity extends BaseActivity {
         if (getIntent().hasExtra("task")) {
             taskResult = (Task) getIntent().getSerializableExtra("task");
             deadLineCalendar = taskResult.getDueDate();
-            taskColorTags = taskResult.getTags();
+            taskColorTagList = taskResult.getTags();
             isCreateTask = false;
             List<Attachment> attachments = taskResult.getAttachments();
             for (int i = 0; i < attachments.size(); i++) {
@@ -247,7 +247,7 @@ public class TaskAddActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_save:
-                if (!isAbleCreateOrUpdateTask())
+                if (!checkingAddOrUpdateTaskAvaliable())
                     return;
                 if (isCreateTask) {
                     createTask();
@@ -261,7 +261,7 @@ public class TaskAddActivity extends BaseActivity {
                 break;
             case R.id.rl_task_type:
                 intent.setClass(this, TaskTagsManageActivity.class);
-                intent.putExtra(TaskTagsManageActivity.EXTRA_TAGS, (ArrayList<TaskColorTag>) taskColorTags);
+                intent.putExtra(TaskTagsManageActivity.EXTRA_TAGS, (ArrayList<TaskColorTag>) taskColorTagList);
                 startActivityForResult(intent, REQUEST_CLASS_TAG);
                 break;
             case R.id.rl_task_manager:
@@ -273,7 +273,7 @@ public class TaskAddActivity extends BaseActivity {
                 intent.setClass(getApplicationContext(), ContactSearchActivity.class);
                 startActivityForResult(intent, REQUEST_MANGER);
                 break;
-            case R.id.rl_task_parter:
+            case R.id.rl_task_participant:
                 intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
                 intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
                 intent.putExtra(ContactSearchFragment.EXTRA_LIMIT, 20);
@@ -346,9 +346,9 @@ public class TaskAddActivity extends BaseActivity {
                     taskAlertTimeView.setText(alertData);
                     break;
                 case REQUEST_CLASS_TAG:
-                    taskColorTags.clear();
+                    taskColorTagList.clear();
                     ArrayList<TaskColorTag> arrayTaskColorTags = (ArrayList<TaskColorTag>) data.getSerializableExtra(TaskTagsManageActivity.EXTRA_TAGS);
-                    taskColorTags.addAll(arrayTaskColorTags);
+                    taskColorTagList.addAll(arrayTaskColorTags);
                     setTaskColorTags();
                     break;
                 case REQUEST_ATTACHMENT:
@@ -359,22 +359,22 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     private void setTaskColorTags() {
-        if (taskColorTags.size() == 1) {
+        if (taskColorTagList.size() == 1) {
             singleTagLayout.setVisibility(View.VISIBLE);
             tagsLayout.setVisibility(View.GONE);
-            taskTypeTapImage.setImageResource(CalendarColorUtils.getColorCircleImage(taskColorTags.get(0).getColor()));
-            taskTypeNameText.setText(taskColorTags.get(0).getTitle());
-        } else if (taskColorTags.size() > 1) {
+            taskTypeTapImage.setImageResource(CalendarColorUtils.getColorCircleImage(taskColorTagList.get(0).getColor()));
+            taskTypeNameText.setText(taskColorTagList.get(0).getTitle());
+        } else if (taskColorTagList.size() > 1) {
             singleTagLayout.setVisibility(View.GONE);
             tagsLayout.setVisibility(View.VISIBLE);
             int widthAndHigh = DensityUtil.dip2px(this, 8);
             tagsLayout.removeAllViews();
-            for (int i = 0; i < taskColorTags.size(); i++) {
+            for (int i = 0; i < taskColorTagList.size(); i++) {
                 ImageView view = new ImageView(this);
                 int rightPaddingPixNum = DensityUtil.dip2px(this, 5);
                 view.setPadding(rightPaddingPixNum, 0, 0, 0);
                 view.setLayoutParams(new ViewGroup.LayoutParams(widthAndHigh + rightPaddingPixNum, widthAndHigh));
-                view.setImageResource(CalendarColorUtils.getColorCircleImage(taskColorTags.get(i).getColor()));
+                view.setImageResource(CalendarColorUtils.getColorCircleImage(taskColorTagList.get(i).getColor()));
                 tagsLayout.addView(view);
             }
         }
@@ -419,7 +419,7 @@ public class TaskAddActivity extends BaseActivity {
     /**
      * 添加或者更新Task 有效性检测
      */
-    private boolean isAbleCreateOrUpdateTask() {
+    private boolean checkingAddOrUpdateTaskAvaliable() {
         if (!NetUtils.isNetworkConnected(this)) {
             ToastUtils.show(this, "网络不通，请检查网络");
             return false;
@@ -592,7 +592,7 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     /**
-     * 文本 Adapter
+     * 附件 Adapter
      */
     public class AttachmentAdapter extends BaseAdapter {
 
@@ -643,6 +643,9 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 获取图片预览路径
+     */
     private String getImgPreviewUri(String attachmentJson) {
         File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
         if (!dir.exists()) {
@@ -685,7 +688,7 @@ public class TaskAddActivity extends BaseActivity {
             for (int i = 0; i < jsonAttachmentList.size(); i++) {
                 apiService.addAttachments(getTaskAddResult.getId(), jsonAttachmentList.get(i).getJsonAttachment().toString());
             }
-            //添加Parter
+            //添加participant
             if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskParticipantList.size() > 0) {
                 JSONArray addMembers = new JSONArray();
                 for (int i = 0; i < taskParticipantList.size(); i++) {
@@ -710,8 +713,8 @@ public class TaskAddActivity extends BaseActivity {
                     apiService.deleteTaskTags(taskResult.getId());
                 } else {
                     List<String> tagsIdList = new ArrayList<>();
-                    for (int i = 0; i < taskColorTags.size(); i++) {
-                        tagsIdList.add(taskColorTags.get(i).getId());
+                    for (int i = 0; i < taskColorTagList.size(); i++) {
+                        tagsIdList.add(taskColorTagList.get(i).getId());
                     }
                     apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
                 }
@@ -901,8 +904,8 @@ public class TaskAddActivity extends BaseActivity {
         public void returnDelTaskTagSuccess() {
             super.returnDelTaskTagSuccess();
             List<String> tagsIdList = new ArrayList<>();
-            for (int i = 0; i < taskColorTags.size(); i++) {
-                tagsIdList.add(taskColorTags.get(i).getId());
+            for (int i = 0; i < taskColorTagList.size(); i++) {
+                tagsIdList.add(taskColorTagList.get(i).getId());
             }
             String colorData = JSONUtils.toJSONString(tagsIdList);
             apiService.addTaskTags(taskResult.getId(), colorData);
@@ -1022,7 +1025,7 @@ public class TaskAddActivity extends BaseActivity {
         int priority = segmentControlView.getSelectedIndex();
         taskResult.setTitle(title);
         taskResult.setPriority(priority);
-        taskResult.setTags(taskColorTags);
+        taskResult.setTags(taskColorTagList);
         if (deadLineCalendar != null)
             taskResult.setDueDate(TimeUtils.localCalendar2UTCCalendar(deadLineCalendar));
         String taskJson = JSONUtils.toJSONString(taskResult);

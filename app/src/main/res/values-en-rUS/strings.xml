@@ -375,6 +375,24 @@
     <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
     <string name="schedule_alert_time_before_a_week">1 Week before</string>
 
+    <string name="schedule_task_add">Add task</string>
+    <string name="schedule_task_detail">Task detail</string>
+
+    <string name="schedule_task_content_hint">Please enter the content</string>
+    <string name="schedule_task_priority">Priority</string>
+    <string name="schedule_task_category">Category</string>
+    <string name="schedule_task_category_no">No</string>
+    <string name="schedule_task_manager">Manager</string>
+    <string name="schedule_task_participant">Participant</string>
+    <string name="schedule_task_manager_num_0">0 people</string>
+    <string name="schedule_task_participant_num_0">0 people</string>
+    <string name="schedule_task_deadline">Deadline</string>
+    <string name="schedule_task_state">State</string>
+    <string name="schedule_task_state_active">Ongoing</string>
+    <string name="schedule_task_stop_alert">End reminder</string>
+    <string name="schedule_task_more">More</string>
+    <string name="schedule_task_attachment">Attachment</string>
+
     <!-- 发现部分 -->
     <string name="find">Discover</string>
     <string name="travel_analysis">Travel analysis</string>

@@ -382,6 +382,24 @@
     <string name="schedule_alert_time_before_two_day">2天前（上午9时）</string>
     <string name="schedule_alert_time_before_a_week">一周前</string>
 
+    <string name="schedule_task_add">添加任务</string>
+    <string name="schedule_task_detail">任务详情</string>
+
+    <string name="schedule_task_content_hint">请输入任务内容...</string>
+    <string name="schedule_task_priority">优先级</string>
+    <string name="schedule_task_category">类别</string>
+    <string name="schedule_task_category_no">未分类</string>
+    <string name="schedule_task_manager">负责人</string>
+    <string name="schedule_task_participant">参与人</string>
+    <string name="schedule_task_manager_num_0">0 人</string>
+    <string name="schedule_task_participant_num_0">0 人</string>
+    <string name="schedule_task_deadline">截止时间</string>
+    <string name="schedule_task_state">状态</string>
+    <string name="schedule_task_state_active">进行中</string>
+    <string name="schedule_task_stop_alert">结束提醒</string>
+    <string name="schedule_task_more">更多</string>
+    <string name="schedule_task_attachment">附件</string>
+
     <!-- 发现部分 -->
     <string name="find">发现</string>
     <string name="travel_analysis">差旅分析</string>
