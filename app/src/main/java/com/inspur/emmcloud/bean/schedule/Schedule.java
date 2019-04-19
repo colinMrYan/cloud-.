@@ -340,44 +340,50 @@ public class Schedule implements Serializable {
         return jsonObject.toString();
     }
 
-    public JSONObject toCalendarEventJSONObject() throws JSONException {
+    public JSONObject toCalendarEventJSONObject()  {
         JSONObject jsonObject = new JSONObject();
-        if (!StringUtils.isBlank(id)) {
-            jsonObject.put("id", id);
-        }
-        jsonObject.put("title", title);
-        jsonObject.put("type", type);
-        jsonObject.put("owner", owner);
-        jsonObject.put("startTime", startTime);
-        jsonObject.put("endTime", endTime);
-        if (creationTime != 0) {
-            jsonObject.put("creationTime", creationTime);
-        }
-        if (lastTime != 0) {
-            jsonObject.put("lastTime", lastTime);
-        }
-        jsonObject.put("isAllDay", isAllDay);
-        jsonObject.put("isCommunity", isCommunity);
-        jsonObject.put("syncToLocal", syncToLocal);
-        jsonObject.put("state", state);
+        try {
+            if (!StringUtils.isBlank(id)) {
+                jsonObject.put("id", id);
+            }
+            jsonObject.put("title", title);
+            jsonObject.put("type", type);
+            jsonObject.put("owner", owner);
+            jsonObject.put("startTime", startTime);
+            jsonObject.put("endTime", endTime);
+            if (creationTime != 0) {
+                jsonObject.put("creationTime", creationTime);
+            }
+            if (lastTime != 0) {
+                jsonObject.put("lastTime", lastTime);
+            }
+            jsonObject.put("isAllDay", isAllDay);
+            jsonObject.put("isCommunity", isCommunity);
+            jsonObject.put("syncToLocal", syncToLocal);
+            jsonObject.put("state", state);
 
-        if (!StringUtils.isBlank(remindEvent)) {
-            JSONObject remindJson = JSONUtils.getJSONObject(remindEvent);
-            jsonObject.put("remindEvent", remindJson);
+            if (!StringUtils.isBlank(remindEvent)) {
+                JSONObject remindJson = JSONUtils.getJSONObject(remindEvent);
+                jsonObject.put("remindEvent", remindJson);
+            }
+
+            if (!StringUtils.isBlank(location)) {
+                JSONObject locationJson = JSONUtils.getJSONObject(location);
+                jsonObject.put("location", locationJson);
+            }
+            if (!StringUtils.isBlank(participants)) {
+                JSONArray partJsonArray = JSONUtils.getJSONArray(participants, new JSONArray());
+                jsonObject.put("participants", partJsonArray);
+            }
+
+            if(!StringUtils.isBlank(note)){
+                jsonObject.put("note", note);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        if (!StringUtils.isBlank(location)) {
-            JSONObject locationJson = JSONUtils.getJSONObject(location);
-            jsonObject.put("location", locationJson);
-        }
-        if (!StringUtils.isBlank(participants)) {
-            JSONArray partJsonArray = JSONUtils.getJSONArray(participants, new JSONArray());
-            jsonObject.put("participants", partJsonArray);
-        }
 
-        if(!StringUtils.isBlank(note)){
-            jsonObject.put("note", note);
-        }
         return jsonObject;
     }
 
