@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +24,8 @@ import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -56,6 +59,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.util.List;
+
 @ContentView(R.layout.activity_setting)
 public class SettingActivity extends BaseActivity {
 
@@ -81,6 +86,10 @@ public class SettingActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     @ViewInject(R.id.tv_setting_theme_name)
     private TextView themeNameText;
+    @ViewInject(R.id.rl_setting_switch_tablayout)
+    private RelativeLayout switchTabLayout;
+    @ViewInject(R.id.tv_setting_tab_name)
+    private TextView tabName;
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @Override
@@ -165,6 +174,36 @@ public class SettingActivity extends BaseActivity {
             experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
         }
         themeNameText.setText(ThemeSwitchActivity.getThemeName());
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
+        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>0?View.VISIBLE:View.GONE);
+        tabName.setText(getTabLayoutName());
+    }
+
+    private String getTabLayoutName() {
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
+        List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        for (int i = 0; i < naviBarSchemeList.size(); i++) {
+            if(naviBarSchemeList.get(i).getName().equals(currentTabLayoutName)){
+                Configuration config = getResources().getConfiguration();
+                String environmentLanguage = config.locale.getLanguage();
+                String tabName = "";
+                switch (environmentLanguage.toLowerCase()) {
+                    case "zh-hant":
+                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getZhHans();
+                        break;
+                    case "en":
+                    case "en-us":
+                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getEnUS();
+                        break;
+                    default:
+                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getZhHans();
+                        break;
+                }
+                return tabName;
+            }
+        }
+        return "";
     }
 
     private void setWebAutoRotateState() {
@@ -254,6 +293,9 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.rl_setting_switch_theme:
                 IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
+                break;
+            case R.id.rl_setting_switch_tablayout:
+                IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);
                 break;
             default:
                 break;

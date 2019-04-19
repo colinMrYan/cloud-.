@@ -145,7 +145,7 @@ public class CustomMonthView extends MonthView {
         String day = calendar.isCurrentDay() ? "今" : String.valueOf(calendar.getDay());
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius, y + mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
+            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius-dipToPx(getContext(), 1.5f), y + mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
         }
 
         if (isSelected) {

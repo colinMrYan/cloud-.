@@ -136,6 +136,17 @@ public class APIUri {
 //        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
     }
 
+    /**
+     * 新版底部Tabbar接口
+     *
+     * @return
+     */
+    public static String getAppNaviTabs() {
+//        return getECMDistribution() + "/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+//        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
+        return "https://ecm.inspuronline.com/distribution/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+    }
+
 
     public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWorkPortletAppConfig ? "&key=WorkPortlet" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");

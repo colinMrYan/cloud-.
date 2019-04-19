@@ -406,6 +406,7 @@ public final class EmmCalendar implements Serializable, Comparable<EmmCalendar> 
                 defaultScheme : emmCalendar.getScheme());
         setSchemeColor(emmCalendar.getSchemeColor());
         setSchemes(emmCalendar.getSchemes());
+        setShowSchemePoint(emmCalendar.isShowSchemePoint|| isShowSchemePoint);
     }
 
     final void clearScheme() {
