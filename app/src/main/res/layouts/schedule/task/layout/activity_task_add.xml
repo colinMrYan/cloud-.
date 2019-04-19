@@ -111,7 +111,8 @@
                     app:scv_SegmentPaddingVertical="5dp"
                     app:scv_TextArray="@array/segment_control_items"
                     app:scv_TextNormalColor="#36A5F6"
-                    app:scv_TextSize="13sp" />
+                    app:scv_TextSize="13sp"
+                    app:scv_SelectedIndex="1"/>
             </RelativeLayout>
 
             <View
