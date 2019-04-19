@@ -8,14 +8,11 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebBackForwardList;
-import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -280,39 +277,41 @@ public class ImpWebView extends WebView {
         settings.setSavePassword(false);
     }
 
-    // 点击back键回退，如果你处理了该事件，则返回true。如果你想允许事件要处理的下一个接收器，返回false
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // 浏览记录含有历史记录，可以回退
-            if (this.canGoBack()) {
-                this.goBack();
-            }
-            return true;
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return !(startOfHistory());
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    // 判断当前页面是否是首页
-    private boolean startOfHistory() {
-        WebBackForwardList currentList = this.copyBackForwardList();
-        WebHistoryItem item = currentList.getItemAtIndex(0);
-        // 如果item为空，表示webview尚未加载url
-        if (item != null) {
-            String url = item.getUrl();
-            String currentUrl = this.getUrl();
-            return currentUrl.equals(url);
-        }
-        return true;
-    }
+//    // 点击back键回退，如果你处理了该事件，则返回true。如果你想允许事件要处理的下一个接收器，返回false
+//    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent event) {
+//        LogUtils.jasonDebug("onKeyUp------");
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            // 浏览记录含有历史记录，可以回退
+//            if (this.canGoBack()) {
+//                this.goBack();
+//            }
+//            return true;
+//        }
+//        return super.onKeyUp(keyCode, event);
+//    }
+//
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        LogUtils.jasonDebug("onKeyDown------");
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            return !(startOfHistory());
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+//
+//    // 判断当前页面是否是首页
+//    private boolean startOfHistory() {
+//        WebBackForwardList currentList = this.copyBackForwardList();
+//        WebHistoryItem item = currentList.getItemAtIndex(0);
+//        // 如果item为空，表示webview尚未加载url
+//        if (item != null) {
+//            String url = item.getUrl();
+//            String currentUrl = this.getUrl();
+//            return currentUrl.equals(url);
+//        }
+//        return true;
+//    }
 
     public void destroy() {
         this.destroyed = true;

@@ -105,7 +105,7 @@ public class UriUtils {
      * @param uri
      */
     public static void openUrl(Activity context, String uri) {
-        openUrl(context, uri, "  ");
+        openUrl(context, uri, "  ",true);
     }
 
     /**
@@ -114,10 +114,11 @@ public class UriUtils {
      * @param context
      * @param uri
      */
-    public static void openUrl(Activity context, String uri, String appName) {
+    public static void openUrl(Activity context, String uri, String appName,boolean isHaveNavBar) {
         Bundle bundle = new Bundle();
         bundle.putString("uri", uri);
         bundle.putString("appName", appName);
+        bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,isHaveNavBar);
         IntentUtils.startActivity(context, ImpActivity.class, bundle);
     }
 
