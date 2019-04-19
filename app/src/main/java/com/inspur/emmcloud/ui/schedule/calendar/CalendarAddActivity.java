@@ -455,7 +455,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             try {
                 loadingDlg.show();
-                LogUtils.LbcDebug("Add Schedule::" + scheduleEvent.toCalendarEventJSONObject().toString());
                 apiService.addSchedule(scheduleEvent.toCalendarEventJSONObject().toString());
             } catch (Exception e) {
                 e.printStackTrace();

@@ -26,6 +26,7 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskAddResult;
@@ -102,16 +103,12 @@ public class TaskAddActivity extends BaseActivity {
     private ImageView participantHeadTwoImageView;
     @ViewInject(R.id.iv_participant_head_one)
     private ImageView participantHeadOneImageView;
-    @ViewInject(R.id.iv_task_participant_add)
-    private ImageView participantAddImageView;
     @ViewInject(R.id.tv_participant_num)
     private TextView participantNumText;
     @ViewInject(R.id.iv_manager_head)
     private ImageView managerHeadImageView;
     @ViewInject(R.id.tv_manager_num)
     private TextView managerNumText;
-    @ViewInject(R.id.iv_task_manager_add)
-    private ImageView managerAddImageView;
     @ViewInject(R.id.tv_end_task_alert_time)
     private TextView taskAlertTimeView;
     @ViewInject(R.id.lv_attachment_abstract_other)
@@ -135,6 +132,7 @@ public class TaskAddActivity extends BaseActivity {
     private AttachmentAdapter attachmentOtherAdapter;
     private String attachmentLocalPath = "";
     private Boolean isCreateTask = true;
+    private RemindEvent remindEvent =new RemindEvent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,10 +300,10 @@ public class TaskAddActivity extends BaseActivity {
             case R.id.rl_state:
                 break;
             case R.id.rl_task_end_alert:
-                intent = new Intent();
-                intent.setClass(this, ScheduleAlertTimeActivity.class);
-                String alertTimeData = taskAlertTimeView.getText().toString();
-                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, alertTimeData);
+                intent.setClass(getApplicationContext(),
+                        ScheduleAlertTimeActivity.class);
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, remindEvent.getAdvanceTimeSpan());
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY, false);
                 startActivityForResult(intent, REQUEST_ALERT_TIME);
                 break;
             case R.id.rl_more:
@@ -342,8 +340,9 @@ public class TaskAddActivity extends BaseActivity {
                     showParticipantImage();
                     break;
                 case REQUEST_ALERT_TIME:
-                    String alertData = data.getStringExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
-                    taskAlertTimeView.setText(alertData);
+                    remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
+                    remindEvent.setRemindType("in_app");
+                    taskAlertTimeView.setText(remindEvent.getName());
                     break;
                 case REQUEST_CLASS_TAG:
                     taskColorTagList.clear();
@@ -470,7 +469,6 @@ public class TaskAddActivity extends BaseActivity {
         final String id = taskMangerList.get(0).getId();
         String ImageUrl = APIUri.getUserIconUrl(this, id);
         ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.default_image, this, 15);
-        managerAddImageView.setVisibility(View.GONE);
         managerHeadImageView.setVisibility(View.VISIBLE);
         managerNumText.setText("1人");
         managerNumText.setVisibility(View.VISIBLE);
@@ -488,7 +486,6 @@ public class TaskAddActivity extends BaseActivity {
      * 负责人UI初始化
      */
     private void initManagerUI() {
-        managerAddImageView.setVisibility(View.VISIBLE);
         managerHeadImageView.setVisibility(View.GONE);
         managerNumText.setVisibility(View.GONE);
     }
@@ -521,7 +518,6 @@ public class TaskAddActivity extends BaseActivity {
         }
         participantNumText.setText(taskParticipantList.size() + "人");
         participantNumText.setVisibility(View.VISIBLE);
-        participantAddImageView.setVisibility(View.GONE);
     }
 
     /**
@@ -531,7 +527,6 @@ public class TaskAddActivity extends BaseActivity {
      */
     private void initParticipantUI(ImageView[] imageViews) {
         participantNumText.setVisibility(View.GONE);
-        participantAddImageView.setVisibility(View.VISIBLE);/**参与者UI 初始化*/
         for (int j = 0; j < 3; j++) {
             imageViews[j].setVisibility(View.GONE);
         }
