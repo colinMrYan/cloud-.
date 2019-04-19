@@ -126,6 +126,7 @@ public class DateTimePickerDialog {
         alertDialog = new AlertDialog.Builder(context, R.style.DateTimeAlertDialog);
         initDialog(view);
         Dialog dialog = alertDialog.create();
+
         dialog.show();
     }
 

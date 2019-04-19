@@ -120,9 +120,9 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
         titleText.setText(isEditable ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
-        if (myCalendar != null) {
-            calendarTypeNameText.setText(isEditable ? "" : myCalendar.getName());
-            calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : CalendarColorUtils.getColorCircleImage(myCalendar.getColor()));
+        if (!StringUtils.isBlank(scheduleEvent.getType())) {
+            calendarTypeNameText.setText(getApplication().getString(R.string.schedule_calendar_company));
+            calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : R.drawable.icon_blue_circle);
         }
         calenderTypeTipLayout.setVisibility(isEditable ? View.GONE : View.VISIBLE);
         initStartEndTimeView();
@@ -331,7 +331,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             scheduleEvent.setState(-1);
             scheduleEvent.setStartTime(startCalendar.getTimeInMillis());
             scheduleEvent.setEndTime(endCalendar.getTimeInMillis());
-            scheduleEvent.setType(myCalendar != null ? myCalendar.getId() : "default");
+            scheduleEvent.setType("default");
             if (remindEvent.getAdvanceTimeSpan() != -1) {
                 scheduleEvent.setRemindEvent(remindEvent.toJSONObject().toString());
             }

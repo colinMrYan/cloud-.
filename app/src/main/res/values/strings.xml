@@ -368,7 +368,7 @@
     <string name="schedule_calendar">日历</string>
     <string name="schedule_calendar_add">添加日程</string>
     <string name="schedule_calendar_detail">日程详情</string>
-    <string name="schedule_calendar_company">公司日历</string>
+    <string name="schedule_calendar_company">我的日程</string>
     <string name="schedule_setting_list_view">列表视图</string>
     <string name="schedule_setting_day_view">日视图</string>
     <string name="schedule_setting_divide_group">分组</string>

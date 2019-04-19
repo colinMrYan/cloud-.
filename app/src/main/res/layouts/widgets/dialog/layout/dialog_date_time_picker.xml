@@ -32,7 +32,7 @@
             android:layout_centerVertical="true"
             android:textSize="@dimen/header_function_textsize"
             android:text="24:00"
-            android:textColor="#36A5F6"></TextView>
+            android:textColor="#333333"></TextView>
 
         <ImageView
             android:id="@+id/iv_time"
