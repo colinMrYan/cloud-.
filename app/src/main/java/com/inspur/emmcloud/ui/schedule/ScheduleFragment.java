@@ -25,7 +25,6 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -211,11 +210,12 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void setSelectCalendarTimeInfo() {
         StringBuilder builder = new StringBuilder();
         boolean isToday = TimeUtils.isCalendarToday(selectCalendar);
+        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SELECT_CALENDAR_CHANGED,isToday));
         calendarDayView.setCurrentTimeLineShow(isToday);
         if (isToday) {
             builder.append(getString(R.string.today) + " ");
         }
-        builder.append(LunarUtil.oneDay(selectCalendar.get(Calendar.YEAR), selectCalendar.get(Calendar.MONTH) + 1, selectCalendar.get(Calendar.DAY_OF_MONTH)));
+        builder.append(TimeUtils.calendar2FormatString(MyApplication.getInstance(),selectCalendar,TimeUtils.getFormat(MyApplication.getInstance(),TimeUtils.FORMAT_MONTH_DAY)));
         builder.append(" ");
         builder.append(TimeUtils.getWeekDay(MyApplication.getInstance(), selectCalendar));
         scheduleDataText.setText(builder.toString());

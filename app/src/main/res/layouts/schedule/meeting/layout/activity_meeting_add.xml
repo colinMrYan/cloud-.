@@ -207,13 +207,6 @@
                     android:paddingRight="16dp">
 
                     <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="2dp"
-                        android:src="@drawable/ic_schedule_add" />
-
-                    <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_centerVertical="true"
@@ -257,29 +250,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"></LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="2dp"
-                        android:src="@drawable/ic_schedule_add" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_arrow_right" />
-                </LinearLayout>
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
             </LinearLayout>
 
             <View
@@ -316,29 +292,12 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"></LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="2dp"
-                        android:src="@drawable/ic_schedule_add" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_arrow_right" />
-                </LinearLayout>
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
             </LinearLayout>
 
             <View
@@ -375,29 +334,12 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"></LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="16dp">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="2dp"
-                        android:src="@drawable/ic_schedule_add" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_arrow_right" />
-                </LinearLayout>
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_arrow_right" />
             </LinearLayout>
 
             <View

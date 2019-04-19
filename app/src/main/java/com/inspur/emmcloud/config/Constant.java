@@ -113,6 +113,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED = "tag_schedule_task_data_changed";
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
+    public static final String EVENTBUS_TAG_SELECT_CALENDAR_CHANGED = "tag_select_calendar_changed";
 
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";

@@ -25,13 +25,14 @@
             />
 
         <ImageButton
-            android:id="@+id/ibt_back_to_today"
+            android:id="@+id/ibt_today"
             android:layout_width="42dp"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/ibt_add"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:visibility="invisible"
             android:scaleType="centerInside"
             android:tint="?attr/header_text_color"
             android:src="@drawable/ic_schedule_back_to_today" />
