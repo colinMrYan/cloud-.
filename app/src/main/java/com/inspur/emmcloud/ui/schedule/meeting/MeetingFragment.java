@@ -88,7 +88,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
+        getMeetingListByStartTime();
     }
 
     @Event(value = R.id.tv_meeting_search)
@@ -108,6 +108,8 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMeetingListByTime(startTime);
+        }else {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
