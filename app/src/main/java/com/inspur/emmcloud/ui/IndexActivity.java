@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -79,6 +80,12 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         EventBus.getDefault().register(this);
+    }
+
+    private void getNaviTabData() {
+        AppAPIService appAPIService = new AppAPIService(this);
+        appAPIService.setAPIInterface(new WebService());
+        appAPIService.getAppNaviTabs();
     }
 
     /**
@@ -326,6 +333,7 @@ public class IndexActivity extends IndexBaseActivity {
             public void getClientIdSuccess(String clientId) {
                 boolean isMainTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
                 if (isMainTabUpdate) {
+                    getNaviTabData();
                     getTabInfo();
                 }
                 boolean isSplashUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
@@ -623,7 +631,16 @@ public class IndexActivity extends IndexBaseActivity {
         public void returnAppTabAutoFail(String error, int errorCode) {
         }
 
+        @Override
+        public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
+            super.returnNaviBarModelSuccess(naviBarModel);
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
+        }
 
+        @Override
+        public void returnNaviBarModelFail(String error, int errorCode) {
+            super.returnNaviBarModelFail(error, errorCode);
+        }
     }
 
 }
