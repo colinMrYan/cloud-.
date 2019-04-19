@@ -52,7 +52,6 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         calendarListView.setAdapter(calendarAdapter);
         workAPIService = new WorkAPIService(this);
         workAPIService.setAPIInterface(new WebService());
-        //calendarList = (List<MyCalendar>)
         calendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
         if (calendarList.size() > 0) {
             calendarAdapter.notifyDataSetChanged();
@@ -85,6 +84,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         }
     }
 
+    /***/
     private class CalendarAdapter extends BaseAdapter {
         @Override
         public int getCount() {
@@ -133,21 +133,9 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         @Override
         public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
             List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
-            for (int i = 0; i < allCalendarList.size(); i++) {
-                boolean isHave = false;
-                MyCalendar myCalendar = allCalendarList.get(i);
-                for (int j = 0; j < calendarList.size(); j++) {
-                    if (!myCalendar.getId().equals(calendarList.get(j).getId())) {
-                        continue;
-                    } else {
-                        isHave = true;
-                    }
-                }
-                if (!isHave) {
-                    calendarList.add(myCalendar);
-                }
-            }
-            MyCalendarCacheUtils.saveMyCalendarList(CalendarTypeSelectActivity.this,calendarList);
+            calendarList.clear();
+            calendarList.addAll(allCalendarList);
+            MyCalendarCacheUtils.saveMyCalendarList(CalendarTypeSelectActivity.this, calendarList);
             if (getIntent().hasExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT)) {
                 calendar = (MyCalendar) getIntent().getExtras().getSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT);
                 for (int i = 0; i < calendarList.size(); i++) {

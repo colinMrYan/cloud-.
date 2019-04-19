@@ -1720,15 +1720,15 @@ public class APIUri {
     }
 
     public static String getScheduleListUrl() {
-        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/GetList?";
+        return "https://emm.inspur.com/api/schedule/v6.0/calendar/GetList?";
     }
 
     public static String getAddScheduleUrl() {
-        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/add";
+        return "https://emm.inspur.com/api/schedule/v6.0/calendar/add";
     }
 
     public static String getUpdateScheduleUrl() {
-        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/update";
+        return "https://emm.inspur.com/api/schedule/v6.0/calendar/update";
     }
 
     public static String getDelScheduleUrl(String scheduleId) {
