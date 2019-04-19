@@ -157,6 +157,15 @@ public class TaskAddActivity extends BaseActivity {
             deadLineCalendar = taskResult.getDueDate();
             taskColorTagList = taskResult.getTags();
             isCreateTask = false;
+            //taskMangerList = ContactUserCache taskResult.getOwner();
+            String masterUid = taskResult.getOwner();
+            if (!StringUtils.isBlank(masterUid)) {
+                ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
+                if (contactUser != null) {
+                    SearchModel searchModel = new SearchModel(contactUser);
+                     taskMangerList.add(searchModel);
+                }
+            }
             List<Attachment> attachments = taskResult.getAttachments();
             for (int i = 0; i < attachments.size(); i++) {
                 JsonAttachmentAndUri jsonAttachmentAndUri = new JsonAttachmentAndUri(JSONUtils.getJSONObject(JSONUtils.toJSONString(attachments.get(i))), "", false);
@@ -224,6 +233,7 @@ public class TaskAddActivity extends BaseActivity {
             if (deadLineCalendar != null) {
                 deadlineTimeText.setText(TimeUtils.calendar2FormatString(this, deadLineCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             }
+            showManagerImage();
         }
         attachmentOtherAdapter.notifyDataSetChanged();
     }
