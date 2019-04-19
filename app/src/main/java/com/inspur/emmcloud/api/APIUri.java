@@ -1631,7 +1631,7 @@ public class APIUri {
      */
     public static String getAgoraUrl() {
 //        return MyApplication.getInstance().getClusterEmm()+"";
-        return "http://emm.inspur.com/api/sys/v6.0/voice/create";
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/create";
     }
 
     /**
@@ -1640,7 +1640,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraJoinChannelSuccessUrl() {
-        return "http://emm.inspur.com/api/sys/v6.0/voice/join/";
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/join/";
     }
 
     /**
@@ -1649,7 +1649,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraChannelInfoUrl() {
-        return "http://emm.inspur.com/api/sys/v6.0/voice/";
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/";
     }
 
     /**
@@ -1658,7 +1658,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraRefuseChannelUrl() {
-        return "http://emm.inspur.com/api/sys/v6.0/voice/refuse/";
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/refuse/";
     }
 
     /**
@@ -1667,7 +1667,7 @@ public class APIUri {
      * @return
      */
     public static String getAgoraLeaveChannelUrl() {
-        return "http://emm.inspur.com/api/sys/v6.0/voice/leave/";
+        return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
     }
 
     /**
