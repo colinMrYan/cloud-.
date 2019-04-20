@@ -9,6 +9,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
@@ -179,7 +180,7 @@ public class MeetingDetailActivity extends BaseActivity{
 
                                 break;
                             case 3:
-
+                                LogUtils.YfcDebug("点击了取消会议");
                                 break;
                             case 4:
 
