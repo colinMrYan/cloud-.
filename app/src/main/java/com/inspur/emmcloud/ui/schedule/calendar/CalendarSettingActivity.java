@@ -39,7 +39,6 @@ import java.util.List;
 public class CalendarSettingActivity extends BaseActivity {
     public static final String SHOW_TYPE_LIST = "show_type_list";
     public static final String SHOW_TYPE_DAY_VIEW = "show_type_day_view";
-    public static String EXTRA_SCHEDULE_CALENDAR_SETTING_CALENDARLIST = "schedule_calendar_setting_calendarlist";
     @ViewInject(R.id.listview_list_calendars)
     private ScrollViewWithListView calendarsListView;
     @ViewInject(R.id.iv_list_view_select)
@@ -99,7 +98,6 @@ public class CalendarSettingActivity extends BaseActivity {
         }
     }
 
-
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
@@ -108,12 +106,14 @@ public class CalendarSettingActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+    /***/
     private class CalendarHolder {
         View calendarStyleColorView;
         SwitchCompat calendarSwitch;
         TextView calendarNameText;
     }
 
+    /***/
     private class CalendarAdapter extends BaseAdapter {
         @Override
         public int getCount() {

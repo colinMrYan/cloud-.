@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
@@ -63,10 +62,6 @@ public class TaskListAdapter extends BaseAdapter {
             deadLineText.setVisibility(View.VISIBLE);
             deadLineText.setText(context.getString(R.string.work_task_end, deadLine));
         } else {
-            RelativeLayout relativeLayout = convertView.findViewById(R.id.ll_category_title);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.addRule(RelativeLayout.CENTER_VERTICAL);
-            relativeLayout.setLayoutParams(params);
             deadLineText.setVisibility(View.GONE);
         }
         if (task.getTags().size() > 0) {

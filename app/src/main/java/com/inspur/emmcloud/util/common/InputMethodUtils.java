@@ -35,12 +35,11 @@ public class InputMethodUtils {
 
     /**
      * 显示虚拟键盘
-     *
      * @param v
      */
     public static void showKeyboard(View v) {
-        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+        InputMethodManager imm = ( InputMethodManager ) v.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
+        imm.showSoftInput(v,InputMethodManager.SHOW_FORCED);
     }
 
     public static void display(final Activity activity, final EditText editText) {

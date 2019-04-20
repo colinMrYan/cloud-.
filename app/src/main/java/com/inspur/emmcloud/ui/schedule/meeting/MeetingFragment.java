@@ -141,6 +141,8 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMeetingListByTime(startTime);
+        }else {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

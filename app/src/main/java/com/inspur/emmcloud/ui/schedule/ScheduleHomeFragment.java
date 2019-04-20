@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
@@ -28,6 +30,10 @@ import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +49,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private View rootView;
     private TabLayout tabLayout;
     private CustomScrollViewPager viewPager;
-    private ImageButton backToToDayImgBtn;
+    private ImageButton toDayImgBtn;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
@@ -52,6 +58,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         initView();
     }
 
@@ -82,8 +89,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
     private void initView() {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
-        backToToDayImgBtn = rootView.findViewById(R.id.ibt_back_to_today);
-        backToToDayImgBtn.setOnClickListener(this);
+        toDayImgBtn = rootView.findViewById(R.id.ibt_today);
+        toDayImgBtn.setOnClickListener(this);
         rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         initTabLayout();
         viewPager = rootView.findViewById(R.id.view_pager_all_schedule);
@@ -141,7 +148,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                 if (viewPager != null) {
                     viewPager.setCurrentItem(position);
                 }
-                backToToDayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
+                toDayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
                 updateTabLayoutTextStatus(tab, true);
             }
 
@@ -236,10 +243,25 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             case R.id.ibt_add:
                 showAddPopMenu(view);
                 break;
-            case R.id.ibt_back_to_today:
+            case R.id.ibt_today:
                 scheduleFragment.setScheduleBackToToday();
                 break;
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSelectCalendarChanged(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SELECT_CALENDAR_CHANGED)){
+            boolean isToday =(Boolean) eventMessage.getMessageObj();
+            toDayImgBtn.setVisibility(isToday?View.INVISIBLE:View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

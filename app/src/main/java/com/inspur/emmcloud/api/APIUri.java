@@ -1720,31 +1720,31 @@ public class APIUri {
     }
 
     public static String getScheduleListUrl() {
-        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/GetList?";
+        return "https://emm.inspur.com/api/schedule/v6.0/calendar/GetList?";
     }
 
     public static String getAddScheduleUrl() {
-        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/add";
+        return "https://emm.inspur.com/api/schedule/v6.0/calendar/add";
     }
 
     public static String getUpdateScheduleUrl() {
-        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/update";
+        return "https://emm.inspur.com/api/schedule/v6.0/calendar/update";
     }
 
     public static String getDelScheduleUrl(String scheduleId) {
-        return "http://172.31.2.36:88/api/schedule/v6.0/calendar/remove/" + scheduleId;
+        return "http://emm.inspur.com/api/schedule/v6.0/calendar/remove/" + scheduleId;
     }
 
     public static String getAddMeetingUrl() {
-        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/add";
+        return "http://emm.inspur.com/api/schedule/v6.0/meeting/add";
     }
 
     public static String getMeetingListByStartTime(){
-        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetByStartTime?";
+        return "http://emm.inspur.com/api/schedule/v6.0/meeting/GetByStartTime?";
     }
 
     public static String getRoomMeetingListByMeetingRoom(){
-        return "http://172.31.2.36:88/api/schedule/v6.0/meeting/GetRoomUse?";
+        return "http://emm.inspur.com/api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
     public static String getMeetingDelUrl(String meetingId){
