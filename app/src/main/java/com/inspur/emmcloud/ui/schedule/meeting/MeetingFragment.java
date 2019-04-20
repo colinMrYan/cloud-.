@@ -2,9 +2,10 @@ package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import com.inspur.emmcloud.MyApplication;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,14 +41,17 @@ import java.util.List;
  */
 
 @ContentView(R.layout.fragment_schedule_meeting)
-public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefreshLayout.OnRefreshListener
-        , ScheduleMeetingListAdapter.OnItemClickLister {
+public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefreshLayout.OnRefreshListener
+        , ScheduleMeetingListAdapter.OnItemClickLister{
     @ViewInject(R.id.swipe_refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
     @ViewInject(R.id.recycler_view_meeting)
     private RecyclerView meetingRecyclerView;
+    @ViewInject(R.id.ev_search)
+    private ClearEditText searchEdit;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
     private List<Meeting> meetingList = new ArrayList<>();
+    private List<Meeting> uiMeetingList = new ArrayList<>();
     private ScheduleApiService apiService;
 
     @Override
@@ -66,6 +71,34 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
         apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
         getMeetingListByStartTime();
+        searchEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                searchMeeting(s);
+            }
+        });
+    }
+
+    private void searchMeeting(Editable s) {
+        String searchContent = s.toString();
+        uiMeetingList.clear();
+        for (int i = 0; i < meetingList.size(); i++) {
+            if(meetingList.get(i).getTitle().contains(searchContent)){
+                uiMeetingList.add(meetingList.get(i));
+            }
+        }
+        scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
+        scheduleMeetingListAdapter.notifyDataSetChanged();
     }
 
 
@@ -80,7 +113,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
 
     @Override
     public void onItemClick(View view, int position) {
-        Meeting meeting = meetingList.get(position);
+        Meeting meeting = uiMeetingList.get(position);
         Bundle bundle = new Bundle();
         bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
         IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
@@ -88,10 +121,10 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
+        getMeetingListByStartTime();
     }
 
-    @Event(value = R.id.tv_meeting_search)
+    @Event(value = R.id.rl_meeting_search)
     public void onClick(View view) {
 
     }
@@ -116,8 +149,11 @@ public class MeetingFragment extends ScheduleBaseFragment implements SwipeRefres
 
         @Override
         public void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult) {
+            searchEdit.setText("");
             meetingList = getMeetingListResult.getMeetingList();
-            scheduleMeetingListAdapter.setMeetingList(meetingList);
+            uiMeetingList.clear();
+            uiMeetingList.addAll(meetingList);
+            scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
             swipeRefreshLayout.setRefreshing(false);
         }

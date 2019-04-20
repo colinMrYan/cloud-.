@@ -438,6 +438,7 @@ public class MeetingAddActivity extends BaseActivity {
         public void returnAddMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED,null));
             finish();
         }
 
