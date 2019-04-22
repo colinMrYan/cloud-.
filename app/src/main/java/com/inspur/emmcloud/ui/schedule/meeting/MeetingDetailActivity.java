@@ -6,13 +6,19 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.Participant;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingDelResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -24,6 +30,9 @@ import java.util.List;
 @ContentView(R.layout.activity_meeting_detail_new)
 public class MeetingDetailActivity extends BaseActivity{
 
+    private static final int MEETING_ATTENDEE = 0;
+    private static final int MEETING_RECORD_HOLDER = 1;
+    private static final int MEETING_CONTACT = 2;
     public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
     @ViewInject(R.id.tv_meeting_title)
     private TextView meetingTitleText;
@@ -44,9 +53,12 @@ public class MeetingDetailActivity extends BaseActivity{
     @ViewInject(R.id.tv_meeting_note)
     private TextView meetingNoteText;
     private Meeting meeting;
+    private ScheduleApiService scheduleApiService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        scheduleApiService = new ScheduleApiService(this);
+        scheduleApiService.setAPIInterface(new WebService());
         meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
         initViews();
     }
@@ -58,18 +70,26 @@ public class MeetingDetailActivity extends BaseActivity{
 //        meetingDistributionText.setText(meeting.getOwner());
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create,TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
-        attendeeText.setText(getString(R.string.meeting_detail_attendee,getAttendee()));
-        meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder,getRecordHolder()));
-        meetingConferenceText.setText(getString(R.string.meeting_detail_conference,getContact()));
+        attendeeText.setText(getString(R.string.meeting_detail_attendee,getMeetingParticipant(MEETING_ATTENDEE)));
+        meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder,getMeetingParticipant(MEETING_RECORD_HOLDER)));
+        meetingConferenceText.setText(getString(R.string.meeting_detail_conference,getMeetingParticipant(MEETING_CONTACT)));
         meetingNoteText.setText(meeting.getNote());
     }
 
-    /**
-     * 获取参会人员
-     * @return
-     */
-    private String getAttendee() {
-        List<Participant> participantList =  meeting.getCommonParticipantList();
+
+    private String getMeetingParticipant(int type){
+        List<Participant> participantList = null;
+        switch (type){
+            case MEETING_ATTENDEE:
+                participantList = meeting.getCommonParticipantList();
+                break;
+            case MEETING_RECORD_HOLDER:
+                participantList = meeting.getRoleParticipantList();
+                break;
+            case MEETING_CONTACT:
+                participantList = meeting.getRecorderParticipantList();
+                break;
+        }
         if(participantList.size() == 0){
             return  "";
         }else if(participantList.size() == 1){
@@ -81,39 +101,6 @@ public class MeetingDetailActivity extends BaseActivity{
         }
     }
 
-    /**
-     * 获取联络人
-     * @return
-     */
-    private String getContact() {
-        List<Participant> participantList = meeting.getRoleParticipantList();
-        if(participantList.size() == 0){
-            return "";
-        }else if(participantList.size() == 1){
-            return participantList.get(0).getName();
-        }else{
-            return getString(R.string.meeting_detail_attendee_num,
-                    participantList.get(0).getName(),
-                    participantList.size());
-        }
-    }
-
-    /**
-     * 获取记录人
-     * @return
-     */
-    private String getRecordHolder() {
-        List<Participant> participantList = meeting.getRecorderParticipantList();
-        if(participantList.size() == 0){
-            return "";
-        }else if(participantList.size() == 1){
-            return participantList.get(0).getName();
-        }else{
-            return getString(R.string.meeting_detail_attendee_num,
-                    participantList.get(0).getName(),
-                    participantList.size());
-        }
-    }
 
     /**
      * 获取会议起止时间
@@ -181,6 +168,7 @@ public class MeetingDetailActivity extends BaseActivity{
                                 break;
                             case 3:
                                 LogUtils.YfcDebug("点击了取消会议");
+                                scheduleApiService.delMeetingById(meeting.getId());
                                 break;
                             case 4:
 
@@ -193,5 +181,18 @@ public class MeetingDetailActivity extends BaseActivity{
                 })
                 .build()
                 .show();
+    }
+
+    class WebService extends APIInterfaceInstance{
+        @Override
+        public void returnDelMeetingSuccess(GetMeetingDelResult getMeetingDelResult) {
+            super.returnDelMeetingSuccess(getMeetingDelResult);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED,null));
+        }
+
+        @Override
+        public void returnDelMeetingFail(String error, int errorCode) {
+            super.returnDelMeetingFail(error, errorCode);
+        }
     }
 }

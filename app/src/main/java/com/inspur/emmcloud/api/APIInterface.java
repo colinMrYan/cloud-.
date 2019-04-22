@@ -80,6 +80,7 @@ import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingDelResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
@@ -866,4 +867,7 @@ public interface APIInterface {
 
     void returnNaviBarModelSuccess(NaviBarModel naviBarModel);
     void returnNaviBarModelFail(String error, int errorCode);
+
+    void returnDelMeetingSuccess(GetMeetingDelResult getMeetingDelResult);
+    void returnDelMeetingFail(String error, int errorCode);
 }

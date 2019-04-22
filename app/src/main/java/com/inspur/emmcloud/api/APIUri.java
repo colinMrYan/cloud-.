@@ -1732,23 +1732,23 @@ public class APIUri {
     }
 
     public static String getDelScheduleUrl(String scheduleId) {
-        return "http://emm.inspur.com/api/schedule/v6.0/calendar/remove/" + scheduleId;
+        return "https://emm.inspur.com/api/schedule/v6.0/calendar/remove/" + scheduleId;
     }
 
     public static String getAddMeetingUrl() {
-        return "http://emm.inspur.com/api/schedule/v6.0/meeting/add";
+        return "https://emm.inspur.com/api/schedule/v6.0/meeting/add";
     }
 
     public static String getMeetingListByStartTime(){
-        return "http://emm.inspur.com/api/schedule/v6.0/meeting/GetByStartTime?";
+        return "https://emm.inspur.com/api/schedule/v6.0/meeting/GetByStartTime?";
     }
 
     public static String getRoomMeetingListByMeetingRoom(){
-        return "http://emm.inspur.com/api/schedule/v6.0/meeting/GetRoomUse?";
+        return "https://emm.inspur.com/api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
     public static String getMeetingDelUrl(String meetingId){
-        return "https://emm.inspuronline.com/api/schedule/v6.0/meeting/remove/"+meetingId;
+        return "https://emm.inspur.com/api/schedule/v6.0/meeting/remove/"+meetingId;
     }
 
     /**
