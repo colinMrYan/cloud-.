@@ -143,8 +143,8 @@ public class GetRoomAvailableResult {
                 if (obj.has("duration")) {
                     this.duration = obj.getString("duration");
                 }
-                if (obj.has("startWebSocket")) {
-                    this.start = obj.getString("startWebSocket");
+                if (obj.has("init")) {
+                    this.start = obj.getString("init");
                 }
                 if (obj.has("end")) {
                     this.end = obj.getString("end");
