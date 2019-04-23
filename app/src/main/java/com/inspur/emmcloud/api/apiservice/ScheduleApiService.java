@@ -453,6 +453,7 @@ public class ScheduleApiService {
 
     /**
      * 获取对应room的会议情况
+     *
      * @param roomId
      * @param startTime
      * @param endTime
@@ -461,8 +462,8 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getRoomMeetingListByMeetingRoom();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("roomId", roomId);
-        params.addQueryStringParameter("startTime", startTime+"");
-        params.addQueryStringParameter("endTime", endTime+"");
+        params.addQueryStringParameter("startTime", startTime + "");
+        params.addQueryStringParameter("endTime", endTime + "");
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -470,7 +471,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getRoomMeetingListByMeetingRoom(roomId,startTime,endTime);
+                        getRoomMeetingListByMeetingRoom(roomId, startTime, endTime);
                     }
 
                     @Override
@@ -729,7 +730,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getMeetingListByStartTime();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        params.addQueryStringParameter("startTime", startTime+"");
+        params.addQueryStringParameter("startTime", startTime + "");
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -759,6 +760,46 @@ public class ScheduleApiService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMeetingListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     *获取会议历史列表
+     * @param pageNum */
+    public void getMeetingHistoryListByPage(final int pageNum) {
+        final String completeUrl = APIUri.getMeetingHistoryListByPage(pageNum);
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMeetingHistoryListByPage(pageNum);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingHistoryListSuccess(new GetMeetingListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingHistoryListFail(error, responseCode);
             }
         });
     }
@@ -802,7 +843,7 @@ public class ScheduleApiService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 LogUtils.YfcDebug("删除失败");
-                apiInterface.returnDelMeetingFail(error,responseCode);
+                apiInterface.returnDelMeetingFail(error, responseCode);
             }
         });
     }

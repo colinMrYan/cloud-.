@@ -870,4 +870,8 @@ public interface APIInterface {
 
     void returnDelMeetingSuccess(GetMeetingDelResult getMeetingDelResult);
     void returnDelMeetingFail(String error, int errorCode);
+
+    void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
+    void returnMeetingHistoryListFail(String error, int errorCode);
+
 }

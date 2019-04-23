@@ -2041,4 +2041,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnDelMeetingFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
+
+    }
+
+    @Override
+    public void returnMeetingHistoryListFail(String error, int errorCode) {
+
+    }
 }

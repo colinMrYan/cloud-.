@@ -1711,8 +1711,14 @@ public class APIUri {
      *
      * @return
      */
+
+    public static String getScheduleBaseUrl(){
+        //return "https://emm.inspur.com";
+        return "http://172.31.2.36:88";
+    }
+
     public static String getCheckCloudPluseConnectUrl() {
-        return "https://emm.inspur.com/api/mam/v3.0/heart/success";
+        return  getScheduleBaseUrl()+"/api/mam/v3.0/heart/success";
     }
 
     public static String getCancelTokenUrl() {
@@ -1720,35 +1726,39 @@ public class APIUri {
     }
 
     public static String getScheduleListUrl() {
-        return "https://emm.inspur.com/api/schedule/v6.0/calendar/GetList?";
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/GetList?";
     }
 
     public static String getAddScheduleUrl() {
-        return "https://emm.inspur.com/api/schedule/v6.0/calendar/add";
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/add";
     }
 
     public static String getUpdateScheduleUrl() {
-        return "https://emm.inspur.com/api/schedule/v6.0/calendar/update";
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/update";
     }
 
     public static String getDelScheduleUrl(String scheduleId) {
-        return "https://emm.inspur.com/api/schedule/v6.0/calendar/remove/" + scheduleId;
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/remove/" + scheduleId;
     }
 
     public static String getAddMeetingUrl() {
-        return "https://emm.inspur.com/api/schedule/v6.0/meeting/add";
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/add";
     }
 
     public static String getMeetingListByStartTime(){
-        return "https://emm.inspur.com/api/schedule/v6.0/meeting/GetByStartTime?";
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/GetByStartTime?";
+    }
+
+    public static String getMeetingHistoryListByPage(int id){
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/GetHistory/"+id;
     }
 
     public static String getRoomMeetingListByMeetingRoom(){
-        return "https://emm.inspur.com/api/schedule/v6.0/meeting/GetRoomUse?";
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
     public static String getMeetingDelUrl(String meetingId){
-        return "https://emm.inspur.com/api/schedule/v6.0/meeting/remove/"+meetingId;
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/remove/"+meetingId;
     }
 
     /**
