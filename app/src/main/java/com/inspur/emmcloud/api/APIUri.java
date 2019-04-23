@@ -144,7 +144,8 @@ public class APIUri {
     public static String getAppNaviTabs() {
 //        return getECMDistribution() + "/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
 //        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
-        return "https://ecm.inspuronline.com/distribution/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+//        return "https://ecm.inspuronline.com/distribution/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+        return "https://emm.inspur.com/api/sys/v6.0/config/multipleLayout";
     }
 
 

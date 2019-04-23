@@ -35,6 +35,7 @@ import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -183,6 +184,9 @@ public class SettingActivity extends BaseActivity {
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
         String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        if(StringUtils.isBlank(currentTabLayoutName)){
+            currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
+        }
         for (int i = 0; i < naviBarSchemeList.size(); i++) {
             if(naviBarSchemeList.get(i).getName().equals(currentTabLayoutName)){
                 Configuration config = getResources().getConfiguration();

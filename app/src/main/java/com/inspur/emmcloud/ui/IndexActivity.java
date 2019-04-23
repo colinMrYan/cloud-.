@@ -317,6 +317,7 @@ public class IndexActivity extends IndexBaseActivity {
         boolean isRouterUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER, getAllConfigVersionResult);
         boolean isContactUserUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER, getAllConfigVersionResult);
         boolean isContactOrgUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG, getAllConfigVersionResult);
+        boolean isNaviTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, getAllConfigVersionResult);
         if (isRouterUpdate) {
             new ProfileUtils(IndexActivity.this, null).initProfile(false);
         }
@@ -328,12 +329,14 @@ public class IndexActivity extends IndexBaseActivity {
         if (isContactOrgUpdate) {
             getContactOrg();
         }
+        if(isNaviTabUpdate){
+            getNaviTabData();
+        }
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
             @Override
             public void getClientIdSuccess(String clientId) {
                 boolean isMainTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
                 if (isMainTabUpdate) {
-                    getNaviTabData();
                     getTabInfo();
                 }
                 boolean isSplashUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
