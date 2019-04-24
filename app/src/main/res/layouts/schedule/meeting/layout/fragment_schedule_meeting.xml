@@ -47,6 +47,8 @@
             android:hint="搜索会议"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
+            android:paddingRight="6dp"
+            android:paddingLeft="6dp"
             android:background="@drawable/bg_schedule_search"
             android:gravity="center"
             android:textColor="#333333"
