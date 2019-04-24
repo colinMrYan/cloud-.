@@ -14,10 +14,10 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.util.common.cache.BitmapPool;
 import com.inspur.emmcloud.util.common.richtext.callback.ImageLoadNotify;
 import com.inspur.emmcloud.util.common.richtext.ext.HtmlTagHandler;
 import com.inspur.emmcloud.util.common.richtext.ext.LongClickableLinkMovementMethod;
-import com.inspur.emmcloud.util.common.richtext.ig.BitmapPool;
 import com.inspur.emmcloud.util.common.richtext.parser.CachedSpannedParser;
 import com.inspur.emmcloud.util.common.richtext.parser.Html2SpannedParser;
 import com.inspur.emmcloud.util.common.richtext.parser.ImageGetterWrapper;
@@ -46,7 +46,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     private static Pattern IMAGE_SRC_PATTERN = Pattern.compile("(src|SRC)=\"(.*?)\"");
     private final SpannedParser spannedParser;
     private final CachedSpannedParser cachedSpannedParser;
-    private final SoftReference<TextView> textViewSoftReference;
+    private final WeakReference<TextView> textViewWeakReference;
     private final RichTextConfig config;
     private HashMap<String, ImageHolder> imageHolderMap;
     @RichState
@@ -54,10 +54,11 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     private int count;
     private int loadingCount;
     private SoftReference<SpannableStringBuilder> richText;
+    private static final HashMap<String, Object> GLOBAL_ARGS = new HashMap<>();
     RichText(RichTextConfig config, TextView textView) {
         this.config = config;
-        this.textViewSoftReference = new SoftReference<>(textView);
-        if (config.richType == RichType.MARKDOWN) {
+        this.textViewWeakReference = new WeakReference<>(textView);
+        if (config.richType == RichType.markdown) {
             spannedParser = new Markdown2SpannedParser(textView);
         } else {
             spannedParser = new Html2SpannedParser(new HtmlTagHandler(textView));
@@ -91,6 +92,17 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     public static void initCacheDir(File cacheDir) {
         BitmapPool.setCacheDir(cacheDir);
     }
+    public static void putArgs(String key, Object args) {
+        synchronized (GLOBAL_ARGS) {
+            GLOBAL_ARGS.put(key, args);
+        }
+    }
+
+    public static Object getArgs(String key) {
+        synchronized (GLOBAL_ARGS) {
+            return GLOBAL_ARGS.get(key);
+        }
+    }
 
     /**
      * 清除缓存
@@ -121,14 +133,14 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     }
 
     public static RichTextConfig.RichTextConfigBuild fromHtml(String source) {
-        return from(source, RichType.HTML);
+        return from(source, RichType.html);
     }
 
     public static RichTextConfig.RichTextConfigBuild fromMarkdown(String source) {
-        return from(source, RichType.MARKDOWN);
+        return from(source, RichType.markdown);
     }
 
-    public static RichTextConfig.RichTextConfigBuild from(String source, @RichType int richType) {
+    public static RichTextConfig.RichTextConfigBuild from(String source, RichType richType) {
         return new RichTextConfig.RichTextConfigBuild(source, richType);
     }
 
@@ -175,7 +187,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     }
 
     void generateAndSet() {
-        final TextView textView = textViewSoftReference.get();
+        final TextView textView = textViewWeakReference.get();
         if (textView != null) {
 //            if (!TextUtils.isEmpty(config.source) && config.source.length() < 0) {
 //                textView.setText(generateRichText());
@@ -241,17 +253,17 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
      * @return Spanned
      */
     private CharSequence generateRichText() {
-        TextView textView = textViewSoftReference.get();
+        TextView textView = textViewWeakReference.get();
         if (textView == null) {
             return null;
         }
-        if (config.richType != RichType.MARKDOWN) {
+        if (config.richType != RichType.markdown) {
             analyzeImages(config.source);
         } else {
             imageHolderMap = new HashMap<>();
         }
         SpannableStringBuilder spannableStringBuilder = null;
-        if (config.cacheType > CacheType.NONE) {
+        if (config.cacheType.intValue() > CacheType.none.intValue()) {
             spannableStringBuilder = RichTextPool.getPool().loadCache(config.source);
         }
         if (spannableStringBuilder == null) {
@@ -299,7 +311,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
             if (TextUtils.isEmpty(src)) {
                 continue;
             }
-            holder = new ImageHolder(src, position, config);
+            holder = new ImageHolder(src, position, config, textViewWeakReference.get());
             if (!config.autoFix && !config.resetSize) {
                 Matcher imageWidthMatcher = IMAGE_WIDTH_PATTERN.matcher(image);
                 if (imageWidthMatcher.find()) {
@@ -319,7 +331,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
      * 回收所有图片和任务
      */
     public void clear() {
-        TextView textView = textViewSoftReference.get();
+        TextView textView = textViewWeakReference.get();
         if (textView != null) {
             textView.setText(null);
         }
@@ -347,7 +359,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
         if (config.noImage) {
             return null;
         }
-        TextView textView = textViewSoftReference.get();
+        TextView textView = textViewWeakReference.get();
         if (textView == null) {
             return null;
         }
@@ -356,13 +368,13 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
             return null;
         }
         ImageHolder holder;
-        if (config.richType == RichType.MARKDOWN) {
-            holder = new ImageHolder(source, loadingCount - 1, config);
+        if (config.richType == RichType.markdown) {
+            holder = new ImageHolder(source, loadingCount - 1, config, textView);
             imageHolderMap.put(source, holder);
         } else {
             holder = imageHolderMap.get(source);
             if (holder == null) {
-                holder = new ImageHolder(source, loadingCount - 1, config);
+                holder = new ImageHolder(source, loadingCount - 1, config, textView);
                 imageHolderMap.put(source, holder);
             }
         }
@@ -382,16 +394,10 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
             int loadedCount = (int) from;
             if (loadedCount >= count) {
                 state = RichState.loaded;
-                if (config.cacheType >= CacheType.LAYOUT) {
-                    SpannableStringBuilder ssb = richText.get();
-                    if (ssb != null) {
-                        RichTextPool.getPool().cache(config.source, ssb);
-                    }
-                }
+                TextView tv = textViewWeakReference.get();
                 if (config.callback != null) {
-                    TextView textView = textViewSoftReference.get();
-                    if (textView != null) {
-                        textView.post(new Runnable() {
+                    if (null != tv) {
+                        tv.post(new Runnable() {
                             @Override
                             public void run() {
                                 config.callback.done(true);

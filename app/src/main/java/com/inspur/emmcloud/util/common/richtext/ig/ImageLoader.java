@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.common.richtext.ig;
 
+
 import com.inspur.emmcloud.util.common.richtext.callback.Recyclable;
 
 /**
