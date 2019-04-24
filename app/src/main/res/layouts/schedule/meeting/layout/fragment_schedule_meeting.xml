@@ -57,14 +57,13 @@
     </RelativeLayout>
     <com.inspur.emmcloud.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
-        android:background="@color/content_bg"
         android:layout_below="@id/rl_meeting_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_meeting"
+        <ListView
+            android:id="@+id/lv_view_meeting"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent"></ListView>
     </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
 
 </RelativeLayout>
