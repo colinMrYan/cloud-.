@@ -75,7 +75,6 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
         super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setOnLoadListener(this);
-        // meetingRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         scheduleMeetingListAdapter = new ScheduleMeetingListAdapter(getActivity());
         meetingListView.setAdapter(scheduleMeetingListAdapter);
         scheduleMeetingListAdapter.setOnItemClickLister(this);
@@ -203,16 +202,18 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
 
         @Override
         public void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByPage) {
-            List<Meeting> meetingList = getMeetingListByPage.getMeetingList();
-            currentPageSize = meetingList.size();
+            List<Meeting> meetingHistoryList = getMeetingListByPage.getMeetingList();
+            currentPageSize = meetingHistoryList.size();
             swipeRefreshLayout.setLoading(false);
             if (!isPullUp) {
+                meetingList.clear();
                 uiMeetingList.clear();
                 swipeRefreshLayout.setRefreshing(false);
             } else {
                 swipeRefreshLayout.setCanLoadMore(true);
             }
-            uiMeetingList.addAll(meetingList);
+            meetingList.addAll(meetingHistoryList);
+            uiMeetingList.addAll(meetingHistoryList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
             pageNum++;
