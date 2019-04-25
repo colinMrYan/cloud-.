@@ -83,9 +83,11 @@ public class IndexActivity extends IndexBaseActivity {
     }
 
     private void getNaviTabData() {
-        AppAPIService appAPIService = new AppAPIService(this);
-        appAPIService.setAPIInterface(new WebService());
-        appAPIService.getAppNaviTabs();
+        if(NetUtils.isNetworkConnected(this,false)){
+            AppAPIService appAPIService = new AppAPIService(this);
+            appAPIService.setAPIInterface(new WebService());
+            appAPIService.getAppNaviTabs();
+        }
     }
 
     /**
