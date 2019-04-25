@@ -9,7 +9,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.Participant;
-import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingDelResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
@@ -185,8 +184,8 @@ public class MeetingDetailActivity extends BaseActivity{
 
     class WebService extends APIInterfaceInstance{
         @Override
-        public void returnDelMeetingSuccess(GetMeetingDelResult getMeetingDelResult) {
-            super.returnDelMeetingSuccess(getMeetingDelResult);
+        public void returnDelMeetingSuccess(String meetingId) {
+            super.returnDelMeetingSuccess(meetingId);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED,null));
         }
 

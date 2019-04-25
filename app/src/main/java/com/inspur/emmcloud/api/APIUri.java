@@ -1737,12 +1737,16 @@ public class APIUri {
         return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/update";
     }
 
-    public static String getDelScheduleUrl(String scheduleId) {
+    public static String getDeleteScheduleUrl(String scheduleId) {
         return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/remove/" + scheduleId;
     }
 
     public static String getAddMeetingUrl() {
         return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/add";
+    }
+
+    public static String getDelMeetingUrl(String meetingId) {
+        return getScheduleBaseUrl() + "/api/schedule/v6.0/meeting/remove/"+meetingId;
     }
 
     public static String getMeetingListByStartTime(){

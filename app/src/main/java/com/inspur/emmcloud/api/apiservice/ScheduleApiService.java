@@ -8,10 +8,10 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingDelResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
@@ -43,6 +43,85 @@ public class ScheduleApiService {
 
     public void setAPIInterface(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
+    }
+
+    /**添加日程*/
+    public void addSchedule(final String schedule) {
+        final String completeUrl = APIUri.getAddScheduleUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(schedule);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addSchedule(schedule);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddScheduleSuccess(new GetIDResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddScheduleFail(error, responseCode);
+            }
+        });
+    }
+    /**更新日程*/
+    public void updateSchedule(final String schedule) {
+        final String completeUrl = APIUri.getUpdateScheduleUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(schedule);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateSchedule(schedule);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateScheduleSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateScheduleFail(error, responseCode);
+            }
+        });
     }
 
     /**
@@ -88,6 +167,49 @@ public class ScheduleApiService {
                 };
                 OauthUtils.getInstance().refreshToken(
                         oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 根据schedule Id 删除schedule
+     */
+    public void deleteSchedule(final String scheduleId) {
+        final String completeUrl = APIUri.getDeleteScheduleUrl(scheduleId);
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(scheduleId);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteSchedule(scheduleId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.LbcDebug("数据显示：：：" + arg0.toString());
+                apiInterface.returnDeleteScheduleSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteScheduleFail(error, responseCode);
             }
         });
     }
@@ -413,11 +535,12 @@ public class ScheduleApiService {
      * @param meeting
      */
     public void deleteMeeting(final Meeting meeting) {
-        final String completeUrl = APIUri.getMeetingDeleteUrl();
+        final String completeUrl = APIUri.getDelMeetingUrl(meeting.getId());
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        params.addQueryStringParameter("rid", meeting.getId());
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+        params.setBodyContent(meeting.getId());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -439,13 +562,13 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDeleteMeetingSuccess(meeting);
+                apiInterface.returnDelMeetingSuccess(meeting);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDeleteMeetingFail(error, responseCode);
+                apiInterface.returnDelMeetingFail(error, responseCode);
             }
         });
     }
@@ -800,50 +923,6 @@ public class ScheduleApiService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMeetingHistoryListFail(error, responseCode);
-            }
-        });
-    }
-
-    /**
-     * 删除会议接口
-     *
-     * @param meetingId
-     */
-    public void delMeetingById(final String meetingId) {
-        final String completeUrl = APIUri.getMeetingDelUrl(meetingId);
-        RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        delMeetingById(meetingId);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // TODO Auto-generated method stub
-                LogUtils.YfcDebug("删除成功");
-                apiInterface.returnDelMeetingSuccess(new GetMeetingDelResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                LogUtils.YfcDebug("删除失败");
-                apiInterface.returnDelMeetingFail(error, responseCode);
             }
         });
     }
