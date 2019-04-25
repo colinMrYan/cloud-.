@@ -58,8 +58,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private static final int REQUEST_CAL_TYPE = 1;
     private static final int REQUEST_REPEAT_TYPE = 2;
     private static final int REQUEST_CAL_ALERT_TIME = 3;
-    @ViewInject(R.id.iv_calendar_detail_more)
-    private ImageView calendarDetailMoreImageView;
     @ViewInject(R.id.et_input_title)
     private EditText inputContentEdit;
     @ViewInject(R.id.switch_all_day)

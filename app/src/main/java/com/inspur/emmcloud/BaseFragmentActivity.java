@@ -26,6 +26,8 @@ public class BaseFragmentActivity extends FragmentActivity {
             MyCameraActivity.class.getName(),
     };
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme();

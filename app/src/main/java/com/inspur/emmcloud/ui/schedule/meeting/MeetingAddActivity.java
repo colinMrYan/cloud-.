@@ -161,7 +161,6 @@ public class MeetingAddActivity extends BaseActivity {
             showSelectUser(liaisonLayout, liaisonSearchModelList);
             showSelectUser(recorderLayout, recorderSearchModelList);
             reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
-        } else {
         }
         setMeetingTime();
         getIsMeetingAdmin();
