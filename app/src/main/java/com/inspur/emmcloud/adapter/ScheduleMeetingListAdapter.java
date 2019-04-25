@@ -43,7 +43,7 @@ public class ScheduleMeetingListAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        public ImageView iconImg ;
+        public ImageView iconImg;
         public TextView titleText;
         public TextView displayNameText;
         public TextView timeText;
@@ -68,7 +68,7 @@ public class ScheduleMeetingListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder ;
+        ViewHolder holder;
         if (null == view) {
             holder = new ViewHolder();
             view = View.inflate(context, R.layout.schedule_meeting_list_item_view, null);

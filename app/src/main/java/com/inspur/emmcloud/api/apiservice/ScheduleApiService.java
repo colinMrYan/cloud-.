@@ -45,7 +45,9 @@ public class ScheduleApiService {
         this.apiInterface = apiInterface;
     }
 
-    /**添加日程*/
+    /**
+     * 添加日程
+     */
     public void addSchedule(final String schedule) {
         final String completeUrl = APIUri.getAddScheduleUrl();
         RequestParams params = MyApplication.getInstance()
@@ -84,7 +86,10 @@ public class ScheduleApiService {
             }
         });
     }
-    /**更新日程*/
+
+    /**
+     * 更新日程
+     */
     public void updateSchedule(final String schedule) {
         final String completeUrl = APIUri.getUpdateScheduleUrl();
         RequestParams params = MyApplication.getInstance()
@@ -843,7 +848,7 @@ public class ScheduleApiService {
         });
     }
 
-    public void updateMeeting(final String meetingJson){
+    public void updateMeeting(final String meetingJson) {
         final String completeUrl = APIUri.getMeetingUpdateUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(meetingJson);
@@ -870,13 +875,13 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAddMeetingSuccess();
+                apiInterface.returnUpdateMeetingSuccess();
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAddMeetingFail(error, responseCode);
+                apiInterface.returnUpdateMeetingFail(error, responseCode);
             }
         });
 
@@ -926,8 +931,10 @@ public class ScheduleApiService {
     }
 
     /**
-     *获取会议历史列表
-     * @param pageNum */
+     * 获取会议历史列表
+     *
+     * @param pageNum
+     */
     public void getMeetingHistoryListByPage(final int pageNum) {
         final String completeUrl = APIUri.getMeetingHistoryListByPage(pageNum);
         RequestParams params = MyApplication.getInstance()
