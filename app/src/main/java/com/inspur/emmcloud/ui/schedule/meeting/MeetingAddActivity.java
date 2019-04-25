@@ -170,7 +170,7 @@ public class MeetingAddActivity extends BaseActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_cancel:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.tv_save:

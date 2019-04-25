@@ -148,10 +148,12 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             startCalendar = scheduleEvent.getStartTimeCalendar();
             endCalendar = scheduleEvent.getEndTimeCalendar();
             contentText = scheduleEvent.getTitle();
+            findViewById(R.id.tv_save).setVisibility(View.GONE);
+            findViewById(R.id.iv_calendar_detail_more).setVisibility(View.VISIBLE);
             List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
-            String calendartype = scheduleEvent.getType();
+            String calendarType = scheduleEvent.getType();
             for (int i = 0; i < allCalendarList.size(); i++) {
-                if (calendartype.equals(allCalendarList.get(i).getId())) {
+                if (calendarType.equals(allCalendarList.get(i).getId())) {
                     myCalendar = allCalendarList.get(i);
                 }
             }
@@ -246,11 +248,14 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         Intent intent = new Intent();
         DateTimePickerDialog dataTimePickerDialog = new DateTimePickerDialog(this);
         switch (v.getId()) {
-            case R.id.tv_cancel:
+            case R.id.ibt_back:
                 finish();
                 break;
             case R.id.iv_calendar_detail_more:
                 showDialog();
+                break;
+            case R.id.tv_save:
+                saveCalendarEvent();
                 break;
             case R.id.rl_calendar_type:
                 intent = new Intent(this, CalendarTypeSelectActivity.class);
