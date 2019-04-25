@@ -172,6 +172,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
+        RichText.debugMode = true;
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
             protected boolean removeEldestEntry(Entry<String, String> eldest) {

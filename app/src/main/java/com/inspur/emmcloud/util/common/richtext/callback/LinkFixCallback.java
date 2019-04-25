@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.common.richtext.callback;
 
+
 import com.inspur.emmcloud.util.common.richtext.LinkHolder;
 
 /**

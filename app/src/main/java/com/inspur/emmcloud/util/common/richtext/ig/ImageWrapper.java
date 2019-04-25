@@ -40,14 +40,6 @@ class ImageWrapper implements Recyclable {
         }
     }
 
-    static ImageWrapper createAsGif(GifDrawable gifDrawable) {
-        return new ImageWrapper(gifDrawable, null);
-    }
-
-    static ImageWrapper createAsBitmap(Bitmap bitmap) {
-        return new ImageWrapper(null, bitmap);
-    }
-
     boolean isGif() {
         return gifDrawable != null;
     }
@@ -59,6 +51,7 @@ class ImageWrapper implements Recyclable {
     Bitmap getAsBitmap() {
         return bitmap;
     }
+
 
     int getHeight() {
         return height;
@@ -83,6 +76,14 @@ class ImageWrapper implements Recyclable {
         if (gifDrawable != null) {
             gifDrawable.stop();
         }
+    }
+
+    static ImageWrapper createAsGif(GifDrawable gifDrawable) {
+        return new ImageWrapper(gifDrawable, null);
+    }
+
+    static ImageWrapper createAsBitmap(Bitmap bitmap) {
+        return new ImageWrapper(null, bitmap);
     }
 
 }
