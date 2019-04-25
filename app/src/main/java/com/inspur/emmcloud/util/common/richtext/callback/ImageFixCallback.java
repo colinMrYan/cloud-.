@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.common.richtext.callback;
 
+
 import com.inspur.emmcloud.util.common.richtext.ImageHolder;
 
 /**
@@ -25,10 +26,10 @@ public interface ImageFixCallback {
     /**
      * 图片下载完成（未加载到内存）并且尺寸已获取，此时给holder设置最大宽高为图片加载到内存后的最大宽高，用与压缩图片
      *
-     * @param holder      ImageHolder
+     * @param holder ImageHolder
      * @param imageWidth  图片原始宽度
      * @param imageHeight 图片原始高度
-     * @param sizeHolder  修改sizeHolder来改变图片的大小
+     * @param sizeHolder 修改sizeHolder来改变图片的大小
      */
     void onSizeReady(ImageHolder holder, int imageWidth, int imageHeight, ImageHolder.SizeHolder sizeHolder);
 

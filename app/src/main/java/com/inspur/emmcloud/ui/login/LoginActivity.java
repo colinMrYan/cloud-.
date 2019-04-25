@@ -123,7 +123,7 @@ public class LoginActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.bt_login:
-                userName = usernameEdit.getText().toString();
+                userName = usernameEdit.getText().toString().trim();
                 password = passwordEdit.getText().toString();
                 loginApp();
                 break;
