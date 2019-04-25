@@ -58,8 +58,8 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private static final int REQUEST_CAL_TYPE = 1;
     private static final int REQUEST_REPEAT_TYPE = 2;
     private static final int REQUEST_CAL_ALERT_TIME = 3;
-    @ViewInject(R.id.tv_save)
-    private TextView saveText;
+    @ViewInject(R.id.iv_calendar_detail_more)
+    private ImageView calendarDetailMoreImageView;
     @ViewInject(R.id.et_input_title)
     private EditText inputContentEdit;
     @ViewInject(R.id.switch_all_day)
@@ -190,7 +190,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         startTimeLayout.setClickable(isEditable);
         endTimeLayout.setClickable(isEditable);
         alertTimeLayout.setClickable(isEditable);
-        saveText.setText(isEditable ? getString(R.string.save) : getString(R.string.calendar_adjust));
     }
 
 
@@ -250,7 +249,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             case R.id.tv_cancel:
                 finish();
                 break;
-            case R.id.tv_save:
+            case R.id.iv_calendar_detail_more:
                 showDialog();
                 break;
             case R.id.rl_calendar_type:
@@ -320,7 +319,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 提示内容*/
     private void showDialog() {
         String date = getString(getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT) ?
-                R.string.schedule_calendar_add : R.string.schedule_calendar_modify);
+                R.string.schedule_calendar_modify:R.string.schedule_calendar_add );
         new ActionSheetDialog.ActionListSheetBuilder(CalendarAddActivity.this)
                 .addItem(date)
                 .addItem(getString(R.string.schedule_calendar_delete))

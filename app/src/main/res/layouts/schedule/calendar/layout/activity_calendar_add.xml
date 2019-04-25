@@ -36,20 +36,20 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
-        <TextView
-            android:id="@+id/tv_save"
+        <ImageView
+            android:id="@+id/iv_calendar_detail_more"
+            android:onClick="onClick"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:clickable="true"
-            android:gravity="center"
-            android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:text="@string/save"
-            android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize" />
+            android:paddingLeft="13dp"
+            android:paddingRight="16dp"
+            android:paddingTop="17dp"
+            android:paddingBottom="17dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_header_option" />
     </RelativeLayout>
 
     <RelativeLayout

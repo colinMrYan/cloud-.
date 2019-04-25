@@ -2050,4 +2050,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnMeetingHistoryListFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnUpdateMeetingSuccess() {
+
+    }
+
+    @Override
+    public void returnUpdateMeetingFail(String error, int errorCode) {
+
+    }
 }

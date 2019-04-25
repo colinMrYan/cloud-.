@@ -1761,8 +1761,8 @@ public class APIUri {
         return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
-    public static String getMeetingDelUrl(String meetingId){
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/remove/"+meetingId;
+    public static String getMeetingUpdateUrl(){
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/update";
     }
 
     /**

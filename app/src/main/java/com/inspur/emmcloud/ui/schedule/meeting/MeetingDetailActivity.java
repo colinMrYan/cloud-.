@@ -13,7 +13,9 @@ import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
@@ -27,7 +29,7 @@ import java.util.List;
  * Created by yufuchang on 2019/4/16.
  */
 @ContentView(R.layout.activity_meeting_detail_new)
-public class MeetingDetailActivity extends BaseActivity{
+public class MeetingDetailActivity extends BaseActivity {
 
     private static final int MEETING_ATTENDEE = 0;
     private static final int MEETING_RECORD_HOLDER = 1;
@@ -53,6 +55,7 @@ public class MeetingDetailActivity extends BaseActivity{
     private TextView meetingNoteText;
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,21 +67,21 @@ public class MeetingDetailActivity extends BaseActivity{
 
     private void initViews() {
         meetingTitleText.setText(meeting.getTitle());
-        meetingTimeText.setText(getString(R.string.meeting_detail_time,getMeetingTime()));
-        meetingRemindText.setText(getString(R.string.meeting_detail_remind,ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(),meeting.getAllDay())));
+        meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
+        meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
-        meetingCreateTimeText.setText(getString(R.string.meeting_detail_create,TimeUtils.calendar2FormatString(this,
+        meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
-        attendeeText.setText(getString(R.string.meeting_detail_attendee,getMeetingParticipant(MEETING_ATTENDEE)));
-        meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder,getMeetingParticipant(MEETING_RECORD_HOLDER)));
-        meetingConferenceText.setText(getString(R.string.meeting_detail_conference,getMeetingParticipant(MEETING_CONTACT)));
+        attendeeText.setText(getString(R.string.meeting_detail_attendee, getMeetingParticipant(MEETING_ATTENDEE)));
+        meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder, getMeetingParticipant(MEETING_RECORD_HOLDER)));
+        meetingConferenceText.setText(getString(R.string.meeting_detail_conference, getMeetingParticipant(MEETING_CONTACT)));
         meetingNoteText.setText(meeting.getNote());
     }
 
 
-    private String getMeetingParticipant(int type){
+    private String getMeetingParticipant(int type) {
         List<Participant> participantList = null;
-        switch (type){
+        switch (type) {
             case MEETING_ATTENDEE:
                 participantList = meeting.getCommonParticipantList();
                 break;
@@ -89,11 +92,11 @@ public class MeetingDetailActivity extends BaseActivity{
                 participantList = meeting.getRecorderParticipantList();
                 break;
         }
-        if(participantList.size() == 0){
-            return  "";
-        }else if(participantList.size() == 1){
+        if (participantList.size() == 0) {
+            return "";
+        } else if (participantList.size() == 1) {
             return participantList.get(0).getName();
-        }else{
+        } else {
             return getString(R.string.meeting_detail_attendee_num,
                     participantList.get(0).getName(),
                     participantList.size());
@@ -103,29 +106,30 @@ public class MeetingDetailActivity extends BaseActivity{
 
     /**
      * 获取会议起止时间
+     *
      * @return
      */
     private String getMeetingTime() {
         String duringTime = "";
         long startTime = meeting.getStartTime();
         long endTime = meeting.getEndTime();
-        if(TimeUtils.isSameDay(TimeUtils.timeLong2Calendar(startTime),TimeUtils.timeLong2Calendar(endTime))){
-            duringTime = TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(startTime),TimeUtils.FORMAT_MONTH_DAY) + " " +
-                    TimeUtils.getWeekDay(this,TimeUtils.timeLong2Calendar(startTime)) + " " +
-                    TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(startTime),TimeUtils.FORMAT_HOUR_MINUTE) +
-                    " - "+TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(endTime),TimeUtils.FORMAT_HOUR_MINUTE);
-        }else{
+        if (TimeUtils.isSameDay(TimeUtils.timeLong2Calendar(startTime), TimeUtils.timeLong2Calendar(endTime))) {
+            duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) + " " +
+                    TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(startTime)) + " " +
+                    TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_HOUR_MINUTE) +
+                    " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_HOUR_MINUTE);
+        } else {
             //先按同一天算
-            duringTime = TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(startTime),TimeUtils.FORMAT_MONTH_DAY) +
-                    TimeUtils.getWeekDay(this,TimeUtils.timeLong2Calendar(startTime)) +
-                    TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(startTime),TimeUtils.FORMAT_HOUR_MINUTE) +
-                    " - "+TimeUtils.calendar2FormatString(this,TimeUtils.timeLong2Calendar(endTime),TimeUtils.FORMAT_HOUR_MINUTE);
+            duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) +
+                    TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(startTime)) +
+                    TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_HOUR_MINUTE) +
+                    " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_HOUR_MINUTE);
         }
-        return  duringTime;
+        return duringTime;
     }
 
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
                 break;
@@ -147,30 +151,22 @@ public class MeetingDetailActivity extends BaseActivity{
 
     private void showDialog() {
         new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
-                .addItem(getString(R.string.meeting_detail_add_participant))
                 .addItem(getString(R.string.meeting_detail_show_qrcode))
                 .addItem(getString(R.string.meeting_detail_change_meeting))
                 .addItem(getString(R.string.meeting_cancel))
-                .addItem(getString(R.string.delete))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         switch (position) {
                             case 0:
-
                                 break;
                             case 1:
-
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("meeting", meeting);
+                                IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
                                 break;
                             case 2:
-
-                                break;
-                            case 3:
-                                LogUtils.YfcDebug("点击了取消会议");
-                                scheduleApiService.delMeetingById(meeting.getId());
-                                break;
-                            case 4:
-
+                                deleteMeeting(meeting);
                                 break;
                             default:
                                 break;
@@ -182,11 +178,23 @@ public class MeetingDetailActivity extends BaseActivity{
                 .show();
     }
 
-    class WebService extends APIInterfaceInstance{
+    /**
+     * 删除会议
+     */
+    private void deleteMeeting(Meeting meeting) {
+        if (NetUtils.isNetworkConnected(this)) {
+            scheduleApiService.deleteMeeting(meeting);
+        } else {
+            ToastUtils.show(this, "");
+        }
+    }
+
+    class WebService extends APIInterfaceInstance {
         @Override
-        public void returnDelMeetingSuccess(String meetingId) {
-            super.returnDelMeetingSuccess(meetingId);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED,null));
+        public void returnDelMeetingSuccess(Meeting meeting) {
+            super.returnDelMeetingSuccess(meeting);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
+            finish();
         }
 
         @Override

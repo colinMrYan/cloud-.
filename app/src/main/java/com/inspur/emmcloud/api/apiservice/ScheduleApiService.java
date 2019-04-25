@@ -843,6 +843,44 @@ public class ScheduleApiService {
         });
     }
 
+    public void updateMeeting(final String meetingJson){
+        final String completeUrl = APIUri.getMeetingUpdateUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.setBodyContent(meetingJson);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addMeeting(meetingJson);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddMeetingSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddMeetingFail(error, responseCode);
+            }
+        });
+
+    }
 
     /**
      * 通过开始时间获取会议
@@ -926,4 +964,5 @@ public class ScheduleApiService {
             }
         });
     }
+
 }

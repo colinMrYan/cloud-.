@@ -876,4 +876,8 @@ public interface APIInterface {
     void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
     void returnMeetingHistoryListFail(String error, int errorCode);
 
+    void returnUpdateMeetingSuccess();
+
+    void returnUpdateMeetingFail(String error, int errorCode);
+
 }
