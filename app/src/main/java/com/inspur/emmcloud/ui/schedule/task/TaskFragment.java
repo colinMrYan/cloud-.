@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 
 import org.xutils.view.annotation.ContentView;
@@ -169,7 +170,9 @@ public class TaskFragment extends Fragment {
 //                    tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#00ffffff"));
 //                    allTaskView.setBackgroundColor(Color.parseColor("#36A5F6"));
 //                }
-                searchEditText.setText("");
+                if(!StringUtils.isBlank(searchEditText.getText().toString())){
+                    searchEditText.setText("");
+                }
                 tabLayoutSchedule.getTabAt(position).select();
                 ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
             }

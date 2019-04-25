@@ -58,7 +58,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/color_list_divider"></View>
+            android:background="@color/color_list_divider"/>
 
         <ImageView
             android:id="@+id/arrow"
@@ -88,7 +88,7 @@
         android:layout_height="0.6dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/color_list_divider"></View>
+        android:background="@color/color_list_divider"/>
 
     <com.inspur.emmcloud.widget.NoScrollGridView
         android:id="@+id/action_grid"
@@ -99,6 +99,6 @@
         android:paddingRight="10dp"
         android:listSelector="@android:color/transparent"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="0.5dp"></com.inspur.emmcloud.widget.NoScrollGridView>
+        android:verticalSpacing="0.5dp"/>
     </LinearLayout>
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>

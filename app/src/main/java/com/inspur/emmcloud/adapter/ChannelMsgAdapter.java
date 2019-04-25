@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
+import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResImageMsg;
@@ -195,6 +196,9 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 break;
             case "extended/actions":
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                break;
+            case "extended/selects":
+                cardContentView = DisplayExtendedDecideMsg.getView(message,context);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context,

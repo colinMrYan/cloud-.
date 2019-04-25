@@ -1582,6 +1582,16 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnOpenDecideBotRequestSuccess() {
+
+    }
+
+    @Override
+    public void returnOpenDecideBotRequestFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult) {
     }
 

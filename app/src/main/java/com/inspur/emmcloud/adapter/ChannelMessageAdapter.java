@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
+import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
@@ -181,6 +182,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
+                cardContentView = DisplayExtendedDecideMsg.getView(message,context);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
