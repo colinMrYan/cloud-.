@@ -2,11 +2,11 @@ package com.inspur.emmcloud.util.common.richtext.ig;
 
 import android.widget.TextView;
 
-import com.inspur.emmcloud.util.common.cache.BitmapPool;
 import com.inspur.emmcloud.util.common.richtext.ImageHolder;
 import com.inspur.emmcloud.util.common.richtext.RichTextConfig;
 import com.inspur.emmcloud.util.common.richtext.callback.ImageLoadNotify;
 import com.inspur.emmcloud.util.common.richtext.drawable.DrawableWrapper;
+import com.inspur.emmcloud.util.common.richtext.exceptions.BitmapInputStreamNullPointException;
 import com.inspur.emmcloud.util.common.richtext.exceptions.ImageDecodeException;
 
 import java.io.BufferedInputStream;
@@ -14,26 +14,29 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by zhou on 2016/12/8.
- * 网络图片下载完成后被回调
+ * Created by zhou on 2017/10/2.
+ * 处理流
  */
-class CallbackImageLoader extends AbstractImageLoader<InputStream> {
 
-    CallbackImageLoader(ImageHolder holder, RichTextConfig config, TextView textView, DrawableWrapper drawableWrapper, ImageLoadNotify iln) {
+class InputStreamImageLoader extends AbstractImageLoader<InputStream> implements Runnable {
+
+    private InputStream inputStream;
+
+    InputStreamImageLoader(ImageHolder holder, RichTextConfig config, TextView textView, DrawableWrapper drawableWrapper, ImageLoadNotify iln, InputStream inputStream) {
         super(holder, config, textView, drawableWrapper, iln, SourceDecode.INPUT_STREAM_DECODE);
+        this.inputStream = inputStream;
     }
 
-    void onImageDownloadFinish(String key, Exception exception) {
-        if (exception != null) {
-            onFailure(exception);
+    @Override
+    public void run() {
+        if (inputStream == null) {
+            onFailure(new BitmapInputStreamNullPointException());
             return;
         }
+
         try {
-            InputStream inputStream = BitmapPool.getPool().readBitmapFromTemp(key);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-
             doLoadImage(bufferedInputStream);
-
             bufferedInputStream.close();
             inputStream.close();
         } catch (IOException e) {
@@ -41,7 +44,6 @@ class CallbackImageLoader extends AbstractImageLoader<InputStream> {
         } catch (OutOfMemoryError error) {
             onFailure(new ImageDecodeException(error));
         }
+
     }
-
 }
-

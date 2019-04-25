@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgActionAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.bean.chat.Action;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
@@ -20,7 +19,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
@@ -33,7 +31,7 @@ import java.util.List;
 /**
  * 展示活动卡片
  */
-public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
+public class DisplayExtendedActionsMsg {
 
     private static DisplayExtendedActionsMsg mInstance;
     private Context context;
@@ -55,14 +53,6 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
         return mInstance;
     }
 
-
-    /**
-     * 富文本卡片
-     *
-     * @param context
-     * @param convertView
-     * @param msg
-     */
     public View getView(Message msg) {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_extended_actions_view, null);
@@ -132,14 +122,4 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
 
     }
 
-    @Override
-    public void returnOpenActionBackgroudUrlSuccess() {
-        LoadingDialog.dimissDlg(loadingDlg);
-    }
-
-    @Override
-    public void returnOpenActionBackgroudUrlFail(String error, int errorCode) {
-        LoadingDialog.dimissDlg(loadingDlg);
-        WebServiceMiddleUtils.hand(context, error, errorCode);
-    }
 }
