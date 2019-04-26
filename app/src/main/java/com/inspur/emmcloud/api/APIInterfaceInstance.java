@@ -2012,6 +2012,16 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnDelMeetingSuccess(Meeting meeting) {
+
+    }
+
+    @Override
+    public void returnDelMeetingFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
 
     }
@@ -2028,6 +2038,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnNaviBarModelFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
+
+    }
+
+    @Override
+    public void returnMeetingHistoryListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnUpdateMeetingSuccess() {
+
+    }
+
+    @Override
+    public void returnUpdateMeetingFail(String error, int errorCode) {
 
     }
 }

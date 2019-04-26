@@ -1,11 +1,9 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +20,7 @@ import java.util.List;
  * Created by chenmch on 2019/4/2.
  */
 
-public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMeetingListAdapter.ViewHolder> {
+public class ScheduleMeetingListAdapter extends BaseAdapter {
     private List<Meeting> meetingList = new ArrayList<>();
     private Context context;
     private OnItemClickLister onItemClickLister;
@@ -36,16 +34,56 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
         this.meetingList.addAll(meetingList);
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.schedule_meeting_list_item_view, null);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+    public void setOnItemClickLister(OnItemClickLister onItemClickLister) {
+        this.onItemClickLister = onItemClickLister;
+    }
+
+    public interface OnItemClickLister {
+        void onItemClick(View view, int position);
+    }
+
+    class ViewHolder {
+        public ImageView iconImg;
+        public TextView titleText;
+        public TextView displayNameText;
+        public TextView timeText;
+        public TextView buildingText;
+        public TextView dateText;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Meeting meeting = meetingList.get(position);
+    public int getCount() {
+        return meetingList.size();
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
+
+    @Override
+    public View getView(final int i, View view, ViewGroup viewGroup) {
+        ViewHolder holder;
+        if (null == view) {
+            holder = new ViewHolder();
+            view = View.inflate(context, R.layout.schedule_meeting_list_item_view, null);
+            holder.buildingText = view.findViewById(R.id.tv_building);
+            holder.dateText = view.findViewById(R.id.tv_date);
+            holder.displayNameText = view.findViewById(R.id.tv_display_name);
+            holder.iconImg = view.findViewById(R.id.iv_icon);
+            holder.timeText = view.findViewById(R.id.tv_time);
+            holder.titleText = view.findViewById(R.id.tv_title);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
+        Meeting meeting = meetingList.get(i);
         Calendar startCalendar = meeting.getStartTimeCalendar();
         Calendar endCalendar = meeting.getEndTimeCalendar();
         holder.titleText.setText(meeting.getTitle());
@@ -62,54 +100,19 @@ public class ScheduleMeetingListAdapter extends RecyclerView.Adapter<ScheduleMee
         }
         holder.dateText.setText(dateBuilder.toString());
         holder.buildingText.setText(meeting.getScheduleLocationObj().getBuilding());
-        if (StringUtils.isBlank(meeting.getScheduleLocationObj().getId())){
+        if (StringUtils.isBlank(meeting.getScheduleLocationObj().getId())) {
             holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_out);
-        }else {
+        } else {
             holder.iconImg.setImageResource(R.drawable.ic_schedule_meeting_type_common);
         }
-    }
-
-
-    @Override
-    public int getItemCount() {
-        return meetingList.size();
-    }
-
-    public void setOnItemClickLister(OnItemClickLister onItemClickLister) {
-        this.onItemClickLister = onItemClickLister;
-    }
-
-    public interface OnItemClickLister {
-        void onItemClick(View view, int position);
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ImageView iconImg;
-        private TextView titleText;
-        private TextView displayNameText;
-        private TextView timeText;
-        private TextView buildingText;
-        private TextView dateText;
-
-        public ViewHolder(View convertView) {
-            super(convertView);
-            itemView.setOnClickListener(this);
-            iconImg = convertView.findViewById(R.id.iv_icon);
-            titleText = convertView.findViewById(R.id.tv_title);
-            displayNameText = convertView.findViewById(R.id.tv_display_name);
-            timeText = convertView.findViewById(R.id.tv_time);
-            buildingText = convertView.findViewById(R.id.tv_building);
-            dateText = convertView.findViewById(R.id.tv_date);
-
-
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (onItemClickLister != null) {
-                onItemClickLister.onItemClick(view, getAdapterPosition());
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onItemClickLister != null) {
+                    onItemClickLister.onItemClick(view, i);
+                }
             }
-
-        }
+        });
+        return view;
     }
 }

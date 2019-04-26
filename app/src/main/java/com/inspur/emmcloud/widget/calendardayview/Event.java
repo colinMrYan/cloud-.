@@ -4,7 +4,6 @@ package com.inspur.emmcloud.widget.calendardayview;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.Calendar;
@@ -161,9 +160,7 @@ public class Event {
     public String getShowEventSubTitle(Context context, Calendar selectCalendar) {
         String showEventSubTitle = "";
         if (getEventType().equals(Event.TYPE_MEETING)) {
-            if (!StringUtils.isBlank(getEventSubTitle())) {
-                showEventSubTitle = "会议地点：" + getEventSubTitle();
-            }
+            showEventSubTitle = getEventSubTitle();
         } else {
             if (TimeUtils.isSameDay(selectCalendar, getEventEndTime())) {
                 showEventSubTitle = context.getString(R.string.today);

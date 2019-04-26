@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -82,16 +83,24 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private ScrollView eventScrollView;
     @ViewInject(R.id.recycler_view_event)
     private RecyclerView eventRecyclerView;
+    @ViewInject(R.id.rl_all_day)
+    private RelativeLayout allDayLayout;
+    @ViewInject(R.id.iv_event_all_day)
+    private ImageView eventAllDayImg;
+    @ViewInject(R.id.tv_event_title_all_day)
+    private ImageView eventAllDayTitle;
     private ScheduleEventListAdapter scheduleEventListAdapter;
     private Boolean isEventShowTypeList;
     private ScheduleApiService apiService;
     private Calendar selectCalendar;
     private List<Event> eventList = new ArrayList<>();
+    private List<Event> allDayEventList = new ArrayList<>();
     private Calendar pageStartCalendar = Calendar.getInstance();
     private Calendar pageEndCalendar = Calendar.getInstance();
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
     private List<Holiday> holidayList= new ArrayList<>();
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -116,7 +125,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED:
             case Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED:
                 showCalendarEvent(true);
-
                 break;
         }
     }
@@ -135,7 +143,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarView.post(new Runnable() {
             @Override
             public void run() {
-                calendarView.scrollToCurrent(true);
+                setScheduleBackToToday();
             }
         });
 
@@ -210,7 +218,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void setSelectCalendarTimeInfo() {
         StringBuilder builder = new StringBuilder();
         boolean isToday = TimeUtils.isCalendarToday(selectCalendar);
-        EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SELECT_CALENDAR_CHANGED,isToday));
         calendarDayView.setCurrentTimeLineShow(isToday);
         if (isToday) {
             builder.append(getString(R.string.today) + " ");
@@ -257,13 +264,22 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         showCalendarViewEventMark(scheduleList, meetingList);
         if (isEventShowTypeList) {
+            allDayLayout.setVisibility(View.GONE);
             scheduleEventListAdapter.setEventList(selectCalendar, eventList);
             scheduleEventListAdapter.notifyDataSetChanged();
         } else {
+            setAllDayEventList();
             calendarDayView.setEventList(eventList, selectCalendar);
         }
         int eventListSize = eventList.size();
         scheduleSumText.setText(eventListSize > 0 ? eventListSize + "项日程" : "");
+    }
+
+    /**
+     * 日视图区分全天和非全天事件
+     */
+    private void setAllDayEventList(){
+
     }
 
     /**

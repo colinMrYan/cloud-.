@@ -860,10 +860,23 @@ public interface APIInterface {
 
     void returnAddMeetingFail(String error, int errorCode);
 
+    void returnDelMeetingSuccess(Meeting meeting);
+
+    void returnDelMeetingFail(String error, int errorCode);
+
     void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
     void returnMeetingListByMeetingRoomFail(String error, int errorCode);
 
 
     void returnNaviBarModelSuccess(NaviBarModel naviBarModel);
     void returnNaviBarModelFail(String error, int errorCode);
+
+
+
+    void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
+    void returnMeetingHistoryListFail(String error, int errorCode);
+
+    void returnUpdateMeetingSuccess();
+    void returnUpdateMeetingFail(String error, int errorCode);
+
 }

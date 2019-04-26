@@ -685,54 +685,54 @@ public class TagHandlerImpl implements TagHandler {
     //jason修改处
     @Override
     public boolean image(Line line) {
-//        line = line.get();
-//        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
-//        Matcher matcher = obtain(Tag.IMAGE, builder);
-//        if (matcher.find()) {
-//            String title = matcher.group(2);
-//            String link = matcher.group(3);
-//            String hint = matcher.group(6);
-//            builder.delete(matcher.startWebSocket(1), matcher.end(1));
-//            builder.insert(matcher.startWebSocket(1), styleBuilder.image(title, link, hint));
-//            image(line);
-//            return true;
-//        }
+        line = line.get();
+        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
+        Matcher matcher = obtain(Tag.IMAGE, builder);
+        if (matcher.find()) {
+            String title = matcher.group(2);
+            String link = matcher.group(3);
+            String hint = matcher.group(6);
+            builder.delete(matcher.start(1), matcher.end(1));
+            builder.insert(matcher.start(1), styleBuilder.image(title, link, hint));
+            image(line);
+            return true;
+        }
         return false;
     }
 
     //jason修改处
     @Override
     public boolean image2(Line line) {
-//        line = line.get();
-//        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
-//        Matcher matcher = obtain(Tag.IMAGE2, builder);
-//        if (matcher.find()) {
-//            String title = matcher.group(2);
-//            String id = matcher.group(3);
-//            Pair<String, String> image = idImageUrl.get(id);
-//            if (image != null) {
-//                builder.delete(matcher.startWebSocket(1), matcher.end(1));
-//                builder.insert(matcher.startWebSocket(1), styleBuilder.image(title, image.first, image.second));
-//            } else {
-//                return false;
-//            }
-//            image2(line);
-//            return true;
-//        }
+        line = line.get();
+        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
+        Matcher matcher = obtain(Tag.IMAGE2, builder);
+        if (matcher.find()) {
+            String title = matcher.group(2);
+            String id = matcher.group(3);
+            Pair<String, String> image = idImageUrl.get(id);
+            if (image != null) {
+                builder.delete(matcher.start(1), matcher.end(1));
+                builder.insert(matcher.start(1), styleBuilder.image(title, image.first, image.second));
+            } else {
+                return false;
+            }
+            image2(line);
+            return true;
+        }
         return false;
     }
 
     //jason修改处
     @Override
     public boolean imageId(String line) {
-//        Matcher matcher = obtain(Tag.IMAGE_ID, line);
-//        if (matcher.find()) {
-//            String id = matcher.group(1);
-//            String link = matcher.group(2);
-//            String hint = matcher.group(5);
-//            idImageUrl.put(id, new Pair<>(link, hint));
-//            return true;
-//        }
+        Matcher matcher = obtain(Tag.IMAGE_ID, line);
+        if (matcher.find()) {
+            String id = matcher.group(1);
+            String link = matcher.group(2);
+            String hint = matcher.group(5);
+            idImageUrl.put(id, new Pair<>(link, hint));
+            return true;
+        }
         return false;
     }
 
@@ -819,8 +819,8 @@ public class TagHandlerImpl implements TagHandler {
         //jason  修改 去除一些标签的过滤
         boolean flag = false;
 //        flag = email(line) || flag;
-//        flag = image(line) || flag;
-//        flag = image2(line) || flag;
+        flag = image(line) || flag;
+        flag = image2(line) || flag;
         flag = link(line) || flag;
 //        flag = link2(line) || flag;
 //        flag = autoLink(line) || flag;

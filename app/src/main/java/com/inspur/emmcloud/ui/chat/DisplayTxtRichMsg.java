@@ -59,7 +59,7 @@ public class DisplayTxtRichMsg {
         String source = JSONUtils.getString(msgBody, "source", "");
         if (msg.getUid().toLowerCase().startsWith("bot")) {
             RichText.from(source)
-                    .type(RichType.MARKDOWN)
+                    .type(RichType.markdown)
                     .linkFix(new LinkFixCallback() {
                         @Override
                         public void fix(LinkHolder holder) {
@@ -88,7 +88,7 @@ public class DisplayTxtRichMsg {
                     })
                     .noImage(true)
                     .singleLoad(false)
-                    .cache(CacheType.ALL)
+                    .cache(CacheType.all)
                     .into(contentText);
         } else {
             contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
