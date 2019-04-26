@@ -55,6 +55,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
     public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
     public static final String EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT = "schedule_calendar_type_select";
+    private static final String EXTRA_SELECT_CALENDAR = "extra_select_calendar";
     private static final int REQUEST_CAL_TYPE = 1;
     private static final int REQUEST_REPEAT_TYPE = 2;
     private static final int REQUEST_CAL_ALERT_TIME = 3;
@@ -159,7 +160,8 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
                     ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay));
         } else {
-            startCalendar = Calendar.getInstance();
+            startCalendar=(Calendar)getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+            startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
             endCalendar = (Calendar) startCalendar.clone();
             if (!isAllDay) {
                 endCalendar.add(Calendar.HOUR_OF_DAY, 1);
@@ -319,10 +321,11 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     }
 
     /**
-     * 提示内容*/
+     * 提示内容
+     */
     private void showDialog() {
         String date = getString(getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT) ?
-                R.string.schedule_calendar_modify:R.string.schedule_calendar_add );
+                R.string.schedule_calendar_modify : R.string.schedule_calendar_add);
         new ActionSheetDialog.ActionListSheetBuilder(CalendarAddActivity.this)
                 .addItem(date)
                 .addItem(getString(R.string.schedule_calendar_delete))
@@ -368,8 +371,8 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     }
 
     /***/
-    private void delCalendarEvent(){
-        if(NetUtils.isNetworkConnected(this)&&getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)){
+    private void delCalendarEvent() {
+        if (NetUtils.isNetworkConnected(this) && getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             apiService.deleteSchedule(scheduleEvent.getId());
         }
     }
@@ -545,7 +548,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
         @Override
         public void returnDeleteScheduleSuccess() {
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED,null));
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
             finish();
         }
 
