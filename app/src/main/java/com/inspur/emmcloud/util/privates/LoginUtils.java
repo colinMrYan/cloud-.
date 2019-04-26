@@ -23,7 +23,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.MDM.MDMListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.MaxHightListView;
+import com.inspur.emmcloud.widget.MaxHeightListView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
@@ -237,7 +237,7 @@ public class LoginUtils extends APIInterfaceInstance {
         final MyDialog myDialog = new MyDialog(activity, R.layout.dialog_login_select_tanent);
         final SwitchView switchView = myDialog.findViewById(R.id.auto_select_switch);
         switchView.setOpened(true);
-        MaxHightListView enterpriseListView = myDialog.findViewById(R.id.enterprise_list);
+        MaxHeightListView enterpriseListView = myDialog.findViewById(R.id.enterprise_list);
         enterpriseListView.setMaxHeight(DensityUtil.dip2px(activity, 180));
         enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList));
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

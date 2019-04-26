@@ -10,23 +10,23 @@ import android.widget.ListView;
  * 可以设置最大高度的listview
  */
 
-public class MaxHightListView extends ListView {
+public class MaxHeightListView extends ListView {
     /**
      * listview最大高度
      */
     private int maxHeight;
 
-    public MaxHightListView(Context context) {
+    public MaxHeightListView(Context context) {
         super(context);
         // TODO Auto-generated constructor stub
     }
 
-    public MaxHightListView(Context context, AttributeSet attrs, int defStyle) {
+    public MaxHeightListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         // TODO Auto-generated constructor stub
     }
 
-    public MaxHightListView(Context context, AttributeSet attrs) {
+    public MaxHeightListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub
     }
