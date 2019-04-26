@@ -164,7 +164,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
                     JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
                     alertTimeName);
-            LogUtils.LbcDebug("shuju:::   "+remindEvent.getName()+"  "+remindEvent.getAdvanceTimeSpan()+" "+remindEvent.getRemindType());
         } else {
             startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
             startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
