@@ -164,7 +164,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         String type = message.getType();
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-
                 cardContentView = DisplayTxtPlainMsg.getView(context,
                         message);
                 break;

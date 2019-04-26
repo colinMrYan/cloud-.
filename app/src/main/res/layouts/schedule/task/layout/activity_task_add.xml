@@ -12,19 +12,15 @@
         android:layout_height="@dimen/header_height"
         android:background="?attr/header_bg">
 
-        <TextView
-            android:id="@+id/tv_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:padding="11dp"
+            android:layout_height="44dp"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:gravity="center"
             android:onClick="onClick"
-            android:paddingLeft="15dp"
-            android:paddingRight="5dp"
-            android:text="@string/cancel"
-            android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize" />
+            android:scaleType="fitXY"
+            android:src="?attr/ic_back_btn" />
 
 
         <TextView
@@ -48,7 +44,7 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
-            android:text="@string/save"
+            android:text="@string/ok"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>

@@ -263,7 +263,7 @@ public class TaskAddActivity extends BaseActivity {
                     updateTask();
                 }
                 break;
-            case R.id.tv_cancel:
+            case R.id.ibt_back:
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
                 finish();
                 break;

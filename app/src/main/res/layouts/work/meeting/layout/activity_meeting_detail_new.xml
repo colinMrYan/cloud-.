@@ -137,11 +137,55 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_meeting_attendee"
+            android:id="@+id/rl_meeting_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
             android:layout_below="@id/rl_meeting_title"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/iv_location_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="12dp"
+                android:src="@drawable/ic_schedule_meeting_attendee" />
+
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:layout_marginBottom="12dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_location_icon"
+                />
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_arrow_right" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_alignLeft="@id/tv_location"
+                android:layout_below="@id/tv_location"
+                android:background="#DDDDDD" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_meeting_attendee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:layout_below="@id/rl_meeting_location"
             android:layout_marginTop="15dp"
             android:gravity="center_vertical">
 
@@ -152,7 +196,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/icon_username" />
+                android:src="@drawable/ic_schedule_meeting_attendee" />
 
             <TextView
                 android:id="@+id/tv_attendee"
@@ -194,7 +238,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/icon_username" />
+                android:src="@drawable/ic_schedule_meeting_recorder" />
 
             <TextView
                 android:id="@+id/tv_meeting_record_holder"
@@ -236,7 +280,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/icon_username" />
+                android:src="@drawable/ic_schedule_meeting_liaison" />
 
             <TextView
                 android:id="@+id/tv_meeting_conference"
@@ -277,7 +321,7 @@
                 android:layout_alignTop="@id/tv_meeting_note"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/icon_username" />
+                android:src="@drawable/ic_schedule_meeting_note" />
 
             <TextView
                 android:id="@+id/tv_meeting_note"
@@ -311,7 +355,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/icon_username" />
+                android:src="@drawable/ic_schedule_meeting_location" />
 
             <TextView
                 android:id="@+id/tv_sign"

@@ -1,9 +1,11 @@
 package com.inspur.emmcloud.util.common.richtext.callback;
 
+
 import com.inspur.emmcloud.util.common.richtext.ImageHolder;
 
 /**
  * Created by zhou on 2017/2/21.
+ * SimpleImageFixCallback
  */
 
 public abstract class SimpleImageFixCallback implements ImageFixCallback {

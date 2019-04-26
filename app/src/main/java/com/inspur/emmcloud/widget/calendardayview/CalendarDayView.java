@@ -28,7 +28,7 @@ import java.util.List;
 
 public class CalendarDayView extends RelativeLayout {
     private static final int TIME_HOUR_HEIGHT = DensityUtil.dip2px(MyApplication.getInstance(), 40);
-    private static final int EVENTT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
+    private static final int EVENT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
     private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3",
             "4", "5", "6", "7", "8", "9", "10", "11"};
     private List<TimeHourRow> timeHourRowList = new ArrayList<>();
@@ -153,7 +153,7 @@ public class CalendarDayView extends RelativeLayout {
         for (TimeHourRow timeHourRow : timeHourRowList) {
             int timeHourRowEventSize = timeHourRow.getEventList().size();
             if (timeHourRowEventSize > 1) {
-                timeHourRow.setEventWidth((eventLayout.getWidth() - timeHourRowEventSize * EVENTT_GAP) / timeHourRowEventSize);
+                timeHourRow.setEventWidth((eventLayout.getWidth() - timeHourRowEventSize * EVENT_GAP) / timeHourRowEventSize);
             }
         }
 
@@ -214,11 +214,7 @@ public class CalendarDayView extends RelativeLayout {
                     event.setIndex(i);
                     int eventWidth = timeHourRow.getEventWidth();
                     int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * DensityUtil.dip2px(getContext(), 40) / 3600000);
-                    int eventMinHeight = DensityUtil.dip2px(MyApplication.getInstance(), 18);
-                    if (eventHeight < eventMinHeight) {
-                        eventHeight = eventMinHeight;
-                    }
-                    int marginLeft = EVENTT_GAP * i + eventWidth * i;
+                    int marginLeft = EVENT_GAP * i + eventWidth * i;
                     Calendar startTime = event.getDayEventStartTime(selectCalendar);
                     Calendar dayStartTime = (Calendar) startTime.clone();
                     dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -237,16 +233,18 @@ public class CalendarDayView extends RelativeLayout {
     private void setEventLayout(final Event event, RelativeLayout.LayoutParams eventLayoutParams) {
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.calendar_day_event_view, null);
         eventView.setBackgroundResource(R.drawable.ic_schedule_calendar_view_event_bg);
-        ImageView eventImg = eventView.findViewById(R.id.iv_event);
-        TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
-        TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
-        eventImg.setImageResource(event.getEventIconResId());
-        eventTitleEvent.setText(event.getEventTitle());
-        String subTitle = event.getShowEventSubTitle(getContext(), selectCalendar);
-        if (event.getEventType().equals(Event.TYPE_TASK)) {
-            subTitle += "截止";
+        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(),24)){
+            ImageView eventImg = eventView.findViewById(R.id.iv_event);
+            TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
+            TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
+            eventImg.setImageResource(event.getEventIconResId());
+            eventTitleEvent.setText(event.getEventTitle());
+            String subTitle = event.getShowEventSubTitle(getContext(), selectCalendar);
+            if (event.getEventType().equals(Event.TYPE_TASK)) {
+                subTitle += "截止";
+            }
+            eventSubtitleEvent.setText(subTitle);
         }
-        eventSubtitleEvent.setText(subTitle);
         eventLayout.addView(eventView, eventLayoutParams);
         eventView.setOnClickListener(new OnClickListener() {
             @Override
