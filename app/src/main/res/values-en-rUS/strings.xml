@@ -375,6 +375,8 @@
     <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
     <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
     <string name="schedule_alert_time_before_a_week">1 Week before</string>
+    <string name="schedule_calendar_modify">Modify schedule</string>
+    <string name="schedule_calendar_delete">Delete schedule</string>
 
     <string name="schedule_task_add">Add task</string>
     <string name="schedule_task_detail">Task detail</string>

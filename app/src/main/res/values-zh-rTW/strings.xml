@@ -382,6 +382,8 @@
     <string name="schedule_alert_time_before_one_day">1天前（上午9時）</string>
     <string name="schedule_alert_time_before_two_day">2天前（上午9時）</string>
     <string name="schedule_alert_time_before_a_week">一周前</string>
+    <string name="schedule_calendar_modify">修改日程</string>
+    <string name="schedule_calendar_delete">刪除日程</string>
 
     <string name="schedule_task_add">添加任務</string>
     <string name="schedule_task_detail">任務詳情</string>

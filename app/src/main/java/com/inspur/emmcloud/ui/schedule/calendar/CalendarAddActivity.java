@@ -91,13 +91,17 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private RelativeLayout endTimeLayout;
     @ViewInject(R.id.rl_alert_time)
     private RelativeLayout alertTimeLayout;
+    @ViewInject(R.id.iv_calendar_detail_more)
+    private ImageView calendarDetailMoreImageView;
+    @ViewInject(R.id.tv_save)
+    private TextView  saveTextView;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private Schedule scheduleEvent = new Schedule();
     private MyCalendar myCalendar;
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private Boolean isAllDay = false;
-    private Boolean isEditable = true;
+    private Boolean isAddCalendar = true;
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText = "";
@@ -119,15 +123,13 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         allDaySwitch.setOnCheckedChangeListener(this);
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
-        titleText.setText(isEditable ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
-        if (!StringUtils.isBlank(scheduleEvent.getType())) {
-            calendarTypeNameText.setText(getApplication().getString(R.string.schedule_calendar_company));
-            calendarTypeFlagImage.setImageResource(isEditable ? R.drawable.icon_blue_circle : R.drawable.icon_blue_circle);
-        }
-        calenderTypeTipLayout.setVisibility(isEditable ? View.GONE : View.VISIBLE);
+        titleText.setText(isAddCalendar ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
+        calendarTypeNameText.setText(getApplication().getString(R.string.schedule_calendar_company));
+        calendarTypeFlagImage.setImageResource(isAddCalendar ? R.drawable.icon_blue_circle : R.drawable.icon_blue_circle);
+        calenderTypeTipLayout.setVisibility(View.VISIBLE);
         initStartEndTimeView();
         alertText.setText(remindEvent.getName());
-        setViewIsEditable(true);
+        setViewIsEditable(isAddCalendar);
     }
 
     /**
@@ -141,14 +143,14 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             contentText = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
         }
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
-            isEditable = false;
+            isAddCalendar = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
             isAllDay = scheduleEvent.getAllDay();
             startCalendar = scheduleEvent.getStartTimeCalendar();
             endCalendar = scheduleEvent.getEndTimeCalendar();
             contentText = scheduleEvent.getTitle();
-            findViewById(R.id.tv_save).setVisibility(View.GONE);
-            findViewById(R.id.iv_calendar_detail_more).setVisibility(View.VISIBLE);
+            saveTextView.setVisibility(View.GONE);
+            calendarDetailMoreImageView.setVisibility(View.VISIBLE);
             List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
             String calendarType = scheduleEvent.getType();
             for (int i = 0; i < allCalendarList.size(); i++) {
@@ -160,7 +162,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
                     ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay));
         } else {
-            startCalendar=(Calendar)getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+            startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
             startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
             endCalendar = (Calendar) startCalendar.clone();
             if (!isAllDay) {
@@ -324,17 +326,17 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 提示内容
      */
     private void showDialog() {
-        String date = getString(getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT) ?
-                R.string.schedule_calendar_modify : R.string.schedule_calendar_add);
         new ActionSheetDialog.ActionListSheetBuilder(CalendarAddActivity.this)
-                .addItem(date)
+                .addItem(getString(R.string.schedule_calendar_modify))
                 .addItem(getString(R.string.schedule_calendar_delete))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         switch (position) {
                             case 0:
-                                saveCalendarEvent();
+                                setViewIsEditable(true);
+                                saveTextView.setVisibility(View.VISIBLE);
+                                calendarDetailMoreImageView.setVisibility(View.GONE);
                                 break;
                             case 1:
                                 delCalendarEvent();
@@ -351,7 +353,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 存储日历事件
      */
     private void saveCalendarEvent() {
-        if (!checkingSaveCalendarEventAvaliable())
+        if (!checkingSaveCalendarEventAvailable())
             return;
         correctedCalendarTime();
         scheduleEvent.setTitle(contentText);
@@ -363,16 +365,17 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         if (remindEvent.getAdvanceTimeSpan() != -1) {
             scheduleEvent.setRemindEvent(remindEvent.toJSONObject().toString());
         }
-        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
-            updateCalEvent();
-        } else {
+        if (isAddCalendar) {
             addCalEvent();
+        } else {
+            updateCalEvent();
         }
     }
 
     /***/
     private void delCalendarEvent() {
-        if (NetUtils.isNetworkConnected(this) && getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
+        if (NetUtils.isNetworkConnected(this) && (!isAddCalendar)) {
+            loadingDlg.show();
             apiService.deleteSchedule(scheduleEvent.getId());
         }
     }
@@ -380,7 +383,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     /**
      * 能否保存提示
      */
-    private boolean checkingSaveCalendarEventAvaliable() {
+    private boolean checkingSaveCalendarEventAvailable() {
         contentText = inputContentEdit.getText().toString();
         if (StringUtils.isBlank(contentText)) {
             ToastUtils.show(getApplicationContext(),
@@ -499,7 +502,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
         @Override
         public void returnAddScheduleSuccess(GetIDResult getIDResult) {
-            super.returnAddScheduleSuccess(getIDResult);
             LoadingDialog.dimissDlg(loadingDlg);
             ToastUtils.show(getApplicationContext(), R.string.calendar_add_success);
             scheduleEvent.setId(getIDResult.getId());
@@ -509,7 +511,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
         @Override
         public void returnAddScheduleFail(String error, int errorCode) {
-            super.returnAddScheduleFail(error, errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
             LogUtils.LbcDebug("add Schedule Fail");
@@ -517,7 +518,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
         @Override
         public void returnUpdateScheduleSuccess() {
-            super.returnUpdateScheduleSuccess();
             LoadingDialog.dimissDlg(loadingDlg);
             sendCalendarEventNotification();
             ToastUtils.show(getApplicationContext(),
@@ -528,13 +528,13 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
         @Override
         public void returnUpdateScheduleFail(String error, int errorCode) {
-            super.returnUpdateScheduleFail(error, errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(CalendarAddActivity.this, error, errorCode);
         }
 
         @Override
         public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
+            LoadingDialog.dimissDlg(loadingDlg);
             List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
             calendarsList.clear();
             calendarsList.addAll(allCalendarList);
@@ -543,17 +543,20 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
         @Override
         public void returnMyCalendarFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
             super.returnMyCalendarFail(error, errorCode);
         }
 
         @Override
         public void returnDeleteScheduleSuccess() {
+            LoadingDialog.dimissDlg(loadingDlg);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
             finish();
         }
 
         @Override
         public void returnDeleteScheduleFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
             super.returnDeleteScheduleFail(error, errorCode);
         }
     }
