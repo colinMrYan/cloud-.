@@ -381,10 +381,11 @@
     <string name="schedule_alert_time_before_one_day">1天前（上午9时）</string>
     <string name="schedule_alert_time_before_two_day">2天前（上午9时）</string>
     <string name="schedule_alert_time_before_a_week">一周前</string>
+    <string name="schedule_calendar_modify">保存修改</string>
+    <string name="schedule_calendar_delete">删除日程</string>
 
     <string name="schedule_task_add">添加任务</string>
     <string name="schedule_task_detail">任务详情</string>
-
     <string name="schedule_task_content_hint">请输入任务内容...</string>
     <string name="schedule_task_priority">优先级</string>
     <string name="schedule_task_category">类别</string>
@@ -876,6 +877,14 @@
     <string name="meeting_detail_one_hour">提前一个小时</string>
     <string name="meeting_detail_one_day">提前一天</string>
     <string name="meeting_detail_attendee_num">%1$s等%2$d人</string>
+
+    <string name="meeting_add_content_hint">请输入会议内容...</string>
+    <string name="meeting_add_location_hint">请选择会议地点...</string>
+    <string name="meeting_add_attendee_title">参会人</string>
+    <string name="meeting_add_record_holder_title">会议记录人</string>
+    <string name="meeting_add_conference_title">会议联络人</string>
+    <string name="meeting_add_note">备注</string>
+    <string name="meeting_add_alert_time">会前提醒</string>
 
 
     <!-- 会议预定错误提示 -->
