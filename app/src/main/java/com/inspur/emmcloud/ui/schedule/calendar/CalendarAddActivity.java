@@ -94,7 +94,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     @ViewInject(R.id.iv_calendar_detail_more)
     private ImageView calendarDetailMoreImageView;
     @ViewInject(R.id.tv_save)
-    private TextView  saveTextView;
+    private TextView saveTextView;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private Schedule scheduleEvent = new Schedule();
@@ -145,7 +145,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         }
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isAddCalendar = false;
-            isEditable=false;
+            isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
             isAllDay = scheduleEvent.getAllDay();
             startCalendar = scheduleEvent.getStartTimeCalendar();
@@ -179,7 +179,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if(isEditable){
+        if (isEditable) {
             isAllDay = b;
             timeTextChangeByIsAllday(isAllDay);
             remindEvent = new RemindEvent();
@@ -340,7 +340,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                         switch (position) {
                             case 0:
                                 setViewIsEditable(true);
-                                isEditable=true;
+                                isEditable = true;
                                 saveTextView.setVisibility(View.VISIBLE);
                                 calendarDetailMoreImageView.setVisibility(View.GONE);
                                 break;
