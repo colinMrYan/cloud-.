@@ -1113,11 +1113,13 @@ public class ChatAPIService {
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("点击机器人卡片返回成功："+new String(arg0));
                 apiInterface.returnOpenDecideBotRequestSuccess();
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("点击机器人卡片返回失败："+error+"code:"+responseCode);
                 apiInterface.returnOpenDecideBotRequestFail(error, responseCode);
             }
 

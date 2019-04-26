@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.chat.MsgContentExtendedDecide;
 import com.inspur.emmcloud.bean.chat.Option;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -89,8 +90,10 @@ public class DisplayExtendedDecideMsg {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(!msgContentDecide.isLockAfterSelection()){
+                    LogUtils.YfcDebug("11111111111111");
                     openOption(context, optionList.get(position));
                 }else{
+                    LogUtils.YfcDebug("222222222222222");
                     if(msgContentDecide.isCanClickAgain()){
                         openOption(context,optionList.get(position));
                         msgContentDecide.setCanClickAgain(false);

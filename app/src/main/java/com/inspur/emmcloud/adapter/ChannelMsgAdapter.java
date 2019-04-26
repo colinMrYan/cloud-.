@@ -1,14 +1,7 @@
 package com.inspur.emmcloud.adapter;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -31,14 +24,22 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtRichMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * Created by chenmch on 2017/11/10.
@@ -198,6 +199,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
                 break;
             case "extended/selects":
+                LogUtils.YfcDebug("v0决策卡片");
                 cardContentView = DisplayExtendedDecideMsg.getView(message,context);
                 break;
             default:

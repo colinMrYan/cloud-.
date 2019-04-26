@@ -28,6 +28,7 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -183,6 +184,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
+                LogUtils.YfcDebug("v1决策卡片");
                 cardContentView = DisplayExtendedDecideMsg.getView(message,context);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
