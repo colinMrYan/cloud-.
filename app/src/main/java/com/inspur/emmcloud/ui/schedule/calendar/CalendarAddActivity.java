@@ -102,6 +102,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private Boolean isAllDay = false;
     private Boolean isAddCalendar = true;
+    private Boolean isEditable = true;
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText = "";
@@ -144,6 +145,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         }
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isAddCalendar = false;
+            isEditable=false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
             isAllDay = scheduleEvent.getAllDay();
             startCalendar = scheduleEvent.getStartTimeCalendar();
@@ -158,9 +160,11 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     myCalendar = allCalendarList.get(i);
                 }
             }
+            String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
             remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
                     JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
-                    ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay));
+                    alertTimeName);
+            LogUtils.LbcDebug("shuju:::   "+remindEvent.getName()+"  "+remindEvent.getAdvanceTimeSpan()+" "+remindEvent.getRemindType());
         } else {
             startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
             startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
@@ -176,10 +180,12 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        isAllDay = b;
-        timeTextextChangeByIsAllday(isAllDay);
-        alertText.setText("");
-        remindEvent = new RemindEvent();
+        if(isEditable){
+            isAllDay = b;
+            timeTextChangeByIsAllday(isAllDay);
+            remindEvent = new RemindEvent();
+            alertText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(-1, isAllDay));
+        }
     }
 
     /**
@@ -228,7 +234,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     /**
      * 全天及非全天UI切换
      */
-    private void timeTextextChangeByIsAllday(boolean IsAllday) {
+    private void timeTextChangeByIsAllday(boolean IsAllday) {
         String startTime = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         String endTime = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         startTimeText.setText(IsAllday ? TimeUtils.getWeekDay(this, startCalendar) : startTime);
@@ -277,7 +283,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                         endCalendar.add(Calendar.MINUTE, intervalMin);
                         String endDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                         endDateText.setText(endDateStr);
-                        timeTextextChangeByIsAllday(isAllDay);
+                        timeTextChangeByIsAllday(isAllDay);
                     }
 
                     @Override
@@ -335,6 +341,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                         switch (position) {
                             case 0:
                                 setViewIsEditable(true);
+                                isEditable=true;
                                 saveTextView.setVisibility(View.VISIBLE);
                                 calendarDetailMoreImageView.setVisibility(View.GONE);
                                 break;
