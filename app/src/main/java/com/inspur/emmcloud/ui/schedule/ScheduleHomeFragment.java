@@ -20,10 +20,12 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingHistoryActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
@@ -179,6 +181,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
+                LogUtils.YfcDebug("schedule:"+menuItem.getItemId());
                 switch (menuItem.getItemId()) {
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
@@ -197,6 +200,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                     case 5:
                         if (viewPager.getCurrentItem() == 0) {
                             IntentUtils.startActivity(getActivity(), CalendarSettingActivity.class);
+                        } else if(viewPager.getCurrentItem() == 1){
+                            IntentUtils.startActivity(getActivity(), MeetingHistoryActivity.class);
                         } else if (viewPager.getCurrentItem() == 2) {
                             IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
                         }

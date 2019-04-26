@@ -841,6 +841,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.schedule.meeting.MeetingHistoryActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.work.calendar.CalDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
