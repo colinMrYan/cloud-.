@@ -197,6 +197,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
     }
 
+    public Calendar getSelectCalendar(){
+        return selectCalendar;
+    }
+
 
     @Override
     public void onCalendarOutOfRange(EmmCalendar calendar) {
@@ -292,7 +296,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 String eventTitle = event.getEventTitle();
                 if (allDayEventList.size()>1){
                     if (eventTitle.length()>14){
-                        eventTitle.substring(0,13);
+                        eventTitle = eventTitle.substring(0,13);
                         eventTitle = eventTitle+"...";
                     }
                     eventTitle = eventTitle+" 等"+allDayEventList.size()+"项日程";

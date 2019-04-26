@@ -25,7 +25,6 @@ import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
@@ -43,6 +42,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
+    private static final String EXTRA_SELECT_CALENDAR = "extra_select_calendar";
     private View rootView;
     private TabLayout tabLayout;
     private CustomScrollViewPager viewPager;
@@ -181,11 +181,12 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
-                LogUtils.YfcDebug("schedule:"+menuItem.getItemId());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(EXTRA_SELECT_CALENDAR,scheduleFragment.getSelectCalendar());
                 switch (menuItem.getItemId()) {
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
-                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class);
+                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class,bundle);
                         break;
                     case 2:
                         recordUserClickWorkFunction(PV_COLLECTION_MISSION);
@@ -195,7 +196,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         break;
                     case 4:
                         recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class);
+                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class,bundle);
                         break;
                     case 5:
                         if (viewPager.getCurrentItem() == 0) {
