@@ -66,7 +66,8 @@ public class MeetingAddActivity extends BaseActivity {
     private static final int REQUEST_SELECT_RECORDER = 2;
     private static final int REQUEST_SELECT_LIAISON = 3;
     private static final int REQUEST_SELECT_MEETING_ROOM = 4;
-    private static final int REQUEST_SET_REMENDEVENT = 5;
+    private static final int REQUEST_SET_REMIND_EVENT = 5;
+    private static final String EXTRA_MEETING="meeting";
     @ViewInject(R.id.et_title)
     private EditText titleEdit;
     @ViewInject(R.id.tv_start_date)
@@ -119,8 +120,8 @@ public class MeetingAddActivity extends BaseActivity {
     private void initData() {
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
-        if (getIntent().hasExtra("meeting")) {
-            meeting = (Meeting) getIntent().getSerializableExtra("meeting");
+        if (getIntent().hasExtra(EXTRA_MEETING)) {
+            meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING);
             location = new Location(JSONUtils.getJSONObject(meeting.getLocation()));
             startTimeCalendar = meeting.getStartTimeCalendar();
             endTimeCalendar = meeting.getEndTimeCalendar();
@@ -153,7 +154,7 @@ public class MeetingAddActivity extends BaseActivity {
      */
     private void initView() {
         loadingDlg = new LoadingDialog(this);
-        if (getIntent().hasExtra("meeting")) {
+        if (getIntent().hasExtra(EXTRA_MEETING)) {
             titleEdit.setText(title);
             meetingPositionEdit.setText(location.getDisplayName());
             notesEdit.setText(note);
@@ -252,7 +253,7 @@ public class MeetingAddActivity extends BaseActivity {
         }
         intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, advanceTimeSpan);
         intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY, isAllDay);
-        startActivityForResult(intent, REQUEST_SET_REMENDEVENT);
+        startActivityForResult(intent, REQUEST_SET_REMIND_EVENT);
     }
 
     private void selectContact(int requestCode) {
@@ -361,7 +362,7 @@ public class MeetingAddActivity extends BaseActivity {
                     location.setBuilding(meetingRoom.getBuilding().getName());
                     location.setDisplayName(meetingRoom.getName());
                     break;
-                case REQUEST_SET_REMENDEVENT:
+                case REQUEST_SET_REMIND_EVENT:
                     remindEvent = (RemindEvent) data.getSerializableExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME);
                     reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
                     break;
@@ -456,7 +457,7 @@ public class MeetingAddActivity extends BaseActivity {
         }
         loadingDlg.show();
         LogUtils.jasonDebug("meeting.toJSonObject().toString()=" + meeting.toJSONObject().toString());
-        if (getIntent().hasExtra("meeting")) {
+        if (getIntent().hasExtra(EXTRA_MEETING)) {
             meeting.setId(this.meeting.getId());
             meeting.setLastTime(this.meeting.getLastTime());
             meeting.setLastTime(this.meeting.getState());

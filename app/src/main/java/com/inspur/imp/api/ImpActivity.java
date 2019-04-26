@@ -28,6 +28,7 @@ public class ImpActivity extends ImpFragmentBaseActivity {
         fragment = new ImpFragment();
         fragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commitAllowingStateLoss();
+
     }
 
 

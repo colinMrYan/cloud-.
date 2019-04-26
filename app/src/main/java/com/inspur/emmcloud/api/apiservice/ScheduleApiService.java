@@ -581,7 +581,6 @@ public class ScheduleApiService {
 
     /**
      * 获取对应room的会议情况
-     *
      * @param roomId
      * @param startTime
      * @param endTime
