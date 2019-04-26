@@ -878,6 +878,14 @@
     <string name="meeting_detail_one_day">提前一天</string>
     <string name="meeting_detail_attendee_num">%1$s等%2$d人</string>
 
+    <string name="meeting_add_content_hint">请输入会议内容...</string>
+    <string name="meeting_add_location_hint">请选择会议地点...</string>
+    <string name="meeting_add_attendee_title">参会人</string>
+    <string name="meeting_add_record_holder_title">会议记录人</string>
+    <string name="meeting_add_conference_title">会议联络人</string>
+    <string name="meeting_add_note">备注</string>
+    <string name="meeting_add_alert_time">会前提醒</string>
+
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部门信息缺失</string>

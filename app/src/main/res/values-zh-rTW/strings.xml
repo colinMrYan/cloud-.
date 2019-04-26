@@ -856,6 +856,8 @@
     <string name="meeting_room_booked">時間已被預訂，請重新選擇</string>
     <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
     <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
+    <string name="meeting_add_content_hint">請輸入會議內容...</string>
+    <string name="meeting_add_location_hint">請選擇會議地點...</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部門資訊缺失</string>
@@ -890,6 +892,12 @@
     <string name="meeting_detail_twenty_minutes">提前20分鐘</string>
     <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
     <string name="meeting_detail_one_hour">提前一個小時</string>
+
+    <string name="meeting_add_attendee_title">參會人</string>
+    <string name="meeting_add_record_holder_title">會議記錄人</string>
+    <string name="meeting_add_conference_title">會議聯絡人</string>
+    <string name="meeting_add_note">備註</string>
+    <string name="meeting_add_alert_time">會前提醒</string>
 
 
     <!-- 日曆 -->

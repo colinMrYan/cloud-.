@@ -67,7 +67,6 @@ public class MeetingAddActivity extends BaseActivity {
     private static final int REQUEST_SELECT_LIAISON = 3;
     private static final int REQUEST_SELECT_MEETING_ROOM = 4;
     private static final int REQUEST_SET_REMIND_EVENT = 5;
-    private static final String EXTRA_MEETING="meeting";
     @ViewInject(R.id.et_title)
     private EditText titleEdit;
     @ViewInject(R.id.tv_start_date)
@@ -120,8 +119,8 @@ public class MeetingAddActivity extends BaseActivity {
     private void initData() {
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
-        if (getIntent().hasExtra(EXTRA_MEETING)) {
-            meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING);
+        if (getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY)) {
+            meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
             location = new Location(JSONUtils.getJSONObject(meeting.getLocation()));
             startTimeCalendar = meeting.getStartTimeCalendar();
             endTimeCalendar = meeting.getEndTimeCalendar();
@@ -154,7 +153,7 @@ public class MeetingAddActivity extends BaseActivity {
      */
     private void initView() {
         loadingDlg = new LoadingDialog(this);
-        if (getIntent().hasExtra(EXTRA_MEETING)) {
+        if (getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY)) {
             titleEdit.setText(title);
             meetingPositionEdit.setText(location.getDisplayName());
             notesEdit.setText(note);
@@ -457,7 +456,7 @@ public class MeetingAddActivity extends BaseActivity {
         }
         loadingDlg.show();
         LogUtils.jasonDebug("meeting.toJSonObject().toString()=" + meeting.toJSONObject().toString());
-        if (getIntent().hasExtra(EXTRA_MEETING)) {
+        if (getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY)) {
             meeting.setId(this.meeting.getId());
             meeting.setLastTime(this.meeting.getLastTime());
             meeting.setLastTime(this.meeting.getState());

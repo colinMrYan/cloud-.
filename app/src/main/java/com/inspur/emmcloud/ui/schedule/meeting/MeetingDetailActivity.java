@@ -36,6 +36,7 @@ public class MeetingDetailActivity extends BaseActivity {
     private static final int MEETING_RECORD_HOLDER = 1;
     private static final int MEETING_CONTACT = 2;
     public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
+
     @ViewInject(R.id.tv_meeting_title)
     private TextView meetingTitleText;
     @ViewInject(R.id.tv_meeting_time)
@@ -166,7 +167,7 @@ public class MeetingDetailActivity extends BaseActivity {
                                 break;
                             case 1:
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("meeting", meeting);
+                                bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
                                 IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
                                 break;
                             case 2:
