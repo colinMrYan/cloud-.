@@ -10,27 +10,22 @@
         android:layout_height="@dimen/header_height"
         android:background="?attr/header_bg">
 
-        <TextView
-            android:id="@+id/tv_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:gravity="center"
             android:onClick="onClick"
-            android:paddingLeft="15dp"
-            android:paddingRight="5dp"
-            android:text="@string/cancel"
-            android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize" />
-
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_back_btn" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="预约会议"
+            android:text="@string/meeting_add"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
@@ -68,7 +63,7 @@
                 android:layout_height="100dp"
                 android:background="@android:color/white"
                 android:gravity="top"
-                android:hint="请输入会议内容..."
+                android:hint="@string/meeting_add_content_hint"
                 android:paddingBottom="15dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
@@ -184,9 +179,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:background="@null"
                     android:layout_toLeftOf="@+id/ll_add_position"
-                    android:hint="输入会议地点"
+                    android:background="@null"
+                    android:hint="@string/meeting_add_location_hint"
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
@@ -226,9 +221,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:onClick="onClick"
                 android:background="@android:color/white"
                 android:gravity="center_vertical"
+                android:onClick="onClick"
                 android:orientation="horizontal">
 
                 <TextView
@@ -239,15 +234,15 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="参会人"
+                    android:text="@string/meeting_add_attendee_title"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
                 <LinearLayout
                     android:id="@+id/ll_attendee"
-                    android:gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"></LinearLayout>
 
                 <ImageView
@@ -269,8 +264,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:onClick="onClick"
                 android:gravity="center_vertical"
+                android:onClick="onClick"
                 android:orientation="horizontal">
 
                 <TextView
@@ -281,7 +276,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="会议记录人"
+                    android:text="@string/meeting_add_record_holder_title"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
@@ -311,8 +306,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:onClick="onClick"
                 android:gravity="center_vertical"
+                android:onClick="onClick"
                 android:orientation="horizontal">
 
                 <TextView
@@ -323,7 +318,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="会议联络人"
+                    android:text="@string/meeting_add_conference_title"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
@@ -360,16 +355,16 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="备注"
+                    android:text="@string/meeting_add_note"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
                 <EditText
                     android:id="@+id/et_notes"
                     android:layout_width="match_parent"
+                    android:layout_height="41dp"
                     android:layout_below="@id/tv_notes_tips"
                     android:background="@null"
-                    android:layout_height="41dp"
                     android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
@@ -388,9 +383,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:onClick="onClick"
                 android:background="@android:color/white"
                 android:gravity="center_vertical"
+                android:onClick="onClick"
                 android:orientation="horizontal">
 
                 <TextView
@@ -401,7 +396,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="会前提醒"
+                    android:text="@string/meeting_add_alert_time"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
@@ -423,12 +418,11 @@
                     android:src="@drawable/ic_arrow_right" />
             </LinearLayout>
 
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_marginLeft="16dp"
                 android:layout_marginBottom="51dp"
+                android:layout_marginLeft="16dp"
                 android:background="@color/color_list_divider" />
         </LinearLayout>
 

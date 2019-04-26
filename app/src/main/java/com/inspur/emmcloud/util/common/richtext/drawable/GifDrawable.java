@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 /**
  * Created by zhou on 2017/2/21.
- * 支持播放Gif图片的自定义Drawable
+ * Support for custom Drawable playing Gif images
  */
 
 public class GifDrawable extends Drawable {
@@ -97,6 +97,7 @@ public class GifDrawable extends Drawable {
     public void stop() {
         running = false;
         this.textView = null;
+        this.movie = null;
     }
 
     @Override

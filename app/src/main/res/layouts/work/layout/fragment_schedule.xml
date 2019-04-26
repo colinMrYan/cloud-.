@@ -20,7 +20,7 @@
         android:gravity="center"
         android:hint="@string/work_search_hint"
         android:textSize="13sp"
-         />
+        android:visibility="gone" />
 
     <com.inspur.emmcloud.widget.calendarview.CalendarLayout
         android:id="@+id/calendar_layout_schedule"
@@ -36,8 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            app:calendar_padding="10dp"
             app:calendar_height="50dp"
+            app:calendar_padding="10dp"
             app:current_day_lunar_text_color="#36A5F6"
             app:current_day_text_color="#36A5F6"
             app:current_month_lunar_text_color="#999999"
@@ -115,6 +115,61 @@
                     android:paddingTop="10dp"
                     android:textColor="#333333"
                     android:textSize="15sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_all_day"
+                android:background="#ffffff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/color_list_divider"></View>
+
+                <TextView
+                    android:id="@+id/tv_all_day"
+                    android:layout_width="30dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="全天"
+                    android:textColor="#888888"
+                    android:textSize="11sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/tv_all_day"
+                    android:background="@drawable/ic_schedule_calendar_view_event_bg"
+                    android:paddingBottom="6dp"
+                    android:paddingTop="6dp">
+
+                    <ImageView
+                        android:id="@+id/iv_event_all_day"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="fitXY" />
+
+                    <TextView
+                        android:id="@+id/tv_event_title_all_day"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/iv_event"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingRight="7dp"
+                        android:textColor="#333333"
+                        android:textSize="13sp" />
+                </RelativeLayout>
+
+
             </RelativeLayout>
 
             <ScrollView

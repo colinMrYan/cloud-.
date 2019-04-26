@@ -23,11 +23,10 @@ import java.util.List;
 
 public class ResolutionUtils {
 
-    public static int getWidth(Activity context) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        context.getWindowManager().getDefaultDisplay()
-                .getMetrics(displayMetrics);
-        return displayMetrics.widthPixels;
+    public static int getWidth(Context context) {
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        return dm.widthPixels;
     }
 
     /**
