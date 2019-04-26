@@ -152,7 +152,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/ic_schedule_meeting_attendee" />
+                android:src="@drawable/ic_schedule_meeting_location" />
 
             <TextView
                 android:id="@+id/tv_location"

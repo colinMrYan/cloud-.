@@ -892,6 +892,7 @@
     <string name="meeting_detail_twenty_minutes">提前20分鐘</string>
     <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
     <string name="meeting_detail_one_hour">提前一個小時</string>
+    <string name="meeting_detail_location">會議地點:</string>
 
     <string name="meeting_add_attendee_title">參會人</string>
     <string name="meeting_add_record_holder_title">會議記錄人</string>

@@ -74,7 +74,8 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
-        meetingLocationText.setText(new Location(meeting.getLocation()).getDisplayName());
+        String locationData = getString(R.string.meeting_detail_location)+new Location(meeting.getLocation()).getDisplayName();
+        meetingLocationText.setText(locationData);
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         attendeeText.setText(getString(R.string.meeting_detail_attendee, getMeetingParticipant(MEETING_ATTENDEE)));
