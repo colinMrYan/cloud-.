@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.Gravity;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -24,6 +25,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.github.zafarkhaja.semver.Version;
+import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.ToastBlackStyle;
 import com.horcrux.svg.SvgPackage;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
@@ -152,7 +155,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
         WebSocketPush.getInstance().startWebSocket();
-
     }
 
     public String getCloudId() {
@@ -190,6 +192,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
+        ToastUtils.init(this,new ToastBlackStyle());
+        ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM,0,0);
     }
 
     /**************************************登出逻辑相关********************************************************/

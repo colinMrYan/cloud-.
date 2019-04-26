@@ -254,6 +254,7 @@ dependencies {
         exclude group: 'com.nineoldandroids', module: 'library'
     }
     compile 'cn.carbs.android:SegmentControlView:1.0.0'
+    implementation 'com.hjq:toast:6.0'
 }
 repositories { flatDir { dirs 'aars' } }
 
