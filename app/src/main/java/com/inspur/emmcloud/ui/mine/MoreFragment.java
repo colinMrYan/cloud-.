@@ -67,6 +67,7 @@ public class MoreFragment extends BaseFragment {
     private List<MineLayoutItemGroup> mineLayoutItemGroupList = new ArrayList<>();
     private BaseExpandableListAdapter adapter;
     private MyClickListener myClickListener = new MyClickListener();
+    private GetMyInfoResult getMyInfoResult;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,8 @@ public class MoreFragment extends BaseFragment {
     }
 
     private void initData() {
+        String myInfo = PreferencesUtils.getString(MyApplication.getInstance(), "myInfo", "");
+        getMyInfoResult = new GetMyInfoResult(myInfo);
         MainTabProperty mainTabProperty =
                 AppTabUtils.getMainTabProperty(MyApplication.getInstance(), getClass().getSimpleName());
         if (mainTabProperty != null) {
@@ -332,12 +335,10 @@ public class MoreFragment extends BaseFragment {
                 LinearLayout userCardMenuLayout = convertView.findViewById(R.id.ll_user_card_menu);
                 setUserCardMenuLayout(userCardMenuLayout, mineLayoutItemList);
                 convertView.findViewById(R.id.ll_my_info).setOnClickListener(myClickListener);
-                enterpriseText.setOnClickListener(myClickListener);
 
-                String myInfo = PreferencesUtils.getString(MyApplication.getInstance(), "myInfo", "");
-                GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
                 Drawable drawable = null;
                 if (getMyInfoResult.getEnterpriseList().size() > 1) {
+                    enterpriseText.setOnClickListener(myClickListener);
                     int drawableId = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_switch_enterprise);
                     drawable = ContextCompat.getDrawable(MyApplication.getInstance(), drawableId);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());

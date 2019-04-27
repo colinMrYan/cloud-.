@@ -14,7 +14,7 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
@@ -160,39 +160,40 @@ public class JpushReceiver extends BroadcastReceiver {
         String extra = "";
         if (bundle.containsKey(JPushInterface.EXTRA_EXTRA)) {
             extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
+            ToastUtils.show(MyApplication.getInstance(),"extra=="+extra);
         }
-        if (!StringUtils.isBlank(extra)) {
-            try {
-                final JSONObject extraObj = new JSONObject(extra);
-                //日历提醒的通知
-                if (extraObj.has("calEvent")) {
-                    String json = extraObj.getString("calEvent");
-                    JSONObject actionObj = new JSONObject();
-                    actionObj.put("url", "ecc-calendar-jpush://");
-                    actionObj.put("type", "open-url");
-                    actionObj.put("content", json);
-                    JSONObject obj = new JSONObject();
-                    obj.put("action", actionObj);
-                    openScheme(context, obj);
-
-                } else if (extraObj.has("action")) {//用scheme打开相应的页面
-                    openScheme(context, extraObj);
-                } else if (extraObj.has("channel")) {
-                    String cid = JSONUtils.getString(extraObj, "channel", "");
-                    if (!StringUtils.isBlank(cid)) {
-                        JSONObject actionObj = new JSONObject();
-                        actionObj.put("url", "ecc-channel://" + cid);
-                        actionObj.put("type", "open-url");
-                        JSONObject obj = new JSONObject();
-                        obj.put("action", actionObj);
-                        openScheme(context, obj);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
+//        if (!StringUtils.isBlank(extra)) {
+//            try {
+//                final JSONObject extraObj = new JSONObject(extra);
+//                //日历提醒的通知
+//                if (extraObj.has("calEvent")) {
+//                    String json = extraObj.getString("calEvent");
+//                    JSONObject actionObj = new JSONObject();
+//                    actionObj.put("url", "ecc-calendar-jpush://");
+//                    actionObj.put("type", "open-url");
+//                    actionObj.put("content", json);
+//                    JSONObject obj = new JSONObject();
+//                    obj.put("action", actionObj);
+//                    openScheme(context, obj);
+//
+//                } else if (extraObj.has("action")) {//用scheme打开相应的页面
+//                    openScheme(context, extraObj);
+//                } else if (extraObj.has("channel")) {
+//                    String cid = JSONUtils.getString(extraObj, "channel", "");
+//                    if (!StringUtils.isBlank(cid)) {
+//                        JSONObject actionObj = new JSONObject();
+//                        actionObj.put("url", "ecc-channel://" + cid);
+//                        actionObj.put("type", "open-url");
+//                        JSONObject obj = new JSONObject();
+//                        obj.put("action", actionObj);
+//                        openScheme(context, obj);
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
     }
 
     /**
