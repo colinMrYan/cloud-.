@@ -925,7 +925,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             swipeRefreshLayout.setRefreshing(false);
             if (getMeetingRoomsResult.getMeetingAreas().size() > 0) {
                 meetingAreas = getMeetingRoomsResult.getMeetingAreas();
-                LogUtils.debug("yfcLog", "meetingAreas 中room大小:" + meetingAreas.get(0).getMeetingRooms().size());
                 expandListView.setAdapter(adapter);
             } else {
                 meetingAreas.clear();

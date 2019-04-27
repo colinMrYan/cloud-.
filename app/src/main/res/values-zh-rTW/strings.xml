@@ -221,7 +221,7 @@
     <string name="login_your_contact"> 您的聯繫方式</string>
     <string name="login_group_album"> 群相冊</string>
     <string name="login_group_file">群文件</string>
-    <string name="login_authorization_expired">授權過期，請重新登錄</string>
+    <string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>
     <string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>
     <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
     <string name="captchas">驗證碼</string>
@@ -233,6 +233,9 @@
     <string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>
     <string name="login_current_login_enterprise">當前系統：%1$s</string>
     <string name="login_forget_password">忘記密碼？</string>
+    <string name="login_fail_limit_remaining">帳號或密碼錯誤，請重新輸入，剩餘%1$d次機會</string>
+    <string name="login_fail_account_lock_by_min">帳號已被鎖定，請%1$d分鐘後再嘗試</string>
+    <string name="login_fail_account_lock_by_second">帳號已被鎖定，請%1$d秒後再次嘗試</string>
 
 
     <!-- 消息部分 -->

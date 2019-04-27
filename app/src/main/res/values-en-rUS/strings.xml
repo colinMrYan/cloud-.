@@ -223,7 +223,7 @@
     <string name="login_your_contact">Your contact</string>
     <string name="login_group_album">Images</string>
     <string name="login_group_file">Files</string>
-    <string name="login_authorization_expired">Authorization Expired</string>
+    <string name="login_authorization_expired">Re-login based on security audit policy</string>
     <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
     <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
     <string name="captchas">Code</string>
@@ -232,6 +232,9 @@
     <string name="login_tv_welcome">Hello，\nwelcome to %1$s</string>
     <string name="login_current_login_enterprise">Current system：%1$s</string>
     <string name="login_forget_password">Forgot Password</string>
+    <string name="login_fail_limit_remaining">Incorrect account or password, re-enter and have %1$d chances left</string>
+    <string name="login_fail_account_lock_by_min">The account has been locked, try again after %1$d minutes</string>
+    <string name="login_fail_account_lock_by_second">The account has been locked, try again after %1$d seconds</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">Please type message content</string>
