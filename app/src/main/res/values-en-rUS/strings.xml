@@ -401,7 +401,7 @@
     <string name="schedule_meeting_history">History meetings</string>
 
     <!--会议（新）-->
-    <string name="schedule_meeting_booking">Booking Meeting</string>
+    <string name="schedule_meeting_booking">Book Meeting</string>
     <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
