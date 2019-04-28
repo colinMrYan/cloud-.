@@ -47,7 +47,6 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -800,7 +799,7 @@ public class WorkFragment extends BaseFragment {
                 GetCalendarEventsResult getCalendarEventsResult,
                 boolean isRefresh) {
             calEventList = getCalendarEventsResult.getCalEventList();
-            CalEventNotificationUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
+//            EventAlertUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
             if (isRefresh && (calEventList.size() < 3)) { // 获取今明两天的日历不足3条
                 getCalEventsFor3();
             } else if (calendarChildAdapter != null) {

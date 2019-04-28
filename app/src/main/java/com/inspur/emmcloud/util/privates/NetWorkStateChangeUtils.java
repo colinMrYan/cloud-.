@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 
 /**
@@ -38,32 +37,32 @@ public class NetWorkStateChangeUtils {
 
     public void netWorkStateChange() {
         try {
-            Context context = MyApplication.getInstance();
-            ConnectivityManager conMan = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo.State mobile = conMan.getNetworkInfo(
-                    ConnectivityManager.TYPE_MOBILE).getState();
+            boolean isAppOnForeground = MyApplication.getInstance().getIsActive();
+            if (isAppOnForeground){
+                boolean isConnected = false;
+                ConnectivityManager connectivity = (ConnectivityManager) MyApplication.getInstance()
+                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (connectivity != null) {
+                    NetworkInfo[] info = connectivity.getAllNetworkInfo();
+                    if (info != null) {
+                        for (int i = 0; i < info.length; i++) {
+                            if (info[i].getState() == NetworkInfo.State.CONNECTED || info[i].getState() == NetworkInfo.State.CONNECTING) {
+                                isConnected = true;
+                                break;
+                            }
+                        }
+                    }
+                }
 
-            NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                    .getState();
-            boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
-            if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
-                if (isAppOnForeground) {
-                    getBadgeFromServer(context);
+                if (isConnected){
+                    getBadgeFromServer(MyApplication.getInstance());
+                    WebSocketPush.getInstance().startWebSocket();
                 }
-                WebSocketPush.getInstance().startWebSocket();
-            } else if (wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) {
-                if (isAppOnForeground) {
-                    getBadgeFromServer(context);
-                }
-                WebSocketPush.getInstance().startWebSocket();
-            } else if (isAppOnForeground) {
-            }
-            if (isAppOnForeground) {
                 checkingNetStateUtils.getNetStateResult(5);
             }
+
         } catch (Exception e) {
-            LogUtils.debug("NetWorkStateChangeUtils", e.getMessage());
+           e.printStackTrace();
         }
     }
 

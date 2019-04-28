@@ -148,7 +148,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                     endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                 } else {
                     if (!calendar.after(startTimeCalendar)) {
-                        showTimeInvaladDlg();
+                        showTimeInvalidDlg();
                         return;
                     }
                 }
@@ -178,7 +178,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     /**
      * 结束时间早于起始时间提醒
      */
-    private void showTimeInvaladDlg() {
+    private void showTimeInvalidDlg() {
         new QMUIDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
                 .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                     @Override
