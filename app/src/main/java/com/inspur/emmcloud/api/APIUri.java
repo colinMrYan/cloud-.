@@ -1779,4 +1779,12 @@ public class APIUri {
         return getToDoBaseUrl() + taskId + "/tags";
     }
 
+    /**
+     * 获取决策卡片机器人触发事件
+     * @return
+     */
+    public static String getDecideCardBotRequestUrl(){
+        return "https://api.inspuronline.com/bot/v1/action/trigger/";
+    }
+
 }
