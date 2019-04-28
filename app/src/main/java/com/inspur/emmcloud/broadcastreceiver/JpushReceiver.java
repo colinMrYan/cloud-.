@@ -14,7 +14,6 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
@@ -160,7 +159,6 @@ public class JpushReceiver extends BroadcastReceiver {
         String extra = "";
         if (bundle.containsKey(JPushInterface.EXTRA_EXTRA)) {
             extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
-            ToastUtils.show(MyApplication.getInstance(),"extra=="+extra);
         }
 //        if (!StringUtils.isBlank(extra)) {
 //            try {
