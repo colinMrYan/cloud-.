@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#ecf1f4"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -38,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:background="@color/content_bg" >
 
@@ -120,6 +122,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:background="@color/white" >
             <TextView
                 android:id="@+id/tv_day_before"
@@ -157,6 +160,16 @@
                 />
 
         </LinearLayout>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_meeting_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_gravity="center_horizontal"
+            app:tabGravity="fill"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="#36A5F6"
+            app:tabTextColor="#333333"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"

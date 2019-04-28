@@ -15,6 +15,14 @@
         android:layout_height="match_parent"
         >
 
+        <TextView
+            android:id="@+id/tv_no_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/content_title_textsize"
+            android:text="@string/work_notask_text"
+            android:textColor="@color/grey_line_color"/>
 
         <com.inspur.emmcloud.widget.MySwipeRefreshLayout
             android:id="@+id/refresh_layout"
@@ -28,14 +36,7 @@
                 android:divider="@color/color_list_divider"
                  />
         </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
-        <TextView
-            android:id="@+id/tv_no_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textSize="@dimen/content_title_textsize"
-            android:text="@string/work_notask_text"
-            android:textColor="@color/grey_line_color"/>
+
     </RelativeLayout>
 
     <LinearLayout

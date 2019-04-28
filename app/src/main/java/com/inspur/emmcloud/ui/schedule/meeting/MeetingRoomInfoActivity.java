@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.schedule.meeting;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -30,6 +31,7 @@ import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -41,6 +43,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -71,6 +74,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private TextView dayText;
     @ViewInject(R.id.tv_day_after)
     private TextView dayAfterText;
+    @ViewInject(R.id.tl_meeting_tab)
+    private TabLayout tabLayout;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private int viewPagerIndex = 0;
@@ -97,6 +102,89 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         meetingRoomFloorText.setText(meetingRoom.getBuilding().getName());
         peopleNumText.setText(meetingRoom.getGalleryful() + "");
         showMeetingRoomEquipment(equipmentLayout, meetingRoom.getEquipmentList());
+        initTabLayout();
+    }
+
+    private void initTabLayout() {
+        String[] tabTitleResIds = {"04月28日", "04月29日", "04月30日", "04月31日"};
+        for (int i = 0; i < tabTitleResIds.length; i++) {
+//            TabLayout.Tab tab = tabLayout.newTab();
+//            tab.setCustomView(R.layout.schedule_meeting_tablayout_text_item);
+//            TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
+//            textView.setWidth(getTabWith(tabTitleResIds.length));
+//            textView.setText(tabTitleResIds[i]);
+//            if(i == 0){
+//                textView.setTextColor(Color.parseColor("#36A5F6"));
+//            }
+//            tabLayout.addTab(tab);
+            tabLayout.addTab(tabLayout.newTab().setText(tabTitleResIds[i]), i == 0);
+        }
+        setTabLayoutWidth();
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (viewPager != null) {
+                    viewPager.setCurrentItem(position);
+                }
+//                TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
+//                textView.setTextColor(Color.parseColor("#36A5F6"));
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+//                TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
+//                textView.setTextColor(Color.parseColor("#333333"));
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+    }
+
+    private void setTabLayoutWidth(){
+        try {
+            //拿到tabLayout的mTabStrip属性
+            Field mTabStripField = tabLayout.getClass().getDeclaredField("mTabStrip");
+            mTabStripField.setAccessible(true);
+            LinearLayout mTabStrip = (LinearLayout) mTabStripField.get(tabLayout);
+            int dp10 = DensityUtil.dip2px(this, 10);
+            for (int i = 0; i < mTabStrip.getChildCount(); i++) {
+                View tabView = mTabStrip.getChildAt(i);
+                //拿到tabView的mTextView属性
+                Field mTextViewField = tabView.getClass().getDeclaredField("mTextView");
+                mTextViewField.setAccessible(true);
+                TextView mTextView = (TextView) mTextViewField.get(tabView);
+                tabView.setPadding(0, 0, 0, 0);
+                //因为我想要的效果是   字多宽线就多宽，所以测量mTextView的宽度
+                int width = 0;
+                width = mTextView.getWidth();
+                if (width == 0) {
+                    mTextView.measure(0, 0);
+                    width = mTextView.getMeasuredWidth();
+                }
+                //设置tab左右间距为10dp  注意这里不能使用Padding 因为源码中线的宽度是根据 tabView的宽度来设置的
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tabView.getLayoutParams();
+                params.width = width ;
+                params.leftMargin = getTabWith(width);
+                params.rightMargin = getTabWith(width);
+                tabView.setLayoutParams(params);
+                tabView.invalidate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int getTabWith(int width) {
+        if(meetingRoom.getMaxAhead() > 2){
+            return (ResolutionUtils.getWidth(this) - width*3)/6;
+        }else{
+            return (ResolutionUtils.getWidth(this) - width*2)/4;
+        }
+
     }
 
 
@@ -186,6 +274,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 viewPagerIndex = arg0;
                 setSelect();
+                tabLayout.getTabAt(arg0).select();
             }
 
             @Override

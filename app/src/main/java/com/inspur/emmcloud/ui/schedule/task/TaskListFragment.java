@@ -353,9 +353,7 @@ public class TaskListFragment extends Fragment {
                 uiTaskList.remove(deletePosition);
                 adapter.notifyDataSetChanged();
             }
-            if (uiTaskList.size() == 0) {
-                noResultText.setVisibility(View.VISIBLE);
-            }
+            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
