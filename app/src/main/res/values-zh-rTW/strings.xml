@@ -385,6 +385,7 @@
     <string name="schedule_calendar_modify">修改日程</string>
     <string name="schedule_calendar_delete">刪除日程</string>
 
+    <!--任务-->
     <string name="schedule_task_add">添加任務</string>
     <string name="schedule_task_detail">任務詳情</string>
     <string name="schedule_task_content_hint">請輸入任務內容...</string>
@@ -401,6 +402,13 @@
     <string name="schedule_task_stop_alert">結束提醒</string>
     <string name="schedule_task_more">更多</string>
     <string name="schedule_task_attachment">附件</string>
+
+    <!--会议-->
+    <string name="schedule_meeting_add_attendee_title">參會人</string>
+    <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
+    <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
+    <string name="schedule_meeting_add_note">備註</string>
+    <string name="schedule_meeting_add_alert_time">會前提醒</string>
 
 
     <!-- 發現部分 -->
@@ -896,11 +904,7 @@
     <string name="meeting_detail_one_hour">提前一個小時</string>
     <string name="meeting_detail_location">會議地點:</string>
 
-    <string name="meeting_add_attendee_title">參會人</string>
-    <string name="meeting_add_record_holder_title">會議記錄人</string>
-    <string name="meeting_add_conference_title">會議聯絡人</string>
-    <string name="meeting_add_note">備註</string>
-    <string name="meeting_add_alert_time">會前提醒</string>
+
 
 
     <!-- 日曆 -->
