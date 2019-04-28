@@ -404,6 +404,8 @@
     <string name="schedule_task_more">更多</string>
     <string name="schedule_task_attachment">附件</string>
     <string name="schedule_task_create">新建任務</string>
+    <string name="schedule_task_project_manager">專案管理</string>
+    <string name="schedule_task_project_manager_add">確認添加</string>
 
     <!--会议-->
     <string name="schedule_meeting_booking">預定會議</string>
@@ -413,6 +415,7 @@
     <string name="schedule_meeting_add_note">備註</string>
     <string name="schedule_meeting_add_alert_time">會前提醒</string>
     <string name="schedule_meeting_history">歷史會議</string>
+    <string name="schedule_meeting_search">蒐索會議</string>
 
 
     <!-- 發現部分 -->
@@ -1488,4 +1491,10 @@
     <string name="current_month">本月</string>
     <string name="user_office_phone">固話</string>
     <string name="group_qrcode">群二維碼</string>
+
+    <string-array name="segment_control_items">
+        <item>低</item>
+        <item>中</item>
+        <item>高</item>
+    </string-array>
 </resources>

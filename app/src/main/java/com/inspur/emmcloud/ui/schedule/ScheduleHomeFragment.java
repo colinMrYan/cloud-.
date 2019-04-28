@@ -222,12 +222,12 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_calendar, 1, getActivity().getString(R.string.schedule_calendar_create)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, getActivity().getString(R.string.schedule_task_create)));
                 // menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking)));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
                 break;
             case 1:
                 //  menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking)));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_meeting_history, 5, getActivity().getString(R.string.schedule_meeting_history)));
                 break;
             case 2:

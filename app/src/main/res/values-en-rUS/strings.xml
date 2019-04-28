@@ -398,7 +398,10 @@
     <string name="schedule_task_more">More</string>
     <string name="schedule_task_attachment">Attachment</string>
     <string name="schedule_task_create">Create Task</string>
-    <string name="schedule_meeting_history">History meetings</string>
+    <string name="schedule_task_project_manager">Project manager</string>
+    <string name="schedule_task_project_manager_add">OK</string>
+    <string name="schedule_task_add_manager">Add manager</string>
+    <string name="schedule_task_add_participant">Add participant</string>
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
@@ -409,6 +412,8 @@
     <string name="schedule_meeting_add_conference_title">Contact</string>
     <string name="schedule_meeting_add_note">Note</string>
     <string name="schedule_meeting_add_alert_time">Reminder</string>
+    <string name="schedule_meeting_history">History meetings</string>
+    <string name="schedule_meeting_search">Search meeting</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -1272,4 +1277,10 @@
     <string name="group_qrcode">QR Code</string>
 
     <string name="user_call">Call</string>
+
+    <string-array name="segment_control_items">
+        <item>Low</item>
+        <item>Middle</item>
+        <item>Height</item>
+    </string-array>
 </resources>
