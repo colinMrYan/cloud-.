@@ -58,7 +58,7 @@ public class TaskTagAddActivity extends BaseActivity {
     }
 
     private void initData() {
-        TagColorBean tagColorPink = new TagColorBean("PINK", getString(R.string.mession_delete_red));
+        TagColorBean tagColorPink = new TagColorBean("RED", getString(R.string.mession_delete_red));
         TagColorBean tagColorOrange = new TagColorBean("ORANGE", getString(R.string.mession_delete_orange));
         TagColorBean tagColorYellow = new TagColorBean("YELLOW", getString(R.string.mession_delete_yellow));
         TagColorBean tagColorGreen = new TagColorBean("GREEN", getString(R.string.mession_delete_green));

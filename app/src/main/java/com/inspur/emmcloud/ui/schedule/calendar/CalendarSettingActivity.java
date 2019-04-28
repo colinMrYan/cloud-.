@@ -12,16 +12,11 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
@@ -47,7 +42,6 @@ public class CalendarSettingActivity extends BaseActivity {
     private ImageView daySelectImageView;
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
-    private WorkAPIService workAPIService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +51,13 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
-        workAPIService = new WorkAPIService(this);
-        workAPIService.setAPIInterface(new WebService());
-        calendarsList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
-        calendarsList = MyCalendarCacheUtils.getAllMyCalendarList(this);
+        calendarsList.add(new MyCalendar("schedule", "我的日程", "BLUE", "", "", true));
+        calendarsList.add(new MyCalendar("meeting", "我的会议", "BLUE", "", "", false));
+        calendarsList.add(new MyCalendar("task", "我的任务", "BLUE", "", "", false));
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
-        getCalendarType();
     }
 
-    private void getCalendarType() {
-        if (NetUtils.isNetworkConnected(this)) {
-            workAPIService.getMyCalendar(0, 30);
-        }
-    }
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -106,12 +93,6 @@ public class CalendarSettingActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    /***/
-    private class CalendarHolder {
-        View calendarStyleColorView;
-        SwitchCompat calendarSwitch;
-        TextView calendarNameText;
-    }
 
     /***/
     private class CalendarAdapter extends BaseAdapter {
@@ -137,52 +118,19 @@ public class CalendarSettingActivity extends BaseActivity {
         public View getView(final int position, View convertView,
                             ViewGroup parent) {
             // TODO Auto-generated method stub
-            CalendarHolder calendarHolder;
             final MyCalendar calendar = calendarsList.get(position);
-            if (null == convertView) {
-                convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
-                calendarHolder = new CalendarHolder();
-                calendarHolder.calendarNameText = convertView.findViewById(R.id.tv_calendar_name);
-                calendarHolder.calendarStyleColorView = convertView.findViewById(R.id.iv_calendar_color_hint);
-                calendarHolder.calendarSwitch = convertView.findViewById(R.id.switch_view_calendar_state);
-                convertView.setTag(calendarHolder);
-            } else {
-                calendarHolder = (CalendarHolder) convertView.getTag();
-            }
+            convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             boolean isHide = MyCalendarOperationCacheUtils.getIsHide(getApplicationContext(), calendar.getId());
-            calendarHolder.calendarSwitch.setChecked(!isHide);
-            calendarHolder.calendarSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            ((SwitchCompat) convertView.findViewById(R.id.switch_view_calendar_state)).setChecked(isHide);
+            ((View)convertView.findViewById(R.id.iv_calendar_color_hint)).setBackgroundResource(CalendarColorUtils.getColorCircleImage(calendar.getColor()));
+            ((TextView)convertView.findViewById(R.id.tv_calendar_name)).setText(calendar.getName());
+            ((SwitchCompat)(convertView.findViewById(R.id.switch_view_calendar_state))).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (b) {
-                        MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), false);
-                    } else {
-                        MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), true);
-                    }
+                    MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), b);
                 }
             });
-            calendarHolder.calendarStyleColorView.setBackgroundResource(CalendarColorUtils.getColorCircleImage(calendar.getColor()));
-            calendarHolder.calendarNameText.setText(calendar.getName());
             return convertView;
-        }
-    }
-
-    /**
-     * 拉取Calendar
-     */
-    class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult) {
-            List<MyCalendar> allCalendarList = getMyCalendarResult.getCalendarList();
-            calendarsList.clear();
-            calendarsList.addAll(allCalendarList);
-            MyCalendarCacheUtils.saveMyCalendarList(CalendarSettingActivity.this, calendarsList);
-            calendarAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void returnMyCalendarFail(String error, int errorCode) {
-            super.returnMyCalendarFail(error, errorCode);
         }
     }
 

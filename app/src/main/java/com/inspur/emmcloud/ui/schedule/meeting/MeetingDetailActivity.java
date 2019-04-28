@@ -82,7 +82,7 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingTitleText.setText(meeting.getTitle());
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
-//        meetingDistributionText.setText(meeting.getOwner());
+        //        meetingDistributionText.setText(meeting.getOwner());
         String locationData = getString(R.string.meeting_detail_location)+new Location(meeting.getLocation()).getDisplayName();
         meetingLocationText.setText(locationData);
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
@@ -169,7 +169,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void showDialog() {
         new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
-                .addItem(getString(R.string.meeting_detail_show_qrcode))
+            //    .addItem(getString(R.string.meeting_detail_show_qrcode))
                 .addItem(getString(R.string.meeting_detail_change_meeting))
                 .addItem(getString(R.string.meeting_cancel))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
@@ -177,13 +177,11 @@ public class MeetingDetailActivity extends BaseActivity {
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         switch (position) {
                             case 0:
-                                break;
-                            case 1:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
                                 IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
                                 break;
-                            case 2:
+                            case 1:
                                 deleteMeeting(meeting);
                                 break;
                             default:

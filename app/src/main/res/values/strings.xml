@@ -426,6 +426,7 @@
     <string name="schedule_meeting_room_list">会议室列表</string>
     <string name="schedule_meeting_search">搜索会议</string>
     <string name="schedule_meeting_booking_room">预定会议室</string>
+    <string name="meeting_detail_location">会议地点:</string>
 
 
     <!-- 发现部分 -->
