@@ -377,6 +377,7 @@
     <string name="schedule_alert_time_before_a_week">1 Week before</string>
     <string name="schedule_calendar_modify">Modify schedule</string>
     <string name="schedule_calendar_delete">Delete schedule</string>
+    <string name="schedule_calendar_create">Create schedule</string>
 
 
     <!--任务（新）-->
@@ -396,8 +397,11 @@
     <string name="schedule_task_stop_alert">End reminder</string>
     <string name="schedule_task_more">More</string>
     <string name="schedule_task_attachment">Attachment</string>
+    <string name="schedule_task_create">Create Task</string>
+    <string name="schedule_meeting_history">History meetings</string>
 
     <!--会议（新）-->
+    <string name="schedule_meeting_booking">Booking Meeting</string>
     <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
