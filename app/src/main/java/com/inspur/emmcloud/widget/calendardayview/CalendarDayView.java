@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.MatheSet;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.util.common.DensityUtil;
 
 import java.util.ArrayList;
@@ -240,7 +241,7 @@ public class CalendarDayView extends RelativeLayout {
             eventImg.setImageResource(event.getEventIconResId());
             eventTitleEvent.setText(event.getEventTitle());
             String subTitle = event.getShowEventSubTitle(getContext(), selectCalendar);
-            if (event.getEventType().equals(Event.TYPE_TASK)) {
+            if (event.getEventType().equals(Schedule.TYPE_TASK)) {
                 subTitle += "截止";
             }
             eventSubtitleEvent.setText(subTitle);
