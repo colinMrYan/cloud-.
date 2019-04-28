@@ -22,7 +22,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
@@ -150,19 +149,22 @@ public class DisplayExtendedDecideMsg {
      */
     public static void openScheme(Context context,String optionContent) {
         optionContent = optionContent.trim();
-        if (optionContent.startsWith(DECIDE_ECC)) {
-            Uri uri = Uri.parse(optionContent);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            context.startActivity(intent);
-        } else if (optionContent.startsWith(DECIDE_HTTP)) {
-            Intent intent = new Intent();
-            intent.setClass(context, ImpActivity.class);
-            intent.putExtra(DECIDE_URI, optionContent);
-            intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
-            context.startActivity(intent);
-        }else{
-            ToastUtils.show(context,R.string.contact_exception);
+        try {
+            if (optionContent.startsWith(DECIDE_HTTP)) {
+                Intent intent = new Intent();
+                intent.setClass(context, ImpActivity.class);
+                intent.putExtra(DECIDE_URI, optionContent);
+                intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+                context.startActivity(intent);
+            } else {
+                Uri uri = Uri.parse(optionContent);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                context.startActivity(intent);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     static class WebService extends APIInterfaceInstance{
