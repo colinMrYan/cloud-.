@@ -1102,6 +1102,46 @@ public class ChatAPIService {
         });
     }
 
+    /**
+     * 活动卡片点击按钮
+     *
+     * @param triggerId
+     */
+    public void openDecideBotRequest(final String triggerId) {
+        final String completeUrl = APIUri.getDecideCardBotRequestUrl()+triggerId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                LogUtils.YfcDebug("点击机器人卡片返回成功："+new String(arg0));
+                apiInterface.returnOpenDecideBotRequestSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("点击机器人卡片返回失败："+error+"code:"+responseCode);
+                apiInterface.returnOpenDecideBotRequestFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        openDecideBotRequest(completeUrl);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
 
     /**
      * 获取聊天文件上传Token

@@ -676,6 +676,9 @@ public interface APIInterface {
 
     void returnOpenActionBackgroudUrlFail(String error, int errorCode);
 
+    void returnOpenDecideBotRequestSuccess();
+    void returnOpenDecideBotRequestFail(String error, int errorCode);
+
     void returnFaceLoginGSSuccess();
 
     void returnFaceLoginGSFail(String error, int errorCode);
