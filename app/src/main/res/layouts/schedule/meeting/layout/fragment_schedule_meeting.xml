@@ -44,7 +44,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_centerVertical="true"
-            android:hint="搜索会议"
+            android:hint="@string/schedule_meeting_search"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:paddingRight="6dp"

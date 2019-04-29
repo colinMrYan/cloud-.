@@ -24,6 +24,7 @@ public class MeetingHistoryActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+        setStatus();
         meetingFragment = new MeetingFragment();
         Intent intent=new Intent();
         intent.putExtra(EXTRA_IS_HISTORY_MEETING,true);
