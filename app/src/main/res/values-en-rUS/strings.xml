@@ -397,7 +397,7 @@
     <string name="schedule_task_stop_alert">End reminder</string>
     <string name="schedule_task_more">More</string>
     <string name="schedule_task_attachment">Attachment</string>
-    <string name="schedule_task_create">Create Task</string>
+    <string name="schedule_task_create">Create task</string>
     <string name="schedule_task_project_manager">Project manager</string>
     <string name="schedule_task_project_manager_add">OK</string>
     <string name="schedule_task_add_manager">Add manager</string>
@@ -414,6 +414,7 @@
     <string name="schedule_meeting_add_alert_time">Reminder</string>
     <string name="schedule_meeting_history">History meetings</string>
     <string name="schedule_meeting_search">Search meeting</string>
+    <string name="schedule_meeting_booking_room">Booking meeting room</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

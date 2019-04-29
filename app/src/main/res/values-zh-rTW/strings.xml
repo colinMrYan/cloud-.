@@ -416,6 +416,7 @@
     <string name="schedule_meeting_add_alert_time">會前提醒</string>
     <string name="schedule_meeting_history">歷史會議</string>
     <string name="schedule_meeting_search">蒐索會議</string>
+    <string name="schedule_meeting_booking_room">預定會議室</string>
 
 
     <!-- 發現部分 -->
