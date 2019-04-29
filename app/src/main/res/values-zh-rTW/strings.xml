@@ -488,7 +488,6 @@
     <string name="clouddriver_has_selected">已選擇(%1$d)</string>
     <string name="clouddriver_sure_delete_file">確定要刪除所選檔嗎？</string>
     <string name="clouddriver_move2_current_directory">移動到目前的目錄</string>
-    <string name="clouddriver_copy2_urrent_directory">複製到目前的目錄</string>
     <string name="clouddriver_create_volume">新建網盤</string>
     <string name="clouddriver_upload_success">上傳成功</string>
     <string name="clouddriver_select_copy_position">選擇複製位置</string>
@@ -523,7 +522,7 @@
     <string name="clouddriver_del_volume_group_member">刪除組成員</string>
     <string name="clouddriver_add_volume_group_member">添加組成員</string>
     <string name="clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
-    <string name="volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
     <string name="clouddriver_exists_same_name">已存在同名檔/資料夾</string>
     <string name="file_rename">檔重命名</string>
     <string name="clouddriver_volume_group_info">組詳情</string>
