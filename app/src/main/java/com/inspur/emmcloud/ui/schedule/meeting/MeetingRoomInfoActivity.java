@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
@@ -68,17 +67,10 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private TextView peopleNumText;
     @ViewInject(R.id.ll_equipment)
     private LinearLayout equipmentLayout;
-    @ViewInject(R.id.tv_day_before)
-    private TextView dayBeforeText;
-    @ViewInject(R.id.tv_day)
-    private TextView dayText;
-    @ViewInject(R.id.tv_day_after)
-    private TextView dayAfterText;
     @ViewInject(R.id.tl_meeting_tab)
     private TabLayout tabLayout;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
-    private int viewPagerIndex = 0;
     private List<List<MeetingSchedule>> allDaysMeetingScheduleList;
     private List<View> viewList = new ArrayList<>();
     private List<Meeting> allMeetingList = new ArrayList<>();
@@ -106,18 +98,9 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     }
 
     private void initTabLayout() {
-        String[] tabTitleResIds = {"04月28日", "04月29日", "04月30日", "04月31日"};
-        for (int i = 0; i < tabTitleResIds.length; i++) {
-//            TabLayout.Tab tab = tabLayout.newTab();
-//            tab.setCustomView(R.layout.schedule_meeting_tablayout_text_item);
-//            TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
-//            textView.setWidth(getTabWith(tabTitleResIds.length));
-//            textView.setText(tabTitleResIds[i]);
-//            if(i == 0){
-//                textView.setTextColor(Color.parseColor("#36A5F6"));
-//            }
-//            tabLayout.addTab(tab);
-            tabLayout.addTab(tabLayout.newTab().setText(tabTitleResIds[i]), i == 0);
+        List<String> tabTitleList = getTabTitleList();
+        for (int i = 0; i < tabTitleList.size(); i++) {
+            tabLayout.addTab(tabLayout.newTab().setText(tabTitleList.get(i)), i == 0);
         }
         setTabLayoutWidth();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -127,14 +110,10 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 if (viewPager != null) {
                     viewPager.setCurrentItem(position);
                 }
-//                TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
-//                textView.setTextColor(Color.parseColor("#36A5F6"));
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-//                TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
-//                textView.setTextColor(Color.parseColor("#333333"));
             }
 
             @Override
@@ -144,13 +123,32 @@ public class MeetingRoomInfoActivity extends BaseActivity {
 
     }
 
+    private List<String> getTabTitleList() {
+        if(meetingRoom.getMaxAhead() > 2){
+            return createTabDay(7);
+        }else{
+            return createTabDay(2);
+        }
+    }
+
+    private List<String> createTabDay(int count) {
+        ArrayList<String> tabTitleList = new ArrayList<>();
+        for (int i = 0; i < count; i++){
+            tabTitleList.add(TimeUtils.getFormatStringFromTargetTime(
+                    MeetingRoomInfoActivity.this, currentCalendar, i));
+        }
+        return tabTitleList;
+    }
+
+    /**
+     * 设置layout的宽度
+     */
     private void setTabLayoutWidth(){
         try {
             //拿到tabLayout的mTabStrip属性
             Field mTabStripField = tabLayout.getClass().getDeclaredField("mTabStrip");
             mTabStripField.setAccessible(true);
             LinearLayout mTabStrip = (LinearLayout) mTabStripField.get(tabLayout);
-            int dp10 = DensityUtil.dip2px(this, 10);
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 View tabView = mTabStrip.getChildAt(i);
                 //拿到tabView的mTextView属性
@@ -178,13 +176,17 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 根据当前tab的宽度，计算tab两侧应该加的间距
+     * @param width
+     * @return
+     */
     private int getTabWith(int width) {
         if(meetingRoom.getMaxAhead() > 2){
             return (ResolutionUtils.getWidth(this) - width*3)/6;
         }else{
             return (ResolutionUtils.getWidth(this) - width*2)/4;
         }
-
     }
 
 
@@ -218,18 +220,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         }
     }
 
-    private void setSelect() {
-//        if (meetingRoom.getMaxAhead()>2){
-//
-//        }else {
-            dayBeforeText.setText(TimeUtils.getFormatStringFromTargetTime(
-                    MeetingRoomInfoActivity.this, currentCalendar, 0));
-            dayAfterText.setText(TimeUtils.getFormatStringFromTargetTime(
-                    MeetingRoomInfoActivity.this, currentCalendar, 1));
-            dayBeforeText.setTextColor(Color.parseColor((viewPagerIndex == 0)?"#36A5F6":"#333333"));
-            dayAfterText.setTextColor(Color.parseColor((viewPagerIndex == 1)?"#36A5F6":"#333333"));
-//        }
-    }
+
 
     /**
      * 初始化listview的显示信息
@@ -272,8 +263,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             @Override
             public void onPageSelected(int arg0) {
                 // TODO Auto-generated method stub
-                viewPagerIndex = arg0;
-                setSelect();
                 tabLayout.getTabAt(arg0).select();
             }
 
@@ -289,8 +278,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
 
             }
         });
-        viewPager.setCurrentItem(viewPagerIndex);
-        setSelect();
+        viewPager.setCurrentItem(0);
     }
 
 
@@ -298,22 +286,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
-                break;
-
-            case R.id.tv_day_before:
-                viewPagerIndex =0;
-                viewPager.setCurrentItem(0);
-                setSelect();
-                break;
-            case R.id.tv_day:
-                if (meetingRoom.getMaxAhead()>2){
-
-                }
-                break;
-            case R.id.tv_day_after:
-                viewPagerIndex =1;
-                viewPager.setCurrentItem(1);
-                setSelect();
                 break;
 
             default:

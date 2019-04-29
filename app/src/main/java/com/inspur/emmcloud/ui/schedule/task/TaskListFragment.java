@@ -146,10 +146,10 @@ public class TaskListFragment extends Fragment {
         apiService.setAPIInterface(new WebService());
         getTaskOrder();
         initPullRefreshLayout();
-        taskListView.setOnItemClickListener(new OnTaskClickListener());
         adapter = new TaskListAdapter(getActivity(), uiTaskList);
         taskListView.setAdapter(adapter);
-//        taskListView.setOnItemLongClickListener(new OnTaskLongClickListener());
+        taskListView.setOnItemClickListener(new OnTaskClickListener());
+        taskListView.setOnItemLongClickListener(new OnTaskLongClickListener());
         getCurrentTaskList();
     }
 
@@ -343,6 +343,7 @@ public class TaskListFragment extends Fragment {
             swipeRefreshLayout.setLoading(false);
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
@@ -360,6 +361,7 @@ public class TaskListFragment extends Fragment {
         public void returnDeleteTaskFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
     }
