@@ -51,9 +51,9 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
-        calendarsList.add(new MyCalendar("schedule", "我的日程", "BLUE", "", "", true));
-        calendarsList.add(new MyCalendar("meeting", "我的会议", "BLUE", "", "", false));
-        calendarsList.add(new MyCalendar("task", "我的任务", "BLUE", "", "", false));
+        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "BLUE", "", "", true));
+        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "BLUE", "", "", false));
+        calendarsList.add(new MyCalendar("task", getApplication().getString(R.string.schedule_calendar_my_task), "BLUE", "", "", false));
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
     }
