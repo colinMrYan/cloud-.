@@ -307,8 +307,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 eventAllDayTitleText.setText(eventTitle);
             }
             calendarDayView.setEventList(eventList, selectCalendar);
+            calendarDayView.post(new Runnable() {
+                @Override
+                public void run() {
+                    eventScrollView.scrollTo(0,calendarDayView.getScrollOffset());
+                }
+            });
         }
-
     }
 
     /**

@@ -46,7 +46,6 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
     private boolean isTorchOn = false;
     private TextView lampText;
     private Rect frameRect;
-    private Rect rangeRect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,22 +104,14 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         int screenHeight = displayMetrics.heightPixels;
         int screenLittleSize = screenWidth < screenHeight ? screenWidth : screenHeight;
         int frameRectWidth = (int) (screenLittleSize * 0.6);
-//        //长和宽必须是4的倍数
-//        frameRectWidth = frameRectWidth - frameRectWidth % 4;
         int frameRectHeight = frameRectWidth;
         int frameRectLeftOffset = (screenWidth - frameRectWidth) / 2;
         int frameRectTopOffset = (int) ((screenHeight - frameRectHeight) / 2);
-        frameRect = new Rect(frameRectLeftOffset, frameRectTopOffset, frameRectLeftOffset + frameRectWidth,
-                frameRectTopOffset + frameRectHeight);
+        int frameRectRightOffset = frameRectLeftOffset + frameRectWidth;
+        int frameRectBottomOffset = frameRectTopOffset + frameRectHeight;
+        frameRect = new Rect(frameRectLeftOffset, frameRectTopOffset, frameRectRightOffset,
+                frameRectBottomOffset);
         mRangeView.setRange(frameRect);
-
-        int rangeRectWidth = screenLittleSize;
-        rangeRectWidth = rangeRectWidth - rangeRectWidth % 4;
-        int rangeRectHeight = rangeRectWidth;
-        int rangeRectLeftOffset = (screenWidth - rangeRectWidth) / 2;
-        int rangeRectTopOffset = (int) ((screenHeight - rangeRectHeight) / 2.5);
-        rangeRect = new Rect(rangeRectLeftOffset, rangeRectTopOffset, rangeRectLeftOffset + rangeRectWidth,
-                rangeRectTopOffset + rangeRectHeight);
     }
 
 
@@ -155,9 +146,23 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
     public void SurfaceReady() {
         surface_ready = 1;
         //mDecode.setFlash("torch");
-        mDecode.setZoomLevel(0.1);
+        mDecode.setZoomLevel(1);
         mDecodeView.startScan();
-        mDecodeView.setRange(new Rect(0, 0, 0, 0));
+        int previewWidth = mDecodeView.getPreviewWidth();
+        int previewHeight = mDecodeView.getPreviewHeight();
+        float ratioWidth=(float)previewWidth*1.0f/mDecodeView.getWidth();
+        float ratioHeight =(float)previewHeight*1.0f/mDecodeView.getHeight();
+        Rect rangeRect = new Rect();
+        rangeRect.left = (int)(ratioWidth*frameRect.left)-50;
+        rangeRect.top = (int)(ratioHeight*frameRect.top)-50;
+        rangeRect.right = (int)(ratioWidth*frameRect.right)+50;
+        rangeRect.bottom = (int)(ratioHeight*frameRect.bottom)+50;
+        rangeRect.left=rangeRect.left-rangeRect.left%4;
+        rangeRect.top=rangeRect.top-rangeRect.top%4;
+        rangeRect.right=rangeRect.right-rangeRect.right%4;
+        rangeRect.bottom=rangeRect.bottom-rangeRect.bottom%4;
+
+        mDecodeView.setRange(rangeRect);
         //Set Zoom Component visible/invisible. 1: visible, 0: invisible
         //mDecode.ZoomShow(0);
 
@@ -208,44 +213,6 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
                 mDecodeView.startScan();
             }
         }
-
-
-        /*
-        if (mDecodeView.mHandler !=  null) {
-            //Set Rectangle in RangeView for indicator display.
-            Rect r_view = new Rect();
-            int rangeWidth = mRangeView.getWidth();
-            int rangeHeight = mRangeView.getHeight();
-            int rect_len = rangeWidth / 2;
-
-            //Draw a rect  on the center of rnageView which with width and height : rect_len.
-            r_view.left = rangeWidth / 2 - rect_len / 2;
-            r_view.top = rangeHeight / 2 - rect_len / 2;
-            r_view.right = rangeWidth / 2 + rect_len / 2;
-            r_view.bottom = rangeHeight / 2 + rect_len / 2;
-
-            mRangeView.setRectangle(r_view);
-            mDecodeView.startScan();
-            //2017/08/17 Range scan demo , only decode left,top 1/4 corner
-            int prv_width = mDecodeView.getPreviewWidth();
-            int prv_height = mDecodeView.getPreviewHeight();
-
-            float ratio_w = (float) prv_width / rangeWidth;
-            float ratio_h = (float) prv_height / rangeHeight;
-
-            Rect r = new Rect();
-
-            //Set the ScanRange base on RangeView indicator.
-            r.left = (int) (ratio_w * r_view.left);
-            r.top = (int) (ratio_h * r_view.top);
-            r.right = (int) (ratio_w * r_view.right);
-            r.bottom = (int) (ratio_h * r_view.bottom);
-            mDecodeView.setRange(r);
-
-            mDecode.setZoomLevel(0.1);
-        }
-        */
-
     }
 
     private void startScanQrCode() {

@@ -4,10 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -35,31 +31,11 @@ public class MapService extends ImpPlugin {
 
     // 回掉方法
     public String successCb, failCb;
-    public LocationClient mLocationClient;
-    public MyLocationListener mMyLocationListener;
     String res = "";
-    LocationClientOption option = new LocationClientOption();
 
     @Override
     public void execute(String action, JSONObject jsonObject) {
-        Log.d("jason", "action=" + action);
-        if ("getInfo".equals(action)) {
-            try {
-                if (!jsonObject.isNull("success"))
-                    successCb = jsonObject.getString("success");
-                if (!jsonObject.isNull("fail"))
-                    failCb = jsonObject.getString("fail");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            mLocationClient = new LocationClient(getFragmentContext());
-            mMyLocationListener = new MyLocationListener();
-            mLocationClient.registerLocationListener(mMyLocationListener);
-            option.setIsNeedAddress(true);
-            option.setCoorType("bd09ll");
-            mLocationClient.setLocOption(option);
-            mLocationClient.start();
-        } else if (action.equals("openByMapApp")) {
+      if (action.equals("openByMapApp")) {
             String jindu = "";
             String weidu = "";
             try {
@@ -163,8 +139,6 @@ public class MapService extends ImpPlugin {
                         .getLaunchIntentForPackage("com.autonavi.minimap");
                 intent.addCategory(Intent.CATEGORY_DEFAULT);
                 intent.setAction(Intent.ACTION_VIEW);
-//				String uri = "androidamap://poi?sourceApplication="
-//						+ packageName + "&keywords=" + destination;
                 String uri = "androidamap://keywordNavi?sourceApplication=" + packageName + "&keyword=" + destination + "&style=2";
                 intent.setData(Uri.parse(uri));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -179,60 +153,6 @@ public class MapService extends ImpPlugin {
             this.jsCallback(failCb, "未安装此地图");
         }
     }
-
-//	/**
-//	 * 打开百度地图来导航
-//	 *
-//	 * @param location
-//	 */
-//	public void openBaiduMapForNavi(String destination) {
-//		try {
-//			String packageName = context.getPackageName();
-//			Intent intent = Intent
-//					.parseUri(
-//							"intent://map/direction?destination="
-//									+ destination
-//									+ "&src="
-//									+ packageName
-//									+ "#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end",
-//							0);
-//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			context.startActivity(intent);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			if (failCb != null) {
-//				this.jsCallback(failCb, "没有安装百度地图");
-//			}
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	/**
-//	 * 打开高德地图来导航
-//	 *
-//	 * @param location
-//	 */
-//	public void openAutonaviMapForNavi(String destination) {
-//		try {
-//			String packageName = context.getPackageName();
-//			Intent intent = context.getPackageManager()
-//					.getLaunchIntentForPackage("com.autonavi.minimap");
-//			intent.addCategory(Intent.CATEGORY_DEFAULT);
-//			intent.setAction(Intent.ACTION_VIEW);
-//			String uri = "androidamap://poi?sourceApplication=" + packageName
-//					+ "&keywords=" + destination;
-//			intent.setData(Uri.parse(uri));
-//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			context.startActivity(intent);
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//			if (failCb != null) {
-//				this.jsCallback(failCb, "没有安装高德地图");
-//			}
-//		}
-//
-//	}
 
     /**
      * 获取地址信息
@@ -286,26 +206,6 @@ public class MapService extends ImpPlugin {
 
     @Override
     public void onDestroy() {
-    }
-
-    /**
-     * 实现实位回调监听
-     */
-    public class MyLocationListener implements BDLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-            longitude = String.valueOf(location.getLongitude());
-            latitude = String.valueOf(location.getLatitude());
-            addressInfo = String.valueOf(location.getAddrStr());
-            errCode = String.valueOf(location.getLocType());
-            // if (location.getLocType() == BDLocation.TypeGpsLocation){
-            //
-            // } else if (location.getLocType() ==
-            // BDLocation.TypeNetWorkLocation){
-            //
-            // }
-            getInfo();
-        }
     }
 
 }

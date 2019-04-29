@@ -86,7 +86,7 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:layout_below="@id/ll_voice_communication_invite"
-        android:layout_above="@id/tv_voice_communication_state">
+        android:layout_above="@+id/tv_voice_communication_state">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/tv_voice_communication_time"
+        android:layout_above="@+id/tv_voice_communication_time"
         android:textColor="#333333"
         android:layout_marginBottom="20dp"
         android:textSize="16sp"
@@ -127,7 +127,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/ll_voice_communication_function_group"
+        android:layout_above="@+id/ll_voice_communication_function_group"
         android:layout_marginBottom="38dp"
         android:textColor="#333333"
         android:textSize="16sp"
@@ -139,7 +139,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/rl_voice_communication_operate"
+        android:layout_above="@+id/rl_voice_communication_operate"
         android:layout_marginBottom="35dp"
         android:orientation="horizontal"
         >

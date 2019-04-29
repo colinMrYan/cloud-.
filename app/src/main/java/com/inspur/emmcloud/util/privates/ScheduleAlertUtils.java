@@ -2,11 +2,9 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONObject;
 
@@ -19,36 +17,37 @@ import cn.jpush.android.data.JPushLocalNotification;
 public class ScheduleAlertUtils {
 
     public static void setScheduleListAlert(Context context,final List<Schedule> scheduleList) {
-        if (scheduleList == null || scheduleList.size() == 0) {
-            return;
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (Schedule schedule : scheduleList) {
-                    if (schedule.getRemindEventObj() != null && schedule.getRemindEventObj().getAdvanceTimeSpan() != -1) {
-                        setScheduleAlert(MyApplication.getInstance(), schedule,Schedule.TYPE_CALENDAR);
-                    }
-                }
-            }
-        }).start();
+//        if (scheduleList == null || scheduleList.size() == 0) {
+//            return;
+//        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                for (Schedule schedule : scheduleList) {
+//                    if (schedule.getRemindEventObj() != null && schedule.getRemindEventObj().getAdvanceTimeSpan() != -1) {
+//                        setScheduleAlert(MyApplication.getInstance(), schedule,Schedule.TYPE_CALENDAR);
+//                    }
+//                }
+//            }
+//        }).start();
 
     }
 
     public static void setMeetingListAlert(Context context,final List<Meeting> meetingList) {
-        if (meetingList == null || meetingList.size() == 0) {
-            return;
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (Meeting schedule : meetingList) {
-                    if (schedule.getRemindEventObj() != null && schedule.getRemindEventObj().getAdvanceTimeSpan() != -1) {
-                        setScheduleAlert(MyApplication.getInstance(), schedule, Schedule.TYPE_CALENDAR);
-                    }
-                }
-            }
-        }).start();
+//        if (meetingList == null || meetingList.size() == 0) {
+//            return;
+//        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                for (Meeting schedule : meetingList) {
+//                    if (schedule.getRemindEventObj() != null && schedule.getRemindEventObj().getAdvanceTimeSpan() != -1) {
+//                        setScheduleAlert(MyApplication.getInstance(), schedule, Schedule.TYPE_MEETING
+//                        );
+//                    }
+//                }
+//            }
+//        }).start();
 
     }
 
@@ -74,7 +73,7 @@ public class ScheduleAlertUtils {
             JSONObject object = new JSONObject();
             try {
                 object.put("schedule",obj);
-                object.put("type",obj);
+                object.put("type",type);
                 ln.setExtras(object.toString());
                 if (context != null) {
                     JPushInterface.removeLocalNotification(context, notificationId);

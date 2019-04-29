@@ -15,6 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -88,6 +89,18 @@ public class CalendarDayView extends RelativeLayout {
         this.eventList = eventList;
         initTimeHourRow();
         showEventList();
+    }
+
+    /**
+     * 每次打开日视图需要滚动到当前时间前一个小时
+     */
+    public int getScrollOffset(){
+        Calendar currentCalendar = Calendar.getInstance();
+        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) -1+ currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+        if(offset<0){
+            offset =0;
+        }
+        return offset;
     }
 
     /**
@@ -221,6 +234,7 @@ public class CalendarDayView extends RelativeLayout {
                     dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
                     dayStartTime.set(Calendar.MINUTE, 0);
                     int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * DensityUtil.dip2px(getContext(), 40) / 3600000);
+                    LogUtils.jasonDebug("marginTop=="+marginTop);
                     RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
                             eventHeight);
                     eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);

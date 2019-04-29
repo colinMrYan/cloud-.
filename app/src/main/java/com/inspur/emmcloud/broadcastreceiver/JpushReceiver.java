@@ -170,16 +170,18 @@ public class JpushReceiver extends BroadcastReceiver {
                 final JSONObject extraObj = new JSONObject(extra);
                 //日历提醒的通知
                 if (extraObj.has("schedule")) {
-                    String json = extraObj.getString("schedule");
+                    String type = JSONUtils.getString(extraObj,"type","");
                     Intent intent = new Intent();
-                    Schedule schedule = new Schedule(JSONUtils.getJSONObject(json));
-                    if (schedule.getType().equals(Schedule.TYPE_CALENDAR)){
+                    if (type.equals(Schedule.TYPE_CALENDAR)){
+                        JSONObject scheduleObj = JSONUtils.getJSONObject(extraObj,"schedule",new JSONObject());
+                        Schedule schedule = new Schedule(scheduleObj);
                         intent.setClass(context,CalendarAddActivity.class);
                         intent.putExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
                         context.startActivity(intent);
-                    }else if(schedule.getType().equals(Schedule.TYPE_MEETING)){
-                        Meeting meeting = (Meeting)schedule;
-                        intent.setClass(context,CalendarAddActivity.class);
+                    }else if(type.equals(Schedule.TYPE_MEETING)){
+                        JSONObject meetingObj = JSONUtils.getJSONObject(extraObj,"schedule",new JSONObject());
+                        Meeting meeting = new Meeting(meetingObj);
+                        intent.setClass(context,MeetingDetailActivity.class);
                         intent.putExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
                         context.startActivity(intent);
                     }else{

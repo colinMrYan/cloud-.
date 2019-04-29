@@ -18,6 +18,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
@@ -27,6 +28,7 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -75,18 +77,19 @@ public class ImpWebChromeClient extends WebChromeClient {
 
     @Override
     public void onShowCustomView(View view, CustomViewCallback callback) {
-        super.onShowCustomView(view, callback);
         fullScreen();
         mWebView.setVisibility(View.GONE);
         mVideoContainer.setVisibility(View.VISIBLE);
         mVideoContainer.addView(view);
         mCallBack = callback;
+        setStatusBarVisibility(false);
         super.onShowCustomView(view, callback);
     }
 
     @Override
     public void onHideCustomView() {
         fullScreen();
+        setStatusBarVisibility(true);
         if (mCallBack != null) {
             mCallBack.onCustomViewHidden();
         }
@@ -95,7 +98,10 @@ public class ImpWebChromeClient extends WebChromeClient {
         mVideoContainer.setVisibility(View.GONE);
         super.onHideCustomView();
     }
-
+    private void setStatusBarVisibility(boolean visible) {
+        int flag = visible ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        ((Activity)context).getWindow().setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
     private void fullScreen() {
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
