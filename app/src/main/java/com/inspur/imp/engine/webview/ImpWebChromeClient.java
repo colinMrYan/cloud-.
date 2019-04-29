@@ -28,7 +28,6 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
