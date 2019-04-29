@@ -375,6 +375,8 @@
     <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
     <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
     <string name="schedule_alert_time_before_a_week">1 Week before</string>
+    <string name="schedule_calendar_modify">Modify schedule</string>
+    <string name="schedule_calendar_delete">Delete schedule</string>
 
     <string name="schedule_task_add">Add task</string>
     <string name="schedule_task_detail">Task detail</string>
@@ -881,6 +883,8 @@
     <string name="meeting_detail_one_hour">One hour before</string>
     <string name="meeting_detail_one_day">One day before</string>
     <string name="meeting_detail_attendee_num">%1$s et al. %2$d</string>
+    <string name="meeting_detail_location">Place:</string>
+
     <string name="meeting_add_content_hint">Please enter the meeting content</string>
     <string name="meeting_add_location_hint">Please select a meeting place</string>
     <string name="meeting_add_attendee_title">Attendee</string>

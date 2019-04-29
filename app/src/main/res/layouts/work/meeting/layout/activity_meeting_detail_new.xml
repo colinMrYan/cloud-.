@@ -152,7 +152,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/ic_schedule_meeting_attendee" />
+                android:src="@drawable/ic_schedule_meeting_location" />
 
             <TextView
                 android:id="@+id/tv_location"
@@ -186,7 +186,6 @@
             android:layout_height="wrap_content"
             android:onClick="onClick"
             android:layout_below="@id/rl_meeting_location"
-            android:layout_marginTop="15dp"
             android:gravity="center_vertical">
 
             <ImageView
@@ -346,6 +345,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
+            android:visibility="gone"
             android:layout_below="@id/rl_meeting_note">
 
             <ImageView
@@ -389,7 +389,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
-            android:layout_below="@+id/rl_meeting_sign">
+            android:layout_below="@+id/rl_meeting_sign"
+            android:visibility="gone">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

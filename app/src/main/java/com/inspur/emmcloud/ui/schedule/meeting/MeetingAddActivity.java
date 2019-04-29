@@ -31,7 +31,6 @@ import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -104,6 +103,7 @@ public class MeetingAddActivity extends BaseActivity {
     private String meetingPosition;
     private RemindEvent remindEvent;
     private Meeting meeting = new Meeting();
+    private boolean isMeetingEditModel = false;
 
 
     @Override
@@ -119,7 +119,8 @@ public class MeetingAddActivity extends BaseActivity {
     private void initData() {
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
-        if (getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY)) {
+        isMeetingEditModel = getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
+        if (isMeetingEditModel) {
             meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
             location = new Location(JSONUtils.getJSONObject(meeting.getLocation()));
             startTimeCalendar = meeting.getStartTimeCalendar();
@@ -153,7 +154,7 @@ public class MeetingAddActivity extends BaseActivity {
      */
     private void initView() {
         loadingDlg = new LoadingDialog(this);
-        if (getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY)) {
+        if (isMeetingEditModel) {
             titleEdit.setText(title);
             meetingPositionEdit.setText(location.getDisplayName());
             notesEdit.setText(note);
@@ -175,7 +176,7 @@ public class MeetingAddActivity extends BaseActivity {
             case R.id.tv_save:
                 if (!isInputValid())
                     return;
-                addMeeting();
+                addOrUpdateMeeting();
                 break;
             case R.id.ll_start_time:
                 showTimeSelectDialog(true);
@@ -415,7 +416,8 @@ public class MeetingAddActivity extends BaseActivity {
 
     }
 
-    private void addMeeting() {
+
+    private Meeting getMeeting(){
         Meeting meeting = new Meeting();
         meeting.setTitle(title);
         meeting.setType("meeting");
@@ -448,25 +450,30 @@ public class MeetingAddActivity extends BaseActivity {
             }
             meeting.setParticipants(array.toString());
             if (remindEvent != null && remindEvent.getAdvanceTimeSpan() != -1) {
-                LogUtils.jasonDebug("remindEvent.toJSonObject().toString()=" + remindEvent.toJSONObject().toString());
                 meeting.setRemindEvent(remindEvent.toJSONObject().toString());
+            }
+            if (isMeetingEditModel){
+                meeting.setId(this.meeting.getId());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return  meeting;
+    }
+
+    /**
+     * 添加或更改会议
+     */
+    private void addOrUpdateMeeting() {
+        Meeting meeting = getMeeting();
         loadingDlg.show();
-        LogUtils.jasonDebug("meeting.toJSonObject().toString()=" + meeting.toJSONObject().toString());
-        if (getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY)) {
-            meeting.setId(this.meeting.getId());
-            meeting.setLastTime(this.meeting.getLastTime());
-            meeting.setLastTime(this.meeting.getState());
+        if (isMeetingEditModel) {
             apiService.updateMeeting(meeting.toJSONObject().toString());
         } else {
             apiService.addMeeting(meeting.toJSONObject().toString());
         }
 
     }
-
 
     /**
      * 判断当前用户是否会议室管理员

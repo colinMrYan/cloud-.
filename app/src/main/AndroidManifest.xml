@@ -642,7 +642,6 @@
 
         <activity
             android:name=".ui.contact.UserInfoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
@@ -851,7 +850,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.calendar.CalBrowseActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
@@ -981,7 +979,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
         <activity
@@ -1120,23 +1117,19 @@
 
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
 
@@ -1151,7 +1144,6 @@
         <!-- imp插件 -->
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"/>
         <activity
             android:name="com.inspur.imp.plugin.barcode.scan.CaptureActivity"

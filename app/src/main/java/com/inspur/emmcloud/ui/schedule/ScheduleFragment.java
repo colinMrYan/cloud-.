@@ -38,6 +38,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
@@ -254,6 +255,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void showCalendarEvent(boolean isForceUpdate) {
         List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
         List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
+        ScheduleAlertUtils.setScheduleListAlert(MyApplication.getInstance(),scheduleList);
+        ScheduleAlertUtils.setMeetingListAlert(MyApplication.getInstance(),meetingList);
         boolean isNeedGetDataFromNet = isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
         if (isNeedGetDataFromNet) {
             List<String> scheduleIdList = new ArrayList<>();

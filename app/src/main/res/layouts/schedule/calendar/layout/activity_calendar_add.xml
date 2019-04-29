@@ -245,7 +245,8 @@
         android:paddingBottom="11dp"
         android:paddingLeft="14dp"
         android:paddingRight="15dp"
-        android:paddingTop="11dp">
+        android:paddingTop="11dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -308,7 +309,8 @@
         android:background="#FFFFFF"
         android:onClick="onClick"
         android:paddingLeft="14dp"
-        android:paddingRight="15dp">
+        android:paddingRight="15dp"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/tv_alert_title"
