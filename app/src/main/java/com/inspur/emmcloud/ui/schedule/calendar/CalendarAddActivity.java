@@ -166,7 +166,10 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     alertTimeName);
         } else {
             Calendar currentCalendar = Calendar.getInstance();
-            startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+            startCalendar=currentCalendar;
+            if(getIntent().hasExtra(EXTRA_SELECT_CALENDAR)){
+                startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+            }
             startCalendar.set(Calendar.HOUR_OF_DAY,currentCalendar.get(Calendar.HOUR_OF_DAY));
             startCalendar.set(Calendar.MINUTE,currentCalendar.get(Calendar.MINUTE));
             startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);

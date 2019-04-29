@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/meeting_add"
+            android:text="@string/schedule_meeting_booking"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
@@ -63,7 +63,7 @@
                 android:layout_height="100dp"
                 android:background="@android:color/white"
                 android:gravity="top"
-                android:hint="@string/meeting_add_content_hint"
+                android:hint="@string/schedule_meeting_add_content_hint"
                 android:paddingBottom="15dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
@@ -181,7 +181,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/ll_add_position"
                     android:background="@null"
-                    android:hint="@string/meeting_add_location_hint"
+                    android:hint="@string/schedule_meeting_add_location_hint"
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
@@ -234,7 +234,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="@string/meeting_add_attendee_title"
+                    android:text="@string/schedule_meeting_add_attendee_title"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
@@ -276,7 +276,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="@string/meeting_add_record_holder_title"
+                    android:text="@string/schedule_meeting_add_record_holder_title"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
@@ -318,7 +318,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="@string/meeting_add_conference_title"
+                    android:text="@string/schedule_meeting_add_conference_title"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
@@ -355,7 +355,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="@string/meeting_add_note"
+                    android:text="@string/schedule_meeting_add_note"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 
@@ -396,7 +396,7 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="@string/meeting_add_alert_time"
+                    android:text="@string/schedule_meeting_add_alert_time"
                     android:textColor="#333333"
                     android:textSize="15sp" />
 

@@ -169,7 +169,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void showDialog() {
         new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
-                .addItem(getString(R.string.meeting_detail_show_qrcode))
+            //    .addItem(getString(R.string.meeting_detail_show_qrcode))
                 .addItem(getString(R.string.meeting_detail_change_meeting))
                 .addItem(getString(R.string.meeting_cancel))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
@@ -177,13 +177,11 @@ public class MeetingDetailActivity extends BaseActivity {
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         switch (position) {
                             case 0:
-                                break;
-                            case 1:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
                                 IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
                                 break;
-                            case 2:
+                            case 1:
                                 deleteMeeting(meeting);
                                 break;
                             default:

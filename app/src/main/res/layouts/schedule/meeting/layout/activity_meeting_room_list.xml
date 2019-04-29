@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="会议室列表"
+            android:text="@string/schedule_meeting_room_list"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 

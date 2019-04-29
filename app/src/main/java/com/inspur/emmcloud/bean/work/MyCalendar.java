@@ -29,8 +29,13 @@ public class MyCalendar implements Serializable {
     @Column(name = "community")
     private boolean community;
 
-    public MyCalendar() {
-
+    public MyCalendar(String id, String name ,String color,String owner,String state,boolean community) {
+       this.id=id;
+       this.name=name;
+       this.color=color;
+       this.owner=owner;
+       this.state=state;
+       this.community=community;
     }
 
     public MyCalendar(JSONObject obj) {
