@@ -39,14 +39,14 @@ public class TaskTagAddActivity extends BaseActivity {
     @ViewInject(R.id.lv_tag_color)
     ListView tagColorList;
     @ViewInject(R.id.tv_delecte_tag)
-    TextView delecteTagText;
+    TextView deleteTagText;
     @ViewInject(R.id.et_tag_name)
     TextView tagNameEdit;
 
     private List<TagColorBean> tagColorBeans = new ArrayList<>();
     private int selectIndex = 0;
     private ColorTagAdapter colorTagAdapter = new ColorTagAdapter();
-    private ArrayList<String> messionTagList;
+    private ArrayList<String> messionTagList=new ArrayList<>();
     private LoadingDialog loadingDialog;
     private WorkAPIService workAPIService;
     private TaskColorTag taskColorTag;
@@ -84,7 +84,7 @@ public class TaskTagAddActivity extends BaseActivity {
             taskColorTag = (TaskColorTag) getIntent().getSerializableExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS);
             selectIndex = getTagColorIndex(tagColorBeans, taskColorTag.getColor());
             tagNameEdit.setText(taskColorTag.getTitle());
-            delecteTagText.setVisibility(View.VISIBLE);
+            deleteTagText.setVisibility(View.VISIBLE);
         }
 
         tagColorList.setAdapter(colorTagAdapter);
