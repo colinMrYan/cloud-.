@@ -378,6 +378,9 @@
     <string name="schedule_calendar_modify">Modify schedule</string>
     <string name="schedule_calendar_delete">Delete schedule</string>
     <string name="schedule_calendar_create">Create schedule</string>
+    <string name="schedule_calendar_my_schedule">My schedule</string>
+    <string name="schedule_calendar_my_meeting">My meeting</string>
+    <string name="schedule_calendar_my_task">My task</string>
 
 
     <!--任务（新）-->

@@ -385,6 +385,9 @@
     <string name="schedule_calendar_modify">修改日程</string>
     <string name="schedule_calendar_delete">刪除日程</string>
     <string name="schedule_calendar_create">新建日程</string>
+    <string name="schedule_calendar_my_schedule">我的日程</string>
+    <string name="schedule_calendar_my_meeting">我的會議</string>
+    <string name="schedule_calendar_my_task">我的任務</string>
 
     <!--任务-->
     <string name="schedule_task_add">添加任務</string>
