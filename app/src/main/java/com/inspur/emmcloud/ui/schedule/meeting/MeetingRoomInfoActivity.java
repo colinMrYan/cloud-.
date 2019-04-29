@@ -263,7 +263,9 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             @Override
             public void onPageSelected(int arg0) {
                 // TODO Auto-generated method stub
-                tabLayout.getTabAt(arg0).select();
+                if(tabLayout != null){
+                    tabLayout.getTabAt(arg0).select();
+                }
             }
 
             @Override
