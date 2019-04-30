@@ -141,7 +141,7 @@
         <!--custom-->
         <meta-data
             android:name="FLAG_APP_VERSION_TYPE"
-            android:value="chinatower" />
+            android:value="Standard" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
