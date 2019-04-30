@@ -125,7 +125,7 @@ public class AboutActivity extends BaseActivity {
                         ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
                         break;
                     case UPGRADE_FAIL:
-                        ToastUtils.show(getApplicationContext(), R.string.check_update_fail);
+                        ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
                         break;
                     case DONOT_UPGRADE:
                         break;
