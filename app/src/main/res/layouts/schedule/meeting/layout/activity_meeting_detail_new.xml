@@ -317,7 +317,7 @@
                 android:id="@+id/iv_note_icon"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_alignTop="@id/tv_meeting_note"
+                android:layout_alignTop="@+id/tv_meeting_note"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="12dp"
                 android:src="@drawable/ic_schedule_meeting_note" />

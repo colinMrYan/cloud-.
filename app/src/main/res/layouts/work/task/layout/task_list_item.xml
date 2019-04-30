@@ -32,7 +32,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_toRightOf="@id/iv_task_color"
-            android:layout_toLeftOf="@id/iv_task_level"
+            android:layout_toLeftOf="@+id/iv_task_level"
             android:textColor="#333333"
             android:textSize="15sp" />
 

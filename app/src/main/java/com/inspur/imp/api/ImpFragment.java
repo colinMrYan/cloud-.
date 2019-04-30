@@ -451,12 +451,15 @@ public class ImpFragment extends ImpBaseFragment {
         if (ImpFragment.this.onKeyDownListener != null){
             ImpFragment.this.onKeyDownListener.onBackKeyDown();
         }else {
-            if (webView.canGoBack()) {
-                webView.goBack();// 返回上一页面
-                setGoBackTitle();
-            } else {
-                finishActivity();
+            if (!webView.getWebChromeClient().hideCustomView()){
+                if (webView.canGoBack()) {
+                    webView.goBack();// 返回上一页面
+                    setGoBackTitle();
+                } else {
+                    finishActivity();
+                }
             }
+
         }
         return true;
     }

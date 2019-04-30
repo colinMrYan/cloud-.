@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ScheduleAllDayEventListAdapter extends BaseAdapter {
         TextView positionText = convertView.findViewById(R.id.tv_event_position);
         iconImg.setImageResource(event.getEventIconResId());
         titleText.setText(event.getEventTitle());
-        if (event.getEventType().equals(Event.TYPE_MEETING)){
+        if (event.getEventType().equals(Schedule.TYPE_MEETING)){
             positionText.setVisibility(View.VISIBLE);
             positionText.setText(event.getEventSubTitle());
         }else {

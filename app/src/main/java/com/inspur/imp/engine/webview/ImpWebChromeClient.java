@@ -11,13 +11,15 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
@@ -45,14 +47,15 @@ public class ImpWebChromeClient extends WebChromeClient {
     private ValueCallback<Uri> mUploadMessage;// 回调图片选择，4.4以下
     private ValueCallback<Uri[]> mUploadCallbackAboveL;// 回调图片选择，5.0以上
     private ImpWebView mWebView;
-    private FrameLayout mVideoContainer;
-    private CustomViewCallback mCallBack;
+    private View customView;
+    private FrameLayout fullscreenContainer;
+    private WebChromeClient.CustomViewCallback customViewCallback;
+    protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
     public ImpWebChromeClient(Context context, ImpWebView webView, FrameLayout frameLayout) {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.mWebView = webView;
-        this.mVideoContainer = frameLayout;
     }
 
     public void onGeolocationPermissionsShowPrompt(String origin,
@@ -75,34 +78,78 @@ public class ImpWebChromeClient extends WebChromeClient {
 
     @Override
     public void onShowCustomView(View view, CustomViewCallback callback) {
-        super.onShowCustomView(view, callback);
-        fullScreen();
-        mWebView.setVisibility(View.GONE);
-        mVideoContainer.setVisibility(View.VISIBLE);
-        mVideoContainer.addView(view);
-        mCallBack = callback;
-        super.onShowCustomView(view, callback);
+        showCustomView(view, callback);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//播放时横屏幕，如果需要改变横竖屏，只需该参数就行了
     }
 
     @Override
     public void onHideCustomView() {
-        fullScreen();
-        if (mCallBack != null) {
-            mCallBack.onCustomViewHidden();
-        }
-        mWebView.setVisibility(View.VISIBLE);
-        mVideoContainer.removeAllViews();
-        mVideoContainer.setVisibility(View.GONE);
-        super.onHideCustomView();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        hideCustomView();
     }
 
-    private void fullScreen() {
-        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    /**
+     * 视频播放全屏
+     * @param view
+     * @param callback
+     */
+    private void showCustomView(View view, CustomViewCallback callback) {
+        // if a view already exists then immediately terminate the new one
+        if (customView != null) {
+            callback.onCustomViewHidden();
+            return;
+        }
+
+        getActivity().getWindow().getDecorView();
+
+        FrameLayout decor = (FrameLayout) getActivity().getWindow().getDecorView();
+        fullscreenContainer = new FullscreenHolder(getActivity());
+        fullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
+        decor.addView(fullscreenContainer, COVER_SCREEN_PARAMS);
+        customView = view;
+        setStatusBarVisibility(false);
+        customViewCallback = callback;
+        mWebView.setVisibility(View.GONE);
+    }
+
+    /**
+     * 退出视频播放全屏
+     * @return 是否消费掉返回键
+     */
+    public boolean hideCustomView() {
+        if (customView == null) {
+            return false;
+        }
+
+        setStatusBarVisibility(true);
+        FrameLayout decor = (FrameLayout) getActivity().getWindow().getDecorView();
+        decor.removeView(fullscreenContainer);
+        fullscreenContainer = null;
+        customView = null;
+        customViewCallback.onCustomViewHidden();
+        mWebView.setVisibility(View.VISIBLE);
+        return true;
+    }
+
+    /** 全屏容器界面 */
+    static class FullscreenHolder extends FrameLayout {
+
+        public FullscreenHolder(Context ctx) {
+            super(ctx);
+            setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent evt) {
+            return true;
         }
     }
+
+    private void setStatusBarVisibility(boolean visible) {
+        int flag = visible ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        getActivity().getWindow().setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
 
     /**
      * 转化为Activity
