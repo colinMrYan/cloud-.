@@ -7,20 +7,19 @@
     tools:context=".MainActivity" >
 
     <ImageView
-        android:id="@+id/splash_image"
+        android:id="@+id/iv_splash_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/splash_page_bottom"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="30dp"
         android:adjustViewBounds="true"
          />
 
     <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/splash_img_top"
+        android:id="@+id/iv_splash_ad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/splash_image"
+        android:layout_above="@id/iv_splash_logo"
         android:scaleType="centerCrop"
         />
 
