@@ -246,6 +246,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         }
     }
 
+
     /**
      * 开启极光推送
      */

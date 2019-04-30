@@ -165,6 +165,7 @@ public class Constant {
     public static final String XIAOMI_FLAG = "xiaomi";
     public static final String MEIZU_FLAG = "meizu";
     public static final String PUSH_HUAWEI_COM = "@push.huawei.com";
+    public static final String PUSH_SWITCH_FLAG = "push_switch_flag";
 
     public static final String APP_WEB_URI = "uri";
 

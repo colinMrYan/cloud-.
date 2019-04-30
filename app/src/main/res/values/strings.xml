@@ -1298,6 +1298,8 @@
     <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
     <string name="voice_to_word">转文字</string>
 
+    <string name="notification_switch">新消息通知</string>
+
 
     <string name="resend_file_failed">无法找到资源文件，消息重发失败</string>
 
