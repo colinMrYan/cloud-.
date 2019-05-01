@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -174,17 +175,20 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         eventScrollView.setVisibility(isEventShowTypeList ? View.GONE : View.VISIBLE);
     }
 
-    private EmmCalendar getSchemeCalendar(int year, int month, int day, String text, boolean isShowSchemePoint,boolean isDuty) {
+    private EmmCalendar getSchemeCalendar(int year, int month, int day, String schemeText, boolean isShowSchemePoint,boolean isDuty,String schemeLunarColor) {
         EmmCalendar emmCalendar = new EmmCalendar();
         emmCalendar.setYear(year);
         emmCalendar.setMonth(month);
         emmCalendar.setDay(day);
-
-        if (!StringUtils.isBlank(text)){
-            emmCalendar.setSchemeColor(isDuty?0xfff0906b:0xff36A5F6);
+//        emmCalendar.setSchemeLunar("123");
+        if (!StringUtils.isBlank(schemeLunarColor)){
+            emmCalendar.setSchemeLunarColor(Color.parseColor(schemeLunarColor));
+        }
+        if (!StringUtils.isBlank(schemeText)){
+            emmCalendar.setSchemeColor(Color.parseColor(isDuty?"#f0906b":"#36A5F6"));
         }
         //如果单独标记颜色、则会使用这个颜色
-        emmCalendar.setScheme(text);
+        emmCalendar.setScheme(schemeText);
         emmCalendar.setShowSchemePoint(isShowSchemePoint);
         return emmCalendar;
     }
@@ -345,8 +349,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             calendar.set(holiday.getYear(),holiday.getMonth()-1,holiday.getDay(),0,0,0);
             calendar.set(Calendar.MILLISECOND,0);
             if (calendar.before(pageEndCalendar) && !calendar.before(pageStartCalendar)){
-                map.put(getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.isDuty()?"班":"休", false,holiday.isDuty()).toString(),
-                        getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(),holiday.isDuty()?"班":"休", false,holiday.isDuty()));
+                EmmCalendar schemeCalendar = getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.isDuty()?"班":"休", false,holiday.isDuty(),"#888888");
+                map.put(schemeCalendar.toString(),schemeCalendar);
             }
         }
 
@@ -356,7 +360,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, " ", true,false);
+                EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, " ", true,false,null);
                 EmmCalendar existEmmCalendar = map.get(emmCalendar.toString());
                 if (existEmmCalendar == null){
                     existEmmCalendar = emmCalendar;
@@ -373,7 +377,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 int year = calendar.get(Calendar.YEAR);
                 int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
-                EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, " ", true,false);
+                EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, " ", true,false,null);
                 EmmCalendar existEmmCalendar = map.get(emmCalendar.toString());
                 if (existEmmCalendar == null){
                     existEmmCalendar = emmCalendar;

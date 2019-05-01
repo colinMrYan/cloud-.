@@ -92,8 +92,12 @@ public final class EmmCalendar implements Serializable, Comparable<EmmCalendar> 
      * using addScheme(int schemeColor,String scheme); multi scheme
      */
     private String scheme;
+
     //是否显示下方的标记
     private boolean isShowSchemePoint = true;
+
+    private int schemeLunarColor;
+    private String schemeLunar;
 
     /**
      * 各种自定义标记颜色、没有则选择默认颜色，如果使用多标记，请使用下面API
@@ -174,6 +178,25 @@ public final class EmmCalendar implements Serializable, Comparable<EmmCalendar> 
         this.lunar = lunar;
     }
 
+    public int getSchemeLunarColor() {
+        return schemeLunarColor;
+    }
+
+    public void setSchemeLunarColor(int schemeLunarColor) {
+        this.schemeLunarColor = schemeLunarColor;
+    }
+
+    public boolean isShowSchemePoint() {
+        return isShowSchemePoint;
+    }
+
+    public String getSchemeLunar() {
+        return schemeLunar;
+    }
+
+    public void setSchemeLunar(String schemeLunar) {
+        this.schemeLunar = schemeLunar;
+    }
 
     public String getScheme() {
         return scheme;
@@ -407,6 +430,8 @@ public final class EmmCalendar implements Serializable, Comparable<EmmCalendar> 
         setSchemeColor(emmCalendar.getSchemeColor());
         setSchemes(emmCalendar.getSchemes());
         setShowSchemePoint(emmCalendar.isShowSchemePoint|| isShowSchemePoint);
+        setSchemeLunar(emmCalendar.getSchemeLunar());
+        setSchemeLunarColor(emmCalendar.getSchemeLunarColor());
     }
 
     final void clearScheme() {

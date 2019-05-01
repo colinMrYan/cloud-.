@@ -282,10 +282,15 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
                 a.setSchemeColor(d.getSchemeColor());
                 a.setSchemes(d.getSchemes());
                 a.setShowSchemePoint(d.getShowSchemePoint());
+                a.setSchemeLunar(d.getSchemeLunar());
+                a.setSchemeLunarColor(d.getSchemeLunarColor());
             } else {
                 a.setScheme("");
                 a.setSchemeColor(0);
                 a.setSchemes(null);
+                a.setShowSchemePoint(false);
+                a.setSchemeLunar("");
+                a.setSchemeLunarColor(0);
             }
         }
     }
