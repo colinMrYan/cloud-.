@@ -56,6 +56,7 @@ import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -304,6 +305,7 @@ public class CommunicationV0Fragment extends BaseFragment {
                     EmmAction emmAction = new EmmAction(channel.getAction());
                     if (emmAction.getCanOpenAction()) {
                         if (emmAction.getUrl().startsWith("http")) {
+                            LogUtils.LbcDebug("3333333333333333333");
                             UriUtils.openUrl(getActivity(), emmAction.getUrl());
                         } else {
                             IntentUtils.startActivity(getActivity(), emmAction.getUrl());

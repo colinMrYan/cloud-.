@@ -13,6 +13,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.util.common.LogUtils;
+
 /**
  * Created by libaochao on 2019/3/22.
  */
@@ -20,6 +22,7 @@ import android.widget.TextView;
 public class TextViewFixTouchConsume extends TextView {
     boolean dontConsumeNonUrlClicks = true;
     boolean linkHit;
+
 
     public TextViewFixTouchConsume(Context context) {
         super(context);
@@ -37,11 +40,9 @@ public class TextViewFixTouchConsume extends TextView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         linkHit = false;
-        boolean res = super.onTouchEvent(event);
-
-        if (dontConsumeNonUrlClicks)
+         super.onTouchEvent(event);
             return linkHit;
-        return res;
+
 
     }
 
@@ -54,7 +55,7 @@ public class TextViewFixTouchConsume extends TextView {
 
     public static class LocalLinkMovementMethod extends LinkMovementMethod {
         static LocalLinkMovementMethod sInstance;
-
+        private long lastClickTime;
 
         public static LocalLinkMovementMethod getInstance() {
             if (sInstance == null)
@@ -67,6 +68,9 @@ public class TextViewFixTouchConsume extends TextView {
         public boolean onTouchEvent(TextView widget,
                                     Spannable buffer, MotionEvent event) {
             int action = event.getAction();
+            if (action == MotionEvent.ACTION_DOWN){
+                lastClickTime = System.currentTimeMillis();
+            }
 
             if (action == MotionEvent.ACTION_UP ||
                     action == MotionEvent.ACTION_DOWN) {
@@ -87,17 +91,20 @@ public class TextViewFixTouchConsume extends TextView {
                         off, off, ClickableSpan.class);
 
                 if (link.length != 0) {
-                    if (action == MotionEvent.ACTION_UP) {
-                        link[0].onClick(widget);
-                    } else if (action == MotionEvent.ACTION_DOWN) {
-                        Selection.setSelection(buffer,
-                                buffer.getSpanStart(link[0]),
-                                buffer.getSpanEnd(link[0]));
+                    if (System.currentTimeMillis() - lastClickTime < 3000) {
+                        if (action == MotionEvent.ACTION_UP) {
+                            link[0].onClick(widget);
+                            if (widget instanceof TextViewFixTouchConsume) {
+                                ((TextViewFixTouchConsume) widget).linkHit = true;
+                            }
+                            LogUtils.jasonDebug("0000000000000000000000");
+                        } else if (action == MotionEvent.ACTION_DOWN) {
+                            LogUtils.jasonDebug("1111111111111111111111111");
+                        }
                     }
 
-                    if (widget instanceof TextViewFixTouchConsume) {
-                        ((TextViewFixTouchConsume) widget).linkHit = true;
-                    }
+
+
                     return true;
                 } else {
                     Selection.removeSelection(buffer);

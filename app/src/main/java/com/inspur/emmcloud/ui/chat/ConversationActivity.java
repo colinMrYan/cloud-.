@@ -1505,6 +1505,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_LINKS:
                 //当消息处于发送中状态时无法点击
                 if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
+                    LogUtils.LbcDebug("Link  点击事件333333333333333333");
                     String url = message.getMsgContentExtendedLinks().getUrl();
                     UriUtils.openUrl(ConversationActivity.this, url);
                 }

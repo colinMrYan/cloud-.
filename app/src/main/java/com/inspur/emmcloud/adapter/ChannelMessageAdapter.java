@@ -209,12 +209,14 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                LogUtils.LbcDebug("外部卡片具有的  长按事件2222222222222");
                 return mItemClickListener.onCardItemLongClick(view, uiMessage);
             }
         });
         cardContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LogUtils.LbcDebug("外部卡片具有的  点击事件1111111111111111");
                 mItemClickListener.onCardItemClick(view, uiMessage);
             }
         });
