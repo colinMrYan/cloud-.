@@ -1242,6 +1242,8 @@
     <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
     <string name="voice_to_word">轉文字</string>
 
+    <string name="notification_switch">新消息通知</string>
+
     <string name="resend_file_failed">無法找到資源檔，消息重發失敗</string>
 
 

@@ -198,12 +198,12 @@ public class SettingActivity extends BaseActivity {
         boolean isOpen = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if(NotificationSetUtils.isNotificationEnabled(this)){
-                isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
+                isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
             }else{
                 isOpen = false;
             }
         }else{
-            isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
+            isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
         }
         return isOpen;
     }
@@ -233,9 +233,8 @@ public class SettingActivity extends BaseActivity {
                     PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
                     switchPush();
                 }else{
-                    notificationSwitch.setChecked(false);
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
-                    switchPush();
+                    showNotificationCloseDlg();
+
                 }
             }
         });
@@ -250,6 +249,28 @@ public class SettingActivity extends BaseActivity {
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
         switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>0?View.VISIBLE:View.GONE);
         tabName.setText(getTabLayoutName());
+    }
+
+    private void showNotificationCloseDlg() {
+            new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setMessage(R.string.notification_switch_cant_recive)
+                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            notificationSwitch.setChecked(true);
+                            dialog.dismiss();
+                        }
+                    })
+                    .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            notificationSwitch.setChecked(false);
+                            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
+                            switchPush();
+                        }
+                    })
+                    .show();
     }
 
     private String getTabLayoutName() {

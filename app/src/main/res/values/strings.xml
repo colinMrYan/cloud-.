@@ -1299,6 +1299,8 @@
     <string name="voice_to_word">转文字</string>
 
     <string name="notification_switch">新消息通知</string>
+    <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
+    <string name="notification_switch_open_setting">系统中的云+消息通知已关闭，前往打开？</string>
 
 
     <string name="resend_file_failed">无法找到资源文件，消息重发失败</string>
