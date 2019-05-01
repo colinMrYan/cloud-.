@@ -271,9 +271,9 @@ public class ScheduleApiService {
                                    final boolean isFilter) {
         String baseUrl = APIUri.getMeetingRoomsUrl() + "?";
         if (isFilter) {
-            baseUrl = baseUrl + "startWebSocket=" + start + "&end=" + end;
+            baseUrl = baseUrl + "start=" + start + "&end=" + end;
         } else {
-            baseUrl = baseUrl + "startWebSocket=" + "&end=";
+            baseUrl = baseUrl + "start=" + "&end=";
         }
         baseUrl = baseUrl + "&isIdle=" + isFilter;
         for (int j = 0; j < officeIdList.size(); j++) {

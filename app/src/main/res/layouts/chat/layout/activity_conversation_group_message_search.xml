@@ -20,7 +20,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="14dp"
             android:background="@drawable/bg_conversation_group_message_search"
-            android:layout_toLeftOf="@id/tv_group_search_messages"
+            android:layout_toLeftOf="@+id/tv_group_search_messages"
             android:padding="6dp">
 
             <ImageView

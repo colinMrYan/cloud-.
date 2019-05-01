@@ -36,7 +36,6 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -44,7 +43,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
-import com.inspur.emmcloud.widget.MaxHightListView;
+import com.inspur.emmcloud.widget.MaxHeightListView;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.IPlugin;
 import com.inspur.imp.plugin.PluginMgr;
@@ -291,7 +290,7 @@ public class ImpFragment extends ImpBaseFragment {
 
                 }
             });
-            MaxHightListView listView = (MaxHightListView) contentView.findViewById(R.id.list);
+            MaxHeightListView listView = (MaxHeightListView) contentView.findViewById(R.id.list);
             listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 240));
             dropTitleAdapter = new Adapter();
             listView.setAdapter(dropTitleAdapter);
@@ -452,12 +451,15 @@ public class ImpFragment extends ImpBaseFragment {
         if (ImpFragment.this.onKeyDownListener != null){
             ImpFragment.this.onKeyDownListener.onBackKeyDown();
         }else {
-            if (webView.canGoBack()) {
-                webView.goBack();// 返回上一页面
-                setGoBackTitle();
-            } else {
-                finishActivity();
+            if (!webView.getWebChromeClient().hideCustomView()){
+                if (webView.canGoBack()) {
+                    webView.goBack();// 返回上一页面
+                    setGoBackTitle();
+                } else {
+                    finishActivity();
+                }
             }
+
         }
         return true;
     }

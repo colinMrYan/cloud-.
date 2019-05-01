@@ -24,7 +24,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:layout_toLeftOf="@+id/arrow"
-            android:layout_toRightOf="@id/name"
+            android:layout_toRightOf="@id/tv_name"
             android:ellipsize="end"
             android:gravity="right"
             android:paddingBottom="10dp"

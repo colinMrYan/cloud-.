@@ -3,14 +3,20 @@ package com.inspur.emmcloud.ui.schedule;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
@@ -25,15 +31,21 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.TaskCacheUtils;
+import com.inspur.emmcloud.widget.MaxHeightListView;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
@@ -49,6 +61,7 @@ import org.xutils.view.annotation.ViewInject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +72,7 @@ import java.util.Map;
 @ContentView(R.layout.fragment_schedule)
 public class ScheduleFragment extends ScheduleBaseFragment implements
         CalendarView.OnCalendarSelectListener,
-        CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister {
+        CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister,AdapterView.OnItemClickListener {
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
@@ -88,7 +101,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     @ViewInject(R.id.iv_event_all_day)
     private ImageView eventAllDayImg;
     @ViewInject(R.id.tv_event_title_all_day)
-    private ImageView eventAllDayTitle;
+    private TextView eventAllDayTitleText;
     private ScheduleEventListAdapter scheduleEventListAdapter;
     private Boolean isEventShowTypeList;
     private ScheduleApiService apiService;
@@ -100,6 +113,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
     private List<Holiday> holidayList= new ArrayList<>();
+    private PopupWindow allDayEventPop;
 
 
     @Override
@@ -135,6 +149,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarView.setOnCalendarSelectListener(this);
         calendarViewExpandImg.setOnClickListener(this);
         calendarDayView.setOnEventClickListener(this);
+        allDayLayout.setOnClickListener(this);
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         scheduleEventListAdapter = new ScheduleEventListAdapter(getActivity());
         scheduleEventListAdapter.setOnItemClickLister(this);
@@ -181,6 +196,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if (calendarView != null) {
             calendarView.scrollToCurrent();
         }
+    }
+
+    public Calendar getSelectCalendar(){
+        return selectCalendar;
     }
 
 
@@ -236,6 +255,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void showCalendarEvent(boolean isForceUpdate) {
         List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
         List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
+        ScheduleAlertUtils.setScheduleListAlert(MyApplication.getInstance(),scheduleList);
+        ScheduleAlertUtils.setMeetingListAlert(MyApplication.getInstance(),meetingList);
         boolean isNeedGetDataFromNet = isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
         if (isNeedGetDataFromNet) {
             List<String> scheduleIdList = new ArrayList<>();
@@ -263,22 +284,51 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 //        eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
         eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         showCalendarViewEventMark(scheduleList, meetingList);
+        allDayLayout.setVisibility(View.GONE);
+        int eventListSize = eventList.size();
+        scheduleSumText.setText(eventListSize > 0 ? eventListSize + "项日程" : "");
         if (isEventShowTypeList) {
-            allDayLayout.setVisibility(View.GONE);
             scheduleEventListAdapter.setEventList(selectCalendar, eventList);
             scheduleEventListAdapter.notifyDataSetChanged();
         } else {
             setAllDayEventList();
+            if (allDayEventList.size()>0){
+                Event event = allDayEventList.get(0);
+                allDayLayout.setVisibility(View.VISIBLE);
+                eventAllDayImg.setImageResource(event.getEventIconResId());
+                String eventTitle = event.getEventTitle();
+                if (allDayEventList.size()>1){
+                    if (eventTitle.length()>14){
+                        eventTitle = eventTitle.substring(0,13);
+                        eventTitle = eventTitle+"...";
+                    }
+                    eventTitle = eventTitle+" 等"+allDayEventList.size()+"项日程";
+                }
+                eventAllDayTitleText.setText(eventTitle);
+            }
             calendarDayView.setEventList(eventList, selectCalendar);
+            calendarDayView.post(new Runnable() {
+                @Override
+                public void run() {
+                    eventScrollView.scrollTo(0,calendarDayView.getScrollOffset());
+                }
+            });
         }
-        int eventListSize = eventList.size();
-        scheduleSumText.setText(eventListSize > 0 ? eventListSize + "项日程" : "");
     }
 
     /**
      * 日视图区分全天和非全天事件
      */
     private void setAllDayEventList(){
+        allDayEventList.clear();
+        Iterator<Event> iterator = eventList.iterator();
+        while (iterator.hasNext()){
+            Event event = iterator.next();
+            if (event.isAllDay()){
+                allDayEventList.add(event);
+                iterator.remove();
+            }
+        }
 
     }
 
@@ -335,25 +385,54 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             }
         }
         calendarView.setSchemeDate(map);
+    }
 
-
-
+    private void showAllDayEventListPop(View anchor){
+        View contentView = LayoutInflater.from(getActivity())
+                .inflate(R.layout.schedule_all_day_event_pop, null);
+        int width = ResolutionUtils.getWidth(MyApplication.getInstance());
+        width = width-2* DensityUtil.dip2px(MyApplication.getInstance(),20);
+        BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
+        MaxHeightListView listView = contentView.findViewById(R.id.lv_all_day_event);
+        listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(),150));
+        listView.setAdapter(new ScheduleAllDayEventListAdapter(getActivity(),allDayEventList));
+        contentView.findViewById(R.id.iv_close).setOnClickListener(this);
+        bubbleLayout.setArrowPosition(width/2-DensityUtil.dip2px(MyApplication.getInstance(),7));
+        allDayEventPop = new PopupWindow(contentView,width,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        allDayEventPop.setOutsideTouchable(false);
+        allDayEventPop.setTouchable(true);
+        allDayEventPop.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        allDayEventPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
+            }
+        });
+        listView.setOnItemClickListener(this);
+        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
+        allDayEventPop.showAsDropDown(anchor,DensityUtil.dip2px(MyApplication.getInstance(),20),0);
     }
 
     private void openEvent(Event event) {
         Bundle bundle = new Bundle();
         switch (event.getEventType()) {
-            case Event.TYPE_MEETING:
+            case Schedule.TYPE_MEETING:
                 Meeting meeting = (Meeting) event.getEventObj();
                 bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
                 IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
                 break;
-            case Event.TYPE_CALENDAR:
+            case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
                 bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
                 IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
                 break;
-            case Event.TYPE_TASK:
+            case Schedule.TYPE_TASK:
                 break;
         }
     }
@@ -364,12 +443,29 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             case R.id.iv_calendar_view_expand:
                 calendarLayout.switchStatus();
                 break;
+            case R.id.rl_all_day:
+                if (allDayEventList.size()>1){
+                    showAllDayEventListPop(view);
+                }else {
+                    onEventClick(allDayEventList.get(0));
+                }
+
+                break;
+            case R.id.iv_close:
+                allDayEventPop.dismiss();
+                break;
         }
     }
 
     @Override
     public void onItemClick(View view, int position, Event event) {
         onEventClick(event);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        onEventClick(allDayEventList.get(position));
+        allDayEventPop.dismiss();
     }
 
     @Override

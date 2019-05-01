@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.protobuf'
 
-
 import com.android.build.OutputFile
 
 apply from: "../node_modules/react-native/react.gradle"
@@ -42,8 +41,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 73
-        versionName "2.8.1"
+        versionCode 79
+        versionName "3.1.0-beta.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
