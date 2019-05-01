@@ -188,7 +188,7 @@
                 android:id="@+id/rl_end_big_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/ll_end_time">
+                android:layout_alignBottom="@+id/ll_end_time">
 
                 <ImageView
                     android:layout_width="11dp"

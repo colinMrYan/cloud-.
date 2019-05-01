@@ -87,7 +87,7 @@
                 android:id="@+id/tv_delecte_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FF4242 "
+                android:textColor="#FF4242"
                 android:textSize="16sp"
                 android:paddingTop="11dp"
                 android:text="删除标签"
