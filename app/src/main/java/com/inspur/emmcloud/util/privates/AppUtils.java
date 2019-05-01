@@ -858,14 +858,14 @@ public class AppUtils {
             if (!StringUtils.isBlank(hwtoken)) {
                 pushId = hwtoken + Constant.PUSH_HUAWEI_COM;
             } else {
-                String jpushPushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
+                String jpushPushId = PreferencesUtils.getString(context, Constant.JPUSH_REGISTER_ID, "");
                 if (!StringUtils.isBlank(jpushPushId)) {
                     AppUtils.setPushFlag(context, Constant.JPUSH_FLAG);
                     pushId = jpushPushId;
                 }
             }
         } else {
-            pushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
+            pushId = PreferencesUtils.getString(context, Constant.JPUSH_REGISTER_ID, "");
         }
         if (StringUtils.isBlank(pushId)) {
             pushId = "UNKNOWN";

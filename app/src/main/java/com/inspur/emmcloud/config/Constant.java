@@ -159,13 +159,16 @@ public class Constant {
     //推送相关配置
     public static final String PUSH_FLAG = "pushFlag";
     public static final String HUAWEI_PUSH_TOKEN = "huawei_push_token";
-    public static final String JPUSH_REG_ID = "JpushRegId";
+    public static final String PUSH_SWITCH_FLAG = "push_switch_flag";
+
+    public static final String JPUSH_REGISTER_ID = "JpushRegId";
+    public static final String MIPUSH_REGISTER_ID = "mi_push_register_id";
     public static final String HUAWEI_FLAG = "huawei";
     public static final String JPUSH_FLAG = "Jpush";
     public static final String XIAOMI_FLAG = "xiaomi";
     public static final String MEIZU_FLAG = "meizu";
     public static final String PUSH_HUAWEI_COM = "@push.huawei.com";
-    public static final String PUSH_SWITCH_FLAG = "push_switch_flag";
+    public static final String PUSH_XIAOMI_COM = "@push.xiaomi.com";
 
     public static final String APP_WEB_URI = "uri";
 

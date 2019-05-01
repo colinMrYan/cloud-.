@@ -42,6 +42,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
@@ -181,7 +182,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
             }
         };
-        AppUtils.setPushFlag(this, "");
+        PushManagerUtils.getInstance().clearPushFlag();
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 "isContactReady", false);

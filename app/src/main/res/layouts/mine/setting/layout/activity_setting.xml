@@ -348,13 +348,15 @@
                     android:text="@string/notification_switch"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.widget.SwitchView
+                <Switch
                     android:id="@+id/switch_view_setting_notification"
-                    android:layout_width="37dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginRight="16dp"
+                    android:thumb="@drawable/switch_custom_thumb_selector"
+                    android:track="@drawable/switch_custom_track_selector" />
 
                 <View
                     android:layout_width="match_parent"

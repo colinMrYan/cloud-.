@@ -10,8 +10,10 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -35,7 +37,6 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.NotificationSetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -46,7 +47,7 @@ import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
@@ -95,19 +96,13 @@ public class SettingActivity extends BaseActivity {
     @ViewInject(R.id.tv_setting_tab_name)
     private TextView tabName;
     @ViewInject(R.id.switch_view_setting_notification)
-    private SwitchView notificationSwitch;
+    private Switch notificationSwitch;
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void toggleToOn(View view) {
             switch (view.getId()) {
-                case R.id.switch_view_setting_notification:
-                    LogUtils.YfcDebug("switch_view_setting_notification");
-                    showNotificationDlg();
-                    notificationSwitch.setOpened(true);
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
-                    break;
                 case R.id.switch_view_setting_run_background:
                     setAppRunBackground(true);
                     break;
@@ -132,10 +127,6 @@ public class SettingActivity extends BaseActivity {
         @Override
         public void toggleToOff(View view) {
             switch (view.getId()) {
-                case R.id.switch_view_setting_notification:
-                    notificationSwitch.setOpened(false);
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
-                    break;
                 case R.id.switch_view_setting_run_background:
                     setAppRunBackground(false);
                     break;
@@ -173,25 +164,32 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        notificationSwitch.setOpened(getSwitchOpen());
+        notificationSwitch.setChecked(getSwitchOpen());
         switchPush();
     }
 
+    /**
+     * 开关push并向服务器发出信号
+     */
     private void switchPush() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if(NotificationSetUtils.isNotificationEnabled(this) &&
                     PreferencesByUserAndTanentUtils.getBoolean(this,
                             Constant.PUSH_SWITCH_FLAG,false)){
                 MyApplication.getInstance().startPush();
+                PushManagerUtils.getInstance().registerPushId2Emm();
             }else{
                 MyApplication.getInstance().stopPush();
+                PushManagerUtils.getInstance().unregisterPushId2Emm();
             }
         }else{
             if(PreferencesByUserAndTanentUtils.getBoolean(this,
                     Constant.PUSH_SWITCH_FLAG,false)){
                 MyApplication.getInstance().startPush();
+                PushManagerUtils.getInstance().registerPushId2Emm();
             }else{
                 MyApplication.getInstance().stopPush();
+                PushManagerUtils.getInstance().unregisterPushId2Emm();
             }
         }
     }
@@ -224,7 +222,23 @@ public class SettingActivity extends BaseActivity {
             voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
         }
-        notificationSwitch.setOnStateChangedListener(onStateChangedListener);
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        showNotificationDlg();
+                    }
+                    notificationSwitch.setChecked(true);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+                    switchPush();
+                }else{
+                    notificationSwitch.setChecked(false);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
+                    switchPush();
+                }
+            }
+        });
         if (AppUtils.isAppVersionStandard()) {
             getUserExperienceUpgradeFlag();
             experienceUpgradeLayout.setVisibility(View.VISIBLE);
@@ -368,19 +382,19 @@ public class SettingActivity extends BaseActivity {
     private void showNotificationDlg() {
         if(!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)){
             new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
-                    .setMessage(R.string.if_confirm_signout)
+                    .setMessage("系统中的云+消息通知已关闭，前往打开？")
                     .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
-                            notificationSwitch.setOpened(false);
+                            notificationSwitch.setChecked(false);
                         }
                     })
                     .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
-                            LogUtils.YfcDebug("打开开关时是否有通知权限：" + NotificationSetUtils.isNotificationEnabled(SettingActivity.this));
+                            dialog.dismiss();
                             NotificationSetUtils.openNotificationSetting(SettingActivity.this);
                         }
                     })
@@ -403,7 +417,7 @@ public class SettingActivity extends BaseActivity {
                 .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
-                        new PushIdManagerUtils(SettingActivity.this).unregisterPushId2Emm();
+                        PushManagerUtils.getInstance().unregisterPushId2Emm();
                         dialog.dismiss();
                         boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
                         if (NetUtils.isNetworkConnected(getApplicationContext(), false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist) {

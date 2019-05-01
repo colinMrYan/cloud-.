@@ -18,7 +18,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
-import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,8 +85,8 @@ public class JpushReceiver extends BroadcastReceiver {
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             AppUtils.setPushFlag(context, Constant.JPUSH_FLAG);
-            PreferencesUtils.putString(context, Constant.JPUSH_REG_ID, regId);
-            new PushIdManagerUtils(context).registerPushId2Emm();
+            PreferencesUtils.putString(context, Constant.JPUSH_REGISTER_ID, regId);
+            PushManagerUtils.getInstance().registerPushId2Emm();
             new ClientIDUtils(context).upload();
             WebSocketPush.getInstance().startWebSocket();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent

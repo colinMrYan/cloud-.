@@ -43,7 +43,7 @@ import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -113,7 +113,7 @@ public class IndexActivity extends IndexBaseActivity {
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
-        new PushIdManagerUtils(this).registerPushId2Emm();
+        PushManagerUtils.getInstance().registerPushId2Emm();
         ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
         getAllRobotInfo();
         getAllChannelGroup();
