@@ -628,8 +628,17 @@ public class IndexActivity extends IndexBaseActivity {
 
         @Override
         public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
-            updateTabbarWithOrder(getAppMainTabResult);
-            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,""));
+            if(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() == 0){
+                updateMainTabbarWithOrder(getAppMainTabResult);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            }else {
+                PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION,
+                        getAppMainTabResult.getMainTabPayLoad().getVersion());
+                PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,
+                        getAppMainTabResult.getAppTabInfo());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            }
         }
 
         @Override
@@ -640,6 +649,7 @@ public class IndexActivity extends IndexBaseActivity {
         public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
             super.returnNaviBarModelSuccess(naviBarModel);
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
+            updateNaviTabbar();
         }
 
         @Override

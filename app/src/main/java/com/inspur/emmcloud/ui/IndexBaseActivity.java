@@ -797,7 +797,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      *
      * @param getAppMainTabResult
      */
-    public void updateTabbarWithOrder(GetAppMainTabResult getAppMainTabResult) {
+    public void updateMainTabbarWithOrder(GetAppMainTabResult getAppMainTabResult) {
         String command = getAppMainTabResult.getCommand();
         if (command.equals("FORWARD")) {
             PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, Constant.PREF_APP_TAB_BAR_VERSION,
@@ -807,6 +807,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             mTabHost.clearAllTabs(); // 更新tabbar
             initTabs();
         }
+    }
+
+    public void updateNaviTabbar(){
+        mTabHost.clearAllTabs(); // 更新tabbar
+        initTabs();
     }
 
     @Override
