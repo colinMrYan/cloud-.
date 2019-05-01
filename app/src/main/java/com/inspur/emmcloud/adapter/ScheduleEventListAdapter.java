@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
@@ -56,11 +57,11 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
 
         String startTime = "";
         String endTime = "";
-        if (event.getEventType().equals(Event.TYPE_CALENDAR)) {
+        if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
             holder.eventPositionText.setVisibility(View.GONE);
             startTime = TimeUtils.calendar2FormatString(context, event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
             endTime = TimeUtils.calendar2FormatString(context, event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
-        } else if (event.getEventType().equals(Event.TYPE_MEETING)) {
+        } else if (event.getEventType().equals(Schedule.TYPE_MEETING)) {
             holder.eventPositionText.setVisibility(View.VISIBLE);
             if (!StringUtils.isBlank(event.getEventSubTitle())) {
                 holder.eventPositionText.setText("会议地点：" + event.getEventSubTitle());

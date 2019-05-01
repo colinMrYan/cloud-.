@@ -1144,6 +1144,7 @@
         <!-- imp插件 -->
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
+            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"/>
         <activity
             android:name="com.inspur.imp.plugin.barcode.scan.CaptureActivity"
