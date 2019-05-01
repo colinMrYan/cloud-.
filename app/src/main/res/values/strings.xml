@@ -933,7 +933,7 @@
     <string name="net_ping_url_cloud">云＋</string>
 
     <!--电源白名单-->
-    <string name="battery_tip_content">系统已对云+开启省电优化，可能导致消息延迟或丢失，请将云+加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
+    <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
     <string name="battery_tip_ishide">不再提醒</string>
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去设置</string>
