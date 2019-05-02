@@ -267,7 +267,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * @return
      */
     private boolean canConnectHuawei() {
-        String pushFlag = AppUtils.getPushFlag(this);
+        String pushFlag = PushManagerUtils.getPushFlag(this);
         return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
     }
 

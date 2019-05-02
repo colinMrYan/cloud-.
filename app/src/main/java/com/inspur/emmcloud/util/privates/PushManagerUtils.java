@@ -115,7 +115,6 @@ public class PushManagerUtils {
         return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
     }
 
-
     public void setJpushStatus(boolean isOpen){
         if (isOpen){
             // 初始化 JPush

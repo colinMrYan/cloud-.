@@ -32,13 +32,13 @@ public class ClientIDUtils {
         if (!MyApplication.getInstance().isHaveLogin()) {
             return;
         }
-        String pushTracer = AppUtils.getPushId(context);
+        String pushTracer = PushManagerUtils.getPushId(context);
         if (NetUtils.isNetworkConnected(context, false)) {
             ChatAPIService apiService = new ChatAPIService(context);
             apiService.setAPIInterface(new WebService());
             String deviceId = AppUtils.getMyUUID(context);
             String deviceName = AppUtils.getDeviceName(context);
-            String pushProvider = AppUtils.getPushProvider(context);
+            String pushProvider = PushManagerUtils.getPushProvider(context);
             apiService.uploadPushInfo(deviceId, deviceName, pushProvider, pushTracer);
         } else {
             callbackClientIdFail();

@@ -1273,7 +1273,7 @@
     <string name="emm_keyboard_number">Number</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">Letter</string>
-    <string name="emm_secure_keyboard">%1$s Safety Keyboard</string>
+    <string name="emm_secure_keyboard">Safety Keyboard</string>
     <string name="emm_keyboard_space">space</string>
 
     <string name="welcome_to">Welcome to </string>

@@ -17,6 +17,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
@@ -73,7 +74,7 @@ public class AboutActivity extends BaseActivity {
                 .addItem("ecm.client-registry-->" + MyApplication.getInstance().getClusterClientRegistry())
                 .addItem("ClientId-->" + PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
-                .addItem("DeviceToken-->" + AppUtils.getPushId(MyApplication.getInstance()))
+                .addItem("DeviceToken-->" + PushManagerUtils.getPushId(MyApplication.getInstance()))
                 .build()
                 .show();
         return false;
