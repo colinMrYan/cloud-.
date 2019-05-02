@@ -16,8 +16,8 @@ import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
+import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
@@ -37,9 +37,6 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
-import com.inspur.emmcloud.ui.work.calendar.CalActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
-import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -474,13 +471,13 @@ public class SchemeHandleActivity extends Activity {
     private void openNativeSchemeByHost(String host, Intent intent) {
         switch (host) {
             case "calendar":
-                IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class, true);
+              //  IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class, true);
                 break;
             case "to-do":
-                IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class, true);
+              //  IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class, true);
                 break;
             case "meeting":
-                IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class, true);
+              //  IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class, true);
                 break;
             case "webex":
                 String installUri = intent.getExtras().getString("installUri", "");
