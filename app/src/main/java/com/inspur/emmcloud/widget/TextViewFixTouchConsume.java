@@ -60,6 +60,7 @@ public class TextViewFixTouchConsume extends TextView {
         static LocalLinkMovementMethod sInstance;
         private long lastClickTime;
         private static final long CLICK_DELAY = 500l;
+        private boolean isMovingDoing = false;
 
 
 
@@ -96,24 +97,17 @@ public class TextViewFixTouchConsume extends TextView {
                 if (link.length != 0) {
                     if (action == MotionEvent.ACTION_UP) {
                         if (System.currentTimeMillis() - lastClickTime > CLICK_DELAY) {
-                            ViewParent parent = widget.getParent();
-                            if (parent instanceof ViewGroup) {
-                                // 获取被点击控件的父容器，让父容器执行点击；
-                                ((ViewGroup) parent).performClick();
-                            }
-                            LogUtils.LbcDebug("22222222222222222222222222");
                             return true;
                         }else{
-                            //点击事件
                             link[0].onClick(widget);
-                            LogUtils.LbcDebug("11111111111111111111111111");
                             return true;
                         }
-                       // link[0].onClick(widget);
                     } else if (action == MotionEvent.ACTION_DOWN) {
                         Selection.setSelection(buffer,
                                 buffer.getSpanStart(link[0]),
                                 buffer.getSpanEnd(link[0]));
+                        lastClickTime= System.currentTimeMillis();
+                        isMovingDoing=true;
                     }
 
                     if (widget instanceof TextViewFixTouchConsume) {
@@ -124,6 +118,17 @@ public class TextViewFixTouchConsume extends TextView {
                     Selection.removeSelection(buffer);
                     Touch.onTouchEvent(widget, buffer, event);
                     return false;
+                }
+            }
+            if(action==MotionEvent.ACTION_MOVE&&isMovingDoing){
+                if (System.currentTimeMillis() - lastClickTime > CLICK_DELAY) {
+                    ViewParent parent = widget.getParent();
+                    if (parent instanceof ViewGroup) {
+                        // 获取被点击控件的父容器，让父容器执行点击；
+                        ((ViewGroup) parent).performLongClick();
+                        isMovingDoing=false;
+                    }
+                    return true;
                 }
             }
             return Touch.onTouchEvent(widget, buffer, event);
