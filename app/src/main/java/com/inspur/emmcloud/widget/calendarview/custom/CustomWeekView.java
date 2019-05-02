@@ -41,6 +41,7 @@ public class CustomWeekView extends WeekView {
      * 今天的背景色
      */
     private Paint mCurrentDayPaint = new Paint();
+    private Paint mSchemeSolarTextPaint = new Paint();
 
 
     /**
@@ -69,6 +70,9 @@ public class CustomWeekView extends WeekView {
         mSolarTermTextPaint.setColor(0xff489dff);
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
+
+        mSchemeSolarTextPaint.setAntiAlias(true);
+        mSchemeSolarTextPaint.setTextAlign(Paint.Align.CENTER);
 
         mSchemeBasicPaint.setAntiAlias(true);
         mSchemeBasicPaint.setStyle(Paint.Style.FILL);
@@ -121,6 +125,7 @@ public class CustomWeekView extends WeekView {
     protected void onPreviewHook() {
         mSolarTermTextPaint.setTextSize(mCurMonthLunarTextPaint.getTextSize());
         mRadius = Math.min(mItemWidth, mItemHeight) / 13 * 5;
+        mSchemeSolarTextPaint.setTextSize(mCurMonthLunarTextPaint.getTextSize());
     }
 
     @Override
@@ -144,6 +149,7 @@ public class CustomWeekView extends WeekView {
         int cx = x + mItemWidth / 2;
         int top = -(int) (mItemHeight / 5.5);
         String day = calendar.isCurrentDay() ? "今" : String.valueOf(calendar.getDay());
+        String lunar = TextUtils.isEmpty(calendar.getSchemeLunar()) ? calendar.getLunar() : calendar.getSchemeLunar();
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
             canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius-dipToPx(getContext(), 1.5f), mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
@@ -151,24 +157,29 @@ public class CustomWeekView extends WeekView {
         if (isSelected) {
             canvas.drawText(day, cx, mTextBaseLine + top,
                     mSelectTextPaint);
-            canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + mItemHeight / 15, mSelectedLunarTextPaint);
+            canvas.drawText(lunar, cx, mTextBaseLine + mItemHeight / 15, mSelectedLunarTextPaint);
         } else if (hasScheme) {
-
             canvas.drawText(day, cx, mTextBaseLine + top,
                     calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
-
-            canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + mItemHeight / 15,
-                    !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint : mSchemeLunarTextPaint);
+            Paint currentMonthPaint = null;
+            if (calendar.getSchemeLunarColor() != 0) {
+                mSchemeSolarTextPaint.setColor(calendar.getSchemeLunarColor());
+                currentMonthPaint = mSchemeSolarTextPaint;
+            } else {
+                currentMonthPaint = !TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival()) ? mSolarTermTextPaint : mSchemeLunarTextPaint;
+            }
+            canvas.drawText(lunar, cx, mTextBaseLine  + mItemHeight / 15,
+                    calendar.isCurrentMonth() ? currentMonthPaint : mOtherMonthLunarTextPaint);
         } else {
             canvas.drawText(day, cx, mTextBaseLine + top,
                     calendar.isCurrentDay() ? mCurDayTextPaint :
                             calendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
 
-            canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + mItemHeight / 15,
+            canvas.drawText(lunar, cx, mTextBaseLine  + mItemHeight / 15,
                     calendar.isCurrentDay() ? mCurDayLunarTextPaint :
-                            !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint :
-                                    calendar.isCurrentMonth() ?
-                                            mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
+                            calendar.isCurrentMonth() ? (!TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival())) ? mSolarTermTextPaint :
+                                    mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
         }
+
     }
 }

@@ -78,6 +78,7 @@ import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
@@ -870,16 +871,16 @@ public interface APIInterface {
     void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
     void returnMeetingListByMeetingRoomFail(String error, int errorCode);
 
-
     void returnNaviBarModelSuccess(NaviBarModel naviBarModel);
     void returnNaviBarModelFail(String error, int errorCode);
-
-
 
     void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
     void returnMeetingHistoryListFail(String error, int errorCode);
 
     void returnUpdateMeetingSuccess();
     void returnUpdateMeetingFail(String error, int errorCode);
+
+    void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult);
+    void returnHolidayDataFail(String error, int errorCode);
 
 }

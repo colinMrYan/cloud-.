@@ -1713,8 +1713,8 @@ public class APIUri {
      */
 
     public static String getScheduleBaseUrl(){
-        return "https://emm.inspur.com";
-        //return "http://172.31.2.36:88";
+        //return "https://emm.inspur.com";
+        return "http://172.31.2.36:88";
     }
 
     public static String getCheckCloudPluseConnectUrl() {
@@ -1763,6 +1763,10 @@ public class APIUri {
 
     public static String getMeetingUpdateUrl(){
         return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/update";
+    }
+
+    public static String getHolidayDataUrl(){
+        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/HolidayData/";
     }
 
     /**

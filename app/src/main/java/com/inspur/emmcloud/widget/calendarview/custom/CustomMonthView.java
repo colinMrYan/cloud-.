@@ -41,7 +41,10 @@ public class CustomMonthView extends MonthView {
      */
     private Paint mCurrentDayPaint = new Paint();
 
-    private Paint mSchemeSolorTextPaint = new Paint();
+    /**
+     * 自定义节假日
+     */
+    private Paint mSchemeSolarTextPaint = new Paint();
 
     /**
      * 圆点半径
@@ -71,8 +74,8 @@ public class CustomMonthView extends MonthView {
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
 
-        mSchemeSolorTextPaint.setAntiAlias(true);
-        mSchemeSolorTextPaint.setTextAlign(Paint.Align.CENTER);
+        mSchemeSolarTextPaint.setAntiAlias(true);
+        mSchemeSolarTextPaint.setTextAlign(Paint.Align.CENTER);
 
         mSchemeBasicPaint.setAntiAlias(true);
         mSchemeBasicPaint.setStyle(Paint.Style.FILL);
@@ -125,6 +128,7 @@ public class CustomMonthView extends MonthView {
     protected void onPreviewHook() {
         mSolarTermTextPaint.setTextSize(mCurMonthLunarTextPaint.getTextSize());
         mRadius = Math.min(mItemWidth, mItemHeight) / 13 * 5;
+        mSchemeSolarTextPaint.setTextSize(mCurMonthLunarTextPaint.getTextSize());
     }
 
     @Override
@@ -162,9 +166,9 @@ public class CustomMonthView extends MonthView {
             canvas.drawText(day, cx, mTextBaseLine + top,
                     calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
             Paint currentMonthPaint = null;
-            if (calendar.getSchemeColor() != 0) {
-                mSchemeSolorTextPaint.setColor(calendar.getSchemeColor());
-                currentMonthPaint = mSchemeSolorTextPaint;
+            if (calendar.getSchemeLunarColor() != 0) {
+                mSchemeSolarTextPaint.setColor(calendar.getSchemeLunarColor());
+                currentMonthPaint = mSchemeSolarTextPaint;
             } else {
                 currentMonthPaint = !TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival()) ? mSolarTermTextPaint : mSchemeLunarTextPaint;
             }
