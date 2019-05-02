@@ -5,7 +5,7 @@ import android.widget.Chronometer;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.text.ParseException;
