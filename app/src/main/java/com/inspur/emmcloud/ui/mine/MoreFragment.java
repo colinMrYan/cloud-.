@@ -39,7 +39,6 @@ import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
@@ -227,7 +226,6 @@ public class MoreFragment extends BaseFragment {
             }
         } else {
             if (uri.startsWith("http")) {
-                LogUtils.LbcDebug("444444444444444444444444");
                 UriUtils.openUrl(getActivity(), uri);
             } else {
                 try {

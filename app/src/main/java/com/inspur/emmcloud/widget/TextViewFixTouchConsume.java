@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.util.common.LogUtils;
-
 /**
  * Created by libaochao on 2019/3/22.
  */

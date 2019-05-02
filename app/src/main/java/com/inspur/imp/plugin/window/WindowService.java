@@ -2,7 +2,6 @@ package com.inspur.imp.plugin.window;
 
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -45,7 +44,6 @@ public class WindowService extends ImpPlugin implements OnKeyDownListener {
         String url = JSONUtils.getString(paramsObject, "url", "");
         String title = JSONUtils.getString(paramsObject, "title", "");
         boolean isHaveNavBar = JSONUtils.getBoolean(paramsObject, "isHaveNavbar", true);
-        LogUtils.LbcDebug("7777777777777777777");
         UriUtils.openUrl(getActivity(), url, title, isHaveNavBar);
     }
 

@@ -14,7 +14,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
@@ -89,7 +88,6 @@ public class DisplayTxtMarkdownMsg {
                 .urlClick(new OnUrlClickListener() {
                     @Override
                     public boolean urlClicked(String url) {
-                        LogUtils.LbcDebug("富文本具有的点击事件1111111111111111");
                         if (url.startsWith("http")) {
                             UriUtils.openUrl((Activity) context, url);
                             return true;

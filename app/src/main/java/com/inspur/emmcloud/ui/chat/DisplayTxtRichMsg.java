@@ -13,7 +13,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
 import com.inspur.emmcloud.util.common.richtext.LinkHolder;
@@ -74,7 +73,6 @@ public class DisplayTxtRichMsg {
                         @Override
                         public boolean urlClicked(String url) {
                             if (url.startsWith("http")) {
-                                LogUtils.LbcDebug("5555555555555555555");
                                 UriUtils.openUrl((Activity) context, url);
                                 return true;
                             }
