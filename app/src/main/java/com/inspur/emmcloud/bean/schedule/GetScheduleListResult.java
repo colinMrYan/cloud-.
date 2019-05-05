@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.schedule;
 
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import java.util.ArrayList;

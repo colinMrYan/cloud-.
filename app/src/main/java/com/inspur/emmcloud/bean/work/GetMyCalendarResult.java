@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.work;
 
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
