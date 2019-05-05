@@ -420,6 +420,9 @@
     <string name="schedule_meeting_add_attendee_title">参会人</string>
     <string name="schedule_meeting_add_record_holder_title">会议记录人</string>
     <string name="schedule_meeting_add_conference_title">会议联络人</string>
+    <string name="schedule_meeting_select_attendee_title">选择参会人</string>
+    <string name="schedule_meeting_select_record_holder_title">选择会议记录人</string>
+    <string name="schedule_meeting_select_conference_title">选择会议联络人</string>
     <string name="schedule_meeting_add_note">备注</string>
     <string name="schedule_meeting_add_alert_time">会前提醒</string>
     <string name="schedule_meeting_detail_location">会议地点:</string>
