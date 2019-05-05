@@ -34,6 +34,7 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.NotificationSetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
@@ -43,7 +44,7 @@ import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -98,7 +99,17 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();
-        MyApplication.getInstance().startPush();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if(NotificationSetUtils.isNotificationEnabled(this) &&
+                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true))){
+                MyApplication.getInstance().startPush();
+            }
+        }else{
+            if(PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true)){
+                MyApplication.getInstance().startPush();
+            }
+        }
+
     }
 
     private void initView() {
@@ -115,7 +126,7 @@ public class IndexActivity extends IndexBaseActivity {
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
-        new PushIdManagerUtils(this).registerPushId2Emm();
+        PushManagerUtils.getInstance().registerPushId2Emm();
         ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
         getAllRobotInfo();
         getAllChannelGroup();

@@ -1,14 +1,5 @@
 package com.inspur.emmcloud.widget.keyboardview;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -30,6 +21,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.InputMethodUtils;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class EmmSecurityKeyboard extends PopupWindow {
 
@@ -165,7 +164,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 InputMethodUtils.showKeyboard(curEditText);
             }
         });
-        ((TextView)mainView.findViewById(R.id.tv_keyboard_name)).setText(contextLocal.getString(R.string.emm_secure_keyboard, AppUtils.getAppName(contextLocal)));
+        ((TextView)mainView.findViewById(R.id.tv_keyboard_name)).setText(R.string.emm_secure_keyboard);
         this.setContentView(mainView);
         this.setWidth(EmmDisplayUtils.getScreenWidth(context));
         this.setHeight(LayoutParams.WRAP_CONTENT);
