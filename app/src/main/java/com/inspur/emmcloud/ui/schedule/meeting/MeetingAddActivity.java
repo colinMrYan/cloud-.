@@ -263,13 +263,13 @@ public class MeetingAddActivity extends BaseActivity {
         intent.putExtra("isMulti_select", true);
         intent.putExtra("isContainMe", true);
         if (requestCode == REQUEST_SELECT_ATTENDEE) {
-            title = "选择参会人";
+            title = getString(R.string.schedule_meeting_select_attendee_title);
             intent.putExtra("hasSearchResult", (Serializable) attendeeSearchModelList);
         } else if (requestCode == REQUEST_SELECT_RECORDER) {
-            title = "选择会议记录人";
+            title = getString(R.string.schedule_meeting_select_record_holder_title);
             intent.putExtra("hasSearchResult", (Serializable) recorderSearchModelList);
         } else {
-            title = "选择会议联络人";
+            title = getString(R.string.schedule_meeting_select_conference_title);
             intent.putExtra("hasSearchResult", (Serializable) liaisonSearchModelList);
         }
         intent.putExtra("title", title);

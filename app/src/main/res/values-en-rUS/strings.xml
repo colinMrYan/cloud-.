@@ -413,11 +413,18 @@
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
     <string name="schedule_meeting_add_record_holder_title">Recorder</string>
     <string name="schedule_meeting_add_conference_title">Contact</string>
+    <string name="schedule_meeting_select_attendee_title">Select attendee</string>
+    <string name="schedule_meeting_select_record_holder_title">Select recorder</string>
+    <string name="schedule_meeting_select_conference_title">Select conference</string>
     <string name="schedule_meeting_add_note">Note</string>
     <string name="schedule_meeting_add_alert_time">Reminder</string>
     <string name="schedule_meeting_history">History meetings</string>
     <string name="schedule_meeting_search">Search meeting</string>
     <string name="schedule_meeting_booking_room">Booking meeting room</string>
+    <string name="schedule_meeting_room_list">Meeting room list</string>
+    <string name="schedule_meeting_in_meeting">Meeting</string>
+    <string name="schedule_meeting_be_free">Free</string>
+    <string name="schedule_choose_common_office">Common office locations</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
