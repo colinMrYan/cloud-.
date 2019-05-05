@@ -429,6 +429,8 @@
     <string name="schedule_meeting_in_meeting">會議中</string>
     <string name="schedule_meeting_be_free">空閒</string>
     <string name="schedule_choose_common_office">常用辦公地點</string>
+    <string name="schedule_meeting_change">修改會議</string>
+    <string name="schedule_meeting_cancel">取消會議</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
@@ -921,8 +923,6 @@
     <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
     <string name="meeting_detail_one_hour">提前一個小時</string>
     <string name="meeting_detail_location">會議地點:</string>
-
-
 
 
     <!-- 日曆 -->

@@ -170,8 +170,8 @@ public class MeetingDetailActivity extends BaseActivity {
     private void showDialog() {
         new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
             //    .addItem(getString(R.string.meeting_detail_show_qrcode))
-                .addItem(getString(R.string.meeting_detail_change_meeting))
-                .addItem(getString(R.string.meeting_cancel))
+                .addItem(getString(R.string.schedule_meeting_change))
+                .addItem(getString(R.string.schedule_meeting_cancel))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {

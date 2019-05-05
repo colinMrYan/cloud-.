@@ -438,6 +438,8 @@
     <string name="schedule_meeting_in_meeting">会议中</string>
     <string name="schedule_meeting_be_free">空闲</string>
     <string name="meeting_detail_location">会议地点:</string>
+    <string name="schedule_meeting_change">修改会议</string>
+    <string name="schedule_meeting_cancel">取消会议</string>
 
 
     <!-- 发现部分 -->

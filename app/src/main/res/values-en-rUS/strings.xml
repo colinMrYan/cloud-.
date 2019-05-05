@@ -427,6 +427,8 @@
     <string name="schedule_meeting_in_meeting">Meeting</string>
     <string name="schedule_meeting_be_free">Free</string>
     <string name="schedule_choose_common_office">Common office locations</string>
+    <string name="schedule_meeting_change">Modify meeting</string>
+    <string name="schedule_meeting_cancel">Delete meeting</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
