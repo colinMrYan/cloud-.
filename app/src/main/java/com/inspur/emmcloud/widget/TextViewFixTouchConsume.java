@@ -11,6 +11,8 @@ import android.text.method.Touch;
 import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 /**
@@ -54,6 +56,10 @@ public class TextViewFixTouchConsume extends TextView {
 
     public static class LocalLinkMovementMethod extends LinkMovementMethod {
         static LocalLinkMovementMethod sInstance;
+        private long lastClickTime;
+        private static final long CLICK_DELAY = 500l;
+        private boolean isMovingDoing = false;
+
 
 
         public static LocalLinkMovementMethod getInstance() {
@@ -88,11 +94,18 @@ public class TextViewFixTouchConsume extends TextView {
 
                 if (link.length != 0) {
                     if (action == MotionEvent.ACTION_UP) {
-                        link[0].onClick(widget);
+                        if (System.currentTimeMillis() - lastClickTime > CLICK_DELAY) {
+                            return true;
+                        }else{
+                            link[0].onClick(widget);
+                            return true;
+                        }
                     } else if (action == MotionEvent.ACTION_DOWN) {
                         Selection.setSelection(buffer,
                                 buffer.getSpanStart(link[0]),
                                 buffer.getSpanEnd(link[0]));
+                        lastClickTime= System.currentTimeMillis();
+                        isMovingDoing=true;
                     }
 
                     if (widget instanceof TextViewFixTouchConsume) {
@@ -103,6 +116,17 @@ public class TextViewFixTouchConsume extends TextView {
                     Selection.removeSelection(buffer);
                     Touch.onTouchEvent(widget, buffer, event);
                     return false;
+                }
+            }
+            if(action==MotionEvent.ACTION_MOVE&&isMovingDoing){
+                if (System.currentTimeMillis() - lastClickTime > CLICK_DELAY) {
+                    ViewParent parent = widget.getParent();
+                    if (parent instanceof ViewGroup) {
+                        // 获取被点击控件的父容器，让父容器执行点击；
+                        ((ViewGroup) parent).performLongClick();
+                        isMovingDoing=false;
+                    }
+                    return true;
                 }
             }
             return Touch.onTouchEvent(widget, buffer, event);

@@ -40,6 +40,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.NotificationSetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -247,7 +248,7 @@ public class SettingActivity extends BaseActivity {
         }
         themeNameText.setText(ThemeSwitchActivity.getThemeName());
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
-        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>0?View.VISIBLE:View.GONE);
+        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>1?View.VISIBLE:View.GONE);
         tabName.setText(getTabLayoutName());
     }
 
@@ -277,27 +278,45 @@ public class SettingActivity extends BaseActivity {
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
         String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        if(StringUtils.isBlank(currentTabLayoutName)){
+            currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
+        }
+        String tabName = "";
         for (int i = 0; i < naviBarSchemeList.size(); i++) {
-            if(naviBarSchemeList.get(i).getName().equals(currentTabLayoutName)){
-                Configuration config = getResources().getConfiguration();
-                String environmentLanguage = config.locale.getLanguage();
-                String tabName = "";
-                switch (environmentLanguage.toLowerCase()) {
-                    case "zh-hant":
-                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getZhHans();
-                        break;
-                    case "en":
-                    case "en-us":
-                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getEnUS();
-                        break;
-                    default:
-                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getZhHans();
-                        break;
+            NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
+            if(naviBarScheme.getName().equals(currentTabLayoutName)){
+                return getTabNameByLangudge(naviBarScheme);
+            }
+        }
+        if(StringUtils.isBlank(tabName)){
+            String defaultScheme = naviBarModel.getNaviBarPayload().getDefaultScheme();
+            for (int i = 0; i < naviBarSchemeList.size(); i++) {
+                NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
+                if(naviBarSchemeList.get(i).getName().equals(defaultScheme)){
+                    return getTabNameByLangudge(naviBarScheme);
                 }
-                return tabName;
             }
         }
         return "";
+    }
+
+    private String getTabNameByLangudge(NaviBarScheme naviBarScheme) {
+        String tempTabName = "";
+        Configuration config = getResources().getConfiguration();
+        String environmentLanguage = config.locale.getLanguage();
+        switch (environmentLanguage.toLowerCase()) {
+            case "zh-hant":
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getZhHans();
+                break;
+            case "en":
+            case "en-us":
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getEnUS();
+                break;
+            default:
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getZhHans();
+                break;
+        }
+        return tempTabName;
     }
 
     private void setWebAutoRotateState() {
