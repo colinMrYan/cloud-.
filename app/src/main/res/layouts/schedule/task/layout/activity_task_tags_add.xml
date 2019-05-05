@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:hint="请输入项目标题"
+                android:hint="@string/schedule_task_label_add_hint"
                 android:textColorHint="#999999"
                 android:background="#FFFFFF"
                 android:paddingBottom="11dp"

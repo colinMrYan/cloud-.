@@ -410,6 +410,7 @@
     <string name="schedule_task_project_manager">專案管理</string>
     <string name="schedule_task_project_manager_add">確認添加</string>
     <string name="schedule_task_label_add_hint">請輸入項目標題</string>
+    <string name="schedule_task_label">標籤</string>
 
     <!--会议-->
     <string name="schedule_meeting_booking">預定會議</string>
