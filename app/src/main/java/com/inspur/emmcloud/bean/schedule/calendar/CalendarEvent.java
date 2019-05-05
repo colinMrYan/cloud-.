@@ -1,6 +1,7 @@
-package com.inspur.emmcloud.bean.work;
+package com.inspur.emmcloud.bean.schedule.calendar;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 

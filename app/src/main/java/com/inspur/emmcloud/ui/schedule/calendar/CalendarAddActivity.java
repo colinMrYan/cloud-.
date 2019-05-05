@@ -20,7 +20,7 @@ import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.work.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;

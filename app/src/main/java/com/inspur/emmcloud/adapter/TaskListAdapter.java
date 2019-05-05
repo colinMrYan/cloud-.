@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;

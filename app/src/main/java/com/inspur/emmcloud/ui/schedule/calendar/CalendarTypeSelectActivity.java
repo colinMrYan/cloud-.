@@ -16,7 +16,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.work.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 
