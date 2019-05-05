@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jsoup.helper.StringUtil;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -57,6 +59,13 @@ public class MeetingDetailActivity extends BaseActivity {
     private TextView meetingConferenceText;
     @ViewInject(R.id.tv_meeting_note)
     private TextView meetingNoteText;
+    @ViewInject(R.id.rl_meeting_record_holder)
+    private RelativeLayout meetingRecordHolderLayout;
+    @ViewInject(R.id.rl_meeting_conference)
+    private RelativeLayout meetingConferenceLayout;
+    @ViewInject(R.id.rl_meeting_note)
+    private RelativeLayout meetingNoteLayout;
+
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
 
@@ -74,13 +83,17 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
-        meetingLocationText.setText(new Location(meeting.getLocation()).getDisplayName());
+        String locationData = getString(R.string.meeting_detail_location)+new Location(meeting.getLocation()).getDisplayName();
+        meetingLocationText.setText(locationData);
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         attendeeText.setText(getString(R.string.meeting_detail_attendee, getMeetingParticipant(MEETING_ATTENDEE)));
         meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder, getMeetingParticipant(MEETING_RECORD_HOLDER)));
         meetingConferenceText.setText(getString(R.string.meeting_detail_conference, getMeetingParticipant(MEETING_CONTACT)));
         meetingNoteText.setText(meeting.getNote());
+        meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size()>0?View.VISIBLE:View.GONE);
+        meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size()>0?View.VISIBLE:View.GONE);
+        meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote())?View.GONE:View.VISIBLE);
     }
 
 
@@ -156,7 +169,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void showDialog() {
         new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
-                .addItem(getString(R.string.meeting_detail_show_qrcode))
+            //    .addItem(getString(R.string.meeting_detail_show_qrcode))
                 .addItem(getString(R.string.meeting_detail_change_meeting))
                 .addItem(getString(R.string.meeting_cancel))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
@@ -164,13 +177,11 @@ public class MeetingDetailActivity extends BaseActivity {
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         switch (position) {
                             case 0:
-                                break;
-                            case 1:
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
                                 IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
                                 break;
-                            case 2:
+                            case 1:
                                 deleteMeeting(meeting);
                                 break;
                             default:

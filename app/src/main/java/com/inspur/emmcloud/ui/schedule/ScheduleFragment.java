@@ -38,6 +38,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
@@ -254,6 +255,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void showCalendarEvent(boolean isForceUpdate) {
         List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
         List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
+        ScheduleAlertUtils.setScheduleListAlert(MyApplication.getInstance(),scheduleList);
+        ScheduleAlertUtils.setMeetingListAlert(MyApplication.getInstance(),meetingList);
         boolean isNeedGetDataFromNet = isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
         if (isNeedGetDataFromNet) {
             List<String> scheduleIdList = new ArrayList<>();
@@ -304,8 +307,13 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 eventAllDayTitleText.setText(eventTitle);
             }
             calendarDayView.setEventList(eventList, selectCalendar);
+            calendarDayView.post(new Runnable() {
+                @Override
+                public void run() {
+                    eventScrollView.scrollTo(0,calendarDayView.getScrollOffset());
+                }
+            });
         }
-
     }
 
     /**
@@ -414,17 +422,17 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private void openEvent(Event event) {
         Bundle bundle = new Bundle();
         switch (event.getEventType()) {
-            case Event.TYPE_MEETING:
+            case Schedule.TYPE_MEETING:
                 Meeting meeting = (Meeting) event.getEventObj();
                 bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
                 IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
                 break;
-            case Event.TYPE_CALENDAR:
+            case Schedule.TYPE_CALENDAR:
                 Schedule schedule = (Schedule) event.getEventObj();
                 bundle.putSerializable(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
                 IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
                 break;
-            case Event.TYPE_TASK:
+            case Schedule.TYPE_TASK:
                 break;
         }
     }

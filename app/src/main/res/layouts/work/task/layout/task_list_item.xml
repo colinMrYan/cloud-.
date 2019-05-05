@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="66dp"
+    android:minHeight="58dp"
     android:orientation="vertical"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
@@ -32,7 +32,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:layout_toRightOf="@id/iv_task_color"
-            android:layout_toLeftOf="@id/iv_task_level"
+            android:layout_toLeftOf="@+id/iv_task_level"
             android:textColor="#333333"
             android:textSize="15sp" />
 

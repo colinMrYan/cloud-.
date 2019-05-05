@@ -45,7 +45,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
+import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
@@ -209,7 +209,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void signout(boolean isWebSocketSignout) {
         // TODO Auto-generated method stub
         //清除日历提醒极光推送本地通知
-        CalEventNotificationUtils.cancelAllCalEventNotification(this);
+        ScheduleAlertUtils.cancelAllCalEventNotification(this);
         stopPush();
         clearNotification();
         removeAllCookie();
@@ -286,7 +286,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             JPushInterface.stopPush(this);
         }
         //清除日历提醒极光推送本地通知
-        CalEventNotificationUtils.cancelAllCalEventNotification(getInstance());
+        ScheduleAlertUtils.cancelAllCalEventNotification(getInstance());
     }
 
     /**

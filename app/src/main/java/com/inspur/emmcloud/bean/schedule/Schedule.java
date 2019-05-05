@@ -22,6 +22,9 @@ import java.util.List;
  */
 @Table(name = "Schedule")
 public class Schedule implements Serializable {
+    public static final String TYPE_MEETING = "schedule_meeting";
+    public static final String TYPE_CALENDAR = "schedule_calendar";
+    public static final String TYPE_TASK = "schedule_task";
     @Column(name = "id", isId = true)
     private String id = "";// 唯一标识
     @Column(name = "title")
@@ -94,7 +97,7 @@ public class Schedule implements Serializable {
                 if (scheduleEndTime.after(dayEndCalendar)) {
                     scheduleEndTime = dayEndCalendar;
                 }
-                Event event = new Event(schedule.getId(), Event.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule);
+                Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule);
                 event.setAllDay(schedule.getAllDay());
                 eventList.add(event);
             }

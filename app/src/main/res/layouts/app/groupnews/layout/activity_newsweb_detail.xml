@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/news_share_img"
+            android:layout_toLeftOf="@+id/news_share_img"
             android:layout_toRightOf="@id/news_close_btn"
             android:ellipsize="middle"
             android:singleLine="true"

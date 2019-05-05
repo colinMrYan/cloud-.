@@ -86,7 +86,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private void initView() {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
         todayBtn = rootView.findViewById(R.id.bt_today);
-        todayBtn.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"");
+        todayBtn.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
         todayBtn.setOnClickListener(this);
         rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         initTabLayout();
@@ -182,11 +182,11 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id, MenuItem menuItem) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(EXTRA_SELECT_CALENDAR,scheduleFragment.getSelectCalendar());
+                bundle.putSerializable(EXTRA_SELECT_CALENDAR, scheduleFragment.getSelectCalendar());
                 switch (menuItem.getItemId()) {
                     case 1:
                         recordUserClickWorkFunction(PV_COLLECTION_CAL);
-                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class,bundle);
+                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
                         break;
                     case 2:
                         recordUserClickWorkFunction(PV_COLLECTION_MISSION);
@@ -196,12 +196,12 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         break;
                     case 4:
                         recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class,bundle);
+                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
                         break;
                     case 5:
                         if (viewPager.getCurrentItem() == 0) {
                             IntentUtils.startActivity(getActivity(), CalendarSettingActivity.class);
-                        } else if(viewPager.getCurrentItem() == 1){
+                        } else if (viewPager.getCurrentItem() == 1) {
                             IntentUtils.startActivity(getActivity(), MeetingHistoryActivity.class);
                         } else if (viewPager.getCurrentItem() == 2) {
                             IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
@@ -219,19 +219,19 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         List<MenuItem> menuItemList = new ArrayList<>();
         switch (viewPager.getCurrentItem()) {
             case 0:
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_calendar, 1, "新建日程"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, "预定会议室"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_calendar, 1, getActivity().getString(R.string.schedule_calendar_create)));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, getActivity().getString(R.string.schedule_task_create)));
+                // menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
                 break;
             case 1:
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, "预定会议室"));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_meeting_history, 5, "历史会议"));
+                //  menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_meeting_history, 5, getActivity().getString(R.string.schedule_meeting_history)));
                 break;
             case 2:
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, "新建任务"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, getActivity().getString(R.string.schedule_task_create)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
                 break;
         }

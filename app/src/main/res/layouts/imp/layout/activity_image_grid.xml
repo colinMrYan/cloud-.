@@ -74,7 +74,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
-                android:layout_toLeftOf="@id/btn_edit"
                 android:background="#cc111111"/>
         </RelativeLayout>
     </RelativeLayout>

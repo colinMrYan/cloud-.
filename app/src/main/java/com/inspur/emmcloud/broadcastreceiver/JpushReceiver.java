@@ -8,9 +8,13 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -122,7 +126,7 @@ public class JpushReceiver extends BroadcastReceiver {
             if (((MyApplication) context.getApplicationContext()).getIsActive()) {
                 return;
             }
-            openNotifycation(context, bundle);
+            openNotification(context, bundle);
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent
                 .getAction())) {
             LogUtils.debug(TAG,
@@ -156,7 +160,7 @@ public class JpushReceiver extends BroadcastReceiver {
      * @param context
      * @param bundle
      */
-    private void openNotifycation(final Context context, Bundle bundle) {
+    private void openNotification(final Context context, Bundle bundle) {
         String extra = "";
         if (bundle.containsKey(JPushInterface.EXTRA_EXTRA)) {
             extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
@@ -165,16 +169,24 @@ public class JpushReceiver extends BroadcastReceiver {
             try {
                 final JSONObject extraObj = new JSONObject(extra);
                 //日历提醒的通知
-                if (extraObj.has("calEvent")) {
-                    String json = extraObj.getString("calEvent");
-                    JSONObject actionObj = new JSONObject();
-                    actionObj.put("url", "ecc-calendar-jpush://");
-                    actionObj.put("type", "open-url");
-                    actionObj.put("content", json);
-                    JSONObject obj = new JSONObject();
-                    obj.put("action", actionObj);
-                    openScheme(context, obj);
+                if (extraObj.has("schedule")) {
+                    String type = JSONUtils.getString(extraObj,"type","");
+                    Intent intent = new Intent();
+                    if (type.equals(Schedule.TYPE_CALENDAR)){
+                        JSONObject scheduleObj = JSONUtils.getJSONObject(extraObj,"schedule",new JSONObject());
+                        Schedule schedule = new Schedule(scheduleObj);
+                        intent.setClass(context,CalendarAddActivity.class);
+                        intent.putExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
+                        context.startActivity(intent);
+                    }else if(type.equals(Schedule.TYPE_MEETING)){
+                        JSONObject meetingObj = JSONUtils.getJSONObject(extraObj,"schedule",new JSONObject());
+                        Meeting meeting = new Meeting(meetingObj);
+                        intent.setClass(context,MeetingDetailActivity.class);
+                        intent.putExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+                        context.startActivity(intent);
+                    }else{
 
+                    }
                 } else if (extraObj.has("action")) {//用scheme打开相应的页面
                     openScheme(context, extraObj);
                 } else if (extraObj.has("channel")) {

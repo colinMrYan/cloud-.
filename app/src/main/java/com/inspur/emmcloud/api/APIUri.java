@@ -1713,8 +1713,8 @@ public class APIUri {
      */
 
     public static String getScheduleBaseUrl(){
-        //return "https://emm.inspur.com";
-        return "http://172.31.2.36:88";
+        return "https://emm.inspur.com";
+        //return "http://172.31.2.36:88";
     }
 
     public static String getCheckCloudPluseConnectUrl() {
@@ -1777,6 +1777,14 @@ public class APIUri {
      */
     public static String getAddTaskTagsUrl(String taskId) {
         return getToDoBaseUrl() + taskId + "/tags";
+    }
+
+    /**
+     * 获取决策卡片机器人触发事件
+     * @return
+     */
+    public static String getDecideCardBotRequestUrl(){
+        return "https://api.inspuronline.com/bot/v1/action/trigger/";
     }
 
 }

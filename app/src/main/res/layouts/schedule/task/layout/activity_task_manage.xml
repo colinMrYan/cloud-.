@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="管理项目"
+            android:text="@string/schedule_task_project_manager"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
         <ImageButton
@@ -66,7 +66,7 @@
         android:elevation="1dp"
         android:gravity="center"
         android:onClick="onClick"
-        android:text="确认添加"
+        android:text="@string/schedule_task_project_manager_add"
         android:textColor="@android:color/white"
         android:textSize="15sp"
         app:qmui_backgroundColor="#36A5F6"

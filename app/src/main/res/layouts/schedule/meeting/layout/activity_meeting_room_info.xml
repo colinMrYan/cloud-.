@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#ecf1f4"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -28,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/meeting_room_booking_detail"
+            android:text="@string/schedule_meeting_room_booking_detail"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
@@ -38,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:background="@color/content_bg" >
 
@@ -116,53 +118,21 @@
             android:layout_height="0.5px"
             android:background="@color/color_list_divider" />
 
-        <LinearLayout
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_meeting_tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/white" >
-            <TextView
-                android:id="@+id/tv_day_before"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:paddingTop="11dp"
-                android:paddingBottom="11dp"
-                android:textSize="16sp"
-                android:onClick="onClick"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                />
-            <TextView
-                android:id="@+id/tv_day"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textSize="16sp"
-                android:onClick="onClick"
-                android:gravity="center_horizontal"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                />
-            <TextView
-                android:id="@+id/tv_day_after"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:paddingTop="11dp"
-                android:paddingBottom="11dp"
-                android:textSize="16sp"
-                android:gravity="right"
-                android:onClick="onClick"
-                android:paddingRight="20dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                />
-
-        </LinearLayout>
+            android:background="@color/white"
+            android:layout_gravity="center_horizontal"
+            app:tabGravity="fill"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="#36A5F6"
+            app:tabTextColor="#333333"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/date_layout"
             android:background="@color/content_bg"
             android:paddingTop="5dp" />
     </LinearLayout>

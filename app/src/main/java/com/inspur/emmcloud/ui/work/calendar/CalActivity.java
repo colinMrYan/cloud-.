@@ -26,7 +26,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -149,8 +148,8 @@ public class CalActivity extends BaseActivity implements MySwipeRefreshLayout.On
             if (calEvent.getState() != null
                     && !calEvent.getState().equals("REMOVED") && !isHide && startDate != null) {
                 if (startDate != null) {
-                    CalEventNotificationUtils.setCalEventNotification(
-                            getApplicationContext(), calEvent);
+//                    EventAlertUtils.setCalEventNotification(
+//                            getApplicationContext(), calEvent);
                     int month = startDate.get(Calendar.MONTH) + 1;
                     int key = -1;
                     if (calEventDisplayType.equals("monthly")) {

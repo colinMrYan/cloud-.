@@ -358,7 +358,7 @@
     <string name="work_task_all">Whole</string>
     <string name="work_task_end">%1$s End</string>
 
-    <!-- 日程 -->
+    <!-- 日程 （新）-->
     <string name="schedule_event_alert">Schedule reminder</string>
     <string name="schedule_calendar_add">Add schedule</string>
     <string name="schedule_calendar_detail">Schedule detail</string>
@@ -375,10 +375,17 @@
     <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
     <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
     <string name="schedule_alert_time_before_a_week">1 Week before</string>
+    <string name="schedule_calendar_modify">Modify schedule</string>
+    <string name="schedule_calendar_delete">Delete schedule</string>
+    <string name="schedule_calendar_create">Create schedule</string>
+    <string name="schedule_calendar_my_schedule">My schedule</string>
+    <string name="schedule_calendar_my_meeting">My meeting</string>
+    <string name="schedule_calendar_my_task">My task</string>
 
+
+    <!--任务（新）-->
     <string name="schedule_task_add">Add task</string>
     <string name="schedule_task_detail">Task detail</string>
-
     <string name="schedule_task_content_hint">Please enter the content</string>
     <string name="schedule_task_priority">Priority</string>
     <string name="schedule_task_category">Category</string>
@@ -393,6 +400,24 @@
     <string name="schedule_task_stop_alert">End reminder</string>
     <string name="schedule_task_more">More</string>
     <string name="schedule_task_attachment">Attachment</string>
+    <string name="schedule_task_create">Create task</string>
+    <string name="schedule_task_project_manager">Project manager</string>
+    <string name="schedule_task_project_manager_add">OK</string>
+    <string name="schedule_task_add_manager">Add manager</string>
+    <string name="schedule_task_add_participant">Add participant</string>
+
+    <!--会议（新）-->
+    <string name="schedule_meeting_booking">Book Meeting</string>
+    <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
+    <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
+    <string name="schedule_meeting_add_attendee_title">Attendee</string>
+    <string name="schedule_meeting_add_record_holder_title">Recorder</string>
+    <string name="schedule_meeting_add_conference_title">Contact</string>
+    <string name="schedule_meeting_add_note">Note</string>
+    <string name="schedule_meeting_add_alert_time">Reminder</string>
+    <string name="schedule_meeting_history">History meetings</string>
+    <string name="schedule_meeting_search">Search meeting</string>
+    <string name="schedule_meeting_booking_room">Booking meeting room</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -881,13 +906,9 @@
     <string name="meeting_detail_one_hour">One hour before</string>
     <string name="meeting_detail_one_day">One day before</string>
     <string name="meeting_detail_attendee_num">%1$s et al. %2$d</string>
-    <string name="meeting_add_content_hint">Please enter the meeting content</string>
-    <string name="meeting_add_location_hint">Please select a meeting place</string>
-    <string name="meeting_add_attendee_title">Attendee</string>
-    <string name="meeting_add_record_holder_title">Recorder</string>
-    <string name="meeting_add_conference_title">Contact</string>
-    <string name="meeting_add_note">Note</string>
-    <string name="meeting_add_alert_time">Reminder</string>
+    <string name="meeting_detail_location">Place:</string>
+
+
 
     <!-- 日历 -->
     <string name="calendar_detail">Calendar Details</string>
@@ -1260,4 +1281,10 @@
     <string name="group_qrcode">QR Code</string>
 
     <string name="user_call">Call</string>
+
+    <string-array name="segment_control_items">
+        <item>Low</item>
+        <item>Middle</item>
+        <item>Height</item>
+    </string-array>
 </resources>

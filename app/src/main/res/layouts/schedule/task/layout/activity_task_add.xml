@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/iv_task_type_arrow"
+                    android:layout_toLeftOf="@+id/iv_task_type_arrow"
                     android:orientation="horizontal"
                     android:visibility="gone"></LinearLayout>
 
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/iv_task_type_arrow"
+                    android:layout_toLeftOf="@+id/iv_task_type_arrow"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -162,7 +162,7 @@
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_toLeftOf="@id/tv_task_type_name"
+                        android:layout_toLeftOf="@+id/tv_task_type_name"
                         android:src="@drawable/icon_blue_circle" />
 
                     <TextView
@@ -218,7 +218,7 @@
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/tv_manager_num"
+                    android:layout_toLeftOf="@+id/tv_manager_num"
                     android:visibility="gone" />
 
                 <TextView
@@ -226,7 +226,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/iv_task_manager_arrow"
+                    android:layout_toLeftOf="@+id/iv_task_manager_arrow"
                     android:text="@string/schedule_task_manager_num_0"
                     android:textColor="#888888"
                     android:visibility="gone" />
@@ -272,7 +272,7 @@
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/iv_participant_head_two"
+                    android:layout_toLeftOf="@+id/iv_participant_head_two"
                     android:src="@drawable/default_image"
                     android:visibility="gone" />
 
@@ -282,7 +282,7 @@
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/iv_participant_head_one"
+                    android:layout_toLeftOf="@+id/iv_participant_head_one"
                     android:src="@drawable/default_image"
                     android:visibility="gone" />
 
@@ -292,7 +292,7 @@
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/tv_participant_num"
+                    android:layout_toLeftOf="@+id/tv_participant_num"
                     android:src="@drawable/default_image"
                     android:visibility="gone" />
 
@@ -301,7 +301,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/iv_task_participant_arrow"
+                    android:layout_toLeftOf="@+id/iv_task_participant_arrow"
                     android:text="@string/schedule_task_participant_num_0"
                     android:textColor="#888888"
                     android:visibility="gone" />
@@ -344,7 +344,7 @@
                     android:id="@+id/tv_deadline_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/iv_deadline_select_enter"
+                    android:layout_toLeftOf="@+id/iv_deadline_select_enter"
                     android:text=""
                     android:textColor="#888888"
                     android:textSize="16sp" />
@@ -387,7 +387,7 @@
                     android:id="@+id/tv_state_tip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/iv_state_enter"
+                    android:layout_toLeftOf="@+id/iv_state_enter"
                     android:text="@string/schedule_task_state_active"
                     android:textColor="#36A5F6"
                     android:textSize="16sp" />
@@ -431,7 +431,7 @@
                     android:id="@+id/tv_end_task_alert_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/iv_task_end_alert_enter"
+                    android:layout_toLeftOf="@+id/iv_task_end_alert_enter"
                     android:text="@string/calendar_no_alert"
                     android:textColor="#888888"
                     android:textSize="16sp" />
