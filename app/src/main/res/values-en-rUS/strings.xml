@@ -405,6 +405,8 @@
     <string name="schedule_task_project_manager_add">OK</string>
     <string name="schedule_task_add_manager">Add manager</string>
     <string name="schedule_task_add_participant">Add participant</string>
+    <string name="schedule_task_label">Label</string>
+    <string name="schedule_task_label_add_hint">Please enter a project title</string>
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
