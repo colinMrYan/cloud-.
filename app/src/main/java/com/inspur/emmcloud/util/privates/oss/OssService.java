@@ -21,6 +21,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
 import java.util.HashMap;
@@ -125,7 +126,7 @@ public class OssService implements VolumeFileUploadService {
             {
                 put("callbackUrl", getVolumeFileUploadTokenResult.getCallbackUrl());
                 //callbackBody可以自定义传入的信息
-                put("callbackBody", getVolumeFileUploadTokenResult.getCallbackBody());
+                put("callbackBody", StringUtils.utf8Encode(getVolumeFileUploadTokenResult.getCallbackBody(),getVolumeFileUploadTokenResult.getCallbackBody()));
             }
         });
 

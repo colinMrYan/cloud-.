@@ -518,7 +518,8 @@ public class APIUri {
      * @return
      */
     public static String getChatFileResouceUrl(String cid, String path) {
-        return getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
+        return StringUtils.utf8Encode(url,url);
     }
 
     /**
@@ -529,7 +530,8 @@ public class APIUri {
      * @return
      */
     public static String getChatVoiceFileResouceUrl(String cid, String path) {
-        return getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
+        return StringUtils.utf8Encode(url,url);
     }
 
     /**
