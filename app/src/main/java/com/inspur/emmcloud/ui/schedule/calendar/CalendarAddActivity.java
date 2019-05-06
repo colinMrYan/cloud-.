@@ -163,8 +163,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             }
             String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
             remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
-                    JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
-                    alertTimeName);
+                    JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
         } else {
             Calendar currentCalendar = Calendar.getInstance();
             if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
@@ -190,7 +189,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (isEditable) {
             isAllDay = b;
-            timeTextChangeByIsAllday(isAllDay);
+            timeTextChangeByIsAllDay(isAllDay);
             remindEvent = new RemindEvent();
             alertText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(-1, isAllDay));
         }
@@ -242,7 +241,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     /**
      * 全天及非全天UI切换
      */
-    private void timeTextChangeByIsAllday(boolean IsAllday) {
+    private void timeTextChangeByIsAllDay(boolean IsAllday) {
         String startTime = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         String endTime = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         startTimeText.setText(IsAllday ? TimeUtils.getWeekDay(this, startCalendar) : startTime);
@@ -291,7 +290,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                         endCalendar.add(Calendar.MINUTE, intervalMin);
                         String endDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                         endDateText.setText(endDateStr);
-                        timeTextChangeByIsAllday(isAllDay);
+                        timeTextChangeByIsAllDay(isAllDay);
                     }
 
                     @Override
