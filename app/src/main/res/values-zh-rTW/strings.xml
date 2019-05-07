@@ -393,7 +393,6 @@
     <string name="schedule_calendar_pm">下午</string>
     <string name="schedule_calendar_so_on"> 等</string>
     <string name="schedule_calendar_schedules">項工程</string>
-
     <string name="schedule_calendar_no_schedule_today">暫無日程安排</string>
     <string name="schedule_meeting_no_meeting_today">暂无會議安排</string>
     <string name="schedule_task_no_task_today">暂无任務安排</string>
@@ -440,6 +439,7 @@
     <string name="schedule_choose_common_office">常用辦公地點</string>
     <string name="schedule_meeting_change">修改會議</string>
     <string name="schedule_meeting_cancel">取消會議</string>
+    <string name="schedule_meeting_booking_detail">會議詳情</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>

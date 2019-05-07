@@ -425,6 +425,7 @@
     <string name="schedule_meeting_add_record_holder_title">Recorder</string>
     <string name="schedule_meeting_add_conference_title">Contact</string>
     <string name="schedule_meeting_select_attendee_title">Select attendee</string>
+    <string name="schedule_meeting_booking_detail">Meeting detail</string>
     <string name="schedule_meeting_select_record_holder_title">Select recorder</string>
     <string name="schedule_meeting_select_conference_title">Select conference</string>
     <string name="schedule_meeting_add_note">Note</string>
