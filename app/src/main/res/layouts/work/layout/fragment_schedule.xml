@@ -134,7 +134,7 @@
                         android:layout_height="24dp"
                         android:layout_centerVertical="true"
                         android:gravity="center"
-                        android:text="全天"
+                        android:text="@string/schedule_calendar_all_day"
                         android:textColor="#888888"
                         android:textSize="11sp" />
 

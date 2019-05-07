@@ -382,6 +382,12 @@
     <string name="schedule_calendar_my_meeting">My meeting</string>
     <string name="schedule_calendar_my_task">My task</string>
 
+    <string name="schedule_calendar_all_day">All day</string>
+    <string name="schedule_calendar_am">AM</string>
+    <string name="schedule_calendar_pm">PM</string>
+    <string name="schedule_calendar_so_on">... </string>
+    <string name="schedule_calendar_schedules">schedules</string>
+
 
     <!--任务（新）-->
     <string name="schedule_task_add">Add task</string>

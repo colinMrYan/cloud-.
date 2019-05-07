@@ -388,6 +388,11 @@
     <string name="schedule_calendar_my_meeting">我的会议</string>
     <string name="schedule_calendar_my_task">我的任务</string>
 
+    <string name="schedule_calendar_all_day">全天</string>
+    <string name="schedule_calendar_am">上午</string>
+    <string name="schedule_calendar_pm">下午</string>
+    <string name="schedule_calendar_so_on"> 等</string>
+    <string name="schedule_calendar_schedules">项日程</string>
 
     <!--任务（新）-->
     <string name="schedule_task_add">添加任务</string>
