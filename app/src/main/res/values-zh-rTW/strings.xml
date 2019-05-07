@@ -959,6 +959,7 @@
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加行事曆</string>
     <string name="calendar_no_alert">無提醒</string>
+    <string name="calendar_when_event_finished">結束時</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>

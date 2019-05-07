@@ -956,6 +956,7 @@
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
     <string name="calendar_no_alert">No reminder</string>
+    <string name="calendar_when_event_finished">Finished</string>
 
     <!-- 通用 -->
     <string name="save">Save</string>

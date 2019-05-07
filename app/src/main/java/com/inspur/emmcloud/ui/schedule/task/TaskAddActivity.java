@@ -314,6 +314,7 @@ public class TaskAddActivity extends BaseActivity {
                         ScheduleAlertTimeActivity.class);
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, remindEvent.getAdvanceTimeSpan());
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY, false);
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_IS_TASK, true);
                 startActivityForResult(intent, REQUEST_ALERT_TIME);
                 break;
             case R.id.rl_more:
