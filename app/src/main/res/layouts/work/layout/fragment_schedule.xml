@@ -193,6 +193,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+            <RelativeLayout
+                android:id="@+id/rl_schedule_list_default"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/iv_schedule_list_view_default"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="110dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_schedule_default"/>
+                <TextView
+                    android:text="@string/schedule_calendar_no_schedule_today"
+                    android:layout_below="@id/iv_schedule_list_view_default"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textSize="17sp"
+                    android:textColor="#666666"
+                    android:singleLine="true"/>
+            </RelativeLayout>
 
         </com.inspur.emmcloud.widget.CalendarLinearLayout>
     </com.inspur.emmcloud.widget.calendarview.CalendarLayout>

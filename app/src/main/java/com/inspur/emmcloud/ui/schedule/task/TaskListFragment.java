@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -56,6 +57,8 @@ public class TaskListFragment extends Fragment {
     private LinearLayout noSearchResultLayout;
     @ViewInject(R.id.tv_no_result)
     private TextView noResultText;
+    @ViewInject(R.id.iv_task_no_result)
+    private ImageView taskNoResultImageView;
     private boolean injected = false;
     private String orderBy = "PRIORITY";
     private String orderType = "ASC";
@@ -333,6 +336,7 @@ public class TaskListFragment extends Fragment {
                 taskList = getTaskListResult.getTaskList();
             }
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
             uiTaskList.clear();
             uiTaskList.addAll(taskList);
             adapter.setAndChangeData(uiTaskList);
@@ -344,6 +348,7 @@ public class TaskListFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
@@ -355,6 +360,7 @@ public class TaskListFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
@@ -362,6 +368,7 @@ public class TaskListFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
     }

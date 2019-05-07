@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -51,6 +52,8 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
     private ListView meetingListView;
     @ViewInject(R.id.ev_search)
     private ClearEditText searchEdit;
+    @ViewInject(R.id.rl_meeting_list_default)
+    private RelativeLayout meetingListDefaultLayout;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
     private List<Meeting> meetingList = new ArrayList<>();
     private List<Meeting> uiMeetingList = new ArrayList<>();
@@ -75,7 +78,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
         super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setOnLoadListener(this);
-        if(isHistoryMeeting)
+        if (isHistoryMeeting)
             swipeRefreshLayout.setCanLoadMore(true);
         scheduleMeetingListAdapter = new ScheduleMeetingListAdapter(getActivity());
         meetingListView.setAdapter(scheduleMeetingListAdapter);
@@ -111,6 +114,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
         }
         scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
         scheduleMeetingListAdapter.notifyDataSetChanged();
+        meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -188,6 +192,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
             uiMeetingList.addAll(meetingList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
+            meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setCanLoadMore(false);
             swipeRefreshLayout.setLoading(false);
@@ -216,6 +221,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
             uiMeetingList.addAll(meetingHistoryList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
+            meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
             pageNum++;
         }
 

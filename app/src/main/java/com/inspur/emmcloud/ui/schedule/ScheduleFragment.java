@@ -96,6 +96,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private ScrollView eventScrollView;
     @ViewInject(R.id.recycler_view_event)
     private RecyclerView eventRecyclerView;
+    @ViewInject(R.id.rl_schedule_list_default)
+    private RelativeLayout scheduleListDefaultLayout;
     @ViewInject(R.id.rl_all_day)
     private RelativeLayout allDayLayout;
     @ViewInject(R.id.iv_event_all_day)
@@ -287,7 +289,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         showCalendarViewEventMark(scheduleList, meetingList);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
-        scheduleSumText.setText(eventListSize > 0 ? eventListSize +" "+ getActivity().getString(R.string.schedule_calendar_schedules) : "");
+        scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize<1) ? View.VISIBLE : View.GONE);
+        scheduleSumText.setText(eventListSize > 0 ? eventListSize + " " + getActivity().getString(R.string.schedule_calendar_schedules) : "");
         if (isEventShowTypeList) {
             scheduleEventListAdapter.setEventList(selectCalendar, eventList);
             scheduleEventListAdapter.notifyDataSetChanged();
@@ -303,8 +306,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                         eventTitle = eventTitle.substring(0, 13);
                         eventTitle = eventTitle + "...";
                     }
-                    eventTitle = eventTitle + getActivity().getString(R.string.schedule_calendar_so_on) +" "+
-                            allDayEventList.size() +" "+ getActivity().getString(R.string.schedule_calendar_schedules);
+                    eventTitle = eventTitle + getActivity().getString(R.string.schedule_calendar_so_on) + " " +
+                            allDayEventList.size() + " " + getActivity().getString(R.string.schedule_calendar_schedules);
                 }
                 eventAllDayTitleText.setText(eventTitle);
             }
