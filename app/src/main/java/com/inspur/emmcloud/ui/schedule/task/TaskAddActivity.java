@@ -27,13 +27,13 @@ import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
-import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.bean.schedule.task.TaskSubject;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -119,6 +119,8 @@ public class TaskAddActivity extends BaseActivity {
     private SegmentControlView segmentControlView;
     @ViewInject(R.id.tv_title)
     private TextView titleText;
+
+
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult = new Task();
@@ -132,7 +134,8 @@ public class TaskAddActivity extends BaseActivity {
     private AttachmentAdapter attachmentOtherAdapter;
     private String attachmentLocalPath = "";
     private Boolean isCreateTask = true;
-    private RemindEvent remindEvent =new RemindEvent();
+    private RemindEvent remindEvent = new RemindEvent();
+    private int taskType = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +157,7 @@ public class TaskAddActivity extends BaseActivity {
         //判断是否为新建任务
         if (getIntent().hasExtra("task")) {
             taskResult = (Task) getIntent().getSerializableExtra("task");
+            taskType = getIntent().getIntExtra(TaskListFragment.TASK_CURRENT_INDEX, 0);
             deadLineCalendar = taskResult.getDueDate();
             taskColorTagList = taskResult.getTags();
             isCreateTask = false;
@@ -163,7 +167,7 @@ public class TaskAddActivity extends BaseActivity {
                 ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
                 if (contactUser != null) {
                     SearchModel searchModel = new SearchModel(contactUser);
-                     taskMangerList.add(searchModel);
+                    taskMangerList.add(searchModel);
                 }
             }
             List<Attachment> attachments = taskResult.getAttachments();
@@ -228,14 +232,34 @@ public class TaskAddActivity extends BaseActivity {
         if (!isCreateTask) {
             contentInputEdit.setText(taskResult.getTitle());
             segmentControlView.setSelectedIndex(taskResult.getPriority());
-            setTaskColorTags();
-            titleText.setText("任务详情");
+            titleText.setText(getApplication().getString(R.string.schedule_task_detail));
             if (deadLineCalendar != null) {
                 deadlineTimeText.setText(TimeUtils.calendar2FormatString(this, deadLineCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             }
+            setTaskColorTags();
             showManagerImage();
+            setClickable(taskType);
         }
         attachmentOtherAdapter.notifyDataSetChanged();
+    }
+
+
+    private void setClickable(int taskType) {
+        //大于1 设置为不可点击，否则不做处理
+        if (taskType > 1) {
+            titleText.setClickable(false);
+            contentInputEdit.setEnabled(false);
+            tagsLayout.setClickable(false);
+            segmentControlView.setClickable(false);
+            findViewById(R.id.rl_task_type).setClickable(false);
+            findViewById(R.id.rl_task_manager).setClickable(false);
+            findViewById(R.id.rl_task_participant).setClickable(false);
+            findViewById(R.id.rl_deadline).setClickable(false);
+            findViewById(R.id.rl_task_end_alert).setClickable(false);
+            findViewById(R.id.rl_attachments_others).setClickable(false);
+            findViewById(R.id.tv_save).setVisibility(View.GONE);
+
+        }
     }
 
 
