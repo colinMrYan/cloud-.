@@ -104,10 +104,10 @@ public class MeetingDetailActivity extends BaseActivity {
                 participantList = meeting.getCommonParticipantList();
                 break;
             case MEETING_RECORD_HOLDER:
-                participantList = meeting.getRoleParticipantList();
+                participantList = meeting.getRecorderParticipantList();
                 break;
             case MEETING_CONTACT:
-                participantList = meeting.getRecorderParticipantList();
+                participantList = meeting.getRoleParticipantList();
                 break;
         }
         if (participantList.size() == 0) {
