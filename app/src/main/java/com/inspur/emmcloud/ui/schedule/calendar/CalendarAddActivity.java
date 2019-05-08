@@ -304,7 +304,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                 dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
                     @Override
                     public void positiveListener(Calendar calendar) {
-                        if (calendar.before(startCalendar)) {
+                        if (calendar.getTimeInMillis()-startCalendar.getTimeInMillis()<(60000)) {
                             showEndDateErrorRemindDialog();
                             return;
                         }
