@@ -33,7 +33,6 @@
             android:text="30"
             android:textSize="12sp"
             android:layout_marginRight="10dp"
-            android:paddingTop="1dp"
             android:gravity="center"
             android:textColor="#444444"
             android:scaleType="centerInside"
@@ -49,7 +48,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:scaleType="centerInside"
-            android:src="?attr/ic_add" />
+            android:src="@drawable/ic_add" />
 
 
     </RelativeLayout>
