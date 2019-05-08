@@ -415,7 +415,7 @@
     <string name="schedule_task_more">更多</string>
     <string name="schedule_task_attachment">附件</string>
     <string name="schedule_task_create">新建任务</string>
-    <string name="schedule_task_project_manager">项目管理</string>
+    <string name="schedule_task_project_manager">标签管理</string>
     <string name="schedule_task_project_manager_add">确认添加</string>
     <string name="schedule_task_add_manager">添加负责人</string>
     <string name="schedule_task_add_participant">添加参与人</string>

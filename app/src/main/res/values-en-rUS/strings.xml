@@ -410,7 +410,7 @@
     <string name="schedule_task_more">More</string>
     <string name="schedule_task_attachment">Attachment</string>
     <string name="schedule_task_create">Create task</string>
-    <string name="schedule_task_project_manager">Project manager</string>
+    <string name="schedule_task_project_manager">Label manager</string>
     <string name="schedule_task_project_manager_add">OK</string>
     <string name="schedule_task_add_manager">Add manager</string>
     <string name="schedule_task_add_participant">Add participant</string>

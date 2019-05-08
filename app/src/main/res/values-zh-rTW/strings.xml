@@ -415,7 +415,7 @@
     <string name="schedule_task_more">更多</string>
     <string name="schedule_task_attachment">附件</string>
     <string name="schedule_task_create">新建任務</string>
-    <string name="schedule_task_project_manager">專案管理</string>
+    <string name="schedule_task_project_manager">標籤管理</string>
     <string name="schedule_task_project_manager_add">確認添加</string>
     <string name="schedule_task_label_add_hint">請輸入項目標題</string>
     <string name="schedule_task_label">標籤</string>
