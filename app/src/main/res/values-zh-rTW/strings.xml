@@ -422,6 +422,7 @@
     <string name="schedule_task_label_color">標籤顏色</string>
     <string name="schedule_task_delete_the_tag">刪除標籤</string>
     <string name="schedule_task_tag_name_null_hint">標籤名稱不能為空</string>
+    <string name="schedule_task_title_is_empty">任務標題不可為空</string>
 
     <!--会议-->
     <string name="schedule_meeting_booking">預定會議</string>

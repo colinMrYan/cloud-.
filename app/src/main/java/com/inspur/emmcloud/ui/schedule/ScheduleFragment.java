@@ -33,6 +33,7 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -42,6 +43,7 @@ import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.TaskCacheUtils;
 import com.inspur.emmcloud.widget.MaxHeightListView;
@@ -283,9 +285,16 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             getScheduleList(calendarLastTime, meetingLastTime, taskLastTime, scheduleIdList, meetingIdList, taskIdList);
         }
         eventList.clear();
-        eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
-//        eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
-        eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
+        boolean scheduleIsShow = MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
+        boolean meetingIsShow = MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
+        LogUtils.LbcDebug("scheduleIsShow:"+scheduleIsShow+" meetingIsShow:"+meetingIsShow);
+        if(meetingIsShow){
+            eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
+        }
+   //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
+        if(scheduleIsShow){
+            eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
+        }
         showCalendarViewEventMark(scheduleList, meetingList);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();

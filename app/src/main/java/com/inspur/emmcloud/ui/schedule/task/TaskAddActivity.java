@@ -455,7 +455,7 @@ public class TaskAddActivity extends BaseActivity {
      */
     private boolean checkingAddOrUpdateTaskAvaliable() {
         if (!NetUtils.isNetworkConnected(this)) {
-            ToastUtils.show(this, "网络不通，请检查网络");
+            ToastUtils.show(this,getString(R.string.net_connected_error));
             return false;
         } else if (StringUtils.isBlank(contentInputEdit.getText().toString())) {
             ToastUtils.show(this, "任务标题不可为空");
