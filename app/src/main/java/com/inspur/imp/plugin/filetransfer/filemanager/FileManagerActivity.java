@@ -59,6 +59,9 @@ public class FileManagerActivity extends BaseActivity {
         titleAdapter = new TitleAdapter(FileManagerActivity.this, new ArrayList<TitlePath>());
         titleRecyclerview.setAdapter(titleAdapter);
         okText = (TextView) findViewById(R.id.tv_ok);
+        if(1==maximum){
+            okText.setVisibility(View.GONE);
+        }
         setOKTextStatus();
         fileRecyclerView = (RecyclerView) findViewById(R.id.rcv_file);
 

@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.schedule.task.TagColorBean;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -212,6 +213,7 @@ public class TaskTagAddActivity extends BaseActivity {
 
         @Override
         public void returnCreateTagFail(String error, int errorCode) {
+            LogUtils.LbcDebug("error::"+error+"errorCode::"+errorCode);
             WebServiceMiddleUtils.hand(TaskTagAddActivity.this, error, errorCode);
         }
 
