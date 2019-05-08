@@ -33,7 +33,6 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -285,9 +284,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             getScheduleList(calendarLastTime, meetingLastTime, taskLastTime, scheduleIdList, meetingIdList, taskIdList);
         }
         eventList.clear();
-        boolean scheduleIsShow = MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
-        boolean meetingIsShow = MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
-        LogUtils.LbcDebug("scheduleIsShow:"+scheduleIsShow+" meetingIsShow:"+meetingIsShow);
+        boolean scheduleIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
+        boolean meetingIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
         if(meetingIsShow){
             eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
         }

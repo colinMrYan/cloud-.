@@ -53,7 +53,7 @@ public class CalendarSettingActivity extends BaseActivity {
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
         calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "BLUE", "", "", true));
         calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "BLUE", "", "", false));
-        calendarsList.add(new MyCalendar("task", getApplication().getString(R.string.schedule_calendar_my_task), "BLUE", "", "", false));
+        //calendarsList.add(new MyCalendar("task", getApplication().getString(R.string.schedule_calendar_my_task), "BLUE", "", "", false));
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
     }
@@ -93,6 +93,10 @@ public class CalendarSettingActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     /***/
     private class CalendarAdapter extends BaseAdapter {
@@ -121,13 +125,13 @@ public class CalendarSettingActivity extends BaseActivity {
             final MyCalendar calendar = calendarsList.get(position);
             convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             boolean isHide = MyCalendarOperationCacheUtils.getIsHide(getApplicationContext(), calendar.getId());
-            ((SwitchCompat) convertView.findViewById(R.id.switch_view_calendar_state)).setChecked(isHide);
+            ((SwitchCompat) convertView.findViewById(R.id.switch_view_calendar_state)).setChecked(!isHide);
             ((View)convertView.findViewById(R.id.iv_calendar_color_hint)).setBackgroundResource(CalendarColorUtils.getColorCircleImage(calendar.getColor()));
             ((TextView)convertView.findViewById(R.id.tv_calendar_name)).setText(calendar.getName());
             ((SwitchCompat)(convertView.findViewById(R.id.switch_view_calendar_state))).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), b);
+                    MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), !b);
                 }
             });
             return convertView;
