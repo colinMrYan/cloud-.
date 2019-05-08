@@ -237,6 +237,7 @@ public class FileManagerActivity extends BaseActivity {
                 return 1;
             } else {
                 return file1.getName().toLowerCase().compareTo(file2.getName().toLowerCase().toString());
+
             }
         }
     }
