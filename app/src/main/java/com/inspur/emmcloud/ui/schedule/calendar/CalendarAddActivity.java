@@ -202,7 +202,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      */
     private void setViewIsEditable(Boolean isEditable) {
         setEditTextState(inputContentEdit, isEditable);
-        allDaySwitch.setEnabled(isEditable);
+        allDaySwitch.setClickable(isEditable);
         calendarTypeLayout.setClickable(isEditable);
         startTimeLayout.setClickable(isEditable);
         endTimeLayout.setClickable(isEditable);
