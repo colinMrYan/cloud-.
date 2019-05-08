@@ -706,7 +706,6 @@ public class TaskAddActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
-            LogUtils.LbcDebug("创建任务成功");
             LoadingDialog.dimissDlg(loadingDlg);
             taskResult = new Task();
             taskResult.setTitle(contentInputEdit.getText().toString());
