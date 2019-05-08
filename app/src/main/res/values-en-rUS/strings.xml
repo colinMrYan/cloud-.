@@ -417,6 +417,8 @@
     <string name="schedule_task_label">Tag</string>
     <string name="schedule_task_label_add_hint">Please enter a tag name</string>
     <string name="schedule_task_label_color">Tag Color</string>
+    <string name="schedule_task_delete_the_tag">Delete Tag</string>
+    <string name="schedule_task_tag_name_null_hint">Tag name cannot be empty</string>
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>

@@ -90,7 +90,7 @@
                 android:textColor="#FF4242"
                 android:textSize="16sp"
                 android:paddingTop="11dp"
-                android:text="删除标签"
+                android:text="@string/schedule_task_delete_the_tag"
                 android:gravity="center"
                 android:paddingBottom="11dp"
                 android:onClick="onClick"
