@@ -279,7 +279,7 @@ public class TaskAddActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_save:
-                if (!checkingAddOrUpdateTaskAvaliable())
+                if (!checkingAddOrUpdateTaskAvailable())
                     return;
                 if (isCreateTask) {
                     createTask();
@@ -453,12 +453,12 @@ public class TaskAddActivity extends BaseActivity {
     /**
      * 添加或者更新Task 有效性检测
      */
-    private boolean checkingAddOrUpdateTaskAvaliable() {
+    private boolean checkingAddOrUpdateTaskAvailable() {
         if (!NetUtils.isNetworkConnected(this)) {
             ToastUtils.show(this,getString(R.string.net_connected_error));
             return false;
         } else if (StringUtils.isBlank(contentInputEdit.getText().toString())) {
-            ToastUtils.show(this, "任务标题不可为空");
+            ToastUtils.show(this,getString(R.string.schedule_task_title_is_empty));
             return false;
         }
         return true;
@@ -505,7 +505,7 @@ public class TaskAddActivity extends BaseActivity {
         String ImageUrl = APIUri.getUserIconUrl(this, id);
         ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.default_image, this, 15);
         managerHeadImageView.setVisibility(View.VISIBLE);
-        managerNumText.setText("1人");
+        managerNumText.setText(1+getString(R.string.schedule_task_a_person));
         managerNumText.setVisibility(View.VISIBLE);
         managerHeadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -551,7 +551,7 @@ public class TaskAddActivity extends BaseActivity {
                 }
             });
         }
-        participantNumText.setText(taskParticipantList.size() + "人");
+        participantNumText.setText(taskParticipantList.size() + getString(R.string.schedule_task_a_person));
         participantNumText.setVisibility(View.VISIBLE);
     }
 

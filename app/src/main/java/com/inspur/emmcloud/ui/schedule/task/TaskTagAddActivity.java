@@ -213,7 +213,6 @@ public class TaskTagAddActivity extends BaseActivity {
 
         @Override
         public void returnCreateTagFail(String error, int errorCode) {
-            LogUtils.LbcDebug("error::"+error+"errorCode::"+errorCode);
             WebServiceMiddleUtils.hand(TaskTagAddActivity.this, error, errorCode);
         }
 

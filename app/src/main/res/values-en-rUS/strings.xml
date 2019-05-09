@@ -420,6 +420,7 @@
     <string name="schedule_task_delete_the_tag">Delete Tag</string>
     <string name="schedule_task_tag_name_null_hint">Tag name cannot be empty</string>
     <string name="schedule_task_title_is_empty">Task title cannot be empty</string>
+    <string name="schedule_task_a_person">person</string>
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>

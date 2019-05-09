@@ -406,7 +406,7 @@ public class MeetingAddActivity extends BaseActivity {
             TextView textView = new TextView(this);
             textView.setTextColor(Color.parseColor("#888888"));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            textView.setText(searchModelList.size() + "人");
+            textView.setText(searchModelList.size() + getString(R.string.schedule_task_a_person));
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             int marginLeft = DensityUtil.dip2px(MyApplication.getInstance(), 3);
             layoutParams.setMargins(marginLeft, 0, 0, 0);

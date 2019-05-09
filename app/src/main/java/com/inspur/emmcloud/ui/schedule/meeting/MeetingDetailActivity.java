@@ -83,7 +83,7 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
-        String locationData = getString(R.string.meeting_detail_location)+new Location(meeting.getLocation()).getDisplayName();
+        String locationData = getString(R.string.meeting_detail_location) + new Location(meeting.getLocation()).getDisplayName();
         meetingLocationText.setText(locationData);
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
@@ -91,9 +91,9 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder, getMeetingParticipant(MEETING_RECORD_HOLDER)));
         meetingConferenceText.setText(getString(R.string.meeting_detail_conference, getMeetingParticipant(MEETING_CONTACT)));
         meetingNoteText.setText(meeting.getNote());
-        meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size()>0?View.VISIBLE:View.GONE);
-        meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size()>0?View.VISIBLE:View.GONE);
-        meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote())?View.GONE:View.VISIBLE);
+        meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
+        meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
+        meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
     }
 
 
@@ -169,7 +169,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void showDialog() {
         new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
-            //    .addItem(getString(R.string.meeting_detail_show_qrcode))
+                //    .addItem(getString(R.string.meeting_detail_show_qrcode))
                 .addItem(getString(R.string.schedule_meeting_change))
                 .addItem(getString(R.string.schedule_meeting_cancel))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {

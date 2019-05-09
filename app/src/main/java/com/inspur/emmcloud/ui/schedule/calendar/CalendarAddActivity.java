@@ -241,11 +241,11 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     /**
      * 全天及非全天UI切换
      */
-    private void timeTextChangeByIsAllDay(boolean IsAllday) {
+    private void timeTextChangeByIsAllDay(boolean IsAllDay) {
         String startTime = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         String endTime = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
-        startTimeText.setText(IsAllday ? TimeUtils.getWeekDay(this, startCalendar) : startTime);
-        endTimeText.setText(IsAllday ? TimeUtils.getWeekDay(this, endCalendar) : endTime);
+        startTimeText.setText(IsAllDay ? TimeUtils.getWeekDay(this, startCalendar) : startTime);
+        endTimeText.setText(IsAllDay ? TimeUtils.getWeekDay(this, endCalendar) : endTime);
     }
 
     /**
@@ -304,7 +304,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                 dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
                     @Override
                     public void positiveListener(Calendar calendar) {
-                        if (calendar.getTimeInMillis()-startCalendar.getTimeInMillis()<(60000)) {
+                        if (calendar.getTimeInMillis() - startCalendar.getTimeInMillis() < (60000)) {
                             showEndDateErrorRemindDialog();
                             return;
                         }

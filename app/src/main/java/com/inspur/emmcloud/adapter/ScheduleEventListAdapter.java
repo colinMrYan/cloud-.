@@ -57,7 +57,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
 
         String startTime = "";
         String endTime = "";
-        if (event.getEventType().equals(Schedule.TYPE_CALENDAR) ) {
+        if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
             holder.eventPositionText.setVisibility(View.GONE);
             startTime = TimeUtils.calendar2FormatString(context, event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
             endTime = TimeUtils.calendar2FormatString(context, event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);

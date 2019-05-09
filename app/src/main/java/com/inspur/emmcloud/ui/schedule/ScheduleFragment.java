@@ -286,17 +286,17 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         eventList.clear();
         boolean scheduleIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
         boolean meetingIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
-        if(meetingIsShow){
+        if (meetingIsShow) {
             eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
         }
-   //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
-        if(scheduleIsShow){
+        //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
+        if (scheduleIsShow) {
             eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         }
         showCalendarViewEventMark(scheduleList, meetingList);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
-        scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize<1) ? View.VISIBLE : View.GONE);
+        scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize < 1) ? View.VISIBLE : View.GONE);
         scheduleSumText.setText(eventListSize > 0 ? eventListSize + " " + getActivity().getString(R.string.schedule_calendar_schedules) : "");
         if (isEventShowTypeList) {
             scheduleEventListAdapter.setEventList(selectCalendar, eventList);

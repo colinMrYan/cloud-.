@@ -93,10 +93,6 @@ public class CalendarSettingActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 
     /***/
     private class CalendarAdapter extends BaseAdapter {

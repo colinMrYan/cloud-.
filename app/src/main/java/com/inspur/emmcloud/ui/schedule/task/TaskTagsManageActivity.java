@@ -191,11 +191,9 @@ public class TaskTagsManageActivity extends BaseActivity {
         @Override
         public void returnGetTagResultSuccess(GetTagResult getTagResult) {
             super.returnGetTagResultSuccess(getTagResult);
-            LogUtils.LbcDebug("111111111111111111111");
             LoadingDialog.dimissDlg(loadingDialog);
             allTags = getTagResult.getArrayList();
             allTags.size();
-            LogUtils.LbcDebug("AllTags Size:::" + allTags.size());
             taskTagsAdapter.notifyDataSetChanged();
             String userId = ((MyApplication) getApplicationContext()).getUid();
             PreferencesUtils.putString(TaskTagsManageActivity.this,
@@ -205,7 +203,6 @@ public class TaskTagsManageActivity extends BaseActivity {
 
         @Override
         public void returnGetTagResultFail(String error, int errorCode) {
-            LogUtils.LbcDebug("22222222222222222222222");
             LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(TaskTagsManageActivity.this, error, errorCode);
         }
