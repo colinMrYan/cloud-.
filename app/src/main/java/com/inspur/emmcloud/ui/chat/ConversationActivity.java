@@ -66,6 +66,7 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
+import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
@@ -1512,7 +1513,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 break;
             default:
-                UpgradeUtils upgradeUtils = new UpgradeUtils(context,
+                NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(context,
                         null, true);
                 upgradeUtils.checkUpdate(true);
                 break;
