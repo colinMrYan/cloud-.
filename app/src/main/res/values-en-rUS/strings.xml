@@ -1239,6 +1239,10 @@
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
     <string name="voice_to_word">Voice to Text</string>
 
+    <string name="notification_switch">New Notification</string>
+    <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
+    <string name="notification_switch_open_setting">Cloud + Message Notification in the System Closed to Open？</string>
+
     <string name="resend_file_failed">The message resent failed because the resource file could not be found</string>
 
     <!--权限管理-->
@@ -1269,7 +1273,7 @@
     <string name="emm_keyboard_number">Number</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">Letter</string>
-    <string name="emm_secure_keyboard">%1$s Safety Keyboard</string>
+    <string name="emm_secure_keyboard">Safety Keyboard</string>
     <string name="emm_keyboard_space">space</string>
 
     <string name="welcome_to">Welcome to </string>
