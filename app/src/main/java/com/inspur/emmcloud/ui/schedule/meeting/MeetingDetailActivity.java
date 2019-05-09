@@ -89,7 +89,7 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
-        String locationData = getString(R.string.meeting_detail_location)+new Location(meeting.getLocation()).getDisplayName();
+        String locationData = getString(R.string.meeting_detail_location) + new Location(meeting.getLocation()).getDisplayName();
         meetingLocationText.setText(locationData);
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
@@ -111,10 +111,10 @@ public class MeetingDetailActivity extends BaseActivity {
                 participantList = meeting.getCommonParticipantList();
                 break;
             case MEETING_RECORD_HOLDER:
-                participantList = meeting.getRoleParticipantList();
+                participantList = meeting.getRecorderParticipantList();
                 break;
             case MEETING_CONTACT:
-                participantList = meeting.getRecorderParticipantList();
+                participantList = meeting.getRoleParticipantList();
                 break;
         }
         if (participantList.size() == 0) {
@@ -208,9 +208,9 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void showDialog() {
         new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
-            //    .addItem(getString(R.string.meeting_detail_show_qrcode))
-                .addItem(getString(R.string.meeting_detail_change_meeting))
-                .addItem(getString(R.string.meeting_cancel))
+                //    .addItem(getString(R.string.meeting_detail_show_qrcode))
+                .addItem(getString(R.string.schedule_meeting_change))
+                .addItem(getString(R.string.schedule_meeting_cancel))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
