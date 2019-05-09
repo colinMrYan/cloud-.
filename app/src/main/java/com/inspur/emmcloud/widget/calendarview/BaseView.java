@@ -131,6 +131,8 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      */
     int mCurrentItem = -1;
 
+    boolean isLunarAndFestivalShow = true;
+
     public BaseView(Context context) {
         this(context, null);
     }
@@ -138,6 +140,14 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     public BaseView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint(context);
+    }
+
+    public boolean isLunarAndFestivalShow() {
+        return isLunarAndFestivalShow;
+    }
+
+    public void setLunarAndFestivalShow(boolean lunarAndFestivalShow) {
+        isLunarAndFestivalShow = lunarAndFestivalShow;
     }
 
     /**
@@ -217,7 +227,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      */
     void setup(CalendarViewDelegate delegate) {
         this.mDelegate = delegate;
-
+        this.isLunarAndFestivalShow = delegate.isLunarAndFestivalShow;
         this.mCurDayTextPaint.setColor(delegate.getCurDayTextColor());
         this.mCurDayLunarTextPaint.setColor(delegate.getCurDayLunarTextColor());
         this.mCurMonthTextPaint.setColor(delegate.getCurrentMonthTextColor());

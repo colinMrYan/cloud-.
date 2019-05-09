@@ -1756,4 +1756,10 @@ public class CalendarView extends FrameLayout {
 
         void onCalendarInterceptClick(EmmCalendar emmCalendar, boolean isClick);
     }
+
+    public void setIsLunarAndFestivalShow(boolean isLunarAndFestivalShow){
+        if(mDelegate != null){
+            mDelegate.setLunarAndFestivalShow(isLunarAndFestivalShow);
+        }
+    }
 }
