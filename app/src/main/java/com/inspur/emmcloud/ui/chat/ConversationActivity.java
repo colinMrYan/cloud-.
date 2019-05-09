@@ -418,7 +418,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
-                showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
+                showMediaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
             }
 
             @Override
@@ -590,7 +590,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-    private void showMeidaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final QMUILoadingView downloadLoadingView) {
+    private void showMediaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final QMUILoadingView downloadLoadingView) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         mediaVoiceReRecognizerPop = new PopupWindow(contentView,

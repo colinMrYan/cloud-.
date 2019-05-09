@@ -144,7 +144,8 @@ public class APIUri {
     public static String getAppNaviTabs() {
 //        return getECMDistribution() + "/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
 //        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
-        return "https://ecm.inspuronline.com/distribution/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+//        return "https://ecm.inspuronline.com/distribution/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+        return "https://emm.inspur.com/api/sys/v6.0/config/multipleLayout";
     }
 
 
@@ -517,7 +518,8 @@ public class APIUri {
      * @return
      */
     public static String getChatFileResouceUrl(String cid, String path) {
-        return getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
+        return url.replaceAll("\\+","%2B");
     }
 
     /**
@@ -528,7 +530,8 @@ public class APIUri {
      * @return
      */
     public static String getChatVoiceFileResouceUrl(String cid, String path) {
-        return getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
+        return url.replaceAll("\\+","%2B");
     }
 
     /**
