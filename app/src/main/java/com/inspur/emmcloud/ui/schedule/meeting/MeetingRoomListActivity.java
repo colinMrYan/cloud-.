@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -74,6 +75,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         initView();
         startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_TIME);
         endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_TIME);
+        LogUtils.YfcDebug("endTime:"+endTimeCalendar.getTimeInMillis());
         setMeetingTime();
         onRefresh();
 
@@ -233,7 +235,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             if (!swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(true);
             }
-            apiService.getMeetingRoomList(startTimeCalendar.getTimeInMillis(), endTimeCalendar.getTimeInMillis(), officeIdList, true);
+            apiService.getMeetingRoomList(TimeUtils.getStartTime(), TimeUtils.getStartTime() + 48*60*60*1000, officeIdList, true);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
