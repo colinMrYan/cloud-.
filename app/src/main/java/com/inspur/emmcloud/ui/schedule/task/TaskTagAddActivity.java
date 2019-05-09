@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.schedule.task.TagColorBean;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -108,11 +109,11 @@ public class TaskTagAddActivity extends BaseActivity {
                 //存储条件，网络及名称不能为空
                 String title = tagNameEdit.getText().toString();
                 if (!NetUtils.isNetworkConnected(this)) {
-                    ToastUtils.show(this, "网络无法连接");
+                    ToastUtils.show(this, getString(R.string.net_connected_error));
                     return;
                 }
                 if (StringUtils.isBlank(title)) {
-                    ToastUtils.show(this, "标签名称不能为空");
+                    ToastUtils.show(this, getString(R.string.schedule_task_tag_name_null_hint));
                     return;
                 }
                 //一种是新建；第二种是更新
@@ -126,7 +127,7 @@ public class TaskTagAddActivity extends BaseActivity {
                 break;
             case R.id.tv_delecte_tag:
                 if (!NetUtils.isNetworkConnected(this)) {
-                    ToastUtils.show(this, "无法连接网络");
+                    ToastUtils.show(this, getString(R.string.net_connected_error));
                     return;
                 }
                 if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS))

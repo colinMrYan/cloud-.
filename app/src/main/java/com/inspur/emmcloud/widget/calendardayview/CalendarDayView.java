@@ -74,9 +74,9 @@ public class CalendarDayView extends RelativeLayout {
             hourText.setText(dayHourTimes[i]);
             TextView amText = hourLayout.findViewById(R.id.tv_am);
             if (i == 7) {
-                amText.setText("上午");
+                amText.setText(R.string.schedule_calendar_am);
             } else if (i == 13) {
-                amText.setText("下午");
+                amText.setText(R.string.schedule_calendar_pm);
             }
 
             timeHourLayout.addView(hourLayout);

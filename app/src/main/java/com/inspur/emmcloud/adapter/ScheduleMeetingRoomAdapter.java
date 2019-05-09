@@ -105,7 +105,8 @@ public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
         nameText.setText(meetingRoom.getName());
         peopleNumText.setText(meetingRoom.getGalleryful() + "");
         boolean isInMeeting = meetingRoom.getLight().equals("RED");
-        statusText.setText(isInMeeting ? "会议中" : "空闲");
+        statusText.setText(isInMeeting ? context.getResources().getString(R.string.schedule_meeting_in_meeting) :
+                context.getResources().getString(R.string.schedule_meeting_be_free));
         statusPointImg.setImageResource(isInMeeting ? R.drawable.ic_schedule_meeting_room_busy : R.drawable.ic_schedule_meeting_room_free);
         statusText.setTextColor(Color.parseColor(isInMeeting ? "#FF0000" : "#7ED321"));
         return convertView;

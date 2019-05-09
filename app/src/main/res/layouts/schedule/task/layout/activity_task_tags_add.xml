@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="标签"
+            android:text="@string/schedule_task_label"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:hint="请输入项目标题"
+                android:hint="@string/schedule_task_label_add_hint"
                 android:textColorHint="#999999"
                 android:background="#FFFFFF"
                 android:paddingBottom="11dp"
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5sp"/>
             <TextView
-                android:text="标签颜色"
+                android:text="@string/schedule_task_label_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#999999"
@@ -90,7 +90,7 @@
                 android:textColor="#FF4242"
                 android:textSize="16sp"
                 android:paddingTop="11dp"
-                android:text="删除标签"
+                android:text="@string/schedule_task_delete_the_tag"
                 android:gravity="center"
                 android:paddingBottom="11dp"
                 android:onClick="onClick"

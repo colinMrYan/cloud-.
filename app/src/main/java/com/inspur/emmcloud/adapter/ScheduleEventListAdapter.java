@@ -64,7 +64,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         } else if (event.getEventType().equals(Schedule.TYPE_MEETING)) {
             holder.eventPositionText.setVisibility(View.VISIBLE);
             if (!StringUtils.isBlank(event.getEventSubTitle())) {
-                holder.eventPositionText.setText("会议地点：" + event.getEventSubTitle());
+                holder.eventPositionText.setText(context.getString(R.string.meeting_detail_location) + event.getEventSubTitle());
             }
             startTime = TimeUtils.calendar2FormatString(context, event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
             endTime = TimeUtils.calendar2FormatString(context, event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);

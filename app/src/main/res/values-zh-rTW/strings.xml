@@ -388,6 +388,14 @@
     <string name="schedule_calendar_my_schedule">我的日程</string>
     <string name="schedule_calendar_my_meeting">我的會議</string>
     <string name="schedule_calendar_my_task">我的任務</string>
+    <string name="schedule_calendar_all_day">全天</string>
+    <string name="schedule_calendar_am">上午</string>
+    <string name="schedule_calendar_pm">下午</string>
+    <string name="schedule_calendar_so_on"> 等</string>
+    <string name="schedule_calendar_schedules">項工程</string>
+    <string name="schedule_calendar_no_schedule_today">暫無日程安排</string>
+    <string name="schedule_meeting_no_meeting_today">暂无會議安排</string>
+    <string name="schedule_task_no_task_today">暂无任務安排</string>
 
     <!--任务-->
     <string name="schedule_task_add">添加任務</string>
@@ -407,20 +415,35 @@
     <string name="schedule_task_more">更多</string>
     <string name="schedule_task_attachment">附件</string>
     <string name="schedule_task_create">新建任務</string>
-    <string name="schedule_task_project_manager">專案管理</string>
+    <string name="schedule_task_project_manager">標籤管理</string>
     <string name="schedule_task_project_manager_add">確認添加</string>
-
+    <string name="schedule_task_label_add_hint">請輸入標籤名稱</string>
+    <string name="schedule_task_label">標籤</string>
+    <string name="schedule_task_label_color">標籤顏色</string>
+    <string name="schedule_task_delete_the_tag">刪除標籤</string>
+    <string name="schedule_task_tag_name_null_hint">標籤名稱不能為空</string>
+    <string name="schedule_task_title_is_empty">任務標題不可為空</string>
+    <string name="schedule_task_a_person">人</string>
     <!--会议-->
     <string name="schedule_meeting_booking">預定會議</string>
     <string name="schedule_meeting_add_attendee_title">參會人</string>
     <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
     <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
+    <string name="schedule_meeting_select_attendee_title">選擇參會人</string>
+    <string name="schedule_meeting_select_record_holder_title">選擇會議記錄人</string>
+    <string name="schedule_meeting_select_conference_title">選擇會議聯絡人</string>
     <string name="schedule_meeting_add_note">備註</string>
     <string name="schedule_meeting_add_alert_time">會前提醒</string>
     <string name="schedule_meeting_history">歷史會議</string>
     <string name="schedule_meeting_search">蒐索會議</string>
     <string name="schedule_meeting_booking_room">預定會議室</string>
-
+    <string name="schedule_meeting_room_list">會議室列表</string>
+    <string name="schedule_meeting_in_meeting">會議中</string>
+    <string name="schedule_meeting_be_free">空閒</string>
+    <string name="schedule_choose_common_office">常用辦公地點</string>
+    <string name="schedule_meeting_change">修改會議</string>
+    <string name="schedule_meeting_cancel">取消會議</string>
+    <string name="schedule_meeting_booking_detail">會議詳情</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
@@ -915,8 +938,6 @@
     <string name="meeting_detail_location">會議地點:</string>
 
 
-
-
     <!-- 日曆 -->
     <string name="calendar_detail">日曆詳情</string>
     <string name="calendar_adjust">調整</string>
@@ -942,6 +963,7 @@
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加行事曆</string>
     <string name="calendar_no_alert">無提醒</string>
+    <string name="calendar_when_event_finished">結束時</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>
