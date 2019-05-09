@@ -188,7 +188,7 @@ public class CalendarView extends FrameLayout {
                 int y = emmCalendar.getYear() - mDelegate.getMinYear();
                 int position = 12 * y + mDelegate.mIndexEmmCalendar.getMonth() - mDelegate.getMinYearMonth();
                 mWeekPager.updateSingleSelect();
-                mMonthPager.setCurrentItem(position, false);
+                mMonthPager.setCurrentItem(position, false);      //当跨月时如 5.31和6.1 mDelegate.mIndexEmmCalendar 不同
                 mMonthPager.updateSelected();
                 if (mWeekBar != null &&
                         (mDelegate.getSelectMode() == CalendarViewDelegate.SELECT_MODE_DEFAULT
