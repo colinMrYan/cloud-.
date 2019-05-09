@@ -61,6 +61,8 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
@@ -130,6 +132,7 @@ public class TaskAddActivity extends BaseActivity {
     private List<SearchModel> taskParticipantList = new ArrayList<>();
     private List<SearchModel> orgTaskParticipantList = new ArrayList<>();
     private List<TaskColorTag> taskColorTagList = new ArrayList<>();
+    private List<TaskColorTag> orgTaskColorTagList = new ArrayList<>();
     private Calendar deadLineCalendar;
     private AttachmentAdapter attachmentOtherAdapter;
     private String attachmentLocalPath = "";
@@ -142,6 +145,7 @@ public class TaskAddActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initData();
         initView();
+        EventBus.getDefault().register(this);
     }
 
     private void initData() {
@@ -160,6 +164,11 @@ public class TaskAddActivity extends BaseActivity {
             taskType = getIntent().getIntExtra(TaskListFragment.TASK_CURRENT_INDEX, 0);
             deadLineCalendar = taskResult.getDueDate();
             taskColorTagList = taskResult.getTags();
+            for (int i=0;i<taskColorTagList.size();i++){
+                if(taskColorTagList.get(i).getTitle().equals("文分类"))
+                 taskColorTagList.remove(i);
+            }
+            orgTaskColorTagList=taskColorTagList;
             isCreateTask = false;
             //taskMangerList = ContactUserCache taskResult.getOwner();
             String masterUid = taskResult.getOwner();
@@ -703,21 +712,33 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void dealTagRequest(SimpleEventMessage messageEvent) {
+        if (messageEvent.getAction().equals("deleteTagsRequest")) {
+            //更新Task
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
             LoadingDialog.dimissDlg(loadingDlg);
             taskResult = new Task();
+            LogUtils.LbcDebug("111111111111111111");
             taskResult.setTitle(contentInputEdit.getText().toString());
             taskResult.setId(getTaskAddResult.getId());
             taskResult.setOwner(PreferencesUtils.getString(
                     TaskAddActivity.this, "userID"));
             taskResult.setState("ACTIVED");
-            //调用创建任务成功
             for (int i = 0; i < jsonAttachmentList.size(); i++) {
                 apiService.addAttachments(getTaskAddResult.getId(), jsonAttachmentList.get(i).getJsonAttachment().toString());
             }
-            //添加participant
             if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskParticipantList.size() > 0) {
                 JSONArray addMembers = new JSONArray();
                 for (int i = 0; i < taskParticipantList.size(); i++) {
@@ -725,31 +746,24 @@ public class TaskAddActivity extends BaseActivity {
                 }
                 apiService.inviteMateForTask(getTaskAddResult.getId(), addMembers);
             }
-            //更改Manager
             if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskMangerList.size() > 0) {
                 apiService.changeMessionOwner(taskResult.getId(), taskMangerList.get(0).getId(), taskMangerList.get(0).getName());
             }
-
             //更新Task
             if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
                 String taskData = uploadTaskData();
                 apiService.updateTask(taskData, -1);
             }
 
-            //更新Task
-            if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
-                if (!isCreateTask) {
-                    apiService.deleteTaskTags(taskResult.getId());
-                } else {
-                    List<String> tagsIdList = new ArrayList<>();
-                    for (int i = 0; i < taskColorTagList.size(); i++) {
-                        tagsIdList.add(taskColorTagList.get(i).getId());
-                    }
-                    apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
+            if (!isCreateTask) {
+                apiService.deleteTaskTags(taskResult.getId(),JSONUtils.toJSONString(orgTaskColorTagList));
+            } else {
+                List<String> tagsIdList = new ArrayList<>();
+                for (int i = 0; i < taskColorTagList.size(); i++) {
+                    tagsIdList.add(taskColorTagList.get(i).getId());
                 }
-
+                apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
             }
-
 
         }
 
@@ -780,7 +794,13 @@ public class TaskAddActivity extends BaseActivity {
                     getString(R.string.mession_saving_success));
             setResult(RESULT_OK);
             LogUtils.LbcDebug("修改保存成功");
-            finish();
+
+            if (!isCreateTask) {
+                apiService.deleteTaskTags(taskResult.getId(),JSONUtils.toJSONString(orgTaskColorTagList));
+            } else {
+                finish();
+            }
+
         }
 
         @Override
@@ -921,7 +941,9 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAddTaskTagSuccess() {
-            super.returnAddTaskTagSuccess();
+            if (!isCreateTask) {
+                 finish();
+            }
         }
 
         @Override
@@ -931,13 +953,11 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnDelTaskTagSuccess() {
-            super.returnDelTaskTagSuccess();
             List<String> tagsIdList = new ArrayList<>();
             for (int i = 0; i < taskColorTagList.size(); i++) {
                 tagsIdList.add(taskColorTagList.get(i).getId());
             }
-            String colorData = JSONUtils.toJSONString(tagsIdList);
-            apiService.addTaskTags(taskResult.getId(), colorData);
+            apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
         }
 
         @Override

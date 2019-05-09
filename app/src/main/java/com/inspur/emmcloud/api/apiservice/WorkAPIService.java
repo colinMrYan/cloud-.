@@ -1978,10 +1978,13 @@ public class WorkAPIService {
     /**
      * 删除任务中的标签
      **/
-    public void deleteTaskTags(final String taskId) {
+    public void deleteTaskTags(final String taskId,final String tagsIdJSON) {
         final String completeUrl = APIUri.getDelTaskTagsUrl(taskId);
+        LogUtils.LbcDebug("deleteTags:"+completeUrl);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
+        params.setBodyContent(tagsIdJSON);
+        params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
