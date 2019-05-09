@@ -1,10 +1,13 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,7 +20,6 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.schedule.task.TagColorBean;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -36,13 +38,13 @@ import java.util.List;
  * Created by libaochao on 2019/4/9.
  */
 @ContentView(R.layout.activity_task_tags_add)
-public class TaskTagAddActivity extends BaseActivity {
+public class TaskTagAddActivity extends BaseActivity  {
     @ViewInject(R.id.lv_tag_color)
     ListView tagColorList;
     @ViewInject(R.id.tv_delecte_tag)
     TextView deleteTagText;
     @ViewInject(R.id.et_tag_name)
-    TextView tagNameEdit;
+    EditText tagNameEdit;
 
     private List<TagColorBean> tagColorBeans = new ArrayList<>();
     private int selectIndex = 0;
@@ -87,7 +89,27 @@ public class TaskTagAddActivity extends BaseActivity {
             tagNameEdit.setText(taskColorTag.getTitle());
             deleteTagText.setVisibility(View.VISIBLE);
         }
+        tagNameEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String str = charSequence.toString();
+                if (str.length()>64){
+                    tagNameEdit.setText(str.substring(0,64)); //截取前x位
+                    tagNameEdit.requestFocus();
+                    tagNameEdit.setSelection(tagNameEdit.getText().length()); //光标移动到最后
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         tagColorList.setAdapter(colorTagAdapter);
         loadingDialog = new LoadingDialog(TaskTagAddActivity.this);
         workAPIService = new WorkAPIService(this);
