@@ -33,6 +33,7 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -222,7 +223,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
+        LogUtils.LbcDebug("onCalendarSelect::getMonth:"+calendar.getMonth());
         selectCalendar = Calendar.getInstance();
+        LogUtils.LbcDebug("onCurrentCalendar::getMonth:"+selectCalendar.getTime());
         selectCalendar.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay(), 0, 0, 0);
         selectCalendar.set(Calendar.MILLISECOND, 0);
         setSelectCalendarTimeInfo();
