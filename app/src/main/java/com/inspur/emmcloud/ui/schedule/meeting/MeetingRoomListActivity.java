@@ -75,7 +75,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         initView();
         startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_TIME);
         endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_TIME);
-        LogUtils.YfcDebug("endTime:"+endTimeCalendar.getTimeInMillis());
         setMeetingTime();
         onRefresh();
 

@@ -15,10 +15,9 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
+import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
@@ -191,11 +190,9 @@ public class TaskTagsManageActivity extends BaseActivity {
         @Override
         public void returnGetTagResultSuccess(GetTagResult getTagResult) {
             super.returnGetTagResultSuccess(getTagResult);
-            LogUtils.LbcDebug("111111111111111111111");
             LoadingDialog.dimissDlg(loadingDialog);
             allTags = getTagResult.getArrayList();
             allTags.size();
-            LogUtils.LbcDebug("AllTags Size:::" + allTags.size());
             taskTagsAdapter.notifyDataSetChanged();
             String userId = ((MyApplication) getApplicationContext()).getUid();
             PreferencesUtils.putString(TaskTagsManageActivity.this,
@@ -205,7 +202,6 @@ public class TaskTagsManageActivity extends BaseActivity {
 
         @Override
         public void returnGetTagResultFail(String error, int errorCode) {
-            LogUtils.LbcDebug("22222222222222222222222");
             LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(TaskTagsManageActivity.this, error, errorCode);
         }
