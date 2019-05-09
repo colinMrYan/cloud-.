@@ -127,7 +127,9 @@ public class TaskListFragment extends Fragment {
      */
     public void setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;
-        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+        if(swipeRefreshLayout != null){
+            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+        }
     }
 
     /**
