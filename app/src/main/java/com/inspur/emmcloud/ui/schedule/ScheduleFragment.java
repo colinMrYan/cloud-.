@@ -33,7 +33,6 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -258,11 +257,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
      * @param isForceUpdate 是否强制刷新数据
      */
     private void showCalendarEvent(boolean isForceUpdate) {
-        LogUtils.LbcDebug("CalendarStart:"+TimeUtils.calendar2FormatString(getContext(),pageStartCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE)+
-                " pageEndCalendar:"+TimeUtils.calendar2FormatString(getContext(),pageEndCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         List<Schedule> scheduleList = ScheduleCacheUtils.getScheduleList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
         List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
-        LogUtils.LbcDebug("scheduleList Size:"+scheduleList.size()+" meetingList Size:"+meetingList.size());
         ScheduleAlertUtils.setScheduleListAlert(MyApplication.getInstance(), scheduleList);
         ScheduleAlertUtils.setMeetingListAlert(MyApplication.getInstance(), meetingList);
         boolean isNeedGetDataFromNet = isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
@@ -291,15 +287,12 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         boolean scheduleIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
         boolean meetingIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
         if (meetingIsShow) {
-            LogUtils.LbcDebug("SelectCalendar::"+selectCalendar.getTime());
             eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
         }
         //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
         if (scheduleIsShow) {
-            LogUtils.LbcDebug("SelectCalendar::"+selectCalendar.getTime());
             eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         }
-        LogUtils.LbcDebug("eventList::"+eventList.size());
         showCalendarViewEventMark(scheduleList, meetingList);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
