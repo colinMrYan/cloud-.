@@ -20,6 +20,7 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.schedule.task.TagColorBean;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -61,7 +62,7 @@ public class TaskTagAddActivity extends BaseActivity  {
     }
 
     private void initData() {
-        TagColorBean tagColorPink = new TagColorBean("RED", getString(R.string.mession_delete_red));
+        TagColorBean tagColorPink = new TagColorBean("PINK", getString(R.string.mession_delete_red));
         TagColorBean tagColorOrange = new TagColorBean("ORANGE", getString(R.string.mession_delete_orange));
         TagColorBean tagColorYellow = new TagColorBean("YELLOW", getString(R.string.mession_delete_yellow));
         TagColorBean tagColorGreen = new TagColorBean("GREEN", getString(R.string.mession_delete_green));
@@ -102,6 +103,7 @@ public class TaskTagAddActivity extends BaseActivity  {
                     tagNameEdit.setText(str.substring(0,64)); //截取前x位
                     tagNameEdit.requestFocus();
                     tagNameEdit.setSelection(tagNameEdit.getText().length()); //光标移动到最后
+                    ToastUtils.show(getBaseContext(),R.string.schedule_task_tag_name_length);
                 }
             }
 
