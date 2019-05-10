@@ -100,7 +100,6 @@ public class Schedule implements Serializable {
                 }
                 Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule);
                 event.setAllDay(schedule.getAllDay());
-                LogUtils.LbcDebug("event::::"+event.getEventTitle());
                 eventList.add(event);
             }
         }
