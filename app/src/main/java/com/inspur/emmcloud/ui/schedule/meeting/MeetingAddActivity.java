@@ -242,6 +242,26 @@ public class MeetingAddActivity extends BaseActivity {
                     getString(R.string.meeting_notice_too_long));
             return false;
         }
+
+        if (startTimeCalendar.getTimeInMillis() < System.currentTimeMillis()) {
+            ToastUtils.show(MeetingAddActivity.this, R.string.meeting_room_time_late);
+            return false;
+        }
+        if (startTimeCalendar.after(endTimeCalendar)) {
+            ToastUtils.show(MeetingAddActivity.this, R.string.calendar_start_or_end_time_illegal);
+            return false;
+        }
+
+        int count = TimeUtils.getCountdownNum(endTimeCalendar);
+        if (count >= meetingRoom.getMaxAhead()) {
+            ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_day));
+            return false;
+        }
+        int countHour = TimeUtils.getCeil(endTimeCalendar, startTimeCalendar);
+        if (countHour > Integer.parseInt(meetingRoom.getMaxDuration())) {
+            ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_time));
+            return false;
+        }
         if (location == null) {
             location = new Location();
         }

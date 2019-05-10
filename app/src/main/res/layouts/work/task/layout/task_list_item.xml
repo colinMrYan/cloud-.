@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/iv_task_color"
             android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_height="10dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
@@ -38,8 +38,8 @@
 
         <ImageView
             android:id="@+id/iv_task_level"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"

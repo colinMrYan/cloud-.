@@ -2,10 +2,12 @@ package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
@@ -14,6 +16,7 @@ import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -26,6 +29,7 @@ import org.jsoup.helper.StringUtil;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,6 +69,8 @@ public class MeetingDetailActivity extends BaseActivity {
     private RelativeLayout meetingConferenceLayout;
     @ViewInject(R.id.rl_meeting_note)
     private RelativeLayout meetingNoteLayout;
+    @ViewInject(R.id.iv_meeting_detail_more)
+    private ImageView meetingMoreImg;
 
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
@@ -91,9 +97,10 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder, getMeetingParticipant(MEETING_RECORD_HOLDER)));
         meetingConferenceText.setText(getString(R.string.meeting_detail_conference, getMeetingParticipant(MEETING_CONTACT)));
         meetingNoteText.setText(meeting.getNote());
-        meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
-        meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
-        meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
+        meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size()>0?View.VISIBLE:View.GONE);
+        meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size()>0?View.VISIBLE:View.GONE);
+        meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote())?View.GONE:View.VISIBLE);
+        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) || meeting.getStartTime()>System.currentTimeMillis())?View.VISIBLE:View.GONE);
     }
 
 
@@ -155,16 +162,48 @@ public class MeetingDetailActivity extends BaseActivity {
                 showDialog();
                 break;
             case R.id.rl_meeting_attendee:
+                startMembersActivity(MEETING_ATTENDEE);
                 break;
             case R.id.rl_meeting_record_holder:
+                startMembersActivity(MEETING_ATTENDEE);
                 break;
             case R.id.rl_meeting_conference:
+                startMembersActivity(MEETING_ATTENDEE);
                 break;
             case R.id.rl_meeting_sign:
                 break;
             case R.id.rl_meeting_summary:
                 break;
         }
+    }
+
+    private void startMembersActivity(int type) {
+        List<String> uidList;
+        switch (type){
+            case MEETING_ATTENDEE:
+                uidList = getUidList(meeting.getCommonParticipantList());
+                break;
+            case MEETING_RECORD_HOLDER:
+                uidList = getUidList(meeting.getRoleParticipantList());
+                break;
+            case MEETING_CONTACT:
+                uidList = getUidList(meeting.getRecorderParticipantList());
+                break;
+            default:
+                uidList = new ArrayList<>();
+        }
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("uidList", (ArrayList<String>) uidList);
+        bundle.putString("title",getString(R.string.meeting_memebers));
+        IntentUtils.startActivity(this, MembersActivity.class,bundle);
+    }
+
+    private List<String> getUidList(List<Participant> commonParticipantList) {
+        List<String> uidList = new ArrayList<>();
+        for(Participant participant:commonParticipantList){
+            uidList.add(participant.getId());
+        }
+        return uidList;
     }
 
     private void showDialog() {

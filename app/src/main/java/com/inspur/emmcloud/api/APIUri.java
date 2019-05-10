@@ -1716,8 +1716,9 @@ public class APIUri {
      */
 
     public static String getScheduleBaseUrl(){
-        return "https://emm.inspur.com";
+//        return "https://emm.inspur.com";
         //return "http://172.31.2.36:88";
+        return MyApplication.getInstance().getClusterEmm();
     }
 
     public static String getCheckCloudPluseConnectUrl() {

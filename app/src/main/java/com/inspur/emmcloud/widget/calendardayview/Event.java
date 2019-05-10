@@ -160,12 +160,11 @@ public class Event {
         if (getEventType().equals(Schedule.TYPE_MEETING)) {
             showEventSubTitle = getEventSubTitle();
         } else {
-            if (TimeUtils.isSameDay(selectCalendar, getEventEndTime())) {
+            if (TimeUtils.isSameDay(selectCalendar, Calendar.getInstance())) {
                 showEventSubTitle = context.getString(R.string.today);
             } else {
                 showEventSubTitle = TimeUtils.calendar2FormatString(context, getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY);
             }
-
         }
         return showEventSubTitle;
     }
