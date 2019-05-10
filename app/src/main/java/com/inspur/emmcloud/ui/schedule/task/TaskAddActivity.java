@@ -725,7 +725,7 @@ public class TaskAddActivity extends BaseActivity {
     /**
      * 添加附件到任务*/
     private void addAttachmentsToTask(String taskId){
-        if(NetUtils.isNetworkConnected(this)){
+        if(NetUtils.isNetworkConnected(this,false)){
             for (int i = 0; i < jsonAttachmentList.size(); i++) {
                 apiService.addAttachments(taskId, jsonAttachmentList.get(i).getJsonAttachment().toString());
             }
@@ -733,7 +733,7 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     private void addParticipantsToTask(String taskId){
-        if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskParticipantList.size() > 0) {
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false) && taskParticipantList.size() > 0) {
             JSONArray addMembers = new JSONArray();
             for (int i = 0; i < taskParticipantList.size(); i++) {
                 addMembers.put(taskParticipantList.get(i).getId());
@@ -745,7 +745,7 @@ public class TaskAddActivity extends BaseActivity {
     /**
      * 更改任务 owner*/
     private void changeOwnerToTask(){
-        if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskMangerList.size() > 0) {
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false) && taskMangerList.size() > 0) {
             apiService.changeMessionOwner(taskResult.getId(), taskMangerList.get(0).getId(), taskMangerList.get(0).getName());
         }
     }
@@ -753,7 +753,7 @@ public class TaskAddActivity extends BaseActivity {
     /**
      * 更新任务名称等属性*/
     private void upDateTask(){
-        if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false)) {
             String taskData = uploadTaskData();
             apiService.updateTask(taskData, -1);
         }
@@ -763,7 +763,7 @@ public class TaskAddActivity extends BaseActivity {
      * 添加Tags
      */
     private void addTaskTags(){
-        if(NetUtils.isNetworkConnected(TaskAddActivity.this)){
+        if(NetUtils.isNetworkConnected(TaskAddActivity.this,false)){
             List<String> tagsIdList = new ArrayList<>();
             for (int i = 0; i < taskColorTagList.size(); i++) {
                 tagsIdList.add(taskColorTagList.get(i).getId());
@@ -788,7 +788,7 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     private void addAttachmentsToTask(JSONObject jsonAttachment){
-        if (!isCreateTask && NetUtils.isNetworkConnected(TaskAddActivity.this)) {
+        if (!isCreateTask && NetUtils.isNetworkConnected(TaskAddActivity.this,false)) {
             apiService.addAttachments(taskResult.getId(), jsonAttachment.toString());
         }
     }
@@ -804,11 +804,13 @@ public class TaskAddActivity extends BaseActivity {
             taskResult.setOwner(PreferencesUtils.getString(
                     TaskAddActivity.this, "userID"));
             taskResult.setState("ACTIVED");
-            addAttachmentsToTask(getTaskAddResult.getId());
-            addParticipantsToTask(getTaskAddResult.getId());
-            changeOwnerToTask();
-            upDateTask();
-            addTaskTags();
+            if(NetUtils.isNetworkConnected(TaskAddActivity.this,true)){
+                addAttachmentsToTask(getTaskAddResult.getId());
+                addParticipantsToTask(getTaskAddResult.getId());
+                changeOwnerToTask();
+                upDateTask();
+                addTaskTags();
+            }
         }
 
         @Override
