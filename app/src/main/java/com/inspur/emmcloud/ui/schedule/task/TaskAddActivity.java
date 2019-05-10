@@ -165,10 +165,8 @@ public class TaskAddActivity extends BaseActivity {
             deadLineCalendar = taskResult.getDueDate();
             taskColorTagList = taskResult.getTags();
             for (int i=0;i<taskColorTagList.size();i++){
-                if(taskColorTagList.get(i).getTitle().equals("文分类"))
-                 taskColorTagList.remove(i);
+                orgTaskColorTagList.add(taskColorTagList.get(i));
             }
-            orgTaskColorTagList=taskColorTagList;
             isCreateTask = false;
             //taskMangerList = ContactUserCache taskResult.getOwner();
             String masterUid = taskResult.getOwner();
@@ -391,6 +389,10 @@ public class TaskAddActivity extends BaseActivity {
                 case REQUEST_CLASS_TAG:
                     taskColorTagList.clear();
                     ArrayList<TaskColorTag> arrayTaskColorTags = (ArrayList<TaskColorTag>) data.getSerializableExtra(TaskTagsManageActivity.EXTRA_TAGS);
+                    LogUtils.LbcDebug("返回的tags::"+arrayTaskColorTags.size());
+                    for (int i=0;i<arrayTaskColorTags.size();i++){
+                        LogUtils.LbcDebug("Tag:::"+arrayTaskColorTags.get(i).getTitle()+arrayTaskColorTags.get(i).getId());
+                    }
                     taskColorTagList.addAll(arrayTaskColorTags);
                     setTaskColorTags();
                     break;
@@ -730,7 +732,6 @@ public class TaskAddActivity extends BaseActivity {
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
             LoadingDialog.dimissDlg(loadingDlg);
             taskResult = new Task();
-            LogUtils.LbcDebug("111111111111111111");
             taskResult.setTitle(contentInputEdit.getText().toString());
             taskResult.setId(getTaskAddResult.getId());
             taskResult.setOwner(PreferencesUtils.getString(
@@ -754,17 +755,11 @@ public class TaskAddActivity extends BaseActivity {
                 String taskData = uploadTaskData();
                 apiService.updateTask(taskData, -1);
             }
-
-            if (!isCreateTask) {
-                apiService.deleteTaskTags(taskResult.getId(),JSONUtils.toJSONString(orgTaskColorTagList));
-            } else {
                 List<String> tagsIdList = new ArrayList<>();
                 for (int i = 0; i < taskColorTagList.size(); i++) {
                     tagsIdList.add(taskColorTagList.get(i).getId());
                 }
                 apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
-            }
-
         }
 
         @Override
@@ -789,15 +784,20 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.mession_saving_success));
             setResult(RESULT_OK);
             LogUtils.LbcDebug("修改保存成功");
 
             if (!isCreateTask) {
-                apiService.deleteTaskTags(taskResult.getId(),JSONUtils.toJSONString(orgTaskColorTagList));
+                List<String> tagsIdList = new ArrayList<>();
+                LogUtils.LbcDebug("orgSize::" +orgTaskColorTagList.size());
+                for (int i = 0; i < orgTaskColorTagList.size(); i++) {
+                    tagsIdList.add(orgTaskColorTagList.get(i).getId());
+                }
+                apiService.deleteTaskTags(taskResult.getId(),JSONUtils.toJSONString(tagsIdList));
             } else {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
                 finish();
             }
 
@@ -942,6 +942,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnAddTaskTagSuccess() {
             if (!isCreateTask) {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
                  finish();
             }
         }

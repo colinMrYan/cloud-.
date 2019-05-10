@@ -1980,7 +1980,6 @@ public class WorkAPIService {
      **/
     public void deleteTaskTags(final String taskId,final String tagsIdJSON) {
         final String completeUrl = APIUri.getDelTaskTagsUrl(taskId);
-        LogUtils.LbcDebug("deleteTags:"+completeUrl);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(tagsIdJSON);
@@ -2023,7 +2022,6 @@ public class WorkAPIService {
      */
     public void addTaskTags(final String taskId, final String tagsIdJSON) {
         final String completeUrl = APIUri.getAddTaskTagsUrl(taskId);
-        LogUtils.LbcDebug("colorTags::" + tagsIdJSON);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(tagsIdJSON);
