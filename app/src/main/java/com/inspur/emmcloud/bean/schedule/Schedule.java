@@ -2,6 +2,7 @@ package com.inspur.emmcloud.bean.schedule;
 
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
@@ -84,8 +85,10 @@ public class Schedule implements Serializable {
     }
 
     public static List<Event> calendarEvent2EventList(List<Schedule> scheduleList, Calendar selectCalendar) {
+        LogUtils.LbcDebug("scheduleList Size::"+scheduleList.size());
         List<Event> eventList = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
+            LogUtils.LbcDebug("schedule::::"+schedule.getTitle());
             Calendar scheduleStartTime = schedule.getStartTimeCalendar();
             Calendar scheduleEndTime = schedule.getEndTimeCalendar();
             if (TimeUtils.isContainTargetCalendarDay(selectCalendar, scheduleStartTime, scheduleEndTime)) {
@@ -99,6 +102,7 @@ public class Schedule implements Serializable {
                 }
                 Event event = new Event(schedule.getId(), Schedule.TYPE_CALENDAR, schedule.getTitle(), schedule.getScheduleLocationObj().getDisplayName(), scheduleStartTime, scheduleEndTime, schedule);
                 event.setAllDay(schedule.getAllDay());
+                LogUtils.LbcDebug("event::::"+event.getEventTitle());
                 eventList.add(event);
             }
         }
