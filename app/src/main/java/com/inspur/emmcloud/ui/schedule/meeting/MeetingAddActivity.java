@@ -253,12 +253,12 @@ public class MeetingAddActivity extends BaseActivity {
         }
 
         int count = TimeUtils.getCountdownNum(endTimeCalendar);
-        if (count >= meetingRoom.getMaxAhead()) {
+        if (meetingRoom != null && count >= meetingRoom.getMaxAhead()) {
             ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_day));
             return false;
         }
         int countHour = TimeUtils.getCeil(endTimeCalendar, startTimeCalendar);
-        if (countHour > Integer.parseInt(meetingRoom.getMaxDuration())) {
+        if (meetingRoom != null && countHour > Integer.parseInt(meetingRoom.getMaxDuration())) {
             ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_time));
             return false;
         }

@@ -1722,7 +1722,7 @@ public class APIUri {
     }
 
     public static String getCheckCloudPluseConnectUrl() {
-        return  getScheduleBaseUrl()+"/api/mam/v3.0/heart/success";
+        return  getScheduleBaseUrl()+"api/mam/v3.0/heart/success";
     }
 
     public static String getCancelTokenUrl() {
