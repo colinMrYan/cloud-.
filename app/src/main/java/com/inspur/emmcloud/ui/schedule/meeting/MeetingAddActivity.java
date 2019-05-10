@@ -16,6 +16,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
@@ -38,6 +39,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -143,6 +145,12 @@ public class MeetingAddActivity extends BaseActivity {
             }
             remindEvent = meeting.getRemindEventObj();
         } else {
+            String myUid= MyApplication.getInstance().getUid();
+            SearchModel myInfoSearchModel = new SearchModel();
+            ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
+            myInfoSearchModel.setName(myInfo.getName());
+            myInfoSearchModel.setId(myUid);
+            attendeeSearchModelList.add(myInfoSearchModel);
             startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
             endTimeCalendar = (Calendar) startTimeCalendar.clone();
             endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
@@ -158,11 +166,11 @@ public class MeetingAddActivity extends BaseActivity {
             titleEdit.setText(title);
             meetingPositionEdit.setText(location.getDisplayName());
             notesEdit.setText(note);
-            showSelectUser(attendeeLayout, attendeeSearchModelList);
             showSelectUser(liaisonLayout, liaisonSearchModelList);
             showSelectUser(recorderLayout, recorderSearchModelList);
             reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
         }
+        showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();
         getIsMeetingAdmin();
     }

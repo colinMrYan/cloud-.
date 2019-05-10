@@ -1978,10 +1978,12 @@ public class WorkAPIService {
     /**
      * 删除任务中的标签
      **/
-    public void deleteTaskTags(final String taskId) {
+    public void deleteTaskTags(final String taskId,final String tagsIdJSON) {
         final String completeUrl = APIUri.getDelTaskTagsUrl(taskId);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
+        params.setBodyContent(tagsIdJSON);
+        params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -2020,7 +2022,6 @@ public class WorkAPIService {
      */
     public void addTaskTags(final String taskId, final String tagsIdJSON) {
         final String completeUrl = APIUri.getAddTaskTagsUrl(taskId);
-        LogUtils.LbcDebug("colorTags::" + tagsIdJSON);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(tagsIdJSON);
