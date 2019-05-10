@@ -100,7 +100,7 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size()>0?View.VISIBLE:View.GONE);
         meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size()>0?View.VISIBLE:View.GONE);
         meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote())?View.GONE:View.VISIBLE);
-        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) || meeting.getStartTime()>System.currentTimeMillis())?View.VISIBLE:View.GONE);
+        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && meeting.getStartTime()>System.currentTimeMillis())?View.VISIBLE:View.GONE);
     }
 
 
@@ -165,10 +165,10 @@ public class MeetingDetailActivity extends BaseActivity {
                 startMembersActivity(MEETING_ATTENDEE);
                 break;
             case R.id.rl_meeting_record_holder:
-                startMembersActivity(MEETING_ATTENDEE);
+                startMembersActivity(MEETING_RECORD_HOLDER);
                 break;
             case R.id.rl_meeting_conference:
-                startMembersActivity(MEETING_ATTENDEE);
+                startMembersActivity(MEETING_CONTACT);
                 break;
             case R.id.rl_meeting_sign:
                 break;
@@ -184,10 +184,10 @@ public class MeetingDetailActivity extends BaseActivity {
                 uidList = getUidList(meeting.getCommonParticipantList());
                 break;
             case MEETING_RECORD_HOLDER:
-                uidList = getUidList(meeting.getRoleParticipantList());
+                uidList = getUidList(meeting.getRecorderParticipantList());
                 break;
             case MEETING_CONTACT:
-                uidList = getUidList(meeting.getRecorderParticipantList());
+                uidList = getUidList(meeting.getRoleParticipantList());
                 break;
             default:
                 uidList = new ArrayList<>();
@@ -195,6 +195,7 @@ public class MeetingDetailActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("uidList", (ArrayList<String>) uidList);
         bundle.putString("title",getString(R.string.meeting_memebers));
+        bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
         IntentUtils.startActivity(this, MembersActivity.class,bundle);
     }
 
