@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -323,7 +322,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if (scheduleIsShow) {
             eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         }
-        showCalendarViewEventMark(scheduleList, meetingList);
+        showAllEventCalendarViewMark(eventList);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
         scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize < 1) ? View.VISIBLE : View.GONE);
@@ -397,10 +396,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     /**
      * 展示日历事件标志
-     * @param scheduleList
-     * @param meetingList
+     * @param eventList
      */
-    private void showAllEventCalendarViewMark(List<Schedule> scheduleList, List<Meeting> meetingList) {
+    private void showAllEventCalendarViewMark(List<Event> eventList) {
         calendarView.clearSchemeDate();
         Map<String, EmmCalendar> map = new HashMap<>();
         int startYear = pageStartCalendar.get(Calendar.YEAR);
@@ -424,11 +422,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             map.put(schemeCalendar.toString(), schemeCalendar);
         }
 
-        for (Schedule schedule : scheduleList) {
-            showScheduleEventCalendarViewMark(TimeUtils.getDayBeginCalendar(schedule.getStartTimeCalendar()), schedule.getEndTimeCalendar(), map);
-        }
-        for (Meeting meeting : meetingList) {
-            showScheduleEventCalendarViewMark(TimeUtils.getDayBeginCalendar(meeting.getStartTimeCalendar()), meeting.getEndTimeCalendar(), map);
+        for (Event event : eventList) {
+            showScheduleEventCalendarViewMark(TimeUtils.getDayBeginCalendar(event.getEventStartTime()), event.getEventEndTime(), map);
         }
         calendarView.setSchemeDate(map);
     }
