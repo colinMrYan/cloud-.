@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
@@ -28,6 +29,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
+import com.inspur.emmcloud.bean.schedule.Scheme;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabPayLoad;
@@ -96,6 +98,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     // protected ConnectivityManager.NetworkCallback networkCallback;
     // protected ConnectivityManager connectivityManager;
     private BatteryWhiteListDialog confirmDialog;
+    private ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -159,7 +162,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         TabBean[] tabBeans = null;
 //        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
 //                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-        ArrayList<MainTabResult> mainTabResultList = getMainTabList();
+        mainTabResultList = getMainTabList();
         if (mainTabResultList.size() > 0) {
             Configuration config = getResources().getConfiguration();
             String environmentLanguage = config.locale.getLanguage();
@@ -445,6 +448,36 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             // 如果没有应用的key就把应用清0
             setTabBarBadge(Constant.APP_TAB_BAR_APPLICATION_NAME, 0);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveScheme(final Scheme scheme){
+        if(scheme.getSchemeNativeModuleType().equals(Constant.APP_TAB_BAR_WORK)){
+            int index = findTargetTabIndex();
+            if(mTabHost != null ){
+                mTabHost.setCurrentTab(index);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scheme.setSchemeNativeModuleType(scheme.getSchemeNativeModuleName());
+                        EventBus.getDefault().post(scheme);
+                    }
+                },100);
+            }
+        }
+    }
+
+    /**
+     * 通过scheme找到跳转的页面位置
+     * @return
+     */
+    private int findTargetTabIndex() {
+        for (int i = 0; i < mainTabResultList.size(); i++) {
+            if(mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_WORK)){
+                return i;
+            }
+        }
+        return 0;
     }
 
     /**

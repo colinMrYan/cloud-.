@@ -1139,12 +1139,9 @@ public class TimeUtils {
      */
     public static boolean isContainTargetCalendarDay(Calendar targetCalendar, Calendar startCalendar, Calendar endCalendar) {
         Calendar dayBeginCalendar = (Calendar) targetCalendar.clone();
-        dayBeginCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        dayBeginCalendar.set(Calendar.MINUTE, 0);
-        dayBeginCalendar.set(Calendar.SECOND, 0);
-        dayBeginCalendar.set(Calendar.MILLISECOND, 0);
-        Calendar dayEndCalendar = (Calendar) dayBeginCalendar.clone();
-        dayEndCalendar.add(Calendar.DAY_OF_YEAR, 1);
+        dayBeginCalendar = getDayBeginCalendar(dayBeginCalendar);
+        Calendar dayEndCalendar = (Calendar) endCalendar.clone();
+        dayEndCalendar = getDayEndCalendar(dayEndCalendar);
         return (!dayBeginCalendar.after(startCalendar) && dayEndCalendar.after(endCalendar)) || (dayBeginCalendar.before(endCalendar) && dayBeginCalendar.after(startCalendar)) || (dayEndCalendar.before(endCalendar) && dayEndCalendar.after(startCalendar));
     }
 

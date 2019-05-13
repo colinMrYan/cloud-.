@@ -5,7 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -232,6 +234,29 @@ public class TaskAddActivity extends BaseActivity {
                 }
             });
         }
+
+        contentInputEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String str = charSequence.toString();
+                if (str.length()>64){
+                    contentInputEdit.setText(str.substring(0,64)); //截取前x位
+                    contentInputEdit.requestFocus();
+                    contentInputEdit.setSelection(contentInputEdit.getText().length()); //光标移动到最后
+                    ToastUtils.show(getBaseContext(),R.string.schedule_task_title_is_length);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void initView() {
@@ -672,6 +697,7 @@ public class TaskAddActivity extends BaseActivity {
             otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if(taskType <2)
                     deleteAttachment(num);
                 }
             });

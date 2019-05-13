@@ -8,13 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
-import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -168,26 +164,27 @@ public class JpushReceiver extends BroadcastReceiver {
         if (!StringUtils.isBlank(extra)) {
             try {
                 final JSONObject extraObj = new JSONObject(extra);
-                //日历提醒的通知
-                if (extraObj.has("schedule")) {
-                    String type = JSONUtils.getString(extraObj,"type","");
-                    Intent intent = new Intent();
-                    if (type.equals(Schedule.TYPE_CALENDAR)){
-                        JSONObject scheduleObj = JSONUtils.getJSONObject(extraObj,"schedule",new JSONObject());
-                        Schedule schedule = new Schedule(scheduleObj);
-                        intent.setClass(context,CalendarAddActivity.class);
-                        intent.putExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
-                        context.startActivity(intent);
-                    }else if(type.equals(Schedule.TYPE_MEETING)){
-                        JSONObject meetingObj = JSONUtils.getJSONObject(extraObj,"schedule",new JSONObject());
-                        Meeting meeting = new Meeting(meetingObj);
-                        intent.setClass(context,MeetingDetailActivity.class);
-                        intent.putExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
-                        context.startActivity(intent);
-                    }else{
-
-                    }
-                } else if (extraObj.has("action")) {//用scheme打开相应的页面
+//                //日历提醒的通知
+//                if (extraObj.has("schedule")) {
+//                    String type = JSONUtils.getString(extraObj,"type","");
+//                    Intent intent = new Intent();
+//                    if (type.equals(Schedule.TYPE_CALENDAR)){
+//                        JSONObject scheduleObj = JSONUtils.getJSONObject(extraObj,"schedule",new JSONObject());
+//                        Schedule schedule = new Schedule(scheduleObj);
+//                        intent.setClass(context,CalendarAddActivity.class);
+//                        intent.putExtra(CalendarAddActivity.EXTRA_SCHEDULE_CALENDAR_EVENT, schedule);
+//                        context.startActivity(intent);
+//                    }else if(type.equals(Schedule.TYPE_MEETING)){
+//                        JSONObject meetingObj = JSONUtils.getJSONObject(extraObj,"schedule",new JSONObject());
+//                        Meeting meeting = new Meeting(meetingObj);
+//                        intent.setClass(context,MeetingDetailActivity.class);
+//                        intent.putExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+//                        context.startActivity(intent);
+//                    }else{
+//
+//                    }
+//                } else
+                    if (extraObj.has("action")) {//用scheme打开相应的页面
                     openScheme(context, extraObj);
                 } else if (extraObj.has("channel")) {
                     String cid = JSONUtils.getString(extraObj, "channel", "");
