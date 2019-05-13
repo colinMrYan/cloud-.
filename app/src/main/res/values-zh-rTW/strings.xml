@@ -377,7 +377,7 @@
     <string name="schedule_setting_month">月度</string>
     <string name="schedule_setting_view">視圖</string>
     <string name="schedule_calendar_input_content_hint">請輸入日程內容...</string>
-    <string name="schedule_calendar_time_alert">結束時間不能早於起始時間</string>
+    <string name="schedule_calendar_time_alert">結束時間應該晚於始時間</string>
     <string name="schedule_alert_time_occur">日程當天（上午9時）</string>
     <string name="schedule_alert_time_before_one_day">1天前（上午9時）</string>
     <string name="schedule_alert_time_before_two_day">2天前（上午9時）</string>
@@ -423,6 +423,7 @@
     <string name="schedule_task_delete_the_tag">刪除標籤</string>
     <string name="schedule_task_tag_name_null_hint">標籤名稱不能為空</string>
     <string name="schedule_task_title_is_empty">任務標題不可為空</string>
+    <string name="schedule_task_title_is_length">任務標題最長64個字符</string>
     <string name="schedule_task_a_person">人</string>
     <string name="schedule_task_tag_name_length">標籤名稱最多64個字符</string>
     <!--会议-->

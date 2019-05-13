@@ -376,7 +376,7 @@
     <string name="schedule_setting_month">月度</string>
     <string name="schedule_setting_view">视图</string>
     <string name="schedule_calendar_input_content_hint">请输入日程内容...</string>
-    <string name="schedule_calendar_time_alert">结束时间不能早于起始时间</string>
+    <string name="schedule_calendar_time_alert">结束时间应该晚于起始时间</string>
     <string name="schedule_alert_time_occur">日程当天 (上午9时)</string>
     <string name="schedule_alert_time_before_one_day">1天前（上午9时）</string>
     <string name="schedule_alert_time_before_two_day">2天前（上午9时）</string>
@@ -425,6 +425,7 @@
     <string name="schedule_task_delete_the_tag">删除标签</string>
     <string name="schedule_task_tag_name_null_hint">标签名称不能为空</string>
     <string name="schedule_task_title_is_empty">任务标题不可为空</string>
+    <string name="schedule_task_title_is_length">任务标题最长64个字符</string>
     <string name="schedule_task_a_person">人</string>
     <string name="schedule_task_tag_name_length">标签名称最长64个字符</string>
 
