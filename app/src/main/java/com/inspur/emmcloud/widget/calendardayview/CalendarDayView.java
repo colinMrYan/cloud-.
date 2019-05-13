@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.widget.calendardayview;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +42,7 @@ public class CalendarDayView extends RelativeLayout {
     private RelativeLayout currentTimeLineLayout;
     private LinearLayout timeHourLayout;
     private Calendar selectCalendar;
+    private Handler handler;
 
     public CalendarDayView(Context context) {
         this(context, null);
@@ -57,6 +60,16 @@ public class CalendarDayView extends RelativeLayout {
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.calendar_day_view, this, true);
         initTimeHourLayout(view);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Calendar calendar = (Calendar) msg.obj;
+                if (calendar == selectCalendar){
+                    showEventList();
+                }
+
+            }
+        };
     }
 
     /**
@@ -84,21 +97,36 @@ public class CalendarDayView extends RelativeLayout {
         currentTimeLineLayout = view.findViewById(R.id.tl_current_time_line);
     }
 
-    public void setEventList(List<Event> eventList, Calendar selectCalendar) {
+    public void setEventList(List<Event> eventList,  Calendar selectCalendar) {
         this.selectCalendar = selectCalendar;
         this.eventList = eventList;
-        initTimeHourRow();
-        showEventList();
+        new FormatEventThread(selectCalendar).start();
+
     }
+
+    private class FormatEventThread extends Thread{
+        private Calendar selectCalendar;
+        private FormatEventThread(Calendar selectCalendar){
+            this.selectCalendar = selectCalendar;
+        }
+        @Override
+        public void run() {
+            initTimeHourRow();
+            formatEventList();
+            Message message = handler.obtainMessage(1,selectCalendar);
+            handler.sendMessage(message);
+        }
+    }
+
 
     /**
      * 每次打开日视图需要滚动到当前时间前一个小时
      */
-    public int getScrollOffset(){
+    public int getScrollOffset() {
         Calendar currentCalendar = Calendar.getInstance();
-        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) -1+ currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
-        if(offset<0){
-            offset =0;
+        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) - 1 + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+        if (offset < 0) {
+            offset = 0;
         }
         return offset;
     }
@@ -185,8 +213,7 @@ public class CalendarDayView extends RelativeLayout {
         }
     }
 
-    private void showEventList() {
-        eventLayout.removeAllViews();
+    private void formatEventList() {
         for (TimeHourRow timeHourRow : timeHourRowList) {
             List<Event> eventList = timeHourRow.getEventList();
             Collections.sort(eventList, new Comparator<Event>() {
@@ -222,6 +249,13 @@ public class CalendarDayView extends RelativeLayout {
                     eventList.add(event.getIndex(), event);
                 }
             }
+        }
+    }
+
+    private void showEventList() {
+        eventLayout.removeAllViews();
+        for (TimeHourRow timeHourRow : timeHourRowList) {
+            List<Event> eventList = timeHourRow.getEventList();
             for (int i = 0; i < eventList.size(); i++) {
                 Event event = eventList.get(i);
                 if (event.getIndex() < 0) {
@@ -234,7 +268,7 @@ public class CalendarDayView extends RelativeLayout {
                     dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
                     dayStartTime.set(Calendar.MINUTE, 0);
                     int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * DensityUtil.dip2px(getContext(), 40) / 3600000);
-                    LogUtils.jasonDebug("marginTop=="+marginTop);
+                    LogUtils.jasonDebug("marginTop==" + marginTop);
                     RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
                             eventHeight);
                     eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);
@@ -248,7 +282,7 @@ public class CalendarDayView extends RelativeLayout {
     private void setEventLayout(final Event event, RelativeLayout.LayoutParams eventLayoutParams) {
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.calendar_day_event_view, null);
         eventView.setBackgroundResource(R.drawable.ic_schedule_calendar_view_event_bg);
-        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(),24)){
+        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 24)) {
             ImageView eventImg = eventView.findViewById(R.id.iv_event);
             TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
             TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
