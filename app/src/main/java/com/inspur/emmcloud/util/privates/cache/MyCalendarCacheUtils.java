@@ -3,6 +3,9 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +75,5 @@ public class MyCalendarCacheUtils {
             // TODO: handle exception
             e.printStackTrace();
         }
-
     }
-
-
 }

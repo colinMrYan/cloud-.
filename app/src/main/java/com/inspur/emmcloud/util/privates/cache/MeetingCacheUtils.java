@@ -3,8 +3,10 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 
 import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,6 +55,19 @@ public class MeetingCacheUtils {
             meetingList = new ArrayList<>();
         }
         return meetingList;
+    }
+
+    /**
+     *通过id获取缓存meeting数据
+     */
+    public static Meeting getDBMeetingById(Context context, String id) {
+        Meeting meeting = null;
+        try {
+            meeting = DbCacheUtils.getDb(context).findById(Meeting.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return meeting;
     }
 
 

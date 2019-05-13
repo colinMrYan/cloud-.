@@ -2,6 +2,8 @@ package com.inspur.emmcloud.ui.schedule.calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -19,6 +21,7 @@ import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.config.Constant;
@@ -31,7 +34,9 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
@@ -108,11 +113,16 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private String contentText = "";
     RemindEvent remindEvent = new RemindEvent();
     private int intervalMin = 0;
+    //TODO zyj 临时写死日程id
+    private String id = "f7cc52caddb64147b793e6e04bdfc1c9";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
+        loadingDlg = new LoadingDialog(this);
+        apiService = new ScheduleApiService(getApplicationContext());
+        apiService.setAPIInterface(new WebService());
+        init();
         initView();
     }
 
@@ -120,7 +130,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 初始化View
      */
     private void initView() {
-        loadingDlg = new LoadingDialog(this);
         allDaySwitch.setOnCheckedChangeListener(this);
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
@@ -137,33 +146,20 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     /**
      * 初始化日期数据
      */
-    private void initData() {
-        apiService = new ScheduleApiService(getApplicationContext());
-        apiService.setAPIInterface(new WebService());
-
+    private void init() {
         if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
             contentText = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
         }
         if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
             isAddCalendar = false;
             isEditable = false;
-            scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            isAllDay = scheduleEvent.getAllDay();
-            startCalendar = scheduleEvent.getStartTimeCalendar();
-            endCalendar = scheduleEvent.getEndTimeCalendar();
-            contentText = scheduleEvent.getTitle();
-            saveTextView.setVisibility(View.GONE);
-            calendarDetailMoreImageView.setVisibility(View.VISIBLE);
-            List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
-            String calendarType = scheduleEvent.getType();
-            for (int i = 0; i < allCalendarList.size(); i++) {
-                if (calendarType.equals(allCalendarList.get(i).getId())) {
-                    myCalendar = allCalendarList.get(i);
-                }
+            if (!TextUtils.isEmpty(id)) {
+                getDbCalendarFromId();
+                getNetCalendarFromId();
+            } else {
+                scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+                initscheduleData();
             }
-            String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
-            remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
-                    JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
         } else {
             Calendar currentCalendar = Calendar.getInstance();
             if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
@@ -181,8 +177,55 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             }
             scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
             remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+            intervalMin = (int) getIntervalMin();
         }
+    }
+
+    /**
+     * 设置日程相关数据
+     */
+    private void initscheduleData() {
+        isAllDay = scheduleEvent.getAllDay();
+        startCalendar = scheduleEvent.getStartTimeCalendar();
+        endCalendar = scheduleEvent.getEndTimeCalendar();
+        contentText = scheduleEvent.getTitle();
+        saveTextView.setVisibility(View.GONE);
+        calendarDetailMoreImageView.setVisibility(View.VISIBLE);
+        List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
+        String calendarType = scheduleEvent.getType();
+        for (int i = 0; i < allCalendarList.size(); i++) {
+            if (calendarType.equals(allCalendarList.get(i).getId())) {
+                myCalendar = allCalendarList.get(i);
+            }
+        }
+        String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
+        remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
+                JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
         intervalMin = (int) getIntervalMin();
+    }
+
+    /**
+     * 从数据库获取日程数据
+     */
+    private void getDbCalendarFromId() {
+        scheduleEvent = ScheduleCacheUtils.getDBScheduleById(this, id);
+        initscheduleData();
+    }
+
+    /**
+     * 从网络获取日程数据
+     */
+    private void getNetCalendarFromId() {
+        if (NetUtils.isNetworkConnected(this)) {
+            if (!TextUtils.isEmpty(id)) {
+                if (TextUtils.isEmpty(scheduleEvent.getId())) { //如果缓存有数据则不显示loading
+                    loadingDlg.show();
+                }
+                apiService.getCalendarDataFromId(id);
+            }
+        } else {
+            ToastUtils.show(this, "");
+        }
     }
 
     @Override
@@ -572,6 +615,21 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         public void returnDeleteScheduleFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             super.returnDeleteScheduleFail(error, errorCode);
+        }
+
+        @Override
+        public void returnScheduleDataFromIdSuccess(Schedule schedule) {
+            if (schedule != null) {
+                scheduleEvent = schedule;
+                initscheduleData();
+                initView();
+            }
+        }
+
+        @Override
+        public void returnScheduleDataFromIdFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (TextUtils.isEmpty(scheduleEvent.getId())) finish();
         }
     }
 

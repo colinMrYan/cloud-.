@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -22,6 +23,8 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -74,14 +77,23 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
+    private LoadingDialog loadingDlg;
+    //TODO 临时写死会议ID
+    private String meetingId = "973569e9d4e4418eb41c60e285f0ea83";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadingDlg = new LoadingDialog(this);
         scheduleApiService = new ScheduleApiService(this);
         scheduleApiService.setAPIInterface(new WebService());
-        meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
-        initViews();
+        if(TextUtils.isEmpty(meetingId)) {
+            meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
+            initViews();
+        } else {
+            getDbMeetingFromId(meetingId);
+            getMeetingFromId(meetingId);
+        }
     }
 
     private void initViews() {
@@ -101,6 +113,29 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size()>0?View.VISIBLE:View.GONE);
         meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote())?View.GONE:View.VISIBLE);
         meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && meeting.getStartTime()>System.currentTimeMillis())?View.VISIBLE:View.GONE);
+    }
+
+    /**
+     * 通过id获取缓存meeting数据
+     * @param id
+     */
+    private void getDbMeetingFromId(String id){
+        meeting = MeetingCacheUtils.getDBMeetingById(this, id);
+        initViews();
+    }
+
+    /**
+     *通过id获取会议数据
+     */
+    private void getMeetingFromId(String id){
+        if (NetUtils.isNetworkConnected(this)) {
+            if (meeting == null) {
+                loadingDlg.show();
+            }
+            scheduleApiService.getMeetingDataFromId(id);
+        } else {
+            ToastUtils.show(this, "");
+        }
     }
 
 
@@ -256,6 +291,23 @@ public class MeetingDetailActivity extends BaseActivity {
         @Override
         public void returnDelMeetingFail(String error, int errorCode) {
             super.returnDelMeetingFail(error, errorCode);
+        }
+
+        @Override
+        public void returnMeetingDataFromIdSuccess(Meeting meetingData) {
+            super.returnMeetingDataFromIdSuccess(meetingData);
+            LoadingDialog.dimissDlg(loadingDlg);
+            if(meetingData != null) {
+                meeting = meetingData;
+                initViews();
+            }
+        }
+
+        @Override
+        public void returnMeetingDataFromIdFail(String error, int errorCode) {
+            super.returnMeetingDataFromIdFail(error, errorCode);
+            LoadingDialog.dimissDlg(loadingDlg);
+            if(meeting == null) finish();
         }
     }
 }
