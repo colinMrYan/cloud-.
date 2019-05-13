@@ -34,6 +34,7 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.NotificationSetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
@@ -43,7 +44,7 @@ import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -83,9 +84,11 @@ public class IndexActivity extends IndexBaseActivity {
     }
 
     private void getNaviTabData() {
-        AppAPIService appAPIService = new AppAPIService(this);
-        appAPIService.setAPIInterface(new WebService());
-        appAPIService.getAppNaviTabs();
+        if(NetUtils.isNetworkConnected(this,false)){
+            AppAPIService appAPIService = new AppAPIService(this);
+            appAPIService.setAPIInterface(new WebService());
+            appAPIService.getAppNaviTabs();
+        }
     }
 
     /**
@@ -96,7 +99,17 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();
-        MyApplication.getInstance().startPush();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if(NotificationSetUtils.isNotificationEnabled(this) &&
+                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true))){
+                MyApplication.getInstance().startPush();
+            }
+        }else{
+            if(PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true)){
+                MyApplication.getInstance().startPush();
+            }
+        }
+
     }
 
     private void initView() {
@@ -113,7 +126,7 @@ public class IndexActivity extends IndexBaseActivity {
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
-        new PushIdManagerUtils(this).registerPushId2Emm();
+        PushManagerUtils.getInstance().registerPushId2Emm();
         ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
         getAllRobotInfo();
         getAllChannelGroup();
@@ -317,6 +330,7 @@ public class IndexActivity extends IndexBaseActivity {
         boolean isRouterUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER, getAllConfigVersionResult);
         boolean isContactUserUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER, getAllConfigVersionResult);
         boolean isContactOrgUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG, getAllConfigVersionResult);
+        boolean isNaviTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, getAllConfigVersionResult);
         if (isRouterUpdate) {
             new ProfileUtils(IndexActivity.this, null).initProfile(false);
         }
@@ -328,12 +342,14 @@ public class IndexActivity extends IndexBaseActivity {
         if (isContactOrgUpdate) {
             getContactOrg();
         }
+        if(isNaviTabUpdate){
+            getNaviTabData();
+        }
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
             @Override
             public void getClientIdSuccess(String clientId) {
                 boolean isMainTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
                 if (isMainTabUpdate) {
-                    getNaviTabData();
                     getTabInfo();
                 }
                 boolean isSplashUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
@@ -623,8 +639,17 @@ public class IndexActivity extends IndexBaseActivity {
 
         @Override
         public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
-            updateTabbarWithOrder(getAppMainTabResult);
-            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,""));
+            if(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() == 0){
+                updateMainTabbarWithOrder(getAppMainTabResult);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            }else {
+                PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION,
+                        getAppMainTabResult.getMainTabPayLoad().getVersion());
+                PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,
+                        getAppMainTabResult.getAppTabInfo());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            }
         }
 
         @Override
@@ -635,6 +660,7 @@ public class IndexActivity extends IndexBaseActivity {
         public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
             super.returnNaviBarModelSuccess(naviBarModel);
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
+            updateNaviTabbar();
         }
 
         @Override

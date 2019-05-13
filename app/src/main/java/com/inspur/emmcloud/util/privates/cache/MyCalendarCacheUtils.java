@@ -2,7 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.work.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
 
 import java.util.ArrayList;
 import java.util.List;

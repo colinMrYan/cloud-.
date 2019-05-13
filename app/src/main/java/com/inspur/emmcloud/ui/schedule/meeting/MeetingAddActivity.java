@@ -16,6 +16,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
@@ -38,6 +39,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -143,6 +145,12 @@ public class MeetingAddActivity extends BaseActivity {
             }
             remindEvent = meeting.getRemindEventObj();
         } else {
+            String myUid= MyApplication.getInstance().getUid();
+            SearchModel myInfoSearchModel = new SearchModel();
+            ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
+            myInfoSearchModel.setName(myInfo.getName());
+            myInfoSearchModel.setId(myUid);
+            attendeeSearchModelList.add(myInfoSearchModel);
             startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
             endTimeCalendar = (Calendar) startTimeCalendar.clone();
             endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
@@ -158,11 +166,11 @@ public class MeetingAddActivity extends BaseActivity {
             titleEdit.setText(title);
             meetingPositionEdit.setText(location.getDisplayName());
             notesEdit.setText(note);
-            showSelectUser(attendeeLayout, attendeeSearchModelList);
             showSelectUser(liaisonLayout, liaisonSearchModelList);
             showSelectUser(recorderLayout, recorderSearchModelList);
             reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
         }
+        showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();
         getIsMeetingAdmin();
     }
@@ -234,6 +242,26 @@ public class MeetingAddActivity extends BaseActivity {
                     getString(R.string.meeting_notice_too_long));
             return false;
         }
+
+        if (startTimeCalendar.getTimeInMillis() < System.currentTimeMillis()) {
+            ToastUtils.show(MeetingAddActivity.this, R.string.meeting_room_time_late);
+            return false;
+        }
+        if (startTimeCalendar.after(endTimeCalendar)) {
+            ToastUtils.show(MeetingAddActivity.this, R.string.calendar_start_or_end_time_illegal);
+            return false;
+        }
+
+        int count = TimeUtils.getCountdownNum(endTimeCalendar);
+        if (meetingRoom != null && count >= meetingRoom.getMaxAhead()) {
+            ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_day));
+            return false;
+        }
+        int countHour = TimeUtils.getCeil(endTimeCalendar, startTimeCalendar);
+        if (meetingRoom != null && countHour > Integer.parseInt(meetingRoom.getMaxDuration())) {
+            ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_time));
+            return false;
+        }
         if (location == null) {
             location = new Location();
         }
@@ -263,13 +291,13 @@ public class MeetingAddActivity extends BaseActivity {
         intent.putExtra("isMulti_select", true);
         intent.putExtra("isContainMe", true);
         if (requestCode == REQUEST_SELECT_ATTENDEE) {
-            title = "选择参会人";
+            title = getString(R.string.schedule_meeting_select_attendee_title);
             intent.putExtra("hasSearchResult", (Serializable) attendeeSearchModelList);
         } else if (requestCode == REQUEST_SELECT_RECORDER) {
-            title = "选择会议记录人";
+            title = getString(R.string.schedule_meeting_select_record_holder_title);
             intent.putExtra("hasSearchResult", (Serializable) recorderSearchModelList);
         } else {
-            title = "选择会议联络人";
+            title = getString(R.string.schedule_meeting_select_conference_title);
             intent.putExtra("hasSearchResult", (Serializable) liaisonSearchModelList);
         }
         intent.putExtra("title", title);
@@ -406,7 +434,7 @@ public class MeetingAddActivity extends BaseActivity {
             TextView textView = new TextView(this);
             textView.setTextColor(Color.parseColor("#888888"));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            textView.setText(searchModelList.size() + "人");
+            textView.setText(searchModelList.size() + getString(R.string.schedule_task_a_person));
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             int marginLeft = DensityUtil.dip2px(MyApplication.getInstance(), 3);
             layoutParams.setMargins(marginLeft, 0, 0, 0);

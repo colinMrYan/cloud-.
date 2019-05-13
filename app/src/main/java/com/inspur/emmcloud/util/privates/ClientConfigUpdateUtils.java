@@ -43,6 +43,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
             String localMyAppVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_MY_APP.getValue(), "");
             String localContactUserVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_USER.getValue(), "");
             String localContactOrgVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG.getValue(), "");
+            String localNaviTabVersion = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_NAVI_TAB.getValue(),"");
             JSONObject clientConfigVersionObj = new JSONObject();
             try {
                 clientConfigVersionObj.put("lang", localLangVersion);
@@ -52,6 +53,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
                 clientConfigVersionObj.put("app", localMyAppVersion);
                 clientConfigVersionObj.put("contact_user", localContactUserVersion);
                 clientConfigVersionObj.put("contact_org", localContactOrgVersion);
+                clientConfigVersionObj.put("multipleLayout",localNaviTabVersion);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -136,6 +138,7 @@ public class ClientConfigUpdateUtils extends APIInterfaceInstance {
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_LANGUAGE.getValue(), "");
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_SPLASH.getValue(), "");
         PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_ROUTER.getValue(), "");
+        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), ClientConfigItem.CLIENT_CONFIG_NAVI_TAB.getValue(), "");
         GetAllConfigVersionResult allConfigVersionResult = getCacheAllConfigVersionResult();
         if (allConfigVersionResult == null) {
             allConfigVersionResult = new GetAllConfigVersionResult("");

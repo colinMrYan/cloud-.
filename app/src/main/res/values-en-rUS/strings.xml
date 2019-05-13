@@ -381,6 +381,15 @@
     <string name="schedule_calendar_my_schedule">My schedule</string>
     <string name="schedule_calendar_my_meeting">My meeting</string>
     <string name="schedule_calendar_my_task">My task</string>
+    <string name="schedule_calendar_all_day">All day</string>
+    <string name="schedule_calendar_am">AM</string>
+    <string name="schedule_calendar_pm">PM</string>
+    <string name="schedule_calendar_so_on">... </string>
+    <string name="schedule_calendar_schedules">schedules</string>
+
+    <string name="schedule_calendar_no_schedule_today">No schedule</string>
+    <string name="schedule_meeting_no_meeting_today">No meeting</string>
+    <string name="schedule_task_no_task_today">No task</string>
 
 
     <!--任务（新）-->
@@ -401,10 +410,18 @@
     <string name="schedule_task_more">More</string>
     <string name="schedule_task_attachment">Attachment</string>
     <string name="schedule_task_create">Create task</string>
-    <string name="schedule_task_project_manager">Project manager</string>
+    <string name="schedule_task_project_manager">Tag manager</string>
     <string name="schedule_task_project_manager_add">OK</string>
     <string name="schedule_task_add_manager">Add manager</string>
     <string name="schedule_task_add_participant">Add participant</string>
+    <string name="schedule_task_label">Tag</string>
+    <string name="schedule_task_label_add_hint">Please enter a tag name</string>
+    <string name="schedule_task_label_color">Tag Color</string>
+    <string name="schedule_task_delete_the_tag">Delete Tag</string>
+    <string name="schedule_task_tag_name_null_hint">Tag name cannot be empty</string>
+    <string name="schedule_task_title_is_empty">Task title cannot be empty</string>
+    <string name="schedule_task_a_person">person</string>
+    <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
@@ -413,11 +430,21 @@
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
     <string name="schedule_meeting_add_record_holder_title">Recorder</string>
     <string name="schedule_meeting_add_conference_title">Contact</string>
+    <string name="schedule_meeting_select_attendee_title">Select attendee</string>
+    <string name="schedule_meeting_booking_detail">Meeting detail</string>
+    <string name="schedule_meeting_select_record_holder_title">Select recorder</string>
+    <string name="schedule_meeting_select_conference_title">Select conference</string>
     <string name="schedule_meeting_add_note">Note</string>
     <string name="schedule_meeting_add_alert_time">Reminder</string>
     <string name="schedule_meeting_history">History meetings</string>
     <string name="schedule_meeting_search">Search meeting</string>
     <string name="schedule_meeting_booking_room">Booking meeting room</string>
+    <string name="schedule_meeting_room_list">Meeting room list</string>
+    <string name="schedule_meeting_in_meeting">Meeting</string>
+    <string name="schedule_meeting_be_free">Free</string>
+    <string name="schedule_choose_common_office">Common office locations</string>
+    <string name="schedule_meeting_change">Modify meeting</string>
+    <string name="schedule_meeting_cancel">Delete meeting</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -936,6 +963,7 @@
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
     <string name="calendar_no_alert">No reminder</string>
+    <string name="calendar_when_event_finished">Finished</string>
 
     <!-- 通用 -->
     <string name="save">Save</string>
@@ -1239,6 +1267,10 @@
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
     <string name="voice_to_word">Voice to Text</string>
 
+    <string name="notification_switch">New Notification</string>
+    <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
+    <string name="notification_switch_open_setting">Cloud + Message Notification in the System Closed to Open？</string>
+
     <string name="resend_file_failed">The message resent failed because the resource file could not be found</string>
 
     <!--权限管理-->
@@ -1269,7 +1301,7 @@
     <string name="emm_keyboard_number">Number</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">Letter</string>
-    <string name="emm_secure_keyboard">%1$s Safety Keyboard</string>
+    <string name="emm_secure_keyboard">Safety Keyboard</string>
     <string name="emm_keyboard_space">space</string>
 
     <string name="welcome_to">Welcome to </string>
@@ -1287,4 +1319,25 @@
         <item>Middle</item>
         <item>Height</item>
     </string-array>
+
+    <string-array name="week_string_array">
+        <item>SUN</item>
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THU</item>
+        <item>FRI</item>
+        <item>SAT</item>
+    </string-array>
+
+    <string-array name="year_view_week_string_array">
+        <item>SUN</item>
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THU</item>
+        <item>FRI</item>
+        <item>SAT</item>
+    </string-array>
+
 </resources>

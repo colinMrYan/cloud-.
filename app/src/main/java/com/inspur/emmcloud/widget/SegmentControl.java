@@ -239,7 +239,6 @@ public class SegmentControl extends View {
 
 
         if (mTexts != null && mTexts.length > 0) {
-            Log.d("lbc", mTexts + "66666666666666666666666");
 
             if (mCacheBounds == null || mCacheBounds.length != mTexts.length) {
                 mCacheBounds = new Rect[mTexts.length];

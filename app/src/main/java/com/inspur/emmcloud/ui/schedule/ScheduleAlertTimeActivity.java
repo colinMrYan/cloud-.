@@ -26,6 +26,7 @@ import org.xutils.view.annotation.ViewInject;
 public class ScheduleAlertTimeActivity extends BaseActivity {
     public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
     public static String EXTRA_SCHEDULE_IS_ALL_DAY = "schedule_is_all_day";
+    public static String EXTRA_IS_TASK = "schedule_is_task";
     @ViewInject(R.id.lv_alert_time)
     ListView alertTimeListView;
     @ViewInject(R.id.iv_no_alert_select)
@@ -37,14 +38,14 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     private String[] alertTimeString = {};
     private int[] alertTimeInt = {};
     private boolean isAllDay = false;
-    static String[] alertTimeArray = {
+    String[] alertTimeArray = {
             MyApplication.getInstance().getString(R.string.calendar_when_event_occurs),
             MyApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
             MyApplication.getInstance().getString(R.string.calendar_twenty_minite_ago),
             MyApplication.getInstance().getString(R.string.calendar_thirty_minite_ago),
             MyApplication.getInstance().getString(R.string.calendar_one_hour_ago),
             MyApplication.getInstance().getString(R.string.calendar_one_day_ago)};
-    static String[] allDayAlertTimeArray = {
+    String[] allDayAlertTimeArray = {
             MyApplication.getInstance().getString(R.string.schedule_alert_time_occur),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_two_day),
@@ -60,14 +61,15 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         //获取Allday值
         isAllDay = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_IS_ALL_DAY) ?
                 getIntent().getExtras().getBoolean(EXTRA_SCHEDULE_IS_ALL_DAY) : false;
-
+        alertTimeArray[0] = getIntent().getExtras().containsKey(EXTRA_IS_TASK) ?
+                getApplication().getString(R.string.calendar_when_event_finished) : alertTimeArray[0];
         alertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         alertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
         if (alertTime != -1) {
             noAlertSelectImage.setVisibility(View.GONE);
             for (int i = 0; i < alertTimeInt.length; i++) {
-                if (alertTime==alertTimeInt[i]) {
-                    selectPosition = i-1;
+                if (alertTime == alertTimeInt[i]) {
+                    selectPosition = i - 1;
                     break;
                 }
             }
@@ -84,7 +86,7 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
                 noAlertSelectImage.setVisibility(View.GONE);
                 selectPosition = position;
                 adapter.notifyDataSetChanged();
-                alertTime = alertTimeInt[position+1];
+                alertTime = alertTimeInt[position + 1];
             }
         });
     }
@@ -175,15 +177,27 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     /**
      * 根据提前多长时间Int值及 是否 allday 获取相应的名称
      */
-   static public String getAlertTimeNameByTime(int alertTime, boolean isAllDay) {
+    public static String getAlertTimeNameByTime(int alertTime, boolean isAllDay) {
+        String[] alertTimeArray = {
+                MyApplication.getInstance().getString(R.string.calendar_when_event_occurs),
+                MyApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
+                MyApplication.getInstance().getString(R.string.calendar_twenty_minite_ago),
+                MyApplication.getInstance().getString(R.string.calendar_thirty_minite_ago),
+                MyApplication.getInstance().getString(R.string.calendar_one_hour_ago),
+                MyApplication.getInstance().getString(R.string.calendar_one_day_ago)};
+        String[] allDayAlertTimeArray = {
+                MyApplication.getInstance().getString(R.string.schedule_alert_time_occur),
+                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
+                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_two_day),
+                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
         String[] returnAlertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
         int[] returnAlertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
         if (alertTime == -1) {
-            return  MyApplication.getInstance().getString(R.string.calendar_no_alert);
+            return MyApplication.getInstance().getString(R.string.calendar_no_alert);
         }
         for (int i = 0; i < returnAlertTimeInt.length; i++) {
             if (alertTime == returnAlertTimeInt[i]) {
-                return returnAlertTimeString[i-1];
+                return returnAlertTimeString[i - 1];
             }
         }
         return "";

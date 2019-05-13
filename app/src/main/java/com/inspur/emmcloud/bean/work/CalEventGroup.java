@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.work;
 
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

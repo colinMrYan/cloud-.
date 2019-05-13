@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.bean.work;
+package com.inspur.emmcloud.bean.schedule.task;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.inspur.emmcloud.bean.schedule.Schedule;

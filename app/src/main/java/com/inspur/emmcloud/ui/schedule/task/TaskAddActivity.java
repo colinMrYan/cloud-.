@@ -27,13 +27,13 @@ import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
+import com.inspur.emmcloud.bean.schedule.task.Attachment;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
+import com.inspur.emmcloud.bean.schedule.task.Task;
+import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
+import com.inspur.emmcloud.bean.schedule.task.TaskSubject;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.Attachment;
-import com.inspur.emmcloud.bean.work.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.Task;
-import com.inspur.emmcloud.bean.work.TaskColorTag;
-import com.inspur.emmcloud.bean.work.TaskSubject;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -44,7 +44,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -61,6 +60,8 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
@@ -119,6 +120,8 @@ public class TaskAddActivity extends BaseActivity {
     private SegmentControlView segmentControlView;
     @ViewInject(R.id.tv_title)
     private TextView titleText;
+
+
     private WorkAPIService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult = new Task();
@@ -128,17 +131,20 @@ public class TaskAddActivity extends BaseActivity {
     private List<SearchModel> taskParticipantList = new ArrayList<>();
     private List<SearchModel> orgTaskParticipantList = new ArrayList<>();
     private List<TaskColorTag> taskColorTagList = new ArrayList<>();
+    private List<TaskColorTag> orgTaskColorTagList = new ArrayList<>();
     private Calendar deadLineCalendar;
     private AttachmentAdapter attachmentOtherAdapter;
     private String attachmentLocalPath = "";
     private Boolean isCreateTask = true;
-    private RemindEvent remindEvent =new RemindEvent();
+    private RemindEvent remindEvent = new RemindEvent();
+    private int taskType = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initData();
         initView();
+        EventBus.getDefault().register(this);
     }
 
     private void initData() {
@@ -154,8 +160,12 @@ public class TaskAddActivity extends BaseActivity {
         //判断是否为新建任务
         if (getIntent().hasExtra("task")) {
             taskResult = (Task) getIntent().getSerializableExtra("task");
+            taskType = getIntent().getIntExtra(TaskListFragment.TASK_CURRENT_INDEX, 0);
             deadLineCalendar = taskResult.getDueDate();
             taskColorTagList = taskResult.getTags();
+            for (int i = 0; i < taskColorTagList.size(); i++) {
+                orgTaskColorTagList.add(taskColorTagList.get(i));
+            }
             isCreateTask = false;
             //taskMangerList = ContactUserCache taskResult.getOwner();
             String masterUid = taskResult.getOwner();
@@ -163,7 +173,7 @@ public class TaskAddActivity extends BaseActivity {
                 ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
                 if (contactUser != null) {
                     SearchModel searchModel = new SearchModel(contactUser);
-                     taskMangerList.add(searchModel);
+                    taskMangerList.add(searchModel);
                 }
             }
             List<Attachment> attachments = taskResult.getAttachments();
@@ -228,14 +238,34 @@ public class TaskAddActivity extends BaseActivity {
         if (!isCreateTask) {
             contentInputEdit.setText(taskResult.getTitle());
             segmentControlView.setSelectedIndex(taskResult.getPriority());
-            setTaskColorTags();
-            titleText.setText("任务详情");
+            titleText.setText(getApplication().getString(R.string.schedule_task_detail));
             if (deadLineCalendar != null) {
                 deadlineTimeText.setText(TimeUtils.calendar2FormatString(this, deadLineCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             }
+            setTaskColorTags();
             showManagerImage();
+            setClickable(taskType);
         }
         attachmentOtherAdapter.notifyDataSetChanged();
+    }
+
+
+    private void setClickable(int taskType) {
+        //大于1 设置为不可点击，否则不做处理
+        if (taskType > 1) {
+            titleText.setClickable(false);
+            contentInputEdit.setEnabled(false);
+            tagsLayout.setClickable(false);
+            segmentControlView.setClickable(false);
+            findViewById(R.id.rl_task_type).setClickable(false);
+            findViewById(R.id.rl_task_manager).setClickable(false);
+            findViewById(R.id.rl_task_participant).setClickable(false);
+            findViewById(R.id.rl_deadline).setClickable(false);
+            findViewById(R.id.rl_task_end_alert).setClickable(false);
+            findViewById(R.id.rl_attachments_others).setClickable(false);
+            findViewById(R.id.tv_save).setVisibility(View.GONE);
+
+        }
     }
 
 
@@ -255,7 +285,7 @@ public class TaskAddActivity extends BaseActivity {
         Intent intent = new Intent();
         switch (view.getId()) {
             case R.id.tv_save:
-                if (!checkingAddOrUpdateTaskAvaliable())
+                if (!checkingAddOrUpdateTaskAvailable())
                     return;
                 if (isCreateTask) {
                     createTask();
@@ -314,6 +344,7 @@ public class TaskAddActivity extends BaseActivity {
                         ScheduleAlertTimeActivity.class);
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_ALERT_TIME, remindEvent.getAdvanceTimeSpan());
                 intent.putExtra(ScheduleAlertTimeActivity.EXTRA_SCHEDULE_IS_ALL_DAY, false);
+                intent.putExtra(ScheduleAlertTimeActivity.EXTRA_IS_TASK, true);
                 startActivityForResult(intent, REQUEST_ALERT_TIME);
                 break;
             case R.id.rl_more:
@@ -428,12 +459,12 @@ public class TaskAddActivity extends BaseActivity {
     /**
      * 添加或者更新Task 有效性检测
      */
-    private boolean checkingAddOrUpdateTaskAvaliable() {
+    private boolean checkingAddOrUpdateTaskAvailable() {
         if (!NetUtils.isNetworkConnected(this)) {
-            ToastUtils.show(this, "网络不通，请检查网络");
+            ToastUtils.show(this, getString(R.string.net_connected_error));
             return false;
         } else if (StringUtils.isBlank(contentInputEdit.getText().toString())) {
-            ToastUtils.show(this, "任务标题不可为空");
+            ToastUtils.show(this, getString(R.string.schedule_task_title_is_empty));
             return false;
         }
         return true;
@@ -480,7 +511,7 @@ public class TaskAddActivity extends BaseActivity {
         String ImageUrl = APIUri.getUserIconUrl(this, id);
         ImageDisplayUtils.getInstance().displayRoundedImage(managerHeadImageView, ImageUrl, R.drawable.default_image, this, 15);
         managerHeadImageView.setVisibility(View.VISIBLE);
-        managerNumText.setText("1人");
+        managerNumText.setText(1 + getString(R.string.schedule_task_a_person));
         managerNumText.setVisibility(View.VISIBLE);
         managerHeadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -526,7 +557,7 @@ public class TaskAddActivity extends BaseActivity {
                 }
             });
         }
-        participantNumText.setText(taskParticipantList.size() + "人");
+        participantNumText.setText(taskParticipantList.size() + getString(R.string.schedule_task_a_person));
         participantNumText.setVisibility(View.VISIBLE);
     }
 
@@ -678,10 +709,94 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void dealTagRequest(SimpleEventMessage messageEvent) {
+        if (messageEvent.getAction().equals("deleteTagsRequest")) {
+            //更新Task
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    /**
+     * 添加附件到任务*/
+    private void addAttachmentsToTask(String taskId){
+        if(NetUtils.isNetworkConnected(this,false)){
+            for (int i = 0; i < jsonAttachmentList.size(); i++) {
+                apiService.addAttachments(taskId, jsonAttachmentList.get(i).getJsonAttachment().toString());
+            }
+        }
+    }
+
+    private void addParticipantsToTask(String taskId){
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false) && taskParticipantList.size() > 0) {
+            JSONArray addMembers = new JSONArray();
+            for (int i = 0; i < taskParticipantList.size(); i++) {
+                addMembers.put(taskParticipantList.get(i).getId());
+            }
+            apiService.inviteMateForTask(taskId, addMembers);
+        }
+    }
+
+    /**
+     * 更改任务 owner*/
+    private void changeOwnerToTask(){
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false) && taskMangerList.size() > 0) {
+            apiService.changeMessionOwner(taskResult.getId(), taskMangerList.get(0).getId(), taskMangerList.get(0).getName());
+        }
+    }
+
+    /**
+     * 更新任务名称等属性*/
+    private void upDateTask(){
+        if (NetUtils.isNetworkConnected(TaskAddActivity.this,false)) {
+            String taskData = uploadTaskData();
+            apiService.updateTask(taskData, -1);
+        }
+    }
+
+    /***
+     * 添加Tags
+     */
+    private void addTaskTags(){
+        if(NetUtils.isNetworkConnected(TaskAddActivity.this,false)){
+            List<String> tagsIdList = new ArrayList<>();
+            for (int i = 0; i < taskColorTagList.size(); i++) {
+                tagsIdList.add(taskColorTagList.get(i).getId());
+            }
+            apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
+        }
+    }
+
+    /**
+     * 删除Tags*/
+    private void deleteTaskTags(){
+        if (!isCreateTask) {
+            List<String> tagsIdList = new ArrayList<>();
+            for (int i = 0; i < orgTaskColorTagList.size(); i++) {
+                tagsIdList.add(orgTaskColorTagList.get(i).getId());
+            }
+            apiService.deleteTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
+        } else {
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
+            finish();
+        }
+    }
+
+    private void addAttachmentsToTask(JSONObject jsonAttachment){
+        if (!isCreateTask && NetUtils.isNetworkConnected(TaskAddActivity.this,false)) {
+            apiService.addAttachments(taskResult.getId(), jsonAttachment.toString());
+        }
+    }
+
+
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
-            LogUtils.LbcDebug("创建任务成功");
             LoadingDialog.dimissDlg(loadingDlg);
             taskResult = new Task();
             taskResult.setTitle(contentInputEdit.getText().toString());
@@ -689,44 +804,13 @@ public class TaskAddActivity extends BaseActivity {
             taskResult.setOwner(PreferencesUtils.getString(
                     TaskAddActivity.this, "userID"));
             taskResult.setState("ACTIVED");
-            //调用创建任务成功
-            for (int i = 0; i < jsonAttachmentList.size(); i++) {
-                apiService.addAttachments(getTaskAddResult.getId(), jsonAttachmentList.get(i).getJsonAttachment().toString());
+            if(NetUtils.isNetworkConnected(TaskAddActivity.this,true)){
+                addAttachmentsToTask(getTaskAddResult.getId());
+                addParticipantsToTask(getTaskAddResult.getId());
+                changeOwnerToTask();
+                upDateTask();
+                addTaskTags();
             }
-            //添加participant
-            if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskParticipantList.size() > 0) {
-                JSONArray addMembers = new JSONArray();
-                for (int i = 0; i < taskParticipantList.size(); i++) {
-                    addMembers.put(taskParticipantList.get(i).getId());
-                }
-                apiService.inviteMateForTask(getTaskAddResult.getId(), addMembers);
-            }
-            //更改Manager
-            if (NetUtils.isNetworkConnected(TaskAddActivity.this) && taskMangerList.size() > 0) {
-                apiService.changeMessionOwner(taskResult.getId(), taskMangerList.get(0).getId(), taskMangerList.get(0).getName());
-            }
-
-            //更新Task
-            if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
-                String taskData = uploadTaskData();
-                apiService.updateTask(taskData, -1);
-            }
-
-            //更新Task
-            if (NetUtils.isNetworkConnected(TaskAddActivity.this)) {
-                if (!isCreateTask) {
-                    apiService.deleteTaskTags(taskResult.getId());
-                } else {
-                    List<String> tagsIdList = new ArrayList<>();
-                    for (int i = 0; i < taskColorTagList.size(); i++) {
-                        tagsIdList.add(taskColorTagList.get(i).getId());
-                    }
-                    apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
-                }
-
-            }
-
-
         }
 
         @Override
@@ -751,12 +835,11 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.mession_saving_success));
             setResult(RESULT_OK);
-            LogUtils.LbcDebug("修改保存成功");
-            finish();
+            deleteTaskTags();
+
         }
 
         @Override
@@ -770,9 +853,7 @@ public class TaskAddActivity extends BaseActivity {
                 GetFileUploadResult getFileUploadResult, String fakeMessageId) {
             LoadingDialog.dimissDlg(loadingDlg);
             JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
-            if (!isCreateTask && NetUtils.isNetworkConnected(TaskAddActivity.this)) {
-                apiService.addAttachments(taskResult.getId(), jsonAttachment.toString());
-            }
+            addAttachmentsToTask(jsonAttachment);
             jsonAttachmentList.add(new JsonAttachmentAndUri(jsonAttachment, attachmentLocalPath, true));
             attachmentOtherAdapter.notifyDataSetChanged();
         }
@@ -897,7 +978,10 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnAddTaskTagSuccess() {
-            super.returnAddTaskTagSuccess();
+            if (!isCreateTask) {
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
+                finish();
+            }
         }
 
         @Override
@@ -907,13 +991,11 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnDelTaskTagSuccess() {
-            super.returnDelTaskTagSuccess();
             List<String> tagsIdList = new ArrayList<>();
             for (int i = 0; i < taskColorTagList.size(); i++) {
                 tagsIdList.add(taskColorTagList.get(i).getId());
             }
-            String colorData = JSONUtils.toJSONString(tagsIdList);
-            apiService.addTaskTags(taskResult.getId(), colorData);
+            apiService.addTaskTags(taskResult.getId(), JSONUtils.toJSONString(tagsIdList));
         }
 
         @Override
@@ -965,8 +1047,7 @@ public class TaskAddActivity extends BaseActivity {
         public JsonAttachmentAndUri(JSONObject jsonObject, String uri, boolean isNew) {
             this.jsonAttachment = jsonObject;
             this.uri = uri;
-            this.isNew = isNew;
-            //根据路径组装成uri
+            this.isNew = isNew;//根据路径组装成uri
         }
 
         public JSONObject getJsonAttachment() {

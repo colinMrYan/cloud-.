@@ -144,7 +144,8 @@ public class APIUri {
     public static String getAppNaviTabs() {
 //        return getECMDistribution() + "/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
 //        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
-        return "https://ecm.inspuronline.com/distribution/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+//        return "https://ecm.inspuronline.com/distribution/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+        return "https://emm.inspur.com/api/sys/v6.0/config/multipleLayout";
     }
 
 
@@ -517,7 +518,8 @@ public class APIUri {
      * @return
      */
     public static String getChatFileResouceUrl(String cid, String path) {
-        return getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
+        return url.replaceAll("\\+","%2B");
     }
 
     /**
@@ -528,7 +530,8 @@ public class APIUri {
      * @return
      */
     public static String getChatVoiceFileResouceUrl(String cid, String path) {
-        return getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
+        return url.replaceAll("\\+","%2B");
     }
 
     /**
@@ -1713,12 +1716,13 @@ public class APIUri {
      */
 
     public static String getScheduleBaseUrl(){
-        //return "https://emm.inspur.com";
-        return "http://172.31.2.36:88";
+//        return "https://emm.inspur.com";
+        //return "http://172.31.2.36:88";
+        return MyApplication.getInstance().getClusterEmm();
     }
 
     public static String getCheckCloudPluseConnectUrl() {
-        return  getScheduleBaseUrl()+"/api/mam/v3.0/heart/success";
+        return  getScheduleBaseUrl()+"api/mam/v3.0/heart/success";
     }
 
     public static String getCancelTokenUrl() {
@@ -1726,43 +1730,43 @@ public class APIUri {
     }
 
     public static String getScheduleListUrl() {
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/GetList?";
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/GetList?";
     }
 
     public static String getAddScheduleUrl() {
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/add";
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/add";
     }
 
     public static String getUpdateScheduleUrl() {
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/update";
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/update";
     }
 
     public static String getDeleteScheduleUrl(String scheduleId) {
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/remove/" + scheduleId;
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/remove/" + scheduleId;
     }
 
     public static String getAddMeetingUrl() {
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/add";
+        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/add";
     }
 
     public static String getDelMeetingUrl(String meetingId) {
-        return getScheduleBaseUrl() + "/api/schedule/v6.0/meeting/remove/"+meetingId;
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/"+meetingId;
     }
 
     public static String getMeetingListByStartTime(){
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/GetByStartTime?";
+        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetByStartTime?";
     }
 
     public static String getMeetingHistoryListByPage(int id){
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/GetHistory/"+id;
+        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetHistory/"+id;
     }
 
     public static String getRoomMeetingListByMeetingRoom(){
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/GetRoomUse?";
+        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
     public static String getMeetingUpdateUrl(){
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/meeting/update";
+        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/update";
     }
 
     public static String getHolidayDataUrl(){

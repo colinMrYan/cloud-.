@@ -50,7 +50,7 @@ public class ImpWebChromeClient extends WebChromeClient {
     private View customView;
     private FrameLayout fullscreenContainer;
     private WebChromeClient.CustomViewCallback customViewCallback;
-    protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//    protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
     public ImpWebChromeClient(Context context, ImpWebView webView, FrameLayout frameLayout) {
         // TODO Auto-generated constructor stub
@@ -99,13 +99,13 @@ public class ImpWebChromeClient extends WebChromeClient {
             callback.onCustomViewHidden();
             return;
         }
-
         getActivity().getWindow().getDecorView();
-
         FrameLayout decor = (FrameLayout) getActivity().getWindow().getDecorView();
         fullscreenContainer = new FullscreenHolder(getActivity());
-        fullscreenContainer.addView(view, COVER_SCREEN_PARAMS);
-        decor.addView(fullscreenContainer, COVER_SCREEN_PARAMS);
+        FrameLayout.LayoutParams containerLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        decor.addView(fullscreenContainer, containerLayoutParams);
+        FrameLayout.LayoutParams viewLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        fullscreenContainer.addView(view, viewLayoutParams);
         customView = view;
         setStatusBarVisibility(false);
         customViewCallback = callback;

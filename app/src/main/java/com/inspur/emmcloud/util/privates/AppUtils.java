@@ -846,90 +846,12 @@ public class AppUtils {
     }
 
     /**
-     * 通过厂商确定pushId
-     *
-     * @return
-     */
-    public static String getPushId(Context context) {
-        String pushId = "";
-        if (AppUtils.getIsHuaWei() && canConnectHuawei(context)) {
-            // 需要对华为单独推送的时候解开这里
-            String hwtoken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
-            if (!StringUtils.isBlank(hwtoken)) {
-                pushId = hwtoken + Constant.PUSH_HUAWEI_COM;
-            } else {
-                String jpushPushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
-                if (!StringUtils.isBlank(jpushPushId)) {
-                    AppUtils.setPushFlag(context, Constant.JPUSH_FLAG);
-                    pushId = jpushPushId;
-                }
-            }
-        } else {
-            pushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
-        }
-        if (StringUtils.isBlank(pushId)) {
-            pushId = "UNKNOWN";
-        }
-        return pushId;
-    }
-
-    /**
-     * 获取pushProvider
-     *
-     * @param context
-     * @return
-     */
-    public static String getPushProvider(Context context) {
-        // 华为 com.hicloud.push
-        // 极光 cn.jpush
-        // 小米 com.xiaomi.xmpush
-        // 魅族 com.meizu.api - push
-        String pushProvider = "";
-        String pushFlag = AppUtils.getPushFlag(context);
-        switch (pushFlag) {
-            case Constant.HUAWEI_FLAG:
-                pushProvider = "com.hicloud.push";
-                break;
-            case Constant.XIAOMI_FLAG:
-                pushProvider = "com.xiaomi.xmpush";
-                break;
-            case Constant.MEIZU_FLAG:
-                pushProvider = "com.meizu.api-push";
-                break;
-            default:
-                pushProvider = "cn.jpush";
-                break;
-        }
-        return pushProvider;
-    }
-
-    /**
-     * 获取PUSH_FLAG
-     *
-     * @param context
-     * @return
-     */
-    public static String getPushFlag(Context context) {
-        return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
-    }
-
-    /**
-     * 设置pushFlag
-     *
-     * @param context
-     * @param pushFlag
-     */
-    public static void setPushFlag(Context context, String pushFlag) {
-        PreferencesUtils.putString(context, Constant.PUSH_FLAG, pushFlag);
-    }
-
-    /**
      * 判断是否可以连接华为推了送
      *
      * @return
      */
     private static boolean canConnectHuawei(Context context) {
-        String pushFlag = getPushFlag(context);
+        String pushFlag = PushManagerUtils.getPushFlag(context);
         return StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG);
     }
 

@@ -2,7 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.work.MyCalendarOperation;
+import com.inspur.emmcloud.bean.schedule.calendar.MyCalendarOperation;
 
 /**
  * 频道列表缓存处理类

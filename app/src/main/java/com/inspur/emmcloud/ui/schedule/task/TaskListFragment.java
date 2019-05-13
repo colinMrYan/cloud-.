@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,7 +21,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -56,6 +57,8 @@ public class TaskListFragment extends Fragment {
     private LinearLayout noSearchResultLayout;
     @ViewInject(R.id.tv_no_result)
     private TextView noResultText;
+    @ViewInject(R.id.iv_task_no_result)
+    private ImageView taskNoResultImageView;
     private boolean injected = false;
     private String orderBy = "PRIORITY";
     private String orderType = "ASC";
@@ -124,7 +127,9 @@ public class TaskListFragment extends Fragment {
      */
     public void setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;
-        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+        if(swipeRefreshLayout != null){
+            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+        }
     }
 
     /**
@@ -333,6 +338,7 @@ public class TaskListFragment extends Fragment {
                 taskList = getTaskListResult.getTaskList();
             }
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
             uiTaskList.clear();
             uiTaskList.addAll(taskList);
             adapter.setAndChangeData(uiTaskList);
@@ -344,6 +350,7 @@ public class TaskListFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
@@ -355,6 +362,7 @@ public class TaskListFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
@@ -362,6 +370,7 @@ public class TaskListFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
     }

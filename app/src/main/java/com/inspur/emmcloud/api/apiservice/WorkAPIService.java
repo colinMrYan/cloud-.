@@ -19,16 +19,16 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.work.Attachment;
+import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.GetTagResult;
-import com.inspur.emmcloud.bean.work.GetTaskAddResult;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -1978,10 +1978,12 @@ public class WorkAPIService {
     /**
      * 删除任务中的标签
      **/
-    public void deleteTaskTags(final String taskId) {
+    public void deleteTaskTags(final String taskId,final String tagsIdJSON) {
         final String completeUrl = APIUri.getDelTaskTagsUrl(taskId);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
+        params.setBodyContent(tagsIdJSON);
+        params.setAsJsonContent(true);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -2020,7 +2022,6 @@ public class WorkAPIService {
      */
     public void addTaskTags(final String taskId, final String tagsIdJSON) {
         final String completeUrl = APIUri.getAddTaskTagsUrl(taskId);
-        LogUtils.LbcDebug("colorTags::" + tagsIdJSON);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(tagsIdJSON);

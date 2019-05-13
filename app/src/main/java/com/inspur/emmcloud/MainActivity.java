@@ -33,9 +33,9 @@ import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallb
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
+import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
-import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -195,7 +195,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                     .addShortCut(MainActivity.this);
         }
         handMessage();
-        UpgradeUtils upgradeUtils = new UpgradeUtils(MainActivity.this,
+        NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(MainActivity.this,
                 handler, false);
         upgradeUtils.checkUpdate(false);
 

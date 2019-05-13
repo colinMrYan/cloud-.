@@ -74,9 +74,6 @@ public class CustomMonthView extends MonthView {
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
 
-        mSchemeSolarTextPaint.setAntiAlias(true);
-        mSchemeSolarTextPaint.setTextAlign(Paint.Align.CENTER);
-
         mSchemeBasicPaint.setAntiAlias(true);
         mSchemeBasicPaint.setStyle(Paint.Style.FILL);
         mSchemeBasicPaint.setTextAlign(Paint.Align.CENTER);
@@ -155,34 +152,44 @@ public class CustomMonthView extends MonthView {
         String lunar = TextUtils.isEmpty(calendar.getSchemeLunar()) ? calendar.getLunar() : calendar.getSchemeLunar();
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());
-            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius - dipToPx(getContext(), 1.5f), y + mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
+            if(isLunarAndFestivalShow()){
+                canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius - dipToPx(getContext(), 1.5f), y + mPadding + mSchemeBaseLine + dipToPx(getContext(), 6), mTextPaint);
+            }
         }
 
         if (isSelected) {
             canvas.drawText(day, cx, mTextBaseLine + top,
                     mSelectTextPaint);
-            canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15, mSelectedLunarTextPaint);
+            if(isLunarAndFestivalShow()){
+                canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15, mSelectedLunarTextPaint);
+            }
         } else if (hasScheme) {
+
             canvas.drawText(day, cx, mTextBaseLine + top,
                     calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
-            Paint currentMonthPaint = null;
-            if (calendar.getSchemeLunarColor() != 0) {
-                mSchemeSolarTextPaint.setColor(calendar.getSchemeLunarColor());
-                currentMonthPaint = mSchemeSolarTextPaint;
-            } else {
-                currentMonthPaint = !TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival()) ? mSolarTermTextPaint : mSchemeLunarTextPaint;
+            if(isLunarAndFestivalShow()){
+                Paint currentMonthPaint = null;
+                if (calendar.getSchemeLunarColor() != 0) {
+                    mSchemeSolarTextPaint.setColor(calendar.getSchemeLunarColor());
+                    currentMonthPaint = mSchemeSolarTextPaint;
+                } else {
+                    currentMonthPaint = !TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival()) ? mSolarTermTextPaint : mSchemeLunarTextPaint;
+                }
+                canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15,
+                        calendar.isCurrentMonth() ? currentMonthPaint : mOtherMonthLunarTextPaint);
             }
-            canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15,
-                    calendar.isCurrentMonth() ? currentMonthPaint : mOtherMonthLunarTextPaint);
+
         } else {
             canvas.drawText(day, cx, mTextBaseLine + top,
                     calendar.isCurrentDay() ? mCurDayTextPaint :
                             calendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
+            if(isLunarAndFestivalShow()){
+                canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15,
+                        calendar.isCurrentDay() ? mCurDayLunarTextPaint :
+                                calendar.isCurrentMonth() ? (!TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival())) ? mSolarTermTextPaint :
+                                        mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
+            }
 
-            canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15,
-                    calendar.isCurrentDay() ? mCurDayLunarTextPaint :
-                            calendar.isCurrentMonth() ? (!TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival())) ? mSolarTermTextPaint :
-                                    mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
         }
     }
 }

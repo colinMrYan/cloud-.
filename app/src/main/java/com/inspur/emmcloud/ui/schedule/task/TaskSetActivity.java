@@ -100,10 +100,6 @@ public class TaskSetActivity extends BaseActivity {
                 setResult(RESULT_OK);
                 finish();
                 break;
-            case R.id.tv_task_save:
-                setResult(RESULT_OK);
-                finish();
-                break;
             case R.id.rl_task_manager:
                 IntentUtils.startActivity(this, TaskTagsManageActivity.class);
                 break;

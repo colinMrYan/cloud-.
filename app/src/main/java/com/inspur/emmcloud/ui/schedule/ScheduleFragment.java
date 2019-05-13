@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,13 +24,14 @@ import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
+import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
@@ -45,6 +48,7 @@ import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.TaskCacheUtils;
 import com.inspur.emmcloud.widget.MaxHeightListView;
@@ -66,6 +70,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -75,7 +80,7 @@ import java.util.Map;
 @ContentView(R.layout.fragment_schedule)
 public class ScheduleFragment extends ScheduleBaseFragment implements
         CalendarView.OnCalendarSelectListener,
-        CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister, AdapterView.OnItemClickListener {
+        CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister,AdapterView.OnItemClickListener {
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
@@ -99,6 +104,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private ScrollView eventScrollView;
     @ViewInject(R.id.recycler_view_event)
     private RecyclerView eventRecyclerView;
+    @ViewInject(R.id.rl_schedule_list_default)
+    private RelativeLayout scheduleListDefaultLayout;
     @ViewInject(R.id.rl_all_day)
     private RelativeLayout allDayLayout;
     @ViewInject(R.id.iv_event_all_day)
@@ -165,6 +172,41 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setScheduleBackToToday();
             }
         });
+        switch (getLocaleByLanguage(getActivity()).getLanguage()){
+            case "en":
+                calendarView.setIsLunarAndFestivalShow(false);
+                break;
+            default:
+                calendarView.setIsLunarAndFestivalShow(true);
+                break;
+        }
+
+    }
+
+    private Locale getLocaleByLanguage(Context context) {
+        String languageJson = null;
+        if (MyApplication.getInstance() == null || MyApplication.getInstance().getTanent() == null) {
+            languageJson = PreferencesUtils.getString(context, Constant.PREF_LAST_LANGUAGE);
+
+        } else {
+            languageJson = PreferencesUtils
+                    .getString(context, MyApplication.getInstance().getTanent()
+                            + "appLanguageObj");
+        }
+        if (StringUtils.isBlank(languageJson)) {
+            return Locale.getDefault();
+        }
+        String[] array = new Language(languageJson).getIso().split("-");
+        String country = "";
+        String variant = "";
+        try {
+            country = array[0];
+            variant = array[1];
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return new Locale(country, variant);
 
     }
 
@@ -189,7 +231,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
     }
 
-    public Calendar getSelectCalendar() {
+    public Calendar getSelectCalendar(){
         return selectCalendar;
     }
 
@@ -209,6 +251,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
+        selectCalendar = Calendar.getInstance();
         selectCalendar.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay(), 0, 0, 0);
         selectCalendar.set(Calendar.MILLISECOND, 0);
         setSelectCalendarTimeInfo();
@@ -271,13 +314,20 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             getScheduleList(calendarLastTime, meetingLastTime, taskLastTime, scheduleIdList, meetingIdList, taskIdList);
         }
         eventList.clear();
-        eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
-//        eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
-        eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
-        showAllEventCalendarViewMark(scheduleList, meetingList);
+        boolean scheduleIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
+        boolean meetingIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
+        if (meetingIsShow) {
+            eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
+        }
+        //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
+        if (scheduleIsShow) {
+            eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
+        }
+        showCalendarViewEventMark(scheduleList, meetingList);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
-        scheduleSumText.setText(eventListSize > 0 ? eventListSize + "项日程" : "");
+        scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize < 1) ? View.VISIBLE : View.GONE);
+        scheduleSumText.setText(eventListSize > 0 ? eventListSize + " " + getActivity().getString(R.string.schedule_calendar_schedules) : "");
         if (isEventShowTypeList) {
             scheduleEventListAdapter.setEventList(selectCalendar, eventList);
             scheduleEventListAdapter.notifyDataSetChanged();
@@ -293,7 +343,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                         eventTitle = eventTitle.substring(0, 13);
                         eventTitle = eventTitle + "...";
                     }
-                    eventTitle = eventTitle + " 等" + allDayEventList.size() + "项日程";
+                    eventTitle = eventTitle + getActivity().getString(R.string.schedule_calendar_so_on) + " " +
+                            allDayEventList.size() + " " + getActivity().getString(R.string.schedule_calendar_schedules);
                 }
                 eventAllDayTitleText.setText(eventTitle);
             }
@@ -346,7 +397,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     /**
      * 展示日历事件标志
-     *
      * @param scheduleList
      * @param meetingList
      */
