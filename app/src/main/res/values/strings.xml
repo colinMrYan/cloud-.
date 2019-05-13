@@ -394,7 +394,7 @@
     <string name="schedule_calendar_schedules">项日程</string>
 
     <string name="schedule_calendar_no_schedule_today">暂无日程安排</string>
-    <string name="schedule_meeting_no_meeting_today">暂无日程安排</string>
+    <string name="schedule_meeting_no_meeting_today">暂无会议安排</string>
     <string name="schedule_task_no_task_today">暂无任务安排</string>
 
     <!--任务（新）-->
