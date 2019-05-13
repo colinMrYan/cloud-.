@@ -248,7 +248,7 @@ public class TaskAddActivity extends BaseActivity {
                     contentInputEdit.setText(str.substring(0,64)); //截取前x位
                     contentInputEdit.requestFocus();
                     contentInputEdit.setSelection(contentInputEdit.getText().length()); //光标移动到最后
-                    ToastUtils.show(getBaseContext(),R.string.schedule_task_tag_name_length);
+                    ToastUtils.show(getBaseContext(),R.string.schedule_task_title_is_length);
                 }
             }
 
