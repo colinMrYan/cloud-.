@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
+import com.inspur.emmcloud.bean.schedule.Scheme;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
@@ -29,6 +31,10 @@ import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,8 +62,14 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         initView();
+        EventBus.getDefault().register(this);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +84,34 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             parent.removeView(rootView);
         }
         return rootView;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveFragmentScheme(Scheme scheme){
+        if(scheme.getSchemeNativeModuleType().equals(scheme.getSchemeNativeModuleName())){
+            switch (scheme.getSchemeNativeModuleName()){
+                case Constant.ACTION_CALENDAR:
+                    if(tabLayout != null){
+                        tabLayout.getTabAt(0).select();
+                    }
+                    break;
+                case Constant.ACTION_MEETING:
+                    if(tabLayout != null){
+                        tabLayout.getTabAt(1).select();
+                    }
+                    break;
+                case Constant.ACTION_TASK:
+                    if(tabLayout != null){
+                        tabLayout.getTabAt(2).select();
+                    }
+                    break;
+                default:
+                    if(tabLayout != null){
+                        tabLayout.getTabAt(0).select();
+                    }
+                    break;
+            }
+        }
     }
 
     /**
