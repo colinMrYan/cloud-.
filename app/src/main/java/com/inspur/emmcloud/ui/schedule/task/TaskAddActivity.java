@@ -672,6 +672,7 @@ public class TaskAddActivity extends BaseActivity {
             otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if(taskType <2)
                     deleteAttachment(num);
                 }
             });
