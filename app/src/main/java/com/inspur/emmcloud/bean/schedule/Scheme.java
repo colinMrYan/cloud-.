@@ -8,22 +8,22 @@ import java.io.Serializable;
  */
 
 public class Scheme implements Serializable {
-    private String schemeContent = "";
-    private String schemeId = "";
+    private String schemeNativeModuleType = "";
+    private String schemeNativeModuleName = "";
 
-    public String getSchemeContent() {
-        return schemeContent;
+    public String getSchemeNativeModuleType() {
+        return schemeNativeModuleType;
     }
 
-    public void setSchemeContent(String schemeContent) {
-        this.schemeContent = schemeContent;
+    public void setSchemeNativeModuleType(String schemeNativeModuleType) {
+        this.schemeNativeModuleType = schemeNativeModuleType;
     }
 
-    public String getSchemeId() {
-        return schemeId;
+    public String getSchemeNativeModuleName() {
+        return schemeNativeModuleName;
     }
 
-    public void setSchemeId(String schemeId) {
-        this.schemeId = schemeId;
+    public void setSchemeNativeModuleName(String schemeNativeModuleName) {
+        this.schemeNativeModuleName = schemeNativeModuleName;
     }
 }
