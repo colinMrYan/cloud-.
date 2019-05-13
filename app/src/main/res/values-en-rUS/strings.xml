@@ -420,6 +420,7 @@
     <string name="schedule_task_delete_the_tag">Delete Tag</string>
     <string name="schedule_task_tag_name_null_hint">Tag name cannot be empty</string>
     <string name="schedule_task_title_is_empty">Task title cannot be empty</string>
+    <string name="schedule_task_title_is_length">Task title up to 64 characters</string>
     <string name="schedule_task_a_person">person</string>
     <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
 

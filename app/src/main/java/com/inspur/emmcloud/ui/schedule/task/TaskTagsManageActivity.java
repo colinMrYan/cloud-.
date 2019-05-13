@@ -180,6 +180,8 @@ public class TaskTagsManageActivity extends BaseActivity {
             for (int m = 0; m < selectTags.size(); m++) {
                 if (allTags.get(i).equals(selectTags.get(m)))
                     manageTagsHolder.tagSelectImage.setVisibility(View.VISIBLE);
+                if (isHaveExtra&&allTags.get(i).getTitle().equals("未分类"))
+                    manageTagsHolder.tagSelectImage.setVisibility(View.VISIBLE);
             }
             return view;
         }

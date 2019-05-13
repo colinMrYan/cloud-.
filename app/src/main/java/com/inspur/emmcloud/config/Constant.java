@@ -182,4 +182,6 @@ public class Constant {
     //沟通文本消息长按至日程
     public static final String COMMUNICATION_LONG_CLICK_TO_SCHEDULE = "message_long_click_to_schedule";
 
+    public static final String SCHEDULE_QUERY = "schedule_query";
+
 }
