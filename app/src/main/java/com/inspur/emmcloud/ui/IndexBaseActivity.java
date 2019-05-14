@@ -29,7 +29,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
-import com.inspur.emmcloud.bean.schedule.Scheme;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabPayLoad;
@@ -110,6 +109,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
         initTabs();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -451,16 +455,16 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveScheme(final Scheme scheme){
-        if(scheme.getSchemeNativeModuleType().equals(Constant.APP_TAB_BAR_WORK)){
+    public void onReceiveScheme(final SimpleEventMessage simpleEventMessage){
+        if(simpleEventMessage.getAction().equals(Constant.APP_TAB_BAR_WORK)){
             int index = findTargetTabIndex();
             if(mTabHost != null ){
                 mTabHost.setCurrentTab(index);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scheme.setSchemeNativeModuleType(scheme.getSchemeNativeModuleName());
-                        EventBus.getDefault().post(scheme);
+                        simpleEventMessage.setAction(Constant.SCHEDULE_DETAIL);
+                        EventBus.getDefault().post(simpleEventMessage);
                     }
                 },100);
             }

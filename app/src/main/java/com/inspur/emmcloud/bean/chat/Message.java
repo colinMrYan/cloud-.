@@ -19,7 +19,8 @@ public class Message implements Serializable {
     public static final String MESSAGE_TYPE_TEXT_MARKDOWN = "text/markdown";
     public static final String MESSAGE_TYPE_EXTENDED_CONTACT_CARD = "extended/contact-card";
     public static final String MESSAGE_TYPE_EXTENDED_ACTIONS = "extended/actions";
-    public static final String MESSAGE_TYPE_EXTENDED_SELECTED = "extended/selects";
+//    public static final String MESSAGE_TYPE_EXTENDED_SELECTED = "extended/selects";
+    public static final String MESSAGE_TYPE_EXTENDED_SELECTED = "experimental/selects";
     public static final String MESSAGE_TYPE_COMMENT_TEXT_PLAIN = "comment/text-plain";
     public static final String MESSAGE_TYPE_EXTENDED_LINKS = "extended/links";
     public static final String MESSAGE_TYPE_ATTACHMENT_CARD = "attachment/card";

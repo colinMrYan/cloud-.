@@ -16,9 +16,9 @@ import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.schedule.Scheme;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
@@ -473,35 +473,34 @@ public class SchemeHandleActivity extends Activity {
     }
 
     private void openNativeSchemeByHost(String host, Uri query, Intent intent) {
-        Scheme scheme = new Scheme();
-        scheme.setSchemeNativeModuleType(Constant.APP_TAB_BAR_WORK);
+        SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.APP_TAB_BAR_WORK);
         switch (host) {
             case "calendar":
                 if (query.getQuery() == null) {
-                    scheme.setSchemeNativeModuleName(Constant.ACTION_CALENDAR);
-                    EventBus.getDefault().post(scheme);
-                    finish();
-                } else if (getQueryLegal(query)) {
-                    openScheduleActivity(query.getQueryParameter("id"), CalendarAddActivity.class);
+                    simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
+                    EventBus.getDefault().post(simpleEventMessage);
+                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
+                    openScheduleActivity(query.getQueryParameter("id"),CalActivity.class);
                 }
+                finish();
                 break;
             case "to-do":
                 if (query.getQuery() == null) {
-                    scheme.setSchemeNativeModuleName(Constant.ACTION_TASK);
-                    EventBus.getDefault().post(scheme);
-                    finish();
-                } else if (getQueryLegal(query)) {
-                    openScheduleActivity(query.getQueryParameter("id"), TaskAddActivity.class);
+                    simpleEventMessage.setMessageObj(Constant.ACTION_TASK);
+                    EventBus.getDefault().post(simpleEventMessage);
+                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
+                    openScheduleActivity(query.getQueryParameter("id"),TaskAddActivity.class);
                 }
+                finish();
                 break;
             case "meeting":
                 if (query.getQuery() == null) {
-                    scheme.setSchemeNativeModuleName(Constant.ACTION_MEETING);
-                    EventBus.getDefault().post(scheme);
-                    finish();
-                } else if (getQueryLegal(query)) {
-                    openScheduleActivity(query.getQueryParameter("id"), MeetingDetailActivity.class);
+                    simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
+                    EventBus.getDefault().post(simpleEventMessage);
+                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
+                    openScheduleActivity(query.getQueryParameter("id"),MeetingDetailActivity.class);
                 }
+                finish();
                 break;
             case "webex":
                 String installUri = intent.getExtras().getString("installUri", "");
@@ -543,7 +542,7 @@ public class SchemeHandleActivity extends Activity {
     private void openScheduleActivity(String query, Class scheduleActivity) {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.SCHEDULE_QUERY, query);
-        IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle, true);
+        IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle);
     }
 
     private void openComponentScheme(Uri uri, String host) {

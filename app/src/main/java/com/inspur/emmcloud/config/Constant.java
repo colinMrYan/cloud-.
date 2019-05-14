@@ -183,5 +183,6 @@ public class Constant {
     public static final String COMMUNICATION_LONG_CLICK_TO_SCHEDULE = "message_long_click_to_schedule";
 
     public static final String SCHEDULE_QUERY = "schedule_query";
+    public static final String SCHEDULE_DETAIL = "schedule_detail";
 
 }
