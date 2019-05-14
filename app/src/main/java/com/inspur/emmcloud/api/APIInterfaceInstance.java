@@ -79,6 +79,8 @@ import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
+import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
@@ -2032,6 +2034,26 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
+    public void returnMeetingDataFromIdSuccess(Meeting meeting) {
+
+    }
+
+    @Override
+    public void returnMeetingDataFromIdFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnScheduleDataFromIdSuccess(Schedule schedule) {
+
+    }
+
+    @Override
+    public void returnScheduleDataFromIdFail(String error, int errorCode) {
+
+    }
+
+    @Override
     public void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult) {
 
     }
@@ -2068,6 +2090,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUpdateMeetingFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult) {
+
+    }
+
+    @Override
+    public void returnHolidayDataFail(String error, int errorCode) {
 
     }
 }

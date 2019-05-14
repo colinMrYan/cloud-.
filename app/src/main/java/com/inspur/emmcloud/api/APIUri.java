@@ -1716,9 +1716,7 @@ public class APIUri {
      */
 
     public static String getScheduleBaseUrl(){
-//        return "https://emm.inspur.com";
-        //return "http://172.31.2.36:88";
-        return MyApplication.getInstance().getClusterEmm();
+        return getECMScheduleUrl()+"/schedule-ext/";
     }
 
     public static String getCheckCloudPluseConnectUrl() {
@@ -1757,16 +1755,34 @@ public class APIUri {
         return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetByStartTime?";
     }
 
-    public static String getMeetingHistoryListByPage(int id){
-        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetHistory/"+id;
+    /**
+     * 通过id获取会议详情
+     */
+    public static String getMeetingUrlFromId(String id) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Get/" + id;
+    }
+
+    /**
+     * 通过id获取日程详情
+     */
+    public static String getCalendarUrlFromId(String id) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Get/" + id;
+    }
+
+    public static String getMeetingHistoryListByPage(int id) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/GetHistory/" + id;
     }
 
     public static String getRoomMeetingListByMeetingRoom(){
         return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
-    public static String getMeetingUpdateUrl(){
-        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/update";
+    public static String getMeetingUpdateUrl() {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/update";
+    }
+
+    public static String getHolidayDataUrl(){
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/HolidayData/";
     }
 
     /**
@@ -1785,6 +1801,7 @@ public class APIUri {
 
     /**
      * 获取决策卡片机器人触发事件
+     *
      * @return
      */
     public static String getDecideCardBotRequestUrl(){

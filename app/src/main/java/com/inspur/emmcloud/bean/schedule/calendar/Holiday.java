@@ -1,34 +1,47 @@
 package com.inspur.emmcloud.bean.schedule.calendar;
 
 
+import com.inspur.emmcloud.util.common.JSONUtils;
+
+import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 @Table(name = "Holiday")
 public class Holiday {
+    @Column(name = "id", isId = true)
+    private int id;
+    @Column(name = "type")
+    private int type;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "color")
+    private String color;
+    @Column(name = "badge")
+    private String badge;
+    @Column(name = "badgeColor")
+    private String badgeColor;
     @Column(name = "year")
     private int year;
     @Column(name = "month")
     private int month;
     @Column(name = "day")
     private int day;
-    private boolean isDuty = false;
     public Holiday(){
 
     }
 
-    public Holiday(int year, int month, int day,boolean isDuty) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.isDuty = isDuty;
+    public Holiday(JSONObject obj) {
+        type = JSONUtils.getInt(obj,"type",0);
+        name = JSONUtils.getString(obj,"name","");
+        color = JSONUtils.getString(obj,"color","");
+        badge = JSONUtils.getString(obj,"badge","");
+        badgeColor = JSONUtils.getString(obj,"badgeColor","");
+        year = JSONUtils.getInt(obj,"year",0);
+        month = JSONUtils.getInt(obj,"month",0);
+        day = JSONUtils.getInt(obj,"day",0);
+        id=year*10000+month*100+day;
     }
 
-    public Holiday(int year, int month, int day) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.isDuty = false;
-    }
 
     public int getYear() {
         return year;
@@ -54,11 +67,51 @@ public class Holiday {
         this.day = day;
     }
 
-    public boolean isDuty() {
-        return isDuty;
+    public int getType() {
+        return type;
     }
 
-    public void setDuty(boolean duty) {
-        isDuty = duty;
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getBadge() {
+        return badge;
+    }
+
+    public void setBadge(String badge) {
+        this.badge = badge;
+    }
+
+    public String getBadgeColor() {
+        return badgeColor;
+    }
+
+    public void setBadgeColor(String badgeColor) {
+        this.badgeColor = badgeColor;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

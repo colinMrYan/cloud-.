@@ -292,7 +292,7 @@ public class SchemeHandleActivity extends Activity {
                                 }
                                 break;
                             case "inspur-ecc-native":
-                                openNativeSchemeByHost(host, uri,getIntent());
+                                openNativeSchemeByHost(host, uri, getIntent());
                                 break;
                             default:
                                 finish();
@@ -477,7 +477,7 @@ public class SchemeHandleActivity extends Activity {
         scheme.setSchemeNativeModuleType(Constant.APP_TAB_BAR_WORK);
         switch (host) {
             case "calendar":
-                if(query.getQuery() == null){
+                if (query.getQuery() == null) {
                     scheme.setSchemeNativeModuleName(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(scheme);
                 }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
@@ -486,7 +486,7 @@ public class SchemeHandleActivity extends Activity {
                 finish();
                 break;
             case "to-do":
-                if(query.getQuery() == null){
+                if (query.getQuery() == null) {
                     scheme.setSchemeNativeModuleName(Constant.ACTION_TASK);
                     EventBus.getDefault().post(scheme);
                 }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
@@ -495,7 +495,7 @@ public class SchemeHandleActivity extends Activity {
                 finish();
                 break;
             case "meeting":
-                if(query.getQuery() == null){
+                if (query.getQuery() == null) {
                     scheme.setSchemeNativeModuleName(Constant.ACTION_MEETING);
                     EventBus.getDefault().post(scheme);
                 }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
@@ -520,14 +520,15 @@ public class SchemeHandleActivity extends Activity {
 
     /**
      * 判断query是否合法
+     *
      * @param query
      * @return
      */
     private boolean getQueryLegal(Uri query) {
-        if(query == null){
+        if (query == null) {
             return false;
         }
-        if(StringUtils.isBlank(query.getQueryParameter("id"))){
+        if (StringUtils.isBlank(query.getQueryParameter("id"))) {
             return false;
         }
         return true;
@@ -535,6 +536,7 @@ public class SchemeHandleActivity extends Activity {
 
     /**
      * 打开日程的Activity
+     *
      * @param query
      * @param scheduleActivity
      */

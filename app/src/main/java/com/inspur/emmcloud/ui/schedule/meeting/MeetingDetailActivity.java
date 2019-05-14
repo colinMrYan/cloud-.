@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -22,6 +23,8 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -74,14 +77,26 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
+    private LoadingDialog loadingDlg;
+    private String meetingId;   //会议id
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadingDlg = new LoadingDialog(this);
         scheduleApiService = new ScheduleApiService(this);
         scheduleApiService.setAPIInterface(new WebService());
-        meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY);
-        initViews();
+        meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
+        meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
+        if (TextUtils.isEmpty(meetingId) && meeting != null) {  //来自列表
+            meetingId = meeting.getId();       //来自列表
+        }
+        if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据
+            getDbMeetingFromId(meetingId);
+            getMeetingFromId(meetingId);
+        } else {                                //id为空是走之前逻辑，异常情况
+            initViews();
+        }
     }
 
     private void initViews() {
@@ -97,10 +112,34 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingRecordHolderText.setText(getString(R.string.meeting_detail_record_holder, getMeetingParticipant(MEETING_RECORD_HOLDER)));
         meetingConferenceText.setText(getString(R.string.meeting_detail_conference, getMeetingParticipant(MEETING_CONTACT)));
         meetingNoteText.setText(meeting.getNote());
-        meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size()>0?View.VISIBLE:View.GONE);
-        meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size()>0?View.VISIBLE:View.GONE);
-        meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote())?View.GONE:View.VISIBLE);
-        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && meeting.getStartTime()>System.currentTimeMillis())?View.VISIBLE:View.GONE);
+        meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
+        meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
+        meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
+        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && meeting.getStartTime() > System.currentTimeMillis()) ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * 通过id获取缓存meeting数据
+     *
+     * @param id
+     */
+    private void getDbMeetingFromId(String id) {
+        meeting = MeetingCacheUtils.getDBMeetingById(this, id);
+        if (meeting != null) initViews();
+    }
+
+    /**
+     * 通过id获取会议数据
+     */
+    private void getMeetingFromId(String id) {
+        if (NetUtils.isNetworkConnected(this)) {
+            if (meeting == null) {
+                loadingDlg.show();
+            }
+            scheduleApiService.getMeetingDataFromId(id);
+        } else {
+            ToastUtils.show(this, "");
+        }
     }
 
 
@@ -179,7 +218,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     private void startMembersActivity(int type) {
         List<String> uidList;
-        switch (type){
+        switch (type) {
             case MEETING_ATTENDEE:
                 uidList = getUidList(meeting.getCommonParticipantList());
                 break;
@@ -194,14 +233,14 @@ public class MeetingDetailActivity extends BaseActivity {
         }
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("uidList", (ArrayList<String>) uidList);
-        bundle.putString("title",getString(R.string.meeting_memebers));
-        bundle.putInt(MembersActivity.MEMBER_PAGE_STATE,MembersActivity.CHECK_STATE);
-        IntentUtils.startActivity(this, MembersActivity.class,bundle);
+        bundle.putString("title", getString(R.string.meeting_memebers));
+        bundle.putInt(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.CHECK_STATE);
+        IntentUtils.startActivity(this, MembersActivity.class, bundle);
     }
 
     private List<String> getUidList(List<Participant> commonParticipantList) {
         List<String> uidList = new ArrayList<>();
-        for(Participant participant:commonParticipantList){
+        for (Participant participant : commonParticipantList) {
             uidList.add(participant.getId());
         }
         return uidList;
@@ -256,6 +295,23 @@ public class MeetingDetailActivity extends BaseActivity {
         @Override
         public void returnDelMeetingFail(String error, int errorCode) {
             super.returnDelMeetingFail(error, errorCode);
+        }
+
+        @Override
+        public void returnMeetingDataFromIdSuccess(Meeting meetingData) {
+            super.returnMeetingDataFromIdSuccess(meetingData);
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (meetingData != null) {
+                meeting = meetingData;
+                initViews();
+            }
+        }
+
+        @Override
+        public void returnMeetingDataFromIdFail(String error, int errorCode) {
+            super.returnMeetingDataFromIdFail(error, errorCode);
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (meeting == null || TextUtils.isEmpty(meeting.getId())) finish();
         }
     }
 }
