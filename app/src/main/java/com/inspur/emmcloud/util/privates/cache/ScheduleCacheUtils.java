@@ -55,5 +55,17 @@ public class ScheduleCacheUtils {
         return scheduleList;
     }
 
+    /**
+     * 通过id获取缓存日程据
+     */
+    public static Schedule getDBScheduleById(Context context, String id) {
+        Schedule schedule = new Schedule();
+        try {
+            schedule = DbCacheUtils.getDb(context).findById(Schedule.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return schedule;
+    }
 
 }
