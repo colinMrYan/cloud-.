@@ -67,10 +67,11 @@ public class CustomWeekView extends WeekView {
         mTextPaint.setFakeBoldText(true);
 
 
-        mSolarTermTextPaint.setColor(0xff489dff);
+        mSolarTermTextPaint.setColor(0xff999999);
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
 
+        mSchemeSolarTextPaint.setAntiAlias(true);
         mSchemeSolarTextPaint.setAntiAlias(true);
         mSchemeSolarTextPaint.setTextAlign(Paint.Align.CENTER);
 

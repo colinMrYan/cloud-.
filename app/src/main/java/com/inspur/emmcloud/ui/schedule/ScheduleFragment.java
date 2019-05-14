@@ -22,7 +22,6 @@ import com.inspur.emmcloud.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
@@ -37,7 +36,6 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -313,16 +311,16 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             getScheduleList(calendarLastTime, meetingLastTime, taskLastTime, scheduleIdList, meetingIdList, taskIdList);
         }
         eventList.clear();
-        boolean scheduleIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
-        boolean meetingIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
-        if (meetingIsShow) {
+        boolean isScheduleShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
+        boolean isMeetingShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
+        if (isMeetingShow) {
             eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
         }
         //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
-        if (scheduleIsShow) {
+        if (isScheduleShow) {
             eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         }
-        showAllEventCalendarViewMark(eventList);
+        showAllEventCalendarViewMark(scheduleList,meetingList,isScheduleShow,isMeetingShow);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
         scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize < 1) ? View.VISIBLE : View.GONE);
@@ -370,6 +368,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
         if (!StringUtils.isEmpty(badge)){
             emmCalendar.setScheme(badge);
+        }else {
+            emmCalendar.setScheme(" ");
         }
         if (!StringUtils.isBlank(badgeColor)){
             emmCalendar.setSchemeColor(Color.parseColor(badgeColor));
@@ -396,9 +396,12 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     /**
      * 展示日历事件标志
-     * @param eventList
+     * @param scheduleList
+     * @param meetingList
+     * @param isScheduleShow
+     * @param isMeetingShow
      */
-    private void showAllEventCalendarViewMark(List<Event> eventList) {
+    private void showAllEventCalendarViewMark(List<Schedule> scheduleList,List<Meeting> meetingList,boolean isScheduleShow,boolean isMeetingShow) {
         calendarView.clearSchemeDate();
         Map<String, EmmCalendar> map = new HashMap<>();
         int startYear = pageStartCalendar.get(Calendar.YEAR);
@@ -421,10 +424,17 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                     ,holiday.getColor(),holiday.getBadge(),holiday.getBadgeColor(),false);
             map.put(schemeCalendar.toString(), schemeCalendar);
         }
-
-        for (Event event : eventList) {
-            showScheduleEventCalendarViewMark(TimeUtils.getDayBeginCalendar(event.getEventStartTime()), event.getEventEndTime(), map);
+        if (isScheduleShow){
+            for (Schedule schedule:scheduleList){
+                showScheduleEventCalendarViewMark(schedule.getStartTimeCalendar(), schedule.getEndTimeCalendar(), map);
+            }
         }
+        if (isMeetingShow){
+            for (Meeting meeting:meetingList){
+                showScheduleEventCalendarViewMark(meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar(), map);
+            }
+        }
+
         calendarView.setSchemeDate(map);
     }
 
@@ -440,7 +450,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             } else {
                 existEmmCalendar.setShowSchemePoint(true);
             }
-            LogUtils.jasonDebug("existEmmCalendar==="+existEmmCalendar.getShowSchemePoint());
             map.put(existEmmCalendar.toString(), existEmmCalendar);
         }
     }
@@ -561,11 +570,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
-            super.returnDeviceCheckSuccess(getDeviceCheckResult);
-        }
-
         @Override
         public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,
                                               Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {

@@ -1716,9 +1716,7 @@ public class APIUri {
      */
 
     public static String getScheduleBaseUrl(){
-//        return "https://emm.inspur.com";
-        //return "http://172.31.2.36:88";
-        return MyApplication.getInstance().getClusterEmm();
+        return getECMScheduleUrl()+"/schedule-ext/";
     }
 
     public static String getCheckCloudPluseConnectUrl() {
@@ -1770,7 +1768,7 @@ public class APIUri {
     }
 
     public static String getHolidayDataUrl(){
-        return getScheduleBaseUrl()+"/api/schedule/v6.0/calendar/HolidayData/";
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/HolidayData/";
     }
 
     /**

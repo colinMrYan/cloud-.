@@ -41,10 +41,8 @@ public class ScheduleCacheUtils {
         try {
             long startTimeLong = startTime.getTimeInMillis();
             long endTimeLong = endTime.getTimeInMillis();
-            scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("startTime", ">", startTimeLong)
-                    .and("endTime", "<", endTimeLong)).or(WhereBuilder.b("startTime", "<=", startTimeLong)
-                    .and("endTime", ">", endTimeLong)).or(WhereBuilder.b("startTime", "<=", endTimeLong)
-                    .and("endTime", ">=", endTimeLong)).orderBy("lastTime", true).findAll();
+            scheduleList = DbCacheUtils.getDb(context).selector(Schedule.class).where(WhereBuilder.b("endTime", ">=", startTimeLong)
+                    .and("startTime", "<=", endTimeLong)).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

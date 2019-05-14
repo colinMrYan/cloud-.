@@ -2,7 +2,6 @@ package com.inspur.emmcloud.bean.schedule.calendar;
 
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -41,7 +40,6 @@ public class Holiday {
         month = JSONUtils.getInt(obj,"month",0);
         day = JSONUtils.getInt(obj,"day",0);
         id=year*10000+month*100+day;
-        LogUtils.jasonDebug("id="+id);
     }
 
 

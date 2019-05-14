@@ -70,7 +70,7 @@ public class CustomMonthView extends MonthView {
         mTextPaint.setFakeBoldText(true);
 
 
-        mSolarTermTextPaint.setColor(0xff489dff);
+        mSolarTermTextPaint.setColor(0xff999999);
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -80,6 +80,10 @@ public class CustomMonthView extends MonthView {
         mSchemeBasicPaint.setFakeBoldText(true);
         mSchemeBasicPaint.setColor(Color.WHITE);
 
+
+        mSchemeSolarTextPaint.setAntiAlias(true);
+        mSchemeSolarTextPaint.setStyle(Paint.Style.FILL);
+        mSchemeSolarTextPaint.setTextAlign(Paint.Align.CENTER);
 
         mCurrentDayPaint.setAntiAlias(true);
         mCurrentDayPaint.setStyle(Paint.Style.FILL);
@@ -164,9 +168,9 @@ public class CustomMonthView extends MonthView {
                 canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15, mSelectedLunarTextPaint);
             }
         } else if (hasScheme) {
-
             canvas.drawText(day, cx, mTextBaseLine + top,
-                    calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
+                    calendar.isCurrentDay() ? mCurDayTextPaint :
+                            calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
             if(isLunarAndFestivalShow()){
                 Paint currentMonthPaint = null;
                 if (calendar.getSchemeLunarColor() != 0) {
@@ -176,7 +180,7 @@ public class CustomMonthView extends MonthView {
                     currentMonthPaint = !TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival()) ? mSolarTermTextPaint : mSchemeLunarTextPaint;
                 }
                 canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15,
-                        calendar.isCurrentMonth() ? currentMonthPaint : mOtherMonthLunarTextPaint);
+                        calendar.isCurrentDay() ?mCurDayLunarTextPaint:calendar.isCurrentMonth() ? currentMonthPaint : mOtherMonthLunarTextPaint);
             }
 
         } else {

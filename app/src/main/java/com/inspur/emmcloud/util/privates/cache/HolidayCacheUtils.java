@@ -39,6 +39,7 @@ public class HolidayCacheUtils {
                     yearHolidayList = new ArrayList<>();
                 }
                 yearHolidayList.add(holiday);
+                yearHolidayListMap.put(holiday.getYear(),yearHolidayList);
             }
 
 
