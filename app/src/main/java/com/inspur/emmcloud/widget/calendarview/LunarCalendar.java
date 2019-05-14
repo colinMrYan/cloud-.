@@ -350,10 +350,11 @@ final class LunarCalendar {
         emmCalendar.setTraditionFestival(festival);
         lunarEmmCalendar.setTraditionFestival(festival);
         lunarEmmCalendar.setSolarTerm(solarTerm);
-        if (!TextUtils.isEmpty(solarTerm)) {
-            emmCalendar.setLunar(solarTerm);
-        } else if (!TextUtils.isEmpty(gregorian)) {
+        //jason修改处：以公历节日优先级最高
+        if (!TextUtils.isEmpty(gregorian)) {
             emmCalendar.setLunar(gregorian);
+        } else if (!TextUtils.isEmpty(solarTerm)) {
+            emmCalendar.setLunar(solarTerm);
         } else if (!TextUtils.isEmpty(festival)) {
             emmCalendar.setLunar(festival);
         } else {
