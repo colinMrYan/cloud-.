@@ -432,6 +432,8 @@
 
     <!--会议(新)-->
     <string name="schedule_meeting_booking">预定会议</string>
+    <string name="schedule_meeting_add_content_hint">请输入会议内容...</string>
+    <string name="schedule_meeting_add_location_hint">请选择会议地点...</string>
     <string name="schedule_meeting_add_attendee_title">参会人</string>
     <string name="schedule_meeting_add_record_holder_title">会议记录人</string>
     <string name="schedule_meeting_add_conference_title">会议联络人</string>
