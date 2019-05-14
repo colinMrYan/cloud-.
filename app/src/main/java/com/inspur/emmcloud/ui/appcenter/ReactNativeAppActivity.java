@@ -448,7 +448,9 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
-            finish();
+            if(!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")){
+                finish();
+            }
         }
 
         @Override
@@ -467,7 +469,9 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
-            finish();
+            if(!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")){
+                finish();
+            }
         }
 
     }
