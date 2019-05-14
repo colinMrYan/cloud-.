@@ -292,7 +292,7 @@ public class SchemeHandleActivity extends Activity {
                                 }
                                 break;
                             case "inspur-ecc-native":
-                                openNativeSchemeByHost(host, uri,getIntent());
+                                openNativeSchemeByHost(host, uri, getIntent());
                                 break;
                             default:
                                 finish();
@@ -477,30 +477,30 @@ public class SchemeHandleActivity extends Activity {
         scheme.setSchemeNativeModuleType(Constant.APP_TAB_BAR_WORK);
         switch (host) {
             case "calendar":
-                if(query.getQuery() == null){
+                if (query.getQuery() == null) {
                     scheme.setSchemeNativeModuleName(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(scheme);
                     finish();
-                }else if(getQueryLegal(query)){
-                    openScheduleActivity(query.getQueryParameter("id"),CalActivity.class);
+                } else if (getQueryLegal(query)) {
+                    openScheduleActivity(query.getQueryParameter("id"), CalendarAddActivity.class);
                 }
                 break;
             case "to-do":
-                if(query.getQuery() == null){
+                if (query.getQuery() == null) {
                     scheme.setSchemeNativeModuleName(Constant.ACTION_TASK);
                     EventBus.getDefault().post(scheme);
                     finish();
-                }else if(getQueryLegal(query)){
-                    openScheduleActivity(query.getQueryParameter("id"),TaskAddActivity.class);
+                } else if (getQueryLegal(query)) {
+                    openScheduleActivity(query.getQueryParameter("id"), TaskAddActivity.class);
                 }
                 break;
             case "meeting":
-                if(query.getQuery() == null){
+                if (query.getQuery() == null) {
                     scheme.setSchemeNativeModuleName(Constant.ACTION_MEETING);
                     EventBus.getDefault().post(scheme);
                     finish();
-                }else if(getQueryLegal(query)){
-                    openScheduleActivity(query.getQueryParameter("id"),MeetingDetailActivity.class);
+                } else if (getQueryLegal(query)) {
+                    openScheduleActivity(query.getQueryParameter("id"), MeetingDetailActivity.class);
                 }
                 break;
             case "webex":
@@ -520,14 +520,15 @@ public class SchemeHandleActivity extends Activity {
 
     /**
      * 判断query是否合法
+     *
      * @param query
      * @return
      */
     private boolean getQueryLegal(Uri query) {
-        if(query == null){
+        if (query == null) {
             return false;
         }
-        if(StringUtils.isBlank(query.getQueryParameter("id"))){
+        if (StringUtils.isBlank(query.getQueryParameter("id"))) {
             return false;
         }
         return true;
@@ -535,13 +536,14 @@ public class SchemeHandleActivity extends Activity {
 
     /**
      * 打开日程的Activity
+     *
      * @param query
      * @param scheduleActivity
      */
     private void openScheduleActivity(String query, Class scheduleActivity) {
         Bundle bundle = new Bundle();
         bundle.putString(Constant.SCHEDULE_QUERY, query);
-        IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle,true);
+        IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle, true);
     }
 
     private void openComponentScheme(Uri uri, String host) {

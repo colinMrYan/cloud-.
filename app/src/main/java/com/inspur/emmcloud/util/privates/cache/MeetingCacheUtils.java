@@ -61,7 +61,7 @@ public class MeetingCacheUtils {
      *通过id获取缓存meeting数据
      */
     public static Meeting getDBMeetingById(Context context, String id) {
-        Meeting meeting = null;
+        Meeting meeting = new Meeting();
         try {
             meeting = DbCacheUtils.getDb(context).findById(Meeting.class, id);
         } catch (Exception e) {

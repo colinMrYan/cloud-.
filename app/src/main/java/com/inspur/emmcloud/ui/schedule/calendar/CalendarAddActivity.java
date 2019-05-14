@@ -113,8 +113,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private String contentText = "";
     RemindEvent remindEvent = new RemindEvent();
     private int intervalMin = 0;
-    //TODO zyj 临时写死日程id
-    private String id = "f7cc52caddb64147b793e6e04bdfc1c9";
+    private String id;// 日程id
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +122,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         apiService = new ScheduleApiService(getApplicationContext());
         apiService.setAPIInterface(new WebService());
         init();
-        initView();
     }
 
     /**
@@ -150,34 +148,29 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
             contentText = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
         }
-        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
+
+        id = getIntent().getStringExtra(Constant.SCHEDULE_QUERY);   //解析通知字段获取id
+        if (!TextUtils.isEmpty(id)) {        ////来自通知
             isAddCalendar = false;
             isEditable = false;
-            if (!TextUtils.isEmpty(id)) {
+            getDbCalendarFromId();
+            getNetCalendarFromId();
+        } else if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {  //通知没有，列表页跳转过来
+            isAddCalendar = false;
+            isEditable = false;
+            scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
+            if (scheduleEvent != null) {
+                id = scheduleEvent.getId();   //获取id
+            }
+
+            if (!TextUtils.isEmpty(id)) {    //当id不为空时通过网络获取数据
                 getDbCalendarFromId();
                 getNetCalendarFromId();
             } else {
-                scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-                initscheduleData();
+                createCalendar();         //当id为空时走创建日程，异常情况
             }
-        } else {
-            Calendar currentCalendar = Calendar.getInstance();
-            if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
-                startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
-            }
-            if (startCalendar == null) {
-                startCalendar = (Calendar) currentCalendar.clone();
-            }
-            startCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
-            startCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
-            startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
-            endCalendar = (Calendar) startCalendar.clone();
-            if (!isAllDay) {
-                endCalendar.add(Calendar.HOUR_OF_DAY, 1);
-            }
-            scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
-            remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
-            intervalMin = (int) getIntervalMin();
+        } else {    //创建日程
+            createCalendar();
         }
     }
 
@@ -205,11 +198,38 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     }
 
     /**
+     * 创建日程
+     */
+    private void createCalendar() {
+        Calendar currentCalendar = Calendar.getInstance();
+        if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
+            startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+        }
+        if (startCalendar == null) {
+            startCalendar = (Calendar) currentCalendar.clone();
+        }
+        startCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+        startCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+        startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
+        endCalendar = (Calendar) startCalendar.clone();
+        if (!isAllDay) {
+            endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+        }
+        scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
+        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+        intervalMin = (int) getIntervalMin();
+        initView();
+    }
+
+    /**
      * 从数据库获取日程数据
      */
     private void getDbCalendarFromId() {
         scheduleEvent = ScheduleCacheUtils.getDBScheduleById(this, id);
-        initscheduleData();
+        if (scheduleEvent != null) {
+            initscheduleData();
+            initView();
+        }
     }
 
     /**
@@ -218,7 +238,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private void getNetCalendarFromId() {
         if (NetUtils.isNetworkConnected(this)) {
             if (!TextUtils.isEmpty(id)) {
-                if (TextUtils.isEmpty(scheduleEvent.getId())) { //如果缓存有数据则不显示loading
+                if (scheduleEvent == null || TextUtils.isEmpty(scheduleEvent.getId())) { //如果缓存有数据则不显示loading
                     loadingDlg.show();
                 }
                 apiService.getCalendarDataFromId(id);
@@ -619,6 +639,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
 
         @Override
         public void returnScheduleDataFromIdSuccess(Schedule schedule) {
+            LoadingDialog.dimissDlg(loadingDlg);
             if (schedule != null) {
                 scheduleEvent = schedule;
                 initscheduleData();
@@ -629,7 +650,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         @Override
         public void returnScheduleDataFromIdFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            if (TextUtils.isEmpty(scheduleEvent.getId())) finish();
+            if (scheduleEvent == null || TextUtils.isEmpty(scheduleEvent.getId())) finish();
         }
     }
 
