@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
-import com.inspur.emmcloud.bean.schedule.Scheme;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
@@ -87,9 +87,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveFragmentScheme(Scheme scheme){
-        if(scheme.getSchemeNativeModuleType().equals(scheme.getSchemeNativeModuleName())){
-            switch (scheme.getSchemeNativeModuleName()){
+    public void onReceiveFragmentScheme(SimpleEventMessage scheme){
+        if(scheme.getAction().equals(Constant.SCHEDULE_DETAIL)){
+            switch ((String)scheme.getMessageObj()){
                 case Constant.ACTION_CALENDAR:
                     if(tabLayout != null){
                         tabLayout.getTabAt(0).select();
