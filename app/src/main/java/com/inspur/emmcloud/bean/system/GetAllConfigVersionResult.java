@@ -56,6 +56,9 @@ public class GetAllConfigVersionResult {
             case CLIENT_CONFIG_CONTACT_ORG:
                 itemVersion = JSONUtils.getString(allConfigVersionObj, "contact_org", "");
                 break;
+            case CLIENT_CONFIG_NAVI_TAB:
+                itemVersion = JSONUtils.getString(allConfigVersionObj, "multipleLayout", "");
+                break;
             default:
                 break;
         }

@@ -83,11 +83,11 @@ public class IndexActivity extends IndexBaseActivity {
         EventBus.getDefault().register(this);
     }
 
-    private void getNaviTabData() {
+    private void getNaviTabData(String naviTabSaveConfigVersion) {
         if(NetUtils.isNetworkConnected(this,false)){
             AppAPIService appAPIService = new AppAPIService(this);
             appAPIService.setAPIInterface(new WebService());
-            appAPIService.getAppNaviTabs();
+            appAPIService.getAppNaviTabs(naviTabSaveConfigVersion);
         }
     }
 
@@ -343,7 +343,7 @@ public class IndexActivity extends IndexBaseActivity {
             getContactOrg();
         }
         if(isNaviTabUpdate){
-            getNaviTabData();
+            getNaviTabData(ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB));
         }
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
             @Override
@@ -660,6 +660,7 @@ public class IndexActivity extends IndexBaseActivity {
         public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
             super.returnNaviBarModelSuccess(naviBarModel);
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
+            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, naviBarModel.getLastNaviLocalVersion());
             updateNaviTabbar();
         }
 

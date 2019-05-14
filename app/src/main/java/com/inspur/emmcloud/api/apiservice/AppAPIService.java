@@ -289,7 +289,7 @@ public class AppAPIService {
     /**
      * 获取显示tab页的接口
      */
-    public void getAppNaviTabs() {
+    public void getAppNaviTabs(final String lastMultipleLayoutVersion) {
         final String completeUrl = APIUri.getAppNaviTabs();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
@@ -311,7 +311,7 @@ public class AppAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0)));
+                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0),lastMultipleLayoutVersion));
             }
 
             @Override

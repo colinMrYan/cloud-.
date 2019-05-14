@@ -130,11 +130,18 @@ package com.inspur.emmcloud.bean.system.navibar;
 public class NaviBarModel {
     private String response = "";
     private NaviBarPayload naviBarPayload;
+    private String lastNaviLocalVersion = "";
+
     public NaviBarModel(String response){
+        this.response = response;
+        this.naviBarPayload = new NaviBarPayload(response);
+    }
+    public NaviBarModel(String response,String lastNaviLocalVersion){
         this.response = response;
 //        this.command = JSONUtils.getString(response,"command","");
 //        this.version = JSONUtils.getString(response,"version","");
         this.naviBarPayload = new NaviBarPayload(response);
+        this.lastNaviLocalVersion = lastNaviLocalVersion;
     }
 
 
@@ -152,5 +159,13 @@ public class NaviBarModel {
 
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    public String getLastNaviLocalVersion() {
+        return lastNaviLocalVersion;
+    }
+
+    public void setLastNaviLocalVersion(String lastNaviLocalVersion) {
+        this.lastNaviLocalVersion = lastNaviLocalVersion;
     }
 }
