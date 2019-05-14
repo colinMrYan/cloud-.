@@ -270,7 +270,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if (isToday) {
             builder.append(getString(R.string.today) + " ");
         }
-        builder.append(TimeUtils.calendar2FormatString(MyApplication.getInstance(), selectCalendar, TimeUtils.getFormat(MyApplication.getInstance(), TimeUtils.FORMAT_MONTH_DAY)));
+        builder.append(TimeUtils.calendar2FormatString(MyApplication.getInstance(), selectCalendar,
+                TimeUtils.getFormat(MyApplication.getInstance(),
+                        Calendar.getInstance().get(Calendar.YEAR)==selectCalendar.get(Calendar.YEAR)?TimeUtils.FORMAT_MONTH_DAY:TimeUtils.FORMAT_YEAR_MONTH_DAY)));
         builder.append(" ");
         builder.append(TimeUtils.getWeekDay(MyApplication.getInstance(), selectCalendar));
         scheduleDataText.setText(builder.toString());
