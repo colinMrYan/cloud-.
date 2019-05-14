@@ -1360,7 +1360,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 transmitTextMsg(cid, uiMessage.getMessage());
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                //  transmitImgMsg(cid, uiMessage.getMessage());
+               transmitImgMsg(cid, uiMessage.getMessage());
                 break;
             default:
                 break;
@@ -1380,6 +1380,8 @@ public class ConversationActivity extends ConversationBaseActivity {
             if (MyApplication.getInstance().isV0VersionChat()) {
             } else {
                 Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
+                String data = JSONUtils.toJSONString(localMessage);
+                LogUtils.LbcDebug("TextData::" + data);
                 WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
             }
         }
@@ -1390,15 +1392,13 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void transmitImgMsg(String cid, Message sendMessage) {
         String path1 = sendMessage.getMsgContentMediaImage().getPreviewMedia();
-        String data = JSONUtils.toJSONString(sendMessage);
-        LogUtils.LbcDebug("data::" + data);
         String path = sendMessage.getLocalPath();
         LogUtils.LbcDebug("path::" + path);
         LogUtils.LbcDebug("path1::" + path1);
         if (!StringUtils.isBlank(path) && NetUtils.isNetworkConnected(getApplicationContext())) {
 //                Message localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid,path);
 //                localMessage.getMsgContentMediaImage().setPreviewMedia(path1);
-//              sendMessageWithFile(localMessage);
+//                sendMessageWithFile(localMessage);
         }
     }
 
@@ -1422,6 +1422,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+               // items = new int[]{ R.string.chat_long_click_transmit };
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
