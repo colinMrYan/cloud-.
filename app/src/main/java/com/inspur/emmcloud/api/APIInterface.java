@@ -78,6 +78,8 @@ import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
+import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
@@ -677,6 +679,7 @@ public interface APIInterface {
     void returnOpenActionBackgroudUrlFail(String error, int errorCode);
 
     void returnOpenDecideBotRequestSuccess();
+
     void returnOpenDecideBotRequestFail(String error, int errorCode);
 
     void returnFaceLoginGSSuccess();
@@ -867,19 +870,30 @@ public interface APIInterface {
 
     void returnDelMeetingFail(String error, int errorCode);
 
+    //会议-通过id获取
+    void returnMeetingDataFromIdSuccess(Meeting meeting);
+    void returnMeetingDataFromIdFail(String error, int errorCode);
+
+    //日程-通过id获取
+    void returnScheduleDataFromIdSuccess(Schedule schedule);
+    void returnScheduleDataFromIdFail(String error, int errorCode);
+
     void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
+
     void returnMeetingListByMeetingRoomFail(String error, int errorCode);
 
 
     void returnNaviBarModelSuccess(NaviBarModel naviBarModel);
+
     void returnNaviBarModelFail(String error, int errorCode);
 
 
-
     void returnMeetingHistoryListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
+
     void returnMeetingHistoryListFail(String error, int errorCode);
 
     void returnUpdateMeetingSuccess();
+
     void returnUpdateMeetingFail(String error, int errorCode);
 
 }
