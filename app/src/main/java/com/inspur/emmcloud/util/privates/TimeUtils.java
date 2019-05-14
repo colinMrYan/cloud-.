@@ -1138,11 +1138,17 @@ public class TimeUtils {
      * @return
      */
     public static boolean isContainTargetCalendarDay(Calendar targetCalendar, Calendar startCalendar, Calendar endCalendar) {
-        Calendar dayBeginCalendar = (Calendar) targetCalendar.clone();
-        dayBeginCalendar = getDayBeginCalendar(dayBeginCalendar);
-        Calendar dayEndCalendar = (Calendar) endCalendar.clone();
-        dayEndCalendar = getDayEndCalendar(dayEndCalendar);
-        return (!dayBeginCalendar.after(startCalendar) && dayEndCalendar.after(endCalendar)) || (dayBeginCalendar.before(endCalendar) && dayBeginCalendar.after(startCalendar)) || (dayEndCalendar.before(endCalendar) && dayEndCalendar.after(startCalendar));
+        if (isSameDay(targetCalendar,startCalendar))
+            return true;
+        if (startCalendar.before(targetCalendar) && endCalendar.after(targetCalendar)){
+            return true;
+        }
+        if (isSameDay(targetCalendar,endCalendar)){
+           if(endCalendar.after(getDayBeginCalendar(targetCalendar))) {
+               return true;
+           }
+        }
+        return false;
     }
 
     /**

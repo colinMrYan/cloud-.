@@ -1,13 +1,13 @@
 package com.inspur.emmcloud.ui.schedule;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,10 +22,10 @@ import com.inspur.emmcloud.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.task.Task;
@@ -77,7 +77,7 @@ import java.util.Map;
 @ContentView(R.layout.fragment_schedule)
 public class ScheduleFragment extends ScheduleBaseFragment implements
         CalendarView.OnCalendarSelectListener,
-        CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister, AdapterView.OnItemClickListener {
+        CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister,AdapterView.OnItemClickListener {
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
@@ -112,15 +112,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private ScheduleEventListAdapter scheduleEventListAdapter;
     private Boolean isEventShowTypeList;
     private ScheduleApiService apiService;
-    private Calendar selectCalendar;
+    private Calendar selectCalendar = Calendar.getInstance();
     private List<Event> eventList = new ArrayList<>();
     private List<Event> allDayEventList = new ArrayList<>();
     private Calendar pageStartCalendar = Calendar.getInstance();
     private Calendar pageEndCalendar = Calendar.getInstance();
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
-    private List<Holiday> holidayList = new ArrayList<>();
     private PopupWindow allDayEventPop;
+    private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
 
 
     @Override
@@ -131,8 +131,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         apiService.setAPIInterface(new WebService());
         pageStartCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
         pageEndCalendar = TimeUtils.getDayEndCalendar(Calendar.getInstance());
-        holidayList = HolidayCacheUtils.getHolidayList(MyApplication.getInstance());
+        yearHolidayListMap = HolidayCacheUtils.getYearHolidayListMap(MyApplication.getInstance());
         initView();
+        getHolidayData(selectCalendar.get(Calendar.YEAR));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -216,20 +217,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         eventScrollView.setVisibility(isEventShowTypeList ? View.GONE : View.VISIBLE);
     }
 
-    private EmmCalendar getSchemeCalendar(int year, int month, int day, String text, boolean isShowSchemePoint, boolean isDuty) {
-        EmmCalendar emmCalendar = new EmmCalendar();
-        emmCalendar.setYear(year);
-        emmCalendar.setMonth(month);
-        emmCalendar.setDay(day);
 
-        if (!StringUtils.isBlank(text)) {
-            emmCalendar.setSchemeColor(isDuty ? 0xfff0906b : 0xff36A5F6);
-        }
-        //如果单独标记颜色、则会使用这个颜色
-        emmCalendar.setScheme(text);
-        emmCalendar.setShowSchemePoint(isShowSchemePoint);
-        return emmCalendar;
-    }
 
     /**
      * 日历返回今天的接口
@@ -240,7 +228,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
     }
 
-    public Calendar getSelectCalendar() {
+    public Calendar getSelectCalendar(){
         return selectCalendar;
     }
 
@@ -249,7 +237,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     public void onCalendarOutOfRange(EmmCalendar calendar) {
 
     }
-
 
     @Override
     public void isExpand(boolean isExpand) {
@@ -300,6 +287,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         List<Meeting> meetingList = MeetingCacheUtils.getMeetingList(MyApplication.getInstance(), pageStartCalendar, pageEndCalendar);
         ScheduleAlertUtils.setScheduleListAlert(MyApplication.getInstance(), scheduleList);
         ScheduleAlertUtils.setMeetingListAlert(MyApplication.getInstance(), meetingList);
+        //在非强制刷新情况下如果前一次日历的日期包含此次的日期则不用重新获取数据
         boolean isNeedGetDataFromNet = isForceUpdate || newDataStartCalendar == null || newDataEndCalendar == null || pageStartCalendar.before(newDataStartCalendar) || pageEndCalendar.after(newDataEndCalendar);
         if (isNeedGetDataFromNet) {
             List<String> scheduleIdList = new ArrayList<>();
@@ -323,16 +311,16 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             getScheduleList(calendarLastTime, meetingLastTime, taskLastTime, scheduleIdList, meetingIdList, taskIdList);
         }
         eventList.clear();
-        boolean scheduleIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
-        boolean meetingIsShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
-        if (meetingIsShow) {
+        boolean isScheduleShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "schedule");
+        boolean isMeetingShow = !MyCalendarOperationCacheUtils.getIsHide(getContext(), "meeting");
+        if (isMeetingShow) {
             eventList.addAll(Meeting.meetingEvent2EventList(meetingList, selectCalendar));
         }
         //  eventList.addAll(Task.taskList2EventList(taskList,selectCalendar));
-        if (scheduleIsShow) {
+        if (isScheduleShow) {
             eventList.addAll(Schedule.calendarEvent2EventList(scheduleList, selectCalendar));
         }
-        showCalendarViewEventMark(scheduleList, meetingList);
+        showAllEventCalendarViewMark(scheduleList,meetingList,isScheduleShow,isMeetingShow);
         allDayLayout.setVisibility(View.GONE);
         int eventListSize = eventList.size();
         scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize < 1) ? View.VISIBLE : View.GONE);
@@ -367,6 +355,29 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
     }
 
+    private EmmCalendar getSchemeCalendar(int year, int month, int day, String holidayName,String holidayColor,String badge,String badgeColor, boolean isShowSchemePoint) {
+        EmmCalendar emmCalendar = new EmmCalendar();
+        emmCalendar.setYear(year);
+        emmCalendar.setMonth(month);
+        emmCalendar.setDay(day);
+        if (!StringUtils.isBlank(holidayName)) {
+            emmCalendar.setSchemeLunar(holidayName);
+        }
+        if (!StringUtils.isBlank(holidayColor)) {
+            emmCalendar.setSchemeLunarColor(Color.parseColor(holidayColor));
+        }
+        if (!StringUtils.isEmpty(badge)){
+            emmCalendar.setScheme(badge);
+        }else {
+            emmCalendar.setScheme(" ");
+        }
+        if (!StringUtils.isBlank(badgeColor)){
+            emmCalendar.setSchemeColor(Color.parseColor(badgeColor));
+        }
+        emmCalendar.setShowSchemePoint(isShowSchemePoint);
+        return emmCalendar;
+    }
+
     /**
      * 日视图区分全天和非全天事件
      */
@@ -385,58 +396,62 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     /**
      * 展示日历事件标志
-     *
      * @param scheduleList
      * @param meetingList
+     * @param isScheduleShow
+     * @param isMeetingShow
      */
-    private void showCalendarViewEventMark(List<Schedule> scheduleList, List<Meeting> meetingList) {
+    private void showAllEventCalendarViewMark(List<Schedule> scheduleList,List<Meeting> meetingList,boolean isScheduleShow,boolean isMeetingShow) {
         calendarView.clearSchemeDate();
         Map<String, EmmCalendar> map = new HashMap<>();
+        int startYear = pageStartCalendar.get(Calendar.YEAR);
+        int endYear = pageEndCalendar.get(Calendar.YEAR);
+        List<Holiday> holidayList = yearHolidayListMap.get(startYear);
+        if (holidayList == null) {
+            holidayList = new ArrayList<>();
+            getHolidayData(startYear);
+        }
+        if (startYear != endYear) {
+            List<Holiday> endYearHolidayList = yearHolidayListMap.get(endYear);
+            if (endYearHolidayList == null) {
+                getHolidayData(endYear);
+            } else {
+                holidayList.addAll(endYearHolidayList);
+            }
+        }
         for (Holiday holiday : holidayList) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(holiday.getYear(), holiday.getMonth() - 1, holiday.getDay(), 0, 0, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            if (calendar.before(pageEndCalendar) && !calendar.before(pageStartCalendar)) {
-                map.put(getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.isDuty() ? "班" : "休", false, holiday.isDuty()).toString(),
-                        getSchemeCalendar(holiday.getYear(), holiday.getMonth(), holiday.getDay(), holiday.isDuty() ? "班" : "休", false, holiday.isDuty()));
+            EmmCalendar schemeCalendar =  getSchemeCalendar(holiday.getYear(),holiday.getMonth(),holiday.getDay(),holiday.getName()
+                    ,holiday.getColor(),holiday.getBadge(),holiday.getBadgeColor(),false);
+            map.put(schemeCalendar.toString(), schemeCalendar);
+        }
+        if (isScheduleShow){
+            for (Schedule schedule:scheduleList){
+                showScheduleEventCalendarViewMark(schedule.getStartTimeCalendar(), schedule.getEndTimeCalendar(), map);
+            }
+        }
+        if (isMeetingShow){
+            for (Meeting meeting:meetingList){
+                showScheduleEventCalendarViewMark(meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar(), map);
             }
         }
 
-        for (Schedule schedule : scheduleList) {
-            Calendar eventStartDayBeginCalendar = TimeUtils.getDayBeginCalendar(schedule.getStartTimeCalendar());
-            for (Calendar calendar = eventStartDayBeginCalendar; calendar.before(schedule.getEndTimeCalendar()); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH) + 1;
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, " ", true, false);
-                EmmCalendar existEmmCalendar = map.get(emmCalendar.toString());
-                if (existEmmCalendar == null) {
-                    existEmmCalendar = emmCalendar;
-                } else {
-                    existEmmCalendar.setShowSchemePoint(true);
-                }
-
-                map.put(existEmmCalendar.toString(), existEmmCalendar);
-            }
-        }
-        for (Meeting meeting : meetingList) {
-            Calendar eventStartDayBeginCalendar = TimeUtils.getDayBeginCalendar(meeting.getStartTimeCalendar());
-            for (Calendar calendar = eventStartDayBeginCalendar; calendar.before(meeting.getEndTimeCalendar()); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH) + 1;
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, " ", true, false);
-                EmmCalendar existEmmCalendar = map.get(emmCalendar.toString());
-                if (existEmmCalendar == null) {
-                    existEmmCalendar = emmCalendar;
-                } else {
-                    existEmmCalendar.setShowSchemePoint(true);
-                }
-
-                map.put(existEmmCalendar.toString(), existEmmCalendar);
-            }
-        }
         calendarView.setSchemeDate(map);
+    }
+
+    private void showScheduleEventCalendarViewMark(Calendar startCalendar, Calendar endCalendar, Map<String, EmmCalendar> map) {
+        for (Calendar calendar = startCalendar; calendar.before(endCalendar); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            EmmCalendar emmCalendar = getSchemeCalendar(year, month, day, null, null, "",null,true);
+            EmmCalendar existEmmCalendar = map.get(emmCalendar.toString());
+            if (existEmmCalendar == null) {
+                existEmmCalendar = emmCalendar;
+            } else {
+                existEmmCalendar.setShowSchemePoint(true);
+            }
+            map.put(existEmmCalendar.toString(), existEmmCalendar);
+        }
     }
 
     private void showAllDayEventListPop(View anchor) {
@@ -531,20 +546,30 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         EventBus.getDefault().unregister(this);
     }
 
-
-    public void getScheduleList(long calendarLastTime, long meetingLastTime, long taskLastTime, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
+    /**
+     * 获取日程、会议、任务信息
+     *
+     * @param calendarLastTime
+     * @param meetingLastTime
+     * @param taskLastTime
+     * @param calendarIdList
+     * @param meetingIdList
+     * @param taskIdList
+     */
+    private void getScheduleList(long calendarLastTime, long meetingLastTime, long taskLastTime, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             apiService.getScheduleList((Calendar) pageStartCalendar.clone(), (Calendar) pageEndCalendar.clone(),
                     calendarLastTime, meetingLastTime, taskLastTime, calendarIdList, meetingIdList, taskIdList);
         }
     }
 
-    class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
-            super.returnDeviceCheckSuccess(getDeviceCheckResult);
+    private void getHolidayData(int year) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
+            apiService.getHolidayData(year);
         }
+    }
 
+    class WebService extends APIInterfaceInstance {
         @Override
         public void returnScheduleListSuccess(GetScheduleListResult getScheduleListResult, Calendar startCalendar,
                                               Calendar endCalendar, List<String> calendarIdList, List<String> meetingIdList, List<String> taskIdList) {
@@ -572,18 +597,14 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
 
         @Override
-        public void returnScheduleListFail(String error, int errorCode) {
-            super.returnScheduleListFail(error, errorCode);
+        public void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult) {
+            yearHolidayListMap.put(getHolidayDataResult.getYear(), getHolidayDataResult.getHolidayList());
+            if (pageStartCalendar.get(Calendar.YEAR) == getHolidayDataResult.getYear() || pageEndCalendar.get(Calendar.YEAR) == getHolidayDataResult.getYear()) {
+                showCalendarEvent(true);
+            }
+            HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), getHolidayDataResult.getYear(), getHolidayDataResult.getHolidayList());
         }
 
-//        @Override
-//        public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
-////            taskList = getTaskListResult.getTaskList();
-//            showCalendarEvent(false);
-//        }
-//
-//        @Override
-//        public void returnRecentTasksFail(String error, int errorCode) {
-//        }
+
     }
 }

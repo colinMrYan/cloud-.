@@ -10,6 +10,7 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
@@ -1022,8 +1023,7 @@ public class ScheduleApiService {
      */
     public void getMeetingHistoryListByPage(final int pageNum) {
         final String completeUrl = APIUri.getMeetingHistoryListByPage(pageNum);
-        RequestParams params = MyApplication.getInstance()
-                .getHttpRequestParams(completeUrl);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -1047,6 +1047,46 @@ public class ScheduleApiService {
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMeetingHistoryListSuccess(new GetMeetingListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingHistoryListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取节假日信息
+     * @param year
+     */
+    public void getHolidayData(final int year) {
+        final String completeUrl = APIUri.getHolidayDataUrl() + year;
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getHolidayData(year);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnHolidayDataSuccess(new GetHolidayDataResult(new String(arg0),year));
             }
 
             @Override

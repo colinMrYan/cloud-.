@@ -4,60 +4,65 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 
+import org.xutils.db.sqlite.WhereBuilder;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chenmch on 2019/4/19.
  */
 
 public class HolidayCacheUtils {
-    public static List<Holiday> getHolidayList(Context context){
-        List<Holiday> holidayList = new ArrayList<>();
-        holidayList.add(new Holiday(2018,12,29,true));
-        holidayList.add(new Holiday(2018,12,30));
-        holidayList.add(new Holiday(2018,12,31));
-        holidayList.add(new Holiday(2019,1,1));
+    public static List<Holiday> getHolidayList(Context context,int year){
+       List<Holiday> holidayList = null;
+       try {
+           holidayList = DbCacheUtils.getDb(context).selector(Holiday.class).where("year","=",year).or("year","=",year+1).or("year","=",year-1).findAll();
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+       if (holidayList == null){
+           holidayList = new ArrayList<>();
+       }
+       return holidayList;
+    }
 
-        holidayList.add(new Holiday(2018,2,2,true));
-        holidayList.add(new Holiday(2018,2,3,true));
-        holidayList.add(new Holiday(2019,2,4));
-        holidayList.add(new Holiday(2019,2,5));
-        holidayList.add(new Holiday(2019,2,6));
-        holidayList.add(new Holiday(2019,2,7));
-        holidayList.add(new Holiday(2019,2,8));
-        holidayList.add(new Holiday(2019,2,9));
-        holidayList.add(new Holiday(2019,2,10));
+    public static Map<Integer,List<Holiday>> getYearHolidayListMap(Context context){
+        Map<Integer,List<Holiday>> yearHolidayListMap = new HashMap<>();
+        try {
+            List<Holiday> allHolidayList = DbCacheUtils.getDb(context).findAll(Holiday.class);
+            for (Holiday holiday:allHolidayList){
+                List<Holiday> yearHolidayList = yearHolidayListMap.get(holiday.getYear());
+                if (yearHolidayList == null){
+                    yearHolidayList = new ArrayList<>();
+                }
+                yearHolidayList.add(holiday);
+                yearHolidayListMap.put(holiday.getYear(),yearHolidayList);
+            }
 
-        holidayList.add(new Holiday(2019,4,5));
-        holidayList.add(new Holiday(2019,4,6));
-        holidayList.add(new Holiday(2019,4,7));
 
-        holidayList.add(new Holiday(2019,4,28,true));
-        holidayList.add(new Holiday(2019,5,1));
-        holidayList.add(new Holiday(2019,5,2));
-        holidayList.add(new Holiday(2019,5,3));
-        holidayList.add(new Holiday(2019,5,4));
-        holidayList.add(new Holiday(2019,5,5,true));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return yearHolidayListMap;
+    }
 
-        holidayList.add(new Holiday(2019,6,7));
-        holidayList.add(new Holiday(2019,6,8));
-        holidayList.add(new Holiday(2019,6,9));
+    public static void saveHolidayList(final Context context,final int year,final List<Holiday> holidayList){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DbCacheUtils.getDb(context).delete(Holiday.class, WhereBuilder.b("year","=",year));
+                    DbCacheUtils.getDb(context).save(holidayList);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
-        holidayList.add(new Holiday(2019,9,13));
-        holidayList.add(new Holiday(2019,9,14));
-        holidayList.add(new Holiday(2019,9,15));
 
-        holidayList.add(new Holiday(2019,9,29,true));
-        holidayList.add(new Holiday(2019,10,1));
-        holidayList.add(new Holiday(2019,10,2));
-        holidayList.add(new Holiday(2019,10,3));
-        holidayList.add(new Holiday(2019,10,4));
-        holidayList.add(new Holiday(2019,10,5));
-        holidayList.add(new Holiday(2019,10,6));
-        holidayList.add(new Holiday(2019,10,7));
-        holidayList.add(new Holiday(2019,10,12,true));
-        return holidayList;
     }
 
 }
