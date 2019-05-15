@@ -88,13 +88,10 @@ public class MeetingDetailActivity extends BaseActivity {
         scheduleApiService.setAPIInterface(new WebService());
         meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
         meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
-        if (TextUtils.isEmpty(meetingId) && meeting != null) {  //来自列表
-            meetingId = meeting.getId();       //来自列表
-        }
-        if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据
+        if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据  来自通知
             getDbMeetingFromId(meetingId);
             getMeetingFromId(meetingId);
-        } else {                                //id为空是走之前逻辑，异常情况
+        } else {                                //id为空是走之前逻辑
             initViews();
         }
     }
