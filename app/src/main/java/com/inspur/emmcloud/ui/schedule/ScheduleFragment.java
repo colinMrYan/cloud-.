@@ -269,6 +269,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         calendarDayView.setCurrentTimeLineShow(isToday);
         if (isToday) {
             builder.append(getString(R.string.today) + " ");
+        }else{
+            builder.append(getShownDay());
         }
         builder.append(TimeUtils.calendar2FormatString(MyApplication.getInstance(), selectCalendar,
                 TimeUtils.getFormat(MyApplication.getInstance(),
@@ -276,6 +278,28 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         builder.append(" ");
         builder.append(TimeUtils.getWeekDay(MyApplication.getInstance(), selectCalendar));
         scheduleDataText.setText(builder.toString());
+    }
+
+    private String getShownDay() {
+        String day = "";
+        switch (TimeUtils.getCountdownNum(selectCalendar)){
+            case -2:
+                day = getString(R.string.the_day_before_yesterday);
+                break;
+            case -1:
+                day = getString(R.string.yesterday);
+                break;
+            case 1:
+                day = getString(R.string.tomorrow);
+                break;
+            case 2:
+                day = getString(R.string.after);
+                break;
+            default:
+                day = "";
+                break;
+        }
+        return day + " ";
     }
 
 

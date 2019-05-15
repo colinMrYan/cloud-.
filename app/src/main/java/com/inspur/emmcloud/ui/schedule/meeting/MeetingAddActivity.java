@@ -155,6 +155,13 @@ public class MeetingAddActivity extends BaseActivity {
             endTimeCalendar = (Calendar) startTimeCalendar.clone();
             endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
         }
+        if(getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
+                && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
+                && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)){
+            startTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
+            endTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+            meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+        }
     }
 
     /**
