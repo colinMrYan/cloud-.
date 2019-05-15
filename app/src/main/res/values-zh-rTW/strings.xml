@@ -428,6 +428,7 @@
     <string name="schedule_task_tag_name_length">標籤名稱最多64個字符</string>
     <!--会议-->
     <string name="schedule_meeting_booking">預定會議</string>
+    <string name="schedule_meeting_room_booking">新建會議</string>
     <string name="schedule_meeting_add_attendee_title">參會人</string>
     <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
     <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
