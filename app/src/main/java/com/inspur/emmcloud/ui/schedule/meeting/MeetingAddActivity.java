@@ -32,6 +32,7 @@ import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -243,10 +244,6 @@ public class MeetingAddActivity extends BaseActivity {
             return false;
         }
 
-        if (startTimeCalendar.getTimeInMillis() < System.currentTimeMillis()) {
-            ToastUtils.show(MeetingAddActivity.this, R.string.meeting_room_time_late);
-            return false;
-        }
         if (startTimeCalendar.after(endTimeCalendar)) {
             ToastUtils.show(MeetingAddActivity.this, R.string.calendar_start_or_end_time_illegal);
             return false;
@@ -343,6 +340,7 @@ public class MeetingAddActivity extends BaseActivity {
         startDataTimePickerDialog.showDatePickerDialog(isAllDay, isStartTime ? startTimeCalendar : endTimeCalendar);
     }
 
+
     /**
      * 显示开始和结束时间
      */
@@ -411,27 +409,31 @@ public class MeetingAddActivity extends BaseActivity {
        // 首先当前时间右半部分与会议室返回时间取交集，如果交集为空时间不做修改
         Calendar currentCalendar = Calendar.getInstance();
         Calendar nextHalfHourCalendar =TimeUtils.getNextHalfHourTime(currentCalendar);
-        if(!nextHalfHourCalendar.after(meetingRoomEndCalendar)){   //有交集
+        if(nextHalfHourCalendar.before(meetingRoomEndCalendar)){   //有交集
             if(nextHalfHourCalendar.after(meetingRoomStartCalendar)){
                 Calendar modifiedCalendar = (Calendar) nextHalfHourCalendar.clone();
                 modifiedCalendar.add(Calendar.HOUR_OF_DAY,2);
                endTimeCalendar= modifiedCalendar.after(meetingRoomEndCalendar)?meetingRoomEndCalendar:modifiedCalendar;
                startTimeCalendar=nextHalfHourCalendar;
+                LogUtils.LbcDebug("111");
             }else{
                 Calendar nextHalfHourStartCalendar =TimeUtils.getNextHalfHourTime(meetingRoomStartCalendar);
                 Calendar modifiedStartCalendar = (Calendar) nextHalfHourStartCalendar.clone();
                 modifiedStartCalendar.add(Calendar.HOUR_OF_DAY,2);
                 endTimeCalendar=modifiedStartCalendar.after(meetingRoomEndCalendar)?meetingRoomEndCalendar:modifiedStartCalendar;
                 startTimeCalendar = nextHalfHourStartCalendar.after(meetingRoomEndCalendar)?meetingRoomStartCalendar:nextHalfHourStartCalendar;
+                LogUtils.LbcDebug("222");
             }
         }else{
             //可能存在半小时以内的会议，如果开始时间
             if(meetingRoomEndCalendar.after(currentCalendar)){
                 endTimeCalendar=meetingRoomEndCalendar;
                 startTimeCalendar=currentCalendar;
+                LogUtils.LbcDebug("333");
             }else{
                 endTimeCalendar=meetingRoomEndCalendar;
                 startTimeCalendar=meetingRoomStartCalendar;
+                LogUtils.LbcDebug("444");
             }
         }
     }
