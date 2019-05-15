@@ -270,6 +270,8 @@ public class TaskAddActivity extends BaseActivity {
             setTaskColorTags();
             showManagerImage();
             setClickable(taskType);
+        }else{
+            singleTagLayout.setVisibility(View.GONE);
         }
         attachmentOtherAdapter.notifyDataSetChanged();
     }
@@ -823,7 +825,6 @@ public class TaskAddActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
-            LoadingDialog.dimissDlg(loadingDlg);
             taskResult = new Task();
             taskResult.setTitle(contentInputEdit.getText().toString());
             taskResult.setId(getTaskAddResult.getId());
@@ -847,7 +848,6 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnInviteMateForTaskSuccess(String subject) {
-            LoadingDialog.dimissDlg(loadingDlg);
             taskResult.setSubject(new TaskSubject(subject));
         }
 
@@ -860,7 +860,6 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnUpdateTaskSuccess(int defaultValue) {
-            LoadingDialog.dimissDlg(loadingDlg);
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.mession_saving_success));
             setResult(RESULT_OK);
@@ -893,7 +892,6 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnAttachmentSuccess(Task taskResult) {
             super.returnAttachmentSuccess(taskResult);
-            LoadingDialog.dimissDlg(loadingDlg);
             List<Attachment> attachments = taskResult.getAttachments();
             taskResult.setAttachments(attachments);
             ToastUtils.show(TaskAddActivity.this,
@@ -909,7 +907,6 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnAddAttachMentSuccess(Attachment attachment) {
             super.returnAddAttachMentSuccess(attachment);
-            LoadingDialog.dimissDlg(loadingDlg);
             List<Attachment> attachments = taskResult.getAttachments();
             attachments.add(attachment);
             taskResult.setAttachments(attachments);
@@ -988,7 +985,7 @@ public class TaskAddActivity extends BaseActivity {
 
         @Override
         public void returnChangeMessionTagSuccess() {
-            LoadingDialog.dimissDlg(loadingDlg);
+
         }
 
         @Override
@@ -1006,6 +1003,7 @@ public class TaskAddActivity extends BaseActivity {
         public void returnAddTaskTagSuccess() {
             if (!isCreateTask) {
                 EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED, ""));
+                LoadingDialog.dimissDlg(loadingDlg);
                 finish();
             }
         }

@@ -11,6 +11,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,13 +33,18 @@ import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.imp.api.Res;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 import java.util.List;
 import java.util.Timer;
@@ -52,6 +58,7 @@ import pl.droidsonroids.gif.GifImageView;
  *
  * @author Administrator
  */
+@ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity { // 此处不能继承BaseActivity 推送会有问题
 
     private static final int LOGIN_SUCCESS = 0;
@@ -64,7 +71,12 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private Handler handler;
     private long activitySplashShowTime = 0;
     private Timer timer;
+    @ViewInject(R.id.ibt_skip)
     private ImageButton skipImageBtn;
+    @ViewInject(R.id.iv_splash_logo)
+    private ImageView splashLogoImg;
+    @ViewInject(R.id.iv_splash_ad)
+    private GifImageView splashAdImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +86,28 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             finish();
             return;
         }
-        setContentView(R.layout.activity_main);
-        skipImageBtn = findViewById(R.id.ibt_skip);
+        initAppAlias();
         checkNecessaryPermission();
 //        IntentUtils.startActivity(this, MeetingOfficeAddActivity.class,true);
+    }
+
+    private void initAppAlias(){
+        String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+        if (appFirstLoadAlis == null) {
+            appFirstLoadAlis = AppUtils.getManifestAppVersionFlag(this);
+            PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS, appFirstLoadAlis);
+        }
+        if (!appFirstLoadAlis.equals("Standard")) {
+            PackageManager pm = getApplicationContext().getPackageManager();
+            pm.setComponentEnabledSetting(new ComponentName(
+                            MainActivity.this, getPackageName() + ".Standard"),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    PackageManager.DONT_KILL_APP);
+            pm.setComponentEnabledSetting(new ComponentName(
+                            MainActivity.this, getPackageName() + "." + appFirstLoadAlis),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+        }
     }
 
     private void checkNecessaryPermission() {
@@ -127,21 +157,8 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
      */
     private void init() {
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
-        if (appFirstLoadAlis == null) {
-            appFirstLoadAlis = AppUtils.getManifestAppVersionFlag(this);
-            PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS, appFirstLoadAlis);
-        }
-        if (!appFirstLoadAlis.equals("Standard")) {
-            PackageManager pm = getApplicationContext().getPackageManager();
-            pm.setComponentEnabledSetting(new ComponentName(
-                            MainActivity.this, getPackageName() + ".Standard"),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP);
-            pm.setComponentEnabledSetting(new ComponentName(
-                            MainActivity.this, getPackageName() + "." + appFirstLoadAlis),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
-        }
+        int splashLogoResId = Res.getDrawableID("ic_splash_logo_"+appFirstLoadAlis);
+        ImageDisplayUtils.getInstance().displayImage(splashLogoImg,"drawable://"+splashLogoResId,R.drawable.ic_splash_logo);
         activitySplashShowTime = System.currentTimeMillis();
         //进行app异常上传
         startUploadExceptionService();
@@ -340,9 +357,9 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             boolean shouldShow = ((nowTime > splashPageBeanLoacal.getPayload().getEffectiveDate())
                     && (nowTime < splashPageBeanLoacal.getPayload().getExpireDate()));
             if (shouldShow && !StringUtils.isBlank(splashPagePath)) {
-                ImageLoader.getInstance().displayImage("file://" + splashPagePath, (GifImageView) findViewById(R.id.splash_img_top));
+                ImageLoader.getInstance().displayImage("file://" + splashPagePath, splashAdImg);
             } else {
-                findViewById(R.id.splash_img_top).setVisibility(View.GONE);
+                splashAdImg.setVisibility(View.GONE);
             }
         }
     }

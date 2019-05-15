@@ -259,6 +259,11 @@ public class MeetingAddActivity extends BaseActivity {
             return false;
         }
 
+        if (endTimeCalendar.before(Calendar.getInstance())) {
+            ToastUtils.show(MeetingAddActivity.this, R.string.calendar_end_time_no_before_current);
+            return false;
+        }
+
         int count = TimeUtils.getCountdownNum(endTimeCalendar);
         if (meetingRoom != null && count >= meetingRoom.getMaxAhead()) {
             ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_day));
@@ -387,8 +392,9 @@ public class MeetingAddActivity extends BaseActivity {
                     showSelectUser(liaisonLayout, searchModelList);
                     break;
                 case REQUEST_SELECT_MEETING_ROOM:
-                    startTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
-                    endTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+                    Calendar backStartTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
+                    Calendar backEndTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+                    correctMeetingRoomTime(backStartTimeCalendar,backEndTimeCalendar);
                     meetingRoom = (MeetingRoom) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
                     setMeetingTime();
                     meetingPositionEdit.setText(meetingRoom.getName());
@@ -404,6 +410,37 @@ public class MeetingAddActivity extends BaseActivity {
             }
         }
 
+    }
+
+    /**修正会议室可用时间
+     * */
+    private void correctMeetingRoomTime(Calendar meetingRoomStartCalendar,Calendar meetingRoomEndCalendar){
+       // 首先当前时间右半部分与会议室返回时间取交集，如果交集为空时间不做修改
+        Calendar currentCalendar = Calendar.getInstance();
+        Calendar nextHalfHourCalendar =TimeUtils.getNextHalfHourTime(currentCalendar);
+        if(!nextHalfHourCalendar.after(meetingRoomEndCalendar)){   //有交集
+            if(nextHalfHourCalendar.after(meetingRoomStartCalendar)){
+                Calendar modifiedCalendar = (Calendar) nextHalfHourCalendar.clone();
+                modifiedCalendar.add(Calendar.HOUR_OF_DAY,2);
+               endTimeCalendar= modifiedCalendar.after(meetingRoomEndCalendar)?meetingRoomEndCalendar:modifiedCalendar;
+               startTimeCalendar=nextHalfHourCalendar;
+            }else{
+                Calendar nextHalfHourStartCalendar =TimeUtils.getNextHalfHourTime(meetingRoomStartCalendar);
+                Calendar modifiedStartCalendar = (Calendar) nextHalfHourStartCalendar.clone();
+                modifiedStartCalendar.add(Calendar.HOUR_OF_DAY,2);
+                endTimeCalendar=modifiedStartCalendar.after(meetingRoomEndCalendar)?meetingRoomEndCalendar:modifiedStartCalendar;
+                startTimeCalendar = nextHalfHourStartCalendar.after(meetingRoomEndCalendar)?meetingRoomStartCalendar:nextHalfHourStartCalendar;
+            }
+        }else{
+            //可能存在半小时以内的会议，如果开始时间
+            if(meetingRoomEndCalendar.after(currentCalendar)){
+                endTimeCalendar=meetingRoomEndCalendar;
+                startTimeCalendar=currentCalendar;
+            }else{
+                endTimeCalendar=meetingRoomEndCalendar;
+                startTimeCalendar=meetingRoomStartCalendar;
+            }
+        }
     }
 
     /**
