@@ -250,10 +250,6 @@ public class MeetingAddActivity extends BaseActivity {
             return false;
         }
 
-        if (startTimeCalendar.getTimeInMillis() < System.currentTimeMillis()) {
-            ToastUtils.show(MeetingAddActivity.this, R.string.meeting_room_time_late);
-            return false;
-        }
         if (startTimeCalendar.after(endTimeCalendar)) {
             ToastUtils.show(MeetingAddActivity.this, R.string.calendar_start_or_end_time_illegal);
             return false;
@@ -350,6 +346,7 @@ public class MeetingAddActivity extends BaseActivity {
         startDataTimePickerDialog.showDatePickerDialog(isAllDay, isStartTime ? startTimeCalendar : endTimeCalendar);
     }
 
+
     /**
      * 显示开始和结束时间
      */
@@ -418,7 +415,7 @@ public class MeetingAddActivity extends BaseActivity {
        // 首先当前时间右半部分与会议室返回时间取交集，如果交集为空时间不做修改
         Calendar currentCalendar = Calendar.getInstance();
         Calendar nextHalfHourCalendar =TimeUtils.getNextHalfHourTime(currentCalendar);
-        if(!nextHalfHourCalendar.after(meetingRoomEndCalendar)){   //有交集
+        if(nextHalfHourCalendar.before(meetingRoomEndCalendar)){   //有交集
             if(nextHalfHourCalendar.after(meetingRoomStartCalendar)){
                 Calendar modifiedCalendar = (Calendar) nextHalfHourCalendar.clone();
                 modifiedCalendar.add(Calendar.HOUR_OF_DAY,2);
