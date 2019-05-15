@@ -159,16 +159,8 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             isAddCalendar = false;
             isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            if (scheduleEvent != null) {
-                id = scheduleEvent.getId();   //获取id
-            }
-
-            if (!TextUtils.isEmpty(id)) {    //当id不为空时通过网络获取数据
-                getDbCalendarFromId();
-                getNetCalendarFromId();
-            } else {
-                createCalendar();         //当id为空时走创建日程，异常情况
-            }
+            initscheduleData();     //直接用传过来的数据
+            initView();
         } else {    //创建日程
             createCalendar();
         }
