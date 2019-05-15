@@ -84,6 +84,7 @@
     <string name="begin">Begin</string>
     <string name="end">End</string>
     <string name="yesterday">Yesterday</string>
+    <string name="the_day_before_yesterday">The day before yesterday</string>
     <string name="format_default">MM/dd/yy HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
     <string name="format_year_month_day">MM/dd/yy</string>
@@ -426,6 +427,7 @@
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
+    <string name="schedule_meeting_room_booking">New meeting</string>
     <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
     <string name="schedule_meeting_add_attendee_title">Attendee</string>

@@ -25,19 +25,9 @@
         android:layout_height="wrap_content"
         android:padding="6dp"
         android:background="@drawable/bg_task_search">
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_search"-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_marginLeft="4dp"-->
-            <!--android:layout_marginRight="6dp"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:scaleType="centerInside"-->
-            <!--android:src="@drawable/ic_task_search" />-->
 
         <com.inspur.emmcloud.widget.ClearEditText
             android:id="@+id/ev_search"
-            android:layout_toRightOf="@id/iv_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
