@@ -964,6 +964,7 @@
     <string name="calendar_adjust">调整</string>
     <string name="calendar_please_input_title">请输入标题</string>
     <string name="calendar_start_or_end_time_illegal">结束时间不能小于开始时间</string>
+    <string name="calendar_end_time_no_before_current">结束时间不能早于当前时间</string>
     <string name="calendar_tilte_cannot_exceed_64">标题不能超过64个字符</string>
     <string name="calendar_select_calendar">请选择日历</string>
     <string name="calendar_add_success">添加成功</string>

@@ -949,6 +949,7 @@
     <string name="calendar_adjust">調整</string>
     <string name="calendar_please_input_title">請輸入標題</string>
     <string name="calendar_start_or_end_time_illegal">結束時間不能小於開始時間</string>
+    <string name="calendar_end_time_no_before_current">結束時間不能早於當前時間</string>
     <string name="calendar_tilte_cannot_exceed_64">標題不能超過64個字元</string>
     <string name="calendar_select_calendar">請選擇日曆</string>
     <string name="calendar_add_success">添加成功</string>
