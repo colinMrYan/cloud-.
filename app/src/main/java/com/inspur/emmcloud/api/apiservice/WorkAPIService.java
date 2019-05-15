@@ -20,17 +20,16 @@ import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.task.Attachment;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.GetTagResult;
-import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -175,8 +174,8 @@ public class WorkAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getMeetingRoomList(start, end, officeIdList,
-                                isFilter);
+                        getFiltMeetingRooms(start, end, commonOfficeIdList,
+                                isFilte);
                     }
 
                     @Override

@@ -172,16 +172,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnOauthSigninFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {
         // TODO Auto-generated method stub
     }

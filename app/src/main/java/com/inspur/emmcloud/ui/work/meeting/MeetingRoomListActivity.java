@@ -675,7 +675,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                             + "selectCommonOfficeIds");
             List<String> selectCommonOfficeIdList = JSONUtils.JSONArray2List(selectCommonOfficeIds, new ArrayList<String>());
             // 修改开关
-            apiService.getMeetingRoomList(beginTimeLong, endTimeLong,
+            apiService.getFiltMeetingRooms(beginTimeLong, endTimeLong,
                     selectCommonOfficeIdList, isFilte);
         }
 
