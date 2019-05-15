@@ -86,6 +86,7 @@
     <string name="begin">開始</string>
     <string name="end">結束</string>
     <string name="yesterday">昨天</string>
+    <string name="the_day_before_yesterday">前天</string>
     <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
     <string name="format_year_month_day">yyyy\'年\'MM\'月\'dd\'日\'</string>
