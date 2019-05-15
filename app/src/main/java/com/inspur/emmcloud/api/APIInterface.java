@@ -114,9 +114,13 @@ import java.util.List;
 
 public interface APIInterface {
 
-    void returnOauthSigninSuccess(GetLoginResult getLoginResult);
+    void returnOauthSignInSuccess(GetLoginResult getLoginResult);
 
-    void returnOauthSigninFail(String error, int errorCode);
+    void returnOauthSignInFail(String error, int errorCode,String headerLimitRemaining,String headerRetryAfter);
+
+    void returnRefreshTokenSuccess(GetLoginResult getLoginResult);
+
+    void returnRefreshTokenFail(String error, int errorCode);
 
     void returnAllAppsSuccess(GetAllAppResult getAllAppResult);
 

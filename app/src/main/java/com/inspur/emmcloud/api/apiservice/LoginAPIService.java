@@ -18,10 +18,18 @@ import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;
+import org.xutils.ex.HttpException;
 import org.xutils.http.RequestParams;
+import org.xutils.http.app.RequestTracker;
+import org.xutils.http.request.UriRequest;
+
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * com.inspur.emmcloud.api.apiservice.LoginAPIService create at 2016年11月8日
@@ -45,7 +53,7 @@ public class LoginAPIService {
      * @param userName
      * @param password
      */
-    public void OauthSignin(String userName, String password) {
+    public void OauthSignIn(String userName, String password) {
         String completeUrl = APIUri.getOauthSigninUrl();
         RequestParams params = new RequestParams(completeUrl);
         params.addParameter("grant_type", "password");
@@ -54,24 +62,89 @@ public class LoginAPIService {
         params.addParameter("client_id", "com.inspur.ecm.client.android");
         params.addParameter("client_secret",
                 "6b3c48dc-2e56-440c-84fb-f35be37480e8");
+        params.setRequestTracker(new RequestTracker() {
+            @Override
+            public void onWaiting(RequestParams requestParams) {
+
+            }
+
+            @Override
+            public void onStart(RequestParams requestParams) {
+
+            }
+
+            @Override
+            public void onRequestCreated(UriRequest uriRequest) {
+
+            }
+
+            @Override
+            public void onCache(UriRequest uriRequest, Object o) {
+
+            }
+
+            @Override
+            public void onSuccess(UriRequest uriRequest, Object o) {
+
+            }
+
+            @Override
+            public void onCancelled(UriRequest uriRequest) {
+
+            }
+
+            @Override
+            public void onError(UriRequest uriRequest, Throwable throwable, boolean b) {
+                String error = "";
+                int responseCode = -1;
+                if (throwable instanceof TimeoutException || throwable instanceof SocketTimeoutException) {
+                    error = "time out";
+                    responseCode = 1001;
+                } else if (throwable instanceof UnknownHostException) {
+                    error = "time out";
+                    responseCode = 1003;
+                } else if (throwable instanceof HttpException) {
+                    HttpException httpEx = (HttpException) throwable;
+                    error = httpEx.getResult();
+                    responseCode = httpEx.getCode();
+                } else {
+                    error = throwable.toString();
+                }
+                if (StringUtils.isBlank(error)) {
+                    error = "未知错误";
+                }
+                String headerLimitRemaining = "";
+                String headerRetryAfter= "";
+                if (uriRequest != null && uriRequest.getResponseHeaders() != null){
+                    headerLimitRemaining = uriRequest.getResponseHeader("X-Rate-Limit-Remaining");
+                    headerRetryAfter = uriRequest.getResponseHeader("X-Rate-Limit-Retry-After-Seconds");
+                }
+                apiInterface.returnOauthSignInFail(error, responseCode,headerLimitRemaining,headerRetryAfter);
+            }
+
+            @Override
+            public void onFinished(UriRequest uriRequest) {
+
+            }
+        });
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnOauthSigninSuccess(new GetLoginResult(new String(arg0)));
+                apiInterface.returnOauthSignInSuccess(new GetLoginResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnOauthSigninFail(error, responseCode);
+//                apiInterface.returnOauthSignInFail(error, responseCode);
             }
 
             @Override
             public void callbackTokenExpire(long requestTime) {
                 // TODO Auto-generated method stub
-                apiInterface.returnOauthSigninFail(new String(""), 500);
+//                apiInterface.returnOauthSignInFail(new String(""), 500,-1,-1);
             }
 
         });
@@ -95,19 +168,19 @@ public class LoginAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnOauthSigninSuccess(new GetLoginResult(new String(arg0)));
+                apiInterface.returnRefreshTokenSuccess(new GetLoginResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnOauthSigninFail(error, responseCode);
+                apiInterface.returnRefreshTokenFail(error, responseCode);
             }
 
             @Override
             public void callbackTokenExpire(long requestTime) {
                 // TODO Auto-generated method stub
-                apiInterface.returnOauthSigninFail("", -1);
+                apiInterface.returnRefreshTokenFail("", -1);
             }
 
         });

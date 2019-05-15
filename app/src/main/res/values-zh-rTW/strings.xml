@@ -2,6 +2,10 @@
 <resources>
 
     <string name="app_name">雲+</string>
+    <string name="app_name_zhihuichengjian">智慧城建</string>
+    <string name="app_name_huaxiayinhang">華夏管理雲</string>
+    <string name="app_name_beiqi">雲+</string>
+    <string name="app_name_chinatower">中國鐵塔報帳</string>
     <string name="reclick_to_desktop">再按一次退出程式</string>
     <string name="Network_Mobile">已經連接到移動網路</string>
     <string name="Network_WIFI">已經連接到WIFI</string>
@@ -226,7 +230,7 @@
     <string name="login_your_contact"> 您的聯繫方式</string>
     <string name="login_group_album"> 群相冊</string>
     <string name="login_group_file">群文件</string>
-    <string name="login_authorization_expired">授權過期，請重新登錄</string>
+    <string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>
     <string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>
     <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
     <string name="captchas">驗證碼</string>
@@ -238,6 +242,9 @@
     <string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>
     <string name="login_current_login_enterprise">當前系統：%1$s</string>
     <string name="login_forget_password">忘記密碼？</string>
+    <string name="login_fail_limit_remaining">帳號或密碼錯誤，請重新輸入，剩餘%1$d次機會</string>
+    <string name="login_fail_account_lock_by_min">帳號已被鎖定，請%1$d分鐘後再嘗試</string>
+    <string name="login_fail_account_lock_by_second">帳號已被鎖定，請%1$d秒後再次嘗試</string>
 
 
     <!-- 消息部分 -->
@@ -1050,7 +1057,7 @@
     <string name="net_ping_url_cloud">雲＋</string>
 
     <!--电源白名单-->
-    <string name="battery_tip_content">系統已對雲+開啟省電優化，可能導致消息延遲或丟失，請將雲+加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
+    <string name="battery_tip_content">系統已對該應用開啟省電優化，可能導致消息延遲或丟失，請將其加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
     <string name="battery_tip_ishide">不再提醒</string>
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去設置</string>

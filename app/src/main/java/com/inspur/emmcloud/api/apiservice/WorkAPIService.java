@@ -147,26 +147,26 @@ public class WorkAPIService {
      *
      * @param start
      * @param end
-     * @param officeIdList
-     * @param isFilter
+     * @param commonOfficeIdList
+     * @param isFilte
      */
-    public void getMeetingRoomList(final long start, final long end,
-                                   final List<String> officeIdList, final boolean isFilter) {
+    public void getFiltMeetingRooms(final long start, final long end,
+                                    final List<String> commonOfficeIdList, final boolean isFilte) {
         String baseUrl = APIUri.getMeetingRoomsUrl() + "?";
-        if (isFilter) {
-            baseUrl = baseUrl + "startWebSocket=" + start + "&end=" + end;
+        if (isFilte) {
+            baseUrl = baseUrl + "start=" + start + "&end=" + end;
         } else {
-            baseUrl = baseUrl + "startWebSocket=" + "&end=";
+            baseUrl = baseUrl + "start=" + "&end=";
         }
-        baseUrl = baseUrl + "&isIdle=" + isFilter;
-        for (int j = 0; j < officeIdList.size(); j++) {
-            baseUrl = baseUrl + "&oids=" + officeIdList.get(j);
+        baseUrl = baseUrl + "&isIdle=" + isFilte;
+        for (int j = 0; j < commonOfficeIdList.size(); j++) {
+            baseUrl = baseUrl + "&oids=" + commonOfficeIdList.get(j);
         }
-        if (officeIdList.size() == 0) {
+        if (commonOfficeIdList.size() == 0) {
             baseUrl = baseUrl + "&oids=";
         }
         final String completeUrl = baseUrl;
-        RequestParams params = MyApplication.getInstance()
+        RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
 

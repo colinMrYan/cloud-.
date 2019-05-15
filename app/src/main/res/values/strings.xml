@@ -5,6 +5,7 @@
     <string name="app_name_zhihuichengjian">智慧城建</string>
     <string name="app_name_huaxiayinhang">华夏管理云</string>
     <string name="app_name_beiqi">云+</string>
+    <string name="app_name_chinatower">中国铁塔报账</string>
     <string name="reclick_to_desktop">再按一次退出程序</string>
     <string name="Network_Mobile">已经连接到移动网络</string>
     <string name="Network_WIFI">已经连接到WIFI</string>
@@ -230,7 +231,7 @@
     <string name="login_your_contact"> 您的联系方式</string>
     <string name="login_group_album"> 群相册</string>
     <string name="login_group_file">群文件</string>
-    <string name="login_authorization_expired">授权过期，请重新登录</string>
+    <string name="login_authorization_expired">基于安全审计策略，需要重新验证用户信息</string>
     <string name="login_cant_login_with_sms">您的账号不允许使用短信登录</string>
     <string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
     <string name="captchas">验证码</string>
@@ -242,6 +243,9 @@
     <string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>
     <string name="login_current_login_enterprise">当前系统：%1$s</string>
     <string name="login_forget_password">忘记密码？</string>
+    <string name="login_fail_limit_remaining">账号或密码错误，请重新输入，还剩余%1$d次机会</string>
+    <string name="login_fail_account_lock_by_min">账号已被锁定，请%1$d分钟后再试</string>
+    <string name="login_fail_account_lock_by_second">账号已被锁定，请%1$d秒后再试</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">请输入消息内容</string>
@@ -1069,7 +1073,7 @@
     <string name="net_ping_url_cloud">云＋</string>
 
     <!--电源白名单-->
-    <string name="battery_tip_content">系统已对云+开启省电优化，可能导致消息延迟或丢失，请将云+加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
+    <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
     <string name="battery_tip_ishide">不再提醒</string>
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去设置</string>

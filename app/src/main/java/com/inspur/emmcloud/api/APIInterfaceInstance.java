@@ -113,6 +113,26 @@ import java.util.Calendar;
 import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
+    @Override
+    public void returnOauthSignInSuccess(GetLoginResult getLoginResult) {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void returnOauthSignInFail(String error, int errorCode, String headerLimitRemaining, String headerRetryAfter) {
+
+    }
+
+    @Override
+    public void returnRefreshTokenSuccess(GetLoginResult getLoginResult) {
+
+    }
+
+    @Override
+    public void returnRefreshTokenFail(String error, int errorCode) {
+
+    }
+
     public APIInterfaceInstance() {
         super();
     }

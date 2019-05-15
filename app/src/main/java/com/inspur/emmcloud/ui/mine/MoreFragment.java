@@ -335,12 +335,11 @@ public class MoreFragment extends BaseFragment {
                 LinearLayout userCardMenuLayout = convertView.findViewById(R.id.ll_user_card_menu);
                 setUserCardMenuLayout(userCardMenuLayout, mineLayoutItemList);
                 convertView.findViewById(R.id.ll_my_info).setOnClickListener(myClickListener);
-
                 Drawable drawable = null;
                 if (getMyInfoResult.getEnterpriseList().size() > 1) {
                     enterpriseText.setOnClickListener(myClickListener);
-                    int drawableId = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_switch_enterprise);
-                    drawable = ContextCompat.getDrawable(MyApplication.getInstance(), drawableId);
+                    int drawableId = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.mine_my_info_switch_enterprise);
+                    drawable = ContextCompat.getDrawable(MyApplication.getInstance(),drawableId);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 }
                 enterpriseText.setCompoundDrawables(null, null, drawable, null);
@@ -373,7 +372,7 @@ public class MoreFragment extends BaseFragment {
                 menuImgBtn.setScaleType(ImageView.ScaleType.FIT_XY);
                 menuImgBtn.setLayoutParams(layoutParams);
                 menuImgBtn.setPadding(paddingLeft, paddingTop, paddingLeft, 0);
-                int tintColor = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_menu_tint_color);
+                int tintColor= ResourceUtils.getResValueOfAttr(getActivity(), R.attr.mine_my_info_menu_tint_color);
                 menuImgBtn.setColorFilter(getContext().getResources().getColor(tintColor));
                 menuImgBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -382,9 +381,9 @@ public class MoreFragment extends BaseFragment {
                     }
                 });
                 String iconUrl = getIconUrl(mineLayoutItem.getIco());
-                if (iconUrl.startsWith("drawable")) {
-                    ImageDisplayUtils.getInstance().displayImageNoCache(menuImgBtn, iconUrl);
-                } else {
+                if (iconUrl.startsWith("drawable")){
+                    ImageDisplayUtils.getInstance().displayImageNoCache(menuImgBtn,iconUrl);
+                }else {
                     ImageDisplayUtils.getInstance().displayImage(menuImgBtn, iconUrl);
                 }
                 userCardMenuLayout.addView(menuImgBtn);
