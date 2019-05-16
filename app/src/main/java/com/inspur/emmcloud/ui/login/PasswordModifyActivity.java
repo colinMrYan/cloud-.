@@ -138,7 +138,7 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
             passwordOrigin = passwordOriginEdit.getText().toString();
             passwordNew = passwordNewEdit.getText().toString();
             passwordConfirm = passwordConfirmEdit.getText().toString();
-            boolean isInputValaid = !StringUtils.isBlank(passwordOrigin) && passwordNew.length() > 7 && passwordConfirm.length() > 7;
+            boolean isInputValaid = !StringUtils.isBlank(passwordOrigin) && passwordNew.length() >= 1 && passwordConfirm.length() >= 1;
             saveBtn.setEnabled(isInputValaid);
             saveBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }

@@ -147,7 +147,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
             // TODO Auto-generated method stub
             passwordNew = passwordNewEdit.getText().toString();
             passwordConfirm = passwordConfirmEdit.getText().toString();
-            boolean isInputValaid = passwordNew.length() > 7 && passwordConfirm.length() > 7;
+            boolean isInputValaid = passwordNew.length() >= 1 && passwordConfirm.length() >= 1;
             saveBtn.setEnabled(isInputValaid);
             saveBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }
