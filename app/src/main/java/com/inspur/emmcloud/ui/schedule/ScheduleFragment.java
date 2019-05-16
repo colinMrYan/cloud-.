@@ -32,6 +32,7 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -120,6 +121,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        LogUtils.LbcDebug("onViewCreated=============");
         EventBus.getDefault().register(this);
         apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -234,6 +236,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void isExpand(boolean isExpand) {
+        LogUtils.LbcDebug("isExpand=============");
         if (isExpand) {
             onCalendarSelect(calendarView.getSelectedCalendar(), false);
         }
@@ -242,6 +245,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
+        LogUtils.LbcDebug("onCalendarSelect=============");
         selectCalendar = Calendar.getInstance();
         selectCalendar.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay(), 0, 0, 0);
         selectCalendar.set(Calendar.MILLISECOND, 0);
@@ -406,7 +410,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         Iterator<Event> iterator = eventList.iterator();
         while (iterator.hasNext()) {
             Event event = iterator.next();
-            if (event.isAllDay()) {
+            boolean isCrossSelectDay = !event.getEventStartTime().after(selectCalendar) && !event.getEventEndTime().before(TimeUtils.getDayEndCalendar(selectCalendar));
+            if (event.isAllDay() || isCrossSelectDay) {
                 allDayEventList.add(event);
                 iterator.remove();
             }

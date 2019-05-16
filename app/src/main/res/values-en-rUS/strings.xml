@@ -452,6 +452,8 @@
     <string name="schedule_choose_common_office">Common office locations</string>
     <string name="schedule_meeting_change">Modify meeting</string>
     <string name="schedule_meeting_cancel">Delete meeting</string>
+    <string name="schedule_meeting_my_create">I created：</string>
+    <string name="schedule_meeting_my_take_part_in"> I involved：</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

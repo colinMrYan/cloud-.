@@ -358,9 +358,11 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     public void positiveListener(Calendar calendar) {
                         if (calendar.getTimeInMillis() - startCalendar.getTimeInMillis() < (60000)) {
                             showEndDateErrorRemindDialog();
+                            endCalendar = (Calendar) startCalendar.clone();
+                            endCalendar.add(Calendar.MINUTE, intervalMin);
                             return;
                         }
-                        endCalendar = calendar;
+                        endCalendar = (Calendar) calendar.clone();
                         String endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                         endDateText.setText(endDataStr);
                         endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
@@ -457,6 +459,8 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
             return false;
         }
         if (endCalendar.before(startCalendar)) {
+            LogUtils.LbcDebug(TimeUtils.calendar2FormatString(this,endCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+            LogUtils.LbcDebug(TimeUtils.calendar2FormatString(this,startCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_start_or_end_time_illegal);
             return false;

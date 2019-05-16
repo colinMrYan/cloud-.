@@ -454,6 +454,8 @@
     <string name="schedule_meeting_change">修改會議</string>
     <string name="schedule_meeting_cancel">取消會議</string>
     <string name="schedule_meeting_booking_detail">會議詳情</string>
+    <string name="schedule_meeting_my_create">我創建的：</string>
+    <string name="schedule_meeting_my_take_part_in">我參與的：</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>

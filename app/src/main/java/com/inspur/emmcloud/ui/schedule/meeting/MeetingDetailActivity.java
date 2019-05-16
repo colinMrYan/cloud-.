@@ -103,6 +103,11 @@ public class MeetingDetailActivity extends BaseActivity {
 //        meetingDistributionText.setText(meeting.getOwner());
         String locationData = getString(R.string.meeting_detail_location) +new Location(meeting.getLocation()).getBuilding()+ new Location(meeting.getLocation()).getDisplayName();
         meetingLocationText.setText(locationData);
+        String owner = meeting.getOwner();
+        String meetingState =(owner==null||owner.equals(MyApplication.getInstance().getUid()))?
+                getString(R.string.schedule_meeting_my_create):getString(R.string.schedule_meeting_my_take_part_in);
+        meetingDistributionText.setVisibility(View.VISIBLE);
+        meetingDistributionText.setText(meetingState);
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         attendeeText.setText(getString(R.string.meeting_detail_attendee, getMeetingParticipant(MEETING_ATTENDEE)));
@@ -112,7 +117,7 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
-        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && meeting.getStartTime() > System.currentTimeMillis()) ? View.VISIBLE : View.GONE);
+        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && System.currentTimeMillis()<meeting.getEndTime()) ? View.VISIBLE : View.GONE);
     }
 
     /**
