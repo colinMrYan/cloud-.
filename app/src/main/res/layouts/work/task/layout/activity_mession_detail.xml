@@ -111,7 +111,7 @@
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_vertical"
                 android:textSize="14sp"
-                segmentcontrol:cornerRadius="5dip"
+                segmentcontrol:segCornerRadius="5dip"
                 segmentcontrol:direction="horizon"
                 segmentcontrol:horizonGap="20dp"
                 segmentcontrol:selectedBackgroundColors="#FF0F7BCA"

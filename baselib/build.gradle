@@ -1,16 +1,19 @@
 apply plugin: 'com.android.library'
+apply from: "../node_modules/react-native/react.gradle"
+apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
 
 android {
-    compileSdkVersion 26
-
-
-
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.androidTools
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
-
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -21,14 +24,86 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+
+    }
+
 
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api deps.support.compat
+    api deps.support.design
+    api deps.support.v7.appcompat
+    api deps.support.v7.recyclerView
+    api deps.support.v7.cardView
+    api deps.support.annotations
+    api deps.support.multidex
+    testApi deps.junit
+    api deps.jimu.componentLib
+    api (deps.butterknife.butterknife) {
+        exclude group: 'com.android.support'
+    }
+    api deps.gson
+    api deps.fastjson
+    api deps.qmui
+    api deps.react
+    api deps.commonsLang3
+    api deps.amapLocation
 
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    api deps.baiduMapLocation
+    api (deps.socket) {
+        exclude group: 'org.json', module: 'json'
+    }
+    api deps.pinyin4j
+    api deps.universalImageLoader
+    api deps.zxing
+    api (deps.PhotoView){
+        exclude module: 'support-compat'
+        exclude module: 'support-core-utils'
+    }
+    api deps.eventbus
+    api deps.annotationApi
+    api deps.calligraphy
+    api deps.HoverView
+    api deps.androidGifDrawable
+    api deps.magicViewpager
+    api deps.jsoup
+    api deps.markdown
+    api deps.disklrucache
+    api deps.progresspieview
+    api deps.ShortcutBadger
+    api deps.RecordWave
+    api deps.mp3spi
+    api deps.Mp3Converter
+
+    api deps.commonsCodec
+    api deps.oss
+    api deps.protobuf
+    api deps.avi
+    api deps.RoundedImageView
+    api deps.semver
+    api deps.bmelnychukAtv
+    api deps.immersionbar
+    api (deps.pagerslidingtabstrip){
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.nineoldandroids', module: 'library'
+    }
+    api deps.SegmentControlView
+    // React Naive Components
+    api project(':react-native-smart-swipe-refresh-layout')
+    api project(':react-native-picker')
+    api project(':react-native-svg')
+    api project(':react-native-vector-icons')
+    api project(':react-native-navigation')
+
+    androidTestApi (deps.support.test.runner) {
+        exclude module: 'support-annotations'
+    }
+    androidTestApi('com.android.support.test:rules:0.5') {
+        exclude module: 'support-annotations'
+    }
 }

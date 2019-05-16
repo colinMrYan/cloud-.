@@ -56,7 +56,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         android:textSize="13sp"
-        segmentcontrol:cornerRadius="5dip"
+        segmentcontrol:segCornerRadius="5dip"
         segmentcontrol:direction="horizon"
         segmentcontrol:horizonGap="30dip"
         segmentcontrol:selectedBackgroundColors="#FF0F7BCA"

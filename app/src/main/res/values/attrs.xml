@@ -95,7 +95,7 @@
         <attr name="android:fadingEdgeLength" />
     </declare-styleable>
     <declare-styleable name="SegmentControl">
-        <attr name="cornerRadius" format="dimension|reference" />
+        <attr name="segCornerRadius" format="dimension|reference" />
         <attr name="selectedBackgroundColors" format="color|reference" />
         <attr name="selectedTextColors" format="color|reference" />
         <attr name="texts" format="string|reference" />

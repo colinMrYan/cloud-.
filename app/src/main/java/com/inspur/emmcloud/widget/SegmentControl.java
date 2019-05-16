@@ -82,7 +82,7 @@ public class SegmentControl extends View {
         mTextSize = ta.getDimensionPixelSize(R.styleable.SegmentControl_android_textSize, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, context.getResources().getDisplayMetrics()));
         mSelectedBackgroundColors = ta.getColor(R.styleable.SegmentControl_selectedBackgroundColors, 0xffffffff);
         mSelectedTextColors = ta.getColor(R.styleable.SegmentControl_selectedTextColors, 0xffffffff);
-        mCornerRadius = ta.getDimensionPixelSize(R.styleable.SegmentControl_cornerRadius, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, context.getResources().getDisplayMetrics()));
+        mCornerRadius = ta.getDimensionPixelSize(R.styleable.SegmentControl_segCornerRadius, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, context.getResources().getDisplayMetrics()));
         mDirection = Direction.values()[ta.getInt(R.styleable.SegmentControl_direction, 0)];
 
         mHorizonGap = ta.getDimensionPixelSize(R.styleable.SegmentControl_horizonGap, 0);

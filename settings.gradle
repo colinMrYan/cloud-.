@@ -1,4 +1,4 @@
-include ':app', ':baselib', ':basemodule', ':baseres', ':basewidget', ':componentservice'
+include ':app', ':baselib', ':basemodule', ':baseres', ':basewidget', ':componentservice', ':login', ':communication', ':schedule', ':appcenter', ':news', ':setting', ':webex', ':mail', ':contact', ':web', ':reactnative'
 
 // React Native Components
 include ':react-native-smart-swipe-refresh-layout'
