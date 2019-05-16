@@ -272,10 +272,6 @@ public interface APIInterface {
 
     void returnUpdateChannelGroupNameFail(String error, int errorCode);
 
-    void returnMeetingListSuccess( GetMeetingListResult getMeetingListResult);
-
-    void returnMeetingListFail(String error, int errorCode);
-
     void returnUploadTrainTicketSuccess();
 
     void returnUploadTrainTicketFail(String error, int errorCode);
@@ -351,6 +347,8 @@ public interface APIInterface {
     void returnUpdateTaskFail(String error, int errorCode, int position);
 
     void returnAttachmentSuccess(Task taskResult);
+
+    void returnAttachmentFail(String error, int errorCode);
 
     void returnAddAttachMentSuccess(Attachment attachment);
 
@@ -850,6 +848,8 @@ public interface APIInterface {
     void returnScheduleDataFromIdFail(String error, int errorCode);
 
     void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
+
+    void returnMeetingListFail(String error, int errorCode);
 
     void returnMeetingListByMeetingRoomFail(String error, int errorCode);
 

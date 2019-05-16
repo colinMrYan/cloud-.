@@ -81,14 +81,19 @@ import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
@@ -100,11 +105,6 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.bean.work.GetLocationResult;
-import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
-import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
-import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 
 import java.util.Calendar;
 import java.util.List;
@@ -597,13 +597,6 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnMeetingListSuccess(
-            com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void returnMeetingListFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
@@ -829,6 +822,12 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
+    @Override
+    public void returnAttachmentFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
+
+    }
+
 
     @Override
     public void returnAddAttachMentSuccess(Attachment attachment) {
@@ -1026,11 +1025,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnFindMixSearchFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnMeetingListSuccess(
-            com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult, String date) {
     }
 
     @Override
