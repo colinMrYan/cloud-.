@@ -230,8 +230,13 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
                         break;
                     case 2:
-                        recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                        if(viewPager.getCurrentItem() == 2){
+                            recordUserClickWorkFunction(PV_COLLECTION_MISSION);
+                            IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
+                        }else{
+                            recordUserClickWorkFunction(PV_COLLECTION_MEETING);
+                            IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                        }
                         break;
                     case 3:
                         if(viewPager.getCurrentItem() == 0){

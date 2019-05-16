@@ -145,7 +145,7 @@ public class MeetingAddActivity extends BaseActivity {
             }
             remindEvent = meeting.getRemindEventObj();
         } else {
-            String myUid = MyApplication.getInstance().getUid();
+            String myUid= MyApplication.getInstance().getUid();
             SearchModel myInfoSearchModel = new SearchModel();
             ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
             myInfoSearchModel.setName(myInfo.getName());
@@ -154,14 +154,18 @@ public class MeetingAddActivity extends BaseActivity {
             startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
             endTimeCalendar = (Calendar) startTimeCalendar.clone();
             endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
-        }
-        if (getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
-                && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
-                && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)) {
-            Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
-            Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
-            correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
-            meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+            if(getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)){
+                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
+                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+                correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
+                meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+                location = new Location();
+                location.setId(meetingRoom.getId());
+                location.setBuilding(meetingRoom.getBuilding().getName());
+                location.setDisplayName(meetingRoom.getName());
+            }
         }
     }
 
@@ -177,6 +181,8 @@ public class MeetingAddActivity extends BaseActivity {
             showSelectUser(liaisonLayout, liaisonSearchModelList);
             showSelectUser(recorderLayout, recorderSearchModelList);
             reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+        }else if(location != null){
+            meetingPositionEdit.setText(location.getDisplayName());
         }
         showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();
@@ -488,7 +494,7 @@ public class MeetingAddActivity extends BaseActivity {
     }
 
 
-    private Meeting getMeeting() {
+    private Meeting getMeeting(){
         Meeting meeting = new Meeting();
         meeting.setTitle(title);
         meeting.setType("meeting");
@@ -523,13 +529,13 @@ public class MeetingAddActivity extends BaseActivity {
             if (remindEvent != null && remindEvent.getAdvanceTimeSpan() != -1) {
                 meeting.setRemindEvent(remindEvent.toJSONObject().toString());
             }
-            if (isMeetingEditModel) {
+            if (isMeetingEditModel){
                 meeting.setId(this.meeting.getId());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return meeting;
+        return  meeting;
     }
 
     /**
@@ -572,7 +578,6 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnAddMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
             finish();
         }
@@ -586,7 +591,6 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnUpdateMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
             finish();
         }
@@ -594,6 +598,7 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnUpdateMeetingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
     }
 }
