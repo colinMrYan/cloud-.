@@ -78,7 +78,7 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
                 if (passwordNew.equals(passwordOrigin)) {
                     ToastUtils.show(PasswordModifyActivity.this, R.string.modify_new_old_same);
                 }
-                if (passwordNew.length() < 8 || passwordNew.length() > 128 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
                     ToastUtils.show(MyApplication.getInstance(), R.string.modify_password_invalid);
                     return;
                 }

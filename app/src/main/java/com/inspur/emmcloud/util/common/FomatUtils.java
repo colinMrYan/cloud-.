@@ -85,6 +85,6 @@ public class FomatUtils {
             }
         }
         int strong = strongDigit + strongLowerCase + strongUpperCase + strongSpecial;
-        return (strong > 2);
+        return (strong >= 1);
     }
 }

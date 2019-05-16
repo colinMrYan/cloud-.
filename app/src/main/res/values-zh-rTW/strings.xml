@@ -270,6 +270,7 @@
     <string name="cancel_a_meeting">[會議取消通知]</string>
     <string name="send_a_meeting_request">[會議審批]</string>
     <string name="send_a_message_of_unknown_type">[未知類型]</string>
+    <string name="send_action_message">[活動消息]</string>
     <string name="direct_no_message">暫無新消息</string>
     <string name="group_no_message">已經進入群組，打個招呼吧</string>
     <string name="welcome_to_attention">歡迎關注</string>
@@ -746,7 +747,7 @@
     <string name="modify_new_old_same">新密碼不能和原密碼相同</string>
     <string name="modify_not_same">新密碼和確認密碼不一致</string>
     <string name="approval_input_password_valiad">請輸入6〜64位密碼</string>
-    <string name="modify_password_invalid">所設密碼需包含數位、小寫字母、大寫字母、特殊符號四類字元其中的三類，並且長度最少為8位</string>
+    <string name="modify_password_invalid">密碼必須是6-16位元的數字+字母/符號的組合</string>
     <string name="modify_password_not_correct">密碼填寫不正確，請確認</string>
     <string name="modify_password_fail">修改密碼失敗</string>
     <string name="modify_password">修改密碼</string>
