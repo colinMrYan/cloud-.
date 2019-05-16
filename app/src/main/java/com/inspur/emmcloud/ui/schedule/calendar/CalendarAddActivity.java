@@ -2,7 +2,6 @@ package com.inspur.emmcloud.ui.schedule.calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -21,7 +20,6 @@ import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.config.Constant;
@@ -34,7 +32,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
@@ -453,7 +450,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 能否保存提示
      */
     private boolean checkingSaveCalendarEventAvailable() {
-        contentText = inputContentEdit.getText().toString();
+        contentText = inputContentEdit.getText().toString().trim();
         if (StringUtils.isBlank(contentText)) {
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_please_input_title);

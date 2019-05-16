@@ -103,6 +103,7 @@ public class MeetingAddActivity extends BaseActivity {
     private String title;
     private String note;
     private String meetingPosition;
+    private String meetingOwner="";
     private RemindEvent remindEvent;
     private Meeting meeting = new Meeting();
     private boolean isMeetingEditModel = false;
@@ -124,6 +125,7 @@ public class MeetingAddActivity extends BaseActivity {
         isMeetingEditModel = getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
         if (isMeetingEditModel) {
             meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
+            meetingOwner = StringUtils.isBlank(meeting.getOwner())?"":meeting.getOwner();
             location = new Location(JSONUtils.getJSONObject(meeting.getLocation()));
             startTimeCalendar = meeting.getStartTimeCalendar();
             endTimeCalendar = meeting.getEndTimeCalendar();
@@ -229,7 +231,7 @@ public class MeetingAddActivity extends BaseActivity {
 
 
     private boolean isInputValid() {
-        title = titleEdit.getText().toString();
+        title = titleEdit.getText().toString().trim();
         meetingPosition = meetingPositionEdit.getText().toString();
         if (StringUtils.isBlank(title)) {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
@@ -496,6 +498,7 @@ public class MeetingAddActivity extends BaseActivity {
 
     private Meeting getMeeting(){
         Meeting meeting = new Meeting();
+        meeting.setOwner(meetingOwner);
         meeting.setTitle(title);
         meeting.setType("meeting");
         meeting.setStartTime(startTimeCalendar.getTimeInMillis());
