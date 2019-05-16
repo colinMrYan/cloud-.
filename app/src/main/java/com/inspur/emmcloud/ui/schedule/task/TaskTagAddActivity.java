@@ -16,7 +16,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.task.TagColorBean;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -51,7 +51,7 @@ public class TaskTagAddActivity extends BaseActivity  {
     private ColorTagAdapter colorTagAdapter = new ColorTagAdapter();
     private ArrayList<String> messionTagList=new ArrayList<>();
     private LoadingDialog loadingDialog;
-    private WorkAPIService workAPIService;
+    private ScheduleApiService scheduleAPIService;
     private TaskColorTag taskColorTag;
 
     @Override
@@ -113,8 +113,8 @@ public class TaskTagAddActivity extends BaseActivity  {
         });
         tagColorList.setAdapter(colorTagAdapter);
         loadingDialog = new LoadingDialog(TaskTagAddActivity.this);
-        workAPIService = new WorkAPIService(this);
-        workAPIService.setAPIInterface(new WebService());
+        scheduleAPIService = new ScheduleApiService(this);
+        scheduleAPIService.setAPIInterface(new WebService());
     }
 
     private int getTagColorIndex(List<TagColorBean> tagColorBeans, String color) {
@@ -143,9 +143,9 @@ public class TaskTagAddActivity extends BaseActivity  {
                 if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS)) {
                     String userId = PreferencesUtils.getString(
                             TaskTagAddActivity.this, "userID");
-                    workAPIService.changeTag(taskColorTag.getId(), title, tagColorBeans.get(selectIndex).getColor(), userId);
+                    scheduleAPIService.changeTag(taskColorTag.getId(), title, tagColorBeans.get(selectIndex).getColor(), userId);
                 } else {
-                    workAPIService.createTag(title, tagColorBeans.get(selectIndex).getColor());
+                    scheduleAPIService.createTag(title, tagColorBeans.get(selectIndex).getColor());
                 }
                 break;
             case R.id.tv_delecte_tag:
@@ -154,7 +154,7 @@ public class TaskTagAddActivity extends BaseActivity  {
                     return;
                 }
                 if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS))
-                    workAPIService.deleteTag(taskColorTag.getId());
+                    scheduleAPIService.deleteTag(taskColorTag.getId());
                 break;
             case R.id.ibt_back:
                 finish();

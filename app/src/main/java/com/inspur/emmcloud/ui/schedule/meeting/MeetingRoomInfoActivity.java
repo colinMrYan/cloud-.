@@ -24,7 +24,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
-import com.inspur.emmcloud.bean.work.MeetingSchedule;
+import com.inspur.emmcloud.bean.schedule.meeting.MeetingSchedule;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;

@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.bean.work;
+package com.inspur.emmcloud.bean.schedule;
 
 
 import org.xutils.db.annotation.Column;

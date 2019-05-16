@@ -14,9 +14,9 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
-import com.inspur.emmcloud.bean.work.GetTagResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -42,7 +42,7 @@ public class TaskTagsManageActivity extends BaseActivity {
     private LoadingDialog loadingDialog;
     private ArrayList<TaskColorTag> allTags = new ArrayList<TaskColorTag>();
     private ArrayList<TaskColorTag> selectTags = new ArrayList<TaskColorTag>();
-    private WorkAPIService workAPIService;
+    private ScheduleApiService scheduleAPIService;
     private boolean isHaveExtra = false;
 
     @Override
@@ -79,8 +79,8 @@ public class TaskTagsManageActivity extends BaseActivity {
             }
         });
         loadingDialog = new LoadingDialog(this);
-        workAPIService = new WorkAPIService(this);
-        workAPIService.setAPIInterface(new WebService());
+        scheduleAPIService = new ScheduleApiService(this);
+        scheduleAPIService.setAPIInterface(new WebService());
         getTags();
         if (getIntent().hasExtra(EXTRA_TAGS)) {
             if (getIntent().getSerializableExtra(EXTRA_TAGS) != null) {
@@ -104,7 +104,7 @@ public class TaskTagsManageActivity extends BaseActivity {
     private void getTags() {
         if (NetUtils.isNetworkConnected(TaskTagsManageActivity.this)) {
             loadingDialog.show();
-            workAPIService.getTags();
+            scheduleAPIService.getTags();
         }
     }
 

@@ -1,6 +1,4 @@
-package com.inspur.emmcloud.bean.work;
-
-import com.inspur.emmcloud.bean.schedule.task.Task;
+package com.inspur.emmcloud.bean.schedule.task;
 
 import org.json.JSONArray;
 

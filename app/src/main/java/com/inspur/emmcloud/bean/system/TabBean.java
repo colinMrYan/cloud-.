@@ -1,6 +1,4 @@
-package com.inspur.emmcloud.ui.schedule.task;
-
-import com.inspur.emmcloud.bean.system.MainTabResult;
+package com.inspur.emmcloud.bean.system;
 
 /**
  * Created by yufuchang on 2017/4/28.

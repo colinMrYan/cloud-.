@@ -20,7 +20,7 @@ import com.inspur.emmcloud.adapter.TaskListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;

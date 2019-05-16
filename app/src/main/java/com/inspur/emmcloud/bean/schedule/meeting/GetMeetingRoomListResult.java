@@ -1,6 +1,5 @@
-package com.inspur.emmcloud.bean.work;
+package com.inspur.emmcloud.bean.schedule.meeting;
 
-import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONArray;
