@@ -19,9 +19,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.TaskListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -40,6 +40,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
+
 
 /**
  * Created by yufuchang on 2019/4/1.

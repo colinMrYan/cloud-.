@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
 
-import com.inspur.emmcloud.bean.work.MentionsAndUrl;
+import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * Created by chenmch on 2018/2/7.
