@@ -55,6 +55,7 @@ import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
+import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -120,6 +121,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
     private PopupWindow allDayEventPop;
+    private MyDialog myDialog=null;
     private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
 
 
@@ -480,6 +482,17 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
     }
 
+    private void showAllDayEventListDlg() {
+        if(myDialog==null)
+        myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
+        MaxHeightListView listView = myDialog.findViewById(R.id.lv_all_day_event);
+        listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 150));
+        listView.setAdapter(new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList));
+        myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
+        listView.setOnItemClickListener(this);
+        myDialog.show();
+    }
+
     private void showAllDayEventListPop(View anchor) {
         View contentView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.schedule_all_day_event_pop, null);
@@ -538,14 +551,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 break;
             case R.id.rl_all_day:
                 if (allDayEventList.size() > 1) {
-                    showAllDayEventListPop(view);
+                    showAllDayEventListDlg();
                 } else {
                     onEventClick(allDayEventList.get(0));
                 }
 
                 break;
             case R.id.iv_close:
-                allDayEventPop.dismiss();
+                myDialog.dismiss();
+                myDialog=null;
                 break;
         }
     }
@@ -558,7 +572,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         onEventClick(allDayEventList.get(position));
-        allDayEventPop.dismiss();
+        if(myDialog!=null)
+            myDialog.dismiss();
     }
 
     @Override
