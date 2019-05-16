@@ -235,7 +235,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-            boolean isInputValaid = passwordEdit.getText().toString().length() >= 6
+            boolean isInputValaid = passwordEdit.getText().toString().length() >= 1
                     && !StringUtils.isBlank(usernameEdit.getText()
                     .toString());
             loginBtn.setEnabled(isInputValaid);

@@ -755,7 +755,7 @@
     <string name="modify_new_old_same">新密码不能和原密码相同</string>
     <string name="modify_not_same">新密码和确认密码不一致</string>
     <string name="approval_input_password_valiad">请输入6~64位密码</string>
-    <string name="modify_password_invalid">所设密码需包含数字、小写字母、大写字母、特殊符号四类字符其中的三类，并且长度最少为8位</string>
+    <string name="modify_password_invalid">密码必须是6-16位的数字、字符组合（不能是纯数字）</string>
     <string name="modify_password_not_correct">密码填写不正确，请确认</string>
     <string name="modify_password_fail">修改密码失败</string>
     <string name="modify_password">修改密码</string>
