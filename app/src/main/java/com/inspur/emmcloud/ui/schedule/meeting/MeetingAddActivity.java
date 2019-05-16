@@ -157,8 +157,9 @@ public class MeetingAddActivity extends BaseActivity {
             if(getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
                     && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
                     && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)){
-                startTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
-                endTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
+                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+                correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
                 meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
                 location = new Location();
                 location.setId(meetingRoom.getId());
@@ -397,7 +398,7 @@ public class MeetingAddActivity extends BaseActivity {
                 case REQUEST_SELECT_MEETING_ROOM:
                     Calendar backStartTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
                     Calendar backEndTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
-                    correctMeetingRoomTime(backStartTimeCalendar,backEndTimeCalendar);
+                    correctMeetingRoomTime(backStartTimeCalendar, backEndTimeCalendar);
                     meetingRoom = (MeetingRoom) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
                     setMeetingTime();
                     meetingPositionEdit.setText(meetingRoom.getName());
@@ -415,33 +416,34 @@ public class MeetingAddActivity extends BaseActivity {
 
     }
 
-    /**修正会议室可用时间
-     * */
-    private void correctMeetingRoomTime(Calendar meetingRoomStartCalendar,Calendar meetingRoomEndCalendar){
-       // 首先当前时间右半部分与会议室返回时间取交集，如果交集为空时间不做修改
+    /**
+     * 修正会议室可用时间
+     */
+    private void correctMeetingRoomTime(Calendar meetingRoomStartCalendar, Calendar meetingRoomEndCalendar) {
+        // 首先当前时间右半部分与会议室返回时间取交集，如果交集为空时间不做修改
         Calendar currentCalendar = Calendar.getInstance();
-        Calendar nextHalfHourCalendar =TimeUtils.getNextHalfHourTime(currentCalendar);
-        if(nextHalfHourCalendar.before(meetingRoomEndCalendar)){   //有交集
-            if(nextHalfHourCalendar.after(meetingRoomStartCalendar)){
+        Calendar nextHalfHourCalendar = TimeUtils.getNextHalfHourTime(currentCalendar);
+        if (nextHalfHourCalendar.before(meetingRoomEndCalendar)) {   //有交集
+            if (nextHalfHourCalendar.after(meetingRoomStartCalendar)) {
                 Calendar modifiedCalendar = (Calendar) nextHalfHourCalendar.clone();
-                modifiedCalendar.add(Calendar.HOUR_OF_DAY,2);
-               endTimeCalendar= modifiedCalendar.after(meetingRoomEndCalendar)?meetingRoomEndCalendar:modifiedCalendar;
-               startTimeCalendar=nextHalfHourCalendar;
-            }else{
-                Calendar nextHalfHourStartCalendar =TimeUtils.getNextHalfHourTime(meetingRoomStartCalendar);
+                modifiedCalendar.add(Calendar.HOUR_OF_DAY, 2);
+                endTimeCalendar = modifiedCalendar.after(meetingRoomEndCalendar) ? meetingRoomEndCalendar : modifiedCalendar;
+                startTimeCalendar = nextHalfHourCalendar;
+            } else {
+                Calendar nextHalfHourStartCalendar = TimeUtils.getNextHalfHourTime(meetingRoomStartCalendar);
                 Calendar modifiedStartCalendar = (Calendar) nextHalfHourStartCalendar.clone();
-                modifiedStartCalendar.add(Calendar.HOUR_OF_DAY,2);
-                endTimeCalendar=modifiedStartCalendar.after(meetingRoomEndCalendar)?meetingRoomEndCalendar:modifiedStartCalendar;
-                startTimeCalendar = nextHalfHourStartCalendar.after(meetingRoomEndCalendar)?meetingRoomStartCalendar:nextHalfHourStartCalendar;
+                modifiedStartCalendar.add(Calendar.HOUR_OF_DAY, 2);
+                endTimeCalendar = modifiedStartCalendar.after(meetingRoomEndCalendar) ? meetingRoomEndCalendar : modifiedStartCalendar;
+                startTimeCalendar = nextHalfHourStartCalendar.after(meetingRoomEndCalendar) ? meetingRoomStartCalendar : nextHalfHourStartCalendar;
             }
-        }else{
+        } else {
             //可能存在半小时以内的会议，如果开始时间
-            if(meetingRoomEndCalendar.after(currentCalendar)){
-                endTimeCalendar=meetingRoomEndCalendar;
-                startTimeCalendar=currentCalendar;
-            }else{
-                endTimeCalendar=meetingRoomEndCalendar;
-                startTimeCalendar=meetingRoomStartCalendar;
+            if (meetingRoomEndCalendar.after(currentCalendar)) {
+                endTimeCalendar = meetingRoomEndCalendar;
+                startTimeCalendar = currentCalendar;
+            } else {
+                endTimeCalendar = meetingRoomEndCalendar;
+                startTimeCalendar = meetingRoomStartCalendar;
             }
         }
     }

@@ -31,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:textSize="@dimen/content_title_textsize"
             android:text="@string/schedule_task_no_task_today"
-            android:textColor="@color/grey_line_color"/>
+            android:textColor="#666666"/>
 
         <com.inspur.emmcloud.widget.MySwipeRefreshLayout
             android:id="@+id/refresh_layout"
