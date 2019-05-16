@@ -480,7 +480,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         if(myDialog==null)
         myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
         MaxHeightListView listView = myDialog.findViewById(R.id.lv_all_day_event);
-        listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 150));
+        listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 300));
         listView.setAdapter(new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList));
         myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
         listView.setOnItemClickListener(this);
