@@ -262,6 +262,7 @@
     <string name="send_a_contact_card">[Buisiness Card]</string>
     <string name="send_a_meeting_invitation">[Meeting Invitation]</string>
     <string name="cancel_a_meeting">[Meeting Cancellation]</string>
+    <string name="send_action_message">[Activity]</string>
     <string name="send_a_meeting_request">[Meeting Approval]</string>
     <string name="send_a_message_of_unknown_type">[Unknown]</string>
     <string name="direct_no_message">No new messages</string>
@@ -743,7 +744,7 @@
     <string name="modify_new_old_same">New password can not be the same as original one</string>
     <string name="modify_not_same">Passwords do not match, make sure</string>
     <string name="approval_input_password_valiad">Enter a password between 6-64 characters.</string>
-    <string name="modify_password_invalid">The password should contain three of the four types of characters: numerals, lowercase letters, uppercase letters and special symbols, and the length should be at least 8</string>
+    <string name="modify_password_invalid">Password must be 6-16 characters and contain both numbers and letters/special characters.</string>
     <string name="modify_password_not_correct">The original password is incorrect</string>
     <string name="modify_password_fail">Failed to modify password</string>
     <string name="modify_password">Change the password</string>

@@ -265,6 +265,7 @@
     <string name="send_a_file">[文件]</string>
     <string name="send_a_link">[链接]</string>
     <string name="send_a_voice">[语音]</string>
+    <string name="send_action_message">[活动消息]</string>
     <string name="send_a_contact_card">[名片]</string>
     <string name="send_a_meeting_invitation">[会议邀请]</string>
     <string name="cancel_a_meeting">[会议取消通知]</string>
@@ -756,7 +757,7 @@
     <string name="modify_new_old_same">新密码不能和原密码相同</string>
     <string name="modify_not_same">新密码和确认密码不一致</string>
     <string name="approval_input_password_valiad">请输入6~64位密码</string>
-    <string name="modify_password_invalid">所设密码需包含数字、小写字母、大写字母、特殊符号四类字符其中的三类，并且长度最少为8位</string>
+    <string name="modify_password_invalid">密码必须是6-16位的数字、字符组合（不能是纯数字）</string>
     <string name="modify_password_not_correct">密码填写不正确，请确认</string>
     <string name="modify_password_fail">修改密码失败</string>
     <string name="modify_password">修改密码</string>
