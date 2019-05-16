@@ -242,7 +242,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             if (!swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(true);
             }
-            apiService.getMeetingRoomList(TimeUtils.getStartTime(), TimeUtils.getStartTime() + 48*60*60*1000, officeIdList, true);
+            apiService.getMeetingRoomList(TimeUtils.getStartTime(), TimeUtils.getStartTime() + 48*60*60*1000, officeIdList, false);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }

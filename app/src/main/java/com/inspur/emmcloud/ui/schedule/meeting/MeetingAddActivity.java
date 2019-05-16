@@ -154,13 +154,17 @@ public class MeetingAddActivity extends BaseActivity {
             startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
             endTimeCalendar = (Calendar) startTimeCalendar.clone();
             endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
-        }
-        if(getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
-                && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
-                && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)){
-            startTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
-            endTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
-            meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+            if(getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)){
+                startTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
+                endTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+                meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+                location = new Location();
+                location.setId(meetingRoom.getId());
+                location.setBuilding(meetingRoom.getBuilding().getName());
+                location.setDisplayName(meetingRoom.getName());
+            }
         }
     }
 
@@ -176,6 +180,8 @@ public class MeetingAddActivity extends BaseActivity {
             showSelectUser(liaisonLayout, liaisonSearchModelList);
             showSelectUser(recorderLayout, recorderSearchModelList);
             reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+        }else if(location != null){
+            meetingPositionEdit.setText(location.getDisplayName());
         }
         showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();
