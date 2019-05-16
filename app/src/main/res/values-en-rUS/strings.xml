@@ -262,6 +262,7 @@
     <string name="send_a_contact_card">[Buisiness Card]</string>
     <string name="send_a_meeting_invitation">[Meeting Invitation]</string>
     <string name="cancel_a_meeting">[Meeting Cancellation]</string>
+    <string name="send_action_message">[Activity]</string>
     <string name="send_a_meeting_request">[Meeting Approval]</string>
     <string name="send_a_message_of_unknown_type">[Unknown]</string>
     <string name="direct_no_message">No new messages</string>

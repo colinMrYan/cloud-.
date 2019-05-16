@@ -265,6 +265,7 @@
     <string name="send_a_file">[文件]</string>
     <string name="send_a_link">[链接]</string>
     <string name="send_a_voice">[语音]</string>
+    <string name="send_action_message">[活动消息]</string>
     <string name="send_a_contact_card">[名片]</string>
     <string name="send_a_meeting_invitation">[会议邀请]</string>
     <string name="cancel_a_meeting">[会议取消通知]</string>

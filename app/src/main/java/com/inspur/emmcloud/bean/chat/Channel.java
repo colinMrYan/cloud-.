@@ -317,6 +317,9 @@ public class Channel implements Serializable {
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     newMsgContent = fromUserName + context.getString(R.string.send_a_voice);
                     break;
+                case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
+                    newMsgContent = MyApplication.getInstance().getString(R.string.send_action_message);
+                    break;
                 default:
                     newMsgContent = fromUserName + context
                             .getString(R.string.send_a_message_of_unknown_type);

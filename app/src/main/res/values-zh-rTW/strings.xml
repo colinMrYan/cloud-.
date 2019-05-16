@@ -270,6 +270,7 @@
     <string name="cancel_a_meeting">[會議取消通知]</string>
     <string name="send_a_meeting_request">[會議審批]</string>
     <string name="send_a_message_of_unknown_type">[未知類型]</string>
+    <string name="send_action_message">[活動消息]</string>
     <string name="direct_no_message">暫無新消息</string>
     <string name="group_no_message">已經進入群組，打個招呼吧</string>
     <string name="welcome_to_attention">歡迎關注</string>
