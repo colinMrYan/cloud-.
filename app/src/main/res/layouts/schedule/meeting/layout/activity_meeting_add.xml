@@ -174,11 +174,13 @@
                 android:background="@android:color/white"
                 android:orientation="horizontal">
 
-                <com.inspur.emmcloud.widget.ClearEditText
-                    android:id="@+id/et_meeting_position"
+                <TextView
+                    android:id="@+id/tv_meeting_position"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:onClick="onClick"
                     android:layout_toLeftOf="@+id/ll_add_position"
                     android:background="@null"
                     android:hint="@string/schedule_meeting_add_location_hint"

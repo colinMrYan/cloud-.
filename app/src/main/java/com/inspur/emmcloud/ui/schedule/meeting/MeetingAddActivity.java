@@ -40,7 +40,6 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -78,8 +77,8 @@ public class MeetingAddActivity extends BaseActivity {
     private TextView endDateText;
     @ViewInject(R.id.tv_end_time)
     private TextView endTimeText;
-    @ViewInject(R.id.et_meeting_position)
-    private ClearEditText meetingPositionEdit;
+    @ViewInject(R.id.tv_meeting_position)
+    private TextView meetingPositionText;
     @ViewInject(R.id.ll_attendee)
     private LinearLayout attendeeLayout;
     @ViewInject(R.id.ll_recorder)
@@ -176,13 +175,13 @@ public class MeetingAddActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         if (isMeetingEditModel) {
             titleEdit.setText(title);
-            meetingPositionEdit.setText(location.getDisplayName());
+            meetingPositionText.setText(location.getBuilding() + " " + location.getDisplayName());
             notesEdit.setText(note);
             showSelectUser(liaisonLayout, liaisonSearchModelList);
             showSelectUser(recorderLayout, recorderSearchModelList);
             reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
         }else if(location != null){
-            meetingPositionEdit.setText(location.getDisplayName());
+            meetingPositionText.setText(location.getBuilding() + " " + location.getDisplayName());
         }
         showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();
@@ -224,13 +223,19 @@ public class MeetingAddActivity extends BaseActivity {
             case R.id.ll_reminder:
                 setReminder();
                 break;
+            case R.id.tv_meeting_position:
+                Intent intent2 = new Intent(this, MeetingRoomListActivity.class);
+                intent2.putExtra(MeetingRoomListActivity.EXTRA_START_TIME, startTimeCalendar);
+                intent2.putExtra(MeetingRoomListActivity.EXTRA_END_TIME, endTimeCalendar);
+                startActivityForResult(intent2, REQUEST_SELECT_MEETING_ROOM);
+                break;
         }
     }
 
 
     private boolean isInputValid() {
         title = titleEdit.getText().toString();
-        meetingPosition = meetingPositionEdit.getText().toString();
+        meetingPosition = meetingPositionText.getText().toString();
         if (StringUtils.isBlank(title)) {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
             return false;
@@ -401,7 +406,7 @@ public class MeetingAddActivity extends BaseActivity {
                     correctMeetingRoomTime(backStartTimeCalendar, backEndTimeCalendar);
                     meetingRoom = (MeetingRoom) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
                     setMeetingTime();
-                    meetingPositionEdit.setText(meetingRoom.getName());
+                    meetingPositionText.setText(meetingRoom.getBuilding().getName() + " " + meetingRoom.getName());
                     location = new Location();
                     location.setId(meetingRoom.getId());
                     location.setBuilding(meetingRoom.getBuilding().getName());
