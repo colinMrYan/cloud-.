@@ -19,7 +19,7 @@ public class FomatUtils {
      */
     public static boolean isValidFileName(String fileName) {
         Matcher matcher = Pattern.compile(
-                "[\\\\/:*?\"<>|]").matcher(
+                "[\\\\/:*?\"<>|&]").matcher(
                 fileName);
 
         while (matcher.find()) {
