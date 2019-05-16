@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -114,7 +113,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar pageEndCalendar = Calendar.getInstance();
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
-    private PopupWindow allDayEventPop;
     private MyDialog myDialog=null;
     private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
 
