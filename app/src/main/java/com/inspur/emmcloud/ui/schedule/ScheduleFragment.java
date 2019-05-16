@@ -5,12 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -38,9 +35,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
@@ -49,7 +44,6 @@ import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.TaskCacheUtils;
 import com.inspur.emmcloud.widget.MaxHeightListView;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
@@ -491,38 +485,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
         listView.setOnItemClickListener(this);
         myDialog.show();
-    }
-
-    private void showAllDayEventListPop(View anchor) {
-        View contentView = LayoutInflater.from(getActivity())
-                .inflate(R.layout.schedule_all_day_event_pop, null);
-        int width = ResolutionUtils.getWidth(MyApplication.getInstance());
-        width = width - 2 * DensityUtil.dip2px(MyApplication.getInstance(), 20);
-        BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
-        MaxHeightListView listView = contentView.findViewById(R.id.lv_all_day_event);
-        listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 150));
-        listView.setAdapter(new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList));
-        contentView.findViewById(R.id.iv_close).setOnClickListener(this);
-        bubbleLayout.setArrowPosition(width / 2 - DensityUtil.dip2px(MyApplication.getInstance(), 7));
-        allDayEventPop = new PopupWindow(contentView, width,
-                LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        allDayEventPop.setOutsideTouchable(false);
-        allDayEventPop.setTouchable(true);
-        allDayEventPop.setTouchInterceptor(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-        allDayEventPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
-            }
-        });
-        listView.setOnItemClickListener(this);
-        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
-        allDayEventPop.showAsDropDown(anchor, DensityUtil.dip2px(MyApplication.getInstance(), 20), 0);
     }
 
     private void openEvent(Event event) {
