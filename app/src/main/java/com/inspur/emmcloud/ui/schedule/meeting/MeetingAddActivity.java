@@ -576,7 +576,6 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnAddMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
             finish();
         }
@@ -590,7 +589,6 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnUpdateMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
             finish();
         }
@@ -598,6 +596,7 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnUpdateMeetingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
     }
 }
