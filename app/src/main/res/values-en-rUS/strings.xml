@@ -954,7 +954,7 @@
     <string name="calendar_please_input_title">Please enter a title </string>
     <string name="calendar_start_or_end_time_illegal">End time should not be less than the start time</string>
     <string name="calendar_end_time_no_before_current">End time cannot be earlier than current time</string>
-    <string name="calendar_title_cannot_exceed_num">Title should not exceed 150 characters</string>
+    <string name="calendar_title_cannot_exceed_num">Title should not exceed 100 characters</string>
     <string name="calendar_select_calendar">Select a calendar type </string>
     <string name="calendar_add_success">Add successfully</string>
     <string name="calendar_every_year">Every Year</string>
