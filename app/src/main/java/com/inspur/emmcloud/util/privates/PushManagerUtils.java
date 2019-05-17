@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -140,11 +141,12 @@ public class PushManagerUtils {
     }
 
 
-    private void setMiPushStatus(boolean isOpen){
+    public void setMiPushStatus(boolean isOpen){
         String APP_ID = "2882303761517539689";
         String APP_KEY = "5381753921689";
         if (isOpen){
             MiPushClient.registerPush(MyApplication.getInstance(), APP_ID, APP_KEY);
+            LogUtils.jasonDebug("setMiPushStatus-------------------------");
         }else {
             MiPushClient.pausePush(MyApplication.getInstance(), null);
         }
@@ -158,10 +160,13 @@ public class PushManagerUtils {
     public void startPush() {
         String pushFlag = getPushFlag(MyApplication.getInstance());
         if (AppUtils.getIsHuaWei() && !pushFlag.equals(Constant.JPUSH_FLAG)){
+            LogUtils.jasonDebug("000000000");
             setHuaWeiPushStatus(true);
         }else if(AppUtils.getIsXiaoMi() && !pushFlag.equals(Constant.JPUSH_FLAG)){
+            LogUtils.jasonDebug("1111111");
             setMiPushStatus(true);
         }else {
+            LogUtils.jasonDebug("2222222222222");
             setJpushStatus(true);
         }
     }

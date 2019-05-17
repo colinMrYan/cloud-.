@@ -1,16 +1,15 @@
 package com.inspur.emmcloud.broadcastreceiver;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.xiaomi.mipush.sdk.ErrorCode;
@@ -18,7 +17,6 @@ import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
-import com.yanzhenjie.permission.PermissionActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -143,14 +141,18 @@ public class MiPushReceiver extends PushMessageReceiver {
         super.onRequirePermissions(context, permissions);
         LogUtils.debug(TAG,
                 "onRequirePermissions is called. need permission" + arrayToString(permissions));
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(context, permissions, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                PushManagerUtils.getInstance().setMiPushStatus(true);
+            }
 
-        if (Build.VERSION.SDK_INT >= 23 && context.getApplicationInfo().targetSdkVersion >= 23) {
-            Intent intent = new Intent();
-            intent.putExtra("permissions", permissions);
-            intent.setComponent(new ComponentName(context.getPackageName(), PermissionActivity.class.getCanonicalName()));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-            context.startActivity(intent);
-        }
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                PushManagerUtils.getInstance().setJpushStatus(true);
+            }
+        });
+
     }
 
     public String arrayToString(String[] strings) {

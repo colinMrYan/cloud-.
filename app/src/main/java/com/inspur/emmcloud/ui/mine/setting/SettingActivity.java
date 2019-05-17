@@ -177,19 +177,19 @@ public class SettingActivity extends BaseActivity {
             if(NotificationSetUtils.isNotificationEnabled(this) &&
                     PreferencesByUserAndTanentUtils.getBoolean(this,
                             Constant.PUSH_SWITCH_FLAG,false)){
-                MyApplication.getInstance().startPush();
+                PushManagerUtils.getInstance().startPush();
                 PushManagerUtils.getInstance().registerPushId2Emm();
             }else{
-                MyApplication.getInstance().stopPush();
+                PushManagerUtils.getInstance().stopPush();
                 PushManagerUtils.getInstance().unregisterPushId2Emm();
             }
         }else{
             if(PreferencesByUserAndTanentUtils.getBoolean(this,
                     Constant.PUSH_SWITCH_FLAG,false)){
-                MyApplication.getInstance().startPush();
+                PushManagerUtils.getInstance().startPush();
                 PushManagerUtils.getInstance().registerPushId2Emm();
             }else{
-                MyApplication.getInstance().stopPush();
+                PushManagerUtils.getInstance().stopPush();
                 PushManagerUtils.getInstance().unregisterPushId2Emm();
             }
         }
