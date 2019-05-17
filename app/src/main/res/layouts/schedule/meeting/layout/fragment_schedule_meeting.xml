@@ -24,6 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="6dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:background="@drawable/bg_task_search">
 
         <com.inspur.emmcloud.widget.ClearEditText
