@@ -32,6 +32,7 @@ import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -285,10 +286,6 @@ public class MeetingAddActivity extends BaseActivity {
             location = new Location();
         }
 
-        if (!location.getDisplayName().equals(meetingPosition)) {
-            location.setDisplayName(meetingPosition);
-            location.setId("");
-        }
         return true;
     }
 
@@ -410,6 +407,7 @@ public class MeetingAddActivity extends BaseActivity {
                     meetingPositionText.setText(meetingRoom.getBuilding().getName() + " " + meetingRoom.getName());
                     location = new Location();
                     location.setId(meetingRoom.getId());
+                    LogUtils.LbcDebug("meeting Id"+meetingRoom.getId());
                     location.setBuilding(meetingRoom.getBuilding().getName());
                     location.setDisplayName(meetingRoom.getName());
                     break;
@@ -509,6 +507,7 @@ public class MeetingAddActivity extends BaseActivity {
         meeting.setEndTime(endTimeCalendar.getTimeInMillis());
         meeting.setNote(note);
         meeting.setLocation(location.toJSONObject().toString());
+        LogUtils.LbcDebug("location "+location.toJSONObject().toString());
         JSONArray array = new JSONArray();
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {
@@ -539,6 +538,7 @@ public class MeetingAddActivity extends BaseActivity {
             if (isMeetingEditModel) {
                 meeting.setId(this.meeting.getId());
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -550,6 +550,7 @@ public class MeetingAddActivity extends BaseActivity {
      */
     private void addOrUpdateMeeting() {
         Meeting meeting = getMeeting();
+        LogUtils.LbcDebug("meeting"+meeting.toString());
         loadingDlg.show();
         if (isMeetingEditModel) {
             apiService.updateMeeting(meeting.toJSONObject().toString());
