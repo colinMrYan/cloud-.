@@ -101,7 +101,7 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
-        String locationData = getString(R.string.meeting_detail_location) +new Location(meeting.getLocation()).getBuilding()+ new Location(meeting.getLocation()).getDisplayName();
+        String locationData = getString(R.string.meeting_detail_location) + new Location(meeting.getLocation()).getBuilding() + " " + new Location(meeting.getLocation()).getDisplayName();
         meetingLocationText.setText(locationData);
         meetingDistributionText.setVisibility(View.VISIBLE);
         meetingDistributionText.setText(getMeetingCategory(meeting));
@@ -114,28 +114,20 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
-        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && System.currentTimeMillis()<meeting.getEndTime()) ? View.VISIBLE : View.GONE);
+        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && System.currentTimeMillis() < meeting.getEndTime()) ? View.VISIBLE : View.GONE);
     }
 
-    private String  getMeetingCategory(Meeting meeting){
-        String meetingCategory ="";
-        if(meeting.getOwner().equals(MyApplication.getInstance().getUid())){
-            meetingCategory= getString(R.string.schedule_meeting_my_create);
-        }else {
-            for(int i=0;i<meeting.getCommonParticipantList().size();i++){
-                if(meeting.getCommonParticipantList().get(i).getId().equals(MyApplication.getInstance().getUid()))
-                    meetingCategory= getString(R.string.schedule_meeting_my_take_part_in);
-                break;
-            }
-            for(int i=0;i<meeting.getRecorderParticipantList().size();i++){
-                if(meeting.getCommonParticipantList().get(i).getId().equals(MyApplication.getInstance().getUid()))
-                    meetingCategory= getString(R.string.schedule_meeting_my_take_part_in);
-                break;
-            }
-            for(int i=0;i<meeting.getRoleParticipantList().size();i++){
-                if(meeting.getCommonParticipantList().get(i).getId().equals(MyApplication.getInstance().getUid()))
-                    meetingCategory= getString(R.string.schedule_meeting_my_take_part_in);
-                break;
+    private String getMeetingCategory(Meeting meeting) {
+        String meetingCategory = "";
+        if (meeting.getOwner().equals(MyApplication.getInstance().getUid())) {
+            meetingCategory = getString(R.string.schedule_meeting_my_create);
+        } else {
+            List<Participant> participantList = meeting.getAllParticipantList();
+            for (int i = 0; i < participantList.size(); i++) {
+                if (meeting.getCommonParticipantList().get(i).getId().equals(MyApplication.getInstance().getUid())) {
+                    meetingCategory = getString(R.string.schedule_meeting_my_take_part_in);
+                    break;
+                }
             }
         }
         return meetingCategory;
