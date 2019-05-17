@@ -435,6 +435,7 @@
     <string name="schedule_meeting_room_booking">New meeting</string>
     <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
+    <string name="schedule_meeting_room_booking_detail">Meeting room details</string>
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
     <string name="schedule_meeting_add_record_holder_title">Recorder</string>
     <string name="schedule_meeting_add_conference_title">Contact</string>
