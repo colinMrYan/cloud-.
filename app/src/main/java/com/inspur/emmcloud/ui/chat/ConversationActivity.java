@@ -442,6 +442,22 @@ public class ConversationActivity extends ConversationBaseActivity {
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 CardClickOperation(ConversationActivity.this, view, uiMessage);
             }
+
+            @Override
+            public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
+                Message message = uiMessage.getMessage();
+                switch (message.getType()){
+                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                        Bundle bundle = new Bundle();
+                        bundle.putString("mid", message.getId());
+                        bundle.putString(EXTRA_CID, message.getChannel());
+                        IntentUtils.startActivity(ConversationActivity.this,
+                                ChannelMessageDetailActivity.class, bundle);
+
+                        break;
+                }
+            }
         });
         adapter.setMessageList(uiMessageList);
         msgListView.setAdapter(adapter);
