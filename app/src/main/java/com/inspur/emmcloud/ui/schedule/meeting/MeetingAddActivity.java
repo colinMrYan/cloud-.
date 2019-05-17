@@ -346,6 +346,8 @@ public class MeetingAddActivity extends BaseActivity {
                     endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                 } else {
                     if (!calendar.after(startTimeCalendar)) {
+                        endTimeCalendar = (Calendar) startTimeCalendar.clone();
+                        endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                         showTimeInvalidDlg();
                         return;
                     }
