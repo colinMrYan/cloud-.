@@ -32,7 +32,6 @@ import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -239,7 +238,6 @@ public class MeetingAddActivity extends BaseActivity {
 
 
     private boolean isInputValid() {
-        LogUtils.LbcDebug("endTimeCalendar isInputValid start" + TimeUtils.calendar2FormatString(MeetingAddActivity.this, endTimeCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         title = titleEdit.getText().toString().trim();
         meetingPosition = meetingPositionText.getText().toString();
         if (StringUtils.isBlank(title)) {
@@ -256,13 +254,13 @@ public class MeetingAddActivity extends BaseActivity {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_invating_members);
             return false;
         }
-        if (title.length() > 128) {
+        if (title.length() > 149) {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.meeting_topic_too_long));
             return false;
         }
         note = notesEdit.getText().toString();
-        if (!StringUtils.isBlank(note) && note.length() > 127) {
+        if (!StringUtils.isBlank(note) && note.length() > 499) {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.meeting_notice_too_long));
             return false;
@@ -296,7 +294,6 @@ public class MeetingAddActivity extends BaseActivity {
             location.setDisplayName(meetingPosition);
             location.setId("");
         }
-        LogUtils.LbcDebug("endTimeCalendar isInputValid end" + TimeUtils.calendar2FormatString(MeetingAddActivity.this, endTimeCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         return true;
     }
 
@@ -513,7 +510,6 @@ public class MeetingAddActivity extends BaseActivity {
         meeting.setType("meeting");
         meeting.setStartTime(startTimeCalendar.getTimeInMillis());
         meeting.setEndTime(endTimeCalendar.getTimeInMillis());
-        LogUtils.LbcDebug("endTimeCalendar" + TimeUtils.calendar2FormatString(MeetingAddActivity.this, endTimeCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
         meeting.setNote(note);
         meeting.setLocation(location.toJSONObject().toString());
         JSONArray array = new JSONArray();

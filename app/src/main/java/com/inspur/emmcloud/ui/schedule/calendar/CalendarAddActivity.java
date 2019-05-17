@@ -467,7 +467,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         }
         if (contentText.length() > 64) {
             ToastUtils.show(getApplicationContext(),
-                    R.string.calendar_tilte_cannot_exceed_64);
+                    R.string.calendar_title_cannot_exceed_num);
             return false;
         }
         return true;

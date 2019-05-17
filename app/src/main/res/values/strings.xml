@@ -869,8 +869,8 @@
     <string name="meeting_choose_log_members">选择会务人员</string>
     <string name="meeting_begin_or_date_time">请选择会议时间</string>
     <string name="meeting_end_time_no_empty">请选择结束时间</string>
-    <string name="meeting_topic_too_long">主题不能超过128个字符！</string>
-    <string name="meeting_notice_too_long">备注不能超过128个字符！</string>
+    <string name="meeting_topic_too_long">主题不能超过150个字符！</string>
+    <string name="meeting_notice_too_long">备注不能超过500个字符！</string>
     <string name="meeting_booking_error">预订出错</string>
     <string name="meeting_time_is_word">时间是字符</string>
     <string name="meeting_room_number">S206</string>
@@ -969,7 +969,7 @@
     <string name="calendar_please_input_title">请输入标题</string>
     <string name="calendar_start_or_end_time_illegal">结束时间不能小于开始时间</string>
     <string name="calendar_end_time_no_before_current">结束时间不能早于当前时间</string>
-    <string name="calendar_tilte_cannot_exceed_64">标题不能超过64个字符</string>
+    <string name="calendar_title_cannot_exceed_num">标题不能超过150个字符</string>
     <string name="calendar_select_calendar">请选择日历</string>
     <string name="calendar_add_success">添加成功</string>
     <string name="calendar_every_year">每年</string>
