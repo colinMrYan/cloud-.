@@ -522,9 +522,6 @@ public class CalendarLayout extends LinearLayout {
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
-        if(listener != null){
-            listener.isExpand(isExpand());
-        }
     }
 
     @Override
@@ -665,6 +662,9 @@ public class CalendarLayout extends LinearLayout {
             }
         });
         objectAnimator.start();
+        if (listener != null) {
+            listener.isExpand(true);
+        }
         return true;
     }
 
@@ -706,6 +706,9 @@ public class CalendarLayout extends LinearLayout {
             }
         });
         objectAnimator.start();
+        if (listener != null) {
+            listener.isExpand(false);
+        }
         return true;
     }
 
