@@ -861,8 +861,8 @@
     <string name="meeting_choose_log_members">選擇會務人員</string>
     <string name="meeting_begin_or_date_time">請選擇會議時間</string>
     <string name="meeting_end_time_no_empty">請選擇結束時間</string>
-    <string name="meeting_topic_too_long">主題不能超過128個字元！</string>
-    <string name="meeting_notice_too_long">備註不能超過128個字元</string>
+    <string name="meeting_topic_too_long">主題不能超過100個字元！</string>
+    <string name="meeting_notice_too_long">備註不能超過500個字元</string>
     <string name="meeting_booking_error">預訂出錯</string>
     <string name="meeting_time_is_word">時間是字元</string>
     <string name="meeting_room_number">S206</string>
