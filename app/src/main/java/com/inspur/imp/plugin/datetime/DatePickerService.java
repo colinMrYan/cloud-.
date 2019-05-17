@@ -101,7 +101,7 @@ public class DatePickerService extends ImpPlugin {
         }
 
         // 显示设置日期对话框
-        DatePickerDialog dateDlg = new DatePickerDialog(getActivity(), theme,
+        DatePickerDialog dateDlg = new DatePickerDialog(getActivity(),
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override

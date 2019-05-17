@@ -136,6 +136,18 @@ public class APIUri {
 //        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
     }
 
+    /**
+     * 新版底部Tabbar接口
+     *
+     * @return
+     */
+    public static String getAppNaviTabs() {
+//        return getECMDistribution() + "/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+//        return getEMMBaseUrl() + "api/sys/v6.0/maintab";
+//        return "https://ecm.inspuronline.com/distribution/rest/api/v1/category/cloud-plus-prefer/namespace/tab-navi-schemes/latest";
+        return "https://emm.inspur.com/api/sys/v6.0/config/multipleLayout";
+    }
+
 
     public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
         return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWorkPortletAppConfig ? "&key=WorkPortlet" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
@@ -506,7 +518,8 @@ public class APIUri {
      * @return
      */
     public static String getChatFileResouceUrl(String cid, String path) {
-        return getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
+        return url.replaceAll("\\+","%2B");
     }
 
     /**
@@ -517,7 +530,8 @@ public class APIUri {
      * @return
      */
     public static String getChatVoiceFileResouceUrl(String cid, String path) {
-        return getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
+        String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
+        return url.replaceAll("\\+","%2B");
     }
 
     /**
@@ -1214,8 +1228,8 @@ public class APIUri {
      *
      * @return
      */
-    public static String getDeleteMeetingUrl() {
-        return getMeetingBaseUrl() + "room/booking/cancel";
+    public static String getMeetingDeleteUrl() {
+        return getMeetingBaseUrl() + "room/booking/cancel?";
     }
 
     /**
@@ -1270,7 +1284,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingIsAdminUrl() {
-        return getMeetingBaseUrl() + "is_admin";
+        return getMeetingBaseUrl() + "is_admin?";
     }
 
     /**
@@ -1700,12 +1714,98 @@ public class APIUri {
      *
      * @return
      */
+
+    public static String getScheduleBaseUrl(){
+        return getECMScheduleUrl()+"/schedule-ext/";
+    }
+
     public static String getCheckCloudPluseConnectUrl() {
-        return "https://emm.inspur.com/api/mam/v3.0/heart/success";
+        return  getScheduleBaseUrl()+"api/mam/v3.0/heart/success";
     }
 
     public static String getCancelTokenUrl() {
         return MyApplication.getInstance().getCloudId() + "oauth2.0/profile";
+    }
+
+    public static String getScheduleListUrl() {
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/GetList?";
+    }
+
+    public static String getAddScheduleUrl() {
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/add";
+    }
+
+    public static String getUpdateScheduleUrl() {
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/update";
+    }
+
+    public static String getDeleteScheduleUrl(String scheduleId) {
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/remove/" + scheduleId;
+    }
+
+    public static String getAddMeetingUrl() {
+        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/add";
+    }
+
+    public static String getDelMeetingUrl(String meetingId) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/"+meetingId;
+    }
+
+    public static String getMeetingListByStartTime(){
+        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetByStartTime?";
+    }
+
+    /**
+     * 通过id获取会议详情
+     */
+    public static String getMeetingUrlFromId(String id) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Get/" + id;
+    }
+
+    /**
+     * 通过id获取日程详情
+     */
+    public static String getCalendarUrlFromId(String id) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Get/" + id;
+    }
+
+    public static String getMeetingHistoryListByPage(int id) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/GetHistory/" + id;
+    }
+
+    public static String getRoomMeetingListByMeetingRoom(){
+        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetRoomUse?";
+    }
+
+    public static String getMeetingUpdateUrl() {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/update";
+    }
+
+    public static String getHolidayDataUrl(){
+        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/HolidayData/";
+    }
+
+    /**
+     * 获取删除工作中的tags
+     */
+    public static String getDelTaskTagsUrl(String taskId) {
+        return getToDoBaseUrl() + taskId + "/tags";
+    }
+
+    /**
+     * 获取删除工作中的tags
+     */
+    public static String getAddTaskTagsUrl(String taskId) {
+        return getToDoBaseUrl() + taskId + "/tags";
+    }
+
+    /**
+     * 获取决策卡片机器人触发事件
+     *
+     * @return
+     */
+    public static String getDecideCardBotRequestUrl(){
+        return "https://api.inspuronline.com/bot/v1/action/trigger/";
     }
 
 }

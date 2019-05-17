@@ -16,8 +16,9 @@ import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
-import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
@@ -36,10 +37,10 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
+import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
-import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
-import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -48,8 +49,8 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.MailLoginUtils;
@@ -118,8 +119,8 @@ public class SchemeHandleActivity extends Activity {
                 setTheme(R.style.AppTheme_Transparent_0);
                 break;
         }
-        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont,0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true,1.0f).init();
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
+        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
     }
 
     private boolean isLackNecessaryPermission() {
@@ -273,7 +274,7 @@ public class SchemeHandleActivity extends Activity {
                                 if (content != null) {
                                     JSONObject calEventObj = JSONUtils.getJSONObject(content);
                                     CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                    Intent intent = new Intent(SchemeHandleActivity.this, CalEventAddActivity.class);
+                                    Intent intent = new Intent(SchemeHandleActivity.this, CalendarAddActivity.class);
                                     intent.putExtra("calEvent", calendarEvent);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
@@ -291,7 +292,7 @@ public class SchemeHandleActivity extends Activity {
                                 }
                                 break;
                             case "inspur-ecc-native":
-                                openNativeSchemeByHost(host, getIntent());
+                                openNativeSchemeByHost(host, uri, getIntent());
                                 break;
                             default:
                                 finish();
@@ -471,16 +472,35 @@ public class SchemeHandleActivity extends Activity {
         }
     }
 
-    private void openNativeSchemeByHost(String host, Intent intent) {
+    private void openNativeSchemeByHost(String host, Uri query, Intent intent) {
+        SimpleEventMessage simpleEventMessage = new SimpleEventMessage(Constant.APP_TAB_BAR_WORK);
         switch (host) {
             case "calendar":
-                IntentUtils.startActivity(SchemeHandleActivity.this, CalActivity.class, true);
+                if (query.getQuery() == null) {
+                    simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
+                    EventBus.getDefault().post(simpleEventMessage);
+                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
+                    openScheduleActivity(query.getQueryParameter("id"),CalActivity.class);
+                }
+                finish();
                 break;
             case "to-do":
-                IntentUtils.startActivity(SchemeHandleActivity.this, MessionListActivity.class, true);
+                if (query.getQuery() == null) {
+                    simpleEventMessage.setMessageObj(Constant.ACTION_TASK);
+                    EventBus.getDefault().post(simpleEventMessage);
+                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
+                    openScheduleActivity(query.getQueryParameter("id"),TaskAddActivity.class);
+                }
+                finish();
                 break;
             case "meeting":
-                IntentUtils.startActivity(SchemeHandleActivity.this, MeetingListActivity.class, true);
+                if (query.getQuery() == null) {
+                    simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
+                    EventBus.getDefault().post(simpleEventMessage);
+                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
+                    openScheduleActivity(query.getQueryParameter("id"),MeetingDetailActivity.class);
+                }
+                finish();
                 break;
             case "webex":
                 String installUri = intent.getExtras().getString("installUri", "");
@@ -495,6 +515,34 @@ public class SchemeHandleActivity extends Activity {
                 finish();
                 break;
         }
+    }
+
+    /**
+     * 判断query是否合法
+     *
+     * @param query
+     * @return
+     */
+    private boolean getQueryLegal(Uri query) {
+        if (query == null) {
+            return false;
+        }
+        if (StringUtils.isBlank(query.getQueryParameter("id"))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 打开日程的Activity
+     *
+     * @param query
+     * @param scheduleActivity
+     */
+    private void openScheduleActivity(String query, Class scheduleActivity) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.SCHEDULE_QUERY, query);
+        IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle);
     }
 
     private void openComponentScheme(Uri uri, String host) {

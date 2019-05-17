@@ -1,12 +1,17 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.SpannableString;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,21 +45,28 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
+import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
@@ -71,11 +83,13 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -96,10 +110,13 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int RQQUEST_CHOOSE_FILE = 4;
     private static final int REQUEST_MENTIONS = 5;
 
+    private static final int SHARE_SEARCH_RUEST_CODE = 31;
+
     private static final int REFRESH_HISTORY_MESSAGE = 6;
     private static final int REFRESH_PUSH_MESSAGE = 7;
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
+
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
 
@@ -124,6 +141,8 @@ public class ConversationActivity extends ConversationBaseActivity {
     private BroadcastReceiver refreshNameReceiver;
     private PopupWindow mediaVoiceReRecognizerPop;
     private PopupWindow resendMessagePop;
+
+    private UIMessage backUiMessage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,15 +221,15 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void initChannelMessage() {
-        List<Message> cacheMessageList ;
+        List<Message> cacheMessageList;
         UIMessage uiMessage = null;
-        if(getIntent().hasExtra(EXTRA_UIMESSAGE)){
-            uiMessage = (UIMessage)getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
+        if (getIntent().hasExtra(EXTRA_UIMESSAGE)) {
+            uiMessage = (UIMessage) getIntent().getSerializableExtra(EXTRA_UIMESSAGE);
             cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null);
-        }else{
+        } else {
             cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
         }
-        if(cacheMessageList == null){
+        if (cacheMessageList == null) {
             cacheMessageList = new ArrayList<>();
         }
         List<Message> messageSendingList = new ArrayList<>();
@@ -226,9 +245,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             getNewMessageOfChannel();
         }
         initViews();
-        if(uiMessage != null){
+        if (uiMessage != null) {
             int position = uiMessageList.indexOf(uiMessage);
-            if(position != -1){
+            if (position != -1) {
                 msgListView.scrollToPosition(position);
             }
         }
@@ -391,16 +410,6 @@ public class ConversationActivity extends ConversationBaseActivity {
         adapter = new ChannelMessageAdapter(ConversationActivity.this, conversation.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                UIMessage uiMessage = uiMessageList.get(position);
-                int messageSendStatus = uiMessage.getSendStatus();
-                //当消息处于发送中状态时无法点击
-                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
-                    openMessage(uiMessage.getMessage());
-                }
-            }
-
-            @Override
             public void onMessageResend(UIMessage uiMessage, View view) {
                 if (uiMessage.getSendStatus() == Message.MESSAGE_SEND_FAIL) {
                     showResendMessageDlg(uiMessage, view);
@@ -409,7 +418,7 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
-                showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
+                showMediaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
             }
 
             @Override
@@ -417,6 +426,21 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (mediaVoiceReRecognizerPop != null && mediaVoiceReRecognizerPop.isShowing()) {
                     mediaVoiceReRecognizerPop.dismiss();
                 }
+            }
+
+            @Override
+            public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
+                backUiMessage = uiMessage;
+                int[] operationsId = getCardLongClickOperations(uiMessage);
+                if (operationsId.length > 0) {
+                    showLongClickOperationsDialog(operationsId, ConversationActivity.this, uiMessage);
+                }
+                return true;
+            }
+
+            @Override
+            public void onCardItemClick(View view, UIMessage uiMessage) {
+                CardClickOperation(ConversationActivity.this, view, uiMessage);
             }
         });
         adapter.setMessageList(uiMessageList);
@@ -566,47 +590,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-    /**
-     * 打开消息
-     * 未发送成功的不可调用此方法，不会根据消息id获取评论
-     *
-     * @param message
-     */
-    private void openMessage(Message message) {
-        String msgType = message.getType();
-        Bundle bundle = new Bundle();
-        switch (msgType) {
-            case "attachment/card":
-                String uid = message.getMsgContentAttachmentCard().getUid();
-                bundle.putString("uid", uid);
-                IntentUtils.startActivity(ConversationActivity.this,
-                        UserInfoActivity.class, bundle);
-                break;
-            case "file/regular-file":
-            case "media/image":
-                bundle.putString("mid", message.getId());
-                bundle.putString(EXTRA_CID, message.getChannel());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        ChannelMessageDetailActivity.class, bundle);
-                break;
-            case "comment/text-plain":
-                String mid = message.getMsgContentComment().getMessage();
-                bundle.putString("mid", mid);
-                bundle.putString(EXTRA_CID, message.getChannel());
-                IntentUtils.startActivity(ConversationActivity.this,
-                        ChannelMessageDetailActivity.class, bundle);
-                break;
-            case "extended/links":
-                String url = message.getMsgContentExtendedLinks().getUrl();
-                UriUtils.openUrl(ConversationActivity.this, url);
-                break;
-            default:
-                break;
-        }
-    }
-
-
-    private void showMeidaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final QMUILoadingView downloadLoadingView) {
+    private void showMediaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final QMUILoadingView downloadLoadingView) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         mediaVoiceReRecognizerPop = new PopupWindow(contentView,
@@ -784,6 +768,28 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case REQUEST_QUIT_CHANNELGROUP:
                     MyApplication.getInstance().setCurrentChannelCid("");
                     finish();
+                    break;
+                case SHARE_SEARCH_RUEST_CODE:
+                    if (NetUtils.isNetworkConnected(getApplicationContext())) {
+                        String searchResult = data.getStringExtra("searchResult");
+                        JSONObject jsonObject = JSONUtils.getJSONObject(searchResult);
+                        if (jsonObject.has("people")) {
+                            JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject, "people", new JSONArray());
+                            if (peopleArray.length() > 0) {
+                                JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
+                                String pidUid = JSONUtils.getString(peopleObj, "pid", "");
+                                createDirectChannel(pidUid, backUiMessage);
+                            }
+                        }
+                        if (jsonObject.has("channelGroup")) {
+                            JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
+                            if (channelGroupArray.length() > 0) {
+                                JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
+                                String cid = JSONUtils.getString(cidObj, "cid", "");
+                                transmitTextMsg(cid, backUiMessage.getMessage());
+                            }
+                        }
+                    }
                     break;
             }
         } else {
@@ -1320,6 +1326,278 @@ public class ConversationActivity extends ConversationBaseActivity {
                 apiService.setConversationHide(conversation.getId(), false);
             }
         }
+    }
+
+    /**
+     * 创建单聊
+     *
+     * @param uid
+     */
+    private void createDirectChannel(String uid, final UIMessage uiMessage) {
+        if (MyApplication.getInstance().isV1xVersionChat()) {
+            new ConversationCreateUtils().createDirectConversation(this, uid,
+                    new ConversationCreateUtils.OnCreateDirectConversationListener() {
+                        @Override
+                        public void createDirectConversationSuccess(Conversation conversation) {
+                            transmitMsg(conversation.getId(), uiMessage);
+                        }
+
+                        @Override
+                        public void createDirectConversationFail() {
+
+                        }
+                    });
+        }
+    }
+
+    /**
+     * 转发消息
+     */
+    private void transmitMsg(String cid, UIMessage uiMessage) {
+        String msgType = uiMessage.getMessage().getType();
+        switch (msgType) {
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                transmitTextMsg(cid, uiMessage.getMessage());
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                //  transmitImgMsg(cid, uiMessage.getMessage());
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 转发文本消息
+     *
+     * @param cid
+     */
+    private void transmitTextMsg(String cid, Message sendMessage) {
+        String text = sendMessage.getMsgContentTextPlain().getText();
+        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(ConversationActivity.this, text, sendMessage.getMsgContentTextPlain().getMentionsMap());
+        text = spannableString.toString();
+        if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
+            if (MyApplication.getInstance().isV0VersionChat()) {
+            } else {
+                Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
+                WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
+            }
+        }
+    }
+
+    /**
+     * 转发图片消息
+     */
+    private void transmitImgMsg(String cid, Message sendMessage) {
+        String path1 = sendMessage.getMsgContentMediaImage().getPreviewMedia();
+        String data = JSONUtils.toJSONString(sendMessage);
+        LogUtils.LbcDebug("data::" + data);
+        String path = sendMessage.getLocalPath();
+        LogUtils.LbcDebug("path::" + path);
+        LogUtils.LbcDebug("path1::" + path1);
+        if (!StringUtils.isBlank(path) && NetUtils.isNetworkConnected(getApplicationContext())) {
+//                Message localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid,path);
+//                localMessage.getMsgContentMediaImage().setPreviewMedia(path1);
+//              sendMessageWithFile(localMessage);
+        }
+    }
+
+    /**
+     * Card 长按事件弹出dialogCard LongClick
+     */
+    private int[] getCardLongClickOperations(final UIMessage uiMessage) {
+        Message message = uiMessage.getMessage();
+        String type = message.getType();
+        int[] items = new int[0];
+        switch (type) {
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
+                break;
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                break;
+            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                break;
+            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                break;
+            default:
+                break;
+        }
+        return items;
+    }
+
+    /**
+     * Card 点击事件 及处理
+     */
+    private void CardClickOperation(final Context context, View view, final UIMessage uiMessage) {
+        Message message = uiMessage.getMessage();
+        int messageSendStatus = uiMessage.getSendStatus();
+        Bundle bundle = new Bundle();
+        String type = message.getType();
+        switch (type) {
+            case Message.MESSAGE_TYPE_ATTACHMENT_CARD:
+                String uid = message.getMsgContentAttachmentCard().getUid();
+                bundle.putString("uid", uid);
+                IntentUtils.startActivity(ConversationActivity.this,
+                        UserInfoActivity.class, bundle);
+                break;
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                break;
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                break;
+            case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                if (uiMessage.getSendStatus() != 1) {
+                    return;
+                }
+                final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+                final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+                if (FileUtils.isFileExist(fileDownloadPath)) {
+                    FileUtils.openFile(context, fileDownloadPath);
+                } else {
+                    Intent intent = new Intent(context, ChatFileDownloadActivtiy.class);
+                    intent.putExtra("message", message);
+                    context.startActivity(intent);
+                }
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_CONTACT_CARD:
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                if (uiMessage.getSendStatus() != 1) {
+                    return;
+                }
+                int[] location = new int[2];
+                view.getLocationOnScreen(location);
+                view.invalidate();
+                int width = view.getWidth();
+                int height = view.getHeight();
+                Intent intent = new Intent(context,
+                        ImagePagerActivity.class);
+                List<Message> imgTypeMsgList = MessageCacheUtil.getImgTypeMessageList(context, uiMessage.getMessage().getChannel(), false);
+                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, uiMessage.getMessage());
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+                context.startActivity(intent);
+                break;
+            case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
+                //当消息处于发送中状态时无法点击
+                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
+                    String mid = message.getMsgContentComment().getMessage();
+                    bundle.putString("mid", mid);
+                    bundle.putString(EXTRA_CID, message.getChannel());
+                    IntentUtils.startActivity(ConversationActivity.this,
+                            ChannelMessageDetailActivity.class, bundle);
+                }
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_LINKS:
+                //当消息处于发送中状态时无法点击
+                if (messageSendStatus == Message.MESSAGE_SEND_SUCCESS) {
+                    String url = message.getMsgContentExtendedLinks().getUrl();
+                    UriUtils.openUrl(ConversationActivity.this, url);
+                }
+                break;
+            case Message.MESSAGE_TYPE_MEDIA_VOICE:
+                break;
+            default:
+                NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(context,
+                        null, true);
+                upgradeUtils.checkUpdate(true);
+                break;
+        }
+    }
+
+    /**
+     * 长按事件处理
+     */
+    private void showLongClickOperationsDialog(final int[] operationsId, final Context context, final UIMessage uiMessage) {
+        final String[] operations = new String[operationsId.length];
+        for (int i = 0; i < operationsId.length; i++) {
+            String operation = context.getResources().getString(operationsId[i]);
+            operations[i] = operation;
+        }
+        new QMUIDialog.MenuDialogBuilder(context)
+                .addItems(operations, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String content;
+                        Message message = uiMessage.getMessage();
+                        SpannableString spannableString;
+                        switch (operationsId[which]) {
+                            case R.string.chat_long_click_copy:
+                                String text = message.getMsgContentTextPlain().getText();
+                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
+                                text = spannableString.toString();
+                                if (!StringUtils.isBlank(text))
+                                    copyToClipboard(context, text);
+                                break;
+                            case R.string.chat_long_click_transmit:
+                                shareMessageToFrinds(context);
+                                break;
+                            case R.string.chat_long_click_schedule:
+                                content = message.getMsgContentTextPlain().getText();
+                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, content, message.getMsgContentTextPlain().getMentionsMap());
+                                content = spannableString.toString();
+                                if (!StringUtils.isBlank(content))
+                                    addTextToSchedule(content);
+                                break;
+                            case R.string.chat_long_click_copy_text:
+                                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
+                                if (!StringUtils.isBlank(content))
+                                    copyToClipboard(context, content);
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .create(R.style.QMUI_Dialog).show();
+    }
+
+    /**
+     * 文本复制到剪切板
+     */
+    private void copyToClipboard(Context context, String content) {
+        ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setPrimaryClip(ClipData.newPlainText(null, content));
+        ToastUtils.show(context, R.string.copyed_to_paste_board);
+    }
+
+    /**
+     * 文本信息添加到日程
+     */
+    private void addTextToSchedule(String content) {
+        Intent intent = new Intent();
+        intent.putExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE, content);
+        intent.setClass(ConversationActivity.this, CalendarAddActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 给朋友转发
+     */
+    private void shareMessageToFrinds(Context context) {
+        Intent intent = new Intent();
+        intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
+        intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
+        ArrayList<String> uidList = new ArrayList<>();
+        uidList.add(MyApplication.getInstance().getUid());
+        intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.news_share));
+        intent.setClass(context,
+                ContactSearchActivity.class);
+        startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);
     }
 
     class CacheMessageListThread extends Thread {

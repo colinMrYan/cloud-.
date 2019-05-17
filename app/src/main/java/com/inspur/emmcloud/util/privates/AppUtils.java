@@ -43,15 +43,14 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
-import com.yanzhenjie.permission.Permission;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -630,7 +629,7 @@ public class AppUtils {
     public static void openCamera(final Activity activity, final String fileName, final int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permission.CAMERA,
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA,
                     new PermissionRequestCallback() {
                         @Override
                         public void onPermissionRequestSuccess(List<String> permissions) {
@@ -844,6 +843,16 @@ public class AppUtils {
         boolean isTelbet = AppUtils.isTablet(context);
         String username = PreferencesUtils.getString(context, "userRealName");
         return username + (isTelbet ? "的平板电脑" : "的手机");
+    }
+
+    /**
+     * 判断是否可以连接华为推了送
+     *
+     * @return
+     */
+    private static boolean canConnectHuawei(Context context) {
+        String pushFlag = PushManagerUtils.getPushFlag(context);
+        return StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG);
     }
 
     /**

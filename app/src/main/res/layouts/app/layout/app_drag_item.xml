@@ -32,5 +32,5 @@
         android:layout_below="@id/app_list_draggrid"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="#efefef"></View>
+        android:background="#efefef"/>
 </RelativeLayout>

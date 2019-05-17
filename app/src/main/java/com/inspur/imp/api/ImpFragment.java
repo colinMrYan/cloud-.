@@ -43,7 +43,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
-import com.inspur.emmcloud.widget.MaxHightListView;
+import com.inspur.emmcloud.widget.MaxHeightListView;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.IPlugin;
 import com.inspur.imp.plugin.PluginMgr;
@@ -54,6 +54,7 @@ import com.inspur.imp.plugin.filetransfer.FileTransferService;
 import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
 import com.inspur.imp.plugin.window.DropItemTitle;
+import com.inspur.imp.plugin.window.OnKeyDownListener;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -98,6 +99,7 @@ public class ImpFragment extends ImpBaseFragment {
     private List<DropItemTitle> dropItemTitleList = new ArrayList<>();
     private Adapter dropTitleAdapter;
     private ImpCallBackInterface impCallBackInterface;
+    private OnKeyDownListener onKeyDownListener;
 
 
     @Override
@@ -288,7 +290,7 @@ public class ImpFragment extends ImpBaseFragment {
 
                 }
             });
-            MaxHightListView listView = (MaxHightListView) contentView.findViewById(R.id.list);
+            MaxHeightListView listView = (MaxHeightListView) contentView.findViewById(R.id.list);
             listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 240));
             dropTitleAdapter = new Adapter();
             listView.setAdapter(dropTitleAdapter);
@@ -307,11 +309,11 @@ public class ImpFragment extends ImpBaseFragment {
         dropTitlePopupWindow.showAsDropDown(headerLayout);
     }
 
-    private void setDropItemTitleSelect(int position){
-        if (dropItemTitleList != null && position <dropItemTitleList.size()){
-            if (position == -1){
-                for (int i=0;i<dropItemTitleList.size();i++){
-                    if (dropItemTitleList.get(i).isSelected()){
+    private void setDropItemTitleSelect(int position) {
+        if (dropItemTitleList != null && position < dropItemTitleList.size()) {
+            if (position == -1) {
+                for (int i = 0; i < dropItemTitleList.size(); i++) {
+                    if (dropItemTitleList.get(i).isSelected()) {
                         position = i;
                         break;
                     }
@@ -394,13 +396,18 @@ public class ImpFragment extends ImpBaseFragment {
                 ImpFragment.this.optionMenuList = optionMenuList;
                 initHeaderOptionMenu();
             }
+
+            @Override
+            public void setOnKeyDownListener(OnKeyDownListener onKeyDownListener) {
+                ImpFragment.this.onKeyDownListener = onKeyDownListener;
+            }
         };
     }
 
     private void setHeaderTitleTextDropImg() {
         boolean isDropTitlePopShow = (dropTitlePopupWindow != null && dropTitlePopupWindow.isShowing());
-        int dropUpRes = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.plugin_ic_header_title_drop_up);
-        int dropDownRes = ResourceUtils.getResValueOfAttr(getActivity(),R.attr.plugin_ic_header_title_drop_down);
+        int dropUpRes = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.plugin_ic_header_title_drop_up);
+        int dropDownRes = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.plugin_ic_header_title_drop_down);
         Drawable drawable = ContextCompat.getDrawable(MyApplication.getInstance(), isDropTitlePopShow ? dropUpRes : dropDownRes);
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         headerText.setCompoundDrawables(null, null, drawable, null);
@@ -440,12 +447,19 @@ public class ImpFragment extends ImpBaseFragment {
     /**
      * 返回
      */
-    public boolean goBack() {
-        if (webView.canGoBack()) {
-            webView.goBack();// 返回上一页面
-            setGoBackTitle();
-        } else {
-            finishActivity();
+    public boolean onBackKeyDown() {
+        if (ImpFragment.this.onKeyDownListener != null){
+            ImpFragment.this.onKeyDownListener.onBackKeyDown();
+        }else {
+            if (!webView.getWebChromeClient().hideCustomView()){
+                if (webView.canGoBack()) {
+                    webView.goBack();// 返回上一页面
+                    setGoBackTitle();
+                } else {
+                    finishActivity();
+                }
+            }
+
         }
         return true;
     }
@@ -722,7 +736,12 @@ public class ImpFragment extends ImpBaseFragment {
                     setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                     break;
                 case R.id.ibt_back:
-                    goBack();
+                    if (webView.canGoBack()) {
+                        webView.goBack();// 返回上一页面
+                        setGoBackTitle();
+                    } else {
+                        finishActivity();
+                    }
                     break;
                 case R.id.imp_close_btn:
                     finishActivity();

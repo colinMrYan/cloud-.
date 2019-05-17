@@ -21,7 +21,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetTagResult;
 import com.inspur.emmcloud.bean.work.MessionSetModel;
-import com.inspur.emmcloud.bean.work.TaskColorTag;
+import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -329,7 +329,7 @@ public class MessionSetActivity extends BaseActivity {
             int positionChoose = PreferencesUtils.getInt(
                     MessionSetActivity.this, "setorder", -1);
             convertView = LayoutInflater.from(MessionSetActivity.this).inflate(
-                    R.layout.meession_taglist_item, null);
+                    R.layout.task_set_item1, null);
             ((TextView) (convertView.findViewById(R.id.mession_set_text)))
                     .setText(messionSetModel.get(position).getContent());
             if (position == positionChoose) {
@@ -366,7 +366,7 @@ public class MessionSetActivity extends BaseActivity {
             int positionChoose = PreferencesUtils.getInt(
                     MessionSetActivity.this, "order");
             convertView = LayoutInflater.from(MessionSetActivity.this).inflate(
-                    R.layout.meession_taglist_item, null);
+                    R.layout.task_set_item1, null);
             ((TextView) (convertView.findViewById(R.id.mession_set_text)))
                     .setText(messionSetOrderModel.get(position).getContent());
             ImageView imageView = (ImageView) convertView

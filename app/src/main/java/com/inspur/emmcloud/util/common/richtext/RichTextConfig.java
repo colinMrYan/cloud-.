@@ -3,12 +3,15 @@ package com.inspur.emmcloud.util.common.richtext;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.common.richtext.callback.Callback;
+import com.inspur.emmcloud.util.common.richtext.callback.DrawableGetter;
 import com.inspur.emmcloud.util.common.richtext.callback.ImageFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.ImageGetter;
 import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
@@ -16,9 +19,13 @@ import com.inspur.emmcloud.util.common.richtext.callback.OnImageClickListener;
 import com.inspur.emmcloud.util.common.richtext.callback.OnImageLongClickListener;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlLongClickListener;
+import com.inspur.emmcloud.util.common.richtext.drawable.DrawableBorderHolder;
+import com.inspur.emmcloud.util.common.richtext.ig.DefaultImageDownloader;
 import com.inspur.emmcloud.util.common.richtext.ig.DefaultImageGetter;
+import com.inspur.emmcloud.util.common.richtext.ig.ImageDownloader;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 /**
  * Created by zhou on 2016/12/3.
@@ -26,17 +33,14 @@ import java.lang.ref.WeakReference;
  */
 @SuppressWarnings("WeakerAccess")
 public final class RichTextConfig {
-
+    public static final String OK_HTTP_GLOBAL_ID = "com.zzhoujay.okhttpimagedownloader.OkHttpImageDownloader";
     public final String source; // 源文本
-    @RichType
-    public final int richType; // 富文本类型，默认HTML
+    public final RichType richType; // 富文本类型，默认HTML
     public final boolean autoFix; // 图片自动修复，默认true
     public final boolean resetSize; // 是否放弃使用img标签中的尺寸属性，默认false
     public final boolean autoPlay; // Gif图片是否自动播放
-    @ImageHolder.ScaleType
-    public final int scaleType; // 图片缩放方式
-    @CacheType
-    public final int cacheType; // 缓存类型
+    public final ImageHolder.ScaleType scaleType; // 图片缩放方式
+    public final CacheType cacheType; // 缓存类型
     public final int width; // 图片边框宽度
     public final int height; // 图片边框高度
     public final ImageFixCallback imageFixCallback; // 自定义图片修复接口只有在autoFix为false时有效
@@ -47,29 +51,45 @@ public final class RichTextConfig {
     public final OnUrlClickListener onUrlClickListener; // 链接点击回调接口
     public final OnImageLongClickListener onImageLongClickListener; // 图片长按回调接口
     public final OnUrlLongClickListener onUrlLongClickListener; // 链接长按回调接口
-    public final Drawable placeHolder; // placeHolder
-    public final Drawable errorImage; // errorImage
     public final Callback callback; // 解析完成的回调
-    public final ImageHolder.BorderHolder borderHolder;
-    public final boolean singleLoad;
+    public final DrawableBorderHolder borderHolder;
     final ImageGetter imageGetter; // 图片加载器，默认为GlideImageGetter
+    public final boolean singleLoad;
+    public final boolean syncParse;
+    public final ImageDownloader imageDownloader;// 图片加载器
+    public final DrawableGetter placeHolderDrawableGetter, errorImageDrawableGetter;
 
+
+
+    private WeakReference<RichText> richTextInstanceWeakReference;
+
+    private final HashMap<String, Object> argsPool;
+
+    void setRichTextInstance(RichText richTextInstance) {
+        if (this.richTextInstanceWeakReference == null)
+            this.richTextInstanceWeakReference = new WeakReference<>(richTextInstance);
+    }
+
+    public RichText getRichTextInstance() {
+        return richTextInstanceWeakReference == null ? null : richTextInstanceWeakReference.get();
+    }
 
     private RichTextConfig(RichTextConfigBuild config) {
         this(config.source, config.richType, config.autoFix, config.resetSize, config.cacheType, config.imageFixCallback,
                 config.linkFixCallback, config.noImage, config.clickable, config.onImageClickListener,
                 config.onUrlClickListener, config.onImageLongClickListener, config.onUrlLongClickListener,
-                config.placeHolder, config.errorImage, config.imageGetter, config.callback, config.autoPlay,
-                config.scaleType, config.width, config.height, config.borderHolder, config.singleLoad);
+                config.imageGetter, config.callback, config.autoPlay, config.scaleType, config.width,
+                config.height, config.borderHolder, config.singleLoad, config.syncParse, config.imageDownloader, config.placeHolderDrawableGetter,
+                config.errorImageDrawableGetter);
     }
 
-    private RichTextConfig(String source, int richType, boolean autoFix, boolean resetSize, @CacheType int cacheType,
+    private RichTextConfig(String source, RichType richType, boolean autoFix, boolean resetSize, CacheType cacheType,
                            ImageFixCallback imageFixCallback, LinkFixCallback linkFixCallback, boolean noImage,
                            int clickable, OnImageClickListener onImageClickListener, OnUrlClickListener onUrlClickListener,
                            OnImageLongClickListener onImageLongClickListener, OnUrlLongClickListener onUrlLongClickListener,
-                           Drawable placeHolder, Drawable errorImage, ImageGetter imageGetter, Callback callback,
-                           boolean autoPlay, @ImageHolder.ScaleType int scaleType, int width, int height,
-                           ImageHolder.BorderHolder borderHolder, boolean singleLoad) {
+                           ImageGetter imageGetter, Callback callback, boolean autoPlay, ImageHolder.ScaleType scaleType,
+                           int width, int height, DrawableBorderHolder borderHolder, boolean singleLoad, boolean syncParse,
+                           ImageDownloader imageDownloader, DrawableGetter placeHolderDrawableGetter, DrawableGetter errorImageDrawableGetter) {
         this.source = source;
         this.richType = richType;
         this.autoFix = autoFix;
@@ -82,8 +102,6 @@ public final class RichTextConfig {
         this.onUrlClickListener = onUrlClickListener;
         this.onImageLongClickListener = onImageLongClickListener;
         this.onUrlLongClickListener = onUrlLongClickListener;
-        this.placeHolder = placeHolder;
-        this.errorImage = errorImage;
         this.imageGetter = imageGetter;
         this.callback = callback;
         this.scaleType = scaleType;
@@ -92,6 +110,10 @@ public final class RichTextConfig {
         this.height = height;
         this.borderHolder = borderHolder;
         this.singleLoad = singleLoad;
+        this.syncParse = syncParse;
+        this.imageDownloader = imageDownloader;
+        this.placeHolderDrawableGetter = placeHolderDrawableGetter;
+        this.errorImageDrawableGetter = errorImageDrawableGetter;
         if (clickable == 0) {
             if (onImageLongClickListener != null || onUrlLongClickListener != null ||
                     onImageClickListener != null || onUrlClickListener != null) {
@@ -99,39 +121,18 @@ public final class RichTextConfig {
             }
         }
         this.clickable = clickable;
+
+        argsPool = new HashMap<>();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RichTextConfig)) return false;
-
-        RichTextConfig that = (RichTextConfig) o;
-
-        if (richType != that.richType) return false;
-        if (autoFix != that.autoFix) return false;
-        if (resetSize != that.resetSize) return false;
-        if (autoPlay != that.autoPlay) return false;
-        if (scaleType != that.scaleType) return false;
-        if (cacheType != that.cacheType) return false;
-        if (width != that.width) return false;
-        if (height != that.height) return false;
-        if (noImage != that.noImage) return false;
-        if (clickable != that.clickable) return false;
-        if (!source.equals(that.source)) return false;
-        return borderHolder.equals(that.borderHolder);
-
-    }
-
-    @Override
-    public int hashCode() {
+    public int key() {
         int result = source.hashCode();
-        result = 31 * result + richType;
+        result = 31 * result + richType.hashCode();
         result = 31 * result + (autoFix ? 1 : 0);
         result = 31 * result + (resetSize ? 1 : 0);
         result = 31 * result + (autoPlay ? 1 : 0);
-        result = 31 * result + scaleType;
-        result = 31 * result + cacheType;
+        result = 31 * result + scaleType.hashCode();
+        result = 31 * result + cacheType.hashCode();
         result = 31 * result + width;
         result = 31 * result + height;
         result = 31 * result + (noImage ? 1 : 0);
@@ -140,16 +141,14 @@ public final class RichTextConfig {
         return result;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "SameParameterValue"})
     public static final class RichTextConfigBuild {
 
         final String source;
-        @RichType
-        int richType;
+        RichType richType;
         boolean autoFix;
         boolean resetSize;
-        @CacheType
-        int cacheType;
+        CacheType cacheType;
         ImageFixCallback imageFixCallback;
         LinkFixCallback linkFixCallback;
         boolean noImage;
@@ -158,39 +157,36 @@ public final class RichTextConfig {
         OnUrlClickListener onUrlClickListener;
         OnImageLongClickListener onImageLongClickListener;
         OnUrlLongClickListener onUrlLongClickListener;
-        Drawable placeHolder;
-        Drawable errorImage;
-        @DrawableRes
-        int placeHolderRes;
-        @DrawableRes
-        int errorImageRes;
         ImageGetter imageGetter;
         Callback callback;
         WeakReference<Object> tag;
         boolean autoPlay;
-        @ImageHolder.ScaleType
-        int scaleType;
+        ImageHolder.ScaleType scaleType;
         int width;
         int height;
-        ImageHolder.BorderHolder borderHolder;
+        DrawableBorderHolder borderHolder;
         boolean singleLoad;
+        boolean syncParse;
+        ImageDownloader imageDownloader;
+        DrawableGetter placeHolderDrawableGetter, errorImageDrawableGetter;
 
-
-        RichTextConfigBuild(String source, int richType) {
+        RichTextConfigBuild(String source, RichType richType) {
             this.source = source;
             this.richType = richType;
             this.autoFix = true;
             this.resetSize = false;
             this.noImage = false;
             this.clickable = 0;
-            this.cacheType = CacheType.ALL;
-            this.imageGetter = new DefaultImageGetter();
+            this.cacheType =  CacheType.all;
             this.autoPlay = false;
-            this.scaleType = ImageHolder.ScaleType.NONE;
+            this.scaleType = ImageHolder.ScaleType.none;
             this.width = ImageHolder.WRAP_CONTENT;
             this.height = ImageHolder.WRAP_CONTENT;
-            this.borderHolder = new ImageHolder.BorderHolder();
+            this.borderHolder = new DrawableBorderHolder();
             this.singleLoad = true;
+            this.placeHolderDrawableGetter = PLACE_HOLDER_DRAWABLE_GETTER;
+            this.errorImageDrawableGetter = ERROR_IMAGE_DRAWABLE_GETTER;
+            this.syncParse = false;
         }
 
         /**
@@ -218,7 +214,7 @@ public final class RichTextConfig {
         /**
          * 不使用img标签里的宽高，img标签的宽高存在才有用
          *
-         * @param resetSize false：使用标签里的宽高，不会触发SIZE_READY的回调；true：忽略标签里的宽高，触发SIZE_READY的回调获取尺寸大小。默认为false
+         * @param resetSize false：使用标签里的宽高；true：忽略标签里的宽高。默认为false
          * @return RichTextConfigBuild
          */
         public RichTextConfigBuild resetSize(boolean resetSize) {
@@ -232,7 +228,7 @@ public final class RichTextConfig {
          * @param cacheType 默认为NONE
          * @return RichTextConfigBuild
          */
-        public RichTextConfigBuild cache(@CacheType int cacheType) {
+        public RichTextConfigBuild cache(CacheType cacheType) {
             this.cacheType = cacheType;
             return this;
         }
@@ -289,7 +285,7 @@ public final class RichTextConfig {
          * @see RichType
          */
         @SuppressWarnings("WeakerAccess")
-        public RichTextConfigBuild type(@RichType int richType) {
+        public RichTextConfigBuild type(RichType richType) {
             this.richType = richType;
             return this;
         }
@@ -355,7 +351,7 @@ public final class RichTextConfig {
          * @param scaleType 缩放方式
          * @return RichTextConfigBuild
          */
-        public RichTextConfigBuild scaleType(@ImageHolder.ScaleType int scaleType) {
+        public RichTextConfigBuild scaleType(ImageHolder.ScaleType scaleType) {
             this.scaleType = scaleType;
             return this;
         }
@@ -418,53 +414,31 @@ public final class RichTextConfig {
         }
 
         /**
-         * 图片加载过程中的占位图
+         * 设置placeHolder创建器
          *
-         * @param placeHolder 占位图
+         * @param drawableGetter placeHolderDrawableGetter
          * @return RichTextConfigBuild
          */
-        public RichTextConfigBuild placeHolder(Drawable placeHolder) {
-            this.placeHolder = placeHolder;
+        public RichTextConfigBuild placeHolder(DrawableGetter drawableGetter) {
+            this.placeHolderDrawableGetter = drawableGetter;
             return this;
         }
 
         /**
-         * 图片加载失败的占位图
+         * 设置errorImage创建器
          *
-         * @param errorImage 占位图
+         * @param drawableGetter errorImageDrawableGetter
          * @return RichTextConfigBuild
          */
-        public RichTextConfigBuild error(Drawable errorImage) {
-            this.errorImage = errorImage;
-            return this;
-        }
-
-        /**
-         * 图片加载过程中的占位图
-         *
-         * @param placeHolder 占位图
-         * @return RichTextConfigBuild
-         */
-        public RichTextConfigBuild placeHolder(@DrawableRes int placeHolder) {
-            this.placeHolderRes = placeHolder;
-            return this;
-        }
-
-        /**
-         * 图片加载失败的占位图
-         *
-         * @param errorImage 占位图
-         * @return RichTextConfigBuild
-         */
-        public RichTextConfigBuild error(@DrawableRes int errorImage) {
-            this.errorImageRes = errorImage;
+        public RichTextConfigBuild errorImage(DrawableGetter drawableGetter) {
+            this.errorImageDrawableGetter = drawableGetter;
             return this;
         }
 
         /**
          * 设置imageGetter
          *
-         * @param imageGetter ig
+         * @param imageGetter ig，如果未null则使用DefaultImageGetter
          * @return RichTextConfigBuild
          * @see ImageGetter
          */
@@ -488,6 +462,17 @@ public final class RichTextConfig {
         }
 
         /**
+         * 设置图片下载器
+         *
+         * @param imageDownloader 设置图片下载器
+         * @return RichTextConfigBuild
+         */
+        public RichTextConfigBuild imageDownloader(ImageDownloader imageDownloader) {
+            this.imageDownloader = imageDownloader;
+            return this;
+        }
+
+        /**
          * 解析完成的回调（图片已完成加载）
          *
          * @param callback callback
@@ -499,31 +484,94 @@ public final class RichTextConfig {
         }
 
         /**
+         * 是否同步解析，默认false
+         *
+         * @param syncParse true：同步解析，false：异步解析
+         * @return RichTextConfigBuild
+         */
+        public RichTextConfigBuild sync(boolean syncParse) {
+            this.syncParse = syncParse;
+            return this;
+        }
+
+        private static final int SET_BOUNDS = 0x09;
+
+        private static final Handler HANDLER = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void dispatchMessage(Message msg) {
+                if (msg.what == SET_BOUNDS) {
+                    //noinspection unchecked
+                    Pair<Drawable, TextView> pair = (Pair<Drawable, TextView>) msg.obj;
+                    Drawable drawable = pair.first;
+                    TextView textView = pair.second;
+                    int width = textView.getWidth() - textView.getPaddingLeft() - textView.getPaddingRight();
+                    drawable.setBounds(0, 0, width, width / 2);
+                }
+            }
+        };
+
+        private static final DrawableGetter PLACE_HOLDER_DRAWABLE_GETTER = new DrawableGetter() {
+
+            @Override
+            public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
+                ColorDrawable drawable = new ColorDrawable(Color.BLACK);
+                int width = textView.getWidth() ;
+                drawable.setBounds(0, 0, width, width / 2);
+                HANDLER.obtainMessage(SET_BOUNDS, Pair.create(drawable, textView)).sendToTarget();
+                return drawable;
+            }
+        };
+
+        private static final DrawableGetter ERROR_IMAGE_DRAWABLE_GETTER = new DrawableGetter() {
+
+            @Override
+            public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
+                ColorDrawable drawable = new ColorDrawable(Color.RED);
+                int width = textView.getWidth();
+                drawable.setBounds(0, 0, width, width / 2);
+                HANDLER.obtainMessage(SET_BOUNDS, Pair.create(drawable, textView)).sendToTarget();
+                return drawable;
+            }
+        };
+
+        /**
          * 加载并设置给textView
          *
          * @param textView TextView
          * @return RichTextConfigBuild
          */
         public RichText into(TextView textView) {
-            if (placeHolder == null && placeHolderRes != 0) {
+            // 检查图片下载器是否已设置
+            if (imageGetter == null) {
+                // 未设置，使用DefaultImageGetter
+//                DefaultImageGetter defaultImageGetter = (DefaultImageGetter) RichText.getArgs(DefaultImageGetter.GLOBAL_ID);
+//                if (defaultImageGetter == null) {
+//                    defaultImageGetter = new DefaultImageGetter();
+//                    RichText.putArgs(DefaultImageGetter.GLOBAL_ID, defaultImageGetter);
+//                }
+//                imageGetter = defaultImageGetter;
+                imageGetter = new DefaultImageGetter();
+            }
+            if (imageGetter instanceof DefaultImageGetter && imageDownloader == null) {
                 try {
-                    placeHolder = ContextCompat.getDrawable(textView.getContext(), placeHolderRes);
+                    // 检查是否依赖了okhttp模块
+                    //noinspection unchecked
+                    Class<ImageDownloader> aClass = (Class<ImageDownloader>) Class.forName(OK_HTTP_GLOBAL_ID);
+                    ImageDownloader downloader = (ImageDownloader) RichText.getArgs(OK_HTTP_GLOBAL_ID);
+                    if (downloader == null) {
+                        downloader = aClass.newInstance();
+                        RichText.putArgs(OK_HTTP_GLOBAL_ID, downloader);
+                    }
+                    imageDownloader = downloader;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // 未依赖okhttp模块，使用DefaultImageDownloader
+                    DefaultImageDownloader defaultImageDownloader = (DefaultImageDownloader) RichText.getArgs(DefaultImageDownloader.GLOBAL_ID);
+                    if (defaultImageDownloader == null) {
+                        defaultImageDownloader = new DefaultImageDownloader();
+                        RichText.putArgs(DefaultImageDownloader.GLOBAL_ID, defaultImageDownloader);
+                    }
+                    imageDownloader = defaultImageDownloader;
                 }
-            }
-            if (placeHolder == null) {
-                placeHolder = new ColorDrawable(Color.LTGRAY);
-            }
-            if (errorImage == null && errorImageRes != 0) {
-                try {
-                    errorImage = ContextCompat.getDrawable(textView.getContext(), errorImageRes);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (errorImage == null) {
-                errorImage = new ColorDrawable(Color.DKGRAY);
             }
             RichText richText = new RichText(new RichTextConfig(this), textView);
             if (tag != null) {

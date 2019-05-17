@@ -2,6 +2,10 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -9,13 +13,20 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
+import com.inspur.emmcloud.util.common.richtext.ImageHolder;
 import com.inspur.emmcloud.util.common.richtext.LinkHolder;
 import com.inspur.emmcloud.util.common.richtext.RichText;
+import com.inspur.emmcloud.util.common.richtext.RichTextConfig;
 import com.inspur.emmcloud.util.common.richtext.RichType;
+import com.inspur.emmcloud.util.common.richtext.callback.DrawableGetter;
+import com.inspur.emmcloud.util.common.richtext.callback.ImageFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
+import com.inspur.emmcloud.util.common.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
@@ -31,18 +42,15 @@ public class DisplayTxtMarkdownMsg {
      * 富文本卡片
      *
      * @param context
-     * @param convertView
      * @param msg
      */
     public static View getView(final Context context, Message msg) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_markdown_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
-        final TextView titleText = (TextView) cardContentView
-                .findViewById(R.id.tv_name_tips);
-        final TextView contentText = (TextView) cardContentView
-                .findViewById(R.id.tv_content);
-        BubbleLayout cardLayout = (BubbleLayout) cardContentView.findViewById(R.id.bl_card);
+        final TextView titleText = cardContentView.findViewById(R.id.tv_name_tips);
+        final TextView contentText = cardContentView.findViewById(R.id.tv_content);
+        BubbleLayout cardLayout = cardContentView.findViewById(R.id.bl_card);
         cardLayout.setArrowDirection(isMyMsg ? ArrowDirection.RIGHT : ArrowDirection.LEFT);
         cardLayout.setBubbleColor(context.getResources().getColor(isMyMsg ? R.color.bg_my_card : R.color.bg_other_card));
         cardLayout.setStrokeWidth(isMyMsg ? 0 : 0.5f);
@@ -50,62 +58,84 @@ public class DisplayTxtMarkdownMsg {
                 isMyMsg ? R.color.white : R.color.black));
         contentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-        String text = msg.getMsgContentTextMarkdown().getText();
+        String content = msg.getMsgContentTextMarkdown().getText();
         String title = msg.getMsgContentTextMarkdown().getTitle();
-        titleText.setVisibility(StringUtils.isBlank(title) ? View.GONE : View.VISIBLE);
-        RichText.from(title)
-                .type(RichType.MARKDOWN)
-                .linkFix(new LinkFixCallback() {
-                    @Override
-                    public void fix(LinkHolder holder) {
-                        holder.setUnderLine(false);
-                        holder.setColor(context.getResources().getColor(
-                                isMyMsg ? R.color.hightlight_in_blue_bg
-                                        : R.color.header_bg_blue));
-                    }
-                })
-                .urlClick(new OnUrlClickListener() {
-                    @Override
-                    public boolean urlClicked(String url) {
-                        if (url.startsWith("http")) {
-                            UriUtils.openUrl((Activity) context, url);
-                            return true;
-                        }
-                        return false;
-                    }
-                })
-                .noImage(true)
-                .singleLoad(false)
-                .cache(CacheType.ALL)
-                .into(titleText);
-
-
-        RichText.from(text)
-                .type(RichType.MARKDOWN)
-                .linkFix(new LinkFixCallback() {
-                    @Override
-                    public void fix(LinkHolder holder) {
-                        holder.setUnderLine(false);
-                        holder.setColor(context.getResources().getColor(
-                                isMyMsg ? R.color.hightlight_in_blue_bg
-                                        : R.color.header_bg_blue));
-                    }
-                })
-                .urlClick(new OnUrlClickListener() {
-                    @Override
-                    public boolean urlClicked(String url) {
-                        if (url.startsWith("http")) {
-                            UriUtils.openUrl((Activity) context, url);
-                            return true;
-                        }
-                        return false;
-                    }
-                })
-                .noImage(true)
-                .singleLoad(false)
-                .cache(CacheType.ALL)
-                .into(contentText);
+        if (StringUtils.isBlank(title)) {
+            titleText.setVisibility(View.GONE);
+        } else {
+            titleText.setVisibility(View.VISIBLE);
+            showContentByMarkdown(context,title,titleText,isMyMsg);
+        }
+        showContentByMarkdown(context,content,contentText,isMyMsg);
         return cardContentView;
     }
 
+
+    private static void showContentByMarkdown(final Context context, final String content, TextView textView, final boolean isMyMsg) {
+        final int holderWidth = ResolutionUtils.getWidth(context) - DensityUtil.dip2px(MyApplication.getInstance(), 141);
+        RichText.from(content)
+                .type(RichType.markdown)
+                .scaleType(ImageHolder.ScaleType.center_crop)
+                .linkFix(new LinkFixCallback() {
+                    @Override
+                    public void fix(LinkHolder holder) {
+                        holder.setUnderLine(false);
+                        holder.setColor(context.getResources().getColor(
+                                isMyMsg ? R.color.hightlight_in_blue_bg
+                                        : R.color.header_bg_blue));
+                    }
+                })
+                .urlClick(new OnUrlClickListener() {
+                    @Override
+                    public boolean urlClicked(String url) {
+                        if (url.startsWith("http")) {
+                            UriUtils.openUrl((Activity) context, url);
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .singleLoad(false)
+                .imageDownloader(new MyImageDownloader())
+                .fix(new ImageFixCallback() {
+                    @Override
+                    public void onInit(ImageHolder holder) {
+                        holder.setWidth(holderWidth);
+                        holder.setHeight(holderWidth);
+                    }
+
+                    @Override
+                    public void onLoading(ImageHolder holder) {
+                    }
+
+                    @Override
+                    public void onSizeReady(ImageHolder holder, int imageWidth, int imageHeight, ImageHolder.SizeHolder sizeHolder) {
+
+                    }
+
+                    @Override
+                    public void onImageReady(ImageHolder holder, int width, int height) {
+                    }
+
+                    @Override
+                    public void onFailure(ImageHolder holder, Exception e) {
+                    }
+                })
+                .placeHolder(drawableGetter) // 设置加载中显示的占位图
+                .errorImage(drawableGetter) // 设置加载失败的错误图
+                .cache(CacheType.all)
+                .autoFix(true)
+                .into(textView);
+    }
+
+
+    private static final DrawableGetter drawableGetter = new DrawableGetter() {
+        @Override
+        public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
+            Bitmap bmp = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_image);
+            Drawable drawable = new BitmapDrawable(MyApplication.getInstance().getResources(),bmp);
+            drawable.setBounds(0,0,bmp.getWidth(),bmp.getHeight());
+            return drawable;
+        }
+    };
 }

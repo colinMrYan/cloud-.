@@ -32,7 +32,7 @@ public class NetworkCallbackImpl extends ConnectivityManager.NetworkCallback {
     @Override
     public void onAvailable(Network network) {
         super.onAvailable(network);
-      //  NetWorkStateChangeUtils.getInstance().netWorkStateChange();
+        //  NetWorkStateChangeUtils.getInstance().netWorkStateChange();
     }
 
     //断开或重连时调用，maxMsToLive 应用将尝试保持网络连接的时间，此时网络随时可能断开

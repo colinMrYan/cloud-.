@@ -117,7 +117,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     private void showDatePickerDlg() {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
-        MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(WebexScheduleMeetingActivity.this, DatePickerDialog.THEME_HOLO_LIGHT,
+        MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(WebexScheduleMeetingActivity.this,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year,
@@ -127,7 +127,6 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
                     }
                 }, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
-        datePickerDialog.setHideYear();
     }
 
 
@@ -136,7 +135,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
      */
     private void showTimePickerDlg() {
         TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-                WebexScheduleMeetingActivity.this, TimePickerDialog.THEME_HOLO_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+                WebexScheduleMeetingActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,
                                   int minute) {

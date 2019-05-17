@@ -71,8 +71,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
     private ProgressBar downloadProgressBar;
     private TextView percentText;
 
-    private upGradeNotificationUtils notificationUtils;
-
     //isManualCheck 是否在关于中手动检查更新
     public UpgradeUtils(Context context, Handler handler, boolean isManualCheck) {
         this.context = context;
@@ -129,11 +127,13 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         if (context != null) {
                             if (upgradeCode == 2) {
                                 showForceUpgradeDlg();
+                            } else {
+                                showSelectUpgradeDlg();
                             }
                         }
                         break;
                     case SHOW_PEOGRESS_LAODING_DLG:
-                        if(null!=progressDownloadDialog){
+                        if (null != progressDownloadDialog) {
                             progressDownloadDialog.show();
                         }
                         break;
@@ -210,16 +210,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                if (context != null) {
-                    if (null == notificationUtils) {
-                        notificationUtils = new upGradeNotificationUtils(context, 10000);
-                    }
-                    // 下载文件
-                    downloadApk();
-                    if (handler != null) {
-                        handler.sendEmptyMessage(NO_NEED_UPGRADE);
-                    }
-                }
+                showDownloadDialog();
             }
         });
         Button cancelBt = dialog.findViewById(R.id.cancel_btn);
@@ -331,9 +322,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         public void onError(Throwable arg0, boolean arg1) {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(DOWNLOAD_FAIL);
-                            if (null != notificationUtils) {
-                                notificationUtils.updateNotification(context.getResources().getString(R.string.app_update_error), false);
-                            }
                         }
 
                         @Override
@@ -346,9 +334,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         public void onSuccess(File arg0) {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(DOWNLOAD_FINISH);
-                            if (null != notificationUtils) {
-                                notificationUtils.deleteNotification();
-                            }
                         }
 
                         @Override
@@ -362,22 +347,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
                                     && progressDownloadDialog.isShowing()) {
                                 upgradeHandler.sendEmptyMessage(DOWNLOAD);
                             }
-                            if (null != notificationUtils) {
-                                String data = context.getResources().getString(R.string.app_update_loaded) +
-                                        FileUtils.formatFileSize(downloadSize) + "/" + FileUtils.formatFileSize(totalSize);
-                                notificationUtils.updateNotification(data, true);
-                            }
                         }
 
                         @Override
                         public void onStarted() {
                             // TODO Auto-generated method stub
                             upgradeHandler.sendEmptyMessage(SHOW_PEOGRESS_LAODING_DLG);
-                            if (null != notificationUtils) {
-                                notificationUtils.initNotification();
-                                ToastUtils.show(context,
-                                        context.getString(R.string.app_update_prepare));
-                            }
                         }
 
                         @Override

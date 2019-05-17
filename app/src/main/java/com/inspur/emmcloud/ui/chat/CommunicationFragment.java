@@ -182,7 +182,7 @@ public class CommunicationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-            checkingNetStateUtils.getNetStateResult(5);
+        checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {
@@ -352,13 +352,14 @@ public class CommunicationFragment extends BaseFragment {
 
     /**
      * 沟通页网络异常提示框
-     * @param netState  通过Action获取操作类型
-     * */
+     *
+     * @param netState 通过Action获取操作类型
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            conversationAdapter.setNetExceptionView((boolean)netState.getMessageObj());
-            if ((Boolean)netState.getMessageObj()){
+            conversationAdapter.setNetExceptionView((boolean) netState.getMessageObj());
+            if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }
         }
@@ -460,7 +461,7 @@ public class CommunicationFragment extends BaseFragment {
                     List<UIConversation> uiConversationList = new ArrayList<>();
                     if (conversationList.size() > 0) {
                         uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
-                        ConversationCacheUtils.saveConversationList(MyApplication.getInstance(),conversationList);
+                        ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
                         List<UIConversation> stickUIConversationList = new ArrayList<>();
                         Iterator<UIConversation> it = uiConversationList.iterator();
                         while (it.hasNext()) {
@@ -976,9 +977,9 @@ public class CommunicationFragment extends BaseFragment {
             List<Conversation> conversationList = getConversationListResult.getConversationList();
             List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
             //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
-            for (Conversation conversation:conversationList){
+            for (Conversation conversation : conversationList) {
                 int index = cacheConversationList.indexOf(conversation);
-                if (index != -1){
+                if (index != -1) {
                     conversation.setHide(cacheConversationList.get(index).isHide());
                 }
             }

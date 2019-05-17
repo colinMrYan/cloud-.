@@ -20,11 +20,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
+import com.inspur.emmcloud.util.privates.TaskTagColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
@@ -40,7 +40,7 @@ public class MessionFinishListActivity extends BaseActivity implements
     private MessionListAdapter adapter;
     private WorkAPIService apiService;
     private LoadingDialog loadingDialog;
-    private ArrayList<TaskResult> taskList;
+    private ArrayList<Task> taskList;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private int page = 0;
     private boolean isPullup = false;
@@ -110,7 +110,7 @@ public class MessionFinishListActivity extends BaseActivity implements
      *
      * @param taskResult
      */
-    protected void updateTask(TaskResult taskResult, int position) {
+    protected void updateTask(Task taskResult, int position) {
         if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
             loadingDialog.show();
             apiService.updateTask(JSONUtils.toJSONString(taskResult), position);
@@ -162,7 +162,7 @@ public class MessionFinishListActivity extends BaseActivity implements
             ((TextView) convertView.findViewById(R.id.mession_text))
                     .setText(taskList.get(position).getTitle());
             if (taskList.get(position).getTags().size() > 0) {
-                MessionTagColorUtils.setTagColorImg((ImageView) convertView
+                TaskTagColorUtils.setTagColorImg((ImageView) convertView
                                 .findViewById(R.id.mession_color),
                         taskList.get(position).getTags().get(0).getColor());
             }
@@ -184,7 +184,7 @@ public class MessionFinishListActivity extends BaseActivity implements
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == -2) {
                     } else {
-                        TaskResult taskResult = taskList.get(position);
+                        Task taskResult = taskList.get(position);
                         taskResult.setState("ACTIVED");
 //						deletePosition = position;
                         updateTask(taskResult, position);

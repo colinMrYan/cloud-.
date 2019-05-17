@@ -546,12 +546,12 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             Iterator<Conversation> it = conversationList.iterator();
             while (it.hasNext()) {
                 Conversation conversation = it.next();
-                if (conversation.isStick()){
+                if (conversation.isStick()) {
                     stickConversationList.add(conversation);
                     it.remove();
                 }
             }
-            conversationList.addAll(0,stickConversationList);
+            conversationList.addAll(0, stickConversationList);
             openGroupChannelList = SearchModel.conversationList2SearchModelList(conversationList);
         }
 

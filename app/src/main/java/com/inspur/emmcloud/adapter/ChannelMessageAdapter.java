@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
+import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedLinksMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -163,7 +165,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         String type = message.getType();
         switch (type) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-
                 cardContentView = DisplayTxtPlainMsg.getView(context,
                         message);
                 break;
@@ -181,6 +182,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                break;
+            case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
+                LogUtils.YfcDebug("v1决策卡片");
+                cardContentView = DisplayExtendedDecideMsg.getView(message,context);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
@@ -201,6 +206,19 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
 
         holder.cardLayout.addView(cardContentView);
+        cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return mItemClickListener.onCardItemLongClick(view, uiMessage);
+            }
+        });
+        cardContentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mItemClickListener.onCardItemClick(view, uiMessage);
+            }
+        });
+
     }
 
     /**
@@ -285,7 +303,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * 创建一个回调接口
      */
     public interface MyItemClickListener {
-        void onItemClick(View view, int position);
+
+        boolean onCardItemLongClick(View view, UIMessage uiMessage);
+
+        void onCardItemClick(View view, UIMessage uiMessage);
 
         void onMessageResend(UIMessage uiMessage, View view);
 
@@ -310,9 +331,10 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             super(view);
             //将全局的监听赋值给接口
             this.mListener = myItemClickListener;
-            itemView.setOnClickListener(this);
+
             cardLayout = (RelativeLayout) view
                     .findViewById(R.id.bll_card);
+            cardLayout.setOnClickListener(this);
             senderNameText = (TextView) view
                     .findViewById(R.id.sender_name_text);
             senderPhotoImgLeft = (ImageView) view
@@ -334,10 +356,6 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
          */
         @Override
         public void onClick(View v) {
-            if (mListener != null) {
-                mListener.onItemClick(v, getAdapterPosition());
-            }
-
         }
 
         public void onMessageResendClick(UIMessage uiMessage) {

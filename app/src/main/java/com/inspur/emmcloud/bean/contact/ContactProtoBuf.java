@@ -99,6 +99,7 @@ public final class ContactProtoBuf {
     getDescriptor() {
         return descriptor;
     }
+
     public interface orgOrBuilder extends
             // @@protoc_insertion_point(interface_extends:com.inspur.emmcloud.bean.contact.org)
             com.google.protobuf.MessageOrBuilder {
@@ -163,6 +164,7 @@ public final class ContactProtoBuf {
          */
         int getSortOrder();
     }
+
     public interface userOrBuilder extends
             // @@protoc_insertion_point(interface_extends:com.inspur.emmcloud.bean.contact.user)
             com.google.protobuf.MessageOrBuilder {
@@ -276,6 +278,7 @@ public final class ContactProtoBuf {
         com.google.protobuf.ByteString
         getTelBytes();
     }
+
     public interface orgsOrBuilder extends
             // @@protoc_insertion_point(interface_extends:com.inspur.emmcloud.bean.contact.orgs)
             com.google.protobuf.MessageOrBuilder {
@@ -324,6 +327,7 @@ public final class ContactProtoBuf {
         com.google.protobuf.ByteString
         getRootIDBytes();
     }
+
     public interface usersOrBuilder extends
             // @@protoc_insertion_point(interface_extends:com.inspur.emmcloud.bean.contact.users)
             com.google.protobuf.MessageOrBuilder {
@@ -1549,6 +1553,7 @@ public final class ContactProtoBuf {
         private user(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
             super(builder);
         }
+
         private user() {
             id_ = "";
             realName_ = "";
@@ -3251,6 +3256,7 @@ public final class ContactProtoBuf {
         private java.util.List<org> orgs_;
         private volatile Object rootID_;
         private byte memoizedIsInitialized = -1;
+
         // Use orgs.newBuilder() to construct.
         private orgs(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
             super(builder);
@@ -4236,6 +4242,7 @@ public final class ContactProtoBuf {
             lastQueryTime_ = 0L;
             users_ = java.util.Collections.emptyList();
         }
+
         private users(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)

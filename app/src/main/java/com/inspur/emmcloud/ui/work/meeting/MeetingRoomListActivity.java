@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -36,11 +35,11 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetMeetingRoomsResult;
-import com.inspur.emmcloud.bean.work.GetOfficeResult;
-import com.inspur.emmcloud.bean.work.MeetingArea;
-import com.inspur.emmcloud.bean.work.MeetingRoom;
+import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
+import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
+import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingRoomInfoActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -72,7 +71,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private WorkAPIService apiService;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout headLayout;
-    private ArrayList<MeetingArea> meetingAreas = new ArrayList<MeetingArea>();
+    private ArrayList<MeetingRoomArea> meetingAreas = new ArrayList<MeetingRoomArea>();
     private TextView beginDateText, beginTimeText, endDateText, endTimeText;
 
     private PopupWindow popupWindow;
@@ -354,43 +353,41 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                MeetingRoomListActivity.this, DatePickerDialog.THEME_HOLO_LIGHT,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        if (beginOrEnd == MEETING_ROOM_BEGIN_DATE) {
-                            beginCalendar.set(Calendar.YEAR, year);
-                            beginCalendar.set(Calendar.MONTH, monthOfYear);
-                            beginCalendar
-                                    .set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                            beginDateText.setText(TimeUtils
-                                    .calendar2FormatString(
-                                            MeetingRoomListActivity.this,
-                                            beginCalendar,
-                                            TimeUtils.FORMAT_YEAR_MONTH_DAY));
-                            if (isFirstTime) {
-                                handleFirstSetTime(true);
-                            }
-                            isHasModifyTime = true;
-                            resetBtn.setTextColor(Color.BLACK);
-                        } else if (beginOrEnd == MEETING_ROOM_END_DATE) {
-                            endCalendar.set(Calendar.YEAR, year);
-                            endCalendar.set(Calendar.MONTH, monthOfYear);
-                            endCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                            endDateText.setText(TimeUtils
-                                    .calendar2FormatString(
-                                            MeetingRoomListActivity.this,
-                                            endCalendar,
-                                            TimeUtils.FORMAT_YEAR_MONTH_DAY));
-                        }
-                        isFirstTime = false;
+                MeetingRoomListActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, monthOfYear, dayOfMonth);
+                if (beginOrEnd == MEETING_ROOM_BEGIN_DATE) {
+                    beginCalendar.set(Calendar.YEAR, year);
+                    beginCalendar.set(Calendar.MONTH, monthOfYear);
+                    beginCalendar
+                            .set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    beginDateText.setText(TimeUtils
+                            .calendar2FormatString(
+                                    MeetingRoomListActivity.this,
+                                    beginCalendar,
+                                    TimeUtils.FORMAT_YEAR_MONTH_DAY));
+                    if (isFirstTime) {
+                        handleFirstSetTime(true);
                     }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                    isHasModifyTime = true;
+                    resetBtn.setTextColor(Color.BLACK);
+                } else if (beginOrEnd == MEETING_ROOM_END_DATE) {
+                    endCalendar.set(Calendar.YEAR, year);
+                    endCalendar.set(Calendar.MONTH, monthOfYear);
+                    endCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    endDateText.setText(TimeUtils
+                            .calendar2FormatString(
+                                    MeetingRoomListActivity.this,
+                                    endCalendar,
+                                    TimeUtils.FORMAT_YEAR_MONTH_DAY));
+                }
+                isFirstTime = false;
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.setHideYear();
         datePickerDialog.show();
     }
 
@@ -428,8 +425,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private void showTimeDialog(int hour, int minute, final int beginOrEnd) {
         isHasModifyTime = true;
         TimePickerDialog beginTimePickerDialog = new TimePickerDialog(
-                MeetingRoomListActivity.this, AlertDialog.THEME_HOLO_LIGHT, new OnTimeSetListener() {
-
+                MeetingRoomListActivity.this, new OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,
                                   int minute) {
@@ -521,7 +517,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public void handleMemberNum(TextView meetingMember, int groupPosition,
                                 int childPosition) {
         int meetingMemberNum = meetingAreas.get(groupPosition)
-                .getMeetingRooms().get(childPosition).getGalleryful();
+                .getMeetingRoomList().get(childPosition).getGalleryful();
         meetingMember.setText("" + meetingMemberNum);
     }
 
@@ -536,8 +532,8 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                              int childPosition) {
         String light = "";
         if (!TextUtils.isEmpty(meetingAreas.get(groupPosition)
-                .getMeetingRooms().get(childPosition).getLight())) {
-            light = meetingAreas.get(groupPosition).getMeetingRooms()
+                .getMeetingRoomList().get(childPosition).getLight())) {
+            light = meetingAreas.get(groupPosition).getMeetingRoomList()
                     .get(childPosition).getLight();
         }
         if (light.equals("GREEN")) {
@@ -558,7 +554,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
      */
     public void handleEquips(ImageView[] equipsImg, int groupPosition,
                              int childPosition) {
-        ArrayList<String> equipmentList = meetingAreas.get(groupPosition).getMeetingRooms().get(childPosition).getEquipmentList();
+        ArrayList<String> equipmentList = meetingAreas.get(groupPosition).getMeetingRoomList().get(childPosition).getEquipmentList();
 
         for (int i = 0; i < 4; i++) {
             equipsImg[i].setVisibility(View.GONE);
@@ -592,10 +588,10 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     public void handleBusyDegree(ImageView imageView, int groupPosition,
                                  int childPosition, int day) {
         if (!StringUtils.isEmpty(meetingAreas.get(groupPosition)
-                .getMeetingRooms().get(childPosition).getBusyDegreeList().get(day)
+                .getMeetingRoomList().get(childPosition).getBusyDegreeList().get(day)
                 + "")) {
-            int busyDegree = Integer.parseInt(meetingAreas.get(groupPosition)
-                    .getMeetingRooms().get(childPosition).getBusyDegreeList().get(day));
+            int busyDegree = meetingAreas.get(groupPosition)
+                    .getMeetingRoomList().get(childPosition).getBusyDegreeList().get(day);
             if (busyDegree < 40) {
                 imageView.setImageResource(R.drawable.icon_meeting_empty);
             } else if (busyDegree < 70) {
@@ -629,7 +625,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
      */
     private void getOffice(boolean isShowDlg) {
         loadingDlg.show(isShowDlg);
-        apiService.getOffice();
+        apiService.getOfficeList();
     }
 
     /**
@@ -709,7 +705,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return meetingAreas.get(groupPosition).getMeetingRooms().size();
+            return meetingAreas.get(groupPosition).getMeetingRoomList().size();
         }
 
         @Override
@@ -719,7 +715,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return meetingAreas.get(groupPosition).getMeetingRooms()
+            return meetingAreas.get(groupPosition).getMeetingRoomList()
                     .get(childPosition);
         }
 
@@ -804,15 +800,15 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             }
 
             holder.roomNum.setText(meetingAreas.get(groupPosition)
-                    .getMeetingRooms().get(childPosition).getName());
+                    .getMeetingRoomList().get(childPosition).getName());
             holder.nextImage.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     MeetingRoom meetingRoom = meetingAreas.get(groupPosition)
-                            .getMeetingRooms().get(childPosition);
-                    String bid = meetingRoom.getMeetingId();
+                            .getMeetingRoomList().get(childPosition);
+                    String bid = meetingRoom.getId();
                     String roomName = meetingRoom.getName();
 //					String equips[] = meetingRoom.getEquipment();
                     ArrayList<String> equipmentList = meetingRoom.getEquipmentList();
@@ -820,7 +816,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                     String shortName = meetingAreas.get(groupPosition)
                             .getName();
                     intent.setClass(MeetingRoomListActivity.this,
-                            MeetingsRoomDetailActivity.class);
+                            MeetingRoomInfoActivity.class);
                     intent.putExtra("maxAhead", meetingRoom.getMaxAhead());
                     intent.putExtra("maxDuration", meetingRoom.getMaxDuration());
                     intent.putExtra("roomName", roomName);
@@ -833,7 +829,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             });
 
             int busyDegreeSize = meetingAreas.get(groupPosition)
-                    .getMeetingRooms().get(childPosition).getBusyDegreeList().size();
+                    .getMeetingRoomList().get(childPosition).getBusyDegreeList().size();
             if (busyDegreeSize == 1) {
                 handleBusyDegree(holder.today, groupPosition, childPosition, 0);
                 holder.torrow.setVisibility(View.GONE);
@@ -879,21 +875,21 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         @Override
         public boolean onChildClick(ExpandableListView parent, View v,
                                     int groupPosition, int childPosition, long id) {
-            String room = meetingAreas.get(groupPosition).getMeetingRooms()
+            String room = meetingAreas.get(groupPosition).getMeetingRoomList()
                     .get(childPosition).getName();
-            String roomid = meetingAreas.get(groupPosition).getMeetingRooms()
-                    .get(childPosition).getMeetingId();
+            String roomid = meetingAreas.get(groupPosition).getMeetingRoomList()
+                    .get(childPosition).getId();
             String roomFlour = meetingAreas.get(groupPosition).getName();
             Intent intent = new Intent();
             intent.putExtra("maxAhead", meetingAreas.get(groupPosition)
-                    .getMeetingRooms().get(childPosition).getMaxAhead());
+                    .getMeetingRoomList().get(childPosition).getMaxAhead());
             intent.putExtra("maxDuration", meetingAreas.get(groupPosition)
-                    .getMeetingRooms().get(childPosition).getMaxDuration());
+                    .getMeetingRoomList().get(childPosition).getMaxDuration());
             intent.putExtra("flour", roomFlour);
             intent.putExtra("room", room);
             intent.putExtra("roomid", roomid);
             intent.putExtra("admin", meetingAreas.get(groupPosition)
-                    .getMeetingRooms().get(0).getAdmin());
+                    .getMeetingRoomList().get(0).getAdmin());
             if (isAfterFilte) {
                 intent.putExtra("beginTime", beginCalendar.getTimeInMillis());
                 intent.putExtra("endTime", endCalendar.getTimeInMillis());
@@ -907,7 +903,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 
     class WebService extends APIInterfaceInstance {
         @Override
-        public void returnMeetingRoomsFail(String error, int errorCode) {
+        public void returnMeetingRoomListFail(String error, int errorCode) {
             if (loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -916,16 +912,16 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         }
 
         @Override
-        public void returnMeetingRoomsSuccess(
-                GetMeetingRoomsResult getMeetingRoomsResult, boolean isFilte) {
+        public void returnMeetingRoomListSuccess(
+                GetMeetingRoomListResult getMeetingRoomsResult, boolean isFilte) {
             if (loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
 
             swipeRefreshLayout.setRefreshing(false);
-            if (getMeetingRoomsResult.getMeetingAreas().size() > 0) {
-                meetingAreas = getMeetingRoomsResult.getMeetingAreas();
-                LogUtils.debug("yfcLog", "meetingAreas 中room大小:" + meetingAreas.get(0).getMeetingRooms().size());
+            if (getMeetingRoomsResult.getMeetingRoomAreaList().size() > 0) {
+                meetingAreas = getMeetingRoomsResult.getMeetingRoomAreaList();
+                LogUtils.debug("yfcLog", "meetingAreas 中room大小:" + meetingAreas.get(0).getMeetingRoomList().size());
                 expandListView.setAdapter(adapter);
             } else {
                 meetingAreas.clear();
@@ -933,26 +929,26 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             adapter.notifyDataSetChanged();
         }
 
-        @Override
-        public void returnOfficeResultSuccess(GetOfficeResult getOfficeResult) {
-            if (getOfficeResult.getOfficeList().size() != 0) {
-                getNoFilteMeetingRooms(false);
-            } else {
-                if (loadingDlg.isShowing()) {
-                    loadingDlg.dismiss();
-                }
-                creatCommonOffice();
-            }
-        }
+//        @Override
+//        public void returnOfficeListResultSuccess(GetOfficeResult getOfficeResult) {
+//            if (getOfficeResult.getOfficeList().size() != 0) {
+//                getNoFilteMeetingRooms(false);
+//            } else {
+//                if (loadingDlg.isShowing()) {
+//                    loadingDlg.dismiss();
+//                }
+//                creatCommonOffice();
+//            }
+//        }
 
-        @Override
-        public void returnOfficeResultFail(String error, int errorCode) {
-            if (loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            swipeRefreshLayout.setRefreshing(false);
-            WebServiceMiddleUtils.hand(MeetingRoomListActivity.this, error, errorCode);
-        }
+//        @Override
+//        public void returnOfficeListResultFail(String error, int errorCode) {
+//            if (loadingDlg.isShowing()) {
+//                loadingDlg.dismiss();
+//            }
+//            swipeRefreshLayout.setRefreshing(false);
+//            WebServiceMiddleUtils.hand(MeetingRoomListActivity.this, error, errorCode);
+//        }
 
     }
 

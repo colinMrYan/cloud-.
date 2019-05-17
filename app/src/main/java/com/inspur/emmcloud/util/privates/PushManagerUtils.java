@@ -116,7 +116,6 @@ public class PushManagerUtils {
         return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
     }
 
-
     public void setJpushStatus(boolean isOpen){
         if (isOpen){
             // 初始化 JPush
@@ -180,7 +179,7 @@ public class PushManagerUtils {
             setJpushStatus(false);
         }
         //清除日历提醒极光推送本地通知
-        CalEventNotificationUtils.cancelAllCalEventNotification(MyApplication.getInstance());
+        ScheduleAlertUtils.cancelAllCalEventNotification(MyApplication.getInstance());
     }
 
 

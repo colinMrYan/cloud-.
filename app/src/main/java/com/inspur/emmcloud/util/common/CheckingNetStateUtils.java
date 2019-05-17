@@ -79,37 +79,43 @@ public class CheckingNetStateUtils {
      */
     public void getNetStateResult( int timeout) {
        final String action = Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT;
-        Context context = MyApplication.getInstance();
-        ConnectivityManager conMan = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo.State mobile = conMan.getNetworkInfo(
-                ConnectivityManager.TYPE_MOBILE).getState();
-        NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                .getState();
-        boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
-        if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
-            if (isAppOnForeground) {
-                PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
-                Message message = new Message();
-                message.obj = pingActionState;
-                handlerNetHint.sendMessage(message);
-            }
-        } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && NetUtils.isVpnConnected()) {
-            if (isAppOnForeground) {
-                PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
-                Message message = new Message();
-                message.obj = pingActionState;
-                handlerNetHint.sendMessage(message);
-            }
-        } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && !NetUtils.isVpnConnected()) {
-            clearUrlsStates();
-            CheckNetPingThreadStartForHint(urls, timeout, action, handlerNetHint);
-        } else if (isAppOnForeground) {
-            PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", false);
-            Message message = new Message();
-            message.obj = pingActionState;
-            handlerNetHint.sendMessage(message);
-        }
+       try {
+           Context context = MyApplication.getInstance();
+           ConnectivityManager conMan = (ConnectivityManager) context
+                   .getSystemService(Context.CONNECTIVITY_SERVICE);
+           NetworkInfo.State mobile = conMan.getNetworkInfo(
+                   ConnectivityManager.TYPE_MOBILE).getState();
+           NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+                   .getState();
+           boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
+           if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
+               if (isAppOnForeground) {
+                   PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
+                   Message message = new Message();
+                   message.obj = pingActionState;
+                   handlerNetHint.sendMessage(message);
+               }
+           } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && NetUtils.isVpnConnected()) {
+               if (isAppOnForeground) {
+                   PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
+                   Message message = new Message();
+                   message.obj = pingActionState;
+                   handlerNetHint.sendMessage(message);
+               }
+           } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && !NetUtils.isVpnConnected()) {
+               clearUrlsStates();
+               CheckNetPingThreadStartForHint(urls, timeout, action, handlerNetHint);
+           } else if (isAppOnForeground) {
+               PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", false);
+               Message message = new Message();
+               message.obj = pingActionState;
+               handlerNetHint.sendMessage(message);
+           }
+
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+
     }
 
     /**

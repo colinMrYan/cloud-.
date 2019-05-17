@@ -130,18 +130,18 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     }
 
     @ReactMethod
-    public void alertDialog(String title,String content,String buttonJson,final Promise promise){
+    public void alertDialog(String title, String content, String buttonJson, final Promise promise) {
         MyQMUIDialog.MessageDialogBuilder messageDialogBuilder = new MyQMUIDialog.MessageDialogBuilder(getCurrentActivity());
-       if (!StringUtils.isBlank(title)){
-           messageDialogBuilder.setTitle(title);
-       }
-        if (!StringUtils.isBlank(content)){
+        if (!StringUtils.isBlank(title)) {
+            messageDialogBuilder.setTitle(title);
+        }
+        if (!StringUtils.isBlank(content)) {
             messageDialogBuilder.setMessage(content);
         }
-        JSONArray array = JSONUtils.getJSONArray(buttonJson,new JSONArray());
-        for (int i=0;i<array.length();i++){
-            final AlertButton alertButton = new AlertButton(JSONUtils.getJSONObject(array,i,new JSONObject()));
-            messageDialogBuilder.addAction(alertButton.getText(),new QMUIDialogAction.ActionListener(){
+        JSONArray array = JSONUtils.getJSONArray(buttonJson, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            final AlertButton alertButton = new AlertButton(JSONUtils.getJSONObject(array, i, new JSONObject()));
+            messageDialogBuilder.addAction(alertButton.getText(), new QMUIDialogAction.ActionListener() {
                 @Override
                 public void onClick(QMUIDialog dialog, int i) {
                     dialog.dismiss();
@@ -158,8 +158,8 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     }
 
     @ReactMethod
-    public void showToast(String content,Promise promise){
-        ToastUtils.show(MyApplication.getInstance(),content, Toast.LENGTH_LONG);
+    public void showToast(String content, Promise promise) {
+        ToastUtils.show(MyApplication.getInstance(), content, Toast.LENGTH_LONG);
     }
 
 

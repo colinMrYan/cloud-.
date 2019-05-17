@@ -70,7 +70,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true,0.2f).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
@@ -123,7 +123,7 @@ public class LoginActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.bt_login:
-                userName = usernameEdit.getText().toString();
+                userName = usernameEdit.getText().toString().trim();
                 password = passwordEdit.getText().toString();
                 loginApp();
                 break;
@@ -235,7 +235,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-            boolean isInputValaid = passwordEdit.getText().toString().length() >= 6
+            boolean isInputValaid = passwordEdit.getText().toString().length() >= 1
                     && !StringUtils.isBlank(usernameEdit.getText()
                     .toString());
             loginBtn.setEnabled(isInputValaid);

@@ -283,7 +283,7 @@ public class ConversationCacheUtils {
     public static List<Conversation> getConversationListByLastUpdate(Context context, String type) {
         List<Conversation> conversationList = null;
         try {
-            conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).where("type", "=", type).orderBy("lastUpdate",true).findAll();
+            conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).where("type", "=", type).orderBy("lastUpdate", true).findAll();
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -322,7 +322,7 @@ public class ConversationCacheUtils {
                     }
                 }
                 conversationList = DbCacheUtils.getDb(context).selector(Conversation.class)
-                        .where(WhereBuilder.b("name", "like", searchStr).or("pyfull", "like", searchStr)).and("type", "=", Conversation.TYPE_GROUP).orderBy("lastUpdate",true).findAll();
+                        .where("type", "=", Conversation.TYPE_GROUP).and(WhereBuilder.b("name", "like", searchStr).or("pyfull", "like", searchStr)).orderBy("lastUpdate",true).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();

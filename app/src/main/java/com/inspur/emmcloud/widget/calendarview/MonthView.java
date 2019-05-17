@@ -39,12 +39,12 @@ public abstract class MonthView extends BaseMonthView {
         int d = 0;
         for (int i = 0; i < mLineCount; i++) {
             for (int j = 0; j < 7; j++) {
-                Calendar calendar = mItems.get(d);
+                EmmCalendar emmCalendar = mItems.get(d);
                 if (mDelegate.getMonthViewShowMode() == CalendarViewDelegate.MODE_ONLY_CURRENT_MONTH) {
                     if (d > mItems.size() - mNextDiff) {
                         return;
                     }
-                    if (!calendar.isCurrentMonth()) {
+                    if (!emmCalendar.isCurrentMonth()) {
                         ++d;
                         continue;
                     }
@@ -53,7 +53,7 @@ public abstract class MonthView extends BaseMonthView {
                         return;
                     }
                 }
-                draw(canvas, calendar, i, j, d);
+                draw(canvas, emmCalendar, i, j, d);
                 ++d;
             }
         }
@@ -63,36 +63,36 @@ public abstract class MonthView extends BaseMonthView {
     /**
      * 开始绘制
      *
-     * @param canvas   canvas
-     * @param calendar 对应日历
-     * @param i        i
-     * @param j        j
-     * @param d        d
+     * @param canvas      canvas
+     * @param emmCalendar 对应日历
+     * @param i           i
+     * @param j           j
+     * @param d           d
      */
-    private void draw(Canvas canvas, Calendar calendar, int i, int j, int d) {
+    private void draw(Canvas canvas, EmmCalendar emmCalendar, int i, int j, int d) {
         int x = j * mItemWidth + mDelegate.getCalendarPadding();
         int y = i * mItemHeight;
         onLoopStart(x, y);
         boolean isSelected = d == mCurrentItem;
-        boolean hasScheme = calendar.hasScheme();
+        boolean hasScheme = emmCalendar.hasScheme();
 
         if (hasScheme) {
             //标记的日子
             boolean isDrawSelected = false;//是否继续绘制选中的onDrawScheme
             if (isSelected) {
-                isDrawSelected = onDrawSelected(canvas, calendar, x, y, true);
+                isDrawSelected = onDrawSelected(canvas, emmCalendar, x, y, true);
             }
             if (isDrawSelected || !isSelected) {
                 //将画笔设置为标记颜色
-                mSchemePaint.setColor(calendar.getSchemeColor() != 0 ? calendar.getSchemeColor() : mDelegate.getSchemeThemeColor());
-                onDrawScheme(canvas, calendar, x, y);
+                mSchemePaint.setColor(emmCalendar.getSchemeColor() != 0 ? emmCalendar.getSchemeColor() : mDelegate.getSchemeThemeColor());
+                onDrawScheme(canvas, emmCalendar, x, y);
             }
         } else {
             if (isSelected) {
-                onDrawSelected(canvas, calendar, x, y, false);
+                onDrawSelected(canvas, emmCalendar, x, y, false);
             }
         }
-        onDrawText(canvas, calendar, x, y, hasScheme, isSelected);
+        onDrawText(canvas, emmCalendar, x, y, hasScheme, isSelected);
     }
 
 
@@ -102,53 +102,53 @@ public abstract class MonthView extends BaseMonthView {
         if (!isClick) {
             return;
         }
-        Calendar calendar = getIndex();
+        EmmCalendar emmCalendar = getIndex();
 
-        if (calendar == null) {
+        if (emmCalendar == null) {
             return;
         }
 
         if (mDelegate.getMonthViewShowMode() == CalendarViewDelegate.MODE_ONLY_CURRENT_MONTH &&
-                !calendar.isCurrentMonth()) {
+                !emmCalendar.isCurrentMonth()) {
             return;
         }
 
-        if (onCalendarIntercept(calendar)) {
-            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(calendar, true);
+        if (onCalendarIntercept(emmCalendar)) {
+            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(emmCalendar, true);
             return;
         }
 
 
-        if (!isInRange(calendar)) {
+        if (!isInRange(emmCalendar)) {
             if (mDelegate.mCalendarSelectListener != null) {
-                mDelegate.mCalendarSelectListener.onCalendarOutOfRange(calendar);
+                mDelegate.mCalendarSelectListener.onCalendarOutOfRange(emmCalendar);
             }
             return;
         }
 
-        mCurrentItem = mItems.indexOf(calendar);
+        mCurrentItem = mItems.indexOf(emmCalendar);
 
-        if (!calendar.isCurrentMonth() && mMonthViewPager != null) {
+        if (!emmCalendar.isCurrentMonth() && mMonthViewPager != null) {
             int cur = mMonthViewPager.getCurrentItem();
             int position = mCurrentItem < 7 ? cur - 1 : cur + 1;
             mMonthViewPager.setCurrentItem(position);
         }
 
         if (mDelegate.mInnerListener != null) {
-            mDelegate.mInnerListener.onMonthDateSelected(calendar, true);
+            mDelegate.mInnerListener.onMonthDateSelected(emmCalendar, true);
         }
 
         if (mParentLayout != null) {
-            if (calendar.isCurrentMonth()) {
-                mParentLayout.updateSelectPosition(mItems.indexOf(calendar));
+            if (emmCalendar.isCurrentMonth()) {
+                mParentLayout.updateSelectPosition(mItems.indexOf(emmCalendar));
             } else {
-                mParentLayout.updateSelectWeek(CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart()));
+                mParentLayout.updateSelectWeek(CalendarUtil.getWeekFromDayInMonth(emmCalendar, mDelegate.getWeekStart()));
             }
 
         }
 
         if (mDelegate.mCalendarSelectListener != null) {
-            mDelegate.mCalendarSelectListener.onCalendarSelect(calendar, true);
+            mDelegate.mCalendarSelectListener.onCalendarSelect(emmCalendar, true);
         }
     }
 
@@ -160,66 +160,66 @@ public abstract class MonthView extends BaseMonthView {
         if (!isClick) {
             return false;
         }
-        Calendar calendar = getIndex();
-        if (calendar == null) {
+        EmmCalendar emmCalendar = getIndex();
+        if (emmCalendar == null) {
             return false;
         }
 
         if (mDelegate.getMonthViewShowMode() == CalendarViewDelegate.MODE_ONLY_CURRENT_MONTH &&
-                !calendar.isCurrentMonth()) {
+                !emmCalendar.isCurrentMonth()) {
             return false;
         }
 
 
-        if (onCalendarIntercept(calendar)) {
-            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(calendar, true);
+        if (onCalendarIntercept(emmCalendar)) {
+            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(emmCalendar, true);
             return false;
         }
 
-        boolean isCalendarInRange = isInRange(calendar);
+        boolean isCalendarInRange = isInRange(emmCalendar);
 
         if (!isCalendarInRange) {
             if (mDelegate.mCalendarLongClickListener != null) {
-                mDelegate.mCalendarLongClickListener.onCalendarLongClickOutOfRange(calendar);
+                mDelegate.mCalendarLongClickListener.onCalendarLongClickOutOfRange(emmCalendar);
             }
             return true;
         }
 
         if (mDelegate.isPreventLongPressedSelected()) {
             if (mDelegate.mCalendarLongClickListener != null) {
-                mDelegate.mCalendarLongClickListener.onCalendarLongClick(calendar);
+                mDelegate.mCalendarLongClickListener.onCalendarLongClick(emmCalendar);
             }
             return true;
         }
 
 
-        mCurrentItem = mItems.indexOf(calendar);
+        mCurrentItem = mItems.indexOf(emmCalendar);
 
-        if (!calendar.isCurrentMonth() && mMonthViewPager != null) {
+        if (!emmCalendar.isCurrentMonth() && mMonthViewPager != null) {
             int cur = mMonthViewPager.getCurrentItem();
             int position = mCurrentItem < 7 ? cur - 1 : cur + 1;
             mMonthViewPager.setCurrentItem(position);
         }
 
         if (mDelegate.mInnerListener != null) {
-            mDelegate.mInnerListener.onMonthDateSelected(calendar, true);
+            mDelegate.mInnerListener.onMonthDateSelected(emmCalendar, true);
         }
 
         if (mParentLayout != null) {
-            if (calendar.isCurrentMonth()) {
-                mParentLayout.updateSelectPosition(mItems.indexOf(calendar));
+            if (emmCalendar.isCurrentMonth()) {
+                mParentLayout.updateSelectPosition(mItems.indexOf(emmCalendar));
             } else {
-                mParentLayout.updateSelectWeek(CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart()));
+                mParentLayout.updateSelectWeek(CalendarUtil.getWeekFromDayInMonth(emmCalendar, mDelegate.getWeekStart()));
             }
 
         }
 
         if (mDelegate.mCalendarSelectListener != null) {
-            mDelegate.mCalendarSelectListener.onCalendarSelect(calendar, true);
+            mDelegate.mCalendarSelectListener.onCalendarSelect(emmCalendar, true);
         }
 
         if (mDelegate.mCalendarLongClickListener != null) {
-            mDelegate.mCalendarLongClickListener.onCalendarLongClick(calendar);
+            mDelegate.mCalendarLongClickListener.onCalendarLongClick(emmCalendar);
         }
         invalidate();
         return true;
@@ -228,35 +228,35 @@ public abstract class MonthView extends BaseMonthView {
     /**
      * 绘制选中的日期
      *
-     * @param canvas    canvas
-     * @param calendar  日历日历calendar
-     * @param x         日历Card x起点坐标
-     * @param y         日历Card y起点坐标
-     * @param hasScheme hasScheme 非标记的日期
+     * @param canvas      canvas
+     * @param emmCalendar 日历日历calendar
+     * @param x           日历Card x起点坐标
+     * @param y           日历Card y起点坐标
+     * @param hasScheme   hasScheme 非标记的日期
      * @return 是否绘制onDrawScheme，true or false
      */
-    protected abstract boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme);
+    protected abstract boolean onDrawSelected(Canvas canvas, EmmCalendar emmCalendar, int x, int y, boolean hasScheme);
 
     /**
      * 绘制标记的日期,这里可以是背景色，标记色什么的
      *
-     * @param canvas   canvas
-     * @param calendar 日历calendar
-     * @param x        日历Card x起点坐标
-     * @param y        日历Card y起点坐标
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param y           日历Card y起点坐标
      */
-    protected abstract void onDrawScheme(Canvas canvas, Calendar calendar, int x, int y);
+    protected abstract void onDrawScheme(Canvas canvas, EmmCalendar emmCalendar, int x, int y);
 
 
     /**
      * 绘制日历文本
      *
-     * @param canvas     canvas
-     * @param calendar   日历calendar
-     * @param x          日历Card x起点坐标
-     * @param y          日历Card y起点坐标
-     * @param hasScheme  是否是标记的日期
-     * @param isSelected 是否选中
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param y           日历Card y起点坐标
+     * @param hasScheme   是否是标记的日期
+     * @param isSelected  是否选中
      */
-    protected abstract void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected);
+    protected abstract void onDrawText(Canvas canvas, EmmCalendar emmCalendar, int x, int y, boolean hasScheme, boolean isSelected);
 }

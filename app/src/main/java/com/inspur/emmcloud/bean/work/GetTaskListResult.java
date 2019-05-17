@@ -1,19 +1,21 @@
 package com.inspur.emmcloud.bean.work;
 
+import com.inspur.emmcloud.bean.schedule.task.Task;
+
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 
 public class GetTaskListResult {
 
-    private ArrayList<TaskResult> taskList = new ArrayList<TaskResult>();
+    private ArrayList<Task> taskList = new ArrayList<Task>();
 
     public GetTaskListResult(String response) {
         JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(response);
             for (int i = 0; i < jsonArray.length(); i++) {
-                TaskResult taskResult = new TaskResult(jsonArray.getJSONObject(i));
+                Task taskResult = new Task(jsonArray.getJSONObject(i));
                 taskList.add(taskResult);
             }
         } catch (Exception e) {
@@ -24,11 +26,11 @@ public class GetTaskListResult {
 
     }
 
-    public ArrayList<TaskResult> getTaskList() {
+    public ArrayList<Task> getTaskList() {
         return taskList;
     }
 
-    public void setTaskList(ArrayList<TaskResult> taskList) {
+    public void setTaskList(ArrayList<Task> taskList) {
         this.taskList = taskList;
     }
 

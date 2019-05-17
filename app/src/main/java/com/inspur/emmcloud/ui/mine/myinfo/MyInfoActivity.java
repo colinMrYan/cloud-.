@@ -94,7 +94,7 @@ public class MyInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true,0.2f).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());

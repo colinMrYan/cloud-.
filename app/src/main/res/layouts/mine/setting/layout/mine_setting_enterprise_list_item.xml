@@ -7,7 +7,7 @@
     android:background="@color/white">
     <ImageView
         android:id="@+id/iv_select"
-        android:src="@drawable/ic_volume_file_select_yes"
+        android:src="@drawable/ic_select_yes"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:scaleType="fitXY"

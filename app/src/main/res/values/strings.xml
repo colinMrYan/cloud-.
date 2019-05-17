@@ -5,6 +5,7 @@
     <string name="app_name_zhihuichengjian">智慧城建</string>
     <string name="app_name_huaxiayinhang">华夏管理云</string>
     <string name="app_name_beiqi">云+</string>
+    <string name="app_name_chinatower">中国铁塔报账</string>
     <string name="reclick_to_desktop">再按一次退出程序</string>
     <string name="Network_Mobile">已经连接到移动网络</string>
     <string name="Network_WIFI">已经连接到WIFI</string>
@@ -88,6 +89,7 @@
     <string name="begin">开始</string>
     <string name="end">结束</string>
     <string name="yesterday">昨天</string>
+    <string name="the_day_before_yesterday">前天</string>
     <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
     <string name="format_year_month_day">yyyy\'年\'MM\'月\'dd\'日\'</string>
@@ -98,6 +100,7 @@
     <string name="format_month_day">MM\'月\'dd\'日\'</string>
     <string name="format_task_month_day">MM.dd</string>
     <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
+    <string name="format_month_day_hour_minute">MM\'月\'dd\'日\' HH:mm</string>
     <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
     <string name="time_null">无</string>
     <string name="cutdown_now">今</string>
@@ -138,7 +141,7 @@
     <string name="message_without_interruption">消息免打扰</string>
     <string name="login_hint_text">用户名/邮箱/手机号</string>
     <string name="modify_group_name">群名片</string>
-    <string name="choose_common_office">添加常用办公地点</string>
+    <string name="choose_common_office">常用办公地点</string>
     <string name="please_click_choosing_time">请点击选择时间</string>
     <string name="meeting_room">会议室</string>
     <string name="building">建筑</string>
@@ -229,7 +232,7 @@
     <string name="login_your_contact"> 您的联系方式</string>
     <string name="login_group_album"> 群相册</string>
     <string name="login_group_file">群文件</string>
-    <string name="login_authorization_expired">授权过期，请重新登录</string>
+    <string name="login_authorization_expired">基于安全审计策略，需要重新验证用户信息</string>
     <string name="login_cant_login_with_sms">您的账号不允许使用短信登录</string>
     <string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
     <string name="captchas">验证码</string>
@@ -241,6 +244,9 @@
     <string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>
     <string name="login_current_login_enterprise">当前系统：%1$s</string>
     <string name="login_forget_password">忘记密码？</string>
+    <string name="login_fail_limit_remaining">账号或密码错误，请重新输入，还剩余%1$d次机会</string>
+    <string name="login_fail_account_lock_by_min">账号已被锁定，请%1$d分钟后再试</string>
+    <string name="login_fail_account_lock_by_second">账号已被锁定，请%1$d秒后再试</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">请输入消息内容</string>
@@ -259,6 +265,7 @@
     <string name="send_a_file">[文件]</string>
     <string name="send_a_link">[链接]</string>
     <string name="send_a_voice">[语音]</string>
+    <string name="send_action_message">[活动消息]</string>
     <string name="send_a_contact_card">[名片]</string>
     <string name="send_a_meeting_invitation">[会议邀请]</string>
     <string name="cancel_a_meeting">[会议取消通知]</string>
@@ -318,6 +325,10 @@
     <string name="chat_file_open_fail_tip">没有找到对应的程序</string>
     <string name="chat_conversation_unread_count">%1$d条新消息</string>
     <string name="chat_group_message_search">查找聊天记录</string>
+    <string name="chat_long_click_copy">复制</string>
+    <string name="chat_long_click_transmit">转发</string>
+    <string name="chat_long_click_schedule">日程</string>
+    <string name="chat_long_click_copy_text">复制文字</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
@@ -348,6 +359,110 @@
     <string name="work_calendar_text">企业日历</string>
     <string name="work_task_text">我的任务</string>
     <string name="work_info_text">信息栏</string>
+    <string name="work_search_hint">搜索日历、任务</string>
+    <string name="work_mession">任务</string>
+    <string name="work_schedule">日程</string>
+    <string name="work_task_mine">我创建的</string>
+    <string name="work_task_involved">我参与的</string>
+    <string name="work_task_focused">我关注的</string>
+    <string name="work_task_done">已完成的</string>
+    <string name="work_task_all">全部</string>
+    <string name="work_task_end">%1$s 截止</string>
+
+    <!-- 日程 -->
+    <string name="schedule_event_alert">日程提醒</string>
+    <string name="schedule_calendar">日历</string>
+    <string name="schedule_calendar_add">添加日程</string>
+    <string name="schedule_calendar_detail">日程详情</string>
+    <string name="schedule_calendar_company">我的日程</string>
+    <string name="schedule_setting_list_view">列表视图</string>
+    <string name="schedule_setting_day_view">日视图</string>
+    <string name="schedule_setting_divide_group">分组</string>
+    <string name="schedule_setting_quarter">季度</string>
+    <string name="schedule_setting_month">月度</string>
+    <string name="schedule_setting_view">视图</string>
+    <string name="schedule_calendar_input_content_hint">请输入日程内容...</string>
+    <string name="schedule_calendar_time_alert">结束时间应该晚于起始时间</string>
+    <string name="schedule_alert_time_occur">日程当天 (上午9时)</string>
+    <string name="schedule_alert_time_before_one_day">1天前（上午9时）</string>
+    <string name="schedule_alert_time_before_two_day">2天前（上午9时）</string>
+    <string name="schedule_alert_time_before_a_week">一周前</string>
+    <string name="schedule_calendar_modify">修改日程</string>
+    <string name="schedule_calendar_delete">删除日程</string>
+    <string name="schedule_calendar_create">新建日程</string>
+    <string name="schedule_calendar_my_schedule">我的日程</string>
+    <string name="schedule_calendar_my_meeting">我的会议</string>
+    <string name="schedule_calendar_my_task">我的任务</string>
+    <string name="schedule_calendar_all_day">全天</string>
+    <string name="schedule_calendar_am">上午</string>
+    <string name="schedule_calendar_pm">下午</string>
+    <string name="schedule_calendar_so_on"> 等</string>
+    <string name="schedule_calendar_schedules">项日程</string>
+
+    <string name="schedule_calendar_no_schedule_today">暂无日程安排</string>
+    <string name="schedule_meeting_no_meeting_today">暂无会议安排</string>
+    <string name="schedule_task_no_task_today">暂无任务安排</string>
+
+    <!--任务（新）-->
+    <string name="schedule_task_add">添加任务</string>
+    <string name="schedule_task_detail">任务详情</string>
+    <string name="schedule_task_content_hint">请输入任务内容...</string>
+    <string name="schedule_task_priority">优先级</string>
+    <string name="schedule_task_category">类别</string>
+    <string name="schedule_task_category_no">未分类</string>
+    <string name="schedule_task_manager">负责人</string>
+    <string name="schedule_task_participant">参与人</string>
+    <string name="schedule_task_manager_num_0">0 人</string>
+    <string name="schedule_task_participant_num_0">0 人</string>
+    <string name="schedule_task_deadline">截止时间</string>
+    <string name="schedule_task_state">状态</string>
+    <string name="schedule_task_state_active">进行中</string>
+    <string name="schedule_task_stop_alert">结束提醒</string>
+    <string name="schedule_task_more">更多</string>
+    <string name="schedule_task_attachment">附件</string>
+    <string name="schedule_task_create">新建任务</string>
+    <string name="schedule_task_project_manager">标签管理</string>
+    <string name="schedule_task_project_manager_add">确认添加</string>
+    <string name="schedule_task_add_manager">添加负责人</string>
+    <string name="schedule_task_add_participant">添加参与人</string>
+    <string name="schedule_task_label">标签</string>
+    <string name="schedule_task_label_add_hint">请输入标签名称</string>
+    <string name="schedule_task_label_color">标签颜色</string>
+    <string name="schedule_task_delete_the_tag">删除标签</string>
+    <string name="schedule_task_tag_name_null_hint">标签名称不能为空</string>
+    <string name="schedule_task_title_is_empty">任务标题不可为空</string>
+    <string name="schedule_task_title_is_length">任务标题最长64个字符</string>
+    <string name="schedule_task_a_person">人</string>
+    <string name="schedule_task_tag_name_length">标签名称最长64个字符</string>
+
+
+    <!--会议(新)-->
+    <string name="schedule_meeting_booking">预定会议</string>
+    <string name="schedule_meeting_room_booking">新建会议</string>
+    <string name="schedule_meeting_add_content_hint">请输入会议内容...</string>
+    <string name="schedule_meeting_add_location_hint">请选择会议地点...</string>
+    <string name="schedule_meeting_add_attendee_title">参会人</string>
+    <string name="schedule_meeting_add_record_holder_title">会议记录人</string>
+    <string name="schedule_meeting_add_conference_title">会议联络人</string>
+    <string name="schedule_meeting_select_attendee_title">选择参会人</string>
+    <string name="schedule_meeting_select_record_holder_title">选择会议记录人</string>
+    <string name="schedule_meeting_select_conference_title">选择会议联络人</string>
+    <string name="schedule_meeting_add_note">备注</string>
+    <string name="schedule_meeting_add_alert_time">会前提醒</string>
+    <string name="schedule_meeting_detail_location">会议地点:</string>
+    <string name="schedule_meeting_booking_detail">会议详情</string>
+    <string name="schedule_meeting_history">历史会议</string>
+    <string name="schedule_choose_common_office">常用办公地点</string>
+    <string name="schedule_meeting_room_booking_detail">会议室详情</string>
+    <string name="schedule_meeting_room_list">会议室列表</string>
+    <string name="schedule_meeting_search">搜索会议</string>
+    <string name="schedule_meeting_booking_room">预定会议室</string>
+    <string name="schedule_meeting_in_meeting">会议中</string>
+    <string name="schedule_meeting_be_free">空闲</string>
+    <string name="meeting_detail_location">会议地点:</string>
+    <string name="schedule_meeting_change">修改会议</string>
+    <string name="schedule_meeting_cancel">取消会议</string>
+
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
@@ -487,7 +602,7 @@
     <string name="file_rename">文件重命名</string>
     <string name="disk">网盘</string>
 
-     <!--Webex 会议-->
+    <!--Webex 会议-->
     <string name="webex_meeting_title">%1$s的会议</string>
     <string name="webex_input_invitee_emails_hint">添加参会人含后缀邮箱</string>
     <string name="webex_input_invitee_emails">请输入参会人的电子邮箱地址</string>
@@ -632,13 +747,16 @@
     <string name="mine_theme_grey">优雅灰</string>
     <string name="mine_theme_blue">商务蓝</string>
 
+    <string name="mine_tab_layout">布局切换</string>
+    <string name="mine_tab_layout_switch">是否切换为：%1$s</string>
+
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">请输入新密码</string>
     <string name="modify_input_confirm_passord">请输入确认密码</string>
     <string name="modify_new_old_same">新密码不能和原密码相同</string>
     <string name="modify_not_same">新密码和确认密码不一致</string>
     <string name="approval_input_password_valiad">请输入6~64位密码</string>
-    <string name="modify_password_invalid">所设密码需包含数字、小写字母、大写字母、特殊符号四类字符其中的三类，并且长度最少为8位</string>
+    <string name="modify_password_invalid">密码必须是6-16位的数字、字符组合（不能是纯数字）</string>
     <string name="modify_password_not_correct">密码填写不正确，请确认</string>
     <string name="modify_password_fail">修改密码失败</string>
     <string name="modify_password">修改密码</string>
@@ -802,6 +920,30 @@
     <string name="meeting_room_booked">时间已被预订，请重新选择</string>
     <string name="meeting_room_ilegal_time">时间非法，请检查</string>
     <string name="meeting_room_time_late">开始时间不能早于当前时间</string>
+    <string name="meeting_room_locked_by_admin">会议室被管理员锁定，不可预定</string>
+
+    <string name="meeting_detail_time">时间：%1$s</string>
+    <string name="meeting_detail_remind">提醒：%1$s</string>
+    <string name="meeting_detail_create">%1$s 创建</string>
+    <string name="meeting_detail_attendee">参会人:%1$s</string>
+    <string name="meeting_detail_record_holder">会议记录人:%1$s</string>
+    <string name="meeting_detail_conference">会议联络人:%1$s</string>
+    <string name="meeting_detail_note">着装要求:%1$s</string>
+    <string name="meeting_detail_sign">会议签到</string>
+    <string name="meeting_detail_summary">十 添加会议摘要</string>
+    <string name="meeting_detail_change_meeting">修改会议</string>
+    <string name="meeting_detail_show_qrcode">展示签到二维码</string>
+    <string name="meeting_detail_add_participant">添加参会人</string>
+    <string name="meeting_detail_before_beginning">开始前</string>
+    <string name="meeting_detail_ten_minutes">提前10分钟</string>
+    <string name="meeting_detail_twenty_minutes">提前20分钟</string>
+    <string name="meeting_detail_thirty_minutes">提前30分钟</string>
+    <string name="meeting_detail_one_hour">提前一个小时</string>
+    <string name="meeting_detail_one_day">提前一天</string>
+    <string name="meeting_detail_attendee_num">%1$s等%2$d人</string>
+
+
+
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部门信息缺失</string>
@@ -825,6 +967,7 @@
     <string name="calendar_adjust">调整</string>
     <string name="calendar_please_input_title">请输入标题</string>
     <string name="calendar_start_or_end_time_illegal">结束时间不能小于开始时间</string>
+    <string name="calendar_end_time_no_before_current">结束时间不能早于当前时间</string>
     <string name="calendar_tilte_cannot_exceed_64">标题不能超过64个字符</string>
     <string name="calendar_select_calendar">请选择日历</string>
     <string name="calendar_add_success">添加成功</string>
@@ -832,9 +975,11 @@
     <string name="monthly">每月</string>
     <string name="weekly">每周</string>
     <string name="every_day">每日</string>
-    <string name="calendar_when_event_occurs">事件发生时</string>
+    <string name="calendar_when_event_occurs">开始时</string>
     <string name="calendar_five_minite_ago">5分钟前</string>
+    <string name="calendar_ten_minite_ago">10分钟前</string>
     <string name="calendar_fifteen_minite_ago">15分钟前</string>
+    <string name="calendar_twenty_minite_ago">20分钟前</string>
     <string name="calendar_thirty_minite_ago">30分钟前</string>
     <string name="calendar_one_hour_ago">1小时前</string>
     <string name="calendar_two_hours_ago">2小时前</string>
@@ -842,7 +987,8 @@
     <string name="calendar_two_days_ago">2天前</string>
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加日历</string>
-
+    <string name="calendar_no_alert">无提醒</string>
+    <string name="calendar_when_event_finished">结束时</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>
@@ -931,7 +1077,7 @@
     <string name="net_ping_url_cloud">云＋</string>
 
     <!--电源白名单-->
-    <string name="battery_tip_content">系统已对云+开启省电优化，可能导致消息延迟或丢失，请将云+加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
+    <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
     <string name="battery_tip_ishide">不再提醒</string>
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去设置</string>
@@ -1108,10 +1254,7 @@
     <string name="safe_center_unenable">未启用</string>
 
 
-
-
     <string name="qr_code_analysis_fail">二维码解析失败</string>
-
 
 
     //tag标签
@@ -1188,10 +1331,15 @@
     <string name="voice_audio_record_unavailiable">当前录音设备不可用，请检查录音权限是否开启</string>
     <string name="voice_to_word">转文字</string>
 
+    <string name="notification_switch">新消息通知</string>
+    <string name="notification_switch_cant_recive">关闭后，手机将不再接收新消息通知</string>
+    <string name="notification_switch_open_setting">系统中的云+消息通知已关闭，前往打开？</string>
+
 
     <string name="resend_file_failed">无法找到资源文件，消息重发失败</string>
 
     <!--权限管理-->
+    <string name="permission_dialog_title">提示</string>
     <string name="permission_message_always_failed">您已禁止授予%1$s %2$s 权限，可能会造成功能不可用，如需使用请到设置里授予权限</string>
     <string name="permission_grant_fail">您已禁止授予%1$s %2$s 权限</string>
 
@@ -1202,14 +1350,23 @@
     <string name="permission_storage_permission">存储空间</string>
     <string name="permission_next">下一步</string>
 
+    <string name="permission_name_calendar">日历</string>
+    <string name="permission_name_camera">相机</string>
+    <string name="permission_name_contacts">通讯录</string>
+    <string name="permission_name_location">位置信息</string>
+    <string name="permission_name_microphone">麦克风</string>
+    <string name="permission_name_phone">电话</string>
+    <string name="permission_name_sensors">身体传感器</string>
+    <string name="permission_name_sms">短信</string>
+    <string name="permission_name_storage">存储空间</string>
+
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
     <string name="emm_keyboard_zero2nine">1234567890</string>
     <string name="emm_keyboard_number">数字</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">字母</string>
-    <string name="emm_secure_keyboard">安全键盘安全模式</string>
-    <string name="emm_secure_keyboard_normal">安全键盘普通模式</string>
+    <string name="emm_secure_keyboard">安全键盘</string>
     <string name="emm_keyboard_space">空格</string>
 
 
@@ -1286,7 +1443,7 @@
         <item>三十</item>
     </string-array>
 
-    <string-array name="solar_festival" >
+    <string-array name="solar_festival">
         <item>0101元旦</item>
         <item>0214情人节</item>
         <item>0308妇女节</item>
@@ -1441,7 +1598,13 @@
         <item>申</item>
 
     </string-array>
-    <string name="work_schedule">日程</string>
     <!--日历字符串资源结束-->
+
+    <string-array name="segment_control_items">
+        <item>低</item>
+        <item>中</item>
+        <item>高</item>
+    </string-array>
+
 
 </resources>

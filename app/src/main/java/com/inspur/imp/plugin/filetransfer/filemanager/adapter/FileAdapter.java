@@ -57,7 +57,7 @@ public class FileAdapter extends RecyclerViewAdapter {
             fileHolder.fileChildCount.setText(context.getString(R.string.file) + ": " + fileBean.getChildCount());
 
             fileHolder.fileSize.setVisibility(View.GONE);
-            fileHolder.dir_enter_image.setImageResource(R.drawable.icon_arrow_right);
+            fileHolder.dir_enter_image.setImageResource(R.drawable.ic_arrow_right);
 
         } else {
             fileHolder.fileChildCount.setVisibility(View.GONE);
@@ -65,7 +65,7 @@ public class FileAdapter extends RecyclerViewAdapter {
             fileHolder.fileSize.setText(FileUtil.sizeToChange(fileBean.getSize()));
             fileHolder.dir_enter_image.setVisibility(maximum == 1 ? View.INVISIBLE : View.VISIBLE);
             boolean isSelected = selectFileBeanList.contains(fileBean);
-            fileHolder.dir_enter_image.setImageResource(isSelected ? R.drawable.ic_volume_file_select_yes : R.drawable.ic_volume_file_select_no);
+            fileHolder.dir_enter_image.setImageResource(isSelected ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         }
 
         //设置图标

@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +14,12 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * DisplayResImageMsg
@@ -84,30 +78,6 @@ public class DisplayMediaImageMsg {
                     setImgViewSize(context, imageView, longImgText, w, h);
                 }
                 loadingView.setVisibility(View.GONE);
-            }
-        });
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (uiMessage.getSendStatus() != 1) {
-                    return;
-                }
-                int[] location = new int[2];
-                view.getLocationOnScreen(location);
-                view.invalidate();
-                int width = view.getWidth();
-                int height = view.getHeight();
-                Intent intent = new Intent(context,
-                        ImagePagerActivity.class);
-                List<Message> imgTypeMsgList = MessageCacheUtil.getImgTypeMessageList(context, uiMessage.getMessage().getChannel(), false);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, uiMessage.getMessage());
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-                context.startActivity(intent);
             }
         });
         return cardContentView;

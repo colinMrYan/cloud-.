@@ -508,7 +508,7 @@ public class TripDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void retrunTripArriveFail(String error, int errorCode) {
+        public void returnTripArriveFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();

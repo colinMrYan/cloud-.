@@ -11,6 +11,7 @@ import com.huawei.hms.api.HuaweiApiClient.OnConnectionFailedListener;
 import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -55,7 +56,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnected() {
-        PushManagerUtils.getInstance().setPushFlag(contextLocal, Constant.HUAWEI_FLAG);
+        PushManagerUtils.setPushFlag(contextLocal, Constant.HUAWEI_FLAG);
         getToken();
         setPassByMsg(true);
     }

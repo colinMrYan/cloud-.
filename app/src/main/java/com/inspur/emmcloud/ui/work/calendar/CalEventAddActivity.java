@@ -19,8 +19,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
-import com.inspur.emmcloud.bean.work.CalendarEvent;
-import com.inspur.emmcloud.bean.work.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -143,10 +143,10 @@ public class CalEventAddActivity extends BaseActivity {
                 addText.setVisibility(View.GONE);
             }
             addText.setText(getString(R.string.calendar_adjust));
-            isAllDay = calEvent.getAllday();
+            isAllDay = calEvent.isAllday();
             allDaySwitch.setOpened(isAllDay);
-            startCalendar = calEvent.getLocalStartDate();
-            endCalendar = calEvent.getLocalEndDate();
+            startCalendar = calEvent.getStartDate();
+            endCalendar = calEvent.getEndDate();
             String title = calEvent.getTitle();
             titleEdit.setText(title);
             setEditTextState(titleEdit, false);
@@ -161,6 +161,9 @@ public class CalEventAddActivity extends BaseActivity {
                 calendarImg.setFillColor(color);
             }
 
+        } else if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
+            String data = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
+            titleEdit.setText(data);
         }
         setEventTime(startCalendar, endCalendar);
         if (isAllDay) {
@@ -425,32 +428,30 @@ public class CalEventAddActivity extends BaseActivity {
         Locale locale = getResources().getConfiguration().locale;
         Locale.setDefault(locale);
         MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
-                CalEventAddActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert,
-                new DatePickerDialog.OnDateSetListener() {
+                CalEventAddActivity.this, new DatePickerDialog.OnDateSetListener() {
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        String tripDateString = TimeUtils.calendar2FormatString(CalEventAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
-                        if (isStartDate) {
-                            startDateText.setText(tripDateString);
-                            if (isAllDay) {
-                                endDateText.setText(tripDateString);
-                            }
-                        } else {
-                            if (isAllDay) {
-                                startDateText.setText(tripDateString);
-                            }
-                            endDateText.setText(tripDateString);
-                        }
-
+            @Override
+            public void onDateSet(DatePicker view, int year,
+                                  int monthOfYear, int dayOfMonth) {
+                // TODO Auto-generated method stub
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, monthOfYear, dayOfMonth);
+                String tripDateString = TimeUtils.calendar2FormatString(CalEventAddActivity.this, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                if (isStartDate) {
+                    startDateText.setText(tripDateString);
+                    if (isAllDay) {
+                        endDateText.setText(tripDateString);
                     }
-                }, year, month, day);
+                } else {
+                    if (isAllDay) {
+                        startDateText.setText(tripDateString);
+                    }
+                    endDateText.setText(tripDateString);
+                }
+
+            }
+        }, year, month, day);
         datePickerDialog.show();
-        datePickerDialog.setHideYear();
     }
 
     private void showTimePickerDlg(final boolean isStartTime, Calendar calendar) {
@@ -458,7 +459,7 @@ public class CalEventAddActivity extends BaseActivity {
         int minute = calendar.get(Calendar.MINUTE);
         // TODO Auto-generated method stub
         TimePickerDialog timePickerDialog = new TimePickerDialog(
-                CalEventAddActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert, new OnTimeSetListener() {
+                CalEventAddActivity.this, new OnTimeSetListener() {
 
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay,

@@ -671,24 +671,25 @@ public class MessageCacheUtil {
 
     /**
      * 查找所有文本类型的消息
+     *
      * @param context
      * @param cid
      * @return
      */
-    public static List<Message> getGroupMessageWithType(Context context, String cid){
+    public static List<Message> getGroupMessageWithType(Context context, String cid) {
         List<Message> messageList = new ArrayList<>();
         try {
             messageList = DbCacheUtils.getDb(context).selector(Message.class)
                     .where("channel", "=", cid)
                     .and(WhereBuilder.b("type", "=", Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN)
-                            .or("type","=",Message.MESSAGE_TYPE_TEXT_MARKDOWN)
+                            .or("type", "=", Message.MESSAGE_TYPE_TEXT_MARKDOWN)
                             .or("type", "=", Message.MESSAGE_TYPE_TEXT_PLAIN))
-                    .orderBy("creationDate",true)
+                    .orderBy("creationDate", true)
                     .findAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(messageList == null){
+        if (messageList == null) {
             messageList = new ArrayList<>();
         }
         return messageList;

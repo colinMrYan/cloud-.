@@ -266,7 +266,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
             case R.id.rl_portal_tip:
                 String activityName = getResources().getString(R.string.net_network_authentication);
                 if (PortalUrl != null && PortalUrl != "") {
-                    UriUtils.openUrl(this, PortalUrl, activityName);
+                    UriUtils.openUrl(this, PortalUrl, activityName,true);
                 }
                 break;
             case R.id.rl_checking_dns_state:

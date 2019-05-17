@@ -11,9 +11,10 @@ import org.json.JSONObject;
 public class AlertButton {
     private String text;
     private String code;
-    public AlertButton (JSONObject obj){
-        text = JSONUtils.getString(obj,"text","");
-        code = JSONUtils.getString(obj,"code","");
+
+    public AlertButton(JSONObject obj) {
+        text = JSONUtils.getString(obj, "text", "");
+        code = JSONUtils.getString(obj, "code", "");
     }
 
     public String getText() {

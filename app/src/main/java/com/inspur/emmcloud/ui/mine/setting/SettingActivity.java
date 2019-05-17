@@ -2,13 +2,18 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -23,6 +28,8 @@ import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -31,7 +38,9 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.NotificationSetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -55,6 +64,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
+
+import java.util.List;
 
 @ContentView(R.layout.activity_setting)
 public class SettingActivity extends BaseActivity {
@@ -81,8 +92,15 @@ public class SettingActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     @ViewInject(R.id.tv_setting_theme_name)
     private TextView themeNameText;
+    @ViewInject(R.id.rl_setting_switch_tablayout)
+    private RelativeLayout switchTabLayout;
+    @ViewInject(R.id.tv_setting_tab_name)
+    private TextView tabName;
+    @ViewInject(R.id.switch_view_setting_notification)
+    private Switch notificationSwitch;
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void toggleToOn(View view) {
             switch (view.getId()) {
@@ -141,6 +159,54 @@ public class SettingActivity extends BaseActivity {
         setLanguage();
         handMessage();
         EventBus.getDefault().register(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        notificationSwitch.setChecked(getSwitchOpen());
+        switchPush();
+    }
+
+    /**
+     * 开关push并向服务器发出信号
+     */
+    private void switchPush() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if(NotificationSetUtils.isNotificationEnabled(this) &&
+                    PreferencesByUserAndTanentUtils.getBoolean(this,
+                            Constant.PUSH_SWITCH_FLAG,false)){
+                MyApplication.getInstance().startPush();
+                PushManagerUtils.getInstance().registerPushId2Emm();
+            }else{
+                MyApplication.getInstance().stopPush();
+                PushManagerUtils.getInstance().unregisterPushId2Emm();
+            }
+        }else{
+            if(PreferencesByUserAndTanentUtils.getBoolean(this,
+                    Constant.PUSH_SWITCH_FLAG,false)){
+                MyApplication.getInstance().startPush();
+                PushManagerUtils.getInstance().registerPushId2Emm();
+            }else{
+                MyApplication.getInstance().stopPush();
+                PushManagerUtils.getInstance().unregisterPushId2Emm();
+            }
+        }
+    }
+
+    private boolean getSwitchOpen() {
+        boolean isOpen = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if(NotificationSetUtils.isNotificationEnabled(this)){
+                isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+            }else{
+                isOpen = false;
+            }
+        }else{
+            isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+        }
+        return isOpen;
     }
 
     private void initView() {
@@ -157,6 +223,22 @@ public class SettingActivity extends BaseActivity {
             voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
         }
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        showNotificationDlg();
+                    }
+                    notificationSwitch.setChecked(true);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+                    switchPush();
+                }else{
+                    showNotificationCloseDlg();
+
+                }
+            }
+        });
         if (AppUtils.isAppVersionStandard()) {
             getUserExperienceUpgradeFlag();
             experienceUpgradeLayout.setVisibility(View.VISIBLE);
@@ -165,6 +247,76 @@ public class SettingActivity extends BaseActivity {
             experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
         }
         themeNameText.setText(ThemeSwitchActivity.getThemeName());
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
+        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>1?View.VISIBLE:View.GONE);
+        tabName.setText(getTabLayoutName());
+    }
+
+    private void showNotificationCloseDlg() {
+            new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setMessage(R.string.notification_switch_cant_recive)
+                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            notificationSwitch.setChecked(true);
+                            dialog.dismiss();
+                        }
+                    })
+                    .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            notificationSwitch.setChecked(false);
+                            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
+                            switchPush();
+                        }
+                    })
+                    .show();
+    }
+
+    private String getTabLayoutName() {
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
+        List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        if(StringUtils.isBlank(currentTabLayoutName)){
+            currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
+        }
+        String tabName = "";
+        for (int i = 0; i < naviBarSchemeList.size(); i++) {
+            NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
+            if(naviBarScheme.getName().equals(currentTabLayoutName)){
+                return getTabNameByLangudge(naviBarScheme);
+            }
+        }
+        if(StringUtils.isBlank(tabName)){
+            String defaultScheme = naviBarModel.getNaviBarPayload().getDefaultScheme();
+            for (int i = 0; i < naviBarSchemeList.size(); i++) {
+                NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
+                if(naviBarSchemeList.get(i).getName().equals(defaultScheme)){
+                    return getTabNameByLangudge(naviBarScheme);
+                }
+            }
+        }
+        return "";
+    }
+
+    private String getTabNameByLangudge(NaviBarScheme naviBarScheme) {
+        String tempTabName = "";
+        Configuration config = getResources().getConfiguration();
+        String environmentLanguage = config.locale.getLanguage();
+        switch (environmentLanguage.toLowerCase()) {
+            case "zh-hant":
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getZhHans();
+                break;
+            case "en":
+            case "en-us":
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getEnUS();
+                break;
+            default:
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getZhHans();
+                break;
+        }
+        return tempTabName;
     }
 
     private void setWebAutoRotateState() {
@@ -187,7 +339,7 @@ public class SettingActivity extends BaseActivity {
             iso = iso.replace("-", "_");
             iso = iso.toLowerCase();
             Integer id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
-            if (id == null){
+            if (id == null) {
                 id = R.drawable.zh_cn;
             }
             //设置语言国旗标志
@@ -255,8 +407,38 @@ public class SettingActivity extends BaseActivity {
             case R.id.rl_setting_switch_theme:
                 IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
                 break;
+            case R.id.rl_setting_switch_tablayout:
+                IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);
+                break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 弹出注销提示框
+     */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void showNotificationDlg() {
+        if(!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)){
+            new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setMessage("系统中的云+消息通知已关闭，前往打开？")
+                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            notificationSwitch.setChecked(false);
+                        }
+                    })
+                    .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            NotificationSetUtils.openNotificationSetting(SettingActivity.this);
+                        }
+                    })
+                    .show();
         }
     }
 

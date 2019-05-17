@@ -16,6 +16,7 @@
 package com.inspur.emmcloud.widget.calendarview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -61,7 +62,12 @@ public class WeekBar extends LinearLayout {
      */
     protected void setTextColor(int color) {
         for (int i = 0; i < getChildCount(); i++) {
-            ((TextView) getChildAt(i)).setTextColor(color);
+            if (i == 0 || i == 6) {
+                ((TextView) getChildAt(i)).setTextColor(Color.parseColor("#999999"));
+            } else {
+                ((TextView) getChildAt(i)).setTextColor(color);
+            }
+
         }
     }
 
@@ -80,11 +86,11 @@ public class WeekBar extends LinearLayout {
     /**
      * 日期选择事件，这里提供这个回调，可以方便定制WeekBar需要
      *
-     * @param calendar  calendar 选择的日期
-     * @param weekStart 周起始
-     * @param isClick   isClick 点击
+     * @param emmCalendar calendar 选择的日期
+     * @param weekStart   周起始
+     * @param isClick     isClick 点击
      */
-    protected void onDateSelected(Calendar calendar, int weekStart, boolean isClick) {
+    protected void onDateSelected(EmmCalendar emmCalendar, int weekStart, boolean isClick) {
 
     }
 
@@ -106,12 +112,12 @@ public class WeekBar extends LinearLayout {
     /**
      * 通过View的位置和周起始获取星期的对应坐标
      *
-     * @param calendar  calendar
-     * @param weekStart weekStart
+     * @param emmCalendar calendar
+     * @param weekStart   weekStart
      * @return 通过View的位置和周起始获取星期的对应坐标
      */
-    protected int getViewIndexByCalendar(Calendar calendar, int weekStart) {
-        int week = calendar.getWeek() + 1;
+    protected int getViewIndexByCalendar(EmmCalendar emmCalendar, int weekStart) {
+        int week = emmCalendar.getWeek() + 1;
         if (weekStart == CalendarViewDelegate.WEEK_START_WITH_SUN) {
             return week - 1;
         }

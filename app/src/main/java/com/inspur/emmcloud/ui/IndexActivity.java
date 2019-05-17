@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -33,6 +34,7 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.NotificationSetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
@@ -81,6 +83,14 @@ public class IndexActivity extends IndexBaseActivity {
         EventBus.getDefault().register(this);
     }
 
+    private void getNaviTabData(String naviTabSaveConfigVersion) {
+        if(NetUtils.isNetworkConnected(this,false)){
+            AppAPIService appAPIService = new AppAPIService(this);
+            appAPIService.setAPIInterface(new WebService());
+            appAPIService.getAppNaviTabs(naviTabSaveConfigVersion);
+        }
+    }
+
     /**
      * 初始化app的运行环境
      */
@@ -89,7 +99,17 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();
-        PushManagerUtils.getInstance().startPush();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if(NotificationSetUtils.isNotificationEnabled(this) &&
+                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true))){
+                MyApplication.getInstance().startPush();
+            }
+        }else{
+            if(PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true)){
+                MyApplication.getInstance().startPush();
+            }
+        }
+
     }
 
     private void initView() {
@@ -113,6 +133,7 @@ public class IndexActivity extends IndexBaseActivity {
         updateReactNative();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
     }
+
     /**
      * 获取我的应用推荐小部件数据,如果到了更新时间才请求
      */
@@ -309,6 +330,7 @@ public class IndexActivity extends IndexBaseActivity {
         boolean isRouterUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER, getAllConfigVersionResult);
         boolean isContactUserUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER, getAllConfigVersionResult);
         boolean isContactOrgUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG, getAllConfigVersionResult);
+        boolean isNaviTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, getAllConfigVersionResult);
         if (isRouterUpdate) {
             new ProfileUtils(IndexActivity.this, null).initProfile(false);
         }
@@ -319,6 +341,9 @@ public class IndexActivity extends IndexBaseActivity {
         }
         if (isContactOrgUpdate) {
             getContactOrg();
+        }
+        if(isNaviTabUpdate){
+            getNaviTabData(ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB));
         }
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
             @Override
@@ -614,15 +639,35 @@ public class IndexActivity extends IndexBaseActivity {
 
         @Override
         public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
-            updateTabbarWithOrder(getAppMainTabResult);
-            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,""));
+            if(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() == 0){
+                updateMainTabbarWithOrder(getAppMainTabResult);
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            }else {
+                PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION,
+                        getAppMainTabResult.getMainTabPayLoad().getVersion());
+                PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,
+                        getAppMainTabResult.getAppTabInfo());
+                ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
+            }
         }
 
         @Override
         public void returnAppTabAutoFail(String error, int errorCode) {
         }
 
+        @Override
+        public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
+            super.returnNaviBarModelSuccess(naviBarModel);
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
+            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, naviBarModel.getLastNaviLocalVersion());
+            updateNaviTabbar();
+        }
 
+        @Override
+        public void returnNaviBarModelFail(String error, int errorCode) {
+            super.returnNaviBarModelFail(error, errorCode);
+        }
     }
 
 }

@@ -97,7 +97,7 @@ final class CalendarViewDelegate {
     /**
      * 标记的日期,数量巨大，请使用这个
      */
-    Map<String, Calendar> mSchemeDatesMap;
+    Map<String, EmmCalendar> mSchemeDatesMap;
     /**
      * 日期拦截事件
      */
@@ -145,19 +145,19 @@ final class CalendarViewDelegate {
     /**
      * 保存选中的日期
      */
-    Calendar mSelectedCalendar;
+    EmmCalendar mSelectedEmmCalendar;
     /**
      * 保存标记位置
      */
-    Calendar mIndexCalendar;
+    EmmCalendar mIndexEmmCalendar;
     /**
      * 多选日历
      */
-    Map<String, Calendar> mSelectedCalendars = new HashMap<>();
+    Map<String, EmmCalendar> mSelectedCalendars = new HashMap<>();
     /**
      * 选择范围日历
      */
-    Calendar mSelectedStartRangeCalendar, mSelectedEndRangeCalendar;
+    EmmCalendar mSelectedStartRangeEmmCalendar, mSelectedEndRangeEmmCalendar;
     /**
      * 周起始
      */
@@ -298,12 +298,14 @@ final class CalendarViewDelegate {
     /**
      * 今天的日子
      */
-    private Calendar mCurrentDate;
+    private EmmCalendar mCurrentDate;
     private boolean mMonthViewScrollable,
             mWeekViewScrollable,
             mYearViewScrollable;
     private int mMaxMultiSelectSize;
     private int mMinSelectRange, mMaxSelectRange;
+
+    boolean isLunarAndFestivalShow = true;
 
     CalendarViewDelegate(Context context, @Nullable AttributeSet attrs) {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CalendarView);
@@ -327,7 +329,7 @@ final class CalendarViewDelegate {
 
         mSchemeText = array.getString(R.styleable.CalendarView_scheme_text);
         if (TextUtils.isEmpty(mSchemeText)) {
-            mSchemeText = "记";
+            mSchemeText = "";
         }
 
         mMonthViewScrollable = array.getBoolean(R.styleable.CalendarView_month_view_scrollable, true);
@@ -406,7 +408,7 @@ final class CalendarViewDelegate {
     }
 
     private void init() {
-        mCurrentDate = new Calendar();
+        mCurrentDate = new EmmCalendar();
         Date d = new Date();
         mCurrentDate.setYear(CalendarUtil.getDate("yyyy", d));
         mCurrentDate.setMonth(CalendarUtil.getDate("MM", d));
@@ -442,6 +444,13 @@ final class CalendarViewDelegate {
         }
     }
 
+    public boolean isLunarAndFestivalShow() {
+        return isLunarAndFestivalShow;
+    }
+
+    public void setLunarAndFestivalShow(boolean lunarAndFestivalShow) {
+        isLunarAndFestivalShow = lunarAndFestivalShow;
+    }
 
     private void setRange(int minYear, int minYearMonth,
                           int maxYear, int maxYearMonth) {
@@ -800,7 +809,7 @@ final class CalendarViewDelegate {
         }
     }
 
-    Calendar getCurrentDay() {
+    EmmCalendar getCurrentDay() {
         return mCurrentDate;
     }
 
@@ -825,7 +834,7 @@ final class CalendarViewDelegate {
     }
 
     void clearSelectedScheme() {
-        mSelectedCalendar.clearScheme();
+        mSelectedEmmCalendar.clearScheme();
     }
 
     int getMinYearDay() {
@@ -838,58 +847,58 @@ final class CalendarViewDelegate {
 
     final void updateSelectCalendarScheme() {
         if (mSchemeDatesMap != null && mSchemeDatesMap.size() > 0) {
-            String key = mSelectedCalendar.toString();
+            String key = mSelectedEmmCalendar.toString();
             if (mSchemeDatesMap.containsKey(key)) {
-                Calendar d = mSchemeDatesMap.get(key);
-                mSelectedCalendar.mergeScheme(d, getSchemeText());
+                EmmCalendar d = mSchemeDatesMap.get(key);
+                mSelectedEmmCalendar.mergeScheme(d, getSchemeText());
             }
         } else {
             clearSelectedScheme();
         }
     }
 
-    Calendar createCurrentDate() {
-        Calendar calendar = new Calendar();
-        calendar.setYear(mCurrentDate.getYear());
-        calendar.setWeek(mCurrentDate.getWeek());
-        calendar.setMonth(mCurrentDate.getMonth());
-        calendar.setDay(mCurrentDate.getDay());
-        calendar.setCurrentDay(true);
-        LunarCalendar.setupLunarCalendar(calendar);
-        return calendar;
+    EmmCalendar createCurrentDate() {
+        EmmCalendar emmCalendar = new EmmCalendar();
+        emmCalendar.setYear(mCurrentDate.getYear());
+        emmCalendar.setWeek(mCurrentDate.getWeek());
+        emmCalendar.setMonth(mCurrentDate.getMonth());
+        emmCalendar.setDay(mCurrentDate.getDay());
+        emmCalendar.setCurrentDay(true);
+        LunarCalendar.setupLunarCalendar(emmCalendar);
+        return emmCalendar;
     }
 
-    final Calendar getMinRangeCalendar() {
-        Calendar calendar = new Calendar();
-        calendar.setYear(mMinYear);
-        calendar.setMonth(mMinYearMonth);
-        calendar.setDay(mMinYearDay);
-        calendar.setCurrentDay(calendar.equals(mCurrentDate));
-        LunarCalendar.setupLunarCalendar(calendar);
-        return calendar;
+    final EmmCalendar getMinRangeCalendar() {
+        EmmCalendar emmCalendar = new EmmCalendar();
+        emmCalendar.setYear(mMinYear);
+        emmCalendar.setMonth(mMinYearMonth);
+        emmCalendar.setDay(mMinYearDay);
+        emmCalendar.setCurrentDay(emmCalendar.equals(mCurrentDate));
+        LunarCalendar.setupLunarCalendar(emmCalendar);
+        return emmCalendar;
     }
 
     @SuppressWarnings("unused")
-    final Calendar getMaxRangeCalendar() {
-        Calendar calendar = new Calendar();
-        calendar.setYear(mMaxYear);
-        calendar.setMonth(mMaxYearMonth);
-        calendar.setDay(mMaxYearDay);
-        calendar.setCurrentDay(calendar.equals(mCurrentDate));
-        LunarCalendar.setupLunarCalendar(calendar);
-        return calendar;
+    final EmmCalendar getMaxRangeCalendar() {
+        EmmCalendar emmCalendar = new EmmCalendar();
+        emmCalendar.setYear(mMaxYear);
+        emmCalendar.setMonth(mMaxYearMonth);
+        emmCalendar.setDay(mMaxYearDay);
+        emmCalendar.setCurrentDay(emmCalendar.equals(mCurrentDate));
+        LunarCalendar.setupLunarCalendar(emmCalendar);
+        return emmCalendar;
     }
 
     /**
      * 添加事件标记，来自Map
      */
-    final void addSchemesFromMap(List<Calendar> mItems) {
+    final void addSchemesFromMap(List<EmmCalendar> mItems) {
         if (mSchemeDatesMap == null || mSchemeDatesMap.size() == 0) {
             return;
         }
-        for (Calendar a : mItems) {
+        for (EmmCalendar a : mItems) {
             if (mSchemeDatesMap.containsKey(a.toString())) {
-                Calendar d = mSchemeDatesMap.get(a.toString());
+                EmmCalendar d = mSchemeDatesMap.get(a.toString());
                 a.setScheme(TextUtils.isEmpty(d.getScheme()) ? getSchemeText() : d.getScheme());
                 a.setSchemeColor(d.getSchemeColor());
                 a.setSchemes(d.getSchemes());
@@ -905,8 +914,8 @@ final class CalendarViewDelegate {
      * 清楚选择
      */
     final void clearSelectRange() {
-        mSelectedStartRangeCalendar = null;
-        mSelectedEndRangeCalendar = null;
+        mSelectedStartRangeEmmCalendar = null;
+        mSelectedEndRangeEmmCalendar = null;
     }
 
     /**
@@ -914,43 +923,43 @@ final class CalendarViewDelegate {
      *
      * @return 选中范围
      */
-    final List<Calendar> getSelectCalendarRange() {
+    final List<EmmCalendar> getSelectCalendarRange() {
         if (mSelectMode != SELECT_MODE_RANGE) {
             return null;
         }
-        List<Calendar> calendars = new ArrayList<>();
-        if (mSelectedStartRangeCalendar == null ||
-                mSelectedEndRangeCalendar == null) {
-            return calendars;
+        List<EmmCalendar> emmCalendars = new ArrayList<>();
+        if (mSelectedStartRangeEmmCalendar == null ||
+                mSelectedEndRangeEmmCalendar == null) {
+            return emmCalendars;
         }
         final long ONE_DAY = 1000 * 3600 * 24;
         java.util.Calendar date = java.util.Calendar.getInstance();
 
-        date.set(mSelectedStartRangeCalendar.getYear(),
-                mSelectedStartRangeCalendar.getMonth() - 1,
-                mSelectedStartRangeCalendar.getDay());//
+        date.set(mSelectedStartRangeEmmCalendar.getYear(),
+                mSelectedStartRangeEmmCalendar.getMonth() - 1,
+                mSelectedStartRangeEmmCalendar.getDay());//
 
         long startTimeMills = date.getTimeInMillis();//获得起始时间戳
 
 
-        date.set(mSelectedEndRangeCalendar.getYear(),
-                mSelectedEndRangeCalendar.getMonth() - 1,
-                mSelectedEndRangeCalendar.getDay());//
+        date.set(mSelectedEndRangeEmmCalendar.getYear(),
+                mSelectedEndRangeEmmCalendar.getMonth() - 1,
+                mSelectedEndRangeEmmCalendar.getDay());//
         long endTimeMills = date.getTimeInMillis();
         for (long start = startTimeMills; start <= endTimeMills; start += ONE_DAY) {
             date.setTimeInMillis(start);
-            Calendar calendar = new Calendar();
-            calendar.setYear(date.get(java.util.Calendar.YEAR));
-            calendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
-            calendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
+            EmmCalendar emmCalendar = new EmmCalendar();
+            emmCalendar.setYear(date.get(java.util.Calendar.YEAR));
+            emmCalendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
+            emmCalendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
             if (mCalendarInterceptListener != null &&
-                    mCalendarInterceptListener.onCalendarIntercept(calendar)) {
+                    mCalendarInterceptListener.onCalendarIntercept(emmCalendar)) {
                 continue;
             }
-            LunarCalendar.setupLunarCalendar(calendar);
-            calendars.add(calendar);
+            LunarCalendar.setupLunarCalendar(emmCalendar);
+            emmCalendars.add(emmCalendar);
         }
-        addSchemesFromMap(calendars);
-        return calendars;
+        addSchemesFromMap(emmCalendars);
+        return emmCalendars;
     }
 }

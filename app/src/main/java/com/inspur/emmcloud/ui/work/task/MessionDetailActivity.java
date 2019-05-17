@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -33,11 +32,11 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.bean.work.Attachment;
+import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.work.TaskColorTag;
-import com.inspur.emmcloud.bean.work.TaskResult;
-import com.inspur.emmcloud.bean.work.TaskSubject;
+import com.inspur.emmcloud.bean.schedule.task.Task;
+import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
+import com.inspur.emmcloud.bean.schedule.task.TaskSubject;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -51,7 +50,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
+import com.inspur.emmcloud.util.privates.TaskTagColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -93,7 +92,7 @@ public class MessionDetailActivity extends BaseActivity {
     private List<SearchModel> deleteMemList = new ArrayList<SearchModel>();
     private List<SearchModel> oldMemList = new ArrayList<SearchModel>();
     private TextView managerText;
-    private TaskResult task;
+    private Task task;
     private List<TaskColorTag> tagList;
     private Calendar dueDate;
     private WorkAPIService apiService;
@@ -120,7 +119,7 @@ public class MessionDetailActivity extends BaseActivity {
         apiService = new WorkAPIService(MessionDetailActivity.this);
         apiService.setAPIInterface(new WebService());
 //		initTask();
-        task = (TaskResult) getIntent().getExtras().getSerializable("task");
+        task = (Task) getIntent().getExtras().getSerializable("task");
         attachments = task.getAttachments();
         initUI();
         getTasks();
@@ -185,7 +184,7 @@ public class MessionDetailActivity extends BaseActivity {
             int tagSize = tagList.size() > 3 ? 3 : tagList.size();
             for (int i = 0; i < tagSize; i++) {
                 tagImgs[i].setVisibility(View.VISIBLE);
-                MessionTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
+                TaskTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
                         .getColor());
             }
         }
@@ -480,7 +479,7 @@ public class MessionDetailActivity extends BaseActivity {
         }
         for (int i = 0; i < tagNumber; i++) {
             tagImgs[i].setVisibility(View.VISIBLE);
-            MessionTagColorUtils.setTagColorImg(tagImgs[i], addTags.get(i).getColor());
+            TaskTagColorUtils.setTagColorImg(tagImgs[i], addTags.get(i).getColor());
         }
         tagList.clear();
         tagList.addAll(addTags);
@@ -673,20 +672,19 @@ public class MessionDetailActivity extends BaseActivity {
             Locale locale = getResources().getConfiguration().locale;
             Locale.setDefault(locale);
             MyDatePickerDialog dialog = new MyDatePickerDialog(
-                    MessionDetailActivity.this, AlertDialog.THEME_HOLO_LIGHT,
-                    new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year,
-                                              int monthOfYear, int dayOfMonth) {
-                            messionEndTime.setText(year + "-"
-                                    + (monthOfYear + 1) + "-" + dayOfMonth);
-                            dueDate = Calendar.getInstance();
-                            dueDate.set(Calendar.YEAR, year);
-                            dueDate.set(Calendar.MONTH, monthOfYear);
-                            dueDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                            task.setDueDate(dueDate);
-                        }
-                    }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                    MessionDetailActivity.this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    messionEndTime.setText(year + "-"
+                            + (monthOfYear + 1) + "-" + dayOfMonth);
+                    dueDate = Calendar.getInstance();
+                    dueDate.set(Calendar.YEAR, year);
+                    dueDate.set(Calendar.MONTH, monthOfYear);
+                    dueDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    task.setDueDate(dueDate);
+                }
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH));
             dialog.show();
         }
@@ -994,7 +992,7 @@ public class MessionDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnAttachmentSuccess(TaskResult taskResult) {
+        public void returnAttachmentSuccess(Task taskResult) {
             super.returnAttachmentSuccess(taskResult);
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();

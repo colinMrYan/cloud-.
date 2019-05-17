@@ -372,13 +372,13 @@ public class CommunicationV0Fragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-                if((boolean)netState.getMessageObj()){
-                    DeleteHeaderView();
-                    WebSocketPush.getInstance().startWebSocket();
-                }else{
-                    AddHeaderView();
-                }
+            if ((boolean) netState.getMessageObj()) {
+                DeleteHeaderView();
+                WebSocketPush.getInstance().startWebSocket();
+            } else {
+                AddHeaderView();
             }
+        }
     }
 
 

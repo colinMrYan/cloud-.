@@ -4,10 +4,12 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
     <View
         android:id="@+id/top_blank_view"
         android:layout_width="match_parent"
-        android:layout_height="10dp"/>
+        android:layout_height="10dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,10 +22,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_corner_part_top"
-            android:paddingBottom="14dp"
+            android:paddingBottom="15dp"
             android:paddingLeft="14dp"
-            android:paddingRight="5dp"
-            android:paddingTop="14dp">
+            android:paddingRight="15.9dp"
+            android:paddingTop="12dp">
 
             <ImageView
                 android:id="@+id/group_icon_img"
@@ -39,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/group_icon_img"
-                android:textColor="#3CBAFF"
+                android:textColor="#94AFC4"
                 android:textSize="14sp" />
 
             <ImageView
@@ -48,48 +50,52 @@
                 android:layout_height="16dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/right_arrow" />
+                android:src="@drawable/ic_arrow_right" />
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:id="@+id/work_add_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="17dp"
-                android:paddingRight="12dp"
-                >
+                android:paddingRight="12dp">
+
                 <ImageView
                     android:id="@+id/add_img"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_centerVertical="true"
                     android:layout_marginBottom="2dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="2dp"
                     android:gravity="center"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_work_add"
-                    android:layout_marginRight="12dp"
-                    android:layout_centerVertical="true"
-                    />
+                    android:src="@drawable/ic_add" />
+
                 <TextView
                     android:id="@+id/work_add_text"
-                    android:textColor="#333333"
-                    android:textSize="15sp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/add_img"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:paddingRight="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textColor="#333333"
+                    android:textSize="15sp" />
+
                 <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
                     android:layout_below="@id/add_img"
                     android:layout_toRightOf="@id/add_img"
-                    android:layout_width="match_parent"
-                    android:background="@color/color_list_divider"
-                    android:layout_height="0.5px"></View>
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
+
             <com.inspur.emmcloud.widget.ScrollViewWithListView
                 android:id="@+id/list"
                 android:layout_width="match_parent"
@@ -100,12 +106,10 @@
 
             </com.inspur.emmcloud.widget.ScrollViewWithListView>
         </RelativeLayout>
-
-
     </LinearLayout>
 
     <View
         android:id="@+id/bottom_blank_view"
         android:layout_width="match_parent"
-        android:layout_height="50dp"></View>
+        android:layout_height="50dp" />
 </LinearLayout>

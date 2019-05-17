@@ -81,7 +81,7 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_schedule_add_mission" />
+                android:src="@drawable/ic_schedule_add_task" />
 
             <TextView
                 android:id="@+id/tv_schedule_mission"
@@ -123,7 +123,7 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_schedule_add_meeting" />
+                android:src="@drawable/ic_schedule_add_meeting_room" />
 
             <TextView
                 android:id="@+id/tv_schedule_meeting"

@@ -58,36 +58,36 @@ public class DefaultYearView extends YearView {
 
 
     @Override
-    protected boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme) {
+    protected boolean onDrawSelected(Canvas canvas, EmmCalendar emmCalendar, int x, int y, boolean hasScheme) {
         return false;
     }
 
     @Override
-    protected void onDrawScheme(Canvas canvas, Calendar calendar, int x, int y) {
+    protected void onDrawScheme(Canvas canvas, EmmCalendar emmCalendar, int x, int y) {
 
     }
 
     @Override
-    protected void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected) {
+    protected void onDrawText(Canvas canvas, EmmCalendar emmCalendar, int x, int y, boolean hasScheme, boolean isSelected) {
         float baselineY = mTextBaseLine + y;
         int cx = x + mItemWidth / 2;
 
         if (isSelected) {
-            canvas.drawText(String.valueOf(calendar.getDay()),
+            canvas.drawText(String.valueOf(emmCalendar.getDay()),
                     cx,
                     baselineY,
                     hasScheme ? mSchemeTextPaint : mSelectTextPaint);
         } else if (hasScheme) {
-            canvas.drawText(String.valueOf(calendar.getDay()),
+            canvas.drawText(String.valueOf(emmCalendar.getDay()),
                     cx,
                     baselineY,
-                    calendar.isCurrentDay() ? mCurDayTextPaint :
-                            calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
+                    emmCalendar.isCurrentDay() ? mCurDayTextPaint :
+                            emmCalendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
 
         } else {
-            canvas.drawText(String.valueOf(calendar.getDay()), cx, baselineY,
-                    calendar.isCurrentDay() ? mCurDayTextPaint :
-                            calendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
+            canvas.drawText(String.valueOf(emmCalendar.getDay()), cx, baselineY,
+                    emmCalendar.isCurrentDay() ? mCurDayTextPaint :
+                            emmCalendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
         }
     }
 }

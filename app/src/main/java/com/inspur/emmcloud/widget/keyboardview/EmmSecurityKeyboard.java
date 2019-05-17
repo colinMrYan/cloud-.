@@ -164,6 +164,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 InputMethodUtils.showKeyboard(curEditText);
             }
         });
+        ((TextView)mainView.findViewById(R.id.tv_keyboard_name)).setText(R.string.emm_secure_keyboard);
         this.setContentView(mainView);
         this.setWidth(EmmDisplayUtils.getScreenWidth(context));
         this.setHeight(LayoutParams.WRAP_CONTENT);
@@ -180,12 +181,12 @@ public class EmmSecurityKeyboard extends PopupWindow {
                     R.xml.emm_keyboard_english_land);
             keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number_land);
             keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift_land);
-            randomKeysForOnce();
+            initKeys();
         } else {
             keyboardLetter = new Keyboard(context, R.xml.emm_keyboard_english);
             keyboardNumber = new Keyboard(context, R.xml.emm_keyboard_number);
             keyboardSymbol = new Keyboard(context, R.xml.emm_keyboard_symbols_shift);
-            randomKeysForOnce();
+            initKeys();
         }
         keyboardView = mainView.findViewById(R.id.keyboard_view);
         switch (configuration.getDefaultKeyboardType().getCode()) {
@@ -214,26 +215,66 @@ public class EmmSecurityKeyboard extends PopupWindow {
     private void setRandomLetter(boolean isRandomLetter){
         if(isRandomLetter){
             randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
+            randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
+            keyboardView.setKeyboard(keyboardNumber);
             keyboardView.setKeyboard(keyboardLetter);
             for (Key key : keyboardLetter.getKeys()) {
                 if (key.codes[0] == -10) {
                     key.icon = contextLocal.getResources().getDrawable(
                             R.drawable.ic_safe_keyboard_press);
                 }
+                correctKeyLabelAndCode(key);
             }
-            ((TextView)mainView.findViewById(R.id.tv_keyboard_name)).setText(contextLocal.getString(R.string.emm_secure_keyboard));
         }else{
             EmmCreateKeyList.initLetters(letterList);
+            EmmCreateKeyList.initNumbers(numberList);
             keyboardLetter = new Keyboard(contextLocal, R.xml.emm_keyboard_english);
+            keyboardNumber = new Keyboard(contextLocal, R.xml.emm_keyboard_number);
+            keyboardView.setKeyboard(keyboardNumber);
             keyboardView.setKeyboard(keyboardLetter);
             for (Key key : keyboardLetter.getKeys()) {
                 if (key.codes[0] == -10) {
                     key.icon = contextLocal.getResources().getDrawable(
                             R.drawable.ic_safe_keyboard_normal);
                 }
+                correctKeyLabelAndCode(key);
             }
-            ((TextView)mainView.findViewById(R.id.tv_keyboard_name)).setText(contextLocal.getString(R.string.emm_secure_keyboard_normal));
+
         }
+    }
+
+    private void correctKeyLabelAndCode(Key key){
+        if(isUpper){
+            if(key.label != null && isLowerASCIILetter(key)){
+                key.label = key.label.toString().toUpperCase();
+            }
+            if(isLowerASCIILetter(key)){
+                key.codes[0] = key.codes[0] - 32;
+            }
+            if (key.codes[0] == -1) {
+                key.icon = contextLocal.getResources().getDrawable(
+                        R.drawable.icon_keyboard_shift_c);
+            }
+        }else{
+            if(key.label != null && isUpperASCIILetter(key)){
+                key.label = key.label.toString().toLowerCase();
+            }
+            if(isUpperASCIILetter(key)){
+                key.codes[0] = key.codes[0] + 32;
+            }
+            if (key.codes[0] == -1) {
+                key.icon = contextLocal.getResources().getDrawable(
+                        R.drawable.icon_keyboard_shift);
+            }
+        }
+    }
+
+    private boolean isLowerASCIILetter(Key key){
+        return (key.codes[0]>=97 && key.codes[0] <= 122);
+    }
+
+    private boolean isUpperASCIILetter(Key key){
+        return (key.codes[0]>=65 && key.codes[0] <= 90);
     }
 
     private void editTextAddListener() {
@@ -290,11 +331,11 @@ public class EmmSecurityKeyboard extends PopupWindow {
         }
     }
 
-    private void randomKeysForOnce() {
+    private void initKeys() {
         EmmCreateKeyList.initLetters(letterList);
 //        randomKeys(KEYBOARD_LETTER_RANDOM_TYPE);
         EmmCreateKeyList.initNumbers(numberList);
-        randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
+//        randomKeys(KEYBOARD_NUMBER_RANDOM_TYPE);
     }
 
     /**
@@ -376,11 +417,12 @@ public class EmmSecurityKeyboard extends PopupWindow {
                 break;
         }
         for (Key key : keyList) {
+            //这一行代表两个意义1，首先确定是不是对字母乱序，2，确定按键上是不是一个字母或者数字
             if (key.label != null && (keyType == KEYBOARD_LETTER_RANDOM_TYPE ?
                     isLetter(key.label.toString()) : isNumber(key.label.toString()))) {
                 int number = new Random().nextInt(temList.size());
                 String[] textArray = temList.get(number).split("#");
-                key.label = textArray[1];
+                key.label = isUpper ? textArray[1].toUpperCase():textArray[1].toLowerCase();
                 key.codes[0] = Integer.valueOf(textArray[0], KEYBOARD_RADIX);
                 temList.remove(number);
             }

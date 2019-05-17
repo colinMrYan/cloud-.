@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginRight="4dp"
-            android:layout_toLeftOf="@id/more_function_list_img"
+            android:layout_toLeftOf="@+id/more_function_list_img"
             android:clickable="true"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"

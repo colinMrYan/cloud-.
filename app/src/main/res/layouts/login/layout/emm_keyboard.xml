@@ -20,12 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_toRightOf="@id/iv_keyboard_view_sys"
-            android:layout_toLeftOf="@id/iv_keyboard_view_down"
+            android:layout_toLeftOf="@+id/iv_keyboard_view_down"
             android:textSize="16sp"
             android:textColor="#eeeeee"
             android:background="#212121"
             android:gravity="center"
-            android:text="@string/emm_secure_keyboard_normal"/>
+            />
 
         <ImageView
             android:id="@+id/iv_keyboard_view_down"

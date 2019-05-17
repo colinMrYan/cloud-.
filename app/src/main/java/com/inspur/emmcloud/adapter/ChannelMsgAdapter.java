@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
+import com.inspur.emmcloud.ui.chat.DisplayExtendedDecideMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResImageMsg;
@@ -30,6 +31,7 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtRichMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -195,6 +197,14 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 break;
             case "extended/actions":
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                break;
+//            case "extended/selects":
+//                LogUtils.YfcDebug("v0决策卡片");
+//                cardContentView = DisplayExtendedDecideMsg.getView(message,context);
+//                break;
+            case "experimental/selects":
+                LogUtils.YfcDebug("v0决策卡片");
+                cardContentView = DisplayExtendedDecideMsg.getView(message,context);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context,

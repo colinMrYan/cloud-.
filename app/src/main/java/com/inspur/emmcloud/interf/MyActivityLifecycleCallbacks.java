@@ -21,13 +21,13 @@ import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionActivity;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
-import com.yanzhenjie.permission.PermissionActivity;
 
 /**
  * Created by chenmch on 2017/9/13.
@@ -73,7 +73,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         //如果没有存储权限则跳转到MainActivity进行处理
         String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
         if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
-            if (!(currentActivity instanceof MainActivity || currentActivity instanceof PermissionActivity)) {
+            if (!(currentActivity instanceof MainActivity || currentActivity instanceof EmmPermissionActivity)) {
                 Intent intent = new Intent(currentActivity, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 currentActivity.startActivity(intent);

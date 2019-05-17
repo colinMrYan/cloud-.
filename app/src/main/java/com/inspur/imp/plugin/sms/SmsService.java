@@ -13,12 +13,12 @@ import android.telephony.SmsManager;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
-import com.yanzhenjie.permission.Permission;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +72,7 @@ public class SmsService extends ImpPlugin {
      * @param paramsObject
      */
     private void checkSendSMSPermissionAndSendSMS(final String send, final JSONObject paramsObject) {
-        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permission.SEND_SMS, new PermissionRequestCallback() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(getActivity(), Permissions.SEND_SMS, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 if (send.equals("send")) {

@@ -175,7 +175,7 @@
                                 android:id="@+id/tv_cer_issuer_tip"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#666666 "
+                                android:textColor="#666666"
                                 android:text="颁发者：" />
                             <TextView
                                 android:id="@+id/tv_installed_cer_issuer_name"
@@ -183,7 +183,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="90dp"
                                 android:text="使用中"
-                                android:textColor="#666666 "
+                                android:textColor="#666666"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -197,7 +197,7 @@
                                 android:id="@+id/tv_installed_cer_final_data_tip"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#666666 "
+                                android:textColor="#666666"
                                 android:text="有效期至：" />
                             <TextView
                                 android:id="@+id/tv_installed_cer_final_data"
@@ -205,7 +205,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="90dp"
                                 android:text="2023-03-12 18:08:00"
-                                android:textColor="#666666 "
+                                android:textColor="#666666"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -236,7 +236,7 @@
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:textColor="#666666 "
+                                android:textColor="#666666"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 
@@ -266,7 +266,7 @@
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:textColor="#666666 "
+                                android:textColor="#666666"
                                 android:textSize="14sp" />
                         </RelativeLayout>
 

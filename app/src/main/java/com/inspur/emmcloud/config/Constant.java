@@ -49,6 +49,8 @@ public class Constant {
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
     public static final String PREF_APP_THEME = "app_theme_num_v1";
+    public static final String APP_TAB_LAYOUT_NAME = "app_tab_layout_name";
+    public static final String APP_TAB_LAYOUT_DATA = "app_tab_layout_data";
     public static final String PREF_LOGIN_USERNAME = "userName";
     public static final String PREF_LOGIN_PASSWORD = "password";
     public static final String PREF_CLOUD_IDM = "cloud_idm";
@@ -60,6 +62,10 @@ public class Constant {
     public static final String PREF_MAIL_PASSWORD = "mail_password";
     public static final String PREF_MY_INFO_SHOW_CONFIG = "user_profiles";
     public static final String PREF_MINE_USER_MENUS = "mine_user_menus";
+
+    public static final String PREF_CALENDAR_EVENT_SHOW_TYPE = "calendar_event_show_type";
+    public static final String PREF_MEETING_OFFICE_ID_LIST = "meeting_office_id_list";
+    public static final String PREF_IS_MEETING_ADMIN = "is_meeting_admin";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -104,6 +110,13 @@ public class Constant {
     public static final String EVENTBUS_TAG_MAIL_LOGIN_SUCCESS = "tag_mail_login_success";
     public static final String EVENTBUS_TAG_MAIL_LOGIN_FAIL = "tag_mail_login_fail";
     public static final String EVENTBUS_TAG_MAIL_REMOVE = "tag_mail_remove";
+    public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED = "tag_schedule_calendar_setting_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED = "tag_schedule_meeting_data_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_TASK_DATA_CHANGED = "tag_schedule_task_data_changed";
+    public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
+    public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
+    public static final String EVENTBUS_TAG_SELECT_CALENDAR_CHANGED = "tag_select_calendar_changed";
+
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
@@ -146,6 +159,7 @@ public class Constant {
     //推送相关配置
     public static final String PUSH_FLAG = "pushFlag";
     public static final String HUAWEI_PUSH_TOKEN = "huawei_push_token";
+    public static final String PUSH_SWITCH_FLAG = "push_switch_flag";
     public static final String JPUSH_REGISTER_ID = "JpushRegId";
     public static final String MIPUSH_REGISTER_ID = "mi_push_register_id";
     public static final String HUAWEI_FLAG = "huawei";
@@ -163,5 +177,11 @@ public class Constant {
     public static final String MAIL_ENCRYPT_IV = "inspurcloud+2019";
 
     public static final String SF_OPEN_URL = "open-url";
+
+    //沟通文本消息长按至日程
+    public static final String COMMUNICATION_LONG_CLICK_TO_SCHEDULE = "message_long_click_to_schedule";
+
+    public static final String SCHEDULE_QUERY = "schedule_query";
+    public static final String SCHEDULE_DETAIL = "schedule_detail";
 
 }

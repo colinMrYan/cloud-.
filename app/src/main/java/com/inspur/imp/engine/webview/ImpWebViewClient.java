@@ -4,12 +4,14 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -158,6 +160,11 @@ public class ImpWebViewClient extends WebViewClient {
         }
     }
 
+    @Override
+    public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+        handler.proceed();
+    }
+
 
     @TargetApi(Build.VERSION_CODES.N)
     @Override
@@ -270,7 +277,7 @@ public class ImpWebViewClient extends WebViewClient {
             e.printStackTrace();
         }
         int port = urlWithParams.getPort();
-        String requestUrl = urlWithParams.getProtocol() + "://" + urlWithParams.getHost()+(port == -1?"":":"+port);
+        String requestUrl = urlWithParams.getProtocol() + "://" + urlWithParams.getHost() + (port == -1 ? "" : ":" + port);
         MyAppAPIService appAPIService = new MyAppAPIService(MyApplication.getInstance());
         appAPIService.setAPIInterface(new WebService(view));
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
