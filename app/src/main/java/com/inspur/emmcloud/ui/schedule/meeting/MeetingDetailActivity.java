@@ -125,7 +125,7 @@ public class MeetingDetailActivity extends BaseActivity {
         } else {
             List<Participant> participantList = meeting.getAllParticipantList();
             for (int i = 0; i < participantList.size(); i++) {
-                if (meeting.getCommonParticipantList().get(i).getId().equals(MyApplication.getInstance().getUid())) {
+                if (participantList.get(i).getId().equals(MyApplication.getInstance().getUid())) {
                     meetingCategory = getString(R.string.schedule_meeting_my_take_part_in);
                     break;
                 }
