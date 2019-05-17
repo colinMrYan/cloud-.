@@ -76,6 +76,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:layout_toLeftOf="@id/arrow"
+            android:lineSpacingMultiplier="1.2"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingBottom="10dp"
