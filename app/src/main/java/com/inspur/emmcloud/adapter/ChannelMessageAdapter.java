@@ -218,6 +218,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 mItemClickListener.onCardItemClick(view, uiMessage);
             }
         });
+        holder.cardParentLayout.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                mItemClickListener.onCardItemLayoutClick(view,uiMessage);
+            }
+        });
 
     }
 
@@ -307,6 +313,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         boolean onCardItemLongClick(View view, UIMessage uiMessage);
 
         void onCardItemClick(View view, UIMessage uiMessage);
+
+          void onCardItemLayoutClick(View view, UIMessage uiMessage);
 
         void onMessageResend(UIMessage uiMessage, View view);
 
