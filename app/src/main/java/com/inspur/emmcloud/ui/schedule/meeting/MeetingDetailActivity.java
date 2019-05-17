@@ -23,6 +23,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
@@ -156,10 +157,10 @@ public class MeetingDetailActivity extends BaseActivity {
         if (participantList.size() == 0) {
             return "";
         } else if (participantList.size() == 1) {
-            return participantList.get(0).getName();
+            return ContactUserCacheUtils.getContactUserByUid(participantList.get(0).getId()).getName();
         } else {
             return getString(R.string.meeting_detail_attendee_num,
-                    participantList.get(0).getName(),
+                    ContactUserCacheUtils.getContactUserByUid(participantList.get(0).getId()).getName(),
                     participantList.size());
         }
     }
@@ -180,11 +181,8 @@ public class MeetingDetailActivity extends BaseActivity {
                     TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_HOUR_MINUTE) +
                     " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_HOUR_MINUTE);
         } else {
-            //先按同一天算
-            duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) +
-                    TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(startTime)) +
-                    TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_HOUR_MINUTE) +
-                    " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_HOUR_MINUTE);
+            duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE) +
+                    " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         }
         return duringTime;
     }
