@@ -552,7 +552,7 @@
     <string name="clouddriver_upload_again">重新上传</string>
     <string name="clouddriver_download_size">下载(%1$s)</string>
     <string name="clouddriver_downloading_status">下载中(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">文件名中不能包含特殊字符 / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_file_name_invaliad">文件名中不能包含特殊字符 / \ " : | * ? &lt; &gt;&#038;</string>
     <string name="clouddriver_select_photo">选择照片</string>
     <string name="clouddriver_select_file">选择文件</string>
     <string name="clouddriver_volume_info">网盘详情</string>

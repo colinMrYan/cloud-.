@@ -44,6 +44,7 @@ import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
@@ -485,6 +486,7 @@ public class SchemeHandleActivity extends Activity {
                 finish();
                 break;
             case "to-do":
+                LogUtils.LbcDebug("query.getQueryParameter"+query.getQueryParameter("id"));
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_TASK);
                     EventBus.getDefault().post(simpleEventMessage);
