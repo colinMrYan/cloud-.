@@ -592,6 +592,7 @@
     <string name="group">Group</string>
     <string name="people_num">%1$dpeople</string>
     <string name="file_rename">File Rename</string>
+    <string name="folder_rename">Folder Rename</string>
     <string name="refresh">Refresh</string>
 
     <!--Webex 会议-->
