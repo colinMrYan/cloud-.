@@ -23,6 +23,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
@@ -293,28 +294,27 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void deleteMeeting(Meeting meeting) {
         if (NetUtils.isNetworkConnected(this)) {
+            loadingDlg.show();
             scheduleApiService.deleteMeeting(meeting);
-        } else {
-            ToastUtils.show(this, "");
         }
     }
 
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnDelMeetingSuccess(Meeting meeting) {
-            super.returnDelMeetingSuccess(meeting);
+            LoadingDialog.dimissDlg(loadingDlg);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
             finish();
         }
 
         @Override
         public void returnDelMeetingFail(String error, int errorCode) {
-            super.returnDelMeetingFail(error, errorCode);
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
         }
 
         @Override
         public void returnMeetingDataFromIdSuccess(Meeting meetingData) {
-            super.returnMeetingDataFromIdSuccess(meetingData);
             LoadingDialog.dimissDlg(loadingDlg);
             if (meetingData != null) {
                 meeting = meetingData;
@@ -324,7 +324,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
         @Override
         public void returnMeetingDataFromIdFail(String error, int errorCode) {
-            super.returnMeetingDataFromIdFail(error, errorCode);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
             if (meeting == null || TextUtils.isEmpty(meeting.getId())) finish();
         }

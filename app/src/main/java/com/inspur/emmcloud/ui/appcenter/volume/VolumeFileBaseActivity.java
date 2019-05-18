@@ -283,7 +283,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         inputEdit.setText(fileNameNoEx);
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) fileRenameDlg.findViewById(R.id.app_update_title)).setText(R.string.file_rename);
+        ((TextView) fileRenameDlg.findViewById(R.id.app_update_title)).setText(
+                volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? R.string.file_rename : R.string.folder_rename);
         Button okBtn = (Button) fileRenameDlg.findViewById(R.id.ok_btn);
         okBtn.setText(R.string.rename);
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +292,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             public void onClick(View v) {
                 String newName = inputEdit.getText().toString().trim();
                 if (StringUtils.isBlank(newName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_input_file_name);
+                    ToastUtils.show(getApplicationContext(),volumeFile.getType().equals(
+                            VolumeFile.FILE_TYPE_REGULAR) ?R.string.clouddriver_input_file_name:R.string.clouddriver_input_directory_name);
                     return;
                 }
                 if (!FomatUtils.isValidFileName(newName)) {
@@ -328,7 +330,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     /**
      * 设置跟权限相关的layout,可以被继承此Activity的实例重写控制当前页面的layout
      *
-     * @param haveModifyPrivilege
      */
     protected void setCurrentDirectoryLayoutByPrivilege() {
     }
@@ -407,7 +408,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     /**
      * 移动文件
      *
-     * @param volumeFileList
+     * @param moveVolumeFileList
      */
     protected void moveFile(List<VolumeFile> moveVolumeFileList) {
         this.moveVolumeFileList = moveVolumeFileList;
