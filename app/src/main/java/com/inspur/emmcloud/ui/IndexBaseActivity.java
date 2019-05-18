@@ -454,9 +454,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onReceiveScheme(final SimpleEventMessage simpleEventMessage){
         if(simpleEventMessage.getAction().equals(Constant.APP_TAB_BAR_WORK)){
+            SimpleEventMessage stickyEvent = EventBus.getDefault().getStickyEvent(SimpleEventMessage.class);
+            if(stickyEvent != null) {
+                EventBus.getDefault().removeStickyEvent(stickyEvent);
+            }
             int index = findTargetTabIndex();
             if(mTabHost != null ){
                 mTabHost.setCurrentTab(index);
@@ -864,6 +868,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         // networkCallback = null;
         // }
         // }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 }
