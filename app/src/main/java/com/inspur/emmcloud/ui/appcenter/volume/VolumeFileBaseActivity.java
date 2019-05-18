@@ -292,8 +292,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             public void onClick(View v) {
                 String newName = inputEdit.getText().toString().trim();
                 if (StringUtils.isBlank(newName)) {
-                    ToastUtils.show(getApplicationContext(),volumeFile.getType().equals(
-                            VolumeFile.FILE_TYPE_REGULAR) ?R.string.clouddriver_input_file_name:R.string.clouddriver_input_directory_name);
+                    ToastUtils.show(getApplicationContext(), volumeFile.getType().equals(
+                            VolumeFile.FILE_TYPE_REGULAR) ? R.string.clouddriver_input_file_name : R.string.clouddriver_input_directory_name);
                     return;
                 }
                 if (!FomatUtils.isValidFileName(newName)) {
@@ -329,7 +329,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     /**
      * 设置跟权限相关的layout,可以被继承此Activity的实例重写控制当前页面的layout
-     *
      */
     protected void setCurrentDirectoryLayoutByPrivilege() {
     }

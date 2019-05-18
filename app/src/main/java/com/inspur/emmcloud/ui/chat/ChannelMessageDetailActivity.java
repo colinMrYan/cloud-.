@@ -187,8 +187,8 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             msgDisplayView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
-                     String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+                    MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+                    String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
                     if (FileUtils.isFileExist(fileDownloadPath)) {
                         FileUtils.openFile(ChannelMessageDetailActivity.this, fileDownloadPath);
                     } else {

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -307,7 +308,7 @@ public class MeetingDetailActivity extends BaseActivity {
         @Override
         public void returnDelMeetingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
 
         @Override
@@ -321,7 +322,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
         @Override
         public void returnMeetingDataFromIdFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(),error,errorCode);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
             if (meeting == null || TextUtils.isEmpty(meeting.getId())) finish();
         }
