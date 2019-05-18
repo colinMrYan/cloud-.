@@ -159,7 +159,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
         EventBus.getDefault().unregister(this);
     }
 
-    private void getMeetingList() {
+    public void getMeetingList() {
         if (isHistoryMeeting){
             getMeetingHistoryListByPage(pageNum);
         }else{
