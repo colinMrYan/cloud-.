@@ -99,6 +99,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                 case Constant.ACTION_MEETING:
                     if(tabLayout != null){
                         tabLayout.getTabAt(1).select();
+                        if(meetingFragment != null){
+                            meetingFragment.getMeetingList();
+                        }
                     }
                     break;
                 case Constant.ACTION_TASK:
