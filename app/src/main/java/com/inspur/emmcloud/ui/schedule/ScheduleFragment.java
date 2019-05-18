@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.schedule;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +17,6 @@ import com.inspur.emmcloud.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
@@ -36,6 +34,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
@@ -62,7 +61,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -165,43 +163,18 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setScheduleBackToToday();
             }
         });
-        switch (getLocaleByLanguage(getActivity()).getLanguage()){
-            case "en":
-                calendarView.setIsLunarAndFestivalShow(false);
-                break;
-            default:
+        switch (AppUtils.getCurrentAppLanguage(getActivity())){
+            case "zh-Hans":
+            case "zh-hant":
                 calendarView.setIsLunarAndFestivalShow(true);
                 break;
+            default:
+                calendarView.setIsLunarAndFestivalShow(false);
+                break;
         }
 
     }
 
-    private Locale getLocaleByLanguage(Context context) {
-        String languageJson = null;
-        if (MyApplication.getInstance() == null || MyApplication.getInstance().getTanent() == null) {
-            languageJson = PreferencesUtils.getString(context, Constant.PREF_LAST_LANGUAGE);
-
-        } else {
-            languageJson = PreferencesUtils
-                    .getString(context, MyApplication.getInstance().getTanent()
-                            + "appLanguageObj");
-        }
-        if (StringUtils.isBlank(languageJson)) {
-            return Locale.getDefault();
-        }
-        String[] array = new Language(languageJson).getIso().split("-");
-        String country = "";
-        String variant = "";
-        try {
-            country = array[0];
-            variant = array[1];
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        return new Locale(country, variant);
-
-    }
 
     /**
      * 设置事件展示样式-日视图和列表视图

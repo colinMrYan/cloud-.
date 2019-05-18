@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -94,11 +94,9 @@ public class TabLayoutSwitchActivity extends BaseActivity {
      */
     private String getTabLayoutName(int i) {
         String tabLayoutName = "";
-        Configuration config = getResources().getConfiguration();
-        String environmentLanguage = config.locale.getLanguage();
-        switch (environmentLanguage.toLowerCase()) {
+        switch (AppUtils.getCurrentAppLanguage(TabLayoutSwitchActivity.this)) {
             case "zh-hant":
-                tabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(i).getNaviBarTitleResult().getZhHans();
+                tabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(i).getNaviBarTitleResult().getZhHant();
                 break;
             case "en":
             case "en-us":
