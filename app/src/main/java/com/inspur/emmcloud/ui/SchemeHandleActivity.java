@@ -486,7 +486,6 @@ public class SchemeHandleActivity extends Activity {
                 finish();
                 break;
             case "to-do":
-                LogUtils.LbcDebug("query.getQueryParameter"+query.getQueryParameter("id"));
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_TASK);
                     EventBus.getDefault().post(simpleEventMessage);
@@ -498,7 +497,7 @@ public class SchemeHandleActivity extends Activity {
             case "meeting":
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
-                    EventBus.getDefault().post(simpleEventMessage);
+                    EventBus.getDefault().postSticky(simpleEventMessage);
                 }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
                     openScheduleActivity(query.getQueryParameter("id"),MeetingDetailActivity.class);
                 }
