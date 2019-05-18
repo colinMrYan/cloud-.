@@ -464,7 +464,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     private void showScheduleEventCalendarViewMark(Calendar startCalendar, Calendar endCalendar, Map<String, EmmCalendar> map) {
-        for (Calendar calendar = startCalendar; calendar.before(endCalendar); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
+        for (Calendar calendar = TimeUtils.getDayBeginCalendar(startCalendar); calendar.before(endCalendar); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
