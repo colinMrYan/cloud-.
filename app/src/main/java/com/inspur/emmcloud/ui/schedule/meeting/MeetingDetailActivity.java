@@ -25,7 +25,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
@@ -91,7 +90,6 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
         meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
         if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据  来自通知
-            getDbMeetingFromId(meetingId);
             getMeetingFromId(meetingId);
         } else {                                //id为空是走之前逻辑
             initViews();
@@ -135,15 +133,6 @@ public class MeetingDetailActivity extends BaseActivity {
         return meetingCategory;
     }
 
-    /**
-     * 通过id获取缓存meeting数据
-     *
-     * @param id
-     */
-    private void getDbMeetingFromId(String id) {
-        meeting = MeetingCacheUtils.getDBMeetingById(this, id);
-        if (meeting != null) initViews();
-    }
 
     /**
      * 通过id获取会议数据
@@ -324,7 +313,7 @@ public class MeetingDetailActivity extends BaseActivity {
         public void returnMeetingDataFromIdFail(String error, int errorCode) {
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
-            if (meeting == null || TextUtils.isEmpty(meeting.getId())) finish();
+            finish();
         }
     }
 }

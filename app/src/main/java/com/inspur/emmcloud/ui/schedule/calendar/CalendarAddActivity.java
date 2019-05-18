@@ -643,7 +643,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         @Override
         public void returnScheduleDataFromIdFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            if (scheduleEvent == null || TextUtils.isEmpty(scheduleEvent.getId())) finish();
+           finish();
         }
     }
 
