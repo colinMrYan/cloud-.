@@ -51,7 +51,6 @@ public class TabLayoutSwitchActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 showTabLayoutSwitch(i);
             }
         });
@@ -117,28 +116,30 @@ public class TabLayoutSwitchActivity extends BaseActivity {
      * @param selectIndex
      */
     private void showTabLayoutSwitch(final int selectIndex){
-        final String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
-        final String selectedTabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(selectIndex).getName();
-        new MyQMUIDialog.MessageDialogBuilder(this)
-                .setMessage(getString(R.string.mine_tab_layout_switch,getTabLayoutName(selectIndex)))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
-                })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        if(!currentTabLayoutName.equals(selectedTabLayoutName)){
-                            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,selectedTabLayoutName);
-                            Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+        if(getSelectedShow(selectIndex)  != View.VISIBLE){
+            final String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+            final String selectedTabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(selectIndex).getName();
+            new MyQMUIDialog.MessageDialogBuilder(this)
+                    .setMessage(getString(R.string.mine_tab_layout_switch,getTabLayoutName(selectIndex)))
+                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
                         }
-                    }
-                })
-                .show();
+                    })
+                    .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            if(!currentTabLayoutName.equals(selectedTabLayoutName)){
+                                PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,selectedTabLayoutName);
+                                Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                        }
+                    })
+                    .show();
+        }
     }
 
     /**
