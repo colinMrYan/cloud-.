@@ -185,7 +185,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
                 LogUtils.YfcDebug("v1决策卡片");
-                cardContentView = DisplayExtendedDecideMsg.getView(message,context);
+                cardContentView = DisplayExtendedDecideMsg.getView(message, context);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
@@ -209,22 +209,21 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                return mItemClickListener.onCardItemLongClick(view, uiMessage);
+                if (mItemClickListener != null) {
+                    mItemClickListener.onCardItemLongClick(view, uiMessage);
+                }
+                return true;
             }
         });
         cardContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mItemClickListener.onCardItemClick(view, uiMessage);
-            }
-        });
-        holder.cardParentLayout.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                mItemClickListener.onCardItemLayoutClick(view,uiMessage);
-            }
-        });
+                if (mItemClickListener != null) {
+                    mItemClickListener.onCardItemClick(view, uiMessage);
+                }
 
+            }
+        });
     }
 
     /**
@@ -314,7 +313,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
         void onCardItemClick(View view, UIMessage uiMessage);
 
-          void onCardItemLayoutClick(View view, UIMessage uiMessage);
+        void onCardItemLayoutClick(View view, UIMessage uiMessage);
 
         void onMessageResend(UIMessage uiMessage, View view);
 
@@ -355,6 +354,8 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
+            itemView.setOnClickListener(this);
+
         }
 
         /**
@@ -364,6 +365,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
          */
         @Override
         public void onClick(View v) {
+            int position = getAdapterPosition();
+            if (mItemClickListener != null && position != -1) {
+                mItemClickListener.onCardItemLayoutClick(v, UIMessageList.get(getAdapterPosition()));
+            }
+
         }
 
         public void onMessageResendClick(UIMessage uiMessage) {

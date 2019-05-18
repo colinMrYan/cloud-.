@@ -29,9 +29,9 @@
             android:layout_below="@id/iv_task_no_result"
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
-            android:textSize="@dimen/content_title_textsize"
+            android:textSize="16sp"
             android:text="@string/schedule_task_no_task_today"
-            android:textColor="#666666"/>
+            android:textColor="#999999"/>
 
         <com.inspur.emmcloud.widget.MySwipeRefreshLayout
             android:id="@+id/refresh_layout"
