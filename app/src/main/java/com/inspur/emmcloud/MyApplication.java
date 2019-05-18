@@ -42,6 +42,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
@@ -240,10 +241,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 目前使用的位置有ActionReceiver，IndexActivity 截止到181030
      */
     public void startPush() {
-        if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
-            HuaWeiPushMangerUtils.getInstance(this).connect();
-        } else {
-            startJPush();
+        if(PreferencesByUserAndTanentUtils.getBoolean(this,Constant.PUSH_SWITCH_FLAG,true)){
+            if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
+                HuaWeiPushMangerUtils.getInstance(this).connect();
+            } else {
+                startJPush();
+            }
         }
     }
 
@@ -252,6 +255,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 开启极光推送
      */
     public void startJPush() {
+
         // 初始化 JPush
         JPushInterface.init(this);
         if (JPushInterface.isPushStopped(this)) {

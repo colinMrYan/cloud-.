@@ -78,8 +78,9 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
         super.onViewCreated(view, savedInstanceState);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setOnLoadListener(this);
-        if (isHistoryMeeting)
+        if (isHistoryMeeting){
             swipeRefreshLayout.setCanLoadMore(true);
+        }
         scheduleMeetingListAdapter = new ScheduleMeetingListAdapter(getActivity());
         meetingListView.setAdapter(scheduleMeetingListAdapter);
         scheduleMeetingListAdapter.setOnItemClickLister(this);
@@ -159,10 +160,11 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
     }
 
     private void getMeetingList() {
-        if (isHistoryMeeting)
+        if (isHistoryMeeting){
             getMeetingHistoryListByPage(pageNum);
-        else
+        }else{
             getMeetingListByStartTime();
+        }
     }
 
     private void getMeetingListByStartTime() {

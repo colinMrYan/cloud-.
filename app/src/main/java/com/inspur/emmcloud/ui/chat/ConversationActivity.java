@@ -268,7 +268,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void setUnReadMessageCount() {
         if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
             final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+//            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
             unreadQMUIRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
             unreadQMUIRoundBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
