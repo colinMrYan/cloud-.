@@ -24,6 +24,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.MeetingSchedule;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
@@ -39,6 +40,9 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -83,6 +87,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         meetingRoom = (MeetingRoom) getIntent().getExtras().getSerializable(EXTRA_MEETING_ROOM);
         initView();
         getMeetingListByMeetingRoom();
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -326,6 +331,21 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 initData();
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
+                getMeetingListByMeetingRoom();
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
