@@ -868,7 +868,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         // networkCallback = null;
         // }
         // }
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 }
