@@ -601,6 +601,7 @@
     <string name="group">组</string>
     <string name="people_num">%1$d人</string>
     <string name="file_rename">文件重命名</string>
+    <string name="folder_rename">文件夹重命名</string>
     <string name="disk">网盘</string>
 
     <!--Webex 会议-->
