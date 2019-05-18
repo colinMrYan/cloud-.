@@ -261,6 +261,10 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             swipeRefreshLayout.setRefreshing(false);
             meetingRoomAreaList = getMeetingRoomListResult.getMeetingRoomAreaList();
             meetingRoomAdapter.setData(meetingRoomAreaList);
+            for (int i=0;i<meetingRoomAreaList.size();i++){
+                expandableListView.collapseGroup(i);
+                expandableListView.expandGroup(i);
+            }
         }
 
         @Override
