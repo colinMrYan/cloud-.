@@ -57,7 +57,8 @@
         <ListView
             android:id="@+id/lv_view_meeting"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
+            android:layout_height="match_parent"
+            android:divider="@null"/>
     </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
     <RelativeLayout
         android:id="@+id/rl_meeting_list_default"

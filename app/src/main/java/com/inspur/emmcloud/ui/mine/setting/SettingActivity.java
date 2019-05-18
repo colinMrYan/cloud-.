@@ -266,6 +266,7 @@ public class SettingActivity extends BaseActivity {
                         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
                             notificationSwitch.setChecked(false);
                             PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
                             switchPush();
