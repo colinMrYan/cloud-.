@@ -32,6 +32,7 @@
     <style name="AppTheme_0"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_white</item>
         <item name="header_bg">@drawable/shape_header_bg_white</item>
+        <item name="header_search_contact_bg">@drawable/shape_header_contact_bg_white</item>
         <item name="footer_bg">@drawable/footer_bg_white</item>
         <item name="footer_bg_color">@color/footer_bg_white</item>
         <item name="header_text_color">@color/header_text_black</item>
@@ -69,6 +70,7 @@
     <style name="AppTheme_1"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_grey</item>
         <item name="header_bg">@drawable/shape_header_bg_grey</item>
+        <item name="header_search_contact_bg">@drawable/shape_header_contact_bg_grey</item>
         <item name="footer_bg">@drawable/footer_bg_grey</item>
         <item name="footer_bg_color">@color/footer_bg_grey</item>
         <item name="header_text_color">@color/header_text_grey</item>
@@ -104,6 +106,7 @@
     <style name="AppTheme_2"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_blue</item>
         <item name="header_bg">@drawable/shape_header_bg_blue</item>
+        <item name="header_search_contact_bg">@drawable/shape_header_contact_bg_blue</item>
         <item name="footer_bg">@drawable/footer_bg_blue</item>
         <item name="footer_bg_color">@color/footer_bg_blue</item>
         <item name="header_text_color">@color/header_text</item>

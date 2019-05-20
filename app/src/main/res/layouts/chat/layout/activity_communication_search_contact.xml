@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg">
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="15dp"
+            android:text="@string/cancel"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_function_textsize" />
+        <RelativeLayout
+            android:id="@+id/search_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_cancel"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/bg_search_contact_edit">
+            <ImageView
+                android:id="@+id/iv_search_members"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/ic_search_members"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"/>
+
+            <com.inspur.emmcloud.widget.ClearEditText
+                android:id="@+id/ev_search_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="#ffff"
+                android:layout_toRightOf="@id/iv_search_members"
+                android:drawableRight="@drawable/ic_edit_text_delbtn"
+                android:freezesText="true"
+                android:gravity="center_vertical"
+                android:hint="搜索"
+                android:imeOptions="actionSearch"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingRight="5dp"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="#CDCDCD"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

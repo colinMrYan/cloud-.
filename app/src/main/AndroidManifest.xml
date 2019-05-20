@@ -588,6 +588,14 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".ui.chat.CommunicationSearchContactActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity
             android:name=".ui.chat.CorrectedSpeechInputActivity"
             android:launchMode="singleTask"

@@ -6,6 +6,7 @@
     <attr name="footer_tab_text_color_nor" format="reference|color"/>
     <attr name="footer_tab_text_color_select" format="reference|color"/>
     <attr name="header_bg" format="reference"/>
+    <attr name="header_search_contact_bg" format="reference"/>
     <attr name="footer_bg" format="reference"/>
 
     <attr name="footer_tab_text_color" format="reference"/>
