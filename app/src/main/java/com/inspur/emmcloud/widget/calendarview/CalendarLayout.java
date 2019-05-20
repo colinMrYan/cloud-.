@@ -719,6 +719,9 @@ public class CalendarLayout extends LinearLayout {
         if (mContentView == null) {
             return;
         }
+        if (isWeekView != true){
+            return;
+        }
         if ((mDefaultStatus == STATUS_SHRINK ||
                 mCalendarShowMode == CALENDAR_SHOW_MODE_ONLY_WEEK_VIEW) &&
                 mCalendarShowMode != CALENDAR_SHOW_MODE_ONLY_MONTH_VIEW) {

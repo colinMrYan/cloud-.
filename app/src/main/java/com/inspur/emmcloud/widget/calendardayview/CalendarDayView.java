@@ -30,8 +30,8 @@ import java.util.List;
 public class CalendarDayView extends RelativeLayout {
     private static final int TIME_HOUR_HEIGHT = DensityUtil.dip2px(MyApplication.getInstance(), 40);
     private static final int EVENT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
-    private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3",
-            "4", "5", "6", "7", "8", "9", "10", "11"};
+    private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
+            "16", "17", "18", "19", "20", "21", "22", "23"};
     private List<TimeHourRow> timeHourRowList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private RelativeLayout eventLayout;
@@ -71,13 +71,6 @@ public class CalendarDayView extends RelativeLayout {
             hourLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TIME_HOUR_HEIGHT));
             TextView hourText = hourLayout.findViewById(R.id.tv_hour);
             hourText.setText(dayHourTimes[i]);
-            TextView amText = hourLayout.findViewById(R.id.tv_am);
-            if (i == 7) {
-                amText.setText(R.string.schedule_calendar_am);
-            } else if (i == 13) {
-                amText.setText(R.string.schedule_calendar_pm);
-            }
-
             timeHourLayout.addView(hourLayout);
         }
         currentTimeLineLayout = view.findViewById(R.id.tl_current_time_line);
