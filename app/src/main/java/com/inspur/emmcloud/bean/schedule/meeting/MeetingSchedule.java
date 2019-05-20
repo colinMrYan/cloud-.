@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.schedule.meeting;
 
 
-import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 
 public class MeetingSchedule {
     private Long from;
