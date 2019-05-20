@@ -268,7 +268,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void setUnReadMessageCount() {
         if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
             final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+//            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
             unreadQMUIRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
             unreadQMUIRoundBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -441,6 +441,22 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 CardClickOperation(ConversationActivity.this, view, uiMessage);
+            }
+
+            @Override
+            public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
+                Message message = uiMessage.getMessage();
+                switch (message.getType()){
+                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                        Bundle bundle = new Bundle();
+                        bundle.putString("mid", message.getId());
+                        bundle.putString(EXTRA_CID, message.getChannel());
+                        IntentUtils.startActivity(ConversationActivity.this,
+                                ChannelMessageDetailActivity.class, bundle);
+
+                        break;
+                }
             }
         });
         adapter.setMessageList(uiMessageList);

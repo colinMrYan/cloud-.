@@ -501,7 +501,7 @@ public class TaskAddActivity extends BaseActivity {
      * 创建任务
      */
     private void createTask() {
-        String taskContent = contentInputEdit.getText().toString();
+        String taskContent = contentInputEdit.getText().toString().trim();
         loadingDlg.show();
         apiService.createTasks(taskContent);
     }
@@ -826,7 +826,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
             taskResult = new Task();
-            taskResult.setTitle(contentInputEdit.getText().toString());
+            taskResult.setTitle(contentInputEdit.getText().toString().trim());
             taskResult.setId(getTaskAddResult.getId());
             taskResult.setOwner(PreferencesUtils.getString(
                     TaskAddActivity.this, "userID"));

@@ -139,6 +139,7 @@ public class TaskTagAddActivity extends BaseActivity  {
                     ToastUtils.show(this, getString(R.string.schedule_task_tag_name_null_hint));
                     return;
                 }
+                loadingDialog.show();
                 //一种是新建；第二种是更新
                 if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS)) {
                     String userId = PreferencesUtils.getString(
@@ -236,6 +237,7 @@ public class TaskTagAddActivity extends BaseActivity  {
 
         @Override
         public void returnCreateTagFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(TaskTagAddActivity.this, error, errorCode);
         }
 

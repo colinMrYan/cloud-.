@@ -231,7 +231,7 @@ public class DraggableListView extends ListView {
         mDragBitmap = bm;
 
         mWindowManager = (WindowManager) getContext()
-                .getSystemService("window");
+                .getSystemService(Context.WINDOW_SERVICE);
         mWindowManager.addView(v, mWindowParams);
         mDragView = v;
     }
@@ -239,7 +239,7 @@ public class DraggableListView extends ListView {
     private void stopDragging() {
         if (mDragView != null) {
             WindowManager wm = (WindowManager) getContext().getSystemService(
-                    "window");
+                    Context.WINDOW_SERVICE);
             wm.removeView(mDragView);
             mDragView.setImageDrawable(null);
             mDragView = null;

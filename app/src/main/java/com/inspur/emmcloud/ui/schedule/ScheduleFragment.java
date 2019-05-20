@@ -1,17 +1,12 @@
 package com.inspur.emmcloud.ui.schedule;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -22,7 +17,6 @@ import com.inspur.emmcloud.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
@@ -36,9 +30,9 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
@@ -49,12 +43,12 @@ import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.TaskCacheUtils;
 import com.inspur.emmcloud.widget.MaxHeightListView;
-import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
+import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,7 +61,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -119,13 +112,14 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar pageEndCalendar = Calendar.getInstance();
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
-    private PopupWindow allDayEventPop;
+    private MyDialog myDialog=null;
     private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        LogUtils.LbcDebug("onViewCreated=============");
         EventBus.getDefault().register(this);
         apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -169,43 +163,18 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setScheduleBackToToday();
             }
         });
-        switch (getLocaleByLanguage(getActivity()).getLanguage()){
-            case "en":
-                calendarView.setIsLunarAndFestivalShow(false);
-                break;
-            default:
+        switch (AppUtils.getCurrentAppLanguage(getActivity())){
+            case "zh-Hans":
+            case "zh-hant":
                 calendarView.setIsLunarAndFestivalShow(true);
                 break;
+            default:
+                calendarView.setIsLunarAndFestivalShow(false);
+                break;
         }
 
     }
 
-    private Locale getLocaleByLanguage(Context context) {
-        String languageJson = null;
-        if (MyApplication.getInstance() == null || MyApplication.getInstance().getTanent() == null) {
-            languageJson = PreferencesUtils.getString(context, Constant.PREF_LAST_LANGUAGE);
-
-        } else {
-            languageJson = PreferencesUtils
-                    .getString(context, MyApplication.getInstance().getTanent()
-                            + "appLanguageObj");
-        }
-        if (StringUtils.isBlank(languageJson)) {
-            return Locale.getDefault();
-        }
-        String[] array = new Language(languageJson).getIso().split("-");
-        String country = "";
-        String variant = "";
-        try {
-            country = array[0];
-            variant = array[1];
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        return new Locale(country, variant);
-
-    }
 
     /**
      * 设置事件展示样式-日视图和列表视图
@@ -240,6 +209,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void isExpand(boolean isExpand) {
+        LogUtils.LbcDebug("isExpand=============");
         if (isExpand) {
             onCalendarSelect(calendarView.getSelectedCalendar(), false);
         }
@@ -248,6 +218,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
+        LogUtils.LbcDebug("onCalendarSelect=============");
         selectCalendar = Calendar.getInstance();
         selectCalendar.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay(), 0, 0, 0);
         selectCalendar.set(Calendar.MILLISECOND, 0);
@@ -412,7 +383,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         Iterator<Event> iterator = eventList.iterator();
         while (iterator.hasNext()) {
             Event event = iterator.next();
-            if (event.isAllDay()) {
+            boolean isCrossSelectDay = !event.getEventStartTime().after(selectCalendar) && !event.getEventEndTime().before(TimeUtils.getDayEndCalendar(selectCalendar));
+            if (event.isAllDay() || isCrossSelectDay) {
                 allDayEventList.add(event);
                 iterator.remove();
             }
@@ -465,7 +437,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     private void showScheduleEventCalendarViewMark(Calendar startCalendar, Calendar endCalendar, Map<String, EmmCalendar> map) {
-        for (Calendar calendar = startCalendar; calendar.before(endCalendar); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
+        for (Calendar calendar = TimeUtils.getDayBeginCalendar(startCalendar); calendar.before(endCalendar); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -480,36 +452,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
     }
 
-    private void showAllDayEventListPop(View anchor) {
-        View contentView = LayoutInflater.from(getActivity())
-                .inflate(R.layout.schedule_all_day_event_pop, null);
-        int width = ResolutionUtils.getWidth(MyApplication.getInstance());
-        width = width - 2 * DensityUtil.dip2px(MyApplication.getInstance(), 20);
-        BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
-        MaxHeightListView listView = contentView.findViewById(R.id.lv_all_day_event);
-        listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 150));
+    private void showAllDayEventListDlg() {
+        if(myDialog==null)
+        myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
+        MaxHeightListView listView = myDialog.findViewById(R.id.lv_all_day_event);
+        listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 300));
         listView.setAdapter(new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList));
-        contentView.findViewById(R.id.iv_close).setOnClickListener(this);
-        bubbleLayout.setArrowPosition(width / 2 - DensityUtil.dip2px(MyApplication.getInstance(), 7));
-        allDayEventPop = new PopupWindow(contentView, width,
-                LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        allDayEventPop.setOutsideTouchable(false);
-        allDayEventPop.setTouchable(true);
-        allDayEventPop.setTouchInterceptor(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-        allDayEventPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                AppUtils.setWindowBackgroundAlpha(getActivity(), 1.0f);
-            }
-        });
+        myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
         listView.setOnItemClickListener(this);
-        AppUtils.setWindowBackgroundAlpha(getActivity(), 0.8f);
-        allDayEventPop.showAsDropDown(anchor, DensityUtil.dip2px(MyApplication.getInstance(), 20), 0);
+        myDialog.show();
     }
 
     private void openEvent(Event event) {
@@ -538,14 +489,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 break;
             case R.id.rl_all_day:
                 if (allDayEventList.size() > 1) {
-                    showAllDayEventListPop(view);
+                    showAllDayEventListDlg();
                 } else {
                     onEventClick(allDayEventList.get(0));
                 }
 
                 break;
             case R.id.iv_close:
-                allDayEventPop.dismiss();
+                myDialog.dismiss();
+                myDialog=null;
                 break;
         }
     }
@@ -558,7 +510,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         onEventClick(allDayEventList.get(position));
-        allDayEventPop.dismiss();
+        if(myDialog!=null)
+            myDialog.dismiss();
     }
 
     @Override

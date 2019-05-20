@@ -13,7 +13,7 @@ public class Participant {
     public static final String TYPE_RECORDER = "recorder";
     public static final String TYPE_CONTACT = "contact";
     private String id;
-    private String name;
+    private String name;//name可能有也可能没有会议详情那里显示的时候用的id从通讯录中取的名字
     private String role;//common,普通参与者,recorder, 记录人,contact,联系人
 
     public Participant() {

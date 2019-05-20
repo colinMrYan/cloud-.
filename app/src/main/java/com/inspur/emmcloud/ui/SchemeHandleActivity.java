@@ -43,6 +43,7 @@ import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
@@ -495,7 +496,7 @@ public class SchemeHandleActivity extends Activity {
             case "meeting":
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
-                    EventBus.getDefault().post(simpleEventMessage);
+                    EventBus.getDefault().postSticky(simpleEventMessage);
                 }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
                     openScheduleActivity(query.getQueryParameter("id"),MeetingDetailActivity.class);
                 }

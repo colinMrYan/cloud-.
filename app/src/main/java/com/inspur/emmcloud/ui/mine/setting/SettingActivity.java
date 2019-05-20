@@ -266,6 +266,7 @@ public class SettingActivity extends BaseActivity {
                         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
                             notificationSwitch.setChecked(false);
                             PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
                             switchPush();
@@ -422,7 +423,7 @@ public class SettingActivity extends BaseActivity {
     private void showNotificationDlg() {
         if(!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)){
             new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
-                    .setMessage("系统中的云+消息通知已关闭，前往打开？")
+                    .setMessage(getString(R.string.notification_switch_open_setting))
                     .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {

@@ -32,6 +32,7 @@ import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -40,7 +41,6 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -78,8 +78,8 @@ public class MeetingAddActivity extends BaseActivity {
     private TextView endDateText;
     @ViewInject(R.id.tv_end_time)
     private TextView endTimeText;
-    @ViewInject(R.id.et_meeting_position)
-    private ClearEditText meetingPositionEdit;
+    @ViewInject(R.id.tv_meeting_position)
+    private TextView meetingPositionText;
     @ViewInject(R.id.ll_attendee)
     private LinearLayout attendeeLayout;
     @ViewInject(R.id.ll_recorder)
@@ -103,6 +103,7 @@ public class MeetingAddActivity extends BaseActivity {
     private String title;
     private String note;
     private String meetingPosition;
+    private String meetingOwner = "";
     private RemindEvent remindEvent;
     private Meeting meeting = new Meeting();
     private boolean isMeetingEditModel = false;
@@ -124,6 +125,7 @@ public class MeetingAddActivity extends BaseActivity {
         isMeetingEditModel = getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
         if (isMeetingEditModel) {
             meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
+            meetingOwner = meeting.getOwner();
             location = new Location(JSONUtils.getJSONObject(meeting.getLocation()));
             startTimeCalendar = meeting.getStartTimeCalendar();
             endTimeCalendar = meeting.getEndTimeCalendar();
@@ -131,21 +133,22 @@ public class MeetingAddActivity extends BaseActivity {
             note = meeting.getNote();
             List<String> attendeeList = meeting.getGetParticipantList();
             for (int i = 0; i < attendeeList.size(); i++) {
+                meeting.getRoleParticipantList();
                 JSONObject jsonObject = JSONUtils.getJSONObject(attendeeList.get(i));
-                SearchModel searchModel = new SearchModel();
-                searchModel.setId(JSONUtils.getString(jsonObject, "id", ""));
-                searchModel.setName(JSONUtils.getString(jsonObject, "name", ""));
                 if (Participant.TYPE_COMMON.equals(JSONUtils.getString(jsonObject, "role", ""))) {
+                   SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
                     attendeeSearchModelList.add(searchModel);
                 } else if (Participant.TYPE_CONTACT.equals(JSONUtils.getString(jsonObject, "role", ""))) {
+                    SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
                     liaisonSearchModelList.add(searchModel);
                 } else if (Participant.TYPE_RECORDER.equals(JSONUtils.getString(jsonObject, "role", ""))) {
+                    SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
                     recorderSearchModelList.add(searchModel);
                 }
             }
             remindEvent = meeting.getRemindEventObj();
         } else {
-            String myUid= MyApplication.getInstance().getUid();
+            String myUid = MyApplication.getInstance().getUid();
             SearchModel myInfoSearchModel = new SearchModel();
             ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
             myInfoSearchModel.setName(myInfo.getName());
@@ -154,13 +157,19 @@ public class MeetingAddActivity extends BaseActivity {
             startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
             endTimeCalendar = (Calendar) startTimeCalendar.clone();
             endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
-        }
-        if(getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
-                && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
-                && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)){
-            startTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
-            endTimeCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
-            meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+            meetingOwner = MyApplication.getInstance().getUid();
+            if (getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)) {
+                Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
+                Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
+                correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
+                meetingRoom = (MeetingRoom) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
+                location = new Location();
+                location.setId(meetingRoom.getId());
+                location.setBuilding(meetingRoom.getBuilding().getName());
+                location.setDisplayName(meetingRoom.getName());
+            }
         }
     }
 
@@ -171,11 +180,13 @@ public class MeetingAddActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         if (isMeetingEditModel) {
             titleEdit.setText(title);
-            meetingPositionEdit.setText(location.getDisplayName());
+            meetingPositionText.setText(location.getBuilding() + " " + location.getDisplayName());
             notesEdit.setText(note);
             showSelectUser(liaisonLayout, liaisonSearchModelList);
             showSelectUser(recorderLayout, recorderSearchModelList);
             reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+        } else if (location != null) {
+            meetingPositionText.setText(location.getBuilding() + " " + location.getDisplayName());
         }
         showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();
@@ -217,13 +228,19 @@ public class MeetingAddActivity extends BaseActivity {
             case R.id.ll_reminder:
                 setReminder();
                 break;
+            case R.id.tv_meeting_position:
+                Intent intent2 = new Intent(this, MeetingRoomListActivity.class);
+                intent2.putExtra(MeetingRoomListActivity.EXTRA_START_TIME, startTimeCalendar);
+                intent2.putExtra(MeetingRoomListActivity.EXTRA_END_TIME, endTimeCalendar);
+                startActivityForResult(intent2, REQUEST_SELECT_MEETING_ROOM);
+                break;
         }
     }
 
 
     private boolean isInputValid() {
-        title = titleEdit.getText().toString();
-        meetingPosition = meetingPositionEdit.getText().toString();
+        title = titleEdit.getText().toString().trim();
+        meetingPosition = meetingPositionText.getText().toString();
         if (StringUtils.isBlank(title)) {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
             return false;
@@ -238,13 +255,13 @@ public class MeetingAddActivity extends BaseActivity {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_invating_members);
             return false;
         }
-        if (title.length() > 128) {
+        if (title.length() > 149) {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.meeting_topic_too_long));
             return false;
         }
         note = notesEdit.getText().toString();
-        if (!StringUtils.isBlank(note) && note.length() > 127) {
+        if (!StringUtils.isBlank(note) && note.length() > 499) {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.meeting_notice_too_long));
             return false;
@@ -260,11 +277,6 @@ public class MeetingAddActivity extends BaseActivity {
             return false;
         }
 
-        int count = TimeUtils.getCountdownNum(endTimeCalendar);
-        if (meetingRoom != null && count >= meetingRoom.getMaxAhead()) {
-            ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_day));
-            return false;
-        }
         int countHour = TimeUtils.getCeil(endTimeCalendar, startTimeCalendar);
         if (meetingRoom != null && countHour > Integer.parseInt(meetingRoom.getMaxDuration())) {
             ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_time));
@@ -274,10 +286,6 @@ public class MeetingAddActivity extends BaseActivity {
             location = new Location();
         }
 
-        if (!location.getDisplayName().equals(meetingPosition)) {
-            location.setDisplayName(meetingPosition);
-            location.setId("");
-        }
         return true;
     }
 
@@ -330,6 +338,8 @@ public class MeetingAddActivity extends BaseActivity {
                     endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                 } else {
                     if (!calendar.after(startTimeCalendar)) {
+                        endTimeCalendar = (Calendar) startTimeCalendar.clone();
+                        endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                         showTimeInvalidDlg();
                         return;
                     }
@@ -391,12 +401,13 @@ public class MeetingAddActivity extends BaseActivity {
                 case REQUEST_SELECT_MEETING_ROOM:
                     Calendar backStartTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
                     Calendar backEndTimeCalendar = (Calendar) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
-                    correctMeetingRoomTime(backStartTimeCalendar,backEndTimeCalendar);
+                    correctMeetingRoomTime(backStartTimeCalendar, backEndTimeCalendar);
                     meetingRoom = (MeetingRoom) data.getSerializableExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM);
                     setMeetingTime();
-                    meetingPositionEdit.setText(meetingRoom.getName());
+                    meetingPositionText.setText(meetingRoom.getBuilding().getName() + " " + meetingRoom.getName());
                     location = new Location();
                     location.setId(meetingRoom.getId());
+                    LogUtils.LbcDebug("meeting Id"+meetingRoom.getId());
                     location.setBuilding(meetingRoom.getBuilding().getName());
                     location.setDisplayName(meetingRoom.getName());
                     break;
@@ -409,33 +420,34 @@ public class MeetingAddActivity extends BaseActivity {
 
     }
 
-    /**修正会议室可用时间
-     * */
-    private void correctMeetingRoomTime(Calendar meetingRoomStartCalendar,Calendar meetingRoomEndCalendar){
-       // 首先当前时间右半部分与会议室返回时间取交集，如果交集为空时间不做修改
+    /**
+     * 修正会议室可用时间
+     */
+    private void correctMeetingRoomTime(Calendar meetingRoomStartCalendar, Calendar meetingRoomEndCalendar) {
+        // 首先当前时间右半部分与会议室返回时间取交集，如果交集为空时间不做修改
         Calendar currentCalendar = Calendar.getInstance();
-        Calendar nextHalfHourCalendar =TimeUtils.getNextHalfHourTime(currentCalendar);
-        if(nextHalfHourCalendar.before(meetingRoomEndCalendar)){   //有交集
-            if(nextHalfHourCalendar.after(meetingRoomStartCalendar)){
+        Calendar nextHalfHourCalendar = TimeUtils.getNextHalfHourTime(currentCalendar);
+        if (nextHalfHourCalendar.before(meetingRoomEndCalendar)) {   //有交集
+            if (nextHalfHourCalendar.after(meetingRoomStartCalendar)) {
                 Calendar modifiedCalendar = (Calendar) nextHalfHourCalendar.clone();
-                modifiedCalendar.add(Calendar.HOUR_OF_DAY,2);
-               endTimeCalendar= modifiedCalendar.after(meetingRoomEndCalendar)?meetingRoomEndCalendar:modifiedCalendar;
-               startTimeCalendar=nextHalfHourCalendar;
-            }else{
-                Calendar nextHalfHourStartCalendar =TimeUtils.getNextHalfHourTime(meetingRoomStartCalendar);
+                modifiedCalendar.add(Calendar.HOUR_OF_DAY, 2);
+                endTimeCalendar = modifiedCalendar.after(meetingRoomEndCalendar) ? meetingRoomEndCalendar : modifiedCalendar;
+                startTimeCalendar = nextHalfHourCalendar;
+            } else {
+                Calendar nextHalfHourStartCalendar = TimeUtils.getNextHalfHourTime(meetingRoomStartCalendar);
                 Calendar modifiedStartCalendar = (Calendar) nextHalfHourStartCalendar.clone();
-                modifiedStartCalendar.add(Calendar.HOUR_OF_DAY,2);
-                endTimeCalendar=modifiedStartCalendar.after(meetingRoomEndCalendar)?meetingRoomEndCalendar:modifiedStartCalendar;
-                startTimeCalendar = nextHalfHourStartCalendar.after(meetingRoomEndCalendar)?meetingRoomStartCalendar:nextHalfHourStartCalendar;
+                modifiedStartCalendar.add(Calendar.HOUR_OF_DAY, 2);
+                endTimeCalendar = modifiedStartCalendar.after(meetingRoomEndCalendar) ? meetingRoomEndCalendar : modifiedStartCalendar;
+                startTimeCalendar = nextHalfHourStartCalendar.after(meetingRoomEndCalendar) ? meetingRoomStartCalendar : nextHalfHourStartCalendar;
             }
-        }else{
+        } else {
             //可能存在半小时以内的会议，如果开始时间
-            if(meetingRoomEndCalendar.after(currentCalendar)){
-                endTimeCalendar=meetingRoomEndCalendar;
-                startTimeCalendar=currentCalendar;
-            }else{
-                endTimeCalendar=meetingRoomEndCalendar;
-                startTimeCalendar=meetingRoomStartCalendar;
+            if (meetingRoomEndCalendar.after(currentCalendar)) {
+                endTimeCalendar = meetingRoomEndCalendar;
+                startTimeCalendar = currentCalendar;
+            } else {
+                endTimeCalendar = meetingRoomEndCalendar;
+                startTimeCalendar = meetingRoomStartCalendar;
             }
         }
     }
@@ -486,14 +498,16 @@ public class MeetingAddActivity extends BaseActivity {
     }
 
 
-    private Meeting getMeeting(){
+    private Meeting getMeeting() {
         Meeting meeting = new Meeting();
+        meeting.setOwner(meetingOwner);
         meeting.setTitle(title);
         meeting.setType("meeting");
         meeting.setStartTime(startTimeCalendar.getTimeInMillis());
         meeting.setEndTime(endTimeCalendar.getTimeInMillis());
         meeting.setNote(note);
         meeting.setLocation(location.toJSONObject().toString());
+        LogUtils.LbcDebug("location "+location.toJSONObject().toString());
         JSONArray array = new JSONArray();
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {
@@ -521,13 +535,14 @@ public class MeetingAddActivity extends BaseActivity {
             if (remindEvent != null && remindEvent.getAdvanceTimeSpan() != -1) {
                 meeting.setRemindEvent(remindEvent.toJSONObject().toString());
             }
-            if (isMeetingEditModel){
+            if (isMeetingEditModel) {
                 meeting.setId(this.meeting.getId());
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  meeting;
+        return meeting;
     }
 
     /**
@@ -535,6 +550,7 @@ public class MeetingAddActivity extends BaseActivity {
      */
     private void addOrUpdateMeeting() {
         Meeting meeting = getMeeting();
+        LogUtils.LbcDebug("meeting"+meeting.toString());
         loadingDlg.show();
         if (isMeetingEditModel) {
             apiService.updateMeeting(meeting.toJSONObject().toString());
@@ -570,7 +586,6 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnAddMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
             finish();
         }
@@ -584,7 +599,6 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnUpdateMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
-            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_SETTING_CHANGED, null));
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
             finish();
         }
@@ -592,6 +606,7 @@ public class MeetingAddActivity extends BaseActivity {
         @Override
         public void returnUpdateMeetingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
     }
 }

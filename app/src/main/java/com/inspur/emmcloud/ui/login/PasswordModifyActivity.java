@@ -78,7 +78,7 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
                 if (passwordNew.equals(passwordOrigin)) {
                     ToastUtils.show(PasswordModifyActivity.this, R.string.modify_new_old_same);
                 }
-                if (passwordNew.length() < 8 || passwordNew.length() > 128 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
                     ToastUtils.show(MyApplication.getInstance(), R.string.modify_password_invalid);
                     return;
                 }
@@ -138,7 +138,7 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
             passwordOrigin = passwordOriginEdit.getText().toString();
             passwordNew = passwordNewEdit.getText().toString();
             passwordConfirm = passwordConfirmEdit.getText().toString();
-            boolean isInputValaid = !StringUtils.isBlank(passwordOrigin) && passwordNew.length() > 7 && passwordConfirm.length() > 7;
+            boolean isInputValaid = !StringUtils.isBlank(passwordOrigin) && passwordNew.length() >= 1 && passwordConfirm.length() >= 1;
             saveBtn.setEnabled(isInputValaid);
             saveBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }

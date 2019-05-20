@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.schedule.calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -20,8 +21,8 @@ import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -32,6 +33,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
@@ -358,9 +360,11 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     public void positiveListener(Calendar calendar) {
                         if (calendar.getTimeInMillis() - startCalendar.getTimeInMillis() < (60000)) {
                             showEndDateErrorRemindDialog();
+                            endCalendar = (Calendar) startCalendar.clone();
+                            endCalendar.add(Calendar.MINUTE, intervalMin);
                             return;
                         }
-                        endCalendar = calendar;
+                        endCalendar = (Calendar) calendar.clone();
                         String endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                         endDateText.setText(endDataStr);
                         endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
@@ -450,20 +454,22 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 能否保存提示
      */
     private boolean checkingSaveCalendarEventAvailable() {
-        contentText = inputContentEdit.getText().toString();
+        contentText = inputContentEdit.getText().toString().trim();
         if (StringUtils.isBlank(contentText)) {
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_please_input_title);
             return false;
         }
         if (endCalendar.before(startCalendar)) {
+            LogUtils.LbcDebug(TimeUtils.calendar2FormatString(this,endCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+            LogUtils.LbcDebug(TimeUtils.calendar2FormatString(this,startCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_start_or_end_time_illegal);
             return false;
         }
         if (contentText.length() > 64) {
             ToastUtils.show(getApplicationContext(),
-                    R.string.calendar_tilte_cannot_exceed_64);
+                    R.string.calendar_title_cannot_exceed_num);
             return false;
         }
         return true;
@@ -639,7 +645,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         @Override
         public void returnScheduleDataFromIdFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            if (scheduleEvent == null || TextUtils.isEmpty(scheduleEvent.getId())) finish();
+           finish();
         }
     }
 
