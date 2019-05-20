@@ -5,7 +5,6 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -50,15 +49,15 @@ public class PushManagerUtils {
             }
         } else  if (AppUtils.getIsXiaoMi() && !pushFlag.equals(Constant.JPUSH_FLAG)) {
             String registerId =  PreferencesUtils.getString(context, Constant.MIPUSH_REGISTER_ID, "");
-            if (!StringUtils.isBlank(pushId)){
+            if (!StringUtils.isBlank(registerId)){
                 pushId = registerId + Constant.PUSH_XIAOMI_COM;
             }
         }
         if (StringUtils.isBlank(pushId)){
             pushId = PreferencesUtils.getString(context, Constant.JPUSH_REGISTER_ID, "");
-            if (StringUtils.isBlank(pushId)){
-                setPushFlag(context, Constant.JPUSH_FLAG);
-            }
+//            if (StringUtils.isBlank(pushId)){
+//                setPushFlag(context, Constant.JPUSH_FLAG);
+//            }
         }
         if (StringUtils.isBlank(pushId)) {
             pushId = "UNKNOWN";
@@ -146,7 +145,7 @@ public class PushManagerUtils {
         String APP_KEY = "5381753921689";
         if (isOpen){
             MiPushClient.registerPush(MyApplication.getInstance(), APP_ID, APP_KEY);
-            LogUtils.jasonDebug("setMiPushStatus-------------------------");
+            MiPushClient.setAcceptTime(MyApplication.getInstance(), 0, 0, 23, 59, null);
         }else {
             MiPushClient.pausePush(MyApplication.getInstance(), null);
         }
@@ -160,13 +159,10 @@ public class PushManagerUtils {
     public void startPush() {
         String pushFlag = getPushFlag(MyApplication.getInstance());
         if (AppUtils.getIsHuaWei() && !pushFlag.equals(Constant.JPUSH_FLAG)){
-            LogUtils.jasonDebug("000000000");
             setHuaWeiPushStatus(true);
         }else if(AppUtils.getIsXiaoMi() && !pushFlag.equals(Constant.JPUSH_FLAG)){
-            LogUtils.jasonDebug("1111111");
             setMiPushStatus(true);
         }else {
-            LogUtils.jasonDebug("2222222222222");
             setJpushStatus(true);
         }
     }
