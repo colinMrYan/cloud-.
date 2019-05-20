@@ -59,6 +59,9 @@ public class FileManagerActivity extends BaseActivity {
         titleAdapter = new TitleAdapter(FileManagerActivity.this, new ArrayList<TitlePath>());
         titleRecyclerview.setAdapter(titleAdapter);
         okText = (TextView) findViewById(R.id.tv_ok);
+        if(1==maximum){
+            okText.setVisibility(View.GONE);
+        }
         setOKTextStatus();
         fileRecyclerView = (RecyclerView) findViewById(R.id.rcv_file);
 
@@ -236,7 +239,8 @@ public class FileManagerActivity extends BaseActivity {
             } else if (file1.isFile() && file2.isDirectory()) {
                 return 1;
             } else {
-                return file1.getName().toLowerCase().compareTo(file2.getName().toString());
+                return file1.getName().toLowerCase().compareTo(file2.getName().toLowerCase().toString());
+
             }
         }
     }
@@ -307,7 +311,7 @@ public class FileManagerActivity extends BaseActivity {
 //        AndPermission.onRequestPermissionsResult(requestCode, permissions, grantResults, listener);
 //    }
 
-//    private PermissionListener listener = new PermissionListener() {
+//    private EmmPermissionListener listener = new EmmPermissionListener() {
 //        @Override
 //        public void onSucceed(int requestCode, List<String> grantedPermissions) {
 //            // 权限申请成功回调。

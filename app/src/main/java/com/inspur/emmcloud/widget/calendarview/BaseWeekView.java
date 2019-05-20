@@ -32,10 +32,10 @@ public abstract class BaseWeekView extends BaseView {
     /**
      * 初始化周视图控件
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      */
-    final void setup(Calendar calendar) {
-        mItems = CalendarUtil.initCalendarForWeekView(calendar, mDelegate, mDelegate.getWeekStart());
+    final void setup(EmmCalendar emmCalendar) {
+        mItems = CalendarUtil.initCalendarForWeekView(emmCalendar, mDelegate, mDelegate.getWeekStart());
         addSchemesFromMap();
         invalidate();
     }
@@ -44,81 +44,81 @@ public abstract class BaseWeekView extends BaseView {
     /**
      * 记录已经选择的日期
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      */
-    final void setSelectedCalendar(Calendar calendar) {
+    final void setSelectedCalendar(EmmCalendar emmCalendar) {
         if (mDelegate.getSelectMode() == CalendarViewDelegate.SELECT_MODE_SINGLE &&
-                !calendar.equals(mDelegate.mSelectedCalendar)) {
+                !emmCalendar.equals(mDelegate.mSelectedEmmCalendar)) {
             return;
         }
-        mCurrentItem = mItems.indexOf(calendar);
+        mCurrentItem = mItems.indexOf(emmCalendar);
     }
 
 
     /**
      * 周视图切换点击默认位置
      *
-     * @param calendar calendar
-     * @param isNotice isNotice
+     * @param emmCalendar calendar
+     * @param isNotice    isNotice
      */
-    final void performClickCalendar(Calendar calendar, boolean isNotice) {
+    final void performClickCalendar(EmmCalendar emmCalendar, boolean isNotice) {
         if (mParentLayout == null || mDelegate.mInnerListener == null || mItems == null || mItems.size() == 0) {
             return;
         }
 
-        int week = CalendarUtil.getWeekViewIndexFromCalendar(calendar, mDelegate.getWeekStart());
+        int week = CalendarUtil.getWeekViewIndexFromCalendar(emmCalendar, mDelegate.getWeekStart());
         if (mItems.contains(mDelegate.getCurrentDay())) {
             week = CalendarUtil.getWeekViewIndexFromCalendar(mDelegate.getCurrentDay(), mDelegate.getWeekStart());
         }
 
         int curIndex = week;
 
-        Calendar currentCalendar = mItems.get(week);
+        EmmCalendar currentEmmCalendar = mItems.get(week);
         if (mDelegate.getSelectMode() != CalendarViewDelegate.SELECT_MODE_DEFAULT) {
-            if (mItems.contains(mDelegate.mSelectedCalendar)) {
-                currentCalendar = mDelegate.mSelectedCalendar;
+            if (mItems.contains(mDelegate.mSelectedEmmCalendar)) {
+                currentEmmCalendar = mDelegate.mSelectedEmmCalendar;
             } else {
                 mCurrentItem = -1;
             }
         }
 
-        if (!isInRange(currentCalendar)) {
-            curIndex = getEdgeIndex(isMinRangeEdge(currentCalendar));
-            currentCalendar = mItems.get(curIndex);
+        if (!isInRange(currentEmmCalendar)) {
+            curIndex = getEdgeIndex(isMinRangeEdge(currentEmmCalendar));
+            currentEmmCalendar = mItems.get(curIndex);
         }
 
 
-        currentCalendar.setCurrentDay(currentCalendar.equals(mDelegate.getCurrentDay()));
-        mDelegate.mInnerListener.onWeekDateSelected(currentCalendar, false);
-        int i = CalendarUtil.getWeekFromDayInMonth(currentCalendar, mDelegate.getWeekStart());
+        currentEmmCalendar.setCurrentDay(currentEmmCalendar.equals(mDelegate.getCurrentDay()));
+        mDelegate.mInnerListener.onWeekDateSelected(currentEmmCalendar, false);
+        int i = CalendarUtil.getWeekFromDayInMonth(currentEmmCalendar, mDelegate.getWeekStart());
         mParentLayout.updateSelectWeek(i);
 
 
         if (mDelegate.mCalendarSelectListener != null
                 && isNotice
                 && mDelegate.getSelectMode() == CalendarViewDelegate.SELECT_MODE_DEFAULT) {
-            mDelegate.mCalendarSelectListener.onCalendarSelect(currentCalendar, false);
+            mDelegate.mCalendarSelectListener.onCalendarSelect(currentEmmCalendar, false);
         }
 
         mParentLayout.updateContentViewTranslateY();
         if (mDelegate.getSelectMode() == CalendarViewDelegate.SELECT_MODE_DEFAULT) {
             mCurrentItem = curIndex;
         }
-        mDelegate.mIndexCalendar = currentCalendar;
+        mDelegate.mIndexEmmCalendar = currentEmmCalendar;
         invalidate();
     }
 
     /**
      * 是否是最小访问边界了
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 是否是最小访问边界了
      */
-    final boolean isMinRangeEdge(Calendar calendar) {
+    final boolean isMinRangeEdge(EmmCalendar emmCalendar) {
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.set(mDelegate.getMinYear(), mDelegate.getMinYearMonth() - 1, mDelegate.getMinYearDay());
         long minTime = c.getTimeInMillis();
-        c.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay());
+        c.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, emmCalendar.getDay());
         long curTime = c.getTimeInMillis();
         return curTime < minTime;
     }
@@ -131,7 +131,7 @@ public abstract class BaseWeekView extends BaseView {
      */
     final int getEdgeIndex(boolean isMinEdge) {
         for (int i = 0; i < mItems.size(); i++) {
-            Calendar item = mItems.get(i);
+            EmmCalendar item = mItems.get(i);
             boolean isInRange = isInRange(item);
             if (isMinEdge && isInRange) {
                 return i;
@@ -148,7 +148,7 @@ public abstract class BaseWeekView extends BaseView {
      *
      * @return 获取点击的日历
      */
-    protected Calendar getIndex() {
+    protected EmmCalendar getIndex() {
 
         int indexX = (int) mX / mItemWidth;
         if (indexX >= 7) {
@@ -175,20 +175,20 @@ public abstract class BaseWeekView extends BaseView {
     final void updateWeekStart() {
 
         int position = (int) getTag();
-        Calendar calendar = CalendarUtil.getFirstCalendarStartWithMinCalendar(mDelegate.getMinYear(),
+        EmmCalendar emmCalendar = CalendarUtil.getFirstCalendarStartWithMinCalendar(mDelegate.getMinYear(),
                 mDelegate.getMinYearMonth(),
                 mDelegate.getMinYearDay(),
                 position + 1,
                 mDelegate.getWeekStart());
-        setSelectedCalendar(mDelegate.mSelectedCalendar);
-        setup(calendar);
+        setSelectedCalendar(mDelegate.mSelectedEmmCalendar);
+        setup(emmCalendar);
     }
 
     /**
      * 更新当选模式
      */
     final void updateSingleSelect() {
-        if (!mItems.contains(mDelegate.mSelectedCalendar)) {
+        if (!mItems.contains(mDelegate.mSelectedEmmCalendar)) {
             mCurrentItem = -1;
             invalidate();
         }
@@ -199,7 +199,7 @@ public abstract class BaseWeekView extends BaseView {
         if (mItems == null)
             return;
         if (mItems.contains(mDelegate.getCurrentDay())) {
-            for (Calendar a : mItems) {//添加操作
+            for (EmmCalendar a : mItems) {//添加操作
                 a.setCurrentDay(false);
             }
             int index = mItems.indexOf(mDelegate.getCurrentDay());

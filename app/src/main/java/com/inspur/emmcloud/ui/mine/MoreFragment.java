@@ -28,7 +28,6 @@ import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MineLayoutItem;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -68,6 +67,7 @@ public class MoreFragment extends BaseFragment {
     private List<MineLayoutItemGroup> mineLayoutItemGroupList = new ArrayList<>();
     private BaseExpandableListAdapter adapter;
     private MyClickListener myClickListener = new MyClickListener();
+    private GetMyInfoResult getMyInfoResult;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +81,8 @@ public class MoreFragment extends BaseFragment {
     }
 
     private void initData() {
+        String myInfo = PreferencesUtils.getString(MyApplication.getInstance(), "myInfo", "");
+        getMyInfoResult = new GetMyInfoResult(myInfo);
         MainTabProperty mainTabProperty =
                 AppTabUtils.getMainTabProperty(MyApplication.getInstance(), getClass().getSimpleName());
         if (mainTabProperty != null) {
@@ -251,8 +253,7 @@ public class MoreFragment extends BaseFragment {
      * @param functionId
      */
     private void recordUserClick(String functionId) {
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "mine");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+        PVCollectModelCacheUtils.saveCollectModel(functionId, "mine");
     }
 
     private void getUserCardMenu() {
@@ -309,7 +310,7 @@ public class MoreFragment extends BaseFragment {
             View view = new View(getActivity());
             int height = groupPosition > 1 ? DensityUtil.dip2px(MyApplication.getInstance(), 10) : 0;
             view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, height));
-            view.setBackgroundColor(ContextCompat.getColor(MyApplication.getInstance(),R.color.content_bg));
+            view.setBackgroundColor(ContextCompat.getColor(MyApplication.getInstance(), R.color.content_bg));
             return view;
         }
 
@@ -334,9 +335,6 @@ public class MoreFragment extends BaseFragment {
                 LinearLayout userCardMenuLayout = convertView.findViewById(R.id.ll_user_card_menu);
                 setUserCardMenuLayout(userCardMenuLayout, mineLayoutItemList);
                 convertView.findViewById(R.id.ll_my_info).setOnClickListener(myClickListener);
-
-                String myInfo = PreferencesUtils.getString(MyApplication.getInstance(), "myInfo", "");
-                GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
                 Drawable drawable = null;
                 if (getMyInfoResult.getEnterpriseList().size() > 1) {
                     enterpriseText.setOnClickListener(myClickListener);

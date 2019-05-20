@@ -644,7 +644,7 @@ public class FileService extends ImpPlugin {
             }
             jsCallback(funct, obj.toString().trim());
             /*
-			 * try { throw new NoModificationAllowedException(
+             * try { throw new NoModificationAllowedException(
 			 * "You can't delete the root directory"); } catch
 			 * (NoModificationAllowedException e) { e.printStackTrace(); }
 			 */

@@ -7,19 +7,19 @@
     app:bl_arrowDirection="right"
     app:bl_arrowHeight="10dp"
     app:bl_arrowPosition="16dp"
-    app:bl_cornersRadius="8dp"
     app:bl_arrowWidth="4.5dp"
+    app:bl_cornersRadius="8dp"
     app:bl_strokeColor="#AAAAAA"
     app:bl_strokeWidth="0.5px">
-    <TextView
+
+    <com.inspur.emmcloud.widget.TextViewFixTouchConsume
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:lineSpacingMultiplier="1.2"
         android:padding="10dp"
-        android:textIsSelectable="false"
-        android:textSize="16sp"
-       />
+        android:textSize="16sp" />
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>
 
 

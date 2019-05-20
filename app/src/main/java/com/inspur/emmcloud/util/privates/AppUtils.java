@@ -43,15 +43,14 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
-import com.yanzhenjie.permission.Permission;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -159,8 +158,8 @@ public class AppUtils {
             final ContentResolver cr = context.getContentResolver();
             String AUTHORITY = "com.android.launcher2.settings";
             final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/favorites?notify=true");
-            Cursor c = cr.query(CONTENT_URI, new String[] { "title", "iconResource" }, "title=?",
-                    new String[] { context.getString(R.string.app_name) }, null);
+            Cursor c = cr.query(CONTENT_URI, new String[]{"title", "iconResource"}, "title=?",
+                    new String[]{context.getString(R.string.app_name)}, null);
 
             if (c != null && c.getCount() > 0) {
                 isInstallShortcut = true;
@@ -630,7 +629,7 @@ public class AppUtils {
     public static void openCamera(final Activity activity, final String fileName, final int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permission.CAMERA,
+            PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA,
                     new PermissionRequestCallback() {
                         @Override
                         public void onPermissionRequestSuccess(List<String> permissions) {
@@ -847,90 +846,12 @@ public class AppUtils {
     }
 
     /**
-     * 通过厂商确定pushId
-     *
-     * @return
-     */
-    public static String getPushId(Context context) {
-        String pushId = "";
-        if (AppUtils.getIsHuaWei() && canConnectHuawei(context)) {
-            // 需要对华为单独推送的时候解开这里
-            String hwtoken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
-            if (!StringUtils.isBlank(hwtoken)) {
-                pushId = hwtoken + Constant.PUSH_HUAWEI_COM;
-            } else {
-                String jpushPushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
-                if (!StringUtils.isBlank(jpushPushId)) {
-                    AppUtils.setPushFlag(context, Constant.JPUSH_FLAG);
-                    pushId = jpushPushId;
-                }
-            }
-        } else {
-            pushId = PreferencesUtils.getString(context, Constant.JPUSH_REG_ID, "");
-        }
-        if (StringUtils.isBlank(pushId)) {
-            pushId = "UNKNOWN";
-        }
-        return pushId;
-    }
-
-    /**
-     * 获取pushProvider
-     *
-     * @param context
-     * @return
-     */
-    public static String getPushProvider(Context context) {
-        // 华为 com.hicloud.push
-        // 极光 cn.jpush
-        // 小米 com.xiaomi.xmpush
-        // 魅族 com.meizu.api - push
-        String pushProvider = "";
-        String pushFlag = AppUtils.getPushFlag(context);
-        switch (pushFlag) {
-        case Constant.HUAWEI_FLAG:
-            pushProvider = "com.hicloud.push";
-            break;
-        case Constant.XIAOMI_FLAG:
-            pushProvider = "com.xiaomi.xmpush";
-            break;
-        case Constant.MEIZU_FLAG:
-            pushProvider = "com.meizu.api-push";
-            break;
-        default:
-            pushProvider = "cn.jpush";
-            break;
-        }
-        return pushProvider;
-    }
-
-    /**
-     * 获取PUSH_FLAG
-     *
-     * @param context
-     * @return
-     */
-    public static String getPushFlag(Context context) {
-        return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
-    }
-
-    /**
-     * 设置pushFlag
-     *
-     * @param context
-     * @param pushFlag
-     */
-    public static void setPushFlag(Context context, String pushFlag) {
-        PreferencesUtils.putString(context, Constant.PUSH_FLAG, pushFlag);
-    }
-
-    /**
      * 判断是否可以连接华为推了送
      *
      * @return
      */
     private static boolean canConnectHuawei(Context context) {
-        String pushFlag = getPushFlag(context);
+        String pushFlag = PushManagerUtils.getPushFlag(context);
         return StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG);
     }
 

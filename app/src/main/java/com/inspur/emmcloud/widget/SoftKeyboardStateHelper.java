@@ -17,6 +17,7 @@ public class SoftKeyboardStateHelper implements ViewTreeObserver.OnGlobalLayoutL
     private final View activityRootView;
     private int lastSoftKeyboardHeightInPx;
     private boolean isSoftKeyboardOpened;
+
     public SoftKeyboardStateHelper(View activityRootView) {
         this(activityRootView, false);
     }

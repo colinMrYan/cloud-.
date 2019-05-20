@@ -149,10 +149,10 @@ public class ResourceUtils {
         return tv.resourceId;
     }
 
-    public static  boolean getBoolenOfAttr(Activity activity, int attr){
-        int[] attrs = new int[] {attr};
+    public static boolean getBoolenOfAttr(Activity activity, int attr) {
+        int[] attrs = new int[]{attr};
         TypedArray typedArray = activity.obtainStyledAttributes(attrs);
-        Boolean value = typedArray.getBoolean(0,true);
+        Boolean value = typedArray.getBoolean(0, true);
         typedArray.recycle();
         return value;
     }

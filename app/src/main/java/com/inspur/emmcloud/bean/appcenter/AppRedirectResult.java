@@ -11,6 +11,7 @@ public class AppRedirectResult {
 
     private String code;
     private String redirect_uri;
+
     /**
      * code : OC-1-7cRqHyFGz5WOUceqU7gR5REsvwiY9mseO6h
      * redirect_uri : http://thinklancer.com/index.php/Phone/Oauth/auth?code=OC-1-7cRqHyFGz5WOUceqU7gR5REsvwiY9mseO6h

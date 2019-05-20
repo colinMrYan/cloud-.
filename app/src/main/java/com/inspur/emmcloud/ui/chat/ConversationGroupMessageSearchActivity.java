@@ -31,7 +31,7 @@ import java.util.List;
  * 搜索群消息页面
  */
 @ContentView(R.layout.activity_conversation_group_message_search)
-public class ConversationGroupMessageSearchActivity extends BaseActivity{
+public class ConversationGroupMessageSearchActivity extends BaseActivity {
     @ViewInject(R.id.ev_message_search)
     private EditText messageSearchEditText;
     @ViewInject(R.id.recycler_view_group_message_search)
@@ -48,7 +48,7 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity{
 
     private void initViews() {
         this.cid = getIntent().getStringExtra(ConversationActivity.EXTRA_CID);
-        final List<Message> messageList = MessageCacheUtil.getGroupMessageWithType(this,cid);
+        final List<Message> messageList = MessageCacheUtil.getGroupMessageWithType(this, cid);
         final List<String> messageContentList = getMessageContentList(messageList);
         groupMessageSearchAdapter = new GroupMessageSearchAdapter(ConversationGroupMessageSearchActivity.this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -59,10 +59,10 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity{
             @Override
             public void onItemClick(UIMessage uiMessage) {
                 Bundle bundle = new Bundle();
-                bundle.putString(ConversationActivity.EXTRA_CID,cid);
-                bundle.putSerializable(ConversationActivity.EXTRA_UIMESSAGE,uiMessage);
+                bundle.putString(ConversationActivity.EXTRA_CID, cid);
+                bundle.putSerializable(ConversationActivity.EXTRA_UIMESSAGE, uiMessage);
                 dismissSoftKeyboard();
-                IntentUtils.startActivity(ConversationGroupMessageSearchActivity.this,ConversationActivity.class,bundle,true);
+                IntentUtils.startActivity(ConversationGroupMessageSearchActivity.this, ConversationActivity.class, bundle, true);
             }
         });
         messageSearchEditText.addTextChangedListener(new TextWatcher() {
@@ -79,11 +79,11 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity{
                 searchResultList.clear();
                 String keyWords = s.toString();
                 for (int i = 0; i < messageContentList.size(); i++) {
-                    if(!StringUtils.isBlank(keyWords) && messageContentList.get(i).contains(keyWords)){
+                    if (!StringUtils.isBlank(keyWords) && messageContentList.get(i).contains(keyWords)) {
                         searchResultList.add(messageList.get(i));
                     }
                 }
-                groupMessageSearchAdapter.setAndRefreshAdapter(searchResultList,keyWords);
+                groupMessageSearchAdapter.setAndRefreshAdapter(searchResultList, keyWords);
             }
         });
     }
@@ -95,14 +95,15 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity{
 
     /**
      * 中间转化步骤便于搜索，防止搜索数字搜出@的人
+     *
      * @param messageList
      * @return
      */
     private List<String> getMessageContentList(List<Message> messageList) {
         List<String> messageContentList = new ArrayList<>();
-        for(Message message:messageList){
+        for (Message message : messageList) {
             String type = message.getType();
-            switch (type){
+            switch (type) {
                 case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                     messageContentList.add(ChatMsgContentUtils.mentionsAndUrl2Span(ConversationGroupMessageSearchActivity.this,
                             message.getMsgContentComment().getText(), message.getMsgContentComment().getMentionsMap()).toString());
@@ -120,8 +121,8 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity{
         return messageContentList;
     }
 
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.tv_group_search_messages:
                 dismissSoftKeyboard();
                 finish();

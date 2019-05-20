@@ -23,32 +23,30 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
-import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.work.FestivalDate;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.Meeting;
-import com.inspur.emmcloud.bean.work.MyCalendar;
-import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.work.WorkSetting;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
+import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
-import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
-import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LunarUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
-import com.inspur.emmcloud.util.privates.CalendarUtil;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -93,7 +91,7 @@ public class WorkFragment extends BaseFragment {
     private BaseAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetingList = new ArrayList<>();
-    private ArrayList<TaskResult> taskList = new ArrayList<>();
+    private ArrayList<Task> taskList = new ArrayList<>();
     private List<CalendarEvent> calEventList = new ArrayList<>();
     private BroadcastReceiver calEventReceiver;
     private BroadcastReceiver meetingAndTaskReceiver;
@@ -285,7 +283,7 @@ public class WorkFragment extends BaseFragment {
      * @param taskResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTaskData(TaskResult taskResult) {
+    public void updateTaskData(Task taskResult) {
         if (taskResult != null) {
             int index = taskList.indexOf(taskResult);
             if (index != -1) {
@@ -338,7 +336,7 @@ public class WorkFragment extends BaseFragment {
                 || language.equals("zh-TW")
                 || language.equals("followSys")) {
             ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
-                    .setText(CalendarUtil.getChineseToday()
+                    .setText(LunarUtil.getChineseToday()
                             + TimeUtils.getWeekDay(getContext(), calendar));
         } else if (language.getIso().equals("en-US")) {
             ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
@@ -468,8 +466,7 @@ public class WorkFragment extends BaseFragment {
      * @param functionId
      */
     private void recordUserClickWorkFunction(String functionId) {
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+        PVCollectModelCacheUtils.saveCollectModel(functionId, "work");
     }
 
     @Override
@@ -594,7 +591,7 @@ public class WorkFragment extends BaseFragment {
                 public void onClick(View v) {
                     if (id.equals(TYPE_CALENDAR)) {
                         recordUserClickWorkFunction("calendar");
-                        IntentUtils.startActivity(getActivity(), CalEventAddActivity.class);
+                        IntentUtils.startActivity(getActivity(), CalendarAddActivity.class);
                     } else if (id.equals(TYPE_MEETING)) {
                         recordUserClickWorkFunction("meeting");
                         IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
@@ -676,7 +673,7 @@ public class WorkFragment extends BaseFragment {
                     dateText.setText(time);
                     break;
                 case TYPE_TASK:
-                    TaskResult task = taskList.get(position);
+                    Task task = taskList.get(position);
                     content = task.getTitle();
                     ViewGroup.LayoutParams param = countDownText.getLayoutParams();
                     param.height = DensityUtil.dip2px(getActivity(), 8);
@@ -693,10 +690,10 @@ public class WorkFragment extends BaseFragment {
                 case TYPE_CALENDAR:
                     CalendarEvent calendarEvent = calEventList.get(position);
                     content = calendarEvent.getTitle();
-                    countDown = TimeUtils.getCountdown(getActivity(), calendarEvent.getLocalStartDate());
+                    countDown = TimeUtils.getCountdown(getActivity(), calendarEvent.getStartDate());
                     WorkColorUtils.showDayOfWeek(countDownText,
                             TimeUtils
-                                    .getCountdownNum(calendarEvent.getLocalStartDate()));
+                                    .getCountdownNum(calendarEvent.getStartDate()));
                     dateText.setText(TimeUtils.getCalEventTimeSelection(getActivity(), calendarEvent));
                     break;
                 default:
@@ -721,12 +718,12 @@ public class WorkFragment extends BaseFragment {
             if (type.equals(TYPE_CALENDAR)) {
                 bundle.putSerializable("calEvent",
                         calEventList.get(position));
-                IntentUtils.startActivity(getActivity(), CalEventAddActivity.class, bundle);
+                IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
                 recordUserClickWorkFunction("calendar");
             } else if (type.equals(TYPE_TASK)) {
                 bundle.putSerializable("task",
                         taskList.get(position));
-                IntentUtils.startActivity(getActivity(), MessionDetailActivity.class, bundle);
+                IntentUtils.startActivity(getActivity(), TaskAddActivity.class, bundle);
                 recordUserClickWorkFunction("task");
             } else if (type.equals(TYPE_MEETING)) {
                 Meeting meeting = meetingList.get(position);
@@ -802,7 +799,7 @@ public class WorkFragment extends BaseFragment {
                 GetCalendarEventsResult getCalendarEventsResult,
                 boolean isRefresh) {
             calEventList = getCalendarEventsResult.getCalEventList();
-            CalEventNotificationUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
+//            EventAlertUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
             if (isRefresh && (calEventList.size() < 3)) { // 获取今明两天的日历不足3条
                 getCalEventsFor3();
             } else if (calendarChildAdapter != null) {

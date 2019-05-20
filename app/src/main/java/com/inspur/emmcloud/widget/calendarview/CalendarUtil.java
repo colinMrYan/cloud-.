@@ -39,11 +39,11 @@ final class CalendarUtil {
     /**
      * 判断一个日期是否是周末，即周六日
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 判断一个日期是否是周末，即周六日
      */
-    static boolean isWeekend(Calendar calendar) {
-        int week = getWeekFormCalendar(calendar);
+    static boolean isWeekend(EmmCalendar emmCalendar) {
+        int week = getWeekFormCalendar(emmCalendar);
         return week == 0 || week == 6;
     }
 
@@ -113,56 +113,56 @@ final class CalendarUtil {
      * 获取某天在该月的第几周,换言之就是获取这一天在该月视图的第几行,第几周，根据周起始动态获取
      * Test pass，单元测试通过
      *
-     * @param calendar  calendar
-     * @param weekStart 其实星期是哪一天？
+     * @param emmCalendar calendar
+     * @param weekStart   其实星期是哪一天？
      * @return 获取某天在该月的第几周 the week line in MonthView
      */
-    static int getWeekFromDayInMonth(Calendar calendar, int weekStart) {
+    static int getWeekFromDayInMonth(EmmCalendar emmCalendar, int weekStart) {
         java.util.Calendar date = java.util.Calendar.getInstance();
-        date.set(calendar.getYear(), calendar.getMonth() - 1, 1);
+        date.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, 1);
         //该月第一天为星期几,星期天 == 0
-        int diff = getMonthViewStartDiff(calendar, weekStart);
-        return (calendar.getDay() + diff - 1) / 7 + 1;
+        int diff = getMonthViewStartDiff(emmCalendar, weekStart);
+        return (emmCalendar.getDay() + diff - 1) / 7 + 1;
     }
 
     /**
      * 获取上一个日子
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 获取上一个日子
      */
-    static Calendar getPreCalendar(Calendar calendar) {
+    static EmmCalendar getPreCalendar(EmmCalendar emmCalendar) {
         java.util.Calendar date = java.util.Calendar.getInstance();
 
-        date.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay());//
+        date.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, emmCalendar.getDay());//
 
         long timeMills = date.getTimeInMillis();//获得起始时间戳
 
         date.setTimeInMillis(timeMills - ONE_DAY);
 
-        Calendar preCalendar = new Calendar();
-        preCalendar.setYear(date.get(java.util.Calendar.YEAR));
-        preCalendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
-        preCalendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
+        EmmCalendar preEmmCalendar = new EmmCalendar();
+        preEmmCalendar.setYear(date.get(java.util.Calendar.YEAR));
+        preEmmCalendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
+        preEmmCalendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
 
-        return preCalendar;
+        return preEmmCalendar;
     }
 
-    static Calendar getNextCalendar(Calendar calendar) {
+    static EmmCalendar getNextCalendar(EmmCalendar emmCalendar) {
         java.util.Calendar date = java.util.Calendar.getInstance();
 
-        date.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay());//
+        date.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, emmCalendar.getDay());//
 
         long timeMills = date.getTimeInMillis();//获得起始时间戳
 
         date.setTimeInMillis(timeMills + ONE_DAY);
 
-        Calendar nextCalendar = new Calendar();
-        nextCalendar.setYear(date.get(java.util.Calendar.YEAR));
-        nextCalendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
-        nextCalendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
+        EmmCalendar nextEmmCalendar = new EmmCalendar();
+        nextEmmCalendar.setYear(date.get(java.util.Calendar.YEAR));
+        nextEmmCalendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
+        nextEmmCalendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
 
-        return nextCalendar;
+        return nextEmmCalendar;
     }
 
     /**
@@ -170,13 +170,13 @@ final class CalendarUtil {
      * 获取日期所在月视图对应的起始偏移量
      * Test pass
      *
-     * @param calendar  calendar
-     * @param weekStart weekStart 星期的起始
+     * @param emmCalendar calendar
+     * @param weekStart   weekStart 星期的起始
      * @return 获取日期所在月视图对应的起始偏移量 the start diff with MonthView
      */
-    static int getMonthViewStartDiff(Calendar calendar, int weekStart) {
+    static int getMonthViewStartDiff(EmmCalendar emmCalendar, int weekStart) {
         java.util.Calendar date = java.util.Calendar.getInstance();
-        date.set(calendar.getYear(), calendar.getMonth() - 1, 1);
+        date.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, 1);
         int week = date.get(java.util.Calendar.DAY_OF_WEEK);
         if (weekStart == CalendarViewDelegate.WEEK_START_WITH_SUN) {
             return week - 1;
@@ -193,14 +193,14 @@ final class CalendarUtil {
      * 获取日期所在月份的结束偏移量，用于计算两个年份之间总共有多少周，不用于MonthView
      * Test pass
      *
-     * @param calendar  calendar
-     * @param weekStart weekStart 星期的起始
+     * @param emmCalendar calendar
+     * @param weekStart   weekStart 星期的起始
      * @return 获取日期所在月份的结束偏移量 the end diff in Month not MonthView
      */
     @SuppressWarnings("unused")
-    static int getMonthEndDiff(Calendar calendar, int weekStart) {
+    static int getMonthEndDiff(EmmCalendar emmCalendar, int weekStart) {
         java.util.Calendar date = java.util.Calendar.getInstance();
-        date.set(calendar.getYear(), calendar.getMonth() - 1, getMonthDaysCount(calendar.getYear(), calendar.getMonth()));
+        date.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, getMonthDaysCount(emmCalendar.getYear(), emmCalendar.getMonth()));
         int week = date.get(java.util.Calendar.DAY_OF_WEEK);
         if (weekStart == CalendarViewDelegate.WEEK_START_WITH_SUN) {
             return 7 - week;
@@ -277,12 +277,12 @@ final class CalendarUtil {
      * 获取某个日期是星期几
      * 测试通过
      *
-     * @param calendar 某个日期
+     * @param emmCalendar 某个日期
      * @return 返回某个日期是星期几
      */
-    static int getWeekFormCalendar(Calendar calendar) {
+    static int getWeekFormCalendar(EmmCalendar emmCalendar) {
         java.util.Calendar date = java.util.Calendar.getInstance();
-        date.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay());
+        date.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, emmCalendar.getDay());
         return date.get(java.util.Calendar.DAY_OF_WEEK) - 1;
     }
 
@@ -291,19 +291,19 @@ final class CalendarUtil {
      * 获取周视图的切换默认选项位置 WeekView index
      * 测试通过 test pass
      *
-     * @param calendar  calendar
-     * @param weekStart weekStart
+     * @param emmCalendar calendar
+     * @param weekStart   weekStart
      * @return 获取周视图的切换默认选项位置
      */
-    static int getWeekViewIndexFromCalendar(Calendar calendar, int weekStart) {
-        return getWeekViewStartDiff(calendar.getYear(), calendar.getMonth(), calendar.getDay(), weekStart);
+    static int getWeekViewIndexFromCalendar(EmmCalendar emmCalendar, int weekStart) {
+        return getWeekViewStartDiff(emmCalendar.getYear(), emmCalendar.getMonth(), emmCalendar.getDay(), weekStart);
     }
 
     /**
      * 是否在日期范围內
      * 测试通过 test pass
      *
-     * @param calendar     calendar
+     * @param emmCalendar  calendar
      * @param minYear      minYear
      * @param minYearDay   最小年份天
      * @param minYearMonth minYearMonth
@@ -312,7 +312,7 @@ final class CalendarUtil {
      * @param maxYearDay   最大年份天
      * @return 是否在日期范围內
      */
-    static boolean isCalendarInRange(Calendar calendar,
+    static boolean isCalendarInRange(EmmCalendar emmCalendar,
                                      int minYear, int minYearMonth, int minYearDay,
                                      int maxYear, int maxYearMonth, int maxYearDay) {
         java.util.Calendar c = java.util.Calendar.getInstance();
@@ -320,7 +320,7 @@ final class CalendarUtil {
         long minTime = c.getTimeInMillis();
         c.set(maxYear, maxYearMonth - 1, maxYearDay);
         long maxTime = c.getTimeInMillis();
-        c.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay());
+        c.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, emmCalendar.getDay());
         long curTime = c.getTimeInMillis();
         return curTime >= minTime && curTime <= maxTime;
     }
@@ -366,14 +366,14 @@ final class CalendarUtil {
      * 用来设置 WeekView currentItem
      * 测试通过 test pass
      *
-     * @param calendar     calendar
+     * @param emmCalendar  calendar
      * @param minYear      minYear 最小年份
      * @param minYearMonth maxYear 最小年份月份
      * @param minYearDay   最小年份天
      * @param weekStart    周起始
      * @return 返回两个年份中第几周 the WeekView currentItem
      */
-    static int getWeekFromCalendarStartWithMinCalendar(Calendar calendar,
+    static int getWeekFromCalendarStartWithMinCalendar(EmmCalendar emmCalendar,
                                                        int minYear, int minYearMonth, int minYearDay,
                                                        int weekStart) {
         java.util.Calendar date = java.util.Calendar.getInstance();
@@ -382,14 +382,14 @@ final class CalendarUtil {
 
         int preDiff = getWeekViewStartDiff(minYear, minYearMonth, minYearDay, weekStart);//范围起始的周偏移量
 
-        int weekStartDiff = getWeekViewStartDiff(calendar.getYear(),
-                calendar.getMonth(),
-                calendar.getDay(),
+        int weekStartDiff = getWeekViewStartDiff(emmCalendar.getYear(),
+                emmCalendar.getMonth(),
+                emmCalendar.getDay(),
                 weekStart);//获取点击的日子在周视图的起始，为了兼容全球时区，最大日差为一天，如果周起始偏差weekStartDiff=0，则日期加1
 
-        date.set(calendar.getYear(),
-                calendar.getMonth() - 1,
-                weekStartDiff == 0 ? calendar.getDay() + 1 : calendar.getDay());
+        date.set(emmCalendar.getYear(),
+                emmCalendar.getMonth() - 1,
+                weekStartDiff == 0 ? emmCalendar.getDay() + 1 : emmCalendar.getDay());
 
         long curTimeMills = date.getTimeInMillis();//给定时间戳
 
@@ -410,7 +410,7 @@ final class CalendarUtil {
      * @param week         从最小年份minYear月minYearMonth 日1 开始的第几周 week > 0
      * @return 该星期的第一天日期
      */
-    static Calendar getFirstCalendarStartWithMinCalendar(int minYear, int minYearMonth, int minYearDay, int week, int weekStart) {
+    static EmmCalendar getFirstCalendarStartWithMinCalendar(int minYear, int minYearMonth, int minYearDay, int week, int weekStart) {
         java.util.Calendar date = java.util.Calendar.getInstance();
 
         date.set(minYear, minYearMonth - 1, minYearDay);//
@@ -431,24 +431,24 @@ final class CalendarUtil {
         timeCountMills -= startDiff * ONE_DAY;
         date.setTimeInMillis(timeCountMills);
 
-        Calendar calendar = new Calendar();
-        calendar.setYear(date.get(java.util.Calendar.YEAR));
-        calendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
-        calendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
+        EmmCalendar emmCalendar = new EmmCalendar();
+        emmCalendar.setYear(date.get(java.util.Calendar.YEAR));
+        emmCalendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
+        emmCalendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
 
-        return calendar;
+        return emmCalendar;
     }
 
 
     /**
      * 是否在日期范围内
      *
-     * @param calendar calendar
-     * @param delegate delegate
+     * @param emmCalendar calendar
+     * @param delegate    delegate
      * @return 是否在日期范围内
      */
-    static boolean isCalendarInRange(Calendar calendar, CalendarViewDelegate delegate) {
-        return isCalendarInRange(calendar,
+    static boolean isCalendarInRange(EmmCalendar emmCalendar, CalendarViewDelegate delegate) {
+        return isCalendarInRange(emmCalendar,
                 delegate.getMinYear(), delegate.getMinYearMonth(), delegate.getMinYearDay(),
                 delegate.getMaxYear(), delegate.getMaxYearMonth(), delegate.getMaxYearDay());
     }
@@ -474,24 +474,24 @@ final class CalendarUtil {
      * 运算 calendar1 - calendar2
      * test Pass
      *
-     * @param calendar1 calendar1
-     * @param calendar2 calendar2
+     * @param emmCalendar1 calendar1
+     * @param emmCalendar2 calendar2
      * @return calendar1 - calendar2
      */
-    static int differ(Calendar calendar1, Calendar calendar2) {
-        if (calendar1 == null) {
+    static int differ(EmmCalendar emmCalendar1, EmmCalendar emmCalendar2) {
+        if (emmCalendar1 == null) {
             return Integer.MIN_VALUE;
         }
-        if (calendar2 == null) {
+        if (emmCalendar2 == null) {
             return Integer.MAX_VALUE;
         }
         java.util.Calendar date = java.util.Calendar.getInstance();
 
-        date.set(calendar1.getYear(), calendar1.getMonth() - 1, calendar1.getDay());//
+        date.set(emmCalendar1.getYear(), emmCalendar1.getMonth() - 1, emmCalendar1.getDay());//
 
         long startTimeMills = date.getTimeInMillis();//获得起始时间戳
 
-        date.set(calendar2.getYear(), calendar2.getMonth() - 1, calendar2.getDay());//
+        date.set(emmCalendar2.getYear(), emmCalendar2.getMonth() - 1, emmCalendar2.getDay());//
 
         long endTimeMills = date.getTimeInMillis();//获得结束时间戳
 
@@ -511,12 +511,12 @@ final class CalendarUtil {
      */
     static int compareTo(int minYear, int minYearMonth, int minYearDay,
                          int maxYear, int maxYearMonth, int maxYearDay) {
-        Calendar first = new Calendar();
+        EmmCalendar first = new EmmCalendar();
         first.setYear(minYear);
         first.setMonth(minYearMonth);
         first.setDay(minYearDay);
 
-        Calendar second = new Calendar();
+        EmmCalendar second = new EmmCalendar();
         second.setYear(maxYear);
         second.setMonth(maxYearMonth);
         second.setDay(maxYearDay);
@@ -532,7 +532,7 @@ final class CalendarUtil {
      * @param weekStar    weekStar
      * @return 为月视图初始化日历项
      */
-    static List<Calendar> initCalendarForMonthView(int year, int month, Calendar currentDate, int weekStar) {
+    static List<EmmCalendar> initCalendarForMonthView(int year, int month, EmmCalendar currentDate, int weekStar) {
         java.util.Calendar date = java.util.Calendar.getInstance();
 
         date.set(year, month - 1, 1);
@@ -546,7 +546,7 @@ final class CalendarUtil {
 
         int size = 42;
 
-        List<Calendar> mItems = new ArrayList<>();
+        List<EmmCalendar> mItems = new ArrayList<>();
 
         int preMonthDaysCount;
         if (month == 1) {//如果是1月
@@ -570,38 +570,38 @@ final class CalendarUtil {
         }
         int nextDay = 1;
         for (int i = 0; i < size; i++) {
-            Calendar calendarDate = new Calendar();
+            EmmCalendar emmCalendarDate = new EmmCalendar();
             if (i < mPreDiff) {
-                calendarDate.setYear(preYear);
-                calendarDate.setMonth(preMonth);
-                calendarDate.setDay(preMonthDaysCount - mPreDiff + i + 1);
+                emmCalendarDate.setYear(preYear);
+                emmCalendarDate.setMonth(preMonth);
+                emmCalendarDate.setDay(preMonthDaysCount - mPreDiff + i + 1);
             } else if (i >= monthDayCount + mPreDiff) {
-                calendarDate.setYear(nextYear);
-                calendarDate.setMonth(nextMonth);
-                calendarDate.setDay(nextDay);
+                emmCalendarDate.setYear(nextYear);
+                emmCalendarDate.setMonth(nextMonth);
+                emmCalendarDate.setDay(nextDay);
                 ++nextDay;
             } else {
-                calendarDate.setYear(year);
-                calendarDate.setMonth(month);
-                calendarDate.setCurrentMonth(true);
-                calendarDate.setDay(i - mPreDiff + 1);
+                emmCalendarDate.setYear(year);
+                emmCalendarDate.setMonth(month);
+                emmCalendarDate.setCurrentMonth(true);
+                emmCalendarDate.setDay(i - mPreDiff + 1);
             }
-            if (calendarDate.equals(currentDate)) {
-                calendarDate.setCurrentDay(true);
+            if (emmCalendarDate.equals(currentDate)) {
+                emmCalendarDate.setCurrentDay(true);
             }
-            LunarCalendar.setupLunarCalendar(calendarDate);
-            mItems.add(calendarDate);
+            LunarCalendar.setupLunarCalendar(emmCalendarDate);
+            mItems.add(emmCalendarDate);
         }
         return mItems;
     }
 
-    static List<Calendar> getWeekCalendars(Calendar calendar, CalendarViewDelegate mDelegate) {
-        long curTime = calendar.getTimeInMillis();
+    static List<EmmCalendar> getWeekCalendars(EmmCalendar emmCalendar, CalendarViewDelegate mDelegate) {
+        long curTime = emmCalendar.getTimeInMillis();
 
         java.util.Calendar date = java.util.Calendar.getInstance();
-        date.set(calendar.getYear(),
-                calendar.getMonth() - 1,
-                calendar.getDay());//
+        date.set(emmCalendar.getYear(),
+                emmCalendar.getMonth() - 1,
+                emmCalendar.getDay());//
         int week = date.get(java.util.Calendar.DAY_OF_WEEK);
         int startDiff;
         if (mDelegate.getWeekStart() == 1) {
@@ -615,55 +615,55 @@ final class CalendarUtil {
         curTime -= startDiff * ONE_DAY;
         java.util.Calendar minCalendar = java.util.Calendar.getInstance();
         minCalendar.setTimeInMillis(curTime);
-        Calendar startCalendar = new Calendar();
-        startCalendar.setYear(minCalendar.get(java.util.Calendar.YEAR));
-        startCalendar.setMonth(minCalendar.get(java.util.Calendar.MONTH) + 1);
-        startCalendar.setDay(minCalendar.get(java.util.Calendar.DAY_OF_MONTH));
-        return initCalendarForWeekView(startCalendar, mDelegate, mDelegate.getWeekStart());
+        EmmCalendar startEmmCalendar = new EmmCalendar();
+        startEmmCalendar.setYear(minCalendar.get(java.util.Calendar.YEAR));
+        startEmmCalendar.setMonth(minCalendar.get(java.util.Calendar.MONTH) + 1);
+        startEmmCalendar.setDay(minCalendar.get(java.util.Calendar.DAY_OF_MONTH));
+        return initCalendarForWeekView(startEmmCalendar, mDelegate, mDelegate.getWeekStart());
     }
 
     /**
      * 生成周视图的7个item
      *
-     * @param calendar  calendar
-     * @param mDelegate mDelegate
-     * @param weekStart weekStart
+     * @param emmCalendar calendar
+     * @param mDelegate   mDelegate
+     * @param weekStart   weekStart
      * @return 生成周视图的7个item
      */
-    static List<Calendar> initCalendarForWeekView(Calendar calendar, CalendarViewDelegate mDelegate, int weekStart) {
+    static List<EmmCalendar> initCalendarForWeekView(EmmCalendar emmCalendar, CalendarViewDelegate mDelegate, int weekStart) {
 
         java.util.Calendar date = java.util.Calendar.getInstance();//当天时间
-        date.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay());
+        date.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, emmCalendar.getDay());
         long curDateMills = date.getTimeInMillis();//生成选择的日期时间戳
 
-        int weekEndDiff = getWeekViewEndDiff(calendar.getYear(), calendar.getMonth(), calendar.getDay(), weekStart);
-        List<Calendar> mItems = new ArrayList<>();
+        int weekEndDiff = getWeekViewEndDiff(emmCalendar.getYear(), emmCalendar.getMonth(), emmCalendar.getDay(), weekStart);
+        List<EmmCalendar> mItems = new ArrayList<>();
 
         date.setTimeInMillis(curDateMills);
-        Calendar selectCalendar = new Calendar();
-        selectCalendar.setYear(date.get(java.util.Calendar.YEAR));
-        selectCalendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
-        selectCalendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
-        if (selectCalendar.equals(mDelegate.getCurrentDay())) {
-            selectCalendar.setCurrentDay(true);
+        EmmCalendar selectEmmCalendar = new EmmCalendar();
+        selectEmmCalendar.setYear(date.get(java.util.Calendar.YEAR));
+        selectEmmCalendar.setMonth(date.get(java.util.Calendar.MONTH) + 1);
+        selectEmmCalendar.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
+        if (selectEmmCalendar.equals(mDelegate.getCurrentDay())) {
+            selectEmmCalendar.setCurrentDay(true);
         }
-        LunarCalendar.setupLunarCalendar(selectCalendar);
-        selectCalendar.setCurrentMonth(true);
-        mItems.add(selectCalendar);
+        LunarCalendar.setupLunarCalendar(selectEmmCalendar);
+        selectEmmCalendar.setCurrentMonth(true);
+        mItems.add(selectEmmCalendar);
 
 
         for (int i = 1; i <= weekEndDiff; i++) {
             date.setTimeInMillis(curDateMills + i * ONE_DAY);
-            Calendar calendarDate = new Calendar();
-            calendarDate.setYear(date.get(java.util.Calendar.YEAR));
-            calendarDate.setMonth(date.get(java.util.Calendar.MONTH) + 1);
-            calendarDate.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
-            if (calendarDate.equals(mDelegate.getCurrentDay())) {
-                calendarDate.setCurrentDay(true);
+            EmmCalendar emmCalendarDate = new EmmCalendar();
+            emmCalendarDate.setYear(date.get(java.util.Calendar.YEAR));
+            emmCalendarDate.setMonth(date.get(java.util.Calendar.MONTH) + 1);
+            emmCalendarDate.setDay(date.get(java.util.Calendar.DAY_OF_MONTH));
+            if (emmCalendarDate.equals(mDelegate.getCurrentDay())) {
+                emmCalendarDate.setCurrentDay(true);
             }
-            LunarCalendar.setupLunarCalendar(calendarDate);
-            calendarDate.setCurrentMonth(true);
-            mItems.add(calendarDate);
+            LunarCalendar.setupLunarCalendar(emmCalendarDate);
+            emmCalendarDate.setCurrentMonth(true);
+            mItems.add(emmCalendarDate);
         }
         return mItems;
     }
@@ -723,42 +723,42 @@ final class CalendarUtil {
      * @param delegate position
      * @return 从月视图切换获得第一天的日期
      */
-    static Calendar getFirstCalendarFromMonthViewPager(int position, CalendarViewDelegate delegate) {
-        Calendar calendar = new Calendar();
-        calendar.setYear((position + delegate.getMinYearMonth() - 1) / 12 + delegate.getMinYear());
-        calendar.setMonth((position + delegate.getMinYearMonth() - 1) % 12 + 1);
-        calendar.setDay(1);
-        if (!isCalendarInRange(calendar, delegate)) {
-            if (isMinRangeEdge(calendar, delegate)) {
-                calendar = delegate.getMinRangeCalendar();
+    static EmmCalendar getFirstCalendarFromMonthViewPager(int position, CalendarViewDelegate delegate) {
+        EmmCalendar emmCalendar = new EmmCalendar();
+        emmCalendar.setYear((position + delegate.getMinYearMonth() - 1) / 12 + delegate.getMinYear());
+        emmCalendar.setMonth((position + delegate.getMinYearMonth() - 1) % 12 + 1);
+        emmCalendar.setDay(1);
+        if (!isCalendarInRange(emmCalendar, delegate)) {
+            if (isMinRangeEdge(emmCalendar, delegate)) {
+                emmCalendar = delegate.getMinRangeCalendar();
             } else {
-                calendar = delegate.getMaxRangeCalendar();
+                emmCalendar = delegate.getMaxRangeCalendar();
             }
         }
-        calendar.setCurrentMonth(calendar.getYear() == delegate.getCurrentDay().getYear() &&
-                calendar.getMonth() == delegate.getCurrentDay().getMonth());
-        calendar.setCurrentDay(calendar.equals(delegate.getCurrentDay()));
-        LunarCalendar.setupLunarCalendar(calendar);
-        return calendar;
+        emmCalendar.setCurrentMonth(emmCalendar.getYear() == delegate.getCurrentDay().getYear() &&
+                emmCalendar.getMonth() == delegate.getCurrentDay().getMonth());
+        emmCalendar.setCurrentDay(emmCalendar.equals(delegate.getCurrentDay()));
+        LunarCalendar.setupLunarCalendar(emmCalendar);
+        return emmCalendar;
     }
 
 
     /**
      * 根据传入的日期获取边界访问日期，要么最大，要么最小
      *
-     * @param calendar calendar
-     * @param delegate delegate
+     * @param emmCalendar calendar
+     * @param delegate    delegate
      * @return 获取边界访问日期
      */
-    static Calendar getRangeEdgeCalendar(Calendar calendar, CalendarViewDelegate delegate) {
+    static EmmCalendar getRangeEdgeCalendar(EmmCalendar emmCalendar, CalendarViewDelegate delegate) {
         if (CalendarUtil.isCalendarInRange(delegate.getCurrentDay(), delegate)) {
             return delegate.createCurrentDate();
         }
-        if (isCalendarInRange(calendar, delegate)) {
-            return calendar;
+        if (isCalendarInRange(emmCalendar, delegate)) {
+            return emmCalendar;
         }
-        Calendar minRangeCalendar = delegate.getMinRangeCalendar();
-        if (minRangeCalendar.isSameMonth(calendar)) {
+        EmmCalendar minRangeEmmCalendar = delegate.getMinRangeCalendar();
+        if (minRangeEmmCalendar.isSameMonth(emmCalendar)) {
             return delegate.getMinRangeCalendar();
         }
         return delegate.getMaxRangeCalendar();
@@ -767,14 +767,14 @@ final class CalendarUtil {
     /**
      * 是否是最小访问边界了
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 是否是最小访问边界了
      */
-    private static boolean isMinRangeEdge(Calendar calendar, CalendarViewDelegate delegate) {
+    private static boolean isMinRangeEdge(EmmCalendar emmCalendar, CalendarViewDelegate delegate) {
         java.util.Calendar c = java.util.Calendar.getInstance();
         c.set(delegate.getMinYear(), delegate.getMinYearMonth() - 1, delegate.getMinYearDay());
         long minTime = c.getTimeInMillis();
-        c.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay());
+        c.set(emmCalendar.getYear(), emmCalendar.getMonth() - 1, emmCalendar.getDay());
         long curTime = c.getTimeInMillis();
         return curTime < minTime;
     }

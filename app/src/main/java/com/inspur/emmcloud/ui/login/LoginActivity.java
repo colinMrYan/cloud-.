@@ -28,6 +28,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
@@ -69,7 +70,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true,0.2f).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
@@ -102,7 +103,6 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-
     /**
      * 显示当前登录租户信息
      */
@@ -123,7 +123,7 @@ public class LoginActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         switch (v.getId()) {
             case R.id.bt_login:
-                userName = usernameEdit.getText().toString();
+                userName = usernameEdit.getText().toString().trim();
                 password = passwordEdit.getText().toString();
                 loginApp();
                 break;
@@ -162,6 +162,7 @@ public class LoginActivity extends BaseActivity {
                 LoadingDialog.dimissDlg(LoadingDlg);
                 switch (msg.what) {
                     case LOGIN_SUCCESS:
+                        PVCollectModelCacheUtils.saveCollectModel("login", "passwordLogin");
                         enterApp();
                         break;
                     case LOGIN_FAIL:
@@ -234,7 +235,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-            boolean isInputValaid = passwordEdit.getText().toString().length() >= 6
+            boolean isInputValaid = passwordEdit.getText().toString().length() >= 1
                     && !StringUtils.isBlank(usernameEdit.getText()
                     .toString());
             loginBtn.setEnabled(isInputValaid);

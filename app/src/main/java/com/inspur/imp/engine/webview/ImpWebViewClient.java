@@ -277,7 +277,7 @@ public class ImpWebViewClient extends WebViewClient {
             e.printStackTrace();
         }
         int port = urlWithParams.getPort();
-        String requestUrl = urlWithParams.getProtocol() + "://" + urlWithParams.getHost()+(port == -1?"":":"+port);
+        String requestUrl = urlWithParams.getProtocol() + "://" + urlWithParams.getHost() + (port == -1 ? "" : ":" + port);
         MyAppAPIService appAPIService = new MyAppAPIService(MyApplication.getInstance());
         appAPIService.setAPIInterface(new WebService(view));
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {

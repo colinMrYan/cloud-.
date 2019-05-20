@@ -125,7 +125,7 @@ public class OssService implements VolumeFileUploadService {
             {
                 put("callbackUrl", getVolumeFileUploadTokenResult.getCallbackUrl());
                 //callbackBody可以自定义传入的信息
-                put("callbackBody", getVolumeFileUploadTokenResult.getCallbackBody());
+                put("callbackBody",getVolumeFileUploadTokenResult.getCallbackBody().replaceAll("\\+","%2B"));
             }
         });
 

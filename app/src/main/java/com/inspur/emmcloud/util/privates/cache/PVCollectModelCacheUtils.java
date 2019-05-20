@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 
 import org.json.JSONArray;
@@ -11,14 +12,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PVCollectModelCacheUtils {
-    public static void saveCollectModel(Context context,
-                                        PVCollectModel collectModel) {
-        try {
-            DbCacheUtils.getDb(context).save(collectModel);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+
+    public static void saveCollectModel(String functionID, String functionType) {
+        PVCollectModel pvCollectModel = new PVCollectModel(functionID, functionType);
+        saveCollectModel(MyApplication.getInstance(), pvCollectModel);
+    }
+
+    private static void saveCollectModel(final Context context, final PVCollectModel collectModel) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DbCacheUtils.getDb(context).save(collectModel);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
     public static List<PVCollectModel> getCollectModelList(Context context) {

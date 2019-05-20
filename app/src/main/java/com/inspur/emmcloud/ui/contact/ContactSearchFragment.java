@@ -72,6 +72,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -539,8 +540,19 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             openGroupChannelList = SearchModel.channelGroupList2SearchModelList(ChannelGroupCacheUtils
                     .getAllChannelGroupList(MyApplication.getInstance()));
         } else {
-            openGroupChannelList = SearchModel.conversationList2SearchModelList(ConversationCacheUtils
-                    .getConversationList(MyApplication.getInstance(), Conversation.TYPE_GROUP));
+            List<Conversation> conversationList = ConversationCacheUtils
+                    .getConversationListByLastUpdate(MyApplication.getInstance(), Conversation.TYPE_GROUP);
+            List<Conversation> stickConversationList = new ArrayList<>();
+            Iterator<Conversation> it = conversationList.iterator();
+            while (it.hasNext()) {
+                Conversation conversation = it.next();
+                if (conversation.isStick()) {
+                    stickConversationList.add(conversation);
+                    it.remove();
+                }
+            }
+            conversationList.addAll(0, stickConversationList);
+            openGroupChannelList = SearchModel.conversationList2SearchModelList(conversationList);
         }
 
         openGroupTextList.add(new FirstGroupTextModel(getString(R.string.all),

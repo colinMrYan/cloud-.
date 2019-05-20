@@ -27,12 +27,14 @@ import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
@@ -279,6 +281,42 @@ public class AppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 apiInterface.returnAppTabAutoFail(error, responseCode);
+            }
+        });
+    }
+
+
+    /**
+     * 获取显示tab页的接口
+     */
+    public void getAppNaviTabs(final String lastMultipleLayoutVersion) {
+        final String completeUrl = APIUri.getAppNaviTabs();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0),lastMultipleLayoutVersion));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnNaviBarModelFail(error,responseCode);
             }
         });
     }
@@ -671,8 +709,8 @@ public class AppAPIService {
             registerPushTokenJsonObject.put("deviceId", AppUtils.getMyUUID(context));
             registerPushTokenJsonObject.put("appId", context.getPackageName());
             registerPushTokenJsonObject.put("appVersion", AppUtils.getVersion(context));
-            registerPushTokenJsonObject.put("type", AppUtils.getPushProvider(context));
-            registerPushTokenJsonObject.put("token", AppUtils.getPushId(context));
+            registerPushTokenJsonObject.put("type", PushManagerUtils.getPushProvider(context));
+            registerPushTokenJsonObject.put("token", PushManagerUtils.getPushId(context));
             registerPushTokenJsonObject.put("inspurId", MyApplication.getInstance().getUid());
             registerPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getCurrentEnterprise().getId());
             registerPushTokenJsonObject.put("deviceModel", AppUtils.GetChangShang() + "/" + AppUtils.GetModel());
@@ -724,8 +762,8 @@ public class AppAPIService {
             unregisterPushTokenJsonObject.put("deviceId", AppUtils.getMyUUID(context));
             unregisterPushTokenJsonObject.put("appId", context.getPackageName());
             unregisterPushTokenJsonObject.put("appVersion", AppUtils.getVersion(context));
-            unregisterPushTokenJsonObject.put("type", AppUtils.getPushProvider(context));
-            unregisterPushTokenJsonObject.put("token", AppUtils.getPushId(context));
+            unregisterPushTokenJsonObject.put("type", PushManagerUtils.getPushProvider(context));
+            unregisterPushTokenJsonObject.put("token", PushManagerUtils.getPushId(context));
             unregisterPushTokenJsonObject.put("inspurId", MyApplication.getInstance().getUid());
             unregisterPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getCurrentEnterprise().getId());
             unregisterPushTokenJsonObject.put("deviceModel", AppUtils.GetChangShang() + "/" + AppUtils.GetModel());

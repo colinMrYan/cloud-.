@@ -178,27 +178,30 @@ public class ActionSheetDialog extends Dialog {
 
         /**
          * 设置标题颜色
+         *
          * @param titleColor
          */
-        public ActionListSheetBuilder setTitleColor(int titleColor){
+        public ActionListSheetBuilder setTitleColor(int titleColor) {
             this.titleColor = titleColor;
             return this;
         }
 
         /**
          * 设置条目颜色
+         *
          * @param itemColor
          */
-        public ActionListSheetBuilder setItemColor(int itemColor){
+        public ActionListSheetBuilder setItemColor(int itemColor) {
             this.itemColor = itemColor;
             return this;
         }
 
         /**
          * 设置取消键颜色
+         *
          * @param cancelColor
          */
-        public ActionListSheetBuilder setCancelColor(int cancelColor){
+        public ActionListSheetBuilder setCancelColor(int cancelColor) {
             this.cancelColor = cancelColor;
             return this;
         }
@@ -240,7 +243,7 @@ public class ActionSheetDialog extends Dialog {
                     mDialog.dismiss();
                 }
             });
-            ((TextView)wrapperView.findViewById(R.id.cancel)).setTextColor(cancelColor);
+            ((TextView) wrapperView.findViewById(R.id.cancel)).setTextColor(cancelColor);
             return wrapperView;
         }
 

@@ -534,7 +534,7 @@ public class MeetingListActivity extends BaseActivity implements
         }
 
         @Override
-        public void returnDelMeetingSuccess() {
+        public void returnDeleteMeetingSuccess(com.inspur.emmcloud.bean.schedule.meeting.Meeting meeting) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
@@ -552,7 +552,7 @@ public class MeetingListActivity extends BaseActivity implements
         }
 
         @Override
-        public void returnDelMeetingFail(String error, int errorCode) {
+        public void returnDeleteMeetingFail(String error, int errorCode) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }

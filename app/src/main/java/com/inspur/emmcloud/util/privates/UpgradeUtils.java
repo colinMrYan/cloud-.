@@ -133,7 +133,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         }
                         break;
                     case SHOW_PEOGRESS_LAODING_DLG:
-                        progressDownloadDialog.show();
+                        if (null != progressDownloadDialog) {
+                            progressDownloadDialog.show();
+                        }
                         break;
 
                     default:

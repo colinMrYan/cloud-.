@@ -15,9 +15,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.common.systool.permission.Permissions;
 import com.shuyu.waveview.FileUtils;
 
 import java.util.List;
@@ -429,11 +429,6 @@ public class AudioRecordButton extends Button {
         }
     }
 
-    @Override
-    public boolean onPreDraw() {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
     /**
      * 获取Mp3文件夹路径

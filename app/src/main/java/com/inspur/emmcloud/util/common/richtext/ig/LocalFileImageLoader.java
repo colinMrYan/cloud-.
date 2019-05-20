@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.util.common.richtext.ig;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.common.richtext.ImageHolder;
@@ -17,29 +15,18 @@ import com.inspur.emmcloud.util.common.richtext.exceptions.ImageDecodeException;
 
 class LocalFileImageLoader extends AbstractImageLoader<String> implements Runnable {
 
-    LocalFileImageLoader(ImageHolder holder, RichTextConfig config, TextView textView, DrawableWrapper drawableWrapper, ImageLoadNotify iln, BitmapWrapper.SizeCacheHolder sizeCacheHolder) {
-        super(holder, config, textView, drawableWrapper, iln, SourceDecode.LOCAL_FILE_SOURCE_DECODE, sizeCacheHolder);
+    LocalFileImageLoader(ImageHolder holder, RichTextConfig config, TextView textView, DrawableWrapper drawableWrapper, ImageLoadNotify iln) {
+        super(holder, config, textView, drawableWrapper, iln, SourceDecode.LOCAL_FILE_SOURCE_DECODE);
     }
 
     @Override
     public void run() {
         try {
-            onLoading();
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            int[] inDimens = getDimensions(holder.getSource(), options);
-            BitmapWrapper.SizeCacheHolder sizeCacheHolder = super.sizeCacheHolder;
-            if (sizeCacheHolder == null) {
-                sizeCacheHolder = loadSizeCacheHolder();
-            }
-            if (sizeCacheHolder == null) {
-                options.inSampleSize = onSizeReady(inDimens[0], inDimens[1]);
-            } else {
-                options.inSampleSize = getSampleSize(inDimens[0], inDimens[1], sizeCacheHolder.rect.width(), sizeCacheHolder.rect.height());
-            }
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            onResourceReady(sourceDecode.decode(holder, holder.getSource(), options));
+            doLoadImage(holder.getSource());
         } catch (Exception e) {
             onFailure(new ImageDecodeException(e));
+        } catch (OutOfMemoryError error) {
+            onFailure(new ImageDecodeException(error));
         }
     }
 }

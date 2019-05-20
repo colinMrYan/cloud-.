@@ -50,7 +50,6 @@ import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
@@ -401,14 +400,15 @@ public class MyAppFragment extends BaseFragment {
 
     /**
      * app页网络异常提示框
-     * @param netState  通过Action获取操作类型
-     * */
+     *
+     * @param netState 通过Action获取操作类型
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            if((boolean)netState.getMessageObj()){
+            if ((boolean) netState.getMessageObj()) {
                 DeleteHeaderView();
-            }else{
+            } else {
                 AddHeaderView();
             }
         }
@@ -447,14 +447,6 @@ public class MyAppFragment extends BaseFragment {
         myIntentFilter.addAction(ACTION_NAME);
         // 注册广播
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, myIntentFilter);
-    }
-
-    /**
-     * 记录用户使用了应用中心功能
-     */
-    private void recordUserClickAppCenter() {
-        PVCollectModel pvCollectModel = new PVCollectModel("appcenter", "application");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
     }
 
     /**
@@ -560,7 +552,7 @@ public class MyAppFragment extends BaseFragment {
             commonlyAppItemList.remove(app);
             List<App> appList = AppCacheUtils.getCommonlyUseNeedShowList(getActivity());
             appAdapterList.get(0)
-                    .setAppItemList(appList.size()>8?appList.subList(0,8):appList);
+                    .setAppItemList(appList.size() > 8 ? appList.subList(0, 8) : appList);
         }
         Iterator<AppGroupBean> appGroupBeanList = appAdapterList.iterator();
         while (appGroupBeanList.hasNext()) {
@@ -847,7 +839,7 @@ public class MyAppFragment extends BaseFragment {
             ImageView imageView = commonlyUseLayout.findViewById(R.id.iv_app_commonly_use);
             TextView textView = commonlyUseLayout.findViewById(R.id.tv_app_commonly_use);
             imageView.setImageResource(getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close);
-            textView.setText(getNeedCommonlyUseApp() ? R.string.app_commonly_use_close:R.string.app_commonly_use);
+            textView.setText(getNeedCommonlyUseApp() ? R.string.app_commonly_use_close : R.string.app_commonly_use);
         }
     }
 
@@ -908,6 +900,16 @@ public class MyAppFragment extends BaseFragment {
         hasIntrcutionDialog.getWindow().setAttributes(wl);
         hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         hasIntrcutionDialog.show();
+    }
+
+    /**
+     * 在应用ListView中获取当前分组是否是常用应用分组，传入参数为当前分组的位置，返回是否常用应用分组
+     *
+     * @param listPosition
+     * @return
+     */
+    private boolean getIsCommonlyUseGroupInList(int listPosition) {
+        return (listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0;
     }
 
     /**
@@ -1029,9 +1031,9 @@ public class MyAppFragment extends BaseFragment {
 //                    //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
 //                    dragGridViewAdapter.setCanEdit(false);
 //                } else {
-                    //如果应用列表可以编辑，不是常用应用分组
-                    dragGridViewAdapter.setCanEdit(true);
-                    dragGridView.setCanEdit(true);
+                //如果应用列表可以编辑，不是常用应用分组
+                dragGridViewAdapter.setCanEdit(true);
+                dragGridView.setCanEdit(true);
 //                }
             } else {
                 //如果不能编辑则把adapter和View的属性都设置为false
@@ -1072,15 +1074,6 @@ public class MyAppFragment extends BaseFragment {
         public void setCanEdit(boolean canDelete) {
             this.canEdit = canDelete;
         }
-    }
-
-    /**
-     * 在应用ListView中获取当前分组是否是常用应用分组，传入参数为当前分组的位置，返回是否常用应用分组
-     * @param listPosition
-     * @return
-     */
-    private boolean getIsCommonlyUseGroupInList(int listPosition) {
-        return  (listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0;
     }
 
     /**
@@ -1152,7 +1145,7 @@ public class MyAppFragment extends BaseFragment {
             switch (v.getId()) {
                 case R.id.ibt_appcenter_enter:
                     IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
-                    recordUserClickAppCenter();
+                    PVCollectModelCacheUtils.saveCollectModel("appcenter", "application");
                     break;
                 case R.id.ibt_appcenter_config:
                     showPopupWindow(v);

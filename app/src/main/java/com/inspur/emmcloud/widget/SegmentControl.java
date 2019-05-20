@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -236,6 +237,7 @@ public class SegmentControl extends View {
         int width = 0;
         int height = 0;
 
+
         if (mTexts != null && mTexts.length > 0) {
 
             if (mCacheBounds == null || mCacheBounds.length != mTexts.length) {
@@ -306,6 +308,7 @@ public class SegmentControl extends View {
 
             switch (heightMode) {
                 case MeasureSpec.AT_MOST:
+                    Log.d("lbc", "heightMode::" + " MeasureSpec.AT_MOST");
                     if (mDirection == Direction.VERTICAL) {
                         if (heightSize <= mSingleChildHeight * mTexts.length) {
                             mSingleChildHeight = heightSize / mTexts.length;
@@ -315,16 +318,21 @@ public class SegmentControl extends View {
                         }
                     } else {
                         height = heightSize <= mSingleChildHeight ? heightSize : mSingleChildHeight;
+                        Log.d("lbc", "11111111111" + "heighSize" + heightSize + "  SingChildHeight:" + mSingleChildHeight);
                     }
                     break;
                 case MeasureSpec.EXACTLY:
+                    Log.d("lbc", "heightMode::" + " MeasureSpec.EXACTLY");
                     height = heightSize;
+                    Log.d("lbc", "222222222hightSize");
                     break;
                 case MeasureSpec.UNSPECIFIED:
+                    Log.d("lbc", "heightMode::" + " MeasureSpec.UNSPECIFIEDT");
                     if (mDirection == Direction.VERTICAL) {
                         height = mSingleChildHeight * mTexts.length;
                     } else {
                         height = heightSize <= mSingleChildHeight ? heightSize : mSingleChildHeight;
+                        Log.d("lbc", "heightSize:" + heightSize + "mSingleChildHeight::" + mSingleChildHeight);
                     }
                     break;
             }

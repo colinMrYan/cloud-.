@@ -37,13 +37,13 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.Bimp;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yanzhenjie.permission.Permission;
 
 import org.json.JSONObject;
 
@@ -196,7 +196,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     }
 
     private void initCamera() {
-        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permission.CAMERA, new PermissionRequestCallback() {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
                 openCamera();

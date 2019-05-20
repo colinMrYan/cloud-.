@@ -112,7 +112,7 @@ public class ImpBaseFragment extends BaseFragment {
         webFunctionLayout.post(new Runnable() {
             @Override
             public void run() {
-                if (getActivity() != null){
+                if (getActivity() != null) {
                     functionLayoutWidth = functionLayout.getWidth();
                     webFunctionLayoutWidth = webFunctionLayout.getWidth();
                     headerText.setMaxWidth(ResolutionUtils.getWidth(getActivity()) - getMaxWidth() * 2);

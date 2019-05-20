@@ -1,0 +1,1100 @@
+package com.inspur.emmcloud.api.apiservice;
+
+import android.content.Context;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APICallback;
+import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.CloudHttpMethod;
+import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.bean.appcenter.GetIDResult;
+import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
+import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.meeting.Building;
+import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.schedule.meeting.Office;
+import com.inspur.emmcloud.bean.work.GetLocationResult;
+import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
+import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
+
+import org.json.JSONObject;
+import org.xutils.http.RequestParams;
+
+import java.util.Calendar;
+import java.util.List;
+
+/**
+ * Created by chenmch on 2019/4/15.
+ */
+
+public class ScheduleApiService {
+    private Context context;
+    private APIInterface apiInterface;
+
+    public ScheduleApiService(Context context) {
+        this.context = context;
+    }
+
+    public void setAPIInterface(APIInterface apiInterface) {
+        this.apiInterface = apiInterface;
+    }
+
+    /**
+     * 添加日程
+     */
+    public void addSchedule(final String schedule) {
+        final String completeUrl = APIUri.getAddScheduleUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(schedule);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addSchedule(schedule);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddScheduleSuccess(new GetIDResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddScheduleFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 更新日程
+     */
+    public void updateSchedule(final String schedule) {
+        final String completeUrl = APIUri.getUpdateScheduleUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(schedule);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateSchedule(schedule);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateScheduleSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateScheduleFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取日程列表（日程和会议）
+     *
+     * @param startTime
+     * @param endTime
+     * @param taskLastTime
+     */
+    public void getScheduleList(final Calendar startTime, final Calendar endTime, final long calendarLastTime, final long meetingLastTime, final long taskLastTime, final List<String> calendarIdList, final List<String> meetingIdList, final List<String> taskIdList) {
+        final String url = APIUri.getScheduleListUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        params.addQueryStringParameter("startTime", startTime.getTimeInMillis() + "");
+        params.addQueryStringParameter("endTime", endTime.getTimeInMillis() + "");
+        params.addQueryStringParameter("calendarLastTime", calendarLastTime + "");
+        params.addQueryStringParameter("meetingLastTime", meetingLastTime + "");
+        params.addQueryStringParameter("taskLastTime", taskLastTime + "");
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnScheduleListSuccess(new GetScheduleListResult(new String(arg0)),
+                        startTime, endTime, calendarIdList, meetingIdList, taskIdList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnScheduleListFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getScheduleList(startTime, endTime, calendarLastTime, meetingLastTime,
+                                taskLastTime, calendarIdList, meetingIdList, taskIdList);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 根据schedule Id 删除schedule
+     */
+    public void deleteSchedule(final String scheduleId) {
+        final String completeUrl = APIUri.getDeleteScheduleUrl(scheduleId);
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(scheduleId);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteSchedule(scheduleId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.LbcDebug("数据显示：：：" + arg0.toString());
+                apiInterface.returnDeleteScheduleSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteScheduleFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取常用办公地点
+     */
+    public void getOfficeList() {
+        final String completeUrl = APIUri.getOfficeUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnOfficeListResultSuccess(new GetOfficeListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnOfficeListResultFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getOfficeList();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+        });
+    }
+
+    /**
+     * 获取过滤后的会议室列表
+     *
+     * @param start
+     * @param end
+     * @param officeIdList
+     * @param isFilter
+     */
+    public void getMeetingRoomList(final long start, final long end, final List<String> officeIdList,
+                                   final boolean isFilter) {
+        String baseUrl = APIUri.getMeetingRoomsUrl() + "?";
+        if (isFilter) {
+            baseUrl = baseUrl + "start=" + start + "&end=" + end;
+        } else {
+            baseUrl = baseUrl + "start=" + "&end=";
+        }
+        baseUrl = baseUrl + "&isIdle=" + isFilter;
+        for (int j = 0; j < officeIdList.size(); j++) {
+            baseUrl = baseUrl + "&oids=" + officeIdList.get(j);
+        }
+        if (officeIdList.size() == 0) {
+            baseUrl = baseUrl + "&oids=";
+        }
+        final String completeUrl = baseUrl;
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMeetingRoomList(start, end, officeIdList, isFilter);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingRoomListSuccess(new GetMeetingRoomListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingRoomListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取我的任务
+     *
+     * @param orderBy
+     * @param orderType
+     */
+    public void getMineTasks(final String orderBy, final String orderType) {
+        final String completeUrl = APIUri.getToDoRecentUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addParameter("order_by", orderBy);
+        params.addParameter("order_type", orderType);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMineTasks(orderBy, orderType);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnRecentTasksFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取我关注的任务
+     */
+    public void getFocusedTasks(final String orderBy, final String orderType) {
+        final String completeUrl = APIUri.getFocusedTasksUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("order_by", orderBy);
+        params.addParameter("order_type", orderType);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getFocusedTasks(orderBy, orderType);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnRecentTasksFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取我参与的任务
+     */
+    public void getInvolvedTasks(final String orderBy, final String orderType) {
+        final String completeUrl = APIUri.getInvolvedTasksUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("order_by", orderBy);
+        params.addParameter("order_type", orderType);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getInvolvedTasks(orderBy, orderType);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnRecentTasksFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取已完成任务（带分页）
+     *
+     * @param page
+     * @param limit
+     * @param state
+     */
+    public void getFinishTasks(final int page, final int limit, final String state) {
+        final String completeUrl = APIUri.getCreateTaskUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addHeader("Accept", "application/json");
+        params.addParameter("page", page);
+        params.addParameter("limit", limit);
+        params.addParameter("state", state);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getFinishTasks(page, limit, state);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnRecentTasksSuccess(new GetTaskListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnRecentTasksFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 删除任务
+     *
+     * @param id
+     */
+    public void setTaskFinishById(final String id) {
+        final String completeUrl = APIUri.getCreateTaskUrl() + "/" + id;
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        setTaskFinishById(id);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteTaskSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteTaskFail(error, responseCode);
+            }
+        });
+    }
+
+
+    /**
+     * 删除会议
+     *
+     * @param meeting
+     */
+    public void deleteMeeting(final Meeting meeting) {
+        final String completeUrl = APIUri.getDelMeetingUrl(meeting.getId());
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(meeting.getId());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteMeeting(meeting);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelMeetingSuccess(meeting);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelMeetingFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 通过id获取会议数据  zyj
+     *
+     * @param id
+     */
+    public void getMeetingDataFromId(final String id) {
+        final String completeUrl = APIUri.getMeetingUrlFromId(id);
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMeetingDataFromId(id);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnMeetingDataFromIdSuccess(object.length() > 0 ?
+                        new Meeting(object) : null);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnMeetingDataFromIdFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 通过id获取日程数据  zyj
+     *
+     * @param id
+     */
+    public void getCalendarDataFromId(final String id) {
+        final String completeUrl = APIUri.getCalendarUrlFromId(id);
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getCalendarDataFromId(id);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnScheduleDataFromIdSuccess(object.length() > 0 ?
+                        new Schedule(object) : null);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnScheduleDataFromIdFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取对应room的会议情况
+     *
+     * @param roomId
+     * @param startTime
+     * @param endTime
+     */
+    public void getRoomMeetingListByMeetingRoom(final String roomId, final long startTime, final long endTime) {
+        final String completeUrl = APIUri.getRoomMeetingListByMeetingRoom();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("roomId", roomId);
+        params.addQueryStringParameter("startTime", startTime + "");
+        params.addQueryStringParameter("endTime", endTime + "");
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getRoomMeetingListByMeetingRoom(roomId, startTime, endTime);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingListSuccess(new GetMeetingListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取是否会议室管理员
+     *
+     * @param uid
+     */
+    public void getIsMeetingAdmin(final String uid) {
+        final String completeUrl = APIUri.getMeetingIsAdminUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("cid", uid);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getIsMeetingAdmin(uid);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnIsMeetingAdminSuccess(new GetIsMeetingAdminResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnIsMeetingAdminFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取园区
+     */
+    public void getMeetingLocation() {
+        final String completeUrl = APIUri.getLoctionUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMeetingLocation();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnLocationResultSuccess(new GetLocationResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnLocationResultFail(error, responseCode);
+            }
+        });
+
+    }
+
+
+    /**
+     * 添加常用办公地点
+     *
+     * @param building
+     */
+    public void addMeetingOffice(final Building building) {
+        final String completeUrl = APIUri.addOfficeUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        JSONObject jsonBuild = new JSONObject();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonBuild.put("id", building.getId());
+            jsonObject.put("name", building.getName());
+            jsonObject.put("building", jsonBuild);
+            params.setBodyContent(jsonObject.toString());
+            params.setAsJsonContent(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addMeetingOffice(building);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddMeetingOfficeSuccess(new Office(new String(arg0)), building);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddMeetingOfficeFail(error, responseCode);
+            }
+        });
+    }
+
+
+    /**
+     * 删除常用办公地点
+     *
+     * @param office
+     */
+    public void deleteMeetingOffice(final Office office) {
+        final String completeUrl = APIUri.addOfficeUrl() + "?id=" + office.getId();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteMeetingOffice(office);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteOfficeSuccess(office);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteOfficeFail(error, responseCode);
+            }
+        });
+
+    }
+
+    /**
+     * 添加会议室
+     *
+     * @param meetingJson
+     */
+    public void addMeeting(final String meetingJson) {
+        final String completeUrl = APIUri.getAddMeetingUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.setBodyContent(meetingJson);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addMeeting(meetingJson);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddMeetingSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddMeetingFail(error, responseCode);
+            }
+        });
+    }
+
+    public void updateMeeting(final String meetingJson) {
+        final String completeUrl = APIUri.getMeetingUpdateUrl();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.setBodyContent(meetingJson);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addMeeting(meetingJson);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateMeetingSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateMeetingFail(error, responseCode);
+            }
+        });
+
+    }
+
+    /**
+     * 通过开始时间获取会议
+     *
+     * @param startTime
+     */
+    public void getMeetingListByTime(final long startTime) {
+        final String completeUrl = APIUri.getMeetingListByStartTime();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("startTime", startTime + "");
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMeetingListByTime(startTime);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingListSuccess(new GetMeetingListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取会议历史列表
+     *
+     * @param pageNum
+     */
+    public void getMeetingHistoryListByPage(final int pageNum) {
+        final String completeUrl = APIUri.getMeetingHistoryListByPage(pageNum);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMeetingHistoryListByPage(pageNum);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingHistoryListSuccess(new GetMeetingListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingHistoryListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取节假日信息
+     * @param year
+     */
+    public void getHolidayData(final int year) {
+        final String completeUrl = APIUri.getHolidayDataUrl() + year;
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getHolidayData(year);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnHolidayDataSuccess(new GetHolidayDataResult(new String(arg0),year));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingHistoryListFail(error, responseCode);
+            }
+        });
+    }
+
+}

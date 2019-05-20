@@ -1,10 +1,13 @@
 package com.inspur.emmcloud.bean.work;
 
+import com.inspur.emmcloud.util.privates.TimeUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 
 public class Meeting implements Serializable, Comparator {
@@ -16,7 +19,6 @@ public class Meeting implements Serializable, Comparator {
     //	private JSONArray participantArray;
     private String alert;
     private String notice;
-
     private String organizer = "";
     private String attendant = "";
     private String location = "";
@@ -198,6 +200,15 @@ public class Meeting implements Serializable, Comparator {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public Calendar getFromCalendar() {
+        return TimeUtils.timeString2Calendar(from);
+    }
+
+    public Calendar getToCalendar() {
+        return TimeUtils.timeString2Calendar(to);
+    }
+
 
     @Override
     public int compare(Object lhs, Object rhs) {

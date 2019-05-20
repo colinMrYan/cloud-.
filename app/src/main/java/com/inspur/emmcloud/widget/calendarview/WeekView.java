@@ -44,26 +44,26 @@ public abstract class WeekView extends BaseWeekView {
         for (int i = 0; i < 7; i++) {
             int x = i * mItemWidth + mDelegate.getCalendarPadding();
             onLoopStart(x);
-            Calendar calendar = mItems.get(i);
+            EmmCalendar emmCalendar = mItems.get(i);
             boolean isSelected = i == mCurrentItem;
-            boolean hasScheme = calendar.hasScheme();
+            boolean hasScheme = emmCalendar.hasScheme();
             if (hasScheme) {
                 boolean isDrawSelected = false;//是否继续绘制选中的onDrawScheme
                 if (isSelected) {
-                    isDrawSelected = onDrawSelected(canvas, calendar, x, true);
+                    isDrawSelected = onDrawSelected(canvas, emmCalendar, x, true);
                 }
                 if (isDrawSelected || !isSelected) {
                     //将画笔设置为标记颜色
-                    mSchemePaint.setColor(calendar.getSchemeColor() != 0 ?
-                            calendar.getSchemeColor() : mDelegate.getSchemeThemeColor());
-                    onDrawScheme(canvas, calendar, x);
+                    mSchemePaint.setColor(emmCalendar.getSchemeColor() != 0 ?
+                            emmCalendar.getSchemeColor() : mDelegate.getSchemeThemeColor());
+                    onDrawScheme(canvas, emmCalendar, x);
                 }
             } else {
                 if (isSelected) {
-                    onDrawSelected(canvas, calendar, x, false);
+                    onDrawSelected(canvas, emmCalendar, x, false);
                 }
             }
-            onDrawText(canvas, calendar, x, hasScheme, isSelected);
+            onDrawText(canvas, emmCalendar, x, hasScheme, isSelected);
         }
     }
 
@@ -72,33 +72,33 @@ public abstract class WeekView extends BaseWeekView {
         if (!isClick) {
             return;
         }
-        Calendar calendar = getIndex();
-        if (calendar == null) {
+        EmmCalendar emmCalendar = getIndex();
+        if (emmCalendar == null) {
             return;
         }
-        if (onCalendarIntercept(calendar)) {
-            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(calendar, true);
+        if (onCalendarIntercept(emmCalendar)) {
+            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(emmCalendar, true);
             return;
         }
-        if (!isInRange(calendar)) {
+        if (!isInRange(emmCalendar)) {
             if (mDelegate.mCalendarSelectListener != null) {
-                mDelegate.mCalendarSelectListener.onCalendarOutOfRange(calendar);
+                mDelegate.mCalendarSelectListener.onCalendarOutOfRange(emmCalendar);
             }
             return;
         }
 
-        mCurrentItem = mItems.indexOf(calendar);
+        mCurrentItem = mItems.indexOf(emmCalendar);
 
         if (mDelegate.mInnerListener != null) {
-            mDelegate.mInnerListener.onWeekDateSelected(calendar, true);
+            mDelegate.mInnerListener.onWeekDateSelected(emmCalendar, true);
         }
         if (mParentLayout != null) {
-            int i = CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart());
+            int i = CalendarUtil.getWeekFromDayInMonth(emmCalendar, mDelegate.getWeekStart());
             mParentLayout.updateSelectWeek(i);
         }
 
         if (mDelegate.mCalendarSelectListener != null) {
-            mDelegate.mCalendarSelectListener.onCalendarSelect(calendar, true);
+            mDelegate.mCalendarSelectListener.onCalendarSelect(emmCalendar, true);
         }
 
         invalidate();
@@ -112,49 +112,49 @@ public abstract class WeekView extends BaseWeekView {
         if (!isClick) {
             return false;
         }
-        Calendar calendar = getIndex();
-        if (calendar == null) {
+        EmmCalendar emmCalendar = getIndex();
+        if (emmCalendar == null) {
             return false;
         }
-        if (onCalendarIntercept(calendar)) {
-            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(calendar, true);
+        if (onCalendarIntercept(emmCalendar)) {
+            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(emmCalendar, true);
             return true;
         }
-        boolean isCalendarInRange = isInRange(calendar);
+        boolean isCalendarInRange = isInRange(emmCalendar);
 
         if (!isCalendarInRange) {
             if (mDelegate.mCalendarLongClickListener != null) {
-                mDelegate.mCalendarLongClickListener.onCalendarLongClickOutOfRange(calendar);
+                mDelegate.mCalendarLongClickListener.onCalendarLongClickOutOfRange(emmCalendar);
             }
             return true;
         }
 
         if (mDelegate.isPreventLongPressedSelected()) {//如果启用拦截长按事件不选择日期
             if (mDelegate.mCalendarLongClickListener != null) {
-                mDelegate.mCalendarLongClickListener.onCalendarLongClick(calendar);
+                mDelegate.mCalendarLongClickListener.onCalendarLongClick(emmCalendar);
             }
             return true;
         }
 
 
-        mCurrentItem = mItems.indexOf(calendar);
+        mCurrentItem = mItems.indexOf(emmCalendar);
 
-        mDelegate.mIndexCalendar = mDelegate.mSelectedCalendar;
+        mDelegate.mIndexEmmCalendar = mDelegate.mSelectedEmmCalendar;
 
         if (mDelegate.mInnerListener != null) {
-            mDelegate.mInnerListener.onWeekDateSelected(calendar, true);
+            mDelegate.mInnerListener.onWeekDateSelected(emmCalendar, true);
         }
         if (mParentLayout != null) {
-            int i = CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart());
+            int i = CalendarUtil.getWeekFromDayInMonth(emmCalendar, mDelegate.getWeekStart());
             mParentLayout.updateSelectWeek(i);
         }
 
         if (mDelegate.mCalendarSelectListener != null) {
-            mDelegate.mCalendarSelectListener.onCalendarSelect(calendar, true);
+            mDelegate.mCalendarSelectListener.onCalendarSelect(emmCalendar, true);
         }
 
         if (mDelegate.mCalendarLongClickListener != null) {
-            mDelegate.mCalendarLongClickListener.onCalendarLongClick(calendar);
+            mDelegate.mCalendarLongClickListener.onCalendarLongClick(emmCalendar);
         }
 
         invalidate();
@@ -164,32 +164,32 @@ public abstract class WeekView extends BaseWeekView {
     /**
      * 绘制选中的日期
      *
-     * @param canvas    canvas
-     * @param calendar  日历日历calendar
-     * @param x         日历Card x起点坐标
-     * @param hasScheme hasScheme 非标记的日期
+     * @param canvas      canvas
+     * @param emmCalendar 日历日历calendar
+     * @param x           日历Card x起点坐标
+     * @param hasScheme   hasScheme 非标记的日期
      * @return 是否绘制 onDrawScheme
      */
-    protected abstract boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, boolean hasScheme);
+    protected abstract boolean onDrawSelected(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme);
 
     /**
      * 绘制标记的日期
      *
-     * @param canvas   canvas
-     * @param calendar 日历calendar
-     * @param x        日历Card x起点坐标
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
      */
-    protected abstract void onDrawScheme(Canvas canvas, Calendar calendar, int x);
+    protected abstract void onDrawScheme(Canvas canvas, EmmCalendar emmCalendar, int x);
 
 
     /**
      * 绘制日历文本
      *
-     * @param canvas     canvas
-     * @param calendar   日历calendar
-     * @param x          日历Card x起点坐标
-     * @param hasScheme  是否是标记的日期
-     * @param isSelected 是否选中
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param hasScheme   是否是标记的日期
+     * @param isSelected  是否选中
      */
-    protected abstract void onDrawText(Canvas canvas, Calendar calendar, int x, boolean hasScheme, boolean isSelected);
+    protected abstract void onDrawText(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme, boolean isSelected);
 }

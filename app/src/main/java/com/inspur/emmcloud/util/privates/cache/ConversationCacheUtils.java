@@ -128,7 +128,7 @@ public class ConversationCacheUtils {
      *
      * @param context
      * @param id
-     * @param name
+     * @param isHide
      */
     public static void updateConversationHide(Context context, String id, boolean isHide) {
         try {
@@ -144,7 +144,7 @@ public class ConversationCacheUtils {
      *
      * @param context
      * @param id
-     * @param name
+     * @param isDnd
      */
     public static void updateConversationDnd(Context context, String id, boolean isDnd) {
         try {
@@ -253,7 +253,7 @@ public class ConversationCacheUtils {
 
 
     /**
-     * 谋取某个类型的会话
+     * 获取某个类型的会话
      *
      * @param context
      * @param type
@@ -263,6 +263,27 @@ public class ConversationCacheUtils {
         List<Conversation> conversationList = null;
         try {
             conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).where("type", "=", type).findAll();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        if (conversationList == null) {
+            conversationList = new ArrayList<>();
+        }
+        return conversationList;
+    }
+
+    /**
+     * 获取某个类型的会话
+     *
+     * @param context
+     * @param type
+     * @return
+     */
+    public static List<Conversation> getConversationListByLastUpdate(Context context, String type) {
+        List<Conversation> conversationList = null;
+        try {
+            conversationList = DbCacheUtils.getDb(context).selector(Conversation.class).where("type", "=", type).orderBy("lastUpdate", true).findAll();
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

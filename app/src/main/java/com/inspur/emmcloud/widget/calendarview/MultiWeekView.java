@@ -44,27 +44,27 @@ public abstract class MultiWeekView extends BaseWeekView {
         for (int i = 0; i < 7; i++) {
             int x = i * mItemWidth + mDelegate.getCalendarPadding();
             onLoopStart(x);
-            Calendar calendar = mItems.get(i);
-            boolean isSelected = isCalendarSelected(calendar);
-            boolean isPreSelected = isSelectPreCalendar(calendar);
-            boolean isNextSelected = isSelectNextCalendar(calendar);
-            boolean hasScheme = calendar.hasScheme();
+            EmmCalendar emmCalendar = mItems.get(i);
+            boolean isSelected = isCalendarSelected(emmCalendar);
+            boolean isPreSelected = isSelectPreCalendar(emmCalendar);
+            boolean isNextSelected = isSelectNextCalendar(emmCalendar);
+            boolean hasScheme = emmCalendar.hasScheme();
             if (hasScheme) {
                 boolean isDrawSelected = false;//是否继续绘制选中的onDrawScheme
                 if (isSelected) {
-                    isDrawSelected = onDrawSelected(canvas, calendar, x, true, isPreSelected, isNextSelected);
+                    isDrawSelected = onDrawSelected(canvas, emmCalendar, x, true, isPreSelected, isNextSelected);
                 }
                 if (isDrawSelected || !isSelected) {
                     //将画笔设置为标记颜色
-                    mSchemePaint.setColor(calendar.getSchemeColor() != 0 ? calendar.getSchemeColor() : mDelegate.getSchemeThemeColor());
-                    onDrawScheme(canvas, calendar, x, isSelected);
+                    mSchemePaint.setColor(emmCalendar.getSchemeColor() != 0 ? emmCalendar.getSchemeColor() : mDelegate.getSchemeThemeColor());
+                    onDrawScheme(canvas, emmCalendar, x, isSelected);
                 }
             } else {
                 if (isSelected) {
-                    onDrawSelected(canvas, calendar, x, false, isPreSelected, isNextSelected);
+                    onDrawSelected(canvas, emmCalendar, x, false, isPreSelected, isNextSelected);
                 }
             }
-            onDrawText(canvas, calendar, x, hasScheme, isSelected);
+            onDrawText(canvas, emmCalendar, x, hasScheme, isSelected);
         }
     }
 
@@ -72,11 +72,11 @@ public abstract class MultiWeekView extends BaseWeekView {
     /**
      * 日历是否被选中
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 日历是否被选中
      */
-    protected boolean isCalendarSelected(Calendar calendar) {
-        return !onCalendarIntercept(calendar) && mDelegate.mSelectedCalendars.containsKey(calendar.toString());
+    protected boolean isCalendarSelected(EmmCalendar emmCalendar) {
+        return !onCalendarIntercept(emmCalendar) && mDelegate.mSelectedCalendars.containsKey(emmCalendar.toString());
     }
 
     @Override
@@ -84,50 +84,50 @@ public abstract class MultiWeekView extends BaseWeekView {
         if (!isClick) {
             return;
         }
-        Calendar calendar = getIndex();
-        if (calendar == null) {
+        EmmCalendar emmCalendar = getIndex();
+        if (emmCalendar == null) {
             return;
         }
-        if (onCalendarIntercept(calendar)) {
-            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(calendar, true);
+        if (onCalendarIntercept(emmCalendar)) {
+            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(emmCalendar, true);
             return;
         }
-        if (!isInRange(calendar)) {
+        if (!isInRange(emmCalendar)) {
             if (mDelegate.mCalendarMultiSelectListener != null) {
-                mDelegate.mCalendarMultiSelectListener.onCalendarMultiSelectOutOfRange(calendar);
+                mDelegate.mCalendarMultiSelectListener.onCalendarMultiSelectOutOfRange(emmCalendar);
             }
             return;
         }
 
 
-        String key = calendar.toString();
+        String key = emmCalendar.toString();
 
         if (mDelegate.mSelectedCalendars.containsKey(key)) {
             mDelegate.mSelectedCalendars.remove(key);
         } else {
             if (mDelegate.mSelectedCalendars.size() >= mDelegate.getMaxMultiSelectSize()) {
                 if (mDelegate.mCalendarMultiSelectListener != null) {
-                    mDelegate.mCalendarMultiSelectListener.onMultiSelectOutOfSize(calendar,
+                    mDelegate.mCalendarMultiSelectListener.onMultiSelectOutOfSize(emmCalendar,
                             mDelegate.getMaxMultiSelectSize());
                 }
                 return;
             }
-            mDelegate.mSelectedCalendars.put(key, calendar);
+            mDelegate.mSelectedCalendars.put(key, emmCalendar);
         }
 
-        mCurrentItem = mItems.indexOf(calendar);
+        mCurrentItem = mItems.indexOf(emmCalendar);
 
         if (mDelegate.mInnerListener != null) {
-            mDelegate.mInnerListener.onWeekDateSelected(calendar, true);
+            mDelegate.mInnerListener.onWeekDateSelected(emmCalendar, true);
         }
         if (mParentLayout != null) {
-            int i = CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart());
+            int i = CalendarUtil.getWeekFromDayInMonth(emmCalendar, mDelegate.getWeekStart());
             mParentLayout.updateSelectWeek(i);
         }
 
         if (mDelegate.mCalendarMultiSelectListener != null) {
             mDelegate.mCalendarMultiSelectListener.onCalendarMultiSelect(
-                    calendar,
+                    emmCalendar,
                     mDelegate.mSelectedCalendars.size(),
                     mDelegate.getMaxMultiSelectSize());
         }
@@ -143,58 +143,58 @@ public abstract class MultiWeekView extends BaseWeekView {
     /**
      * 上一个日期是否选中
      *
-     * @param calendar 当前日期
+     * @param emmCalendar 当前日期
      * @return 上一个日期是否选中
      */
-    protected final boolean isSelectPreCalendar(Calendar calendar) {
-        return !onCalendarIntercept(calendar) &&
-                isCalendarSelected(CalendarUtil.getPreCalendar(calendar));
+    protected final boolean isSelectPreCalendar(EmmCalendar emmCalendar) {
+        return !onCalendarIntercept(emmCalendar) &&
+                isCalendarSelected(CalendarUtil.getPreCalendar(emmCalendar));
     }
 
     /**
      * 下一个日期是否选中
      *
-     * @param calendar 当前日期
+     * @param emmCalendar 当前日期
      * @return 下一个日期是否选中
      */
-    protected final boolean isSelectNextCalendar(Calendar calendar) {
-        return !onCalendarIntercept(calendar) &&
-                isCalendarSelected(CalendarUtil.getNextCalendar(calendar));
+    protected final boolean isSelectNextCalendar(EmmCalendar emmCalendar) {
+        return !onCalendarIntercept(emmCalendar) &&
+                isCalendarSelected(CalendarUtil.getNextCalendar(emmCalendar));
     }
 
     /**
      * 绘制选中的日期
      *
      * @param canvas         canvas
-     * @param calendar       日历日历calendar
+     * @param emmCalendar    日历日历calendar
      * @param x              日历Card x起点坐标
      * @param hasScheme      hasScheme 非标记的日期
      * @param isSelectedPre  上一个日期是否选中
      * @param isSelectedNext 下一个日期是否选中
      * @return 是否绘制 onDrawScheme
      */
-    protected abstract boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, boolean hasScheme,
+    protected abstract boolean onDrawSelected(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme,
                                               boolean isSelectedPre, boolean isSelectedNext);
 
     /**
      * 绘制标记的日期
      *
-     * @param canvas     canvas
-     * @param calendar   日历calendar
-     * @param x          日历Card x起点坐标
-     * @param isSelected 是否选中
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param isSelected  是否选中
      */
-    protected abstract void onDrawScheme(Canvas canvas, Calendar calendar, int x, boolean isSelected);
+    protected abstract void onDrawScheme(Canvas canvas, EmmCalendar emmCalendar, int x, boolean isSelected);
 
 
     /**
      * 绘制日历文本
      *
-     * @param canvas     canvas
-     * @param calendar   日历calendar
-     * @param x          日历Card x起点坐标
-     * @param hasScheme  是否是标记的日期
-     * @param isSelected 是否选中
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param hasScheme   是否是标记的日期
+     * @param isSelected  是否选中
      */
-    protected abstract void onDrawText(Canvas canvas, Calendar calendar, int x, boolean hasScheme, boolean isSelected);
+    protected abstract void onDrawText(Canvas canvas, EmmCalendar emmCalendar, int x, boolean hasScheme, boolean isSelected);
 }

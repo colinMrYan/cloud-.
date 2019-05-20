@@ -65,6 +65,10 @@
     <string name="tab_not_support_tips">%1$s功能已改版，請<Data><![CDATA[<font color=\'#0F7BCA\'>陞級到最新版本</font>]]></Data></string>
     <string name="choose">選擇</string>
     <string name="file_type">檔案類型</string>
+    <string name="app_update_prepare">準備下載</string>
+    <string name="app_update_error">更新失敗</string>
+    <string name="app_update_loaded">已下載：</string>
+
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -86,6 +90,7 @@
     <string name="begin">開始</string>
     <string name="end">結束</string>
     <string name="yesterday">昨天</string>
+    <string name="the_day_before_yesterday">前天</string>
     <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
     <string name="format_year_month_day">yyyy\'年\'MM\'月\'dd\'日\'</string>
@@ -95,6 +100,7 @@
     <string name="not_support_upload">不支持沒有后綴名的文件上傳 </string>
     <string name="format_month_day">MM\'月\'dd\'日\'</string>
     <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
+    <string name="format_month_day_hour_minute">MM\'月\'dd\'日\' HH:mm</string>
     <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
     <string name="time_null">無</string>
     <string name="cutdown_now">今</string>
@@ -134,7 +140,7 @@
     <string name="message_without_interruption">消息免打擾</string>
     <string name="login_hint_text">用戶名/郵箱/手機號</string>
     <string name="modify_group_name">群名片</string>
-    <string name="choose_common_office">添加常用辦公地點</string>
+    <string name="choose_common_office">常用辦公地點</string>
     <string name="please_click_choosing_time">請點擊選擇時間</string>
     <string name="meeting_room">會議室</string>
     <string name="building">建築</string>
@@ -264,6 +270,7 @@
     <string name="cancel_a_meeting">[會議取消通知]</string>
     <string name="send_a_meeting_request">[會議審批]</string>
     <string name="send_a_message_of_unknown_type">[未知類型]</string>
+    <string name="send_action_message">[活動消息]</string>
     <string name="direct_no_message">暫無新消息</string>
     <string name="group_no_message">已經進入群組，打個招呼吧</string>
     <string name="welcome_to_attention">歡迎關注</string>
@@ -316,6 +323,10 @@
     <string name="msg_key_search_member">請輸入關鍵字</string>
     <string name="chat_file_open_fail_tip">沒有找到對應的程式</string>
     <string name="chat_conversation_unread_count">%1$d條新消息</string>
+    <string name="chat_long_click_copy">複製</string>
+    <string name="chat_long_click_transmit">轉發</string>
+    <string name="chat_long_click_schedule">日程</string>
+    <string name="chat_long_click_copy_text">複製文字</string>
 
 
     <!-- 會議卡片 -->
@@ -350,6 +361,103 @@
     <string name="work_calendar_text">企業日曆</string>
     <string name="work_task_text">我的任務</string>
     <string name="work_info_text">資訊欄</string>
+    <string name="work_search_hint">蒐索行事曆、任務</string>
+    <string name="work_mession">任務</string>
+    <string name="work_schedule">日期</string>
+    <string name="work_task_all">全部</string>
+    <string name="work_task_end">%1$s 截止</string>
+
+    <string name="work_task_mine">我創建的</string>
+    <string name="work_task_involved">我參與的</string>
+    <string name="work_task_focused">我關注的</string>
+    <string name="work_task_done">已完成的</string>
+
+
+    <!-- 日程 -->
+    <string name="schedule_event_alert">日程提醒</string>
+    <string name="schedule_calendar">日曆</string>
+    <string name="schedule_calendar_add">添加日程</string>
+    <string name="schedule_calendar_detail">日程詳情</string>
+    <string name="schedule_calendar_company">我的日程</string>
+    <string name="schedule_setting_list_view">列表視圖</string>
+    <string name="schedule_setting_day_view">日視圖</string>
+    <string name="schedule_setting_divide_group">分組</string>
+    <string name="schedule_setting_quarter">季度</string>
+    <string name="schedule_setting_month">月度</string>
+    <string name="schedule_setting_view">視圖</string>
+    <string name="schedule_calendar_input_content_hint">請輸入日程內容...</string>
+    <string name="schedule_calendar_time_alert">結束時間不能早於起始時間</string>
+    <string name="schedule_alert_time_occur">日程當天（上午9時）</string>
+    <string name="schedule_alert_time_before_one_day">1天前（上午9時）</string>
+    <string name="schedule_alert_time_before_two_day">2天前（上午9時）</string>
+    <string name="schedule_alert_time_before_a_week">一周前</string>
+    <string name="schedule_calendar_modify">修改日程</string>
+    <string name="schedule_calendar_delete">刪除日程</string>
+    <string name="schedule_calendar_create">新建日程</string>
+    <string name="schedule_calendar_my_schedule">我的日程</string>
+    <string name="schedule_calendar_my_meeting">我的會議</string>
+    <string name="schedule_calendar_my_task">我的任務</string>
+    <string name="schedule_calendar_all_day">全天</string>
+    <string name="schedule_calendar_am">上午</string>
+    <string name="schedule_calendar_pm">下午</string>
+    <string name="schedule_calendar_so_on"> 等</string>
+    <string name="schedule_calendar_schedules">項工程</string>
+    <string name="schedule_calendar_no_schedule_today">暫無日程安排</string>
+    <string name="schedule_meeting_no_meeting_today">暂无會議安排</string>
+    <string name="schedule_task_no_task_today">暂无任務安排</string>
+
+    <!--任务-->
+    <string name="schedule_task_add">添加任務</string>
+    <string name="schedule_task_detail">任務詳情</string>
+    <string name="schedule_task_content_hint">請輸入任務內容...</string>
+    <string name="schedule_task_priority">優先級</string>
+    <string name="schedule_task_category">類別</string>
+    <string name="schedule_task_category_no">未分類</string>
+    <string name="schedule_task_manager">負責人</string>
+    <string name="schedule_task_participant">參與人</string>
+    <string name="schedule_task_manager_num_0">0 人</string>
+    <string name="schedule_task_participant_num_0">0 人</string>
+    <string name="schedule_task_deadline">截止時間</string>
+    <string name="schedule_task_state">狀態</string>
+    <string name="schedule_task_state_active">進行中</string>
+    <string name="schedule_task_stop_alert">結束提醒</string>
+    <string name="schedule_task_more">更多</string>
+    <string name="schedule_task_attachment">附件</string>
+    <string name="schedule_task_create">新建任務</string>
+    <string name="schedule_task_project_manager">標籤管理</string>
+    <string name="schedule_task_project_manager_add">確認添加</string>
+    <string name="schedule_task_label_add_hint">請輸入標籤名稱</string>
+    <string name="schedule_task_label">標籤</string>
+    <string name="schedule_task_label_color">標籤顏色</string>
+    <string name="schedule_task_delete_the_tag">刪除標籤</string>
+    <string name="schedule_task_tag_name_null_hint">標籤名稱不能為空</string>
+    <string name="schedule_task_title_is_empty">任務標題不可為空</string>
+    <string name="schedule_task_a_person">人</string>
+    <string name="schedule_task_tag_name_length">標籤名稱最多64個字符</string>
+    <!--会议-->
+    <string name="schedule_meeting_booking">預定會議</string>
+    <string name="schedule_meeting_room_booking">新建會議</string>
+    <string name="schedule_meeting_add_attendee_title">參會人</string>
+    <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
+    <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
+    <string name="schedule_meeting_select_attendee_title">選擇參會人</string>
+    <string name="schedule_meeting_select_record_holder_title">選擇會議記錄人</string>
+    <string name="schedule_meeting_select_conference_title">選擇會議聯絡人</string>
+    <string name="schedule_meeting_add_note">備註</string>
+    <string name="schedule_meeting_add_alert_time">會前提醒</string>
+    <string name="schedule_meeting_history">歷史會議</string>
+    <string name="schedule_meeting_search">蒐索會議</string>
+    <string name="schedule_meeting_booking_room">預定會議室</string>
+    <string name="schedule_meeting_room_list">會議室列表</string>
+    <string name="schedule_meeting_in_meeting">會議中</string>
+    <string name="schedule_meeting_be_free">空閒</string>
+    <string name="schedule_choose_common_office">常用辦公地點</string>
+    <string name="schedule_meeting_change">修改會議</string>
+    <string name="schedule_meeting_cancel">取消會議</string>
+    <string name="schedule_meeting_booking_detail">會議詳情</string>
+    <string name="schedule_meeting_my_create">我創建的：</string>
+    <string name="schedule_meeting_my_take_part_in">我參與的：</string>
+    <string name="schedule_meeting_room_booking_detail">會議室詳情</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
@@ -420,7 +528,6 @@
     <string name="clouddriver_has_selected">已選擇(%1$d)</string>
     <string name="clouddriver_sure_delete_file">確定要刪除所選檔嗎？</string>
     <string name="clouddriver_move2_current_directory">移動到目前的目錄</string>
-    <string name="clouddriver_copy2_urrent_directory">複製到目前的目錄</string>
     <string name="clouddriver_create_volume">新建網盤</string>
     <string name="clouddriver_upload_success">上傳成功</string>
     <string name="clouddriver_select_copy_position">選擇複製位置</string>
@@ -439,7 +546,7 @@
     <string name="clouddriver_upload_again">重新上傳</string>
     <string name="clouddriver_download_size">下載(%1$s)</string>
     <string name="clouddriver_downloading_status">下載中(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038;</string>
     <string name="clouddriver_select_photo">選擇照片</string>
     <string name="clouddriver_select_file">選擇檔</string>
     <string name="clouddriver_volume_info">網盤詳情</string>
@@ -454,10 +561,11 @@
     <string name="clouddriver_add_volume_member">添加網盤成員</string>
     <string name="clouddriver_del_volume_group_member">刪除組成員</string>
     <string name="clouddriver_add_volume_group_member">添加組成員</string>
-    <string name="clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
-    <string name="volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038; </string>
+    <string name="clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038; </string>
     <string name="clouddriver_exists_same_name">已存在同名檔/資料夾</string>
     <string name="file_rename">檔重命名</string>
+    <string name="folder_rename">文件夾命名</string>
     <string name="clouddriver_volume_group_info">組詳情</string>
     <string name="clouddriver_volume_group_member">組成員</string>
     <string name="clouddriver_volume_member">網盤成員</string>
@@ -633,6 +741,9 @@
     <string name="mine_theme_grey">優雅灰</string>
     <string name="mine_theme_blue">商務藍</string>
 
+    <string name="mine_tab_layout">佈局切換</string>
+    <string name="mine_tab_layout_switch">是否切換為：%1$s</string>
+
 
     <!-- 修改密碼部分 -->
     <string name="modify_input_user_new_password">請輸入新密碼</string>
@@ -640,7 +751,7 @@
     <string name="modify_new_old_same">新密碼不能和原密碼相同</string>
     <string name="modify_not_same">新密碼和確認密碼不一致</string>
     <string name="approval_input_password_valiad">請輸入6〜64位密碼</string>
-    <string name="modify_password_invalid">所設密碼需包含數位、小寫字母、大寫字母、特殊符號四類字元其中的三類，並且長度最少為8位</string>
+    <string name="modify_password_invalid">密碼必須是6-16位元的數字+字母/符號的組合</string>
     <string name="modify_password_not_correct">密碼填寫不正確，請確認</string>
     <string name="modify_password_fail">修改密碼失敗</string>
     <string name="modify_password">修改密碼</string>
@@ -751,8 +862,8 @@
     <string name="meeting_choose_log_members">選擇會務人員</string>
     <string name="meeting_begin_or_date_time">請選擇會議時間</string>
     <string name="meeting_end_time_no_empty">請選擇結束時間</string>
-    <string name="meeting_topic_too_long">主題不能超過128個字元！</string>
-    <string name="meeting_notice_too_long">備註不能超過128個字元</string>
+    <string name="meeting_topic_too_long">主題不能超過100個字元！</string>
+    <string name="meeting_notice_too_long">備註不能超過500個字元</string>
     <string name="meeting_booking_error">預訂出錯</string>
     <string name="meeting_time_is_word">時間是字元</string>
     <string name="meeting_room_number">S206</string>
@@ -820,21 +931,44 @@
     <string name="meeting_user_profile_missing">用戶資訊缺失 </string>
     <string name="meeting_department_booking_times_over_run">用戶部門資訊缺失</string>
 
+    <string name="meeting_detail_time">時間：%1$s</string>
+    <string name="meeting_detail_remind">提醒：%1$s</string>
+    <string name="meeting_detail_create">%1$s 創建</string>
+    <string name="meeting_detail_attendee">參會人:%1$s</string>
+    <string name="meeting_detail_record_holder">會議記錄人:%1$s</string>
+    <string name="meeting_detail_conference">會議聯絡人:%1$s</string>
+    <string name="meeting_detail_note">著裝要求:%1$s</string>
+    <string name="meeting_detail_sign">會議簽到</string>
+    <string name="meeting_detail_summary">十 添加會議摘要</string>
+    <string name="meeting_detail_change_meeting">修改會議</string>
+    <string name="meeting_detail_show_qrcode">展示簽到二維碼</string>
+    <string name="meeting_detail_add_participant">添加參會人</string>
+    <string name="meeting_detail_before_beginning">開始前</string>
+    <string name="meeting_detail_ten_minutes">提前10分鐘</string>
+    <string name="meeting_detail_twenty_minutes">提前20分鐘</string>
+    <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
+    <string name="meeting_detail_one_hour">提前一個小時</string>
+    <string name="meeting_detail_location">會議地點:</string>
+
+
     <!-- 日曆 -->
     <string name="calendar_detail">日曆詳情</string>
     <string name="calendar_adjust">調整</string>
     <string name="calendar_please_input_title">請輸入標題</string>
     <string name="calendar_start_or_end_time_illegal">結束時間不能小於開始時間</string>
-    <string name="calendar_tilte_cannot_exceed_64">標題不能超過64個字元</string>
+    <string name="calendar_end_time_no_before_current">結束時間不能早於當前時間</string>
+    <string name="calendar_title_cannot_exceed_num">標題不能超過100個字元</string>
     <string name="calendar_select_calendar">請選擇日曆</string>
     <string name="calendar_add_success">添加成功</string>
     <string name="calendar_every_year">每年</string>
     <string name="monthly">每月</string>
     <string name="weekly">每週</string>
     <string name="every_day">每日</string>
-    <string name="calendar_when_event_occurs">事件發生時</string>
+    <string name="calendar_when_event_occurs">開始時</string>
     <string name="calendar_five_minite_ago">5分鐘前</string>
+    <string name="calendar_ten_minite_ago">10分鐘前</string>
     <string name="calendar_fifteen_minite_ago">15分鐘前</string>
+    <string name="calendar_twenty_minite_ago">20分鐘前</string>
     <string name="calendar_thirty_minite_ago">30分鐘前</string>
     <string name="calendar_one_hour_ago">1小時前</string>
     <string name="calendar_two_hours_ago">2小時前</string>
@@ -842,6 +976,8 @@
     <string name="calendar_two_days_ago">2天前</string>
     <string name="calendar_a_week_ago">1周前</string>
     <string name="calendar_add_calendar">添加行事曆</string>
+    <string name="calendar_no_alert">無提醒</string>
+    <string name="calendar_when_event_finished">結束時</string>
 
     <!-- 通用 -->
     <string name="save">保存</string>
@@ -1142,6 +1278,8 @@
     <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
     <string name="voice_to_word">轉文字</string>
 
+    <string name="notification_switch">新消息通知</string>
+
     <string name="resend_file_failed">無法找到資源檔，消息重發失敗</string>
 
 
@@ -1156,6 +1294,16 @@
     <string name="permission_call_phone_permission">撥打電話</string>
     <string name="permission_storage_permission">存儲空間</string>
     <string name="permission_next">下一步</string>
+
+    <string name="permission_name_calendar">日曆</string>
+    <string name="permission_name_camera">相機</string>
+    <string name="permission_name_contacts">通訊錄</string>
+    <string name="permission_name_location">位置信息</string>
+    <string name="permission_name_microphone">麥克風</string>
+    <string name="permission_name_phone">電話</string>
+    <string name="permission_name_sensors">身體感測器</string>
+    <string name="permission_name_sms">簡訊</string>
+    <string name="permission_name_storage">存儲空間</string>
 
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
@@ -1384,4 +1532,10 @@
     <string name="current_month">本月</string>
     <string name="user_office_phone">固話</string>
     <string name="group_qrcode">群二維碼</string>
+
+    <string-array name="segment_control_items">
+        <item>低</item>
+        <item>中</item>
+        <item>高</item>
+    </string-array>
 </resources>

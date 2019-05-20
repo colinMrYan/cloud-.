@@ -8,7 +8,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -62,11 +61,11 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     /**
      * 当进入这个聊天时将取消这个聊天的隐藏状态
      */
-    private void setConversationUnHide(){
+    private void setConversationUnHide() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(),cid,false);
+                ConversationCacheUtils.updateConversationHide(MyApplication.getInstance(), cid, false);
             }
         }).start();
 
@@ -88,18 +87,12 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
      * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
      */
     private void recordUserClickChannel() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(getIntent() != null && getIntent().hasExtra("from")){
-                    String from = getIntent().getExtras().getString("from", "");
-                    if (!from.equals("customer")) {
-                        PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
-                        PVCollectModelCacheUtils.saveCollectModel(MyApplication.getInstance(), pvCollectModel);
-                    }
-                }
+        if (getIntent() != null && getIntent().hasExtra("from")) {
+            String from = getIntent().getExtras().getString("from", "");
+            if (!from.equals("customer")) {
+                PVCollectModelCacheUtils.saveCollectModel("channel", "communicate");
             }
-        }).start();
+        }
     }
 
     private void getConversationInfo() {

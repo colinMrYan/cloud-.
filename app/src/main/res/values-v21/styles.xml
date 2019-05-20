@@ -1,6 +1,7 @@
 <resources>
     <!-- Application theme. -->
     <style name="AppTheme" parent="QMUI.Compat.NoActionBar">
+        <item name="android:colorPrimaryDark">#FFFFFF</item>
         <item name="qmui_dialog_content_message_text_size">17sp</item>
         <item name="qmui_dialog_action_button_text_size">15sp</item>
         <item name="qmui_dialog_content_list_item_text_size">16sp</item>
@@ -11,9 +12,11 @@
         <item name="qmui_dialog_content_list_item_height">44dp</item>
         <item name="qmui_dialog_content_padding_top">10dp</item>
         <item name="qmui_dialog_title_margin_top">20dp</item>
-        <item name="qmui_config_color_blue">@color/transparent</item>
-        <item name="colorAccent">#24ABE9</item>
+        <!--<item name="qmui_config_color_blue">#36A5F6</item>-->
+        <item name="colorAccent">#36A5F6</item>
         <item name="android:navigationBarColor" >@color/white</item>
+        <item name="android:textColorPrimary">#333333</item>
+        <item name="android:textColorSecondary">#333333</item>
     </style>
 
 </resources>

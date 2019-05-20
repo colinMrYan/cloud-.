@@ -44,7 +44,6 @@ import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -137,7 +136,7 @@ public class CommunicationFragment extends BaseFragment {
                             getActivity().getString(R.string.adress_list));
                     IntentUtils.startActivity(getActivity(),
                             ContactSearchActivity.class, bundle);
-                    recordUserClickContact();
+                    PVCollectModelCacheUtils.saveCollectModel("contact", "communicate");
                     break;
                 case R.id.message_create_group_layout:
                     Intent contactIntent = new Intent();
@@ -183,7 +182,7 @@ public class CommunicationFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-            checkingNetStateUtils.getNetStateResult(5);
+        checkingNetStateUtils.getNetStateResult(5);
     }
 
     private void initView() {
@@ -353,24 +352,17 @@ public class CommunicationFragment extends BaseFragment {
 
     /**
      * 沟通页网络异常提示框
-     * @param netState  通过Action获取操作类型
-     * */
+     *
+     * @param netState 通过Action获取操作类型
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            conversationAdapter.setNetExceptionView((boolean)netState.getMessageObj());
-            if ((Boolean)netState.getMessageObj()){
+            conversationAdapter.setNetExceptionView((boolean) netState.getMessageObj());
+            if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }
         }
-    }
-
-    /**
-     * 记录用户点击的频道
-     */
-    private void recordUserClickContact() {
-        PVCollectModel pvCollectModel = new PVCollectModel("contact", "communicate");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
     }
 
     @Override
@@ -469,6 +461,7 @@ public class CommunicationFragment extends BaseFragment {
                     List<UIConversation> uiConversationList = new ArrayList<>();
                     if (conversationList.size() > 0) {
                         uiConversationList = UIConversation.conversationList2UIConversationList(conversationList);
+                        ConversationCacheUtils.saveConversationList(MyApplication.getInstance(), conversationList);
                         List<UIConversation> stickUIConversationList = new ArrayList<>();
                         Iterator<UIConversation> it = uiConversationList.iterator();
                         while (it.hasNext()) {
@@ -984,9 +977,9 @@ public class CommunicationFragment extends BaseFragment {
             List<Conversation> conversationList = getConversationListResult.getConversationList();
             List<Conversation> cacheConversationList = ConversationCacheUtils.getConversationList(MyApplication.getInstance());
             //将数据库中Conversation隐藏状态赋值给从网络拉取的最新数据
-            for (Conversation conversation:conversationList){
+            for (Conversation conversation : conversationList) {
                 int index = cacheConversationList.indexOf(conversation);
-                if (index != -1){
+                if (index != -1) {
                     conversation.setHide(cacheConversationList.get(index).isHide());
                 }
             }

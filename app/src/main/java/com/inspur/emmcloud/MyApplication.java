@@ -42,7 +42,9 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
@@ -172,6 +174,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
+        RichText.debugMode = true;
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
             protected boolean removeEldestEntry(Entry<String, String> eldest) {
@@ -180,7 +183,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
             }
         };
-        AppUtils.setPushFlag(this, "");
+        PushManagerUtils.getInstance().clearPushFlag();
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 "isContactReady", false);
@@ -204,7 +207,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void signout(boolean isWebSocketSignout) {
         // TODO Auto-generated method stub
         //清除日历提醒极光推送本地通知
-        CalEventNotificationUtils.cancelAllCalEventNotification(this);
+        ScheduleAlertUtils.cancelAllCalEventNotification(this);
         stopPush();
         clearNotification();
         removeAllCookie();
@@ -238,17 +241,21 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 目前使用的位置有ActionReceiver，IndexActivity 截止到181030
      */
     public void startPush() {
-        if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
-            HuaWeiPushMangerUtils.getInstance(this).connect();
-        } else {
-            startJPush();
+        if(PreferencesByUserAndTanentUtils.getBoolean(this,Constant.PUSH_SWITCH_FLAG,true)){
+            if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
+                HuaWeiPushMangerUtils.getInstance(this).connect();
+            } else {
+                startJPush();
+            }
         }
     }
+
 
     /**
      * 开启极光推送
      */
     public void startJPush() {
+
         // 初始化 JPush
         JPushInterface.init(this);
         if (JPushInterface.isPushStopped(this)) {
@@ -264,7 +271,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * @return
      */
     private boolean canConnectHuawei() {
-        String pushFlag = AppUtils.getPushFlag(this);
+        String pushFlag = PushManagerUtils.getPushFlag(this);
         return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
     }
 
@@ -281,7 +288,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             JPushInterface.stopPush(this);
         }
         //清除日历提醒极光推送本地通知
-        CalEventNotificationUtils.cancelAllCalEventNotification(getInstance());
+        ScheduleAlertUtils.cancelAllCalEventNotification(getInstance());
     }
 
     /**

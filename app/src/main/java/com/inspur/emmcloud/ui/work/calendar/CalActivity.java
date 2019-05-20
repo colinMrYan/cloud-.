@@ -19,14 +19,13 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.work.CalEventGroup;
-import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
-import com.inspur.emmcloud.bean.work.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -143,14 +142,14 @@ public class CalActivity extends BaseActivity implements MySwipeRefreshLayout.On
                 getApplicationContext(), "celEventDisplayType", "monthly");
         for (int i = 0; i < allCalEventList.size(); i++) {
             CalendarEvent calEvent = allCalEventList.get(i);
-            Calendar startDate = calEvent.getLocalStartDate();
+            Calendar startDate = calEvent.getStartDate();
             boolean isHide = MyCalendarOperationCacheUtils.getIsHide(
                     getApplicationContext(), calEvent.getCalendar().getId());
             if (calEvent.getState() != null
                     && !calEvent.getState().equals("REMOVED") && !isHide && startDate != null) {
                 if (startDate != null) {
-                    CalEventNotificationUtils.setCalEventNotification(
-                            getApplicationContext(), calEvent);
+//                    EventAlertUtils.setCalEventNotification(
+//                            getApplicationContext(), calEvent);
                     int month = startDate.get(Calendar.MONTH) + 1;
                     int key = -1;
                     if (calEventDisplayType.equals("monthly")) {
@@ -420,7 +419,7 @@ public class CalActivity extends BaseActivity implements MySwipeRefreshLayout.On
             List<CalendarEvent> CalEventList = calEventGroupList.get(
                     groupPosition).getCalEventList();
             final CalendarEvent calendarEvent = CalEventList.get(childPosition);
-            Calendar localStartDate = calendarEvent.getLocalStartDate();
+            Calendar localStartDate = calendarEvent.getStartDate();
             holder.eventCountdownText.setText(TimeUtils
                     .getCountdown(getApplicationContext(), localStartDate));
             int color = CalendarColorUtils.getColor(CalActivity.this,

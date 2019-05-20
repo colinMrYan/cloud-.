@@ -89,7 +89,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
                 boolean isContentBlank = (s.length() == 0);
                 sendMsgBtn.setEnabled(!isContentBlank);
 //                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-                sendMsgBtn.setTextColor(isContentBlank? Color.parseColor("#999999"):Color.parseColor("#333333"));
+                sendMsgBtn.setTextColor(isContentBlank ? Color.parseColor("#999999") : Color.parseColor("#333333"));
                 if (canMentions && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
@@ -180,7 +180,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
         }
     }
 
-    @Event({R.id.bt_send,R.id.bt_cancel})
+    @Event({R.id.bt_send, R.id.bt_cancel})
     private void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_send:
@@ -243,6 +243,7 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
 
     public interface ChatInputMenuListener {
         void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap);
+
         void hideChatInputMenu();
     }
 

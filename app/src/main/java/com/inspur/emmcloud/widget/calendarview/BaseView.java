@@ -37,7 +37,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     /**
      * 字体大小
      */
-    static final int TEXT_SIZE = 14;
+    static final int TEXT_SIZE = 15;
     /**
      * 当前月份日期的笔
      */
@@ -117,7 +117,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     /**
      * 日历项
      */
-    List<Calendar> mItems;
+    List<EmmCalendar> mItems;
     /**
      * 点击的x、y坐标
      */
@@ -131,6 +131,8 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      */
     int mCurrentItem = -1;
 
+    boolean isLunarAndFestivalShow = true;
+
     public BaseView(Context context) {
         this(context, null);
     }
@@ -138,6 +140,14 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     public BaseView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint(context);
+    }
+
+    public boolean isLunarAndFestivalShow() {
+        return isLunarAndFestivalShow;
+    }
+
+    public void setLunarAndFestivalShow(boolean lunarAndFestivalShow) {
+        isLunarAndFestivalShow = lunarAndFestivalShow;
     }
 
     /**
@@ -148,14 +158,14 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     private void initPaint(Context context) {
         mCurMonthTextPaint.setAntiAlias(true);
         mCurMonthTextPaint.setTextAlign(Paint.Align.CENTER);
-        mCurMonthTextPaint.setColor(0xFF111111);
-        mCurMonthTextPaint.setFakeBoldText(true);
+        mCurMonthTextPaint.setColor(0x333333);
+        mCurMonthTextPaint.setFakeBoldText(false);
         mCurMonthTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mOtherMonthTextPaint.setAntiAlias(true);
         mOtherMonthTextPaint.setTextAlign(Paint.Align.CENTER);
         mOtherMonthTextPaint.setColor(0xFFe1e1e1);
-        mOtherMonthTextPaint.setFakeBoldText(true);
+        mOtherMonthTextPaint.setFakeBoldText(false);
         mOtherMonthTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mCurMonthLunarTextPaint.setAntiAlias(true);
@@ -175,14 +185,14 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mSchemeTextPaint.setStyle(Paint.Style.FILL);
         mSchemeTextPaint.setTextAlign(Paint.Align.CENTER);
         mSchemeTextPaint.setColor(0xffed5353);
-        mSchemeTextPaint.setFakeBoldText(true);
+        mSchemeTextPaint.setFakeBoldText(false);
         mSchemeTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mSelectTextPaint.setAntiAlias(true);
         mSelectTextPaint.setStyle(Paint.Style.FILL);
         mSelectTextPaint.setTextAlign(Paint.Align.CENTER);
         mSelectTextPaint.setColor(0xffed5353);
-        mSelectTextPaint.setFakeBoldText(true);
+        mSelectTextPaint.setFakeBoldText(false);
         mSelectTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mSchemePaint.setAntiAlias(true);
@@ -193,13 +203,13 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mCurDayTextPaint.setAntiAlias(true);
         mCurDayTextPaint.setTextAlign(Paint.Align.CENTER);
         mCurDayTextPaint.setColor(Color.RED);
-        mCurDayTextPaint.setFakeBoldText(true);
+        mCurDayTextPaint.setFakeBoldText(false);
         mCurDayTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mCurDayLunarTextPaint.setAntiAlias(true);
         mCurDayLunarTextPaint.setTextAlign(Paint.Align.CENTER);
         mCurDayLunarTextPaint.setColor(Color.RED);
-        mCurDayLunarTextPaint.setFakeBoldText(true);
+        mCurDayLunarTextPaint.setFakeBoldText(false);
         mCurDayLunarTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
         mSelectedPaint.setAntiAlias(true);
@@ -217,7 +227,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      */
     void setup(CalendarViewDelegate delegate) {
         this.mDelegate = delegate;
-
+        this.isLunarAndFestivalShow = delegate.isLunarAndFestivalShow;
         this.mCurDayTextPaint.setColor(delegate.getCurDayTextColor());
         this.mCurDayLunarTextPaint.setColor(delegate.getCurDayLunarTextColor());
         this.mCurMonthTextPaint.setColor(delegate.getCurrentMonthTextColor());
@@ -261,7 +271,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      * 移除事件
      */
     final void removeSchemes() {
-        for (Calendar a : mItems) {
+        for (EmmCalendar a : mItems) {
             a.setScheme("");
             a.setSchemeColor(0);
             a.setSchemes(null);
@@ -275,16 +285,22 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         if (mDelegate.mSchemeDatesMap == null || mDelegate.mSchemeDatesMap.size() == 0) {
             return;
         }
-        for (Calendar a : mItems) {
+        for (EmmCalendar a : mItems) {
             if (mDelegate.mSchemeDatesMap.containsKey(a.toString())) {
-                Calendar d = mDelegate.mSchemeDatesMap.get(a.toString());
+                EmmCalendar d = mDelegate.mSchemeDatesMap.get(a.toString());
                 a.setScheme(TextUtils.isEmpty(d.getScheme()) ? mDelegate.getSchemeText() : d.getScheme());
                 a.setSchemeColor(d.getSchemeColor());
                 a.setSchemes(d.getSchemes());
+                a.setShowSchemePoint(d.getShowSchemePoint());
+                a.setSchemeLunar(d.getSchemeLunar());
+                a.setSchemeLunarColor(d.getSchemeLunarColor());
             } else {
                 a.setScheme("");
                 a.setSchemeColor(0);
                 a.setSchemes(null);
+                a.setShowSchemePoint(false);
+                a.setSchemeLunar("");
+                a.setSchemeLunarColor(0);
             }
         }
     }
@@ -331,11 +347,11 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     /**
      * 是否是选中的
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return true or false
      */
-    protected boolean isSelected(Calendar calendar) {
-        return mItems != null && mItems.indexOf(calendar) == mCurrentItem;
+    protected boolean isSelected(EmmCalendar emmCalendar) {
+        return mItems != null && mItems.indexOf(emmCalendar) == mCurrentItem;
     }
 
     /**
@@ -355,22 +371,22 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     /**
      * 是否拦截日期，此设置续设置mCalendarInterceptListener
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 是否拦截日期
      */
-    protected final boolean onCalendarIntercept(Calendar calendar) {
+    protected final boolean onCalendarIntercept(EmmCalendar emmCalendar) {
         return mDelegate.mCalendarInterceptListener != null &&
-                mDelegate.mCalendarInterceptListener.onCalendarIntercept(calendar);
+                mDelegate.mCalendarInterceptListener.onCalendarIntercept(emmCalendar);
     }
 
     /**
      * 是否在日期范围内
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 是否在日期范围内
      */
-    protected final boolean isInRange(Calendar calendar) {
-        return mDelegate != null && CalendarUtil.isCalendarInRange(calendar, mDelegate);
+    protected final boolean isInRange(EmmCalendar emmCalendar) {
+        return mDelegate != null && CalendarUtil.isCalendarInRange(emmCalendar, mDelegate);
     }
 
     /**

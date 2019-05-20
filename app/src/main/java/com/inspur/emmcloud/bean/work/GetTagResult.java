@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean.work;
 
+import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
+
 import org.json.JSONArray;
 
 import java.util.ArrayList;

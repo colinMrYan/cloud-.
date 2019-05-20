@@ -49,6 +49,7 @@ public class UIConversation implements Serializable {
             lastUpdate = messageList.get(messageList.size() - 1).getCreationDate();
             unReadCount = MessageCacheUtil.getChannelMessageUnreadCount(MyApplication.getInstance(), id);
         }
+        conversation.setLastUpdate(lastUpdate);
         setUIConversationIcon();
         setUIConversationContent();
 
@@ -118,6 +119,9 @@ public class UIConversation implements Serializable {
                     break;
                 case Message.MESSAGE_TYPE_MEDIA_VOICE:
                     content = MyApplication.getInstance().getString(R.string.send_a_voice);
+                    break;
+                case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
+                    content = MyApplication.getInstance().getString(R.string.send_action_message);
                     break;
                 default:
                     content = MyApplication.getInstance()

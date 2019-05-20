@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -20,7 +20,7 @@
         <item name="qmui_dialog_content_padding_top">10dp</item>
         <item name="qmui_dialog_title_margin_top">20dp</item>
         <item name="qmui_config_color_blue">@color/transparent</item>
-        <item name="colorAccent">#24ABE9</item>
+        <item name="colorAccent">#36A5F6</item>
     </style>
     <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">#C8C7CC</item>
@@ -367,4 +367,47 @@
         <item name="android:progressDrawable">@drawable/download_progress_color</item>
 
     </style>
+
+    <style name="Theme.Transparent.Permission"
+        parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+
+    </style>
+
+    <style name="ScheduleTabLayoutTextStyle">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="ScheduleTaskTabLayoutTextStyle">
+        <item name="android:textSize">13sp</item>
+    </style>
+    <style name="DateTimePickerDateTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--这个绿色是选中时的背景颜色，和当前日期的颜色-->
+        <item name="colorAccent">#36A5F6</item>
+        <!--设置字体颜色-->
+        <item name="android:textColorPrimary">#333333</item>
+    </style>
+
+    <style name="DateTimeAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">15sp</item>
+        <item name="colorAccent">#36A5F6</item>
+    </style>
+
+    <style name="DateTimePickerTimeTheme" parent="@android:style/Theme.Holo.Light.Panel">
+        <item name="android:textColor">#36A5F6</item>
+        <item name="android:textColorPrimary">#333333</item>
+
+    </style>
+
 </resources>

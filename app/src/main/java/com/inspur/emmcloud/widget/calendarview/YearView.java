@@ -134,7 +134,7 @@ public abstract class YearView extends View {
     /**
      * 日历项
      */
-    List<Calendar> mItems;
+    List<EmmCalendar> mItems;
 
     public YearView(Context context) {
         this(context, null);
@@ -294,9 +294,9 @@ public abstract class YearView extends View {
         if (mDelegate.mSchemeDatesMap == null || mDelegate.mSchemeDatesMap.size() == 0) {
             return;
         }
-        for (Calendar a : mItems) {
+        for (EmmCalendar a : mItems) {
             if (mDelegate.mSchemeDatesMap.containsKey(a.toString())) {
-                Calendar d = mDelegate.mSchemeDatesMap.get(a.toString());
+                EmmCalendar d = mDelegate.mSchemeDatesMap.get(a.toString());
                 a.setScheme(TextUtils.isEmpty(d.getScheme()) ? mDelegate.getSchemeText() : d.getScheme());
                 a.setSchemeColor(d.getSchemeColor());
                 a.setSchemes(d.getSchemes());
@@ -381,15 +381,15 @@ public abstract class YearView extends View {
         int d = 0;
         for (int i = 0; i < mLineCount; i++) {
             for (int j = 0; j < 7; j++) {
-                Calendar calendar = mItems.get(d);
+                EmmCalendar emmCalendar = mItems.get(d);
                 if (d > mItems.size() - mNextDiff) {
                     return;
                 }
-                if (!calendar.isCurrentMonth()) {
+                if (!emmCalendar.isCurrentMonth()) {
                     ++d;
                     continue;
                 }
-                draw(canvas, calendar, i, j, d);
+                draw(canvas, emmCalendar, i, j, d);
                 ++d;
             }
         }
@@ -399,36 +399,36 @@ public abstract class YearView extends View {
     /**
      * 开始绘制
      *
-     * @param canvas   canvas
-     * @param calendar 对应日历
-     * @param i        i
-     * @param j        j
-     * @param d        d
+     * @param canvas      canvas
+     * @param emmCalendar 对应日历
+     * @param i           i
+     * @param j           j
+     * @param d           d
      */
-    private void draw(Canvas canvas, Calendar calendar, int i, int j, int d) {
+    private void draw(Canvas canvas, EmmCalendar emmCalendar, int i, int j, int d) {
         int x = j * mItemWidth + mDelegate.getYearViewPadding();
         int y = i * mItemHeight + getMonthViewTop();
 
-        boolean isSelected = calendar.equals(mDelegate.mSelectedCalendar);
-        boolean hasScheme = calendar.hasScheme();
+        boolean isSelected = emmCalendar.equals(mDelegate.mSelectedEmmCalendar);
+        boolean hasScheme = emmCalendar.hasScheme();
 
         if (hasScheme) {
             //标记的日子
             boolean isDrawSelected = false;//是否继续绘制选中的onDrawScheme
             if (isSelected) {
-                isDrawSelected = onDrawSelected(canvas, calendar, x, y, true);
+                isDrawSelected = onDrawSelected(canvas, emmCalendar, x, y, true);
             }
             if (isDrawSelected || !isSelected) {
                 //将画笔设置为标记颜色
-                mSchemePaint.setColor(calendar.getSchemeColor() != 0 ? calendar.getSchemeColor() : mDelegate.getSchemeThemeColor());
-                onDrawScheme(canvas, calendar, x, y);
+                mSchemePaint.setColor(emmCalendar.getSchemeColor() != 0 ? emmCalendar.getSchemeColor() : mDelegate.getSchemeThemeColor());
+                onDrawScheme(canvas, emmCalendar, x, y);
             }
         } else {
             if (isSelected) {
-                onDrawSelected(canvas, calendar, x, y, false);
+                onDrawSelected(canvas, emmCalendar, x, y, false);
             }
         }
-        onDrawText(canvas, calendar, x, y, hasScheme, isSelected);
+        onDrawText(canvas, emmCalendar, x, y, hasScheme, isSelected);
     }
 
     /**
@@ -473,35 +473,35 @@ public abstract class YearView extends View {
     /**
      * 绘制选中的日期
      *
-     * @param canvas    canvas
-     * @param calendar  日历日历calendar
-     * @param x         日历Card x起点坐标
-     * @param y         日历Card y起点坐标
-     * @param hasScheme hasScheme 非标记的日期
+     * @param canvas      canvas
+     * @param emmCalendar 日历日历calendar
+     * @param x           日历Card x起点坐标
+     * @param y           日历Card y起点坐标
+     * @param hasScheme   hasScheme 非标记的日期
      * @return 是否绘制onDrawScheme，true or false
      */
-    protected abstract boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme);
+    protected abstract boolean onDrawSelected(Canvas canvas, EmmCalendar emmCalendar, int x, int y, boolean hasScheme);
 
     /**
      * 绘制标记的日期,这里可以是背景色，标记色什么的
      *
-     * @param canvas   canvas
-     * @param calendar 日历calendar
-     * @param x        日历Card x起点坐标
-     * @param y        日历Card y起点坐标
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param y           日历Card y起点坐标
      */
-    protected abstract void onDrawScheme(Canvas canvas, Calendar calendar, int x, int y);
+    protected abstract void onDrawScheme(Canvas canvas, EmmCalendar emmCalendar, int x, int y);
 
 
     /**
      * 绘制日历文本
      *
-     * @param canvas     canvas
-     * @param calendar   日历calendar
-     * @param x          日历Card x起点坐标
-     * @param y          日历Card y起点坐标
-     * @param hasScheme  是否是标记的日期
-     * @param isSelected 是否选中
+     * @param canvas      canvas
+     * @param emmCalendar 日历calendar
+     * @param x           日历Card x起点坐标
+     * @param y           日历Card y起点坐标
+     * @param hasScheme   是否是标记的日期
+     * @param isSelected  是否选中
      */
-    protected abstract void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected);
+    protected abstract void onDrawText(Canvas canvas, EmmCalendar emmCalendar, int x, int y, boolean hasScheme, boolean isSelected);
 }

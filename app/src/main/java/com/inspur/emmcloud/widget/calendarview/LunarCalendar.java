@@ -318,25 +318,25 @@ final class LunarCalendar {
     /**
      * 初始化各种农历、节日
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      */
-    static void setupLunarCalendar(Calendar calendar) {
-        int year = calendar.getYear();
-        int month = calendar.getMonth();
-        int day = calendar.getDay();
-        calendar.setWeekend(CalendarUtil.isWeekend(calendar));
-        calendar.setWeek(CalendarUtil.getWeekFormCalendar(calendar));
+    static void setupLunarCalendar(EmmCalendar emmCalendar) {
+        int year = emmCalendar.getYear();
+        int month = emmCalendar.getMonth();
+        int day = emmCalendar.getDay();
+        emmCalendar.setWeekend(CalendarUtil.isWeekend(emmCalendar));
+        emmCalendar.setWeek(CalendarUtil.getWeekFormCalendar(emmCalendar));
 
-        Calendar lunarCalendar = new Calendar();
-        calendar.setLunarCalendar(lunarCalendar);
+        EmmCalendar lunarEmmCalendar = new EmmCalendar();
+        emmCalendar.setLunarEmmCalendar(lunarEmmCalendar);
         int[] lunar = LunarUtil.solarToLunar(year, month, day);
-        lunarCalendar.setYear(lunar[0]);
-        lunarCalendar.setMonth(lunar[1]);
-        lunarCalendar.setDay(lunar[2]);
-        calendar.setLeapYear(CalendarUtil.isLeapYear(year));
+        lunarEmmCalendar.setYear(lunar[0]);
+        lunarEmmCalendar.setMonth(lunar[1]);
+        lunarEmmCalendar.setDay(lunar[2]);
+        emmCalendar.setLeapYear(CalendarUtil.isLeapYear(year));
         if (lunar[3] == 1) {//如果是闰月
-            calendar.setLeapMonth(lunar[1]);
-            lunarCalendar.setLeapMonth(lunar[1]);
+            emmCalendar.setLeapMonth(lunar[1]);
+            lunarEmmCalendar.setLeapMonth(lunar[1]);
         }
         String solarTerm = LunarCalendar.getSolarTerm(year, month, day);
         String gregorian = LunarCalendar.gregorianFestival(month, day);
@@ -345,30 +345,31 @@ final class LunarCalendar {
         if (TextUtils.isEmpty(gregorian)) {
             gregorian = getSpecialFestival(year, month, day);
         }
-        calendar.setSolarTerm(solarTerm);
-        calendar.setGregorianFestival(gregorian);
-        calendar.setTraditionFestival(festival);
-        lunarCalendar.setTraditionFestival(festival);
-        lunarCalendar.setSolarTerm(solarTerm);
-        if (!TextUtils.isEmpty(solarTerm)) {
-            calendar.setLunar(solarTerm);
-        } else if (!TextUtils.isEmpty(gregorian)) {
-            calendar.setLunar(gregorian);
+        emmCalendar.setSolarTerm(solarTerm);
+        emmCalendar.setGregorianFestival(gregorian);
+        emmCalendar.setTraditionFestival(festival);
+        lunarEmmCalendar.setTraditionFestival(festival);
+        lunarEmmCalendar.setSolarTerm(solarTerm);
+        //jason修改处：以公历节日优先级最高
+        if (!TextUtils.isEmpty(gregorian)) {
+            emmCalendar.setLunar(gregorian);
+        } else if (!TextUtils.isEmpty(solarTerm)) {
+            emmCalendar.setLunar(solarTerm);
         } else if (!TextUtils.isEmpty(festival)) {
-            calendar.setLunar(festival);
+            emmCalendar.setLunar(festival);
         } else {
-            calendar.setLunar(lunarText);
+            emmCalendar.setLunar(lunarText);
         }
-        lunarCalendar.setLunar(lunarText);
+        lunarEmmCalendar.setLunar(lunarText);
     }
 
     /**
      * 获取农历节日
      *
-     * @param calendar calendar
+     * @param emmCalendar calendar
      * @return 获取农历节日
      */
-    static String getLunarText(Calendar calendar) {
-        return getLunarText(calendar.getYear(), calendar.getMonth(), calendar.getDay());
+    static String getLunarText(EmmCalendar emmCalendar) {
+        return getLunarText(emmCalendar.getYear(), emmCalendar.getMonth(), emmCalendar.getDay());
     }
 }

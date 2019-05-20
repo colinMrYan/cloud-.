@@ -61,6 +61,9 @@
     <string name="tab_not_support_tips">%1$s function has been revised , Please<Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
     <string name="choose">Choose</string>
     <string name="file_type">File type</string>
+    <string name="app_update_prepare">Ready to download</string>
+    <string name="app_update_error">Update failed</string>
+    <string name="app_update_loaded">Downloaded:</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
@@ -82,6 +85,7 @@
     <string name="begin">Begin</string>
     <string name="end">End</string>
     <string name="yesterday">Yesterday</string>
+    <string name="the_day_before_yesterday">The day before yesterday</string>
     <string name="format_default">MM/dd/yy HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
     <string name="format_year_month_day">MM/dd/yy</string>
@@ -90,6 +94,7 @@
     <string name="format_month_day">MMM dd</string>
     <string name="format_task_month_day">MMM dd</string>
     <string name="format_year_month_day_hour_minute">MM/dd/yy HH:mm</string>
+    <string name="format_month_day_hour_minute">MM/dd HH:mm</string>
     <string name="format_year_month">yyyy-MM</string>
     <string name="time_null">null</string>
     <string name="cutdown_now">now</string>
@@ -130,7 +135,7 @@
     <string name="message_without_interruption">Mute Notifications</string>
     <string name="login_hint_text">Name/E-mail/Phone</string>
     <string name="modify_group_name">Group Contact Card</string>
-    <string name="choose_common_office">Add common office address</string>
+    <string name="choose_common_office">common office address</string>
     <string name="please_click_choosing_time">Please click and choose time</string>
     <string name="meeting_room">Meeting Room</string>
     <string name="building">Building</string>
@@ -257,6 +262,7 @@
     <string name="send_a_contact_card">[Buisiness Card]</string>
     <string name="send_a_meeting_invitation">[Meeting Invitation]</string>
     <string name="cancel_a_meeting">[Meeting Cancellation]</string>
+    <string name="send_action_message">[Activity]</string>
     <string name="send_a_meeting_request">[Meeting Approval]</string>
     <string name="send_a_message_of_unknown_type">[Unknown]</string>
     <string name="direct_no_message">No new messages</string>
@@ -312,6 +318,10 @@
     <string name="msg_key_search_member"> Please enter key words</string>
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>
+    <string name="chat_long_click_copy">Copy</string>
+    <string name="chat_long_click_transmit">Transmit</string>
+    <string name="chat_long_click_schedule">Schedule</string>
+    <string name="chat_long_click_copy_text">Copy text</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -344,6 +354,108 @@
     <string name="work_task_text">Todo</string>
     <string name="work_info_text">Info bar</string>
     <string name="time">Time</string>
+    <string name="work_search_hint">Search calendars, tasks</string>
+    <string name="work_mession">Task</string>
+    <string name="work_schedule">Schedule</string>
+    <string name="work_task_mine">Created</string>
+    <string name="work_task_involved">Involved</string>
+    <string name="work_task_focused">Focused</string>
+    <string name="work_task_done">Finished</string>
+    <string name="work_task_all">Whole</string>
+    <string name="work_task_end">%1$s End</string>
+
+    <!-- 日程 （新）-->
+    <string name="schedule_event_alert">Schedule reminder</string>
+    <string name="schedule_calendar_add">Add schedule</string>
+    <string name="schedule_calendar_detail">Schedule detail</string>
+    <string name="schedule_setting_list_view">List view</string>
+    <string name="schedule_setting_day_view">Day View</string>
+    <string name="schedule_calendar_company">My Schedule</string>
+    <string name="schedule_setting_divide_group">Divide groups</string>
+    <string name="schedule_setting_quarter">Quarter</string>
+    <string name="schedule_setting_month">Month</string>
+    <string name="schedule_setting_view">View</string>
+    <string name="schedule_calendar_input_content_hint">Please enter the schedule content...</string>
+    <string name="schedule_calendar_time_alert">End time cannot be earlier than start time</string>
+    <string name="schedule_alert_time_occur">On day of event(9 AM)</string>
+    <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
+    <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
+    <string name="schedule_alert_time_before_a_week">1 Week before</string>
+    <string name="schedule_calendar_modify">Modify schedule</string>
+    <string name="schedule_calendar_delete">Delete schedule</string>
+    <string name="schedule_calendar_create">Create schedule</string>
+    <string name="schedule_calendar_my_schedule">My schedule</string>
+    <string name="schedule_calendar_my_meeting">My meeting</string>
+    <string name="schedule_calendar_my_task">My task</string>
+    <string name="schedule_calendar_all_day">All day</string>
+    <string name="schedule_calendar_am">AM</string>
+    <string name="schedule_calendar_pm">PM</string>
+    <string name="schedule_calendar_so_on">... </string>
+    <string name="schedule_calendar_schedules">schedules</string>
+
+    <string name="schedule_calendar_no_schedule_today">No schedule</string>
+    <string name="schedule_meeting_no_meeting_today">No meeting</string>
+    <string name="schedule_task_no_task_today">No task</string>
+
+
+    <!--任务（新）-->
+    <string name="schedule_task_add">Add task</string>
+    <string name="schedule_task_detail">Task detail</string>
+    <string name="schedule_task_content_hint">Please enter the content</string>
+    <string name="schedule_task_priority">Priority</string>
+    <string name="schedule_task_category">Category</string>
+    <string name="schedule_task_category_no">No</string>
+    <string name="schedule_task_manager">Manager</string>
+    <string name="schedule_task_participant">Participant</string>
+    <string name="schedule_task_manager_num_0">0 people</string>
+    <string name="schedule_task_participant_num_0">0 people</string>
+    <string name="schedule_task_deadline">Deadline</string>
+    <string name="schedule_task_state">State</string>
+    <string name="schedule_task_state_active">Ongoing</string>
+    <string name="schedule_task_stop_alert">End reminder</string>
+    <string name="schedule_task_more">More</string>
+    <string name="schedule_task_attachment">Attachment</string>
+    <string name="schedule_task_create">Create task</string>
+    <string name="schedule_task_project_manager">Tag manager</string>
+    <string name="schedule_task_project_manager_add">OK</string>
+    <string name="schedule_task_add_manager">Add manager</string>
+    <string name="schedule_task_add_participant">Add participant</string>
+    <string name="schedule_task_label">Tag</string>
+    <string name="schedule_task_label_add_hint">Please enter a tag name</string>
+    <string name="schedule_task_label_color">Tag Color</string>
+    <string name="schedule_task_delete_the_tag">Delete Tag</string>
+    <string name="schedule_task_tag_name_null_hint">Tag name cannot be empty</string>
+    <string name="schedule_task_title_is_empty">Task title cannot be empty</string>
+    <string name="schedule_task_title_is_length">Task title up to 64 characters</string>
+    <string name="schedule_task_a_person">person</string>
+    <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
+
+    <!--会议（新）-->
+    <string name="schedule_meeting_booking">Book Meeting</string>
+    <string name="schedule_meeting_room_booking">New meeting</string>
+    <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
+    <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
+    <string name="schedule_meeting_room_booking_detail">Meeting room details</string>
+    <string name="schedule_meeting_add_attendee_title">Attendee</string>
+    <string name="schedule_meeting_add_record_holder_title">Recorder</string>
+    <string name="schedule_meeting_add_conference_title">Contact</string>
+    <string name="schedule_meeting_select_attendee_title">Select attendee</string>
+    <string name="schedule_meeting_booking_detail">Meeting detail</string>
+    <string name="schedule_meeting_select_record_holder_title">Select recorder</string>
+    <string name="schedule_meeting_select_conference_title">Select conference</string>
+    <string name="schedule_meeting_add_note">Note</string>
+    <string name="schedule_meeting_add_alert_time">Reminder</string>
+    <string name="schedule_meeting_history">History meetings</string>
+    <string name="schedule_meeting_search">Search meeting</string>
+    <string name="schedule_meeting_booking_room">Booking meeting room</string>
+    <string name="schedule_meeting_room_list">Meeting room list</string>
+    <string name="schedule_meeting_in_meeting">Meeting</string>
+    <string name="schedule_meeting_be_free">Free</string>
+    <string name="schedule_choose_common_office">Common office locations</string>
+    <string name="schedule_meeting_change">Modify meeting</string>
+    <string name="schedule_meeting_cancel">Delete meeting</string>
+    <string name="schedule_meeting_my_create">I created：</string>
+    <string name="schedule_meeting_my_take_part_in"> I involved：</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -431,7 +543,7 @@
     <string name="clouddriver_upload_again">Upload Again</string>>
     <string name="clouddriver_download_size">Download(%1$s)</string>
     <string name="clouddriver_downloading_status">Downloading(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">No special characters can be included in the file name: / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_file_name_invaliad">No special characters can be included in the file name: / \ " : | * ? &lt; &gt;&#038; </string>
     <string name="clouddriver_select_photo">Gallery</string>
     <string name="clouddriver_select_file">File</string>
     <string name="clouddriver_volume_info">Shared Disk Details</string>
@@ -445,8 +557,8 @@
     <string name="clouddriver_add_volume_member">Add Member</string>
     <string name="clouddriver_del_volume_group_member">Delete Member</string>
     <string name="clouddriver_add_volume_group_member">Add Member</string>
-    <string name="clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \ " : | * ? &lt; &gt; </string>
-    <string name="clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \ " : | * ? &lt; &gt; &#038;</string>
+    <string name="clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \ " : | * ? &lt; &gt; &#038; </string>
     <string name="clouddriver_exists_same_name">Already exists file / folder of the same name</string>
     <string name="clouddriver_volume_group_info">Group Detaiks</string>
     <string name="clouddriver_volume_group_member">Group Member</string>
@@ -480,6 +592,7 @@
     <string name="group">Group</string>
     <string name="people_num">%1$dpeople</string>
     <string name="file_rename">File Rename</string>
+    <string name="folder_rename">Folder Rename</string>
     <string name="refresh">Refresh</string>
 
     <!--Webex 会议-->
@@ -624,13 +737,16 @@
     <string name="mine_theme_grey">Grey</string>
     <string name="mine_theme_blue">Blue</string>
 
+    <string name="mine_tab_layout">Layout Switching</string>
+    <string name="mine_tab_layout_switch">Switch to：%1$s</string>
+
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
     <string name="modify_input_confirm_passord">Enter confirm password</string>
     <string name="modify_new_old_same">New password can not be the same as original one</string>
     <string name="modify_not_same">Passwords do not match, make sure</string>
     <string name="approval_input_password_valiad">Enter a password between 6-64 characters.</string>
-    <string name="modify_password_invalid">The password should contain three of the four types of characters: numerals, lowercase letters, uppercase letters and special symbols, and the length should be at least 8</string>
+    <string name="modify_password_invalid">Password must be 6-16 characters and contain both numbers and letters/special characters.</string>
     <string name="modify_password_not_correct">The original password is incorrect</string>
     <string name="modify_password_fail">Failed to modify password</string>
     <string name="modify_password">Change the password</string>
@@ -740,8 +856,8 @@
     <string name="meeting_choose_log_members">Choose meeting persons</string>
     <string name="meeting_begin_or_date_time">Select the time</string>
     <string name="meeting_end_time_no_empty">Choose end time</string>
-    <string name="meeting_topic_too_long">Subject cannot exceed 128 characters</string>
-    <string name="meeting_notice_too_long">Notice cannot be more than 128 characters</string>
+    <string name="meeting_topic_too_long">Subject cannot exceed 100 characters</string>
+    <string name="meeting_notice_too_long">Notice cannot be more than 500 characters</string>
     <string name="meeting_booking_error">Reservation error</string>
     <string name="meeting_time_is_word">Time is a character</string>
     <string name="meeting_room_number">S206</string>
@@ -810,12 +926,36 @@
     <string name="meeting_user_profile_missing">User profile missing</string>
     <string name="meeting_department_booking_times_over_run">Department booking time over run</string>
 
+    <string name="meeting_detail_time">Time：%1$s</string>
+    <string name="meeting_detail_remind">Remind：%1$s</string>
+    <string name="meeting_detail_create">%1$s Create</string>
+    <string name="meeting_detail_attendee">Attendee:%1$s</string>
+    <string name="meeting_detail_record_holder">Recorder:%1$s</string>
+    <string name="meeting_detail_conference">Contact:%1$s</string>
+    <string name="meeting_detail_note">Note:%1$s</string>
+    <string name="meeting_detail_sign">Meeting Sign</string>
+    <string name="meeting_detail_summary">十 Add Summary</string>
+    <string name="meeting_detail_change_meeting">Change Meeting</string>
+    <string name="meeting_detail_show_qrcode">Show QrCode</string>
+    <string name="meeting_detail_add_participant">Add Participant</string>
+    <string name="meeting_detail_before_beginning">Before Beginning</string>
+    <string name="meeting_detail_ten_minutes">Ten minutes before</string>
+    <string name="meeting_detail_twenty_minutes">Twenty minutes before</string>
+    <string name="meeting_detail_thirty_minutes">Thirty minutes before</string>
+    <string name="meeting_detail_one_hour">One hour before</string>
+    <string name="meeting_detail_one_day">One day before</string>
+    <string name="meeting_detail_attendee_num">%1$s et al. %2$d</string>
+    <string name="meeting_detail_location">Place:</string>
+
+
+
     <!-- 日历 -->
     <string name="calendar_detail">Calendar Details</string>
     <string name="calendar_adjust">Adjust</string>
     <string name="calendar_please_input_title">Please enter a title </string>
     <string name="calendar_start_or_end_time_illegal">End time should not be less than the start time</string>
-    <string name="calendar_tilte_cannot_exceed_64">Title should not exceed 64 characters</string>
+    <string name="calendar_end_time_no_before_current">End time cannot be earlier than current time</string>
+    <string name="calendar_title_cannot_exceed_num">Title should not exceed 100 characters</string>
     <string name="calendar_select_calendar">Select a calendar type </string>
     <string name="calendar_add_success">Add successfully</string>
     <string name="calendar_every_year">Every Year</string>
@@ -824,7 +964,9 @@
     <string name="every_day">Every Day</string>
     <string name="calendar_when_event_occurs">The event occurs</string>
     <string name="calendar_five_minite_ago">5 minutes ago</string>
+    <string name="calendar_ten_minite_ago">10 minutes ago</string>
     <string name="calendar_fifteen_minite_ago">15 minutes ago</string>
+    <string name="calendar_twenty_minite_ago">20 minutes ago</string>
     <string name="calendar_thirty_minite_ago">30 minutes ago</string>
     <string name="calendar_one_hour_ago">1 hour ago</string>
     <string name="calendar_two_hours_ago">2 hour ago</string>
@@ -833,6 +975,8 @@
     <string name="calendar_a_week_ago">1 week ago</string>
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
+    <string name="calendar_no_alert">No reminder</string>
+    <string name="calendar_when_event_finished">Finished</string>
 
     <!-- 通用 -->
     <string name="save">Save</string>
@@ -1136,6 +1280,10 @@
     <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
     <string name="voice_to_word">Voice to Text</string>
 
+    <string name="notification_switch">New Notification</string>
+    <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
+    <string name="notification_switch_open_setting">Cloud + Message Notification in the System Closed to Open？</string>
+
     <string name="resend_file_failed">The message resent failed because the resource file could not be found</string>
 
     <!--权限管理-->
@@ -1150,13 +1298,23 @@
     <string name="permission_storage_permission">Storage</string>
     <string name="permission_next">Next</string>
 
+    <string name="permission_name_calendar">Calendar</string>
+    <string name="permission_name_camera">Camera</string>
+    <string name="permission_name_contacts">Contacts</string>
+    <string name="permission_name_location">Location</string>
+    <string name="permission_name_microphone">Microphone</string>
+    <string name="permission_name_phone">Phone</string>
+    <string name="permission_name_sensors">Body Sensors</string>
+    <string name="permission_name_sms">SMS</string>
+    <string name="permission_name_storage">Storage</string>
+
     <!--键盘相关-->
     <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
     <string name="emm_keyboard_zero2nine">1234567890</string>
     <string name="emm_keyboard_number">Number</string>
     <string name="emm_keyboard_symbol">#+=</string>
     <string name="emm_keyboard_letter">Letter</string>
-    <string name="emm_secure_keyboard">Secure Keyboard</string>
+    <string name="emm_secure_keyboard">Safety Keyboard</string>
     <string name="emm_keyboard_space">space</string>
 
     <string name="welcome_to">Welcome to </string>
@@ -1168,4 +1326,31 @@
     <string name="group_qrcode">QR Code</string>
 
     <string name="user_call">Call</string>
+
+    <string-array name="segment_control_items">
+        <item>Low</item>
+        <item>Middle</item>
+        <item>Height</item>
+    </string-array>
+
+    <string-array name="week_string_array">
+        <item>SUN</item>
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THU</item>
+        <item>FRI</item>
+        <item>SAT</item>
+    </string-array>
+
+    <string-array name="year_view_week_string_array">
+        <item>SUN</item>
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THU</item>
+        <item>FRI</item>
+        <item>SAT</item>
+    </string-array>
+
 </resources>

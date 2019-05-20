@@ -62,10 +62,10 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.5px"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="61dp"
-            android:background="#E3E3E3" />
+            android:background="@color/color_list_divider" />
     </RelativeLayout>
 
 </LinearLayout>

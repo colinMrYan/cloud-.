@@ -1,23 +1,25 @@
 package com.inspur.emmcloud.util.common.richtext.ig;
 
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.os.Build;
-import android.support.v7.widget.TintContextWrapper;
+import android.graphics.drawable.Drawable;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.cache.BitmapPool;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
 import com.inspur.emmcloud.util.common.richtext.ImageHolder;
 import com.inspur.emmcloud.util.common.richtext.RichTextConfig;
 import com.inspur.emmcloud.util.common.richtext.callback.ImageLoadNotify;
 import com.inspur.emmcloud.util.common.richtext.drawable.DrawableWrapper;
 import com.inspur.emmcloud.util.common.richtext.exceptions.ImageDecodeException;
+import com.inspur.emmcloud.util.common.richtext.ext.ContextKit;
+import com.inspur.emmcloud.util.common.richtext.ext.Debug;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
+
 
 /**
  * Created by zhou on 2016/12/9.
@@ -25,36 +27,31 @@ import java.lang.ref.WeakReference;
  */
 abstract class AbstractImageLoader<T> implements ImageLoader {
 
+    private static final String TAG = "AbstractImageLoader";
+
     final ImageHolder holder;
-    final SourceDecode<T> sourceDecode;
     private final RichTextConfig config;
     private final WeakReference<DrawableWrapper> drawableWrapperWeakReference;
+    private final SourceDecode<T> sourceDecode;
     private final WeakReference<TextView> textViewWeakReference;
     private final WeakReference<ImageLoadNotify> notifyWeakReference;
-    BitmapWrapper.SizeCacheHolder sizeCacheHolder;
+
     private WeakReference<ImageWrapper> imageWrapperWeakReference;
 
-    AbstractImageLoader(ImageHolder holder, RichTextConfig config, TextView textView, DrawableWrapper drawableWrapper, ImageLoadNotify iln, SourceDecode<T> sourceDecode, BitmapWrapper.SizeCacheHolder sizeCacheHolder) {
+    AbstractImageLoader(ImageHolder holder, RichTextConfig config, TextView textView, DrawableWrapper drawableWrapper, ImageLoadNotify iln, SourceDecode<T> sourceDecode) {
         this.holder = holder;
         this.config = config;
         this.sourceDecode = sourceDecode;
         this.textViewWeakReference = new WeakReference<>(textView);
         this.drawableWrapperWeakReference = new WeakReference<>(drawableWrapper);
         this.notifyWeakReference = new WeakReference<>(iln);
-        this.sizeCacheHolder = sizeCacheHolder;
         onLoading();
-    }
-
-    static int getSampleSize(int inWidth, int inHeight, int outWidth, int outHeight) {
-        int maxIntegerFactor = (int) Math.ceil(Math.max(inHeight / (float) outHeight,
-                inWidth / (float) outWidth));
-        int lesserOrEqualSampleSize = Math.max(1, Integer.highestOneBit(maxIntegerFactor));
-        return lesserOrEqualSampleSize << (lesserOrEqualSampleSize < maxIntegerFactor ? 1 : 0);
     }
 
     @Override
     public void onLoading() {
-        if (!activityIsAlive()) {
+        Debug.log(TAG, "onLoading > " + holder.getSource());
+        if (activityDestroyed()) {
             return;
         }
         DrawableWrapper drawableWrapper = drawableWrapperWeakReference.get();
@@ -62,34 +59,31 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
             return;
         }
         holder.setImageState(ImageHolder.ImageState.LOADING);
-        drawableWrapper.setDrawable(config.placeHolder);
-        if (!useCache(drawableWrapper)) {
-            if (config.imageFixCallback != null) {
-                config.imageFixCallback.onLoading(holder);
-            }
-            int imageWidth = 0, imageHeight = 0;
-            boolean fill = false;
-            if (config.placeHolder != null) {
-                Rect bounds = config.placeHolder.getBounds();
-                imageWidth = bounds.width();
-                imageHeight = bounds.height();
-                fill = imageWidth <= 0 || imageHeight <= 0;
-            }
-            int width = getHolderWidth(imageWidth);
-            int height = getHolderHeight(imageHeight);
-            drawableWrapper.setScaleType(holder.getScaleType());
-            drawableWrapper.setBounds(0, 0, width, height);
-            drawableWrapper.setBorderHolder(holder.getBorderHolder());
-            if (fill) {
-                config.placeHolder.setBounds(0, 0, width, height);
-            }
+        Drawable placeHolder = holder.getPlaceHolder();
+        Rect bounds = placeHolder.getBounds();
+        drawableWrapper.setDrawable(placeHolder);
+
+        if (config.imageFixCallback != null) {
+            config.imageFixCallback.onLoading(holder);
         }
-        drawableWrapper.calculate();
+
+        if (drawableWrapper.isHasCache()) {
+            placeHolder.setBounds(drawableWrapper.getBounds());
+        } else {
+            drawableWrapper.setScaleType(holder.getScaleType());
+            drawableWrapper.setBorderHolder(holder.getBorderHolder());
+            drawableWrapper.setBounds(0, 0, getHolderWidth(bounds.width()), getHolderHeight(bounds.height()));
+
+            drawableWrapper.calculate();
+        }
+
         resetText();
+
     }
 
     @Override
     public int onSizeReady(int width, int height) {
+        Debug.log(TAG, "onSizeReady > " + "width = " + width + " , height = " + height + " , " + holder.getSource());
         holder.setImageState(ImageHolder.ImageState.SIZE_READY);
         ImageHolder.SizeHolder sizeHolder = new ImageHolder.SizeHolder(width, height);
         if (config.imageFixCallback != null) {
@@ -107,7 +101,8 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
 
     @Override
     public void onFailure(Exception e) {
-        if (!activityIsAlive()) {
+        Debug.loge(TAG, "onFailure > " + holder.getSource(), e);
+        if (activityDestroyed()) {
             return;
         }
         DrawableWrapper drawableWrapper = drawableWrapperWeakReference.get();
@@ -115,35 +110,30 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
             return;
         }
         holder.setImageState(ImageHolder.ImageState.FAILED);
-        drawableWrapper.setDrawable(config.errorImage);
-        if (!useCache(drawableWrapper)) {
-            if (config.imageFixCallback != null) {
-                config.imageFixCallback.onFailure(holder, e);
-            }
-            int imageWidth = 0, imageHeight = 0;
-            boolean fill = false;
-            if (config.errorImage != null) {
-                Rect bounds = config.errorImage.getBounds();
-                imageWidth = bounds.width();
-                imageHeight = bounds.height();
-                fill = imageWidth <= 0 || imageHeight <= 0;
-            }
-            int width = getHolderWidth(imageWidth);
-            int height = getHolderHeight(imageHeight);
-            drawableWrapper.setScaleType(holder.getScaleType());
-            drawableWrapper.setBounds(0, 0, width, height);
-            drawableWrapper.setBorderHolder(holder.getBorderHolder());
-            if (fill) {
-                config.errorImage.setBounds(0, 0, width, height);
-            }
+        Drawable errorImage = holder.getErrorImage();
+        Rect bounds = errorImage.getBounds();
+        drawableWrapper.setDrawable(errorImage);
+
+        if (config.imageFixCallback != null) {
+            config.imageFixCallback.onFailure(holder, e);
         }
-        drawableWrapper.calculate();
+
+        if (drawableWrapper.isHasCache()) {
+            errorImage.setBounds(drawableWrapper.getBounds());
+        } else {
+            drawableWrapper.setScaleType(holder.getScaleType());
+            drawableWrapper.setBounds(0, 0, getHolderWidth(bounds.width()), getHolderHeight(bounds.height()));
+            drawableWrapper.setBorderHolder(holder.getBorderHolder());
+            drawableWrapper.calculate();
+        }
+
         resetText();
         done();
     }
 
     @Override
     public void onResourceReady(ImageWrapper imageWrapper) {
+        Debug.log(TAG, "onResourceReady > " + holder.getSource());
         if (imageWrapper == null) {
             onFailure(new ImageDecodeException());
             return;
@@ -158,55 +148,51 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
         }
         imageWrapperWeakReference = new WeakReference<>(imageWrapper);
         holder.setImageState(ImageHolder.ImageState.READY);
-        drawableWrapper.setScaleType(holder.getScaleType());
-        drawableWrapper.setDrawable(imageWrapper.getDrawable(textView.getResources()));
-        if (!useCache(drawableWrapper)) {
-            int imageWidth = imageWrapper.getWidth(), imageHeight = imageWrapper.getHeight();
-            if (config.imageFixCallback != null) {
-                config.imageFixCallback.onImageReady(this.holder, imageWidth, imageHeight);
-            }
-            int width = getHolderWidth(imageWidth);
-            int height = getHolderHeight(imageHeight);
-            drawableWrapper.setScaleType(this.holder.getScaleType());
-            drawableWrapper.setBounds(0, 0, width, height);
-            drawableWrapper.setBorderHolder(holder.getBorderHolder());
+
+        Drawable drawable = imageWrapper.getDrawable(textView.getResources());
+        drawableWrapper.setDrawable(drawable);
+
+        int imageWidth = imageWrapper.getWidth(), imageHeight = imageWrapper.getHeight();
+        if (config.imageFixCallback != null) {
+            config.imageFixCallback.onImageReady(this.holder, imageWidth, imageHeight);
         }
-        drawableWrapper.calculate();
-        // startWebSocket gif play
+
+        if (drawableWrapper.isHasCache()) {
+            drawable.setBounds(drawableWrapper.getBounds());
+        } else {
+            drawableWrapper.setScaleType(this.holder.getScaleType());
+            drawableWrapper.setBounds(0, 0, getHolderWidth(imageWidth), getHolderHeight(imageHeight));
+            drawableWrapper.setBorderHolder(holder.getBorderHolder());
+            drawableWrapper.calculate();
+        }
+
+        // start gif play
         if (imageWrapper.isGif() && this.holder.isAutoPlay()) {
             imageWrapper.getAsGif().start(textView);
         }
-        // cache image
-        if (config.cacheType > CacheType.NONE) {
-            BitmapPool pool = BitmapPool.getPool();
-            BitmapWrapper bw = new BitmapWrapper(this.holder.getKey(),
-                    (config.cacheType < CacheType.ALL || imageWrapper.isGif()) ? null : imageWrapper.getAsBitmap(),
-                    drawableWrapper.getBounds(), drawableWrapper.getScaleType(), drawableWrapper.getBorderHolder());
-            pool.put(this.holder.getKey(), bw);
+        // cache size
+        BitmapPool pool = BitmapPool.getPool();
+        String key = holder.getKey();
+        if (config.cacheType.intValue() > CacheType.none.intValue() && !drawableWrapper.isHasCache()) {
+            pool.cacheSize(key, drawableWrapper.getSizeHolder());
         }
+
+        // cache image
+
+        if (config.cacheType.intValue() > CacheType.layout.intValue() && !imageWrapper.isGif()) {
+            pool.cacheBitmap(key, imageWrapper.getAsBitmap());
+        }
+
         // reset TextView
         resetText();
         done();
     }
 
-    int[] getDimensions(T t, BitmapFactory.Options options) {
+    private int[] getDimensions(T t, BitmapFactory.Options options) {
         options.inJustDecodeBounds = true;
         sourceDecode.decodeSize(t, options);
         options.inJustDecodeBounds = false;
         return new int[]{options.outWidth, options.outHeight};
-    }
-
-    BitmapWrapper.SizeCacheHolder loadSizeCacheHolder() {
-        if (sizeCacheHolder == null && config.cacheType > CacheType.NONE) {
-            BitmapWrapper bitmapWrapper = BitmapPool.getPool().read(holder.getKey(), false);
-            if (bitmapWrapper != null) {
-                BitmapWrapper.SizeCacheHolder holder = bitmapWrapper.getSizeCacheHolder();
-                if (holder != null) {
-                    this.sizeCacheHolder = holder;
-                }
-            }
-        }
-        return sizeCacheHolder;
     }
 
     @Override
@@ -219,36 +205,34 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
         }
     }
 
-    InputStream openAssetFile(String name) throws IOException {
-        TextView textView = textViewWeakReference.get();
-        if (textView != null) {
-            return textView.getContext().getAssets().open(name);
-        }
-        return null;
+    private static int getSampleSize(int inWidth, int inHeight, int outWidth, int outHeight) {
+        int maxIntegerFactor = (int) Math.ceil(Math.max(inHeight / (float) outHeight,
+                inWidth / (float) outWidth));
+        int lesserOrEqualSampleSize = Math.max(1, Integer.highestOneBit(maxIntegerFactor));
+        return lesserOrEqualSampleSize << (lesserOrEqualSampleSize < maxIntegerFactor ? 1 : 0);
     }
 
-    private boolean activityIsAlive() {
+    // 执行图片加载，并在加载成功后调用onResourceReady
+    void doLoadImage(T t) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        int[] inDimens = getDimensions(t, options);
+        options.inSampleSize = onSizeReady(inDimens[0], inDimens[1]);
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        onResourceReady(sourceDecode.decode(holder, t, options));
+    }
+
+    private boolean activityDestroyed() {
         TextView textView = textViewWeakReference.get();
         if (textView == null) {
-            return false;
+            Debug.loge(TAG, "textView is recycle");
+            return true;
         }
         Context context = textView.getContext();
-        if (context == null) {
-            return false;
+        boolean isAlive = ContextKit.activityIsAlive(context);
+        if (!isAlive) {
+            Debug.loge(TAG, "activity is destroy");
         }
-        if (context instanceof TintContextWrapper) {
-            context = ((TintContextWrapper) context).getBaseContext();
-        }
-        if (context instanceof Activity) {
-            if (((Activity) context).isFinishing()) {
-                return false;
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && ((Activity) context).isDestroyed()) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return !isAlive;
     }
 
     private void resetText() {
@@ -287,19 +271,6 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
         return tv.getHeight() - tv.getPaddingTop() - tv.getPaddingBottom();
     }
 
-    private boolean useCache(DrawableWrapper drawableWrapper) {
-        if (config.cacheType > CacheType.NONE) {
-            BitmapWrapper.SizeCacheHolder sizeCacheHolder = loadSizeCacheHolder();
-            if (sizeCacheHolder != null) {
-                drawableWrapper.setBounds(sizeCacheHolder.rect);
-                drawableWrapper.setScaleType(sizeCacheHolder.scaleType);
-                drawableWrapper.setBorderHolder(sizeCacheHolder.borderHolder);
-                return true;
-            }
-        }
-        return false;
-    }
-
     private int getHolderWidth(int width) {
         int w = holder.getWidth();
         if (w == ImageHolder.MATCH_PARENT) {
@@ -307,9 +278,9 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
         } else if (w == ImageHolder.WRAP_CONTENT) {
             w = width;
         }
-        if (w <= 0) {
-            return getRealWidth();
-        }
+//        if (w <= 0) {
+//            return getRealWidth();
+//        }
         return w;
     }
 
@@ -320,9 +291,9 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
         } else if (h == ImageHolder.WRAP_CONTENT) {
             h = height;
         }
-        if (h <= 0) {
-            return getRealWidth() / 2;
-        }
+//        if (h <= 0) {
+//            return getRealWidth() / 2;
+//        }
         return h;
     }
 }

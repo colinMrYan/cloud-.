@@ -24,9 +24,11 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.chat.GetMessageCommentResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
@@ -182,6 +184,20 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         View msgDisplayView = null;
         if (!message.getType().equals("media/image")) {
             msgDisplayView = DisplayRegularFileMsg.getView(ChannelMessageDetailActivity.this, message, 1, true);
+            msgDisplayView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+                    String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+                    if (FileUtils.isFileExist(fileDownloadPath)) {
+                        FileUtils.openFile(ChannelMessageDetailActivity.this, fileDownloadPath);
+                    } else {
+                        Intent intent = new Intent(ChannelMessageDetailActivity.this, ChatFileDownloadActivtiy.class);
+                        intent.putExtra("message", message);
+                        ChannelMessageDetailActivity.this.startActivity(intent);
+                    }
+                }
+            });
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView

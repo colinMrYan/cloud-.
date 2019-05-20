@@ -87,7 +87,7 @@ public class UserInfoActivity extends BaseActivity {
     private LinearLayout mobileEmailLayout;
     @ViewInject(R.id.rl_start_chat)
     private RelativeLayout mobileStartChatLayout;
-//    @ViewInject(R.id.tv_user_position)
+    //    @ViewInject(R.id.tv_user_position)
 //    private TextView positionText;
 //    @ViewInject(R.id.ll_user_position)
 //    private LinearLayout mobilePositionLayout;
@@ -100,7 +100,7 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true,0.2f).init();
+        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         init();
     }
 
@@ -182,15 +182,15 @@ public class UserInfoActivity extends BaseActivity {
             dutyText.setVisibility(View.GONE);
         }
         ImageDisplayUtils.getInstance().displayImage(photoImg, headUrl, R.drawable.icon_person_default);
-        startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid())?View.GONE:View.VISIBLE);
+        startChatImg.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
 //        mobilePositionLayout.setVisibility(StringUtils.isBlank(officeStr)?View.GONE:View.VISIBLE);
-        mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr))?View.GONE:View.VISIBLE);
-        mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum)?View.GONE:View.VISIBLE);
-        mobileEmailLayout.setVisibility(StringUtils.isBlank(mail)?View.GONE:View.VISIBLE);
+        mobilePhoneLayout.setVisibility((StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr)) ? View.GONE : View.VISIBLE);
+        mobileSMSLayout.setVisibility(StringUtils.isBlank(phoneNum) ? View.GONE : View.VISIBLE);
+        mobileEmailLayout.setVisibility(StringUtils.isBlank(mail) ? View.GONE : View.VISIBLE);
         boolean isNoContactWay = StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr) && StringUtils.isBlank(mail);
-        mobileContactInfoLayout.setVisibility(isNoContactWay?View.GONE:View.VISIBLE);
-        mobileStartChatLayout.setVisibility(isNoContactWay?View.VISIBLE:View.GONE);
-        userContactWayLayout.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid())?View.GONE:View.VISIBLE);
+        mobileContactInfoLayout.setVisibility(isNoContactWay ? View.GONE : View.VISIBLE);
+        mobileStartChatLayout.setVisibility(isNoContactWay ? View.VISIBLE : View.GONE);
+        userContactWayLayout.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
     }
 
     public void onClick(View v) {
@@ -234,7 +234,7 @@ public class UserInfoActivity extends BaseActivity {
                 showCallUserDialog(contactUser.getTel());
                 break;
             case R.id.ll_user_mail:
-                if(!contactUser.getId().equals(MyApplication.getInstance().getUid())){
+                if (!contactUser.getId().equals(MyApplication.getInstance().getUid())) {
                     AppUtils.sendMail(UserInfoActivity.this, mail, USER_INFO_ACTIVITY_REQUEST_CODE);
                 }
                 break;
@@ -244,7 +244,7 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     private void showCallUserDialog(final String mobile) {
-        if(!contactUser.getId().equals(MyApplication.getInstance().getUid())){
+        if (!contactUser.getId().equals(MyApplication.getInstance().getUid())) {
             new MyQMUIDialog.MessageDialogBuilder(UserInfoActivity.this)
                     .setMessage(mobile)
                     .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
@@ -272,13 +272,13 @@ public class UserInfoActivity extends BaseActivity {
                 .setTitleColor(Color.parseColor("#888888"))
                 .setItemColor(Color.parseColor("#36A5F6"))
                 .setCancelColor(Color.parseColor("#333333"));
-        if(!StringUtils.isBlank(phoneNum)){
+        if (!StringUtils.isBlank(phoneNum)) {
             builder.addItem(getString(R.string.user_info_phone_number) + ":" + phoneNum);
         }
-        if(!StringUtils.isBlank(officePhoneNum)){
+        if (!StringUtils.isBlank(officePhoneNum)) {
             builder.addItem(getString(R.string.user_office_phone) + ":" + officePhoneNum);
         }
-        if(!StringUtils.isBlank(phoneNum) && !StringUtils.isBlank(officePhoneNum)){
+        if (!StringUtils.isBlank(phoneNum) && !StringUtils.isBlank(officePhoneNum)) {
             builder.setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(ActionSheetDialog dialog, View itemView, int position) {
@@ -293,12 +293,12 @@ public class UserInfoActivity extends BaseActivity {
                     }
                 }
             }).build().show();
-        }else if(!StringUtils.isBlank(phoneNum) || !StringUtils.isBlank(officePhoneNum)){
+        } else if (!StringUtils.isBlank(phoneNum) || !StringUtils.isBlank(officePhoneNum)) {
             builder.setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                     dialog.dismiss();
-                    String mobileNum = StringUtils.isBlank(phoneNum)?officePhoneNum:phoneNum;
+                    String mobileNum = StringUtils.isBlank(phoneNum) ? officePhoneNum : phoneNum;
                     AppUtils.call(UserInfoActivity.this, mobileNum, USER_INFO_ACTIVITY_REQUEST_CODE);
                 }
             }).build().show();

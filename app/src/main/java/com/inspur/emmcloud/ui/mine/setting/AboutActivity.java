@@ -13,11 +13,11 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
@@ -60,7 +60,6 @@ public class AboutActivity extends BaseActivity {
 
     @Event(value = R.id.iv_logo, type = View.OnLongClickListener.class)
     private boolean onLongClick(View v) {
-        LogUtils.jasonDebug("00000000000000");
         new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 //						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
                 .addItem("idm-->" + MyApplication.getInstance().getCloudId())
@@ -75,7 +74,7 @@ public class AboutActivity extends BaseActivity {
                 .addItem("ecm.client-registry-->" + MyApplication.getInstance().getClusterClientRegistry())
                 .addItem("ClientId-->" + PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
-                .addItem("DeviceToken-->" + AppUtils.getPushId(MyApplication.getInstance()))
+                .addItem("DeviceToken-->" + PushManagerUtils.getPushId(MyApplication.getInstance()))
                 .build()
                 .show();
         return false;
@@ -122,8 +121,6 @@ public class AboutActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 switch (msg.what) {
                     case NO_NEED_UPGRADE:
-                        ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
-                        break;
                     case UPGRADE_FAIL:
                         ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
                         break;

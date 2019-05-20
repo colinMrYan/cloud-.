@@ -25,6 +25,27 @@ public class CalendarColorUtils {
             displayColor = context.getResources().getColor(R.color.transparent);
         }
         return displayColor;
+    }
 
+    public static int getColorCircleImage(String color) {
+        int displayColor = -1;
+        if (color.equals("ORANGE")) {
+            displayColor = R.drawable.icon_orange_circle;
+        } else if (color.equals("YELLOW")) {
+            displayColor = R.drawable.icon_yellow_circle;
+        } else if (color.equals("GREEN")) {
+            displayColor = R.drawable.icon_green_circle;
+        } else if (color.equals("BLUE")) {
+            displayColor = R.drawable.icon_blue_circle;
+        } else if (color.equals("PURPLE")) {
+            displayColor = R.drawable.icon_purple_circle;
+        } else if (color.equals("BROWN")) {
+            displayColor = R.drawable.icon_brown_circle;
+        } else if (color.equals("PINK")) {
+            displayColor = R.drawable.icon_red_circle;
+        } else {
+            displayColor = R.drawable.icon_blue_circle;
+        }
+        return displayColor;
     }
 }

@@ -245,6 +245,12 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".ui.mine.setting.TabLayoutSwitchActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            />
+
 
         <activity
             android:name=".ui.mine.setting.SafeGustureFaceSettingActivity"
@@ -648,7 +654,6 @@
 
         <activity
             android:name=".ui.contact.UserInfoActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
@@ -725,6 +730,10 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.work.meeting.MeetingDetailActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -839,7 +848,11 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.work.meeting.MeetingsRoomDetailActivity"
+            android:name=".ui.schedule.meeting.MeetingRoomInfoActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingHistoryActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -849,7 +862,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.calendar.CalBrowseActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
@@ -868,6 +880,19 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.schedule.meeting.MeetingAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingRoomListActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingOfficeSettingActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.work.meeting.MyCommonOfficeActivity"
             android:resizeableActivity="true"
@@ -904,6 +929,38 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.schedule.calendar.CalendarAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.ScheduleAlertTimeActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.calendar.CalendarTypeSelectActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.calendar.CalendarSettingActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.task.TaskAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.task.TaskTagAddActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.task.TaskTagsManageActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.task.TaskSetActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -934,7 +991,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
         <activity
@@ -1073,29 +1129,30 @@
 
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
-            android:configChanges="orientation|screenSize"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"/>
 
         <!-- ImagePicker -->
 
 
+        <activity android:name="com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionActivity"
+            android:configChanges="mcc|mnc|locale|keyboard|keyboardHidden|screenLayout|fontScale|uiMode|orientation|screenSize|layoutDirection"
+            android:screenOrientation="unspecified"
+            android:theme="@style/Theme.Transparent.Permission"
+            />
         <!-- imp插件 -->
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
@@ -1347,7 +1404,6 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"

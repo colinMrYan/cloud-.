@@ -35,7 +35,6 @@ import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.Constant;
@@ -954,8 +953,7 @@ public class ChannelV0Activity extends BaseActivity {
     private void recordUserClickChannel() {
         String from = getIntent().getExtras().getString("from", "");
         if (!from.equals("customer")) {
-            PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
-            PVCollectModelCacheUtils.saveCollectModel(ChannelV0Activity.this, pvCollectModel);
+            PVCollectModelCacheUtils.saveCollectModel("channel", "communicate");
         }
     }
 
