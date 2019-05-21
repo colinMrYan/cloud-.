@@ -19,9 +19,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.TaskListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -178,7 +178,7 @@ public class TaskListFragment extends Fragment {
             public void onRefresh() {
                 isPullUp = false;
                 page = 0;
-                if (NetUtils.isNetworkConnected(getActivity())) {
+                if (NetUtils.isNetworkConnected(getActivity(),false)) {
                     getCurrentTaskList();
                 } else {
                     swipeRefreshLayout.setLoading(false);
@@ -189,7 +189,7 @@ public class TaskListFragment extends Fragment {
         swipeRefreshLayout.setOnLoadListener(new MySwipeRefreshLayout.OnLoadListener() {
             @Override
             public void onLoadMore() {
-                if (NetUtils.isNetworkConnected(getActivity())) {
+                if (NetUtils.isNetworkConnected(getActivity(),false)) {
                     apiService.getFinishTasks(page, 12, "REMOVED");
                     isPullUp = true;
                 } else {
@@ -201,7 +201,7 @@ public class TaskListFragment extends Fragment {
 
     private void getCurrentTaskList() {
         currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             if (currentIndex == TaskFragment.MY_MINE) {
                 getMineTasks();
             } else if (currentIndex == TaskFragment.MY_INVOLVED) {
@@ -220,7 +220,7 @@ public class TaskListFragment extends Fragment {
      * 获取关注的任务
      */
     protected void getFocusedTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFocusedTasks(orderBy, orderType);
         }
@@ -230,7 +230,7 @@ public class TaskListFragment extends Fragment {
      * 获取我参与的任务
      */
     protected void getInvolvedTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getInvolvedTasks(orderBy, orderType);
         }
@@ -240,7 +240,7 @@ public class TaskListFragment extends Fragment {
      * 获取我的任务
      */
     protected void getMineTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMineTasks(orderBy, orderType);
         }
@@ -250,7 +250,7 @@ public class TaskListFragment extends Fragment {
      * 获取所有任务
      */
     private void getAllFinishTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFinishTasks(0, 12, "REMOVED");
         }
@@ -263,7 +263,7 @@ public class TaskListFragment extends Fragment {
      * @param position
      */
     protected void deleteTasks(int position) {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.setTaskFinishById(uiTaskList.get(position).getId());
             deletePosition = position;
