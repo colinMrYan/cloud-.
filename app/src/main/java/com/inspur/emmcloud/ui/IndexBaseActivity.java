@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -57,10 +55,11 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
-import com.inspur.emmcloud.widget.dialogs.BatteryWhiteListDialog;
+import com.inspur.emmcloud.widget.dialogs.WhiteListDialog;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
 
@@ -96,7 +95,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     private String tabId = "";
     // protected ConnectivityManager.NetworkCallback networkCallback;
     // protected ConnectivityManager connectivityManager;
-    private BatteryWhiteListDialog confirmDialog;
+    private WhiteListDialog confirmDialog;
     private ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
 
     @Override
@@ -314,23 +313,26 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if (!hasIgnored) {
-                    confirmDialog = new BatteryWhiteListDialog(context, R.string.battery_tip_content,
+                    confirmDialog = new WhiteListDialog(context, R.string.battery_tip_content,
                             R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
-                    confirmDialog.setClicklistener(new BatteryWhiteListDialog.ClickListenerInterface() {
+                    confirmDialog.setClicklistener(new WhiteListDialog.ClickListenerInterface() {
                         @Override
                         public void doConfirm() {
                             if (confirmDialog.getIsHide()) {
                                 PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                             }
                             try {
-                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                                intent.setData(Uri.parse("package:" + context.getPackageName()));
-                                startActivity(intent);
+//                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+//                                intent.setData(Uri.parse("package:" + context.getPackageName()));
+//                                startActivity(intent);
+                                //自启动设置  zyj
+                                WhiteListUtil.enterWhiteListSetting(context);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                            } finally {
+                                confirmDialog.dismiss();
                             }
-                            confirmDialog.dismiss();
                         }
 
                         @Override
