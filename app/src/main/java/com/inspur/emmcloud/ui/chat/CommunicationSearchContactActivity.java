@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 
 import org.xutils.view.annotation.ContentView;
@@ -25,6 +26,11 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     private ClearEditText searchEdit;
     @ViewInject(R.id.tv_cancel)
     private TextView cancelTextView;
+
+    private Runnable searchRunable;
+    private String   searchArea;
+    private String   searchText;
+
 
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
@@ -45,6 +51,51 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchEdit.addTextChangedListener(new SearchWatcher());
         cancelTextView.setOnClickListener(this);
+    }
+
+
+    private void initSearchRunnable() {
+        searchRunable = new Runnable() {
+            @Override
+            public void run() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch (searchArea) {
+//                            case SEARCH_ALL:
+//                                if (MyApplication.getInstance().isV0VersionChat()) {
+//                                    searchChannelGroupList = ChannelGroupCacheUtils
+//                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
+//                                                    searchText);
+//                                } else {
+//                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+//                                }
+//
+//                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
+//                                break;
+//                            case SEARCH_CHANNELGROUP:
+//                                if (MyApplication.getInstance().isV0VersionChat()) {
+//                                    searchChannelGroupList = ChannelGroupCacheUtils
+//                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
+//                                                    searchText);
+//                                } else {
+//                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+//                                }
+//                                break;
+//                            case SEARCH_CONTACT:
+//                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
+//                                break;
+
+                            default:
+                                break;
+                        }
+//                        if (handler != null) {
+//                            handler.sendEmptyMessage(REFRESH_DATA);
+//                        }
+                    }
+                }).start();
+            }
+        };
     }
 
     @Override
@@ -70,7 +121,28 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
         @Override
         public void afterTextChanged(Editable s) {
-
+            searchText = searchEdit.getText().toString().trim();
+            if (!StringUtils.isBlank(searchText)) {
+//                if (popLayout.getVisibility() == View.GONE) {
+//                    searchArea = orginCurrentArea;
+//                }
+//                long currentTime = System.currentTimeMillis();
+//                if (currentTime - lastSearchTime > 500) {
+//                    handler.post(searchRunnbale);
+//                } else {
+//                    handler.removeCallbacks(searchRunnbale);
+//                    handler.postDelayed(searchRunnbale, 500);
+//                }
+//                lastSearchTime = System.currentTimeMillis();
+            } else {
+//                lastSearchTime = 0;
+//                handler.removeCallbacks(searchRunnbale);
+//                hideSearchPop();
+            }
         }
     }
+
+
+
+
 }
