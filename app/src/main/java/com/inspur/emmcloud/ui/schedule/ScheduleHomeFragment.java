@@ -1,19 +1,20 @@
 package com.inspur.emmcloud.ui.schedule;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
@@ -28,6 +29,7 @@ import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
@@ -53,10 +55,11 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private View rootView;
     private TabLayout tabLayout;
     private CustomScrollViewPager viewPager;
-    private Button todayBtn;
+    private ImageButton todayImgBtn;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
+    private TextView dateText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +78,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setFragmentStatusBarWhite();
+        setFragmentStatusBarCommon();
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_schedule_home, container,
                     false);
@@ -129,9 +132,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
     private void initView() {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
-        todayBtn = rootView.findViewById(R.id.bt_today);
-        todayBtn.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
-        todayBtn.setOnClickListener(this);
+        dateText = rootView.findViewById(R.id.tv_date);
+        todayImgBtn = rootView.findViewById(R.id.ibt_today);
+        dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
+        todayImgBtn.setOnClickListener(this);
         rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         initTabLayout();
         viewPager = rootView.findViewById(R.id.view_pager_all_schedule);
@@ -189,7 +193,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                 if (viewPager != null) {
                     viewPager.setCurrentItem(position);
                 }
-                todayBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
+                dateText.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
+                todayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
                 updateTabLayoutTextStatus(tab, true);
             }
 
@@ -215,7 +220,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
         tab.getCustomView().findViewById(R.id.tv_tab).setSelected(isSelect);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, isSelect ? 20 : 18);
-        textView.setTextColor(Color.parseColor(isSelect ? "#333333" : "#888888"));
+        int textColorNormal = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.schedule_tab_text_color_normal);
+        int textColorSelect = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.schedule_tab_text_color_select);
+        textView.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),isSelect?textColorSelect:textColorNormal));
     }
 
 
@@ -302,7 +309,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             case R.id.ibt_add:
                 showAddPopMenu(view);
                 break;
-            case R.id.bt_today:
+            case R.id.ibt_today:
                 scheduleFragment.setScheduleBackToToday();
                 break;
         }
