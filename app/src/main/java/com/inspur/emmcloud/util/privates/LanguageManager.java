@@ -71,7 +71,7 @@ public class LanguageManager {
     }
 
 
-    public  Context attachBaseContext(Context context) {
+    public Context attachBaseContext(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return updateResources(context);
         } else {
@@ -91,7 +91,7 @@ public class LanguageManager {
         return context.createConfigurationContext(configuration);
     }
 
-    private  Locale getLocaleByLanguage(Context context) {
+    private Locale getLocaleByLanguage(Context context) {
         String languageJson = null;
         if (MyApplication.getInstance() == null || MyApplication.getInstance().getTanent() == null) {
             languageJson = PreferencesUtils.getString(context, Constant.PREF_LAST_LANGUAGE);
@@ -132,6 +132,7 @@ public class LanguageManager {
 
     /**
      * 设置App语音
+     *
      * @param getLanguageResult
      */
     private void setAppLanguage(GetLanguageResult getLanguageResult) {
@@ -160,10 +161,61 @@ public class LanguageManager {
     }
 
 
-    public void setLanguageLocal(){
+    public void setLanguageLocal() {
         Configuration config = MyApplication.getInstance().getResources().getConfiguration();
-        String languageJson = PreferencesByTanentUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
-                        + "appLanguageObj");
+        String languageJson = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
+        if (languageJson != null) {
+            String languageName = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, "");
+            // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
+            if (languageName.equals("followSys")) {
+                List<Language> commonLanguageList = getCommonLanguageList(null);
+
+                boolean isContainDefault = false;
+                for (int i = 0; i < commonLanguageList.size(); i++) {
+                    Language commonLanguage = commonLanguageList.get(i);
+                    if (commonLanguage.getIso().contains(
+                            Resources.getSystem().getConfiguration().locale.getCountry())) {
+                        PreferencesUtils.putString(
+                                getInstance(),
+                                MyApplication.getInstance().getTanent() + "appLanguageObj",
+                                commonLanguage.toString());
+                        languageJson = commonLanguage.toString();
+                        isContainDefault = true;
+                        break;
+                    }
+                }
+                if (!isContainDefault) {
+                    PreferencesUtils.putString(getInstance(),
+                            MyApplication.getInstance().getTanent() + "appLanguageObj",
+                            commonLanguageList.get(0).toString());
+                    languageJson = commonLanguageList.get(0).toString();
+                }
+
+
+            }
+            PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
+            // 将iso字符串分割成系统的设置语言
+            String[] array = new Language(languageJson).getIso().split("-");
+            String country = "";
+            String variant = "";
+            try {
+                country = array[0];
+                variant = array[1];
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+            Locale locale = new Locale(country, variant);
+            Locale.setDefault(locale);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                config.setLocale(locale);
+            } else {
+                config.locale = locale;
+            }
+        }
+        config.fontScale = 1.0f;
+        MyApplication.getInstance().getResources().updateConfiguration(config,
+                MyApplication.getInstance().getResources().getDisplayMetrics());
     }
 
 
