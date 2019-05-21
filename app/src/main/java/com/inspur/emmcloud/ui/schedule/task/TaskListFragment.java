@@ -332,16 +332,16 @@ public class TaskListFragment extends Fragment {
                 swipeRefreshLayout.setLoading(false);
                 page = page + 1;
                 taskList.addAll(getTaskListResult.getTaskList());
-                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size() >= 12);
             } else {
                 swipeRefreshLayout.setRefreshing(false);
                 taskList = getTaskListResult.getTaskList();
             }
-            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
-            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size() >= 12);
             uiTaskList.clear();
             uiTaskList.addAll(taskList);
             adapter.setAndChangeData(uiTaskList);
+            noResultText.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
@@ -361,16 +361,16 @@ public class TaskListFragment extends Fragment {
                 uiTaskList.remove(deletePosition);
                 adapter.notifyDataSetChanged();
             }
-            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
-            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            noResultText.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
         public void returnDeleteTaskFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
-            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            noResultText.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
     }
