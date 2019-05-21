@@ -111,7 +111,7 @@ public class LanguageUtils {
             saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
             MineAPIService apiService = new MineAPIService(context);
             apiService.setAPIInterface(new WebService());
-            apiService.getLanguage();
+            apiService.getLanguage("");
         } else if (languageResult != null) {
             handData(new GetLanguageResult(languageResult));
         } else {

@@ -1083,7 +1083,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnLanguageSuccess(GetLanguageResult getLanguageResult) {
+    public void returnLanguageSuccess(GetLanguageResult getLanguageResult,String languageConfigVersion) {
     }
 
     @Override

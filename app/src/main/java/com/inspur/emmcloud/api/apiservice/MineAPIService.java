@@ -199,8 +199,7 @@ public class MineAPIService {
     /**
      * 获取语言
      */
-    public void getLanguage() {
-
+    public void getLanguage(final String languageConfigVersion) {
         final String completeUrl = APIUri.getLangUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -211,7 +210,7 @@ public class MineAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getLanguage();
+                        getLanguage(languageConfigVersion);
                     }
 
                     @Override
@@ -226,7 +225,7 @@ public class MineAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnLanguageSuccess(new GetLanguageResult(new String(arg0)));
+                apiInterface.returnLanguageSuccess(new GetLanguageResult(new String(arg0)),languageConfigVersion);
             }
 
             @Override
