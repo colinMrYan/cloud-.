@@ -173,38 +173,29 @@ public class SettingActivity extends BaseActivity {
      * 开关push并向服务器发出信号
      */
     private void switchPush() {
+        boolean switchFlag = PreferencesByUserAndTanentUtils.getBoolean(this,
+                Constant.PUSH_SWITCH_FLAG,false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if(NotificationSetUtils.isNotificationEnabled(this) &&
-                    PreferencesByUserAndTanentUtils.getBoolean(this,
-                            Constant.PUSH_SWITCH_FLAG,false)){
-                MyApplication.getInstance().startPush();
-                PushManagerUtils.getInstance().registerPushId2Emm();
-            }else{
-                MyApplication.getInstance().stopPush();
-                PushManagerUtils.getInstance().unregisterPushId2Emm();
-            }
+            setPushStatus(NotificationSetUtils.isNotificationEnabled(this) && switchFlag);
         }else{
-            if(PreferencesByUserAndTanentUtils.getBoolean(this,
-                    Constant.PUSH_SWITCH_FLAG,false)){
-                MyApplication.getInstance().startPush();
-                PushManagerUtils.getInstance().registerPushId2Emm();
-            }else{
-                MyApplication.getInstance().stopPush();
-                PushManagerUtils.getInstance().unregisterPushId2Emm();
-            }
+            setPushStatus(switchFlag);
+        }
+    }
+
+    private void setPushStatus(boolean openPush) {
+        if(openPush){
+            PushManagerUtils.getInstance().stopPush();
+            PushManagerUtils.getInstance().unregisterPushId2Emm();
+        }else {
+            PushManagerUtils.getInstance().startPush();
+            PushManagerUtils.getInstance().registerPushId2Emm();
         }
     }
 
     private boolean getSwitchOpen() {
-        boolean isOpen = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if(NotificationSetUtils.isNotificationEnabled(this)){
-                isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
-            }else{
-                isOpen = false;
-            }
-        }else{
-            isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+        boolean isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !NotificationSetUtils.isNotificationEnabled(this)) {
+            isOpen = false;
         }
         return isOpen;
     }

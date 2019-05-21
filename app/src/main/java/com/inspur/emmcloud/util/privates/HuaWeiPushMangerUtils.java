@@ -11,7 +11,6 @@ import com.huawei.hms.api.HuaweiApiClient.OnConnectionFailedListener;
 import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -89,7 +88,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             stopPush();
             client.disconnect();
         }
-        ((MyApplication) contextLocal.getApplicationContext()).startJPush();
+        PushManagerUtils.getInstance().setJpushStatus(true);
 //        PreferencesUtils.putString(contextLocal, Constant.PUSH_FLAG, Constant.JPUSH_FLAG);
 //        //在填充标志的时候传一次JpushId
 //        new PushIdManagerUtils(contextLocal).registerPushId2Emm();
