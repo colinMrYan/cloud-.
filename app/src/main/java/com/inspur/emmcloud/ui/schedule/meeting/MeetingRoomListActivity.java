@@ -18,8 +18,8 @@ import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -197,9 +197,17 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             if (requestCode == REQUEST_MEETING_OFFICE_SETTING) {
                 getOfficeList();
             } else if (requestCode == REQUEST_ENTER_MEETING_ROOM_INFO) {
-                data.putExtra(EXTRA_MEETING_ROOM, selectMeetingRoom);
-                setResult(RESULT_OK, data);
-                finish();
+                if(getIntent() != null && getIntent().hasExtra(EXTRA_START_TIME)){
+                    data.putExtra(EXTRA_MEETING_ROOM, selectMeetingRoom);
+                    setResult(RESULT_OK, data);
+                    finish();
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(MeetingRoomListActivity.EXTRA_START_TIME,data.getSerializableExtra(EXTRA_START_TIME));
+                    bundle.putSerializable(MeetingRoomListActivity.EXTRA_END_TIME,data.getSerializableExtra(EXTRA_END_TIME));
+                    bundle.putSerializable(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM, selectMeetingRoom);
+                    IntentUtils.startActivity(this,MeetingAddActivity.class,bundle,true);
+                }
             }
         }
     }
@@ -234,7 +242,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             if (!swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(true);
             }
-            apiService.getMeetingRoomList(TimeUtils.getStartTime(), TimeUtils.getStartTime() + 48*60*60*1000, officeIdList, true);
+            apiService.getMeetingRoomList(TimeUtils.getStartTime(), TimeUtils.getStartTime() + 48*60*60*1000, officeIdList, false);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -253,6 +261,10 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             swipeRefreshLayout.setRefreshing(false);
             meetingRoomAreaList = getMeetingRoomListResult.getMeetingRoomAreaList();
             meetingRoomAdapter.setData(meetingRoomAreaList);
+            for (int i=0;i<meetingRoomAreaList.size();i++){
+                expandableListView.collapseGroup(i);
+                expandableListView.expandGroup(i);
+            }
         }
 
         @Override

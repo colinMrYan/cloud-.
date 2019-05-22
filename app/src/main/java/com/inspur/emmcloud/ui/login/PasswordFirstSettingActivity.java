@@ -67,7 +67,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
                     ToastUtils.show(PasswordFirstSettingActivity.this, R.string.modify_not_same);
                     return;
                 }
-                if (passwordNew.length() < 8 || passwordNew.length() > 128 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
                     ToastUtils.show(MyApplication.getInstance(), R.string.modify_password_invalid);
                     return;
                 }
@@ -147,7 +147,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
             // TODO Auto-generated method stub
             passwordNew = passwordNewEdit.getText().toString();
             passwordConfirm = passwordConfirmEdit.getText().toString();
-            boolean isInputValaid = passwordNew.length() > 7 && passwordConfirm.length() > 7;
+            boolean isInputValaid = passwordNew.length() >= 1 && passwordConfirm.length() >= 1;
             saveBtn.setEnabled(isInputValaid);
             saveBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }

@@ -102,11 +102,11 @@ public class IndexActivity extends IndexBaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if(NotificationSetUtils.isNotificationEnabled(this) &&
                     (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true))){
-                MyApplication.getInstance().startPush();
+                PushManagerUtils.getInstance().startPush();
             }
         }else{
             if(PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true)){
-                MyApplication.getInstance().startPush();
+                PushManagerUtils.getInstance().startPush();
             }
         }
 

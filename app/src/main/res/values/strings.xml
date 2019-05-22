@@ -5,6 +5,7 @@
     <string name="app_name_zhihuichengjian">智慧城建</string>
     <string name="app_name_huaxiayinhang">华夏管理云</string>
     <string name="app_name_beiqi">云+</string>
+    <string name="app_name_chinatower">中国铁塔报账</string>
     <string name="reclick_to_desktop">再按一次退出程序</string>
     <string name="Network_Mobile">已经连接到移动网络</string>
     <string name="Network_WIFI">已经连接到WIFI</string>
@@ -88,6 +89,7 @@
     <string name="begin">开始</string>
     <string name="end">结束</string>
     <string name="yesterday">昨天</string>
+    <string name="the_day_before_yesterday">前天</string>
     <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
     <string name="format_year_month_day">yyyy\'年\'MM\'月\'dd\'日\'</string>
@@ -230,7 +232,7 @@
     <string name="login_your_contact"> 您的联系方式</string>
     <string name="login_group_album"> 群相册</string>
     <string name="login_group_file">群文件</string>
-    <string name="login_authorization_expired">授权过期，请重新登录</string>
+    <string name="login_authorization_expired">基于安全审计策略，需要重新验证用户信息</string>
     <string name="login_cant_login_with_sms">您的账号不允许使用短信登录</string>
     <string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
     <string name="captchas">验证码</string>
@@ -242,6 +244,9 @@
     <string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>
     <string name="login_current_login_enterprise">当前系统：%1$s</string>
     <string name="login_forget_password">忘记密码？</string>
+    <string name="login_fail_limit_remaining">账号或密码错误，请重新输入，还剩余%1$d次机会</string>
+    <string name="login_fail_account_lock_by_min">账号已被锁定，请%1$d分钟后再试</string>
+    <string name="login_fail_account_lock_by_second">账号已被锁定，请%1$d秒后再试</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">请输入消息内容</string>
@@ -260,6 +265,7 @@
     <string name="send_a_file">[文件]</string>
     <string name="send_a_link">[链接]</string>
     <string name="send_a_voice">[语音]</string>
+    <string name="send_action_message">[活动消息]</string>
     <string name="send_a_contact_card">[名片]</string>
     <string name="send_a_meeting_invitation">[会议邀请]</string>
     <string name="cancel_a_meeting">[会议取消通知]</string>
@@ -432,6 +438,7 @@
 
     <!--会议(新)-->
     <string name="schedule_meeting_booking">预定会议</string>
+    <string name="schedule_meeting_room_booking">新建会议</string>
     <string name="schedule_meeting_add_content_hint">请输入会议内容...</string>
     <string name="schedule_meeting_add_location_hint">请选择会议地点...</string>
     <string name="schedule_meeting_add_attendee_title">参会人</string>
@@ -455,7 +462,8 @@
     <string name="meeting_detail_location">会议地点:</string>
     <string name="schedule_meeting_change">修改会议</string>
     <string name="schedule_meeting_cancel">取消会议</string>
-
+    <string name="schedule_meeting_my_create">我创建的：</string>
+    <string name="schedule_meeting_my_take_part_in">我参与的：</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
@@ -544,7 +552,7 @@
     <string name="clouddriver_upload_again">重新上传</string>
     <string name="clouddriver_download_size">下载(%1$s)</string>
     <string name="clouddriver_downloading_status">下载中(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">文件名中不能包含特殊字符 / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_file_name_invaliad">名称中不能包含特殊字符 / \ " : | * ? &lt; &gt;&#038;</string>
     <string name="clouddriver_select_photo">选择照片</string>
     <string name="clouddriver_select_file">选择文件</string>
     <string name="clouddriver_volume_info">网盘详情</string>
@@ -558,8 +566,8 @@
     <string name="clouddriver_add_volume_member">添加网盘成员</string>
     <string name="clouddriver_del_volume_group_member">删除组成员</string>
     <string name="clouddriver_add_volume_group_member">添加组成员</string>
-    <string name="clouddriver_directory_name_invaliad">文件夹名中不能包含特殊字符 / \ " : | * ? &lt; &gt; </string>
-    <string name="clouddriver_volume_name_invaliad">网盘名中不能包含特殊字符 / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_directory_name_invaliad">文件夹名中不能包含特殊字符 / \ " : | * ? &lt; &gt; &#038; </string>
+    <string name="clouddriver_volume_name_invaliad">网盘名中不能包含特殊字符 / \ " : | * ?  &lt; &gt; &#038;</string>
     <string name="clouddriver_exists_same_name">已存在同名文件/文件夹</string>
     <string name="clouddriver_volume_group_info">组详情</string>
     <string name="clouddriver_volume_group_member">组成员</string>
@@ -593,6 +601,7 @@
     <string name="group">组</string>
     <string name="people_num">%1$d人</string>
     <string name="file_rename">文件重命名</string>
+    <string name="folder_rename">文件夹重命名</string>
     <string name="disk">网盘</string>
 
     <!--Webex 会议-->
@@ -749,7 +758,7 @@
     <string name="modify_new_old_same">新密码不能和原密码相同</string>
     <string name="modify_not_same">新密码和确认密码不一致</string>
     <string name="approval_input_password_valiad">请输入6~64位密码</string>
-    <string name="modify_password_invalid">所设密码需包含数字、小写字母、大写字母、特殊符号四类字符其中的三类，并且长度最少为8位</string>
+    <string name="modify_password_invalid">密码必须是6-16位的数字、字符组合（不能是纯数字）</string>
     <string name="modify_password_not_correct">密码填写不正确，请确认</string>
     <string name="modify_password_fail">修改密码失败</string>
     <string name="modify_password">修改密码</string>
@@ -861,8 +870,8 @@
     <string name="meeting_choose_log_members">选择会务人员</string>
     <string name="meeting_begin_or_date_time">请选择会议时间</string>
     <string name="meeting_end_time_no_empty">请选择结束时间</string>
-    <string name="meeting_topic_too_long">主题不能超过128个字符！</string>
-    <string name="meeting_notice_too_long">备注不能超过128个字符！</string>
+    <string name="meeting_topic_too_long">主题不能超过100个字符！</string>
+    <string name="meeting_notice_too_long">备注不能超过500个字符！</string>
     <string name="meeting_booking_error">预订出错</string>
     <string name="meeting_time_is_word">时间是字符</string>
     <string name="meeting_room_number">S206</string>
@@ -960,7 +969,8 @@
     <string name="calendar_adjust">调整</string>
     <string name="calendar_please_input_title">请输入标题</string>
     <string name="calendar_start_or_end_time_illegal">结束时间不能小于开始时间</string>
-    <string name="calendar_tilte_cannot_exceed_64">标题不能超过64个字符</string>
+    <string name="calendar_end_time_no_before_current">结束时间不能早于当前时间</string>
+    <string name="calendar_title_cannot_exceed_num">标题不能超过100个字符</string>
     <string name="calendar_select_calendar">请选择日历</string>
     <string name="calendar_add_success">添加成功</string>
     <string name="calendar_every_year">每年</string>
@@ -1069,7 +1079,8 @@
     <string name="net_ping_url_cloud">云＋</string>
 
     <!--电源白名单-->
-    <string name="battery_tip_content">系统已对云+开启省电优化，可能导致消息延迟或丢失，请将云+加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
+    <string name="battery_tip_content">系统已对该应用开启省电优化，可能导致消息延迟或丢失，请将其加入到省电优化白名单（点击“去设置”，在弹出对话框中点击“允许”)</string>
+    <string name="white_list_tip_content">由于系统限制，请您手动开启本软件自启动权限，从而保障软件运行的最佳环境（点击“去设置”)</string>
     <string name="battery_tip_ishide">不再提醒</string>
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去设置</string>

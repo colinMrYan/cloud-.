@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_permission_dialog_title"
             android:layout_marginTop="35dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="8dp"
             android:textSize="13sp"
             android:layout_toRightOf="@id/progress_bar_apk_download"/>
 

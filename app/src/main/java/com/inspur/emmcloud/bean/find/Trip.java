@@ -103,8 +103,8 @@ public class Trip implements Serializable {
             if (obj.has("way")) {
                 this.way = obj.getString("way");
             }
-            if (obj.has("startWebSocket")) {
-                String startStr = obj.getString("startWebSocket");
+            if (obj.has("init")) {
+                String startStr = obj.getString("init");
                 this.start = TimeUtils.UTCString2LocalDate(startStr);
             }
             if (obj.has("end")) {

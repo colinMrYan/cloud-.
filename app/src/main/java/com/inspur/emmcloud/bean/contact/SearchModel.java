@@ -114,6 +114,22 @@ public class SearchModel implements Serializable {
         type = channel.getType();
     }
 
+    public SearchModel(String uid){
+        try{
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
+            if (contactUser == null) {
+                return;
+            }
+            this.type = TYPE_USER;
+            this.id = contactUser.getId();
+            this.name = contactUser.getName();
+            this.email = contactUser.getEmail();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
     public static List<SearchModel> channelGroupList2SearchModelList(List<ChannelGroup> channelGroupList) {
         List<SearchModel> searchModelList = new ArrayList<>();
         if (channelGroupList != null) {
