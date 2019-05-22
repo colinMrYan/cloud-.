@@ -1067,6 +1067,7 @@
 
     <!--电源白名单-->
     <string name="battery_tip_content">System has applied battery optimizations to the App,which may cause messages be delayed or missed,please add this to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
+    <string name="white_list_tip_content">Due to system restrictions, please manually open the software self-startup permission, so as to ensure the best environment for software operation (click "Set")</string>
     <string name="battery_tip_ishide">Don\'t ask again</string>
     <string name="battery_tip_cancel">CANCEL</string>
     <string name="battery_tip_toset">SET</string>
