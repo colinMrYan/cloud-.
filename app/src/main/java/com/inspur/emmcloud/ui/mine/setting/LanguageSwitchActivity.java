@@ -2,8 +2,6 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +17,11 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.util.privates.PreferencesByTanentUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -33,14 +32,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class LanguageSwitchActivity extends BaseActivity {
+public class LanguageSwitchActivity extends BaseActivity implements LanguageManager.GetServerLanguageListener{
 
     public static final String LANGUAGE_CHANGE = "change_language";
     private static final int GET_LANGUAGE_SUCCESS = 3;
     private ListView listView;
     private ListViewAdapter adapter;
-    private LanguageUtils languageUtils;
-    private Handler handler;
     private List<Language> commonLanguageList = new ArrayList<Language>();
     private LoadingDialog loadingDlg;
 
@@ -49,35 +46,11 @@ public class LanguageSwitchActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine_language_switch);
-        listView = (ListView) findViewById(R.id.lv);
+        listView =  findViewById(R.id.lv);
         loadingDlg = new LoadingDialog(this);
-        handMessage();
         getLanguageList();
     }
 
-    private void handMessage() {
-        // TODO Auto-generated method stub
-        handler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                // TODO Auto-generated method stub
-                if (loadingDlg != null && loadingDlg.isShowing()) {
-                    loadingDlg.dismiss();
-                }
-                switch (msg.what) {
-                    case GET_LANGUAGE_SUCCESS:
-                        commonLanguageList = languageUtils.getCommonLanguageList();
-                        initData();
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-        };
-    }
 
     /**
      * 获取语言列表
@@ -85,14 +58,13 @@ public class LanguageSwitchActivity extends BaseActivity {
     private void getLanguageList() {
         // TODO Auto-generated method stub
         loadingDlg.show();
-        languageUtils = new LanguageUtils(LanguageSwitchActivity.this, handler);
-        languageUtils.getServerSupportLanguage();
+        LanguageManager.getInstance().getServerSupportLanguage(this);
     }
 
     private void initData() {
         // TODO Auto-generated method stub
         String appDefaultLanguage = Locale.getDefault().getCountry();
-        Language language = languageUtils.getContainedLanguage(
+        Language language = LanguageManager.getInstance().getContainedLanguage(
                 commonLanguageList, appDefaultLanguage);
         if (language == null) {
             language = commonLanguageList.get(0);
@@ -108,9 +80,7 @@ public class LanguageSwitchActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     final int position, long id) {
-                String currentLanguageName = PreferencesUtils.getString(
-                        getApplicationContext(), MyApplication.getInstance().getTanent() + "language",
-                        "");
+                String currentLanguageName = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME,"");
                 Language language = commonLanguageList.get(position);
                 String languageName = "";
                 if (position == 0) {
@@ -154,13 +124,10 @@ public class LanguageSwitchActivity extends BaseActivity {
                         } else {
                             languageName = language.getIso();
                         }
-                        PreferencesUtils.putString(getApplicationContext(),
-                                MyApplication.getInstance().getTanent() + "language", languageName);
-                        PreferencesUtils.putString(getApplicationContext(),
-                                MyApplication.getInstance().getTanent() + "appLanguageObj",
+                        PreferencesByTanentUtils.putString(getApplicationContext(),Constant.PREF_CURRENT_LANGUAGE_NAME, languageName);
+                        PreferencesByTanentUtils.putString(getApplicationContext(),Constant.PREF_CURRENT_LANGUAGE,
                                 language.toString());
-                        ((MyApplication) getApplicationContext())
-                                .setAppLanguageAndFontScale();
+                        LanguageManager.getInstance().setLanguageLocal();
                         Intent intentLog = new Intent(LanguageSwitchActivity.this,
                                 IndexActivity.class);
                         intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -174,6 +141,12 @@ public class LanguageSwitchActivity extends BaseActivity {
 
     public void onClick(View v) {
         finish();
+    }
+
+    @Override
+    public void complete() {
+        commonLanguageList = LanguageManager.getInstance().getCommonLanguageList(null);
+        initData();
     }
 
     public class ListViewAdapter extends BaseAdapter {
@@ -225,8 +198,7 @@ public class LanguageSwitchActivity extends BaseActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            String languageName = PreferencesUtils.getString(
-                    getApplicationContext(), MyApplication.getInstance().getTanent() + "language", "");
+            String languageName = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME,"");
             if (position == 0) {
                 holder.flagImg.setVisibility(View.VISIBLE);
                 holder.flagImg.setImageResource(R.drawable.ic_mine_language_follow_system);

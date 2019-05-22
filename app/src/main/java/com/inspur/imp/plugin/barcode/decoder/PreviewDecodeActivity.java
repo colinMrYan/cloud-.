@@ -26,7 +26,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.imp.api.Res;
 
 import java.io.UnsupportedEncodingException;
@@ -93,7 +93,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
+        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 
 

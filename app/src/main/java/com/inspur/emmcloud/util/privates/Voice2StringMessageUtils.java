@@ -124,7 +124,7 @@ public class Voice2StringMessageUtils {
 //        //网络转写超时设置
 //        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT, "8000");
 
-        String language = AppUtils.getCurrentAppLanguage(context);
+        String language = LanguageManager.getInstance().getCurrentAppLanguage();
         switch (language) {
             case "zh-Hans":
                 // 设置语言

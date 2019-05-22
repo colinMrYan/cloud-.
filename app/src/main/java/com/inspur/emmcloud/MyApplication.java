@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
@@ -36,20 +34,19 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
@@ -72,7 +69,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
@@ -148,7 +144,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         super.onCreate();
         init();
         LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
-        setAppLanguageAndFontScale();
+        LanguageManager.getInstance().setLanguageLocal();
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
@@ -729,83 +725,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (config != null) {
             super.onConfigurationChanged(config);
         }
-        setAppLanguageAndFontScale();
+        LanguageManager.getInstance().setLanguageLocal();
     }
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
+        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 
-    /**
-     * 设置App的语言
-     */
-    public void setAppLanguageAndFontScale() {
-
-        String languageJson = PreferencesUtils
-                .getString(getInstance(), MyApplication.getInstance().getTanent()
-                        + "appLanguageObj");
-        Configuration config = getResources().getConfiguration();
-        if (languageJson != null) {
-            String language = PreferencesUtils.getString(
-                    getInstance(), MyApplication.getInstance().getTanent() + "language");
-            // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
-            if (language.equals("followSys")) {
-                String commonLanguageListJson = PreferencesUtils.getString(
-                        getInstance(), MyApplication.getInstance().getTanent()
-                                + "commonLanguageList");
-                if (commonLanguageListJson != null) {
-                    List<Language> commonLanguageList = JSONUtils
-                            .parseArray(commonLanguageListJson,
-                                    Language.class);
-                    boolean isContainDefault = false;
-                    for (int i = 0; i < commonLanguageList.size(); i++) {
-                        Language commonLanguage = commonLanguageList.get(i);
-                        if (commonLanguage.getIso().contains(
-                                Resources.getSystem().getConfiguration().locale.getCountry())) {
-                            PreferencesUtils.putString(
-                                    getInstance(),
-                                    MyApplication.getInstance().getTanent() + "appLanguageObj",
-                                    commonLanguage.toString());
-                            languageJson = commonLanguage.toString();
-                            isContainDefault = true;
-                            break;
-                        }
-                    }
-                    if (!isContainDefault) {
-                        PreferencesUtils.putString(getInstance(),
-                                MyApplication.getInstance().getTanent() + "appLanguageObj",
-                                commonLanguageList.get(0).toString());
-                        languageJson = commonLanguageList.get(0).toString();
-                    }
-                }
-
-            }
-            PreferencesUtils.putString(getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
-            // 将iso字符串分割成系统的设置语言
-            String[] array = new Language(languageJson).getIso().split("-");
-            String country = "";
-            String variant = "";
-            try {
-                country = array[0];
-                variant = array[1];
-            } catch (Exception e) {
-                // TODO: handle exception
-                e.printStackTrace();
-            }
-            Locale locale = new Locale(country, variant);
-            Locale.setDefault(locale);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                config.setLocale(locale);
-            } else {
-                config.locale = locale;
-            }
-        }
-        config.fontScale = 1.0f;
-        getResources().updateConfiguration(config,
-                getResources().getDisplayMetrics());
-
-    }
 
     public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks() {
         return myActivityLifecycleCallbacks;

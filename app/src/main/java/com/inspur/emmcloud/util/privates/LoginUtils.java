@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class LoginUtils extends APIInterfaceInstance {
+public class LoginUtils extends APIInterfaceInstance implements LanguageManager.GetServerLanguageListener {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_LANGUAGE_SUCCESS = 3;
@@ -43,7 +43,6 @@ public class LoginUtils extends APIInterfaceInstance {
     private Handler handler;
     private boolean isSMSLogin = false;
     private Handler loginUtilsHandler;
-    private LanguageUtils languageUtils;
     private GetLoginResult getLoginResult;
     private LoadingDialog loadingDlg;
     private boolean isLogin = false;  //标记是登录界面(包括手机验证码登录界面)调用
@@ -169,13 +168,12 @@ public class LoginUtils extends APIInterfaceInstance {
      * 获取语音
      */
     public void getServerSupportLanguage() {
-        if (NetUtils.isNetworkConnected(activity, false)) {
-            languageUtils = new LanguageUtils(activity, loginUtilsHandler);
-            languageUtils.getServerSupportLanguage();
-        } else {
-            loginUtilsHandler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
-        }
+       LanguageManager.getInstance().getServerSupportLanguage(this);
+    }
 
+    @Override
+    public void complete() {
+        loginUtilsHandler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
     }
 
     /**
@@ -231,7 +229,6 @@ public class LoginUtils extends APIInterfaceInstance {
      * 显示选择租户Dialog
      *
      * @param enterpriseList
-     * @param defaultEnterprise
      */
     private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList) {
         final MyDialog myDialog = new MyDialog(activity, R.layout.dialog_login_select_tanent);

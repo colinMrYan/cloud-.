@@ -119,22 +119,6 @@ public class AppUtils {
     }
 
     /**
-     * 获取当前应用语言
-     *
-     * @param context
-     * @return
-     */
-    public static String getCurrentAppLanguage(Context context) {
-        String languageJson =
-                PreferencesUtils.getString(context, MyApplication.getInstance().getTanent() + "appLanguageObj");
-        if (languageJson != null) {
-            Language language = new Language(languageJson);
-            return language.getIana();
-        }
-        return "zh-Hans";
-    }
-
-    /**
      * @param context
      * @return
      */

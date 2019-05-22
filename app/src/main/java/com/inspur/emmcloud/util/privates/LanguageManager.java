@@ -58,7 +58,8 @@ public class LanguageManager {
         return mInstance;
     }
 
-    public void getServerSupportLanguage() {
+    public void getServerSupportLanguage(GetServerLanguageListener getServerLanguageListener) {
+        this.getServerLanguageListener = getServerLanguageListener;
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false) && isNeedUpdate()) {
             String languageConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
             MineAPIService apiService = new MineAPIService(MyApplication.getInstance());
@@ -160,7 +161,9 @@ public class LanguageManager {
         setLanguageLocal();
     }
 
-
+    /**
+     * 设置语言Local
+     */
     public void setLanguageLocal() {
         Configuration config = MyApplication.getInstance().getResources().getConfiguration();
         String languageJson = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
@@ -175,9 +178,7 @@ public class LanguageManager {
                     Language commonLanguage = commonLanguageList.get(i);
                     if (commonLanguage.getIso().contains(
                             Resources.getSystem().getConfiguration().locale.getCountry())) {
-                        PreferencesUtils.putString(
-                                getInstance(),
-                                MyApplication.getInstance().getTanent() + "appLanguageObj",
+                        PreferencesByTanentUtils.putString(MyApplication.getInstance(),Constant.PREF_CURRENT_LANGUAGE,
                                 commonLanguage.toString());
                         languageJson = commonLanguage.toString();
                         isContainDefault = true;
@@ -185,13 +186,10 @@ public class LanguageManager {
                     }
                 }
                 if (!isContainDefault) {
-                    PreferencesUtils.putString(getInstance(),
-                            MyApplication.getInstance().getTanent() + "appLanguageObj",
+                    PreferencesByTanentUtils.putString(MyApplication.getInstance(),Constant.PREF_CURRENT_LANGUAGE,
                             commonLanguageList.get(0).toString());
                     languageJson = commonLanguageList.get(0).toString();
                 }
-
-
             }
             PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
             // 将iso字符串分割成系统的设置语言
@@ -263,6 +261,20 @@ public class LanguageManager {
     }
 
     /**
+     * 获取当前应用语言
+     * @return
+     */
+    public static String getCurrentAppLanguage() {
+        String languageJson =
+                PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
+        if (languageJson != null) {
+            Language language = new Language(languageJson);
+            return language.getIana();
+        }
+        return "zh-Hans";
+    }
+
+    /**
      * 从本地获取缓存的服务端支持语音列表
      *
      * @return
@@ -280,7 +292,7 @@ public class LanguageManager {
         PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_SERVER_SUPPORT_LANGUAGE, json);
     }
 
-    private interface GetServerLanguageListener {
+    public interface GetServerLanguageListener {
         void complete();
     }
 
@@ -288,10 +300,6 @@ public class LanguageManager {
         if (getServerLanguageListener != null) {
             getServerLanguageListener.complete();
         }
-    }
-
-    public void setServerLanguageListener(GetServerLanguageListener getServerLanguageListener) {
-        this.getServerLanguageListener = getServerLanguageListener;
     }
 
     private class WebService extends APIInterfaceInstance {
