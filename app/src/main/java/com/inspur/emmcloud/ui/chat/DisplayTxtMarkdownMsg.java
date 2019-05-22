@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.chat.MarkDownLink;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -28,6 +29,7 @@ import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.common.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.util.privates.cache.MarkDownLinkCacheUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -64,14 +66,14 @@ public class DisplayTxtMarkdownMsg {
             titleText.setVisibility(View.GONE);
         } else {
             titleText.setVisibility(View.VISIBLE);
-            showContentByMarkdown(context,title,titleText,isMyMsg);
+            showContentByMarkdown(context,title,titleText,isMyMsg,msg.getId());
         }
-        showContentByMarkdown(context,content,contentText,isMyMsg);
+        showContentByMarkdown(context,content,contentText,isMyMsg,msg.getId());
         return cardContentView;
     }
 
 
-    private static void showContentByMarkdown(final Context context, final String content, TextView textView, final boolean isMyMsg) {
+    private static void showContentByMarkdown(final Context context, final String content, final TextView textView, final boolean isMyMsg,final String mid) {
         final int holderWidth = ResolutionUtils.getWidth(context) - DensityUtil.dip2px(MyApplication.getInstance(), 141);
         RichText.from(content)
                 .type(RichType.markdown)
@@ -88,10 +90,14 @@ public class DisplayTxtMarkdownMsg {
                 .urlClick(new OnUrlClickListener() {
                     @Override
                     public boolean urlClicked(String url) {
+                        MarkDownLink markDownLink= new MarkDownLink(mid,url);
+                        MarkDownLinkCacheUtils.saveMarkDownLink(context,markDownLink);
+                        showContentByMarkdown(context,content,textView,isMyMsg,mid);
                         if (url.startsWith("http")) {
                             UriUtils.openUrl((Activity) context, url);
                             return true;
                         }
+                        /**加上这个目的是为了重新刷新该Ui*/
                         return false;
                     }
                 })
