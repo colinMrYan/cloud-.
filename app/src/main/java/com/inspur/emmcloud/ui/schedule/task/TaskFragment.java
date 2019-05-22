@@ -4,15 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -31,7 +29,7 @@ import java.util.List;
  * 工作主页面下任务页面
  */
 @ContentView(R.layout.fragment_all_task_list)
-public class TaskFragment extends Fragment {
+public class TaskFragment extends BaseFragment {
 
     public static final String MY_TASK_TYPE = "task_type";
     public static final int MY_MINE = 0;
@@ -146,7 +144,7 @@ public class TaskFragment extends Fragment {
 //                if(position == 0){
 //                    taskViewPager.setCurrentItem(position + 1);
 //                }
-                taskViewPager.setCurrentItem(tab.getPosition());
+//                taskViewPager.setCurrentItem(tab.getPosition());
             }
         });
 
@@ -170,11 +168,12 @@ public class TaskFragment extends Fragment {
 //                    tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#00ffffff"));
 //                    allTaskView.setBackgroundColor(Color.parseColor("#36A5F6"));
 //                }
+
                 if(!StringUtils.isBlank(searchEditText.getText().toString())){
                     searchEditText.setText("");
                 }
                 tabLayoutSchedule.getTabAt(position).select();
-                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
+//                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
             }
 
             @Override
@@ -193,31 +192,31 @@ public class TaskFragment extends Fragment {
 //        });
         //将适配器和ViewPager结合
         taskViewPager.setAdapter(adapter);
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+//        searchEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
     }
 
-    /**
-     * 根据滑动状态改变搜索框和展示数据状态
-     */
-    private void setSearchState(int lastTaskPosition) {
-        searchEditText.setText("");
-        ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(lastTaskPosition).setSearchContent("");
-    }
+//    /**
+//     * 根据滑动状态改变搜索框和展示数据状态
+//     */
+//    private void setSearchState(int lastTaskPosition) {
+//        searchEditText.setText("");
+//        ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(lastTaskPosition).setSearchContent("");
+//    }
 
 
     public boolean getIsSelect(int i) {

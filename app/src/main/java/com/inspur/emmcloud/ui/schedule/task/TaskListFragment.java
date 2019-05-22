@@ -112,25 +112,27 @@ public class TaskListFragment extends Fragment {
      * @param searchContent
      */
     public void setSearchContent(String searchContent) {
-        swipeRefreshLayout.setCanLoadMore(StringUtils.isBlank(searchContent));
-        swipeRefreshLayout.setEnabled(StringUtils.isBlank(searchContent));
+        if(swipeRefreshLayout != null){
+            swipeRefreshLayout.setCanLoadMore(StringUtils.isBlank(searchContent));
+            swipeRefreshLayout.setEnabled(StringUtils.isBlank(searchContent));
+        }
         this.searchContent = searchContent;
         if (adapter != null) {
             searchTaskListBySearchContent();
         }
     }
 
-    /**
-     * 告知Fragment当前索引
-     *
-     * @param currentIndex
-     */
-    public void setCurrentIndex(int currentIndex) {
-        this.currentIndex = currentIndex;
-        if(swipeRefreshLayout != null){
-            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
-        }
-    }
+//    /**
+//     * 告知Fragment当前索引
+//     *
+//     * @param currentIndex
+//     */
+//    public void setCurrentIndex(int currentIndex) {
+//        this.currentIndex = currentIndex;
+//        if(swipeRefreshLayout != null){
+//            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && (uiTaskList.size() % 12 == 0));
+//        }
+//    }
 
     /**
      * 根据搜索内容搜索列表
@@ -172,7 +174,7 @@ public class TaskListFragment extends Fragment {
      */
     private void initPullRefreshLayout() {
         //已完成页面设置可以上拉加载
-        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && (uiTaskList.size() % 12 == 0));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -183,7 +185,7 @@ public class TaskListFragment extends Fragment {
                 } else {
                     swipeRefreshLayout.setLoading(false);
                 }
-                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && (uiTaskList.size() % 12 == 0));
             }
         });
         swipeRefreshLayout.setOnLoadListener(new MySwipeRefreshLayout.OnLoadListener() {
@@ -336,10 +338,10 @@ public class TaskListFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
                 taskList = getTaskListResult.getTaskList();
             }
-            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size() >= 12);
             uiTaskList.clear();
             uiTaskList.addAll(taskList);
             adapter.setAndChangeData(uiTaskList);
+            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && (uiTaskList.size() % 12 == 0));
             noResultText.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
             taskNoResultImageView.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
