@@ -313,7 +313,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if (!hasIgnored) {
-                    confirmDialog = new WhiteListDialog(context, R.string.battery_tip_content,
+                    confirmDialog = new WhiteListDialog(context, R.string.white_list_tip_content,
                             R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
                     confirmDialog.setClicklistener(new WhiteListDialog.ClickListenerInterface() {
                         @Override
