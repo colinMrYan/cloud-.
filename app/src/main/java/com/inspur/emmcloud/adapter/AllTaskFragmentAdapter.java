@@ -34,4 +34,5 @@ public class AllTaskFragmentAdapter extends FragmentPagerAdapter {
     public List<TaskListFragment> getTaskListFragment() {
         return taskListFragmentList;
     }
+
 }
