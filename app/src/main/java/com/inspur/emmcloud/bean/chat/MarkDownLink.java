@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Table(name = "MarkDownLink")
 public class MarkDownLink implements Serializable {
-    @Column(name = "id", isId = true)
+    @Column(name = "id",isId = true)
     private String id;
     @Column(name = "mid")
     private String mid;
@@ -22,7 +22,8 @@ public class MarkDownLink implements Serializable {
 
     public MarkDownLink(){}
 
-    public MarkDownLink(String mid,String link){
+    public MarkDownLink(String id ,String mid,String link){
+        this.id=id;
         this.mid=mid;
         this.link=link;
     }

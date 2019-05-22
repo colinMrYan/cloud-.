@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MarkDownLink;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
@@ -43,7 +44,8 @@ public class MarkDownLinkCacheUtils {
             }
             DbCacheUtils.getDb(context).saveOrUpdate(markDownLink);
         } catch (Exception e) {
-            // TODO: handle exception
+            // TODO: handle
+            LogUtils.jasonDebug("存储 makdown Error");
             e.printStackTrace();
         }
     }
@@ -58,9 +60,11 @@ public class MarkDownLinkCacheUtils {
     public static List<MarkDownLink> getMarkDownLinkList(Context context, String mid,String url) {
         List<MarkDownLink> markDownLinks = null;
         try {
-            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("mid","=",mid).and("url","=",url).findAll();
+          markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("mid","=",mid).findAll();
+           // markDownLinks = DbCacheUtils.getDb(context).findAll(MarkDownLink.class);
         } catch (Exception e) {
             // TODO: handle exception
+            LogUtils.jasonDebug("获取makdown 列表 Error");
             e.printStackTrace();
         }
         if (markDownLinks == null) {

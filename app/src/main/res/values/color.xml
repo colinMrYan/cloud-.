@@ -35,6 +35,7 @@
     <!-- 导航栏原来色值#1596d2 -->
 
 
+    <color name="mark_down_url_read">#000000</color>
 
     <color name="content_bg">#f8f9fb</color>
     <color name="footer_tab_text_nor">#979EA3</color>

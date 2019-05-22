@@ -15,6 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.MarkDownLink;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
@@ -32,6 +33,8 @@ import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.MarkDownLinkCacheUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+
+import java.util.List;
 
 /**
  * DisplayTxtRichMsg
@@ -85,14 +88,24 @@ public class DisplayTxtMarkdownMsg {
                         holder.setColor(context.getResources().getColor(
                                 isMyMsg ? R.color.hightlight_in_blue_bg
                                         : R.color.header_bg_blue));
+                        List<MarkDownLink> markDownLinks = MarkDownLinkCacheUtils.getMarkDownLinkList(context,mid,holder.getUrl());
+                        LogUtils.jasonDebug("查询数据库3333"+holder.getUrl()+"::"+mid+"size"+markDownLinks.size());
+                        if(markDownLinks.size()>0){
+                            holder.setColor(context.getResources().getColor(R.color.mark_down_url_read));
+                        }
                     }
                 })
                 .urlClick(new OnUrlClickListener() {
                     @Override
                     public boolean urlClicked(String url) {
-                        MarkDownLink markDownLink= new MarkDownLink(mid,url);
-                        MarkDownLinkCacheUtils.saveMarkDownLink(context,markDownLink);
-                        showContentByMarkdown(context,content,textView,isMyMsg,mid);
+                        List<MarkDownLink> markDownLinks = MarkDownLinkCacheUtils.getMarkDownLinkList(context,mid,url);
+                        LogUtils.jasonDebug("查询数据库Click111"+url+"::"+mid+"size:"+markDownLinks.size());
+                        if(!(markDownLinks.size()>0)){
+                            LogUtils.jasonDebug("查询数据库2222"+url+"::"+mid);
+                            MarkDownLink markDownLink= new MarkDownLink(url+mid,mid,url);
+                            MarkDownLinkCacheUtils.saveMarkDownLink(context,markDownLink);
+                            showContentByMarkdown(context,content,textView,isMyMsg,mid);
+                        }
                         if (url.startsWith("http")) {
                             UriUtils.openUrl((Activity) context, url);
                             return true;
