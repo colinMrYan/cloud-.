@@ -168,7 +168,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
     }
 
     private void getMeetingListByStartTime() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)) {
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMeetingListByTime(startTime);
@@ -178,7 +178,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
     }
 
     private void getMeetingHistoryListByPage(int page) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)) {
             apiService.getMeetingHistoryListByPage(page);
         } else {
             swipeRefreshLayout.setCanLoadMore(false);

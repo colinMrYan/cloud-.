@@ -22,7 +22,6 @@ import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
@@ -41,7 +40,6 @@ import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.TaskCacheUtils;
 import com.inspur.emmcloud.widget.MaxHeightListView;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
@@ -565,12 +563,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                     MeetingCacheUtils.removeMeetingList(MyApplication.getInstance(), meetingIdList);
                     MeetingCacheUtils.saveMeetingList(MyApplication.getInstance(), meetingList);
                 }
-                if (getScheduleListResult.isTaskForward()) {
-                    List<Task> taskList = getScheduleListResult.getTaskList();
-                    //
-                    TaskCacheUtils.saveTaskList(MyApplication.getInstance(), taskList);
+//                if (getScheduleListResult.isTaskForward()) {
+//                    List<Task> taskList = getScheduleListResult.getTaskList();
+//                    //
+//                    TaskCacheUtils.saveTaskList(MyApplication.getInstance(), taskList);
+//                }
+                if (startCalendar.equals(pageStartCalendar) && endCalendar.equals(pageEndCalendar)){
+                    showCalendarEvent(false);
                 }
-                showCalendarEvent(false);
+
             }
 
         }

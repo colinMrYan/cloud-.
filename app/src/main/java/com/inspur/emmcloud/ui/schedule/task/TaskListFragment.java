@@ -19,9 +19,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.TaskListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -112,25 +112,27 @@ public class TaskListFragment extends Fragment {
      * @param searchContent
      */
     public void setSearchContent(String searchContent) {
-        swipeRefreshLayout.setCanLoadMore(StringUtils.isBlank(searchContent));
-        swipeRefreshLayout.setEnabled(StringUtils.isBlank(searchContent));
+        if(swipeRefreshLayout != null){
+            swipeRefreshLayout.setCanLoadMore(StringUtils.isBlank(searchContent));
+            swipeRefreshLayout.setEnabled(StringUtils.isBlank(searchContent));
+        }
         this.searchContent = searchContent;
         if (adapter != null) {
             searchTaskListBySearchContent();
         }
     }
 
-    /**
-     * 告知Fragment当前索引
-     *
-     * @param currentIndex
-     */
-    public void setCurrentIndex(int currentIndex) {
-        this.currentIndex = currentIndex;
-        if(swipeRefreshLayout != null){
-            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
-        }
-    }
+//    /**
+//     * 告知Fragment当前索引
+//     *
+//     * @param currentIndex
+//     */
+//    public void setCurrentIndex(int currentIndex) {
+//        this.currentIndex = currentIndex;
+//        if(swipeRefreshLayout != null){
+//            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && (uiTaskList.size() % 12 == 0));
+//        }
+//    }
 
     /**
      * 根据搜索内容搜索列表
@@ -172,24 +174,24 @@ public class TaskListFragment extends Fragment {
      */
     private void initPullRefreshLayout() {
         //已完成页面设置可以上拉加载
-        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+        swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && (uiTaskList.size() % 12 == 0));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 isPullUp = false;
                 page = 0;
-                if (NetUtils.isNetworkConnected(getActivity())) {
+                if (NetUtils.isNetworkConnected(getActivity(),false)) {
                     getCurrentTaskList();
                 } else {
                     swipeRefreshLayout.setLoading(false);
                 }
-                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE);
+                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && (uiTaskList.size() % 12 == 0));
             }
         });
         swipeRefreshLayout.setOnLoadListener(new MySwipeRefreshLayout.OnLoadListener() {
             @Override
             public void onLoadMore() {
-                if (NetUtils.isNetworkConnected(getActivity())) {
+                if (NetUtils.isNetworkConnected(getActivity(),false)) {
                     apiService.getFinishTasks(page, 12, "REMOVED");
                     isPullUp = true;
                 } else {
@@ -201,7 +203,7 @@ public class TaskListFragment extends Fragment {
 
     private void getCurrentTaskList() {
         currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             if (currentIndex == TaskFragment.MY_MINE) {
                 getMineTasks();
             } else if (currentIndex == TaskFragment.MY_INVOLVED) {
@@ -220,7 +222,7 @@ public class TaskListFragment extends Fragment {
      * 获取关注的任务
      */
     protected void getFocusedTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFocusedTasks(orderBy, orderType);
         }
@@ -230,7 +232,7 @@ public class TaskListFragment extends Fragment {
      * 获取我参与的任务
      */
     protected void getInvolvedTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getInvolvedTasks(orderBy, orderType);
         }
@@ -240,7 +242,7 @@ public class TaskListFragment extends Fragment {
      * 获取我的任务
      */
     protected void getMineTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMineTasks(orderBy, orderType);
         }
@@ -250,7 +252,7 @@ public class TaskListFragment extends Fragment {
      * 获取所有任务
      */
     private void getAllFinishTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFinishTasks(0, 12, "REMOVED");
         }
@@ -263,7 +265,7 @@ public class TaskListFragment extends Fragment {
      * @param position
      */
     protected void deleteTasks(int position) {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.setTaskFinishById(uiTaskList.get(position).getId());
             deletePosition = position;
@@ -332,16 +334,16 @@ public class TaskListFragment extends Fragment {
                 swipeRefreshLayout.setLoading(false);
                 page = page + 1;
                 taskList.addAll(getTaskListResult.getTaskList());
-                swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && getTaskListResult.getTaskList().size() >= 12);
             } else {
                 swipeRefreshLayout.setRefreshing(false);
                 taskList = getTaskListResult.getTaskList();
             }
-            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
-            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
             uiTaskList.clear();
             uiTaskList.addAll(taskList);
             adapter.setAndChangeData(uiTaskList);
+            swipeRefreshLayout.setCanLoadMore(currentIndex == TaskFragment.MY_DONE && (uiTaskList.size() % 12 == 0));
+            noResultText.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
@@ -361,16 +363,16 @@ public class TaskListFragment extends Fragment {
                 uiTaskList.remove(deletePosition);
                 adapter.notifyDataSetChanged();
             }
-            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
-            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            noResultText.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override
         public void returnDeleteTaskFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-            noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
-            taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
+            noResultText.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
+            taskNoResultImageView.setVisibility(uiTaskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
     }
