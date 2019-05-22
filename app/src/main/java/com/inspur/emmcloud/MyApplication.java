@@ -35,18 +35,12 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
-import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
@@ -317,8 +311,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setIsContactReady(boolean isContactReady) {
         MyApplication.isContactReady = isContactReady;
-        PreferencesUtils.putBoolean(getInstance(), "isContactReady",
-                isContactReady);
+        PreferencesUtils.putBoolean(getInstance(), Constant.PREF_IS_CONTACT_READY,isContactReady);
     }
 
     public boolean getIsActive() {

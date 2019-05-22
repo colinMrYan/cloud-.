@@ -34,7 +34,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
@@ -163,7 +163,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setScheduleBackToToday();
             }
         });
-        switch (AppUtils.getCurrentAppLanguage(getActivity())){
+        switch (LanguageManager.getCurrentAppLanguage()){
             case "zh-Hans":
             case "zh-hant":
                 calendarView.setIsLunarAndFestivalShow(true);
