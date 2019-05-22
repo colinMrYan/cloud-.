@@ -302,7 +302,7 @@ public class CalendarLayout extends LinearLayout {
                     mLastY = y;
                     return false;
                 }
-                hideWeek(true);
+                hideWeek(false);
 
                 //向下滑动，并且contentView已经完全平移到底部
                 if (dy > 0 && mContentView.getTranslationY() + dy >= 0) {
@@ -719,9 +719,9 @@ public class CalendarLayout extends LinearLayout {
         if (mContentView == null) {
             return;
         }
-        if (isWeekView != true){
-            return;
-        }
+//        if (isWeekView != true){
+//            return;
+//        }
         if ((mDefaultStatus == STATUS_SHRINK ||
                 mCalendarShowMode == CALENDAR_SHOW_MODE_ONLY_WEEK_VIEW) &&
                 mCalendarShowMode != CALENDAR_SHOW_MODE_ONLY_MONTH_VIEW) {
@@ -746,6 +746,9 @@ public class CalendarLayout extends LinearLayout {
                             super.onAnimationEnd(animation);
                             isAnimating = false;
                             showWeek();
+                            if (listener != null) {
+                                listener.isExpand(false);
+                            }
 
                         }
                     });

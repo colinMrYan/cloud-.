@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -93,7 +94,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     @ViewInject(R.id.recycler_view_event)
     private RecyclerView eventRecyclerView;
     @ViewInject(R.id.rl_schedule_list_default)
-    private RelativeLayout scheduleListDefaultLayout;
+    private LinearLayout scheduleListDefaultLayout;
     @ViewInject(R.id.rl_all_day)
     private RelativeLayout allDayLayout;
     @ViewInject(R.id.iv_event_all_day)
@@ -207,7 +208,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void isExpand(boolean isExpand) {
-        LogUtils.LbcDebug("isExpand=============");
         if (isExpand) {
             onCalendarSelect(calendarView.getSelectedCalendar(), false);
         }
@@ -216,17 +216,19 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
-        LogUtils.LbcDebug("onCalendarSelect=============");
         selectCalendar = Calendar.getInstance();
         selectCalendar.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay(), 0, 0, 0);
         selectCalendar.set(Calendar.MILLISECOND, 0);
         setSelectCalendarTimeInfo();
         List<EmmCalendar> currentPageCalendarList = calendarView.getCurrentPageCalendars();
-        EmmCalendar startEmmCalendar = currentPageCalendarList.get(0);
-        EmmCalendar endEmmCalendar = currentPageCalendarList.get(currentPageCalendarList.size() - 1);
-        pageStartCalendar.set(startEmmCalendar.getYear(), startEmmCalendar.getMonth() - 1, startEmmCalendar.getDay());
-        pageEndCalendar.set(endEmmCalendar.getYear(), endEmmCalendar.getMonth() - 1, endEmmCalendar.getDay());
-        showCalendarEvent(false);
+        if (currentPageCalendarList != null){
+            EmmCalendar startEmmCalendar = currentPageCalendarList.get(0);
+            EmmCalendar endEmmCalendar = currentPageCalendarList.get(currentPageCalendarList.size() - 1);
+            pageStartCalendar.set(startEmmCalendar.getYear(), startEmmCalendar.getMonth() - 1, startEmmCalendar.getDay());
+            pageEndCalendar.set(endEmmCalendar.getYear(), endEmmCalendar.getMonth() - 1, endEmmCalendar.getDay());
+            showCalendarEvent(false);
+        }
+
     }
 
     /**
@@ -321,6 +323,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         scheduleListDefaultLayout.setVisibility((isEventShowTypeList && eventListSize < 1) ? View.VISIBLE : View.GONE);
         scheduleSumText.setText(eventListSize > 0 ? eventListSize + " " + getActivity().getString(R.string.schedule_calendar_schedules) : "");
         if (isEventShowTypeList) {
+            eventRecyclerView.setVisibility(eventList.size()>0?View.VISIBLE:View.GONE);
             scheduleEventListAdapter.setEventList(selectCalendar, eventList);
             scheduleEventListAdapter.notifyDataSetChanged();
         } else {
