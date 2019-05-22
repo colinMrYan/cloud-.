@@ -190,13 +190,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
      */
     private void initEnvironment() {
         // TODO Auto-generated method stub
-        Boolean isFirst = PreferencesUtils.getBoolean(MainActivity.this,
-                "isFirst", true);
-        // 当第一次进入应用，系统没有自动创建快捷方式时进行创建
-        if (isFirst && !AppUtils.isHasShortCut(MainActivity.this)) {
-            ((MyApplication) getApplicationContext())
-                    .addShortCut(MainActivity.this);
-        }
         handMessage();
         NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(MainActivity.this,
                 handler, false);

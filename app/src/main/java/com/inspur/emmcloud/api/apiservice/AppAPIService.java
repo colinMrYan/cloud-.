@@ -68,19 +68,13 @@ public class AppAPIService {
         String clientVersion = AppUtils.getVersion(context);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         params.addParameter("clientVersion", clientVersion);
-        if (((MyApplication) context.getApplicationContext()).isVersionDev()) {
-            params.addParameter("clientType", "dev_android");
+        if (AppUtils.isAppVersionStandard()) {
+            params.addParameter("clientType", "android");
         } else {
-            if (AppUtils.isAppVersionStandard()) {
-                params.addParameter("clientType", "android");
-            } else {
-                String appFirstLoadAlis =
-                        PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
-                params.addParameter("clientType", "android_" + appFirstLoadAlis);
-            }
-
+            String appFirstLoadAlis =
+                    PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+            params.addParameter("clientType", "android_" + appFirstLoadAlis);
         }
-
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -311,12 +305,12 @@ public class AppAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0),lastMultipleLayoutVersion));
+                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0), lastMultipleLayoutVersion));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnNaviBarModelFail(error,responseCode);
+                apiInterface.returnNaviBarModelFail(error, responseCode);
             }
         });
     }

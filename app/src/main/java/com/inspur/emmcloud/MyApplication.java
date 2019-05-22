@@ -4,14 +4,10 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
-import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -202,7 +198,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void signout(boolean isWebSocketSignout) {
         // TODO Auto-generated method stub
         //清除日历提醒极光推送本地通知
-        ScheduleAlertUtils.cancelAllCalEventNotification(this);
         stopPush();
         clearNotification();
         removeAllCookie();
@@ -683,28 +678,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
 /**************************************************************************/
 
-    /***
-     * 判断当前版本是否是开发版
-     *
-     * @return
-     */
-    public boolean isVersionDev() {
-        ApplicationInfo appInfo;
-        try {
-            appInfo = this.getPackageManager().getApplicationInfo(
-                    getPackageName(), PackageManager.GET_META_DATA);
-            String msg = appInfo.metaData.getString("VERSION_TYPE");
-            if (msg.equals("dev")) {
-                return true;
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-
-    }
-
     /**
      * 判断是否已登录
      *
@@ -777,36 +750,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
-    /**
-     * 添加桌面快捷方式
-     **/
-    public void addShortCut(Context context) {
-        Intent shortcutIntent = new Intent(
-                "com.android.launcher.action.INSTALL_SHORTCUT");
-        // 不允许重复创建
-        shortcutIntent.putExtra("duplicate", false);
-        // 快捷方式下的名字
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-                context.getString(R.string.app_name));
-        // 快捷方式的图标
-        Parcelable icon = null;
-        if (isVersionDev()) {
-            icon = Intent.ShortcutIconResource.fromContext(context,
-                    R.drawable.ic_launcher_dev);
-        } else {
-            icon = Intent.ShortcutIconResource.fromContext(context,
-                    R.drawable.ic_launcher);
-        }
-
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-        Intent intent = new Intent(context, MainActivity.class);
-        // 卸载应用的时候删除桌面图标
-        intent.setAction("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.LAUNCHER");
-        // 绑定事件
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(shortcutIntent);
-    }
 
     // 判断IndexActivity是否存在的标志
     public boolean isIndexActivityRunning() {
