@@ -188,7 +188,9 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         }
     }
 
-   // class Conta
+//    class ContactAdapter extends BaseAdapter{
+//
+//    }
 
 
 
