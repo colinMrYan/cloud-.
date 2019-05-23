@@ -73,6 +73,28 @@ public class MarkDownLinkCacheUtils {
         return markDownLinks;
     }
 
+    /**
+     * 获取缓存中的MarkDownList
+     *
+     * @param context
+     * @return
+     */
+    public static List<MarkDownLink> getMarkDownLinkListById(Context context, String id) {
+        List<MarkDownLink> markDownLinks = null;
+        try {
+            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("id","=",id).findAll();
+            // markDownLinks = DbCacheUtils.getDb(context).findAll(MarkDownLink.class);
+        } catch (Exception e) {
+            // TODO: handle exception
+            LogUtils.jasonDebug("获取makdown 列表 Error");
+            e.printStackTrace();
+        }
+        if (markDownLinks == null) {
+            markDownLinks = new ArrayList<>();
+        }
+        return markDownLinks;
+    }
+
 
     /**
      * 删除单条MarkDownLink 信息

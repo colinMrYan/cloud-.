@@ -88,8 +88,7 @@ public class DisplayTxtMarkdownMsg {
                         holder.setColor(context.getResources().getColor(
                                 isMyMsg ? R.color.hightlight_in_blue_bg
                                         : R.color.header_bg_blue));
-                        List<MarkDownLink> markDownLinks = MarkDownLinkCacheUtils.getMarkDownLinkList(context,mid,holder.getUrl());
-                        LogUtils.jasonDebug("查询数据库3333"+holder.getUrl()+"::"+mid+"size"+markDownLinks.size());
+                        List<MarkDownLink> markDownLinks = MarkDownLinkCacheUtils.getMarkDownLinkListById(context,holder.getUrl()+mid);
                         if(markDownLinks.size()>0){
                             holder.setColor(context.getResources().getColor(R.color.mark_down_url_read));
                         }
@@ -98,7 +97,7 @@ public class DisplayTxtMarkdownMsg {
                 .urlClick(new OnUrlClickListener() {
                     @Override
                     public boolean urlClicked(String url) {
-                        List<MarkDownLink> markDownLinks = MarkDownLinkCacheUtils.getMarkDownLinkList(context,mid,url);
+                        List<MarkDownLink> markDownLinks = MarkDownLinkCacheUtils.getMarkDownLinkListById(context,url+mid);
                         LogUtils.jasonDebug("查询数据库Click111"+url+"::"+mid+"size:"+markDownLinks.size());
                         if(!(markDownLinks.size()>0)){
                             LogUtils.jasonDebug("查询数据库2222"+url+"::"+mid);
