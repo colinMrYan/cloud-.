@@ -22,8 +22,9 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 2018/03/01数据
@@ -41,11 +42,10 @@ import org.xutils.view.annotation.ViewInject;
  * }
  * Created by yufuchang on 2018/2/28.
  */
-@ContentView(R.layout.activity_volume_file_permission_manager)
 public class VolumeFilePermissionManagerActivity extends BaseActivity {
 
-    @ViewInject(R.id.rv_volume_file_permission)
-    protected RecyclerView groupRecyclerView;
+    @BindView(R.id.rv_volume_file_permission)
+    RecyclerView groupRecyclerView;
 
     private VolumeGroupPermissionManagerAdapter volumeGroupPermissionManagerAdapter;
 
@@ -54,6 +54,8 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_volume_file_permission_manager);
+        ButterKnife.bind(this);
         initViews();
         getVolumeFileGroup();
     }

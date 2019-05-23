@@ -4,10 +4,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingListAdapter;
@@ -17,7 +20,6 @@ import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -28,32 +30,32 @@ import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by chenmch on 2019/4/6.
  */
 
-@ContentView(R.layout.fragment_schedule_meeting)
-public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefreshLayout.OnRefreshListener
+public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayout.OnRefreshListener
         , MySwipeRefreshLayout.OnLoadListener, ScheduleMeetingListAdapter.OnItemClickLister {
 
     private static String EXTRA_IS_HISTORY_MEETING = "is_history_meeting";
 
-    @ViewInject(R.id.swipe_refresh_layout)
-    private MySwipeRefreshLayout swipeRefreshLayout;
-    @ViewInject(R.id.lv_view_meeting)
-    private ListView meetingListView;
-    @ViewInject(R.id.ev_search)
-    private ClearEditText searchEdit;
-    @ViewInject(R.id.rl_meeting_list_default)
-    private RelativeLayout meetingListDefaultLayout;
+    @BindView(R.id.swipe_refresh_layout)
+    MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.lv_view_meeting)
+    ListView meetingListView;
+    @BindView(R.id.ev_search)
+    ClearEditText searchEdit;
+    @BindView(R.id.rl_meeting_list_default)
+    RelativeLayout meetingListDefaultLayout;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
     private List<Meeting> meetingList = new ArrayList<>();
     private List<Meeting> uiMeetingList = new ArrayList<>();
@@ -63,7 +65,6 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
     private boolean isPullUp = false;
     private boolean isHistoryMeeting = false;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +72,13 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
             isHistoryMeeting = getArguments().getBoolean(EXTRA_IS_HISTORY_MEETING, false);
         }
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_schedule_meeting, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override

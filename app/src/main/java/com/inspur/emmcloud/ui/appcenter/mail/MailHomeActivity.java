@@ -31,10 +31,11 @@ import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by chenmch on 2018/12/20.
@@ -43,17 +44,17 @@ import java.util.List;
 public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
 
     private static final int pageSize = 10;
-    @ViewInject(R.id.srl_refresh)
-    private MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.srl_refresh)
+    MySwipeRefreshLayout swipeRefreshLayout;
 
-    @ViewInject(R.id.lv_mail)
-    private ListView mailListView;
+    @BindView(R.id.lv_mail)
+    ListView mailListView;
 
-    @ViewInject(R.id.tv_header)
-    private TextView headerText;
+    @BindView(R.id.tv_header)
+    TextView headerText;
 
-    @ViewInject(R.id.rl_mail_operation)
-    private RelativeLayout mailOperationLayout;
+    @BindView(R.id.rl_mail_operation)
+    RelativeLayout mailOperationLayout;
 
     private MailListAdapter mailAdapter;
     private MailApiService apiService;
@@ -185,7 +186,7 @@ public class MailHomeActivity extends MailHomeBaseActivity implements MySwipeRef
     /**
      * 本地删除邮件
      *
-     * @param mailList
+     * @param
      */
     private void removeMailListFromLocal(List<Mail> deleteMailList) {
         if (deleteMailList != null && deleteMailList.size() > 0) {

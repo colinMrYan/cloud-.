@@ -79,8 +79,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.io.Serializable;
@@ -90,6 +88,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.R.attr.path;
 
 /**
@@ -97,7 +98,6 @@ import static android.R.attr.path;
  *
  * @author Fortune Yu; create at 2016年8月29日
  */
-@ContentView(R.layout.activity_channelv0)
 public class ChannelV0Activity extends BaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
@@ -106,19 +106,19 @@ public class ChannelV0Activity extends BaseActivity {
     private static final int MENTIONS_RESULT = 5;
     private static final int CHOOSE_FILE = 4;
     private static final int REQUEST_QUIT_CHANNELGROUP = 6;
-    @ViewInject(R.id.msg_list)
-    private RecycleViewForSizeChange msgListView;
+    @BindView(R.id.msg_list)
+    RecycleViewForSizeChange msgListView;
 
-    @ViewInject(R.id.refresh_layout)
-    private SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
-    @ViewInject(R.id.chat_input_menu)
-    private ECMChatInputMenuV0 chatInputMenu;
-    @ViewInject(R.id.header_text)
-    private TextView headerText;
+    @BindView(R.id.chat_input_menu)
+    ECMChatInputMenuV0 chatInputMenu;
+    @BindView(R.id.header_text)
+    TextView headerText;
 
-    @ViewInject(R.id.robot_photo_img)
-    private ImageView robotPhotoImg;
+    @BindView(R.id.robot_photo_img)
+    ImageView robotPhotoImg;
     private LinearLayoutManager linearLayoutManager;
     private LoadingDialog loadingDlg;
     private String robotUid = "BOT6006";
@@ -135,6 +135,8 @@ public class ChannelV0Activity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_channelv0);
+        ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         init();
         registeRefreshNameReceiver();

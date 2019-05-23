@@ -24,11 +24,12 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
 
 
 /**
@@ -38,18 +39,18 @@ import java.util.List;
 
 public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
-    @ViewInject(R.id.location_select_bar_layout)
-    protected RelativeLayout locationSelectBarLayout;
-    @ViewInject(R.id.location_select_to_text)
-    protected TextView locationSelectToText;
-    @ViewInject(R.id.tv_location_select_upload_to)
-    protected TextView locationSelectUploadToText;
-    @ViewInject(R.id.header_operation_layout)
-    private RelativeLayout headerOperationLayout;
-    @ViewInject(R.id.location_select_cancel_text)
-    private TextView locationSelectCancelText;
-    @ViewInject(R.id.path_text)
-    private TextView pathText;
+    @BindView(R.id.location_select_bar_layout)
+    RelativeLayout locationSelectBarLayout;
+    @BindView(R.id.location_select_to_text)
+    TextView locationSelectToText;
+    @BindView(R.id.tv_location_select_upload_to)
+    TextView locationSelectUploadToText;
+    @BindView(R.id.header_operation_layout)
+    RelativeLayout headerOperationLayout;
+    @BindView(R.id.location_select_cancel_text)
+    TextView locationSelectCancelText;
+    @BindView(R.id.path_text)
+    TextView pathText;
 
     private boolean isFunctionCopy;//判断是复制还是移动功能
     private MyAppAPIService apiService;

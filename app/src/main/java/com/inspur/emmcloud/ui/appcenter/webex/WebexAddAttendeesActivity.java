@@ -27,30 +27,28 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by chenmch on 2018/10/11.
  */
-
-@ContentView(R.layout.activity_webex_add_attendees)
 public class WebexAddAttendeesActivity extends BaseActivity {
     public static final String EXTRA_ATTENDEES_LIST = "attendeesList";
     private static final int REQUEST_ADD_INTERNAL_ATTENDEES = 1;
     private static final int REQUEST_ADD_EXTERNAL_ATTENDEES = 2;
-    @ViewInject(R.id.lv_attendees)
-    private ScrollViewWithListView attendeesListView;
-    @ViewInject(R.id.rl_add_attendees)
-    private RelativeLayout addAttendeesLayout;
-    @ViewInject(R.id.sv_content)
-    private ScrollView contentScrollView;
-    @ViewInject(R.id.tv_num)
-    private TextView numText;
+    @BindView(R.id.lv_attendees)
+    ScrollViewWithListView attendeesListView;
+    @BindView(R.id.rl_add_attendees)
+    RelativeLayout addAttendeesLayout;
+    @BindView(R.id.sv_content)
+    ScrollView contentScrollView;
+    @BindView(R.id.tv_num)
+    TextView numText;
     private List<WebexAttendees> webexAttendeesList = new ArrayList<>();
     private Adapter adapter;
 
@@ -58,6 +56,8 @@ public class WebexAddAttendeesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_webex_add_attendees);
+        ButterKnife.bind(this);
         webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
         numText.setText(getString(R.string.webex_add_invitee_num, webexAttendeesList.size(), 20 - webexAttendeesList.size()));
         adapter = new Adapter();

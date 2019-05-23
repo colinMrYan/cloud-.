@@ -43,9 +43,6 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,25 +55,26 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by chenmch on 2018/10/11.
  */
-
-@ContentView(R.layout.activity_webex_my_meeting)
 public class WebexMyMeetingActivity extends BaseActivity {
     private static final int REQUEST_SCHEDULE_WEBEX_MEETING = 1;
     private static final int REQUEST_REMOVE_WEBEX_MEETING = 1;
     private final String webexAppPackageName = "com.cisco.webex.meetings";
-    @ViewInject(R.id.srl)
-    private MySwipeRefreshLayout swipeRefreshLayout;
-    @ViewInject(R.id.elv_meeting)
-    private ExpandableListView expandListView;
-    @ViewInject(R.id.ll_no_meeting)
-    private LinearLayout noMeetingLayout;
-    @ViewInject(R.id.rl_mask)
-    private RelativeLayout maskLayout;
-    @ViewInject(R.id.tv_no_meeting)
-    private TextView noMeetingText;
+    @BindView(R.id.srl)
+    MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.elv_meeting)
+    ExpandableListView expandListView;
+    @BindView(R.id.ll_no_meeting)
+    LinearLayout noMeetingLayout;
+    @BindView(R.id.rl_mask)
+    RelativeLayout maskLayout;
+    @BindView(R.id.tv_no_meeting)
+    TextView noMeetingText;
     private WebexMeetingAdapter adapter;
     private WebexAPIService apiService;
     private List<WebexMeeting> webexMeetingList = new ArrayList<>();
@@ -91,6 +89,8 @@ public class WebexMyMeetingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_webex_my_meeting);
+        ButterKnife.bind(this);
         initView();
         getWxMeetingList(true);
 
