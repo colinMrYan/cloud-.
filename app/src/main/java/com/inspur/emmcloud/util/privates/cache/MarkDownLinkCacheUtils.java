@@ -45,7 +45,6 @@ public class MarkDownLinkCacheUtils {
             DbCacheUtils.getDb(context).saveOrUpdate(markDownLink);
         } catch (Exception e) {
             // TODO: handle
-            LogUtils.jasonDebug("存储 makdown Error");
             e.printStackTrace();
         }
     }
@@ -64,7 +63,6 @@ public class MarkDownLinkCacheUtils {
            // markDownLinks = DbCacheUtils.getDb(context).findAll(MarkDownLink.class);
         } catch (Exception e) {
             // TODO: handle exception
-            LogUtils.jasonDebug("获取makdown 列表 Error");
             e.printStackTrace();
         }
         if (markDownLinks == null) {
@@ -86,7 +84,6 @@ public class MarkDownLinkCacheUtils {
             // markDownLinks = DbCacheUtils.getDb(context).findAll(MarkDownLink.class);
         } catch (Exception e) {
             // TODO: handle exception
-            LogUtils.jasonDebug("获取makdown 列表 Error");
             e.printStackTrace();
         }
         if (markDownLinks == null) {

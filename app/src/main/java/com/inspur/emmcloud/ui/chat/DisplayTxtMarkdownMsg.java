@@ -15,7 +15,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.MarkDownLink;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
@@ -98,9 +97,7 @@ public class DisplayTxtMarkdownMsg {
                     @Override
                     public boolean urlClicked(String url) {
                         List<MarkDownLink> markDownLinks = MarkDownLinkCacheUtils.getMarkDownLinkListById(context,url+mid);
-                        LogUtils.jasonDebug("查询数据库Click111"+url+"::"+mid+"size:"+markDownLinks.size());
                         if(!(markDownLinks.size()>0)){
-                            LogUtils.jasonDebug("查询数据库2222"+url+"::"+mid);
                             MarkDownLink markDownLink= new MarkDownLink(url+mid,mid,url);
                             MarkDownLinkCacheUtils.saveMarkDownLink(context,markDownLink);
                             showContentByMarkdown(context,content,textView,isMyMsg,mid);
