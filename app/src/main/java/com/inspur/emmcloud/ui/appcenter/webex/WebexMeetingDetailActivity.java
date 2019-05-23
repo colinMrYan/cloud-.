@@ -80,6 +80,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 /**
  * Created by chenmch on 2018/10/11.
@@ -349,8 +350,8 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     }
 
-    @Event(value = {R.id.ll_meeting_content}, type = View.OnLongClickListener.class)
-    private boolean onLongClick(View v) {
+    @OnLongClick(R.id.ll_meeting_content)
+    public boolean onLongClick() {
         String content = webexMeeting.getConfName() + "\n" + getString(R.string.webex_time) + timeText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_code) + meetingIdText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_password_tip) + webexMeeting.getMeetingPassword();

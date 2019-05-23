@@ -25,6 +25,7 @@ import org.xutils.view.annotation.Event;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
@@ -60,8 +61,8 @@ public class AboutActivity extends BaseActivity {
         handMessage();
     }
 
-    @Event(value = R.id.iv_logo, type = View.OnLongClickListener.class)
-    private boolean onLongClick(View v) {
+    @OnLongClick(R.id.iv_logo)
+    public boolean onLongClick(View v) {
         new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 //						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
                 .addItem("idm-->" + MyApplication.getInstance().getCloudId())
