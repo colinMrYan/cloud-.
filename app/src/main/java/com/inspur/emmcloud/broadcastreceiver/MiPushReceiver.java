@@ -2,7 +2,6 @@ package com.inspur.emmcloud.broadcastreceiver;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.config.Constant;
@@ -12,7 +11,6 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
-import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -90,8 +88,6 @@ public class MiPushReceiver extends PushMessageReceiver {
 
     @Override
     public void onNotificationMessageArrived(Context context, MiPushMessage message) {
-        LogUtils.YfcDebug("接到小米通知消息");
-        ECMShortcutBadgeNumberManagerUtils.setMIUIV6PlusBadge(context,10,new Intent());
         LogUtils.debug(TAG, "onNotificationMessageArrived is called. " + message.toString());
         if (!TextUtils.isEmpty(message.getTopic())) {
             mTopic = message.getTopic();
