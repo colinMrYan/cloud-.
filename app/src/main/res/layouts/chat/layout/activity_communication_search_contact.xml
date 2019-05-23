@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="#ffff"
+                android:background="@color/white"
                 android:layout_toRightOf="@id/iv_search_members"
                 android:drawableRight="@drawable/ic_edit_text_delbtn"
                 android:freezesText="true"
@@ -60,7 +60,7 @@
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textColorHint="#CDCDCD"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -98,7 +98,7 @@
                         android:textSize="13sp"
                         android:layout_toLeftOf="@+id/pop_third_group_more_text"
                         android:gravity="center_vertical"
-                        android:paddingLeft="7dp"></TextView>
+                        android:paddingLeft="16dp"></TextView>
 
                     <TextView
                         android:id="@+id/pop_third_group_more_text"
@@ -184,7 +184,7 @@
                         android:textSize="13sp"
                         android:layout_toLeftOf="@+id/pop_second_group_more_text"
                         android:gravity="center_vertical"
-                        android:paddingLeft="7dp"></TextView>
+                        android:paddingLeft="16dp"></TextView>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -216,7 +216,8 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/lv_search_group_show">
+                        android:layout_below="@id/lv_search_group_show"
+                        android:visibility="gone">
                         <ImageView
                             android:id="@+id/iv_search_group_hint"
                             android:layout_width="15dp"

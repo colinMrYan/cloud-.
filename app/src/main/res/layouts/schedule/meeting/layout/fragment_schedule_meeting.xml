@@ -60,29 +60,34 @@
             android:layout_height="match_parent"
             android:divider="@null"/>
     </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+
     <RelativeLayout
         android:id="@+id/rl_meeting_list_default"
-        android:layout_below="@id/rl_meeting_search"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:background="@color/content_bg">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/content_bg"
+        android:layout_gravity="center">
+
         <ImageView
             android:id="@+id/iv_meeting_list_view_default"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_meeting_default"/>
+            android:src="@drawable/ic_meeting_default" />
+
         <TextView
-            android:text="@string/schedule_meeting_no_meeting_today"
-            android:layout_below="@id/iv_meeting_list_view_default"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_below="@id/iv_meeting_list_view_default"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="30dp"
-            android:textSize="16sp"
+            android:layout_marginTop="18dp"
+            android:singleLine="true"
+            android:text="@string/schedule_meeting_no_meeting_today"
             android:textColor="#999999"
-            android:singleLine="true"/>
+            android:textSize="16sp" />
     </RelativeLayout>
 </RelativeLayout>

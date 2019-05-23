@@ -663,6 +663,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.send_msg_btn:
+                LogUtils.LbcDebug("发送点击事件");
                 List<String> urlList = null;
                 String content = inputEdit.getRichContent(false);
                 Map<String, String> mentionsMap = null;
