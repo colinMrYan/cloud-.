@@ -188,6 +188,28 @@ public class LoginAPIService {
     }
 
     /**
+     * 退出登录时取消token
+     */
+    public void cancelToken() {
+        final String url = APIUri.getCancelTokenUrl() + "?destroy=ALL";
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+            }
+        });
+    }
+
+
+    /**
      * 短信登录-发送短信
      *
      * @param mobile

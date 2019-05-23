@@ -69,6 +69,16 @@ public class OauthUtils {
         }
     }
 
+    /**
+     * 退出登录时注销token
+     * 无后续需要根据返回内容
+     */
+    public void cancelToken() {
+        LoginAPIService apiService = new LoginAPIService(MyApplication.getInstance());
+        apiService.cancelToken();
+    }
+
+
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnRefreshTokenSuccess(GetLoginResult getLoginResult) {
@@ -130,4 +140,6 @@ public class OauthUtils {
         }
 
     }
+
+
 }

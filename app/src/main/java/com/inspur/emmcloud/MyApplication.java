@@ -5,8 +5,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -21,12 +19,9 @@ import com.github.zafarkhaja.semver.Version;
 import com.horcrux.svg.SvgPackage;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
@@ -37,22 +32,15 @@ import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.MutilClusterUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
-import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.utils.L;
 import com.oblador.vectoricons.VectorIconsPackage;
 
 import org.xutils.http.RequestParams;
@@ -158,7 +146,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         x.Ext.setDebug(true);
         SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
-        initImageLoader();
+        ImageDisplayUtils.getInstance().initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
         RichText.debugMode = true;
@@ -199,7 +187,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         removeAllCookie();
         removeAllSessionCookie();
         clearUserPhotoMap();
-        cancelToken();
+        OauthUtils.getInstance().cancelToken();
         PreferencesUtils.putString(this, "accessToken", "");
         PreferencesUtils.putString(this, "refreshToken", "");
         setAccessToken("");
@@ -212,16 +200,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getInstance(), 0);
     }
 /****************************通知相关（极光和华为推送）******************************************/
-
-    /**
-     * 退出登录时注销token
-     * 无后续需要根据返回内容
-     */
-    private void cancelToken() {
-        AppAPIService appAPIService = new AppAPIService(this);
-        appAPIService.cancelToken();
-    }
-
 
 /************************ Cookie相关 *****************************/
 
@@ -255,13 +233,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return uid;
     }
 
-
-    /*************************** http相关 **************************************/
-
     public void setUid(String uid) {
         this.uid = uid;
     }
-
+    /*************************** http相关 **************************************/
     /**
      * 获取http RequestParams
      *
@@ -294,12 +269,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (currentEnterprise != null) {
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
         }
-        String languageJson = PreferencesUtils.getString(
-                getInstance(), MyApplication.getInstance().getTanent() + "appLanguageObj");
-        if (languageJson != null) {
-            Language language = new Language(languageJson);
-            params.addHeader("Accept-Language", language.getIana());
-        }
+        params.addHeader("Accept-Language", LanguageManager.getCurrentAppLanguage());
         return params;
     }
 
@@ -656,46 +626,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks() {
         return myActivityLifecycleCallbacks;
     }
-
-    /**
-     * startWebSocket ImageLoaderCommon
-     **/
-    private void initImageLoader() {
-        // TODO Auto-generated method stub
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                // 设置图片的解码类型
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
-        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
-                getInstance())
-                .memoryCacheExtraOptions(1280, 1280)
-                .defaultDisplayImageOptions(options)
-                .imageDownloader(
-                        new CustomImageDownloader(getApplicationContext()))
-                .threadPoolSize(6)
-                .threadPriority(Thread.NORM_PRIORITY - 1)
-                .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(
-                        new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
-                .diskCacheSize(100 * 1024 * 1024)
-                // You can pass your own memory cache implementation
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .diskCacheFileNameGenerator(new HashCodeFileNameGenerator());
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            File cacheDir = new File(MyAppConfig.LOCAL_CACHE_PATH);
-            if (!cacheDir.exists()) {
-                cacheDir.mkdirs();
-            }
-            builder = builder.diskCache(new UnlimitedDiskCache(cacheDir));
-        }
-
-        ImageLoaderConfiguration config = builder.build();
-        L.disableLogging(); // 关闭imageloader的疯狂的log
-        ImageLoader.getInstance().init(config);
-
-    }
-
 
     // 判断IndexActivity是否存在的标志
     public boolean isIndexActivityRunning() {

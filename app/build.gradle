@@ -32,14 +32,14 @@ android {
             storePassword properties.getProperty("KEY_PASSWORD")
         }
     }
-    compileSdkVersion 28
-    buildToolsVersion "26.0.2"
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.androidTools
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     defaultConfig {
         applicationId "com.inspur.emmcloud"
-        minSdkVersion 16
-        targetSdkVersion 27
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
         versionCode 82
         versionName "3.1.0-rc.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

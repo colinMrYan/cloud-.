@@ -3,22 +3,34 @@ package com.inspur.emmcloud.util.privates;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.plugin.camera.imagepicker.loader.ImagePickerLoader;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
+import com.nostra13.universalimageloader.utils.L;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
+
+import java.io.File;
 
 
 public class ImageDisplayUtils implements ImagePickerLoader {
@@ -36,6 +48,40 @@ public class ImageDisplayUtils implements ImagePickerLoader {
             }
         }
         return mInstance;
+    }
+
+    public void initImageLoader() {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                // 设置图片的解码类型
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(MyApplication.getInstance())
+                .memoryCacheExtraOptions(1280, 1280)
+                .defaultDisplayImageOptions(options)
+                .imageDownloader(
+                        new CustomImageDownloader(MyApplication.getInstance()))
+                .threadPoolSize(6)
+                .threadPriority(Thread.NORM_PRIORITY - 1)
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCache(
+                        new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
+                .diskCacheSize(100 * 1024 * 1024)
+                // You can pass your own memory cache implementation
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .diskCacheFileNameGenerator(new HashCodeFileNameGenerator());
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            File cacheDir = new File(MyAppConfig.LOCAL_CACHE_PATH);
+            if (!cacheDir.exists()) {
+                cacheDir.mkdirs();
+            }
+            builder = builder.diskCache(new UnlimitedDiskCache(cacheDir));
+        }
+
+        ImageLoaderConfiguration config = builder.build();
+        L.disableLogging(); // 关闭imageloader的疯狂的log
+        ImageLoader.getInstance().init(config);
+
     }
 
 
