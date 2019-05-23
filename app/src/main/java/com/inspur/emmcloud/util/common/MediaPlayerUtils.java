@@ -19,6 +19,12 @@ public class MediaPlayerUtils {
     public MediaPlayerUtils(Context context) {
         mediaPlayerVoiceOn = MediaPlayer.create(context, R.raw.voice_search_on);
         mediaPlayerVoiceOff = MediaPlayer.create(context, R.raw.voice_search_off);
+        if(mediaPlayerVoiceOff==null){
+            LogUtils.LbcDebug("mediaPlayerVoiceOff==null");
+        }
+        if(mediaPlayerVoiceOn==null){
+            LogUtils.LbcDebug("mediaPlayerVoiceOn==null");
+        }
     }
 
     /**

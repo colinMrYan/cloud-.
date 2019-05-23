@@ -49,8 +49,6 @@ import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
-import org.xutils.view.annotation.Event;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -255,6 +253,7 @@ public class ECMChatInputMenu extends LinearLayout {
         waterWaveProgress.setWaveSpeed(0.02F);
         waterWaveProgress.setAmplitude(5.0F);
         lastVolumeLevel = 0;
+        LogUtils.LbcDebug("state");
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
@@ -531,6 +530,7 @@ public class ECMChatInputMenu extends LinearLayout {
         voiceInputLayout.setVisibility(View.VISIBLE);
         lastVolumeLevel = 0;
         waterWaveProgress.setProgress(0);
+        LogUtils.LbcDebug("playVoiceOn");
         mediaPlayerUtils.playVoiceOn();
         voice2StringMessageUtils.startVoiceListening();
     }
@@ -794,6 +794,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void releaseVoliceInput() {
         if (voice2StringMessageUtils.getSpeechRecognizer() != null) {
+            LogUtils.LbcDebug("release voice2StringMessageUtils");
             mediaPlayerUtils.release();
             voice2StringMessageUtils.getSpeechRecognizer().cancel();
             voice2StringMessageUtils.getSpeechRecognizer().destroy();
@@ -810,7 +811,6 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setVoiceImageViewLevel(int volume) {
         //回调函数30多毫秒执行一次
-        LogUtils.LbcDebug("30+毫秒回调函数  ：：" + volume);
         int currentLevel = 0;
         if (0 == volume) {
             currentLevel = 0;
