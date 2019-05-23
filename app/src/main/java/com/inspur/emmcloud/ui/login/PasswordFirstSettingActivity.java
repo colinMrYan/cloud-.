@@ -24,22 +24,20 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 用户初次使用短信验证码登录后，当没有设置密码时进入改页面
  */
 
-@ContentView(R.layout.activity_password_first_setting)
 public class PasswordFirstSettingActivity extends BaseActivity {
-    @ViewInject(R.id.bt_save)
-    private Button saveBtn;
-    @ViewInject(R.id.et_password_new)
-    private EditText passwordNewEdit;
-    @ViewInject(R.id.et_password_confirm)
-    private EditText passwordConfirmEdit;
+    @BindView(R.id.bt_save)
+    Button saveBtn;
+    @BindView(R.id.et_password_new)
+    EditText passwordNewEdit;
+    @BindView(R.id.et_password_confirm)
+    EditText passwordConfirmEdit;
     private String passwordNew;
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
@@ -48,7 +46,8 @@ public class PasswordFirstSettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
+        setContentView(R.layout.activity_password_first_setting);
+        ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);

@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
@@ -21,25 +21,25 @@ import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by libaochao on 2019/4/2.
  */
-@ContentView(R.layout.activity_calendar_setting)
 public class CalendarSettingActivity extends BaseActivity {
     public static final String SHOW_TYPE_LIST = "show_type_list";
     public static final String SHOW_TYPE_DAY_VIEW = "show_type_day_view";
-    @ViewInject(R.id.listview_list_calendars)
-    private ScrollViewWithListView calendarsListView;
-    @ViewInject(R.id.iv_list_view_select)
-    private ImageView listSelectImageView;
-    @ViewInject(R.id.iv_day_view_select)
-    private ImageView daySelectImageView;
+    @BindView(R.id.listview_list_calendars)
+    ScrollViewWithListView calendarsListView;
+    @BindView(R.id.iv_list_view_select)
+    ImageView listSelectImageView;
+    @BindView(R.id.iv_day_view_select)
+    ImageView daySelectImageView;
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
 
@@ -47,6 +47,8 @@ public class CalendarSettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calendar_setting);
+        ButterKnife.bind(this);
         String viewDisplayType = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);

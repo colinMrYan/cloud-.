@@ -49,47 +49,47 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by chenmch on 2019/4/9.
  */
 
-@ContentView(R.layout.activity_meeting_add)
 public class MeetingAddActivity extends BaseActivity {
     private static final int REQUEST_SELECT_ATTENDEE = 1;
     private static final int REQUEST_SELECT_RECORDER = 2;
     private static final int REQUEST_SELECT_LIAISON = 3;
     private static final int REQUEST_SELECT_MEETING_ROOM = 4;
     private static final int REQUEST_SET_REMIND_EVENT = 5;
-    @ViewInject(R.id.et_title)
-    private EditText titleEdit;
-    @ViewInject(R.id.tv_start_date)
-    private TextView startDateText;
-    @ViewInject(R.id.tv_start_time)
-    private TextView startTimeText;
-    @ViewInject(R.id.tv_end_date)
-    private TextView endDateText;
-    @ViewInject(R.id.tv_end_time)
-    private TextView endTimeText;
-    @ViewInject(R.id.tv_meeting_position)
-    private TextView meetingPositionText;
-    @ViewInject(R.id.ll_attendee)
-    private LinearLayout attendeeLayout;
-    @ViewInject(R.id.ll_recorder)
-    private LinearLayout recorderLayout;
-    @ViewInject(R.id.ll_liaison)
-    private LinearLayout liaisonLayout;
-    @ViewInject(R.id.et_notes)
-    private EditText notesEdit;
-    @ViewInject(R.id.tv_reminder)
-    private TextView reminderText;
+    @BindView(R.id.et_title)
+    EditText titleEdit;
+    @BindView(R.id.tv_start_date)
+    TextView startDateText;
+    @BindView(R.id.tv_start_time)
+    TextView startTimeText;
+    @BindView(R.id.tv_end_date)
+    TextView endDateText;
+    @BindView(R.id.tv_end_time)
+    TextView endTimeText;
+    @BindView(R.id.tv_meeting_position)
+    TextView meetingPositionText;
+    @BindView(R.id.ll_attendee)
+    LinearLayout attendeeLayout;
+    @BindView(R.id.ll_recorder)
+    LinearLayout recorderLayout;
+    @BindView(R.id.ll_liaison)
+    LinearLayout liaisonLayout;
+    @BindView(R.id.et_notes)
+    EditText notesEdit;
+    @BindView(R.id.tv_reminder)
+    TextView reminderText;
     private LoadingDialog loadingDlg;
     private ScheduleApiService apiService;
     private Calendar startTimeCalendar;
@@ -112,6 +112,8 @@ public class MeetingAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_add);
+        ButterKnife.bind(this);
         initData();
         initView();
     }

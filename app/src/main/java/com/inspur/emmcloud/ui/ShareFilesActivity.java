@@ -35,36 +35,38 @@ import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by yufuchang on 2018/5/12.
  */
-@ContentView(R.layout.activity_share_files)
 public class ShareFilesActivity extends BaseActivity {
 
     private final static int SHARE_IMAGE_OR_FILES = 0;
-    @ViewInject(R.id.rv_file_list)
-    private RecyclerView recyclerView;
-    @ViewInject(R.id.img_file_icon)
-    private ImageView imageView;
-    @ViewInject(R.id.rl_channel_share)
-    private RelativeLayout channelRelativeLayout;
-    @ViewInject(R.id.rl_volume_share)
-    private RelativeLayout volumeRelativeLayout;
-    @ViewInject(R.id.view_line_volume)
-    private View viewLineVolume;
+    @BindView(R.id.rv_file_list)
+    RecyclerView recyclerView;
+    @BindView(R.id.img_file_icon)
+    ImageView imageView;
+    @BindView(R.id.rl_channel_share)
+    RelativeLayout channelRelativeLayout;
+    @BindView(R.id.rl_volume_share)
+    RelativeLayout volumeRelativeLayout;
+    @BindView(R.id.view_line_volume)
+    View viewLineVolume;
     private List<String> uriList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_share_files);
+        ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
         if (!isImageUriList(uriList)) {
             if (uriList.size() <= 1) {

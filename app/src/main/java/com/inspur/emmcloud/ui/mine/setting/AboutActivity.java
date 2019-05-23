@@ -21,35 +21,38 @@ import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
-import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:53:14
  */
-@ContentView(R.layout.activity_about)
 public class AboutActivity extends BaseActivity {
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
     private Handler handler;
-    @ViewInject(R.id.tv_app_version)
-    private TextView appVersionText;
-    @ViewInject(R.id.iv_logo)
-    private ImageView logoImg;
-    @ViewInject(R.id.rl_protocol)
-    private RelativeLayout protocolLayout;
-    @ViewInject(R.id.rl_invite_friends)
-    private RelativeLayout inviteFriendsLayout;
+    @BindView(R.id.tv_app_version)
+    TextView appVersionText;
+    @BindView(R.id.iv_logo)
+    ImageView logoImg;
+    @BindView(R.id.rl_protocol)
+    RelativeLayout protocolLayout;
+    @BindView(R.id.rl_invite_friends)
+    RelativeLayout inviteFriendsLayout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_about);
+        ButterKnife.bind(this);
         String version = AppUtils.getVersion(this).replace("beta", "b");
         appVersionText.setText(AppUtils.getAppName(this) + "  " + version);
         ImageDisplayUtils.getInstance().displayImage(logoImg, "drawable://" + AppUtils.getAppIconRes(MyApplication.getInstance()), R.drawable.ic_launcher);
@@ -58,8 +61,8 @@ public class AboutActivity extends BaseActivity {
         handMessage();
     }
 
-    @Event(value = R.id.iv_logo, type = View.OnLongClickListener.class)
-    private boolean onLongClick(View v) {
+    @OnLongClick(R.id.iv_logo)
+    public boolean onLongClick(View v) {
         new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 //						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
                 .addItem("idm-->" + MyApplication.getInstance().getCloudId())

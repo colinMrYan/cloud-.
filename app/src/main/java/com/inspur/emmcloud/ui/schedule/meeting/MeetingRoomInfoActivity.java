@@ -42,8 +42,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -52,8 +50,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_meeting_room_info)
 public class MeetingRoomInfoActivity extends BaseActivity {
 
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
@@ -61,18 +60,18 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private final String dayStartTime = "08:00";
     private final String dayEndTime = "18:00";
     private MeetingRoom meetingRoom;
-    @ViewInject(R.id.tv_meeting_room_name)
-    private TextView meetingRoomNameText;
-    @ViewInject(R.id.tv_meeting_room_floor)
-    private TextView meetingRoomFloorText;
-    @ViewInject(R.id.view_pager)
-    private ViewPager viewPager;
-    @ViewInject(R.id.tv_people_num)
-    private TextView peopleNumText;
-    @ViewInject(R.id.ll_equipment)
-    private LinearLayout equipmentLayout;
-    @ViewInject(R.id.tl_meeting_tab)
-    private TabLayout tabLayout;
+    @BindView(R.id.tv_meeting_room_name)
+    TextView meetingRoomNameText;
+    @BindView(R.id.tv_meeting_room_floor)
+    TextView meetingRoomFloorText;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    @BindView(R.id.tv_people_num)
+    TextView peopleNumText;
+    @BindView(R.id.ll_equipment)
+    LinearLayout equipmentLayout;
+    @BindView(R.id.tl_meeting_tab)
+    TabLayout tabLayout;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private List<List<MeetingSchedule>> allDaysMeetingScheduleList;
@@ -84,6 +83,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_room_info);
+        ButterKnife.bind(this);
         meetingRoom = (MeetingRoom) getIntent().getExtras().getSerializable(EXTRA_MEETING_ROOM);
         initView();
         getMeetingListByMeetingRoom();

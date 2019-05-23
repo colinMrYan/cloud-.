@@ -18,7 +18,7 @@ import com.inspur.emmcloud.R;
  * Created by libaochao on 2018/12/18.
  */
 
-public class BatteryWhiteListDialog extends Dialog {
+public class WhiteListDialog extends Dialog {
 
     private Context context;
     private int confirmButtonTextId;
@@ -36,7 +36,7 @@ public class BatteryWhiteListDialog extends Dialog {
      * @param tipContentId
      * @param tipHideHintId
      */
-    public BatteryWhiteListDialog(Context context, int tipContentId, int tipHideHintId, int confirmButtonTextId, int cacelButtonTextId) {
+    public WhiteListDialog(Context context, int tipContentId, int tipHideHintId, int confirmButtonTextId, int cacelButtonTextId) {
         super(context);
         this.context = context;
         this.tipContentId = tipContentId;
@@ -58,7 +58,7 @@ public class BatteryWhiteListDialog extends Dialog {
 
     public void init() {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.dialog_battery_white_list, null);
+        View view = inflater.inflate(R.layout.dialog_white_list, null);
         setContentView(view);
 
         TextView tipContentText = (TextView) view.findViewById(R.id.tv_tip_content);

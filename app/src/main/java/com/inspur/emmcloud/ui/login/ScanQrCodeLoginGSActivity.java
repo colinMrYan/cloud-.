@@ -16,9 +16,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-
-@ContentView(R.layout.activity_scan_qrcode_login_gs)
 public class ScanQrCodeLoginGSActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
 
@@ -26,6 +23,7 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_scan_qrcode_login_gs);
         loadingDlg = new LoadingDialog(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
     }

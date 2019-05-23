@@ -29,37 +29,34 @@ import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2019/4/10.
  */
-
-@ContentView(R.layout.activity_meeting_room_list)
 public class MeetingRoomListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, ExpandableListView.OnChildClickListener {
     public static final String EXTRA_START_TIME = "extra_start_time";
     public static final String EXTRA_END_TIME = "extra_end_time";
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     private static final int REQUEST_MEETING_OFFICE_SETTING = 1;
     private static final int REQUEST_ENTER_MEETING_ROOM_INFO = 2;
-    @ViewInject(R.id.swipe_refresh_layout)
-    private MySwipeRefreshLayout swipeRefreshLayout;
-    @ViewInject(R.id.expandable_list_view)
-    private ExpandableListView expandableListView;
-    @ViewInject(R.id.tv_start_date)
-    private TextView startDateText;
-    @ViewInject(R.id.tv_start_time)
-    private TextView startTimeText;
-    @ViewInject(R.id.tv_end_date)
-    private TextView endDateText;
-    @ViewInject(R.id.tv_end_time)
-    private TextView endTimeText;
+    @BindView(R.id.swipe_refresh_layout)
+    MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.expandable_list_view)
+    ExpandableListView expandableListView;
+    @BindView(R.id.tv_start_date)
+    TextView startDateText;
+    @BindView(R.id.tv_start_time)
+    TextView startTimeText;
+    @BindView(R.id.tv_end_date)
+    TextView endDateText;
+    @BindView(R.id.tv_end_time)
+    TextView endTimeText;
     private Calendar startTimeCalendar;
     private Calendar endTimeCalendar;
     //    private LoadingDialog loadingDlg;
@@ -73,6 +70,8 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_room_list);
+        ButterKnife.bind(this);
         initView();
         startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_TIME);
         endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_TIME);

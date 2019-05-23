@@ -62,42 +62,42 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.List;
 
-@ContentView(R.layout.activity_setting)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SettingActivity extends BaseActivity {
 
     private static final int DATA_CLEAR_SUCCESS = 0;
     private Handler handler;
-    @ViewInject(R.id.switch_view_setting_web_rotate)
-    private SwitchView webRotateSwitch;
-    @ViewInject(R.id.switch_view_setting_run_background)
-    private SwitchView runBackgroundSwitch;
-    @ViewInject(R.id.switch_view_setting_voice_2_word)
-    private SwitchView voice2WordSwitch;
-    @ViewInject(R.id.rl_setting_voice_2_word)
-    private RelativeLayout voice2WordLayout;
-    @ViewInject(R.id.rl_setting_experience_upgrade)
-    private RelativeLayout experienceUpgradeLayout;
-    @ViewInject(R.id.switch_view_setting_experience_upgrade)
-    private SwitchView experienceUpgradeSwitch;
-    @ViewInject(R.id.tv_setting_language_name)
-    private TextView languageNameText;
-    @ViewInject(R.id.iv_setting_language_flag)
-    private ImageView languageFlagImg;
+    @BindView(R.id.switch_view_setting_web_rotate)
+    SwitchView webRotateSwitch;
+    @BindView(R.id.switch_view_setting_run_background)
+    SwitchView runBackgroundSwitch;
+    @BindView(R.id.switch_view_setting_voice_2_word)
+    SwitchView voice2WordSwitch;
+    @BindView(R.id.rl_setting_voice_2_word)
+    RelativeLayout voice2WordLayout;
+    @BindView(R.id.rl_setting_experience_upgrade)
+    RelativeLayout experienceUpgradeLayout;
+    @BindView(R.id.switch_view_setting_experience_upgrade)
+    SwitchView experienceUpgradeSwitch;
+    @BindView(R.id.tv_setting_language_name)
+    TextView languageNameText;
+    @BindView(R.id.iv_setting_language_flag)
+    ImageView languageFlagImg;
     private MineAPIService apiService;
     private LoadingDialog loadingDlg;
-    @ViewInject(R.id.tv_setting_theme_name)
-    private TextView themeNameText;
-    @ViewInject(R.id.rl_setting_switch_tablayout)
-    private RelativeLayout switchTabLayout;
-    @ViewInject(R.id.tv_setting_tab_name)
-    private TextView tabName;
-    @ViewInject(R.id.switch_view_setting_notification)
-    private Switch notificationSwitch;
+    @BindView(R.id.tv_setting_theme_name)
+    TextView themeNameText;
+    @BindView(R.id.rl_setting_switch_tablayout)
+    RelativeLayout switchTabLayout;
+    @BindView(R.id.tv_setting_tab_name)
+    TextView tabName;
+    @BindView(R.id.switch_view_setting_notification)
+    Switch notificationSwitch;
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -155,6 +155,8 @@ public class SettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting);
+        ButterKnife.bind(this);
         initView();
         setLanguage();
         handMessage();
@@ -173,38 +175,29 @@ public class SettingActivity extends BaseActivity {
      * 开关push并向服务器发出信号
      */
     private void switchPush() {
+        boolean switchFlag = PreferencesByUserAndTanentUtils.getBoolean(this,
+                Constant.PUSH_SWITCH_FLAG,false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if(NotificationSetUtils.isNotificationEnabled(this) &&
-                    PreferencesByUserAndTanentUtils.getBoolean(this,
-                            Constant.PUSH_SWITCH_FLAG,false)){
-                MyApplication.getInstance().startPush();
-                PushManagerUtils.getInstance().registerPushId2Emm();
-            }else{
-                MyApplication.getInstance().stopPush();
-                PushManagerUtils.getInstance().unregisterPushId2Emm();
-            }
+            setPushStatus(NotificationSetUtils.isNotificationEnabled(this) && switchFlag);
         }else{
-            if(PreferencesByUserAndTanentUtils.getBoolean(this,
-                    Constant.PUSH_SWITCH_FLAG,false)){
-                MyApplication.getInstance().startPush();
-                PushManagerUtils.getInstance().registerPushId2Emm();
-            }else{
-                MyApplication.getInstance().stopPush();
-                PushManagerUtils.getInstance().unregisterPushId2Emm();
-            }
+            setPushStatus(switchFlag);
+        }
+    }
+
+    private void setPushStatus(boolean openPush) {
+        if(openPush){
+            PushManagerUtils.getInstance().stopPush();
+            PushManagerUtils.getInstance().unregisterPushId2Emm();
+        }else {
+            PushManagerUtils.getInstance().startPush();
+            PushManagerUtils.getInstance().registerPushId2Emm();
         }
     }
 
     private boolean getSwitchOpen() {
-        boolean isOpen = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if(NotificationSetUtils.isNotificationEnabled(this)){
-                isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
-            }else{
-                isOpen = false;
-            }
-        }else{
-            isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+        boolean isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !NotificationSetUtils.isNotificationEnabled(this)) {
+            isOpen = false;
         }
         return isOpen;
     }
