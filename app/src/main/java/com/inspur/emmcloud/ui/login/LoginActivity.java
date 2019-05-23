@@ -33,15 +33,13 @@ import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * 登录页面
  */
-
-@ContentView(R.layout.activity_login)
 public class LoginActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;
@@ -52,22 +50,24 @@ public class LoginActivity extends BaseActivity {
 
     private LoadingDialog LoadingDlg;
     private Handler handler;
-    @ViewInject(R.id.et_username)
-    private ClearEditText usernameEdit;
-    @ViewInject(R.id.et_password)
-    private EditText passwordEdit;
-    @ViewInject(R.id.bt_login)
-    private Button loginBtn;
-    @ViewInject(R.id.tv_current_login_enterprise)
-    private TextView currentLoginEnterpriseText;
-    @ViewInject(R.id.tv_welcome)
-    private TextView welcomeText;
+    @BindView(R.id.et_username)
+    ClearEditText usernameEdit;
+    @BindView(R.id.et_password)
+    EditText passwordEdit;
+    @BindView(R.id.bt_login)
+    Button loginBtn;
+    @BindView(R.id.tv_current_login_enterprise)
+    TextView currentLoginEnterpriseText;
+    @BindView(R.id.tv_welcome)
+    TextView welcomeText;
     private EmmSecurityKeyboard securityKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
         PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();

@@ -45,13 +45,12 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.imp.api.Res;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.droidsonroids.gif.GifImageView;
 
 
@@ -60,7 +59,6 @@ import pl.droidsonroids.gif.GifImageView;
  *
  * @author Administrator
  */
-@ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity { // 此处不能继承BaseActivity 推送会有问题
 
     private static final int LOGIN_SUCCESS = 0;
@@ -73,16 +71,18 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private Handler handler;
     private long activitySplashShowTime = 0;
     private Timer timer;
-    @ViewInject(R.id.ibt_skip)
-    private ImageButton skipImageBtn;
-    @ViewInject(R.id.iv_splash_logo)
-    private ImageView splashLogoImg;
-    @ViewInject(R.id.iv_splash_ad)
-    private GifImageView splashAdImg;
+    @BindView(R.id.ibt_skip)
+    ImageButton skipImageBtn;
+    @BindView(R.id.iv_splash_logo)
+    ImageView splashLogoImg;
+    @BindView(R.id.iv_splash_ad)
+    GifImageView splashAdImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         //解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();

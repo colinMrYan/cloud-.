@@ -28,42 +28,41 @@ import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.http.app.RedirectHandler;
 import org.xutils.http.request.UriRequest;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 /**
  * 云盘下载
  */
-
-@ContentView(R.layout.activity_volume_file_download)
 public class VolumeFileDownloadActivtiy extends BaseActivity {
 
     private String fileSavePath = "";
-    @ViewInject(R.id.download_status_layout)
-    private LinearLayout downloadStatusLayout;
+    @BindView(R.id.download_status_layout)
+    LinearLayout downloadStatusLayout;
 
-    @ViewInject(R.id.download_btn)
-    private Button downloadBtn;
+    @BindView(R.id.download_btn)
+    Button downloadBtn;
 
-    @ViewInject(R.id.download_progress)
-    private ProgressBar progressBar;
+    @BindView(R.id.download_progress)
+    ProgressBar progressBar;
 
-    @ViewInject(R.id.progress_text)
-    private TextView progressText;
+    @BindView(R.id.progress_text)
+    TextView progressText;
 
-    @ViewInject(R.id.tv_file_name)
-    private TextView fileNameText;
+    @BindView(R.id.tv_file_name)
+    TextView fileNameText;
 
-    @ViewInject(R.id.file_type_img)
-    private ImageView fileTypeImg;
+    @BindView(R.id.file_type_img)
+    ImageView fileTypeImg;
 
-    @ViewInject(R.id.file_time_text)
-    private TextView fileTimeText;
+    @BindView(R.id.file_time_text)
+    TextView fileTimeText;
 
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
@@ -71,6 +70,8 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_volume_file_download);
+        ButterKnife.bind(this);
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
         fileTypeImg.setImageResource(VolumeFileIconUtils.getIconResId(volumeFile));

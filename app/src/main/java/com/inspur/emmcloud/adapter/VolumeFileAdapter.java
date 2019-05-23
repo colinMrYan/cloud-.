@@ -19,12 +19,12 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -245,42 +245,42 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         private MyItemClickListener myItemClickListener;
         private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
 
-        @ViewInject(R.id.file_type_img)
-        private ImageView fileTypeImg;
+        @BindView(R.id.file_type_img)
+        ImageView fileTypeImg;
 
-        @ViewInject(R.id.tv_file_name)
-        private TextView fileNameText;
+        @BindView(R.id.tv_file_name)
+        TextView fileNameText;
 
-        @ViewInject(R.id.file_time_text)
-        private TextView fileTimeText;
+        @BindView(R.id.file_time_text)
+        TextView fileTimeText;
 
-        @ViewInject(R.id.tv_file_size)
-        private TextView fileSizeText;
+        @BindView(R.id.tv_file_size)
+        TextView fileSizeText;
 
-        @ViewInject(R.id.file_select_img)
-        private ImageView fileSelcetImg;
+        @BindView(R.id.file_select_img)
+        ImageView fileSelcetImg;
 
-        @ViewInject(R.id.upload_cancel_text)
-        private TextView uploadOperationText;
+        @BindView(R.id.upload_cancel_text)
+        TextView uploadOperationText;
 
-        @ViewInject(R.id.upload_progress)
-        private ProgressBar uploadProgressBar;
+        @BindView(R.id.upload_progress)
+        ProgressBar uploadProgressBar;
 
-        @ViewInject(R.id.upload_status_text)
-        private TextView uploadStatusText;
+        @BindView(R.id.upload_status_text)
+        TextView uploadStatusText;
 
-        @ViewInject(R.id.file_info_layout)
-        private RelativeLayout fileInfoLayout;
+        @BindView(R.id.file_info_layout)
+        RelativeLayout fileInfoLayout;
 
-        @ViewInject(R.id.file_upload_status_layout)
-        private RelativeLayout fileUploadStatusLayout;
+        @BindView(R.id.file_upload_status_layout)
+        RelativeLayout fileUploadStatusLayout;
 
-        @ViewInject(R.id.file_operation_drop_down_img)
-        private ImageView fileOperationDropDownImg;
+        @BindView(R.id.file_operation_drop_down_img)
+        ImageView fileOperationDropDownImg;
 
         public ViewHolder(View itemView, MyItemClickListener myItemClickListener, MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
             super(itemView);
-            x.view().inject(this, itemView);
+            ButterKnife.bind(this, itemView);
             this.myItemClickListener = myItemClickListener;
             this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
             itemView.setOnClickListener(this);

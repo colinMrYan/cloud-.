@@ -13,12 +13,12 @@ import org.xutils.view.annotation.ContentView;
  * 账号、设备安全
  */
 
-@ContentView(R.layout.activity_safe_center)
 public class SafeCenterActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_safe_center);
     }
 
 

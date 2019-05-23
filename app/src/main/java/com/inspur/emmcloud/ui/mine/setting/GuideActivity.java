@@ -25,21 +25,19 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 功能介绍页面 com.inspur.emmcloud.ui.GuideActivity
  */
-@ContentView(R.layout.activity_guide)
 public class GuideActivity extends BaseActivity {
 
-    @ViewInject(R.id.viewpager)
-    private ViewPager viewPager;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
     private List<View> guideViewList = new ArrayList<>();
 
     @Override
@@ -54,7 +52,8 @@ public class GuideActivity extends BaseActivity {
 //            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
 //            getWindow().setAttributes(lp);
 //        }
-        x.view().inject(this);
+        setContentView(R.layout.activity_guide);
+        ButterKnife.bind(this);
         ImmersionBar.with(this).init();
         deleteReactNativeResource();
         initView();

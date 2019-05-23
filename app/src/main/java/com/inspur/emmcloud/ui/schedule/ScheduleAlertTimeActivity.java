@@ -16,20 +16,19 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2019/3/29.
  */
-@ContentView(R.layout.activity_schedule_alert_time)
 public class ScheduleAlertTimeActivity extends BaseActivity {
     public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
     public static String EXTRA_SCHEDULE_IS_ALL_DAY = "schedule_is_all_day";
     public static String EXTRA_IS_TASK = "schedule_is_task";
-    @ViewInject(R.id.lv_alert_time)
+    @BindView(R.id.lv_alert_time)
     ListView alertTimeListView;
-    @ViewInject(R.id.iv_no_alert_select)
+    @BindView(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
 
     int alertTime = -1;
@@ -56,6 +55,8 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_schedule_alert_time);
+        ButterKnife.bind(this);
         alertTime = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME) ?
                 getIntent().getExtras().getInt(EXTRA_SCHEDULE_ALERT_TIME) : -1;
         //获取Allday值

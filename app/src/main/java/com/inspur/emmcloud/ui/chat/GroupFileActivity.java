@@ -39,9 +39,6 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.io.File;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -50,7 +47,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-@ContentView(R.layout.activity_group_file)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class GroupFileActivity extends BaseActivity {
 
     protected static final String SORT_BY_NAME_UP = "sort_by_name_up";
@@ -58,14 +57,14 @@ public class GroupFileActivity extends BaseActivity {
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
     protected String sortType = "sort_by_name_up";
-    @ViewInject(R.id.lv_file)
-    private ListView fileListView;
-    @ViewInject(R.id.rl_no_channel_file)
-    private RelativeLayout noChannelFileLayout;
-    @ViewInject(R.id.tv_order_by_name_asc)
-    private TextView operationSortText;
-    @ViewInject(R.id.tv_filter_by_file_type)
-    private TextView filterByFileTypeText;
+    @BindView(R.id.lv_file)
+    ListView fileListView;
+    @BindView(R.id.rl_no_channel_file)
+    RelativeLayout noChannelFileLayout;
+    @BindView(R.id.tv_order_by_name_asc)
+    TextView operationSortText;
+    @BindView(R.id.tv_filter_by_file_type)
+    TextView filterByFileTypeText;
     private String cid;
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
     private PopupWindow sortOperationPop;
@@ -75,6 +74,8 @@ public class GroupFileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_group_file);
+        ButterKnife.bind(this);
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
         noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE : View.GONE);

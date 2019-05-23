@@ -21,9 +21,6 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,17 +28,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-@ContentView(R.layout.activity_group_album)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class GroupAlbumActivity extends BaseActivity {
 
     public static final int GROUP_TYPE_MSG = 1;
     public static final int GROUP_TYPE_MESSAGE = 2;
-    //    @ViewInject(R.id.gv_album)
 //    private GridView albumGrid;
-    @ViewInject(R.id.rl_no_channel_album)
-    private RelativeLayout noChannelAlbumLayout;
-    @ViewInject(R.id.recycler_view_album)
-    private RecyclerView albumRecyclerView;
+    @BindView(R.id.rl_no_channel_album)
+    RelativeLayout noChannelAlbumLayout;
+    @BindView(R.id.recycler_view_album)
+    RecyclerView albumRecyclerView;
     private String cid;
     private ArrayList<String> imgUrlList = new ArrayList<>();
     private List<Msg> imgTypeMsgList;
@@ -53,6 +51,8 @@ public class GroupAlbumActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_group_album);
+        ButterKnife.bind(this);
         init();
     }
 

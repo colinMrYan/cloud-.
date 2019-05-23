@@ -22,25 +22,23 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 修改密码
  */
 
-@ContentView(R.layout.activity_password_modify)
 public class PasswordModifyActivity extends BaseActivity implements View.OnTouchListener {
 
-    @ViewInject(R.id.bt_save)
-    private Button saveBtn;
-    @ViewInject(R.id.et_password_origin)
-    private EditText passwordOriginEdit;
-    @ViewInject(R.id.et_password_new)
-    private EditText passwordNewEdit;
-    @ViewInject(R.id.et_password_confirm)
-    private EditText passwordConfirmEdit;
+    @BindView(R.id.bt_save)
+    Button saveBtn;
+    @BindView(R.id.et_password_origin)
+    EditText passwordOriginEdit;
+    @BindView(R.id.et_password_new)
+    EditText passwordNewEdit;
+    @BindView(R.id.et_password_confirm)
+    EditText passwordConfirmEdit;
     private String passwordOrigin;
     private String passwordNew;
     private String passwordConfirm;
@@ -51,7 +49,8 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
+        setContentView(R.layout.activity_password_modify);
+        ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         EditWatcher editWatcher = new EditWatcher();
         passwordOriginEdit.addTextChangedListener(editWatcher);

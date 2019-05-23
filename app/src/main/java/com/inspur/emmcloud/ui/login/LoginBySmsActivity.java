@@ -35,14 +35,13 @@ import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 短信登录
  */
 
-@ContentView(R.layout.activity_login_by_sms)
 public class LoginBySmsActivity extends BaseActivity {
 
     public static final int MODE_LOGIN = 1;
@@ -53,20 +52,20 @@ public class LoginBySmsActivity extends BaseActivity {
     private static final int LOGIN_FAIL = 1;
     private static final int GET_SMS_CAPTCHA = 2;
     private int mode = MODE_LOGIN;
-    @ViewInject(R.id.tv_title)
-    private TextView titleText;
-    @ViewInject(R.id.text_input_layout_phone)
-    private TextInputLayout phoneTextInputLayout;
-    @ViewInject(R.id.et_phone)
-    private ClearEditText phoneEdit;
-    @ViewInject(R.id.et_captcha)
-    private ClearEditText captchaEdit;
-    @ViewInject(R.id.bt_get_captcha)
-    private Button getCapthaBtn;
-    @ViewInject(R.id.bt_login)
-    private Button loginBtn;
-    @ViewInject(R.id.tv_login_by_account)
-    private TextView loginByAccountText;
+    @BindView(R.id.tv_title)
+    TextView titleText;
+    @BindView(R.id.text_input_layout_phone)
+    TextInputLayout phoneTextInputLayout;
+    @BindView(R.id.et_phone)
+    ClearEditText phoneEdit;
+    @BindView(R.id.et_captcha)
+    ClearEditText captchaEdit;
+    @BindView(R.id.bt_get_captcha)
+    Button getCapthaBtn;
+    @BindView(R.id.bt_login)
+    Button loginBtn;
+    @BindView(R.id.tv_login_by_account)
+    TextView loginByAccountText;
     private Handler handler;
     private LoadingDialog loadingDlg;
     private String phone;
@@ -76,9 +75,10 @@ public class LoginBySmsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login_by_sms);
+        ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         initView();
-
     }
 
     private void initView() {

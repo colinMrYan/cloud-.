@@ -21,26 +21,26 @@ import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
-import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * Created by Sym on 2015/12/24.
  */
-@ContentView(R.layout.activity_gesture_login)
 public class GestureLoginActivity extends BaseActivity {
 
     private static final int GESTURE_CODE_TIMES = 5;
     private static final long DELAYTIME = 600l;
-    @ViewInject(R.id.lockPatternView)
+    @BindView(R.id.lockPatternView)
     LockPatternView lockPatternView;
-    @ViewInject(R.id.gestrue_message_text)
+    @BindView(R.id.gestrue_message_text)
     TextView gestureMessage;
-    @ViewInject(R.id.forget_gesture_btn)
+    @BindView(R.id.forget_gesture_btn)
     Button forgetGestureBtn;
     private String gesturePassword;
     private boolean isLogin = false;
@@ -87,6 +87,8 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gesture_login);
+        ButterKnife.bind(this);
         init();
         ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();
     }

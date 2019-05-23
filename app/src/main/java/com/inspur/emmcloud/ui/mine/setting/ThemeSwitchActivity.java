@@ -18,21 +18,19 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2019/2/26.
  */
-
-@ContentView(R.layout.activity_mine_language_switch)
 public class ThemeSwitchActivity extends BaseActivity {
     private static final int[] THEME_FLAG = {R.drawable.ic_mine_theme_white, R.drawable.ic_mine_theme_grey, R.drawable.ic_mine_theme_blue};
     private static final int[] THEME_NAME = {R.string.mine_theme_white, R.string.mine_theme_grey, R.string.mine_theme_blue};
-    @ViewInject(R.id.tv_header)
-    private TextView headerText;
-    @ViewInject(R.id.lv)
-    private ListView listView;
+    @BindView(R.id.tv_header)
+    TextView headerText;
+    @BindView(R.id.lv)
+    ListView listView;
 
     public static String getThemeName() {
         int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
@@ -42,6 +40,8 @@ public class ThemeSwitchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mine_language_switch);
+        ButterKnife.bind(this);
         headerText.setText(R.string.mine_theme_switch);
         listView.setAdapter(new Adapter());
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

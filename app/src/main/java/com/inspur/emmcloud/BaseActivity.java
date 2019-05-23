@@ -24,8 +24,6 @@ import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.inspur.imp.plugin.photo.ImageGalleryActivity;
 
-import org.xutils.x;
-
 import java.util.Arrays;
 
 public class BaseActivity extends Activity {
@@ -53,7 +51,6 @@ public class BaseActivity extends Activity {
         // TODO Auto-generated method stub
         setTheme();
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
         setStatus();
     }
 
