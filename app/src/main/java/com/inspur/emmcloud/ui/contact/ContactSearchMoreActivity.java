@@ -44,6 +44,7 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
@@ -306,7 +307,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
+            intent.setClass(getApplicationContext(), WebServiceRouterManager.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -488,7 +489,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                         adapter.notifyDataSetChanged();
                         break;
                     case SEARCH_CHANNELGROUP:
-                        if (MyApplication.getInstance().isV0VersionChat()) {
+                        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                             searchChannelGroupList = ChannelGroupCacheUtils
                                     .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                             searchText);

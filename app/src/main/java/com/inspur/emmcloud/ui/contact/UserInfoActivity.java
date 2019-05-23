@@ -30,6 +30,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
@@ -307,7 +308,7 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     private void createDirectChannel() {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(UserInfoActivity.this, contactUser.getId(),
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override

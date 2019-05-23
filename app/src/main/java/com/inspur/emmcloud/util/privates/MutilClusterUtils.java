@@ -1,24 +1,11 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.net.Uri;
-
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.login.ClusterBean;
-import com.inspur.emmcloud.bean.mine.Enterprise;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by yufuchang on 2018/2/6.
  */
 
 public class MutilClusterUtils {
-    public static final String ECM_CHAT = "com.inspur.ecm.chat";
+/*    public static final String ECM_CHAT = "com.inspur.ecm.chat";
     private static final String ECM_SCHEDULE = "com.inspur.ecm.schedule";
     private static final String ECM_DISTRIBUTION = "com.inspur.ecm.distribution";
     private static final String ECM_NEWS = "com.inspur.ecm.news";
@@ -29,11 +16,11 @@ public class MutilClusterUtils {
     private static final String ECM_BOT = "com.inspur.ecm.bot";
     private static final String ECM_OLD = "com.inspur.ecm";
 
-    /**
+    *//**
      * 修改多云基地址，如果没有基地址则取默认
      *
      * @param enterprise
-     */
+     *//*
     public static void setClusterBaseUrl(Enterprise enterprise) {
         List<ClusterBean> clusterBeanList = enterprise.getClusterBeanList();
         initClusters();
@@ -85,9 +72,9 @@ public class MutilClusterUtils {
         }
     }
 
-    /**
+    *//**
      * 重新初始化路由
-     */
+     *//*
     private static void initClusters() {
         //切企业时重置路由
         MyApplication.getInstance().setClusterEmm("");
@@ -107,9 +94,9 @@ public class MutilClusterUtils {
     }
 
 
-    /**
+    *//**
      * 返回合适的Url
-     */
+     *//*
     private static String getUrlByType(ClusterBean clusterBeanNew, String serviceName) {
         String differentUrlByType = clusterBeanNew.getBaseUrl();
         ClusterBean clusterBean = clusterBeanNew;
@@ -140,11 +127,11 @@ public class MutilClusterUtils {
         return differentUrlByType;
     }
 
-    /**
+    *//**
      * 退化上一版的url
      *
      * @return
-     */
+     *//*
     private static Enterprise getOldEnterprise() {
         String myInfo = PreferencesUtils.getString(MyApplication.getInstance().getApplicationContext(),
                 Constant.PREF_MY_INFO_OLD, "");
@@ -164,12 +151,12 @@ public class MutilClusterUtils {
         return null;
     }
 
-    /**
+    *//**
      * 获取ClusterBean
      *
      * @param serviceName
      * @return
-     */
+     *//*
     public static ClusterBean getClusterBean(String serviceName) {
         ArrayList<ClusterBean> clusterBeanArrayListOld = MyApplication.getInstance().getCurrentEnterprise().getClusterBeanList();
         int index = clusterBeanArrayListOld.indexOf(new ClusterBean(serviceName));
@@ -178,6 +165,6 @@ public class MutilClusterUtils {
             clusterBean = clusterBeanArrayListOld.get(index);
         }
         return clusterBean;
-    }
+    }*/
 
 }
