@@ -22,18 +22,16 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * 共享网盘详情页面
  */
-
-@ContentView(R.layout.activity_share_volumel_info)
 public class GroupInfoActivity extends BaseActivity {
 
     private static final int ADD_MEMBER = 1;
@@ -44,26 +42,28 @@ public class GroupInfoActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private Group group;
 
-    @ViewInject(R.id.gv_member)
-    private NoScrollGridView memberGrid;
+    @BindView(R.id.gv_member)
+    NoScrollGridView memberGrid;
 
-    @ViewInject(R.id.volume_member_text)
-    private TextView groupMemberText;
+    @BindView(R.id.volume_member_text)
+    TextView groupMemberText;
 
-    @ViewInject(R.id.volume_name_text)
-    private TextView groupNameText;
+    @BindView(R.id.volume_name_text)
+    TextView groupNameText;
 
-    @ViewInject(R.id.volume_name_title)
-    private TextView groupNameTitle;
+    @BindView(R.id.volume_name_title)
+    TextView groupNameTitle;
 
-    @ViewInject(R.id.header_text)
-    private TextView headerText;
+    @BindView(R.id.header_text)
+    TextView headerText;
     private VolumeInfoMemberAdapter memberAdapter;
     private ArrayList<String> volumeMemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_share_volumel_info);
+        ButterKnife.bind(this);
         volume = (Volume) getIntent().getSerializableExtra("volume");
         loadingDlg = new LoadingDialog(this);
         apiService = new MyAppAPIService(this);

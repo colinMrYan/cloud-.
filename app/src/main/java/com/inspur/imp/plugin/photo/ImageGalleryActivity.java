@@ -19,26 +19,25 @@ import com.inspur.imp.plugin.photo.transfer.TransferConfig;
 import com.inspur.imp.plugin.photo.transfer.TransferLayout;
 
 import org.xutils.common.Callback;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2018/7/5.
  */
 
-@ContentView(R.layout.plugin_activity_image_gallery)
 public class ImageGalleryActivity extends BaseActivity {
 
     public static final String EXTRA_IMAGE_SOURCE_URLS = "image_source_urls";
     public static final String EXTRA_IMAGE_THUMB_URLS = "image_thumb_urls";
     public static final String EXTRA_IMAGE_INDEX = "image_index";
 
-    @ViewInject(R.id.rl_content)
-    private RelativeLayout contentLayout;
-
+    @BindView(R.id.rl_content)
+    RelativeLayout contentLayout;
 
     private TransferLayout transLayout;
     private TransferConfig transConfig;
@@ -47,6 +46,8 @@ public class ImageGalleryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.plugin_activity_image_gallery);
+        ButterKnife.bind(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 
         List<String> sourceImageList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_SOURCE_URLS);

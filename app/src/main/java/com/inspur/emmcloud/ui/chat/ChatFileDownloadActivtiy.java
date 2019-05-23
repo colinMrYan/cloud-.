@@ -24,41 +24,39 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
 import org.xutils.common.Callback;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 聊天文件下载
  */
-
-@ContentView(R.layout.activity_volume_file_download)
 public class ChatFileDownloadActivtiy extends BaseActivity {
 
     private String fileSavePath = "";
-    @ViewInject(R.id.download_status_layout)
-    private LinearLayout downloadStatusLayout;
+    @BindView(R.id.download_status_layout)
+    LinearLayout downloadStatusLayout;
 
-    @ViewInject(R.id.download_btn)
-    private Button downloadBtn;
+    @BindView(R.id.download_btn)
+    Button downloadBtn;
 
-    @ViewInject(R.id.download_progress)
-    private ProgressBar progressBar;
+    @BindView(R.id.download_progress)
+    ProgressBar progressBar;
 
-    @ViewInject(R.id.progress_text)
-    private TextView progressText;
+    @BindView(R.id.progress_text)
+    TextView progressText;
 
-    @ViewInject(R.id.tv_file_name)
-    private TextView fileNameText;
+    @BindView(R.id.tv_file_name)
+    TextView fileNameText;
 
-    @ViewInject(R.id.file_type_img)
-    private ImageView fileTypeImg;
+    @BindView(R.id.file_type_img)
+    ImageView fileTypeImg;
 
-    @ViewInject(R.id.file_time_text)
-    private TextView fileTimeText;
+    @BindView(R.id.file_time_text)
+    TextView fileTimeText;
 
     private Callback.Cancelable cancelable;
     private Message message;
@@ -66,6 +64,8 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_volume_file_download);
+        ButterKnife.bind(this);
         message = (Message) getIntent().getSerializableExtra("message");
         MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
         fileNameText.setText(msgContentFile.getName());

@@ -44,26 +44,26 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * 云盘-共享网盘列表页面
  */
 
-@ContentView(R.layout.activity_share_volume)
 public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final int UPDATE_VOLUME_NAME = 1;
-    @ViewInject(R.id.refresh_layout)
-    protected SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
     private List<Volume> shareVolumeList = new ArrayList<>();
-    @ViewInject(R.id.share_volume_list)
-    private ListView shareVolumeListView;
+    @BindView(R.id.share_volume_list)
+    ListView shareVolumeListView;
     private Adapter adapter;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -73,6 +73,8 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_share_volume);
+        ButterKnife.bind(this);
         initView();
         getVolumeList(true);
         EventBus.getDefault().register(this);

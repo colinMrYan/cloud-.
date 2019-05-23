@@ -13,27 +13,28 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2019/1/25.
  */
 
-@ContentView(R.layout.activity_safe_guestur_face_setting)
 public class SafeGustureFaceSettingActivity extends BaseActivity {
-    @ViewInject(R.id.switch_view_setting_safe_start_guesture)
-    private SwitchView guestureSwitchView;
-    @ViewInject(R.id.switch_view_setting_safe_start_face)
-    private SwitchView faceSwitchView;
-    @ViewInject(R.id.rl_setting_safe_reset_guesture)
-    private RelativeLayout resetGuestureLayout;
-    @ViewInject(R.id.rl_setting_safe_reset_face)
-    private RelativeLayout resetFaceLayout;
+    @BindView(R.id.switch_view_setting_safe_start_guesture)
+    SwitchView guestureSwitchView;
+    @BindView(R.id.switch_view_setting_safe_start_face)
+    SwitchView faceSwitchView;
+    @BindView(R.id.rl_setting_safe_reset_guesture)
+    RelativeLayout resetGuestureLayout;
+    @BindView(R.id.rl_setting_safe_reset_face)
+    RelativeLayout resetFaceLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_safe_guestur_face_setting);
+        ButterKnife.bind(this);
         initView();
     }
 

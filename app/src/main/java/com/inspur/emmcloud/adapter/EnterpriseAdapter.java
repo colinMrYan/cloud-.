@@ -12,10 +12,10 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
-
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2019/1/25.
@@ -50,8 +50,7 @@ public class EnterpriseAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.mine_setting_enterprise_list_item, null);
-            holder = new Holder();
-            x.view().inject(holder, convertView);//注解绑定
+            holder = new Holder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
@@ -66,10 +65,14 @@ public class EnterpriseAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private class Holder {
-        @ViewInject(R.id.iv_select)
-        private ImageView selectImg;
-        @ViewInject(R.id.tv_name)
-        private TextView enterpriseName;
+    public class Holder {
+        @BindView(R.id.iv_select)
+        ImageView selectImg;
+        @BindView(R.id.tv_name)
+        TextView enterpriseName;
+
+        public Holder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

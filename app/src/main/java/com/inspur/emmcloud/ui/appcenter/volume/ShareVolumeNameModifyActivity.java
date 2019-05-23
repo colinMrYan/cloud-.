@@ -22,20 +22,19 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 修改共享网盘名称
  */
-@ContentView(R.layout.activity_conversation_name_modify)
 public class ShareVolumeNameModifyActivity extends BaseActivity {
 
-    @ViewInject(R.id.edit)
-    private ClearEditText editText;
+    @BindView(R.id.edit)
+    ClearEditText editText;
 
-    @ViewInject(R.id.header_text)
-    private TextView headerText;
+    @BindView(R.id.header_text)
+    TextView headerText;
 
     private LoadingDialog loadingDlg;
     private Volume volume;
@@ -46,6 +45,8 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_conversation_name_modify);
+        ButterKnife.bind(this);
         if (getIntent().hasExtra("volume")) {
             isVolumeNameModify = true;
             volume = (Volume) getIntent().getSerializableExtra("volume");
@@ -86,8 +87,8 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     /**
      * 修改网盘名称
      *
-     * @param volume
-     * @param name
+     * @param
+     * @param
      */
     private void updateShareVolumeName(String volumeName) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -101,7 +102,6 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     /**
      * 修改组名称
      *
-     * @param groupId
      * @param groupName
      */
     private void updateGroupName(String groupName) {

@@ -28,23 +28,22 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2018/12/28.
  */
-@ContentView(R.layout.activity_mail_login)
 public class MailLoginActivity extends BaseActivity {
 
-    @ViewInject(R.id.et_mail)
-    private ClearEditText mailEdit;
-    @ViewInject(R.id.et_password)
-    private EditText passwordEdit;
-    @ViewInject(R.id.bt_login)
-    private Button loginBtn;
-    @ViewInject(R.id.text_input_layout_username)
-    private TextInputLayout usernameTextInputLayout;
+    @BindView(R.id.et_mail)
+    ClearEditText mailEdit;
+    @BindView(R.id.et_password)
+    EditText passwordEdit;
+    @BindView(R.id.bt_login)
+    Button loginBtn;
+    @BindView(R.id.text_input_layout_username)
+    TextInputLayout usernameTextInputLayout;
     private LoadingDialog loadingDlg;
     private MailApiService apiService;
     private String mail = "";
@@ -53,6 +52,8 @@ public class MailLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mail_login);
+        ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         loadingDlg = new LoadingDialog(this);
         apiService = new MailApiService(this);

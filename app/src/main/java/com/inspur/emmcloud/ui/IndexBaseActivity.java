@@ -66,9 +66,6 @@ import com.inspur.imp.api.ImpFragment;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -76,20 +73,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ContentView(R.layout.activity_index)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChangeListener, OnTouchListener {
     private static final int REQUEST_CREATE_GUESTURE = 1;
-    @ViewInject(android.R.id.tabhost)
+    @BindView(android.R.id.tabhost)
     public MyFragmentTabHost mTabHost;
-    @ViewInject(R.id.preload_webview)
+    @BindView(R.id.preload_webview)
     protected WebView webView;
     protected NetworkChangeReceiver networkChangeReceiver;
     private long lastBackTime;
     private TextView newMessageTipsText;
     private RelativeLayout newMessageTipsLayout;
     private boolean batteryDialogIsShow = true;
-    @ViewInject(R.id.tip)
-    private TipsView tipsView;
+    @BindView(R.id.tip)
+    TipsView tipsView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;// 控制如果是系统切换的tab则不计入用户行为
     private String tabId = "";
@@ -101,9 +100,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_index);
+        ButterKnife.bind(this);
         clearOldMainTabData();
-        x.view().inject(this);
         setStatus();
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();

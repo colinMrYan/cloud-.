@@ -40,8 +40,6 @@ import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
 
 import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
 import java.text.Collator;
@@ -52,25 +50,27 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-@ContentView(R.layout.activity_member)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MembersActivity extends BaseActivity implements TextWatcher {
     public static final String MEMBER_PAGE_STATE = "member_page_state";
     public static final int SELECT_STATE = 1;//选择人员
     public static final int MENTIONS_STATE = 2;//@人员选择
     public static final int CHECK_STATE = 3;//查看人员
     private static final int TOTAL_MEMBERS_NUM = 9;//最多可选择的人数配置，修改这个配置应当同时修改toast提示里的配置数量
-    @ViewInject(R.id.sidrbar_channel_member_select)
-    private SideBar lettersSideBar;
-    @ViewInject(R.id.tv_ok)
-    private TextView okTv;
-    @ViewInject(R.id.lv_channel_member_select)
-    private ListView allMemberListView;
-    @ViewInject(R.id.recyclerview_voice_communication_select_members)
-    private RecyclerView selectedMemberRecylerView;
-    @ViewInject(R.id.header_text)
-    private TextView userHeadText;
-    @ViewInject(R.id.ev_channel_member_search_input)
-    private EditText searchInputEv;
+    @BindView(R.id.sidrbar_channel_member_select)
+    SideBar lettersSideBar;
+    @BindView(R.id.tv_ok)
+    TextView okTv;
+    @BindView(R.id.lv_channel_member_select)
+    ListView allMemberListView;
+    @BindView(R.id.recyclerview_voice_communication_select_members)
+    RecyclerView selectedMemberRecylerView;
+    @BindView(R.id.header_text)
+    TextView userHeadText;
+    @BindView(R.id.ev_channel_member_search_input)
+    EditText searchInputEv;
     private CharacterParser characterParser;// 汉字转拼音
     private PinyinComparator pinyinComparator;// 根据拼音来排列ListView里面的数据类
     private ChannelMemberListAdapter channelMemberListAdapter;
@@ -89,6 +89,8 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_member);
+        ButterKnife.bind(this);
         initViews();
         initChannelMemberDataInThread();
         initListener();
