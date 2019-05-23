@@ -190,14 +190,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 final int position = tab.getPosition();
-                if (viewPager != null) {
-                    viewPager.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewPager.setCurrentItem(position);
-                        }
-                    },100);
-                }
+                viewPager.setCurrentItem(position);
                 dateText.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
                 todayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
                 updateTabLayoutTextStatus(tab, true);

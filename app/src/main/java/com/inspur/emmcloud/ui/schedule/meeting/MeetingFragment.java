@@ -1,13 +1,15 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingListAdapter;
@@ -17,7 +19,6 @@ import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.schedule.ScheduleBaseFragment;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -28,7 +29,6 @@ import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
@@ -40,8 +40,7 @@ import java.util.List;
  * Created by chenmch on 2019/4/6.
  */
 
-@ContentView(R.layout.fragment_schedule_meeting)
-public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefreshLayout.OnRefreshListener
+public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayout.OnRefreshListener
         , MySwipeRefreshLayout.OnLoadListener, ScheduleMeetingListAdapter.OnItemClickLister {
 
     private static String EXTRA_IS_HISTORY_MEETING = "is_history_meeting";
@@ -62,23 +61,24 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
     private int currentPageSize = 50;
     private boolean isPullUp = false;
     private boolean isHistoryMeeting = false;
+    private View rootView;
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_meeting, null);
         if (getArguments() != null) {
             isHistoryMeeting = getArguments().getBoolean(EXTRA_IS_HISTORY_MEETING, false);
         }
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
+        meetingListView = rootView.findViewById(R.id.lv_view_meeting);
+        searchEdit = rootView.findViewById(R.id.ev_search);
+        meetingListDefaultLayout = rootView.findViewById(R.id.rl_meeting_list_default);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setOnLoadListener(this);
-        if (isHistoryMeeting){
+        if (isHistoryMeeting) {
             swipeRefreshLayout.setCanLoadMore(true);
         }
         scheduleMeetingListAdapter = new ScheduleMeetingListAdapter(getActivity());
@@ -105,6 +105,20 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
         });
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater
+                    .inflate(R.layout.fragment_schedule_meeting, container, false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
+    }
+
     private void searchMeeting(Editable s) {
         String searchContent = s.toString();
         uiMeetingList.clear();
@@ -115,7 +129,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
         }
         scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
         scheduleMeetingListAdapter.notifyDataSetChanged();
-        meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
+        meetingListDefaultLayout.setVisibility(uiMeetingList.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -160,15 +174,15 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
     }
 
     public void getMeetingList() {
-        if (isHistoryMeeting){
+        if (isHistoryMeeting) {
             getMeetingHistoryListByPage(pageNum);
-        }else{
+        } else {
             getMeetingListByStartTime();
         }
     }
 
     private void getMeetingListByStartTime() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMeetingListByTime(startTime);
@@ -178,7 +192,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
     }
 
     private void getMeetingHistoryListByPage(int page) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(),false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             apiService.getMeetingHistoryListByPage(page);
         } else {
             swipeRefreshLayout.setCanLoadMore(false);
@@ -194,7 +208,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
             uiMeetingList.addAll(meetingList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
-            meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
+            meetingListDefaultLayout.setVisibility(uiMeetingList.size() > 0 ? View.GONE : View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setCanLoadMore(false);
             swipeRefreshLayout.setLoading(false);
@@ -223,7 +237,7 @@ public class MeetingFragment extends ScheduleBaseFragment implements MySwipeRefr
             uiMeetingList.addAll(meetingHistoryList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
-            meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
+            meetingListDefaultLayout.setVisibility(uiMeetingList.size() > 0 ? View.GONE : View.VISIBLE);
             pageNum++;
         }
 

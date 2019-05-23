@@ -2,8 +2,6 @@ package com.inspur.emmcloud.ui.schedule.task;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -35,31 +33,21 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.util.ArrayList;
 
 /**
  * Created by yufuchang on 2019/4/1.
  */
-@ContentView(R.layout.fragment_task_list)
 public class TaskListFragment extends Fragment {
 
     public static final String TASK_TASK_ENTITY = "task";
     public static final String TASK_CURRENT_INDEX = "tabIndex";
-    @ViewInject(R.id.lv_task)
     private ListView taskListView;
-    @ViewInject(R.id.refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
-    @ViewInject(R.id.ll_no_search_result)
     private LinearLayout noSearchResultLayout;
-    @ViewInject(R.id.tv_no_result)
     private TextView noResultText;
-    @ViewInject(R.id.iv_task_no_result)
     private ImageView taskNoResultImageView;
-    private boolean injected = false;
     private String orderBy = "PRIORITY";
     private String orderType = "ASC";
     private int deletePosition = -1;
@@ -71,28 +59,29 @@ public class TaskListFragment extends Fragment {
     private ArrayList<Task> taskList = new ArrayList<Task>();
     private boolean isPullUp = false;
     private int page = 0;
+    private View rootView;
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_task_list, null);
+        initViews();
         EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        injected = true;
-        return x.view().inject(this, inflater, container);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (!injected) {
-            x.view().inject(this, this.getView());
+        if (rootView == null) {
+            rootView = inflater
+                    .inflate(R.layout.fragment_task_list, container, false);
         }
-        initViews();
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -112,7 +101,7 @@ public class TaskListFragment extends Fragment {
      * @param searchContent
      */
     public void setSearchContent(String searchContent) {
-        if(swipeRefreshLayout != null){
+        if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setCanLoadMore(StringUtils.isBlank(searchContent));
             swipeRefreshLayout.setEnabled(StringUtils.isBlank(searchContent));
         }
@@ -148,6 +137,12 @@ public class TaskListFragment extends Fragment {
     }
 
     private void initViews() {
+
+        taskListView = rootView.findViewById(R.id.lv_task);
+        swipeRefreshLayout = rootView.findViewById(R.id.refresh_layout);
+        noSearchResultLayout = rootView.findViewById(R.id.ll_no_search_result);
+        noResultText = rootView.findViewById(R.id.tv_no_result);
+        taskNoResultImageView = rootView.findViewById(R.id.iv_task_no_result);
         currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -180,7 +175,7 @@ public class TaskListFragment extends Fragment {
             public void onRefresh() {
                 isPullUp = false;
                 page = 0;
-                if (NetUtils.isNetworkConnected(getActivity(),false)) {
+                if (NetUtils.isNetworkConnected(getActivity(), false)) {
                     getCurrentTaskList();
                 } else {
                     swipeRefreshLayout.setLoading(false);
@@ -191,7 +186,7 @@ public class TaskListFragment extends Fragment {
         swipeRefreshLayout.setOnLoadListener(new MySwipeRefreshLayout.OnLoadListener() {
             @Override
             public void onLoadMore() {
-                if (NetUtils.isNetworkConnected(getActivity(),false)) {
+                if (NetUtils.isNetworkConnected(getActivity(), false)) {
                     apiService.getFinishTasks(page, 12, "REMOVED");
                     isPullUp = true;
                 } else {
@@ -203,7 +198,7 @@ public class TaskListFragment extends Fragment {
 
     private void getCurrentTaskList() {
         currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
             if (currentIndex == TaskFragment.MY_MINE) {
                 getMineTasks();
             } else if (currentIndex == TaskFragment.MY_INVOLVED) {
@@ -222,7 +217,7 @@ public class TaskListFragment extends Fragment {
      * 获取关注的任务
      */
     protected void getFocusedTasks() {
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFocusedTasks(orderBy, orderType);
         }
@@ -232,7 +227,7 @@ public class TaskListFragment extends Fragment {
      * 获取我参与的任务
      */
     protected void getInvolvedTasks() {
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getInvolvedTasks(orderBy, orderType);
         }
@@ -242,7 +237,7 @@ public class TaskListFragment extends Fragment {
      * 获取我的任务
      */
     protected void getMineTasks() {
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMineTasks(orderBy, orderType);
         }
@@ -252,7 +247,7 @@ public class TaskListFragment extends Fragment {
      * 获取所有任务
      */
     private void getAllFinishTasks() {
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFinishTasks(0, 12, "REMOVED");
         }
@@ -265,7 +260,7 @@ public class TaskListFragment extends Fragment {
      * @param position
      */
     protected void deleteTasks(int position) {
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.setTaskFinishById(uiTaskList.get(position).getId());
             deletePosition = position;
