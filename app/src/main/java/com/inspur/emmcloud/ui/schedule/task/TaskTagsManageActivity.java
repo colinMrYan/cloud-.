@@ -24,20 +24,19 @@ import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2019/4/8.
  */
-@ContentView(R.layout.activity_task_manage)
 public class TaskTagsManageActivity extends BaseActivity {
     public static String EXTRA_TAGS = "tags";
     public static String EXTRA_DELETE_TAGS = "tags";
-    @ViewInject(R.id.lv_task_manage_tags)
-    private ListView taskManageTagsList;
+    @BindView(R.id.lv_task_manage_tags)
+    ListView taskManageTagsList;
     private TaskTagsAdapter taskTagsAdapter;
     private LoadingDialog loadingDialog;
     private ArrayList<TaskColorTag> allTags = new ArrayList<TaskColorTag>();
@@ -48,6 +47,8 @@ public class TaskTagsManageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_task_manage);
+        ButterKnife.bind(this);
         initData();
     }
 

@@ -7,13 +7,11 @@ import android.view.View;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.x;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2019/4/22.
  */
-@ContentView(R.layout.activity_meeting_history)
 public class MeetingHistoryActivity extends BaseFragmentActivity {
 
     private static String EXTRA_IS_HISTORY_MEETING="is_history_meeting";
@@ -23,7 +21,8 @@ public class MeetingHistoryActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
+        setContentView(R.layout.activity_meeting_history);
+        ButterKnife.bind(this);
         setStatus();
         meetingFragment = new MeetingFragment();
         Intent intent=new Intent();

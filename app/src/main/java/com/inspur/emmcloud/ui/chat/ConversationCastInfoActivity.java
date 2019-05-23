@@ -26,10 +26,10 @@ import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
 import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
-@ContentView(R.layout.activity_conversation_cast_info)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ConversationCastInfoActivity extends BaseActivity implements OnStateChangedListener {
 
     public static final String EXTRA_CID = "cid";
@@ -37,26 +37,28 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
     private ChatAPIService apiService;
     private LoadingDialog loadingDlg;
 
-    @ViewInject(R.id.img_photo)
-    private CircleTextImageView robotIconImg;
+    @BindView(R.id.img_photo)
+    CircleTextImageView robotIconImg;
 
-    @ViewInject(R.id.tv_name)
-    private TextView robotNameText;
+    @BindView(R.id.tv_name)
+    TextView robotNameText;
 
-    @ViewInject(R.id.function_introduction_text)
-    private TextView introductionText;
+    @BindView(R.id.function_introduction_text)
+    TextView introductionText;
 
-    @ViewInject(R.id.support_text)
-    private TextView supportText;
+    @BindView(R.id.support_text)
+    TextView supportText;
 
-    @ViewInject(R.id.sv_stick)
-    private SwitchView stickSwitch;
+    @BindView(R.id.sv_stick)
+    SwitchView stickSwitch;
 
     private WebService webService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_conversation_cast_info);
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(ConversationCastInfoActivity.this);
         String cid = getIntent().getExtras().getString(EXTRA_CID);
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
@@ -122,9 +124,6 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
 
     /**
      * 设置频道是否置顶
-     *
-     * @param id
-     * @param isStick
      */
     private void setConversationStick() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {

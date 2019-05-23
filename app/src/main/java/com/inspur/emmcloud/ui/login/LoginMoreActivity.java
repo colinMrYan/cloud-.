@@ -21,25 +21,25 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2018/1/30.
  */
-
-@ContentView(R.layout.activity_login_more)
 public class LoginMoreActivity extends BaseActivity {
 
     private static final int SCAN_LOGIN_ENTERPRISE_INFO = 5;
-    @ViewInject(R.id.tv_current_enterprise_name)
-    private TextView currentEnterpriseNameText;
-    @ViewInject(R.id.ll_reset_enterprise)
-    private LinearLayout resetEnterpriseLayout;
+    @BindView(R.id.tv_current_enterprise_name)
+    TextView currentEnterpriseNameText;
+    @BindView(R.id.ll_reset_enterprise)
+    LinearLayout resetEnterpriseLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login_more);
+        ButterKnife.bind(this);
         initView();
     }
 

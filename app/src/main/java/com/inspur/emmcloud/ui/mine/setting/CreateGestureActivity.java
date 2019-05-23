@@ -16,20 +16,19 @@ import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * create gesture activity
  * Created by Sym on 2015/12/23.
  */
-@ContentView(R.layout.activity_create_gesture)
 public class CreateGestureActivity extends BaseActivity {
 
     public static final String GESTURE_CODE = "gesture_code";
@@ -37,16 +36,16 @@ public class CreateGestureActivity extends BaseActivity {
     public static final String CREATE_GESTURE_CODE_SUCCESS = "create_gesture_code_success";
     public static final String EXTRA_FORCE_SET = "extra_force_set";
     private static final long DELAYTIME = 600L;
-    @ViewInject(R.id.lockPatterIndicator)
-    private LockPatternIndicator lockPatternIndicator;
-    @ViewInject(R.id.lockPatternView)
-    private LockPatternView lockPatternView;
-    @ViewInject(R.id.gesture_reset_btn)
-    private Button resetBtn;
-    @ViewInject(R.id.gesture_message_text)
-    private TextView gestrueMessage;
-    @ViewInject(R.id.tv_force_gesture_create)
-    private TextView forceGestureCreate;
+    @BindView(R.id.lockPatterIndicator)
+    LockPatternIndicator lockPatternIndicator;
+    @BindView(R.id.lockPatternView)
+    LockPatternView lockPatternView;
+    @BindView(R.id.gesture_reset_btn)
+    Button resetBtn;
+    @BindView(R.id.gesture_message_text)
+    TextView gestrueMessage;
+    @BindView(R.id.tv_force_gesture_create)
+    TextView forceGestureCreate;
     private List<LockPatternView.Cell> mChosenPattern = null;
     /**
      * 手势监听
@@ -119,8 +118,9 @@ public class CreateGestureActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_gesture);
+        ButterKnife.bind(this);
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
-        x.view().inject(this);
         init();
     }
 
