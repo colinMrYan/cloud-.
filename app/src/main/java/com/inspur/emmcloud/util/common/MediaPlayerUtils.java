@@ -19,39 +19,45 @@ public class MediaPlayerUtils {
     public MediaPlayerUtils(Context context) {
         mediaPlayerVoiceOn = MediaPlayer.create(context, R.raw.voice_search_on);
         mediaPlayerVoiceOff = MediaPlayer.create(context, R.raw.voice_search_off);
-        if(mediaPlayerVoiceOff==null){
-            LogUtils.LbcDebug("mediaPlayerVoiceOff==null");
-        }
-        if(mediaPlayerVoiceOn==null){
-            LogUtils.LbcDebug("mediaPlayerVoiceOn==null");
-        }
     }
 
     /**
      * 播放开始提示音
      */
     public void playVoiceOn() {
-        mediaPlayerVoiceOn.start();
+        if (mediaPlayerVoiceOn != null){
+            mediaPlayerVoiceOn.start();
+        }
+
     }
 
     /**
      * 播放结束提示音
      */
     public void playVoiceOff() {
-        mediaPlayerVoiceOff.start();
+        if (mediaPlayerVoiceOff != null){
+            mediaPlayerVoiceOff.start();
+        }
+
     }
 
     /**
      * 释放资源
      */
     public void release() {
-        if (mediaPlayerVoiceOn.isPlaying()) {
-            mediaPlayerVoiceOn.stop();
+        if (mediaPlayerVoiceOn != null){
+            if (mediaPlayerVoiceOn.isPlaying()) {
+                mediaPlayerVoiceOn.stop();
+            }
+            mediaPlayerVoiceOn.release();
         }
-        if (mediaPlayerVoiceOff.isPlaying()) {
-            mediaPlayerVoiceOff.stop();
+
+        if (mediaPlayerVoiceOff != null){
+            if (mediaPlayerVoiceOff.isPlaying()) {
+                mediaPlayerVoiceOff.stop();
+            }
+            mediaPlayerVoiceOff.release();
         }
-        mediaPlayerVoiceOn.release();
-        mediaPlayerVoiceOff.release();
+
     }
 }

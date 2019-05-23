@@ -253,7 +253,6 @@ public class ECMChatInputMenu extends LinearLayout {
         waterWaveProgress.setWaveSpeed(0.02F);
         waterWaveProgress.setAmplitude(5.0F);
         lastVolumeLevel = 0;
-        LogUtils.LbcDebug("state");
         mediaPlayerUtils = new MediaPlayerUtils(getContext());
         voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
         voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
@@ -530,7 +529,6 @@ public class ECMChatInputMenu extends LinearLayout {
         voiceInputLayout.setVisibility(View.VISIBLE);
         lastVolumeLevel = 0;
         waterWaveProgress.setProgress(0);
-        LogUtils.LbcDebug("playVoiceOn");
         mediaPlayerUtils.playVoiceOn();
         voice2StringMessageUtils.startVoiceListening();
     }
@@ -794,7 +792,6 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void releaseVoliceInput() {
         if (voice2StringMessageUtils.getSpeechRecognizer() != null) {
-            LogUtils.LbcDebug("release voice2StringMessageUtils");
             mediaPlayerUtils.release();
             voice2StringMessageUtils.getSpeechRecognizer().cancel();
             voice2StringMessageUtils.getSpeechRecognizer().destroy();
