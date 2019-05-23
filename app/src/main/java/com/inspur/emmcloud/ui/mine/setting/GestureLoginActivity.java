@@ -32,6 +32,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -242,17 +243,10 @@ public class GestureLoginActivity extends BaseActivity {
     /**
      * 忘记手势密码（去账号登录界面）
      */
-    @Event(R.id.forget_gesture_btn)
-    private void forgetGesturePasswrod(View view) {
-        switch (view.getId()) {
-            case R.id.forget_gesture_btn:
-                clearGestureInfo();
-                ((MyApplication) getApplication()).signout();
-                break;
-            default:
-                break;
-        }
-
+    @OnClick(R.id.forget_gesture_btn)
+    public void forgetGesturePasswrod() {
+        clearGestureInfo();
+        ((MyApplication) getApplication()).signout();
     }
 
     /**

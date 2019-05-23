@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -181,8 +182,8 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
         }
     }
 
-    @Event({R.id.bt_send, R.id.bt_cancel})
-    private void onClick(View view) {
+    @OnClick({R.id.bt_send, R.id.bt_cancel})
+    public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.bt_send:
                 if (NetUtils.isNetworkConnected(getContext())) {
@@ -203,8 +204,6 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
                 if (chatInputMenuListener != null) {
                     chatInputMenuListener.hideChatInputMenu();
                 }
-                break;
-            default:
                 break;
         }
     }

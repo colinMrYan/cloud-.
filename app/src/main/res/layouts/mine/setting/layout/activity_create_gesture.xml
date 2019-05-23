@@ -55,7 +55,6 @@
             android:padding="20dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:onClick="onClick"
             android:background="@null"
             android:text="@string/create_gesture_reset"
             android:textColor="@color/grey_a5a5a5"

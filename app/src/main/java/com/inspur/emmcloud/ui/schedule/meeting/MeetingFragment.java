@@ -38,6 +38,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by chenmch on 2019/4/6.
@@ -156,7 +157,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         getMeetingList();
     }
 
-    @Event(value = R.id.rl_meeting_search)
+    @OnClick(R.id.rl_meeting_search)
     public void onClick(View view) {
 
     }
