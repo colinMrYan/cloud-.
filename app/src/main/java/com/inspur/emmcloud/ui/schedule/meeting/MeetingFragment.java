@@ -30,7 +30,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,13 +44,9 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
 
     private static String EXTRA_IS_HISTORY_MEETING = "is_history_meeting";
 
-    @ViewInject(R.id.swipe_refresh_layout)
     private MySwipeRefreshLayout swipeRefreshLayout;
-    @ViewInject(R.id.lv_view_meeting)
     private ListView meetingListView;
-    @ViewInject(R.id.ev_search)
     private ClearEditText searchEdit;
-    @ViewInject(R.id.rl_meeting_list_default)
     private LinearLayout meetingListDefaultLayout;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
     private List<Meeting> meetingList = new ArrayList<>();
