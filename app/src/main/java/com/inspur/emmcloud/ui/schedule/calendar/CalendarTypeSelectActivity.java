@@ -31,8 +31,8 @@ import butterknife.ButterKnife;
  */
 public class CalendarTypeSelectActivity extends BaseActivity {
     MyCalendar calendar;
-    @@BindView(R.id.lv_calendars)
-    private ListView calendarListView;
+    @BindView(R.id.lv_calendars)
+    ListView calendarListView;
     private ScheduleApiService scheduleAPIService;
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
