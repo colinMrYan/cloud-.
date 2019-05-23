@@ -161,12 +161,17 @@ public class ScheduleFragment extends BaseFragment implements
         allDayLayout = rootView.findViewById(R.id.rl_all_day);
         eventAllDayImg = rootView.findViewById(R.id.iv_event_all_day);
         eventAllDayTitleText = rootView.findViewById(R.id.tv_event_title_all_day);
-        calendarLayout.shrink(0);
         calendarLayout.setExpandListener(this);
         calendarView.setOnCalendarSelectListener(this);
         calendarViewExpandImg.setOnClickListener(this);
         calendarDayView.setOnEventClickListener(this);
         allDayLayout.setOnClickListener(this);
+        calendarLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                calendarLayout.shrink(0);
+            }
+        });
         eventRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         scheduleEventListAdapter = new ScheduleEventListAdapter(getActivity());
         scheduleEventListAdapter.setOnItemClickLister(this);
