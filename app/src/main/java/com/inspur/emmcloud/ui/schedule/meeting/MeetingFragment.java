@@ -6,8 +6,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
@@ -52,7 +52,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     @ViewInject(R.id.ev_search)
     private ClearEditText searchEdit;
     @ViewInject(R.id.rl_meeting_list_default)
-    private RelativeLayout meetingListDefaultLayout;
+    private LinearLayout meetingListDefaultLayout;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
     private List<Meeting> meetingList = new ArrayList<>();
     private List<Meeting> uiMeetingList = new ArrayList<>();
