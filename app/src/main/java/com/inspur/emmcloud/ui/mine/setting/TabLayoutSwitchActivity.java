@@ -25,26 +25,27 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2019/4/12.
  */
 
-@ContentView(R.layout.activity_mine_tab_layout_switch)
 public class TabLayoutSwitchActivity extends BaseActivity {
-    @ViewInject(R.id.tv_header)
-    private TextView headerText;
-    @ViewInject(R.id.lv)
-    private ListView listView;
+    @BindView(R.id.tv_header)
+    TextView headerText;
+    @BindView(R.id.lv)
+    ListView listView;
     private NaviBarModel naviBarModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mine_tab_layout_switch);
+        ButterKnife.bind(this);
         naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
         headerText.setText(R.string.mine_tab_layout);
         listView.setAdapter(new Adapter());

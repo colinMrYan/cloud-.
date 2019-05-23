@@ -17,16 +17,15 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_feedback)
 public class FeedBackActivity extends BaseActivity {
-    @ViewInject(R.id.et_feedback_content)
+    @BindView(R.id.et_feedback_content)
     EditText feedbackContentEdit;
-    @ViewInject(R.id.et_feedback_contact)
+    @BindView(R.id.et_feedback_contact)
     EditText feedbackContactEdit;
-    @ViewInject(R.id.switch_compat_anonymous)
+    @BindView(R.id.switch_compat_anonymous)
     SwitchCompat anonymousSwitch;
 
     TextWatcher mTextWatcher = new TextWatcher() {
@@ -75,6 +74,8 @@ public class FeedBackActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_feedback);
+        ButterKnife.bind(this);
         feedbackContentEdit.addTextChangedListener(mTextWatcher);
     }
 

@@ -845,15 +845,6 @@ public class AppUtils {
         return username + (isTelbet ? "的平板电脑" : "的手机");
     }
 
-    /**
-     * 判断是否可以连接华为推了送
-     *
-     * @return
-     */
-    private static boolean canConnectHuawei(Context context) {
-        String pushFlag = PushManagerUtils.getPushFlag(context);
-        return StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG);
-    }
 
     /**
      * 设置添加屏幕的背景透明度

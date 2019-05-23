@@ -22,20 +22,19 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2019/4/15.
  */
 
-@ContentView(R.layout.activity_meeting_office_setting)
 public class MeetingOfficeSettingActivity extends BaseActivity implements ExpandableListView.OnChildClickListener {
-    @ViewInject(R.id.expandable_listView)
-    private ExpandableListView expandableListView;
+    @BindView(R.id.expandable_listView)
+    ExpandableListView expandableListView;
     private LoadingDialog loadingDlg;
     private ScheduleApiService apiService;
     private List<MeetingLocation> locationList = new ArrayList<>();
@@ -46,6 +45,8 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_office_setting);
+        ButterKnife.bind(this);
         getMyMeetingOfficeIdList();
         initView();
         getOfficeList();

@@ -30,16 +30,16 @@ import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.helper.StringUtil;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by yufuchang on 2019/4/16.
  */
-@ContentView(R.layout.activity_meeting_detail_new)
 public class MeetingDetailActivity extends BaseActivity {
 
     private static final int MEETING_ATTENDEE = 0;
@@ -47,34 +47,34 @@ public class MeetingDetailActivity extends BaseActivity {
     private static final int MEETING_CONTACT = 2;
     public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
 
-    @ViewInject(R.id.tv_meeting_title)
-    private TextView meetingTitleText;
-    @ViewInject(R.id.tv_meeting_time)
-    private TextView meetingTimeText;
-    @ViewInject(R.id.tv_meeting_remind)
-    private TextView meetingRemindText;
-    @ViewInject(R.id.tv_meeting_distribution)
-    private TextView meetingDistributionText;
-    @ViewInject(R.id.tv_meeting_create)
-    private TextView meetingCreateTimeText;
-    @ViewInject(R.id.tv_attendee)
-    private TextView attendeeText;
-    @ViewInject(R.id.tv_location)
-    private TextView meetingLocationText;
-    @ViewInject(R.id.tv_meeting_record_holder)
-    private TextView meetingRecordHolderText;
-    @ViewInject(R.id.tv_meeting_conference)
-    private TextView meetingConferenceText;
-    @ViewInject(R.id.tv_meeting_note)
-    private TextView meetingNoteText;
-    @ViewInject(R.id.rl_meeting_record_holder)
-    private RelativeLayout meetingRecordHolderLayout;
-    @ViewInject(R.id.rl_meeting_conference)
-    private RelativeLayout meetingConferenceLayout;
-    @ViewInject(R.id.rl_meeting_note)
-    private RelativeLayout meetingNoteLayout;
-    @ViewInject(R.id.iv_meeting_detail_more)
-    private ImageView meetingMoreImg;
+    @BindView(R.id.tv_meeting_title)
+    TextView meetingTitleText;
+    @BindView(R.id.tv_meeting_time)
+    TextView meetingTimeText;
+    @BindView(R.id.tv_meeting_remind)
+    TextView meetingRemindText;
+    @BindView(R.id.tv_meeting_distribution)
+    TextView meetingDistributionText;
+    @BindView(R.id.tv_meeting_create)
+    TextView meetingCreateTimeText;
+    @BindView(R.id.tv_attendee)
+    TextView attendeeText;
+    @BindView(R.id.tv_location)
+    TextView meetingLocationText;
+    @BindView(R.id.tv_meeting_record_holder)
+    TextView meetingRecordHolderText;
+    @BindView(R.id.tv_meeting_conference)
+    TextView meetingConferenceText;
+    @BindView(R.id.tv_meeting_note)
+    TextView meetingNoteText;
+    @BindView(R.id.rl_meeting_record_holder)
+    RelativeLayout meetingRecordHolderLayout;
+    @BindView(R.id.rl_meeting_conference)
+    RelativeLayout meetingConferenceLayout;
+    @BindView(R.id.rl_meeting_note)
+    RelativeLayout meetingNoteLayout;
+    @BindView(R.id.iv_meeting_detail_more)
+    ImageView meetingMoreImg;
 
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
@@ -84,6 +84,8 @@ public class MeetingDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_detail_new);
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         scheduleApiService = new ScheduleApiService(this);
         scheduleApiService.setAPIInterface(new WebService());

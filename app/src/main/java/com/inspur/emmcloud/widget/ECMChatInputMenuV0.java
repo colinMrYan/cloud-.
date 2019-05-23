@@ -45,14 +45,15 @@ import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
 import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -67,29 +68,29 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     private static final int TOPDELY_TIMES = 17;
     private static final long MENTIONS_BASE_TIME = 1515513600000L;
 
-    @ViewInject(R.id.input_edit)
-    private ChatInputEdit inputEdit;
+    @BindView(R.id.input_edit)
+    ChatInputEdit inputEdit;
 
-    @ViewInject(R.id.voice_btn)
-    private ImageButton voiceImgBtn;
+    @BindView(R.id.voice_btn)
+    ImageButton voiceImgBtn;
 
-    @ViewInject(R.id.add_btn)
-    private ImageButton addBtn;
+    @BindView(R.id.add_btn)
+    ImageButton addBtn;
 
-    @ViewInject(R.id.send_msg_btn)
-    private Button sendMsgBtn;
+    @BindView(R.id.send_msg_btn)
+    Button sendMsgBtn;
 
-    @ViewInject(R.id.add_menu_layout)
-    private RelativeLayout addMenuLayout;
+    @BindView(R.id.add_menu_layout)
+    RelativeLayout addMenuLayout;
 
-    @ViewInject(R.id.viewpager_layout)
-    private ECMChatInputMenuViewpageLayout viewpagerLayout;
+    @BindView(R.id.viewpager_layout)
+    ECMChatInputMenuViewpageLayout viewpagerLayout;
 
-    @ViewInject(R.id.wave_progress_input)
-    private WaterWaveProgress waterWaveProgress;
+    @BindView(R.id.wave_progress_input)
+    WaterWaveProgress waterWaveProgress;
 
-    @ViewInject(R.id.voice_input_layout)
-    private RelativeLayout voiceInputLayout;
+    @BindView(R.id.voice_input_layout)
+    RelativeLayout voiceInputLayout;
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -122,7 +123,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
         // TODO Auto-generated method stub
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
         View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu, this, true);
-        x.view().inject(view);
+        ButterKnife.bind(this, view);
         initInputEdit();
         initVoiceInput();
         initViewpageLayout();

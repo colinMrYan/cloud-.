@@ -35,18 +35,17 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * 共享网盘详情页面
  */
 
-@ContentView(R.layout.activity_share_volumel_info)
 public class ShareVolumeInfoActivity extends BaseActivity {
 
     private static final int ADD_MEMBER = 1;
@@ -58,22 +57,22 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
     private VolumeDetail volumeDetail;
-    @ViewInject(R.id.gv_member)
-    private NoScrollGridView memberGrid;
-    @ViewInject(R.id.volume_member_text)
-    private TextView volumeMemberText;
-    @ViewInject(R.id.volume_name_text)
-    private TextView volumeNameText;
-    @ViewInject(R.id.slv_write_group)
-    private ScrollViewWithListView groupWriteListView;
-    @ViewInject(R.id.slv_read_group)
-    private ScrollViewWithListView groupReadListView;
-    @ViewInject(R.id.img_volume_name_arrow)
-    private ImageView volumeNameArrowImg;
-    @ViewInject(R.id.ll_write_group)
-    private LinearLayout groupWriteLayout;
-    @ViewInject(R.id.ll_group_watch)
-    private LinearLayout groupReadLayout;
+    @BindView(R.id.gv_member)
+    NoScrollGridView memberGrid;
+    @BindView(R.id.volume_member_text)
+    TextView volumeMemberText;
+    @BindView(R.id.volume_name_text)
+    TextView volumeNameText;
+    @BindView(R.id.slv_write_group)
+    ScrollViewWithListView groupWriteListView;
+    @BindView(R.id.slv_read_group)
+    ScrollViewWithListView groupReadListView;
+    @BindView(R.id.img_volume_name_arrow)
+    ImageView volumeNameArrowImg;
+    @BindView(R.id.ll_write_group)
+    LinearLayout groupWriteLayout;
+    @BindView(R.id.ll_group_watch)
+    LinearLayout groupReadLayout;
     private VolumeInfoMemberAdapter memberAdapter;
     private VolumeInfoGroupAdapter groupWriteAdapter;
     private VolumeInfoGroupAdapter groupReadAdapter;
@@ -89,6 +88,8 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_share_volumel_info);
+        ButterKnife.bind(this);
         volume = (Volume) getIntent().getSerializableExtra("volume");
         loadingDlg = new LoadingDialog(this);
         apiService = new MyAppAPIService(this);

@@ -44,40 +44,40 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * 群组类型会话详情
  */
-@ContentView(R.layout.activity_conversation_group_info)
 public class ConversationGroupInfoActivity extends BaseActivity {
 
     public static final String EXTRA_CID = "cid";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_DEL_MEMBER = 3;
-    @ViewInject(R.id.gv_member)
-    private NoScrollGridView memberGrid;
-    @ViewInject(R.id.tv_member)
-    private TextView memberText;
-    @ViewInject(R.id.sv_stick)
-    private SwitchView stickSwitch;
-    @ViewInject(R.id.sv_dnd)
-    private SwitchView dndSwitch;
-    @ViewInject(R.id.tv_name)
-    private TextView nameText;
-    @ViewInject(R.id.bt_exit)
-    private Button exitBtn;
-    @ViewInject(R.id.tv_group_members)
-    private TextView groupMembersText;
-    @ViewInject(R.id.iv_group_photo)
-    private CircleTextImageView circleTextImageView;
-    @ViewInject(R.id.tv_group_member_size)
-    private TextView memberSizeText;
+    @BindView(R.id.gv_member)
+    NoScrollGridView memberGrid;
+    @BindView(R.id.tv_member)
+    TextView memberText;
+    @BindView(R.id.sv_stick)
+    SwitchView stickSwitch;
+    @BindView(R.id.sv_dnd)
+    SwitchView dndSwitch;
+    @BindView(R.id.tv_name)
+    TextView nameText;
+    @BindView(R.id.bt_exit)
+    Button exitBtn;
+    @BindView(R.id.tv_group_members)
+    TextView groupMembersText;
+    @BindView(R.id.iv_group_photo)
+    CircleTextImageView circleTextImageView;
+    @BindView(R.id.tv_group_member_size)
+    TextView memberSizeText;
 
     private ChatAPIService apiService;
     private ConversationMemberAdapter adapter;
@@ -144,6 +144,8 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_conversation_group_info);
+        ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         String cid = getIntent().getExtras().getString(EXTRA_CID);

@@ -21,27 +21,27 @@ import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
-
 import java.lang.ref.WeakReference;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by chenmch on 2017/9/1.
  */
 
-@ContentView(R.layout.activity_recommend_app)
 public class RecommendAppActivity extends BaseActivity {
     private final String RECOMMAND_APP_URL = APIUri.getRecommandAppUrl();
-    @ViewInject(R.id.webview)
+    @BindView(R.id.webview)
     ProgressWebView webView;
     private CustomShareListener mShareListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        x.view().inject(this);
+        setContentView(R.layout.activity_recommend_app);
+        ButterKnife.bind(this);
         webView.loadUrl(RECOMMAND_APP_URL);
 
         UMConfigure.init(this, "59aa1f8f76661373290010d3"
@@ -57,9 +57,6 @@ public class RecommendAppActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
-            case R.id.share_img:
-                ShareWeb();
-                break;
             default:
                 break;
         }
@@ -72,8 +69,8 @@ public class RecommendAppActivity extends BaseActivity {
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
-
-    private void ShareWeb() {
+    @OnClick(R.id.share_img)
+    public void ShareWeb() {
 
         mShareListener = new CustomShareListener(this);
         new ShareAction(RecommendAppActivity.this).setDisplayList(

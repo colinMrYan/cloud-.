@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,25 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2019/4/1.
  * 工作主页面下任务页面
  */
-@ContentView(R.layout.fragment_all_task_list)
-public class TaskFragment extends Fragment {
+public class TaskFragment extends BaseFragment {
 
     public static final String MY_TASK_TYPE = "task_type";
     public static final int MY_MINE = 0;
@@ -40,17 +37,16 @@ public class TaskFragment extends Fragment {
     public static final int MY_DONE = 3;
     public static final int MY_ALL = 4;
     private static final int MESSION_SET = 5;
-    @ViewInject(R.id.tl_schedule_task)
-    private TabLayout tabLayoutSchedule;
-    @ViewInject(R.id.viewpager_calendar_holder)
-    private ViewPager taskViewPager;
-    @ViewInject(R.id.v_all_task)
-    private View allTaskView;
-    @ViewInject(R.id.rl_all_task)
-    private RelativeLayout allTaskLayout;
-    @ViewInject(R.id.ev_search)
-    private ClearEditText searchEditText;
-    private boolean injected = false;
+    @BindView(R.id.tl_schedule_task)
+    TabLayout tabLayoutSchedule;
+    @BindView(R.id.viewpager_calendar_holder)
+    ViewPager taskViewPager;
+    @BindView(R.id.v_all_task)
+    View allTaskView;
+    @BindView(R.id.rl_all_task)
+    RelativeLayout allTaskLayout;
+    @BindView(R.id.ev_search)
+    ClearEditText searchEditText;
     private TaskListFragment allTaskListFragment, mineTaskListFragment, involvedTaskListFragment, focusedTaskListFragment, allReadyDoneTaskListFragment;
     private AllTaskFragmentAdapter adapter;
     private int lastTaskPosition = 0;
@@ -64,16 +60,14 @@ public class TaskFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        injected = true;
-        return x.view().inject(this, inflater, container);
+        View view = inflater.inflate(R.layout.fragment_all_task_list, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (!injected) {
-            x.view().inject(this, this.getView());
-        }
         initViews();
     }
 

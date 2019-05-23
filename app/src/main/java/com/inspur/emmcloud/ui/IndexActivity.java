@@ -101,12 +101,12 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().clearUserPhotoMap();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if(NotificationSetUtils.isNotificationEnabled(this) &&
-                    (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true))){
-                MyApplication.getInstance().startPush();
+                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true))){
+                PushManagerUtils.getInstance().startPush();
             }
         }else{
-            if(PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true)){
-                MyApplication.getInstance().startPush();
+            if(PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true)){
+                PushManagerUtils.getInstance().startPush();
             }
         }
 

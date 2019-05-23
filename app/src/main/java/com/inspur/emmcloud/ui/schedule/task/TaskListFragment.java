@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.TaskListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -36,31 +36,29 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2019/4/1.
  */
-@ContentView(R.layout.fragment_task_list)
-public class TaskListFragment extends Fragment {
+public class TaskListFragment extends BaseFragment {
 
     public static final String TASK_TASK_ENTITY = "task";
     public static final String TASK_CURRENT_INDEX = "tabIndex";
-    @ViewInject(R.id.lv_task)
-    private ListView taskListView;
-    @ViewInject(R.id.refresh_layout)
-    private MySwipeRefreshLayout swipeRefreshLayout;
-    @ViewInject(R.id.ll_no_search_result)
-    private LinearLayout noSearchResultLayout;
-    @ViewInject(R.id.tv_no_result)
-    private TextView noResultText;
-    @ViewInject(R.id.iv_task_no_result)
-    private ImageView taskNoResultImageView;
-    private boolean injected = false;
+    @BindView(R.id.lv_task)
+    ListView taskListView;
+    @BindView(R.id.refresh_layout)
+    MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.ll_no_search_result)
+    LinearLayout noSearchResultLayout;
+    @BindView(R.id.tv_no_result)
+    TextView noResultText;
+    @BindView(R.id.iv_task_no_result)
+    ImageView taskNoResultImageView;
     private String orderBy = "PRIORITY";
     private String orderType = "ASC";
     private int deletePosition = -1;
@@ -73,7 +71,6 @@ public class TaskListFragment extends Fragment {
     private boolean isPullUp = false;
     private int page = 0;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,16 +80,14 @@ public class TaskListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        injected = true;
-        return x.view().inject(this, inflater, container);
+        View view = inflater.inflate(R.layout.fragment_task_list, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (!injected) {
-            x.view().inject(this, this.getView());
-        }
         initViews();
     }
 
@@ -262,7 +257,6 @@ public class TaskListFragment extends Fragment {
         }
     }
 
-
     /**
      * 删除任务
      *
@@ -379,7 +373,5 @@ public class TaskListFragment extends Fragment {
             noResultText.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
             taskNoResultImageView.setVisibility(taskList.size() > 0 ? View.GONE : View.VISIBLE);
         }
-
     }
-
 }
