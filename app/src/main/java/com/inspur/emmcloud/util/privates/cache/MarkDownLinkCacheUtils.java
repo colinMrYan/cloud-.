@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MarkDownLink;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
