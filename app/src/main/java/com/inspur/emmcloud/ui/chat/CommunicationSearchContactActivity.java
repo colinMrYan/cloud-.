@@ -24,7 +24,6 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -106,6 +105,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                 switch (message.what) {
                     case REFRESH_DATA:
                         /**刷新Ui*/
+                        findViewById(R.id.tv_group_name_hint).setVisibility(searchChannelGroupList.size() > 0 ? View.VISIBLE : View.GONE);
                         groupAdapter.notifyDataSetChanged();
                         break;
                     case CLEAR_DATA:
@@ -126,20 +126,13 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                     public void run() {
                         switch (searchArea) {
                             case SEARCH_ALL:
-                                    LogUtils.LbcDebug("isV1");
                                     searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 3);
                                 break;
                             case SEARCH_GROUP:
-                                LogUtils.LbcDebug("group");
                                     searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-                                LogUtils.LbcDebug("群组个数::"+searchChannelGroupList.size());
-                                if(StringUtils.isBlank(searchText)){
-                                    LogUtils.LbcDebug("这次是空!!!!!!!!!!!!!!");
-                                }
                                 break;
                             case SEARCH_CONTACT:
-                                LogUtils.LbcDebug("contact");
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 3);
                                 break;
                             default:
