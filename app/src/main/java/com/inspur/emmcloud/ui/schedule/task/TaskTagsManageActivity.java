@@ -47,9 +47,13 @@ public class TaskTagsManageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_manage);
         ButterKnife.bind(this);
         initData();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_task_manage;
     }
 
     /**

@@ -56,9 +56,13 @@ public class TaskTagAddActivity extends BaseActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_tags_add);
         ButterKnife.bind(this);
         initData();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_task_tags_add;
     }
 
     private void initData() {

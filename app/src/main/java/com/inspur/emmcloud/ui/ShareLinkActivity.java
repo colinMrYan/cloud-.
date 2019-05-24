@@ -45,6 +45,11 @@ public class ShareLinkActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public int getLayoutResId() {
+        return 0;
+    }
+
     /**
      * 给朋友分享图片或文件
      */

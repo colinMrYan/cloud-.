@@ -45,12 +45,16 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_office_setting);
         ButterKnife.bind(this);
         getMyMeetingOfficeIdList();
         initView();
         getOfficeList();
         getMeetingLocation();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_office_setting;
     }
 
     private void initView() {

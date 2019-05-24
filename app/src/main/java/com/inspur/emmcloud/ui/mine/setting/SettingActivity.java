@@ -152,17 +152,22 @@ public class SettingActivity extends BaseActivity {
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
         initView();
         setLanguage();
         handMessage();
         EventBus.getDefault().register(this);
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_setting;
     }
 
     @Override
@@ -571,7 +576,7 @@ public class SettingActivity extends BaseActivity {
     public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
             LoadingDialog.dimissDlg(loadingDlg);
-            MyApplication.getInstance().signout(true);
+            MyApplication.getInstance().signout();
             stopAppService();
         }
 

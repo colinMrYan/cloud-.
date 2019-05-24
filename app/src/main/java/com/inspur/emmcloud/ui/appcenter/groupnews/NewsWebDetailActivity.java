@@ -108,11 +108,15 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_newsweb_detail);
         initData();
         initViews();
         EventBus.getDefault().register(this);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_newsweb_detail;
     }
 
     /**

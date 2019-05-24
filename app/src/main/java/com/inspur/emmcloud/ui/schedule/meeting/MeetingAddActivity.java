@@ -112,10 +112,14 @@ public class MeetingAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_add);
         ButterKnife.bind(this);
         initData();
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_add;
     }
 
     /**

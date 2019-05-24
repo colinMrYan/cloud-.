@@ -75,7 +75,6 @@ public class GroupFileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_file);
         ButterKnife.bind(this);
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
@@ -85,6 +84,11 @@ public class GroupFileActivity extends BaseActivity {
         adapter = new GroupFileAdapter();
         fileListView.setAdapter(adapter);
         adapter.setAndReFreshList(fileInfoList);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_file;
     }
 
     private void getFileMsgList() {

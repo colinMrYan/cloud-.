@@ -20,7 +20,7 @@ import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
  * Created by chenmch on 2018/8/25.
  */
 
-public class MediaPlayBaseActivity extends BaseActivity implements SensorEventListener {
+public abstract class MediaPlayBaseActivity extends BaseActivity implements SensorEventListener {
     private PowerManager powerManager;
     private PowerManager.WakeLock wakeLock;
     private SensorManager sensorManager;
@@ -43,6 +43,7 @@ public class MediaPlayBaseActivity extends BaseActivity implements SensorEventLi
             }
         });
     }
+
 
     @Override
     protected void onStart() {

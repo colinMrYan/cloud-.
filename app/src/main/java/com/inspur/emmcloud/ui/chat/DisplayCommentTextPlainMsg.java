@@ -33,11 +33,9 @@ public class DisplayCommentTextPlainMsg {
 
     /**
      * 评论卡片
-     *
      * @param context
-     * @param childView
-     * @param msg
-     * @param apiService
+     * @param message
+     * @return
      */
     public static View getView(final Activity context, final Message message) {
         View cardContentView = LayoutInflater.from(context).inflate(

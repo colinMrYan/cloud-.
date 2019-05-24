@@ -70,7 +70,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_room_list);
         ButterKnife.bind(this);
         initView();
         startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_TIME);
@@ -78,6 +77,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         setMeetingTime();
         onRefresh();
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_room_list;
     }
 
     private void initView() {

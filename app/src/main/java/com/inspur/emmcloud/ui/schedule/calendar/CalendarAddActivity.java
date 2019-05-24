@@ -97,6 +97,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     ImageView calendarDetailMoreImageView;
     @BindView(R.id.tv_save)
     TextView saveTextView;
+    RemindEvent remindEvent = new RemindEvent();
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private Schedule scheduleEvent = new Schedule();
@@ -108,19 +109,22 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText = "";
-    RemindEvent remindEvent = new RemindEvent();
     private int intervalMin = 0;
     private String id;// 日程id
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar_add);
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         apiService = new ScheduleApiService(getApplicationContext());
         apiService.setAPIInterface(new WebService());
         init();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_calendar_add;
     }
 
     /**

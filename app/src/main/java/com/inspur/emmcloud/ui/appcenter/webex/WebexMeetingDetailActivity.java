@@ -121,7 +121,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webex_detail);
         ButterKnife.bind(this);
         loadingDialog = new LoadingDialog(this);
         webexMeeting = (WebexMeeting) getIntent().getSerializableExtra(EXTRA_WEBEXMEETING);
@@ -130,6 +129,11 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         showWebexMeetingDetial();
         getWebexMeeting();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_detail;
     }
 
     private void showWebexMeetingDetial() {

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -93,9 +92,7 @@ public class MyInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_info);
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());
@@ -103,6 +100,15 @@ public class MyInfoActivity extends BaseActivity {
         getUserInfoConfig();
         showMyInfo();
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_my_info;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
     }
 
     /**

@@ -23,11 +23,18 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan_qrcode_login_gs);
         loadingDlg = new LoadingDialog(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_scan_qrcode_login_gs;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

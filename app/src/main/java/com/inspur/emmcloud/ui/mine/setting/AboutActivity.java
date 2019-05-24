@@ -49,7 +49,6 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
         String version = AppUtils.getVersion(this).replace("beta", "b");
         appVersionText.setText(AppUtils.getAppName(this) + "  " + version);
@@ -57,6 +56,11 @@ public class AboutActivity extends BaseActivity {
         protocolLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
         inviteFriendsLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
         handMessage();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_about;
     }
 
     @OnLongClick(R.id.iv_logo)

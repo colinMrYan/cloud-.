@@ -90,7 +90,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_work, container, false);
+            rootView = inflater.inflate(R.layout.fragment_news, container, false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {

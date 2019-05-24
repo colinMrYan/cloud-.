@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -52,9 +51,7 @@ public class MailLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mail_login);
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         loadingDlg = new LoadingDialog(this);
         apiService = new MailApiService(this);
         apiService.setAPIInterface(new WebServie());
@@ -67,6 +64,15 @@ public class MailLoginActivity extends BaseActivity {
         mailEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_login;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
     }
 
     public void onClick(View v) {

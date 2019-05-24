@@ -100,7 +100,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ConversationActivity extends ConversationBaseActivity {
 
@@ -146,8 +145,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_channel);
-        ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         handleMessage();

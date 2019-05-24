@@ -35,11 +35,15 @@ public class ContactOrgStructureActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_org_structure);
         init();
         adapter = new OrgStrContactAdapter(this, orgNameList);
         listView = (ListView) findViewById(R.id.lv_org_structure);
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_contact_org_structure;
     }
 
     /**

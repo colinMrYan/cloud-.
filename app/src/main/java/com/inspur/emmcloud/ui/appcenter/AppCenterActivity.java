@@ -99,6 +99,16 @@ public class AppCenterActivity extends BaseActivity {
         registerReceiver();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return 0;
+    }
+
+    @Override
+    public int getStatusType() {
+        return 0;
+    }
+
     /**
      * modified: lbc
      * modified Data:18/08/29

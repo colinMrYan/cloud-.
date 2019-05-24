@@ -26,17 +26,13 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
     public static String EXTRA_SCHEDULE_ALERT_TIME = "schedule_alert_time";
     public static String EXTRA_SCHEDULE_IS_ALL_DAY = "schedule_is_all_day";
     public static String EXTRA_IS_TASK = "schedule_is_task";
+    static int[] alertTimeIntArray = {-1, 0, 600, 1200, 1800, 3600, 86400};
+    static int[] alertTimeAllDayIntArray = {-1, -32400, 54000, 140400, 572400};
     @BindView(R.id.lv_alert_time)
     ListView alertTimeListView;
     @BindView(R.id.iv_no_alert_select)
     ImageView noAlertSelectImage;
-
     int alertTime = -1;
-    private Adapter adapter;
-    private int selectPosition = -1;
-    private String[] alertTimeString = {};
-    private int[] alertTimeInt = {};
-    private boolean isAllDay = false;
     String[] alertTimeArray = {
             MyApplication.getInstance().getString(R.string.calendar_when_event_occurs),
             MyApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
@@ -49,13 +45,44 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_two_day),
             MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
-    static int[] alertTimeIntArray = {-1, 0, 600, 1200, 1800, 3600, 86400};
-    static int[] alertTimeAllDayIntArray = {-1, -32400, 54000, 140400, 572400};
+    private Adapter adapter;
+    private int selectPosition = -1;
+    private String[] alertTimeString = {};
+    private int[] alertTimeInt = {};
+    private boolean isAllDay = false;
+
+    /**
+     * 根据提前多长时间Int值及 是否 allday 获取相应的名称
+     */
+    public static String getAlertTimeNameByTime(int alertTime, boolean isAllDay) {
+        String[] alertTimeArray = {
+                MyApplication.getInstance().getString(R.string.calendar_when_event_occurs),
+                MyApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
+                MyApplication.getInstance().getString(R.string.calendar_twenty_minite_ago),
+                MyApplication.getInstance().getString(R.string.calendar_thirty_minite_ago),
+                MyApplication.getInstance().getString(R.string.calendar_one_hour_ago),
+                MyApplication.getInstance().getString(R.string.calendar_one_day_ago)};
+        String[] allDayAlertTimeArray = {
+                MyApplication.getInstance().getString(R.string.schedule_alert_time_occur),
+                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
+                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_two_day),
+                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
+        String[] returnAlertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
+        int[] returnAlertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
+        if (alertTime == -1) {
+            return MyApplication.getInstance().getString(R.string.calendar_no_alert);
+        }
+        for (int i = 0; i < returnAlertTimeInt.length; i++) {
+            if (alertTime == returnAlertTimeInt[i]) {
+                return returnAlertTimeString[i - 1];
+            }
+        }
+        return "";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule_alert_time);
         ButterKnife.bind(this);
         alertTime = getIntent().getExtras().containsKey(EXTRA_SCHEDULE_ALERT_TIME) ?
                 getIntent().getExtras().getInt(EXTRA_SCHEDULE_ALERT_TIME) : -1;
@@ -92,6 +119,10 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_schedule_alert_time;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -128,7 +159,6 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
-
 
     /***/
     private class Adapter extends BaseAdapter {
@@ -173,34 +203,5 @@ public class ScheduleAlertTimeActivity extends BaseActivity {
             }
             return convertView;
         }
-    }
-
-    /**
-     * 根据提前多长时间Int值及 是否 allday 获取相应的名称
-     */
-    public static String getAlertTimeNameByTime(int alertTime, boolean isAllDay) {
-        String[] alertTimeArray = {
-                MyApplication.getInstance().getString(R.string.calendar_when_event_occurs),
-                MyApplication.getInstance().getString(R.string.calendar_ten_minite_ago),
-                MyApplication.getInstance().getString(R.string.calendar_twenty_minite_ago),
-                MyApplication.getInstance().getString(R.string.calendar_thirty_minite_ago),
-                MyApplication.getInstance().getString(R.string.calendar_one_hour_ago),
-                MyApplication.getInstance().getString(R.string.calendar_one_day_ago)};
-        String[] allDayAlertTimeArray = {
-                MyApplication.getInstance().getString(R.string.schedule_alert_time_occur),
-                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_one_day),
-                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_two_day),
-                MyApplication.getInstance().getString(R.string.schedule_alert_time_before_a_week)};
-        String[] returnAlertTimeString = isAllDay ? allDayAlertTimeArray : alertTimeArray;
-        int[] returnAlertTimeInt = isAllDay ? alertTimeAllDayIntArray : alertTimeIntArray;
-        if (alertTime == -1) {
-            return MyApplication.getInstance().getString(R.string.calendar_no_alert);
-        }
-        for (int i = 0; i < returnAlertTimeInt.length; i++) {
-            if (alertTime == returnAlertTimeInt[i]) {
-                return returnAlertTimeString[i - 1];
-            }
-        }
-        return "";
     }
 }

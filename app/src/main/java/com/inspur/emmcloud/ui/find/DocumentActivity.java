@@ -37,12 +37,16 @@ public class DocumentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_file);
         ((TextView) findViewById(R.id.header_text))
                 .setText(getString(R.string.docunment));
         setDocumentList();
         fileListView = (ListView) findViewById(R.id.lv_file);
         fileListView.setAdapter(new Adapter());
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_file;
     }
 
     /**

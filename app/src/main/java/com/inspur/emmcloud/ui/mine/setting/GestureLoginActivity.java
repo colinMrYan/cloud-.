@@ -26,8 +26,6 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
-import org.xutils.view.annotation.Event;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -93,11 +91,21 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gesture_login);
         ButterKnife.bind(this);
         init();
         ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_gesture_login;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
+    }
+
+
 
     private void init() {
         //得到当前用户的手势密码
