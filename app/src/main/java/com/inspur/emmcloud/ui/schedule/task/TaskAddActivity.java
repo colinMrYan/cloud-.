@@ -24,7 +24,7 @@ import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
@@ -35,7 +35,7 @@ import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.bean.schedule.task.TaskSubject;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -123,7 +123,7 @@ public class TaskAddActivity extends BaseActivity {
     TextView titleText;
 
 
-    private WorkAPIService apiService;
+    private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult = new Task();
 
@@ -156,7 +156,7 @@ public class TaskAddActivity extends BaseActivity {
         taskParticipantList = new ArrayList<>();
         attachmentOtherAdapter = new AttachmentAdapter();
         loadingDlg = new LoadingDialog(this);
-        apiService = new WorkAPIService(this);
+        apiService = new ScheduleApiService(this);
         attachmentOthersList.setAdapter(attachmentOtherAdapter);
         apiService.setAPIInterface(new TaskAddActivity.WebService());
 

@@ -10,22 +10,28 @@ import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
-import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
-import com.inspur.emmcloud.bean.work.GetLocationResult;
-import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
-import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.bean.schedule.task.Attachment;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
@@ -1093,6 +1099,705 @@ public class ScheduleApiService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMeetingHistoryListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 创建任务
+     */
+    public void createTasks(final String mession) {
+        final String completeUrl = APIUri.getCreateTaskUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("title", mession);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        createTasks(mession);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface
+                        .returnCreateTaskSuccess(new GetTaskAddResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateTaskFail(error, responseCode);
+            }
+        });
+
+    }
+
+    /**
+     * 更新待办任务
+     *
+     * @param taskJson
+     */
+    public void updateTask(final String taskJson, final int position) {
+        final String completeUrl = APIUri.getCreateTaskUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(taskJson);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateTask(taskJson, position);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateTaskSuccess(position);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnUpdateTaskFail(error, responseCode, position);
+            }
+        });
+    }
+
+    /**
+     * 获取task
+     *
+     * @param id
+     */
+    public void getTask(final String id) {
+        final String completeUrl = APIUri.getTasksList(id);
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getTask(id);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnGetTasksSuccess(new GetTaskListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnGetTasksFail(error, responseCode);
+            }
+        });
+    }
+
+
+    /**
+     * 邀请多人参与协作
+     *
+     * @param taskId
+     * @param uidArray
+     */
+    public void inviteMateForTask(final String taskId, final JSONArray uidArray) {
+        final String completeUrl = APIUri.getCreateTaskUrl() + "/" + taskId
+                + "/mates";
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(uidArray.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        inviteMateForTask(taskId, uidArray);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+
+                apiInterface.returnInviteMateForTaskSuccess(new String(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnInviteMateForTaskFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 删除参与人
+     *
+     * @param taskId
+     * @param uidArray
+     */
+    public void deleteMateForTask(final String taskId, final JSONArray uidArray) {
+        final String completeUrl = APIUri.getCreateTaskUrl() + "/" + taskId
+                + "/mates";
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(uidArray.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteMateForTask(taskId, uidArray);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelTaskMemSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelTaskMemFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取所有标签
+     */
+    public void getTags() {
+        final String completeUrl = APIUri.getTagUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addHeader("Accept", "application/json");
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getTags();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnGetTagResultSuccess(new GetTagResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnGetTagResultFail(error, responseCode);
+            }
+        });
+
+    }
+
+    /**
+     * 修改标签
+     *
+     * @param id
+     * @param title
+     * @param color
+     * @param owner
+     */
+    public void changeTag(final String id, final String title,
+                          final String color, final String owner) {
+        final String completeUrl = APIUri.getTagUrl();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", id);
+            jsonObject.put("title", title);
+            jsonObject.put("color", color);
+            jsonObject.put("owner", owner);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(jsonObject.toString());
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        changeTag(id, title, color, owner);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateTagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateTagFail(error, responseCode);
+            }
+        });
+
+    }
+
+    /**
+     * 删除标签
+     *
+     * @param id
+     */
+    public void deleteTag(final String id) {
+        final String completeUrl = APIUri.getTagUrl() + "/" + id;
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteTag(id);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteTagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDeleteTagFail(error, responseCode);
+            }
+        });
+
+    }
+
+    /**
+     * 创建标签
+     *
+     * @param title
+     * @param color
+     */
+    public void createTag(final String title, final String color) {
+        final String completeUrl = APIUri.getTagUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("title", title);
+        params.addParameter("color", color);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        createTag(title, color);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateTagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCreateTagFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 修改任务所有人
+     *
+     * @param id
+     * @param newOwner
+     */
+    public void changeMessionOwner(final String id, final String newOwner, final String managerName) {
+
+        final String completeUrl = APIUri.getChangeMessionOwnerUrl() + id
+                + "?";
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("owner", newOwner);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        changeMessionOwner(id, newOwner, managerName);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnChangeMessionOwnerSuccess(managerName);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnChangeMessionOwnerFail(error, responseCode);
+            }
+        });
+
+    }
+
+
+    /**
+     * 创建附件
+     *
+     * @param id
+     * @param attachments
+     */
+    public void addAttachments(final String id, final String attachments) {
+        final String completeUrl = APIUri.getAddAttachmentsUrl(id);
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        try {
+            JSONObject jsonObject = new JSONObject(attachments);
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(jsonObject);
+            params.setBodyContent(jsonArray.toString());
+            params.setAsJsonContent(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addAttachments(id, attachments);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddAttachMentSuccess(new Attachment(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddAttachMentFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 删除附件
+     *
+     * @param id
+     * @param attachments
+     */
+    public void deleteAttachments(final String id, final String attachments, final int position) {
+        final String completeUrl = APIUri.getAddAttachmentsUrl(id);
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        try {
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(attachments);
+            params.setBodyContent(jsonArray.toString());
+            params.setAsJsonContent(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteAttachments(id, attachments, position);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelAttachmentSuccess(position);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelAttachmentFail(error, responseCode, position);
+            }
+        });
+    }
+
+
+    /****************************************日历部分********************************************************************************/
+
+    /**
+     * 获取我的所有日历
+     *
+     * @param page
+     * @param limit
+     */
+    public void getMyCalendar(final int page, final int limit) {
+        final String completeUrl = APIUri.getCalendarUrl() + "/calendar";
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("page", page);
+        params.addParameter("limit", limit);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMyCalendar(page, limit);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMyCalendarSuccess(new GetMyCalendarResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMyCalendarFail(error, responseCode);
+            }
+        });
+
+
+    }
+
+
+    /**
+     * 删除任务中的标签
+     **/
+    public void deleteTaskTags(final String taskId,final String tagsIdJSON) {
+        final String completeUrl = APIUri.getDelTaskTagsUrl(taskId);
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(tagsIdJSON);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteTag(taskId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelTaskTagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnDelTaskTagFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 添加任务中的标签*
+     */
+    public void addTaskTags(final String taskId, final String tagsIdJSON) {
+        final String completeUrl = APIUri.getAddTaskTagsUrl(taskId);
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.setBodyContent(tagsIdJSON);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addTaskTags(taskId, tagsIdJSON);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddTaskTagSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnAddTaskTagFail(error, responseCode);
             }
         });
     }

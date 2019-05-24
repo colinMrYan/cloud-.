@@ -47,7 +47,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
-import com.inspur.emmcloud.ui.work.TabBean;
+import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
