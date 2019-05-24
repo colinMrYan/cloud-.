@@ -94,8 +94,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void setTheme() {
+        //不使用Base中的主题，使用自定义主题
     }
 
     @Override

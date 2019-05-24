@@ -576,7 +576,7 @@ public class SettingActivity extends BaseActivity {
     public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
             LoadingDialog.dimissDlg(loadingDlg);
-            MyApplication.getInstance().signout(true);
+            MyApplication.getInstance().signout();
             stopAppService();
         }
 

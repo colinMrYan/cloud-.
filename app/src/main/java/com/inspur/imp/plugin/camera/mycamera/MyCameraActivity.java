@@ -108,6 +108,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     }
 
     @Override
+    protected void setTheme() {
+        //不使用Base中的主题，使用自定义主题
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         initView();
