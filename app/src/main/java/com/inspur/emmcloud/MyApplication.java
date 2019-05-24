@@ -42,6 +42,9 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
@@ -232,45 +235,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         appAPIService.cancelToken();
     }
 
-//    /**
-//     * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
-//     * 目前使用的位置有ActionReceiver，IndexActivity 截止到181030
-//     */
-//    public void startPush() {
-//        if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
-//            HuaWeiPushMangerUtils.getInstance(this).connect();
-//        } else {
-//            startJPush();
-//        }
-//    }
-//
-//
-//    /**
-//     * 开启极光推送
-//     */
-//    public void startJPush() {
-//        // 初始化 JPush
-//        JPushInterface.init(this);
-//        if (JPushInterface.isPushStopped(this)) {
-//            JPushInterface.resumePush(this);
-//        }
-//        // 设置开启日志,发布时请关闭日志
-//        JPushInterface.setDebugMode(true);
-//    }
-//
-//    /**
-//     * 判断是否可以连接华为推了送
-//     *
-//     * @return
-//     */
-//    private boolean canConnectHuawei() {
-//        String pushFlag = PushManagerUtils.getPushFlag(this);
-//        return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
-//    }
-
 
 /************************ Cookie相关 *****************************/
-
 
     /**
      * 清除所有的SessionCookie

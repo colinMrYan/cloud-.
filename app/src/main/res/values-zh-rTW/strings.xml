@@ -455,6 +455,9 @@
     <string name="schedule_meeting_change">修改會議</string>
     <string name="schedule_meeting_cancel">取消會議</string>
     <string name="schedule_meeting_booking_detail">會議詳情</string>
+    <string name="schedule_meeting_my_create">我創建的：</string>
+    <string name="schedule_meeting_my_take_part_in">我參與的：</string>
+    <string name="schedule_meeting_room_booking_detail">會議室詳情</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
@@ -543,7 +546,7 @@
     <string name="clouddriver_upload_again">重新上傳</string>
     <string name="clouddriver_download_size">下載(%1$s)</string>
     <string name="clouddriver_downloading_status">下載中(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038;</string>
     <string name="clouddriver_select_photo">選擇照片</string>
     <string name="clouddriver_select_file">選擇檔</string>
     <string name="clouddriver_volume_info">網盤詳情</string>
@@ -558,10 +561,11 @@
     <string name="clouddriver_add_volume_member">添加網盤成員</string>
     <string name="clouddriver_del_volume_group_member">刪除組成員</string>
     <string name="clouddriver_add_volume_group_member">添加組成員</string>
-    <string name="clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
-    <string name="clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038; </string>
+    <string name="clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038; </string>
     <string name="clouddriver_exists_same_name">已存在同名檔/資料夾</string>
     <string name="file_rename">檔重命名</string>
+    <string name="folder_rename">文件夾命名</string>
     <string name="clouddriver_volume_group_info">組詳情</string>
     <string name="clouddriver_volume_group_member">組成員</string>
     <string name="clouddriver_volume_member">網盤成員</string>
@@ -858,8 +862,8 @@
     <string name="meeting_choose_log_members">選擇會務人員</string>
     <string name="meeting_begin_or_date_time">請選擇會議時間</string>
     <string name="meeting_end_time_no_empty">請選擇結束時間</string>
-    <string name="meeting_topic_too_long">主題不能超過128個字元！</string>
-    <string name="meeting_notice_too_long">備註不能超過128個字元</string>
+    <string name="meeting_topic_too_long">主題不能超過100個字元！</string>
+    <string name="meeting_notice_too_long">備註不能超過500個字元</string>
     <string name="meeting_booking_error">預訂出錯</string>
     <string name="meeting_time_is_word">時間是字元</string>
     <string name="meeting_room_number">S206</string>
@@ -953,7 +957,7 @@
     <string name="calendar_please_input_title">請輸入標題</string>
     <string name="calendar_start_or_end_time_illegal">結束時間不能小於開始時間</string>
     <string name="calendar_end_time_no_before_current">結束時間不能早於當前時間</string>
-    <string name="calendar_tilte_cannot_exceed_64">標題不能超過64個字元</string>
+    <string name="calendar_title_cannot_exceed_num">標題不能超過100個字元</string>
     <string name="calendar_select_calendar">請選擇日曆</string>
     <string name="calendar_add_success">添加成功</string>
     <string name="calendar_every_year">每年</string>
@@ -1062,6 +1066,7 @@
 
     <!--电源白名单-->
     <string name="battery_tip_content">系統已對該應用開啟省電優化，可能導致消息延遲或丟失，請將其加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
+    <string name="white_list_tip_content">由於系統限制，請您手動開啟本軟件自啟動許可權，從而保障軟件運行的最佳環境（點擊“去設定”）</string>
     <string name="battery_tip_ishide">不再提醒</string>
     <string name="battery_tip_cancel">取消</string>
     <string name="battery_tip_toset">去設置</string>

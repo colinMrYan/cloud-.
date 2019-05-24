@@ -1,24 +1,25 @@
 package com.inspur.emmcloud.ui.schedule;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
@@ -32,9 +33,11 @@ import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
@@ -53,56 +56,53 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2019/2/18.
  */
-
-@ContentView(R.layout.fragment_schedule)
-public class ScheduleFragment extends ScheduleBaseFragment implements
+public class ScheduleFragment extends BaseFragment implements
         CalendarView.OnCalendarSelectListener,
         CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister,AdapterView.OnItemClickListener {
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
 
+    @BindView(R.id.calendar_view_schedule)
+    CalendarView calendarView;
+    @BindView(R.id.calendar_layout_schedule)
+    CalendarLayout calendarLayout;
+    @BindView(R.id.tv_schedule_date)
+    TextView scheduleDataText;
+    @BindView(R.id.iv_calendar_view_expand)
+    ImageView calendarViewExpandImg;
 
-    @ViewInject(R.id.calendar_view_schedule)
-    private CalendarView calendarView;
-    @ViewInject(R.id.calendar_layout_schedule)
-    private CalendarLayout calendarLayout;
-    @ViewInject(R.id.tv_schedule_date)
-    private TextView scheduleDataText;
-    @ViewInject(R.id.iv_calendar_view_expand)
-    private ImageView calendarViewExpandImg;
+    @BindView(R.id.calendar_day_view)
+    CalendarDayView calendarDayView;
 
-    @ViewInject(R.id.calendar_day_view)
-    private CalendarDayView calendarDayView;
-
-    @ViewInject(R.id.tv_schedule_sum)
-    private TextView scheduleSumText;
-    @ViewInject(R.id.scroll_view_event)
-    private ScrollView eventScrollView;
-    @ViewInject(R.id.recycler_view_event)
-    private RecyclerView eventRecyclerView;
-    @ViewInject(R.id.rl_schedule_list_default)
-    private RelativeLayout scheduleListDefaultLayout;
-    @ViewInject(R.id.rl_all_day)
-    private RelativeLayout allDayLayout;
-    @ViewInject(R.id.iv_event_all_day)
-    private ImageView eventAllDayImg;
-    @ViewInject(R.id.tv_event_title_all_day)
-    private TextView eventAllDayTitleText;
+    @BindView(R.id.tv_schedule_sum)
+    TextView scheduleSumText;
+    @BindView(R.id.scroll_view_event)
+    ScrollView eventScrollView;
+    @BindView(R.id.recycler_view_event)
+    RecyclerView eventRecyclerView;
+    @BindView(R.id.rl_schedule_list_default)
+    RelativeLayout scheduleListDefaultLayout;
+    @BindView(R.id.rl_all_day)
+    RelativeLayout allDayLayout;
+    @BindView(R.id.iv_event_all_day)
+    ImageView eventAllDayImg;
+    @BindView(R.id.tv_event_title_all_day)
+    TextView eventAllDayTitleText;
     private ScheduleEventListAdapter scheduleEventListAdapter;
     private Boolean isEventShowTypeList;
     private ScheduleApiService apiService;
@@ -116,10 +116,17 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private MyDialog myDialog=null;
     private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_schedule, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        LogUtils.LbcDebug("onViewCreated=============");
         EventBus.getDefault().register(this);
         apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -163,42 +170,15 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 setScheduleBackToToday();
             }
         });
-        switch (getLocaleByLanguage(getActivity()).getLanguage()){
-            case "en":
-                calendarView.setIsLunarAndFestivalShow(false);
-                break;
-            default:
+        switch (AppUtils.getCurrentAppLanguage(getActivity())){
+            case "zh-Hans":
+            case "zh-hant":
                 calendarView.setIsLunarAndFestivalShow(true);
                 break;
+            default:
+                calendarView.setIsLunarAndFestivalShow(false);
+                break;
         }
-
-    }
-
-    private Locale getLocaleByLanguage(Context context) {
-        String languageJson = null;
-        if (MyApplication.getInstance() == null || MyApplication.getInstance().getTanent() == null) {
-            languageJson = PreferencesUtils.getString(context, Constant.PREF_LAST_LANGUAGE);
-
-        } else {
-            languageJson = PreferencesUtils
-                    .getString(context, MyApplication.getInstance().getTanent()
-                            + "appLanguageObj");
-        }
-        if (StringUtils.isBlank(languageJson)) {
-            return Locale.getDefault();
-        }
-        String[] array = new Language(languageJson).getIso().split("-");
-        String country = "";
-        String variant = "";
-        try {
-            country = array[0];
-            variant = array[1];
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
-        return new Locale(country, variant);
-
     }
 
     /**
@@ -210,8 +190,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         eventRecyclerView.setVisibility(isEventShowTypeList ? View.VISIBLE : View.GONE);
         eventScrollView.setVisibility(isEventShowTypeList ? View.GONE : View.VISIBLE);
     }
-
-
 
     /**
      * 日历返回今天的接口
@@ -226,7 +204,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         return selectCalendar;
     }
 
-
     @Override
     public void onCalendarOutOfRange(EmmCalendar calendar) {
 
@@ -234,6 +211,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void isExpand(boolean isExpand) {
+        LogUtils.LbcDebug("isExpand=============");
         if (isExpand) {
             onCalendarSelect(calendarView.getSelectedCalendar(), false);
         }
@@ -242,6 +220,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
     @Override
     public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
+        LogUtils.LbcDebug("onCalendarSelect=============");
         selectCalendar = Calendar.getInstance();
         selectCalendar.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay(), 0, 0, 0);
         selectCalendar.set(Calendar.MILLISECOND, 0);
@@ -295,7 +274,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         }
         return day + " ";
     }
-
 
     /**
      * 显示event事件
@@ -406,7 +384,8 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
         Iterator<Event> iterator = eventList.iterator();
         while (iterator.hasNext()) {
             Event event = iterator.next();
-            if (event.isAllDay()) {
+            boolean isCrossSelectDay = !event.getEventStartTime().after(selectCalendar) && !event.getEventEndTime().before(TimeUtils.getDayEndCalendar(selectCalendar));
+            if (event.isAllDay() || isCrossSelectDay) {
                 allDayEventList.add(event);
                 iterator.remove();
             }
@@ -459,7 +438,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     private void showScheduleEventCalendarViewMark(Calendar startCalendar, Calendar endCalendar, Map<String, EmmCalendar> map) {
-        for (Calendar calendar = startCalendar; calendar.before(endCalendar); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
+        for (Calendar calendar = TimeUtils.getDayBeginCalendar(startCalendar); calendar.before(endCalendar); calendar.add(Calendar.DAY_OF_YEAR, 1)) {
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -605,7 +584,5 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             }
             HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), getHolidayDataResult.getYear(), getHolidayDataResult.getHolidayList());
         }
-
-
     }
 }

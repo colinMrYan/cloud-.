@@ -66,8 +66,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.io.Serializable;
@@ -75,12 +73,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.carbs.android.segmentcontrolview.library.SegmentControlView;
 
 /**
  * Created by libaochao on 2019/3/28.
  */
-@ContentView(R.layout.activity_task_add)
 public class TaskAddActivity extends BaseActivity {
     private static final int REQUEST_MANGER = 1;
     private static final int REQUEST_ALBUM = 2;
@@ -88,40 +87,40 @@ public class TaskAddActivity extends BaseActivity {
     private static final int REQUEST_ALERT_TIME = 4;
     private static final int REQUEST_ATTACHMENT = 5;
     public static final int REQUEST_CLASS_TAG = 6;
-    @ViewInject(R.id.ll_single_tag)
+    @BindView(R.id.ll_single_tag)
     LinearLayout singleTagLayout;
-    @ViewInject(R.id.ll_tags)
+    @BindView(R.id.ll_tags)
     LinearLayout tagsLayout;
-    @ViewInject(R.id.et_input_title)
-    private EditText contentInputEdit;
-    @ViewInject(R.id.iv_task_type_tap)
-    private ImageView taskTypeTapImage;
-    @ViewInject(R.id.tv_task_type_name)
-    private TextView taskTypeNameText;
-    @ViewInject(R.id.tv_deadline_time)
-    private TextView deadlineTimeText;
-    @ViewInject(R.id.iv_participant_head_three)
-    private ImageView participantHeadThreeImageView;
-    @ViewInject(R.id.iv_participant_head_two)
-    private ImageView participantHeadTwoImageView;
-    @ViewInject(R.id.iv_participant_head_one)
-    private ImageView participantHeadOneImageView;
-    @ViewInject(R.id.tv_participant_num)
-    private TextView participantNumText;
-    @ViewInject(R.id.iv_manager_head)
-    private ImageView managerHeadImageView;
-    @ViewInject(R.id.tv_manager_num)
-    private TextView managerNumText;
-    @ViewInject(R.id.tv_end_task_alert_time)
-    private TextView taskAlertTimeView;
-    @ViewInject(R.id.lv_attachment_abstract_other)
-    private ListView attachmentOthersList;
-    @ViewInject(R.id.ll_more_content)
-    private LinearLayout moreContentLayout;
-    @ViewInject(R.id.v_priority)
-    private SegmentControlView segmentControlView;
-    @ViewInject(R.id.tv_title)
-    private TextView titleText;
+    @BindView(R.id.et_input_title)
+    EditText contentInputEdit;
+    @BindView(R.id.iv_task_type_tap)
+    ImageView taskTypeTapImage;
+    @BindView(R.id.tv_task_type_name)
+    TextView taskTypeNameText;
+    @BindView(R.id.tv_deadline_time)
+    TextView deadlineTimeText;
+    @BindView(R.id.iv_participant_head_three)
+    ImageView participantHeadThreeImageView;
+    @BindView(R.id.iv_participant_head_two)
+    ImageView participantHeadTwoImageView;
+    @BindView(R.id.iv_participant_head_one)
+    ImageView participantHeadOneImageView;
+    @BindView(R.id.tv_participant_num)
+    TextView participantNumText;
+    @BindView(R.id.iv_manager_head)
+    ImageView managerHeadImageView;
+    @BindView(R.id.tv_manager_num)
+    TextView managerNumText;
+    @BindView(R.id.tv_end_task_alert_time)
+    TextView taskAlertTimeView;
+    @BindView(R.id.lv_attachment_abstract_other)
+    ListView attachmentOthersList;
+    @BindView(R.id.ll_more_content)
+    LinearLayout moreContentLayout;
+    @BindView(R.id.v_priority)
+    SegmentControlView segmentControlView;
+    @BindView(R.id.tv_title)
+    TextView titleText;
 
 
     private WorkAPIService apiService;
@@ -144,6 +143,8 @@ public class TaskAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_task_add);
+        ButterKnife.bind(this);
         initData();
         initView();
         EventBus.getDefault().register(this);
@@ -501,7 +502,7 @@ public class TaskAddActivity extends BaseActivity {
      * 创建任务
      */
     private void createTask() {
-        String taskContent = contentInputEdit.getText().toString();
+        String taskContent = contentInputEdit.getText().toString().trim();
         loadingDlg.show();
         apiService.createTasks(taskContent);
     }
@@ -826,7 +827,7 @@ public class TaskAddActivity extends BaseActivity {
         @Override
         public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult) {
             taskResult = new Task();
-            taskResult.setTitle(contentInputEdit.getText().toString());
+            taskResult.setTitle(contentInputEdit.getText().toString().trim());
             taskResult.setId(getTaskAddResult.getId());
             taskResult.setOwner(PreferencesUtils.getString(
                     TaskAddActivity.this, "userID"));

@@ -2,7 +2,6 @@ package com.inspur.emmcloud.ui.schedule.calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -21,7 +20,6 @@ import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.config.Constant;
@@ -34,7 +32,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
@@ -44,17 +41,17 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by libaochao on 2019/3/29.
  */
-@ContentView(R.layout.activity_calendar_add)
 public class CalendarAddActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
@@ -64,42 +61,42 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private static final int REQUEST_CAL_TYPE = 1;
     private static final int REQUEST_REPEAT_TYPE = 2;
     private static final int REQUEST_CAL_ALERT_TIME = 3;
-    @ViewInject(R.id.et_input_title)
-    private EditText inputContentEdit;
-    @ViewInject(R.id.switch_all_day)
-    private Switch allDaySwitch;
-    @ViewInject(R.id.rl_calendar_type_tip)
-    private RelativeLayout calenderTypeTipLayout;
-    @ViewInject(R.id.tv_calendar_type_name)
-    private TextView calendarTypeNameText;
-    @ViewInject(R.id.iv_calendar_type_flag)
-    private ImageView calendarTypeFlagImage;
-    @ViewInject(R.id.tv_start_date)
-    private TextView startDateText;
-    @ViewInject(R.id.tv_start_time)
-    private TextView startTimeText;
-    @ViewInject(R.id.tv_end_date)
-    private TextView endDateText;
-    @ViewInject(R.id.tv_end_time)
-    private TextView endTimeText;
-    @ViewInject(R.id.tv_alert_text)
-    private TextView alertText;
-    @ViewInject(R.id.tv_repeat_text)
-    private TextView repeatText;
-    @ViewInject(R.id.tv_title)
-    private TextView titleText;
-    @ViewInject(R.id.rl_calendar_type)
-    private RelativeLayout calendarTypeLayout;
-    @ViewInject(R.id.ll_start_time)
-    private RelativeLayout startTimeLayout;
-    @ViewInject(R.id.ll_end_time)
-    private RelativeLayout endTimeLayout;
-    @ViewInject(R.id.rl_alert_time)
-    private RelativeLayout alertTimeLayout;
-    @ViewInject(R.id.iv_calendar_detail_more)
-    private ImageView calendarDetailMoreImageView;
-    @ViewInject(R.id.tv_save)
-    private TextView saveTextView;
+    @BindView(R.id.et_input_title)
+    EditText inputContentEdit;
+    @BindView(R.id.switch_all_day)
+    Switch allDaySwitch;
+    @BindView(R.id.rl_calendar_type_tip)
+    RelativeLayout calenderTypeTipLayout;
+    @BindView(R.id.tv_calendar_type_name)
+    TextView calendarTypeNameText;
+    @BindView(R.id.iv_calendar_type_flag)
+    ImageView calendarTypeFlagImage;
+    @BindView(R.id.tv_start_date)
+    TextView startDateText;
+    @BindView(R.id.tv_start_time)
+    TextView startTimeText;
+    @BindView(R.id.tv_end_date)
+    TextView endDateText;
+    @BindView(R.id.tv_end_time)
+    TextView endTimeText;
+    @BindView(R.id.tv_alert_text)
+    TextView alertText;
+    @BindView(R.id.tv_repeat_text)
+    TextView repeatText;
+    @BindView(R.id.tv_title)
+    TextView titleText;
+    @BindView(R.id.rl_calendar_type)
+    RelativeLayout calendarTypeLayout;
+    @BindView(R.id.ll_start_time)
+    RelativeLayout startTimeLayout;
+    @BindView(R.id.ll_end_time)
+    RelativeLayout endTimeLayout;
+    @BindView(R.id.rl_alert_time)
+    RelativeLayout alertTimeLayout;
+    @BindView(R.id.iv_calendar_detail_more)
+    ImageView calendarDetailMoreImageView;
+    @BindView(R.id.tv_save)
+    TextView saveTextView;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private Schedule scheduleEvent = new Schedule();
@@ -118,6 +115,8 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calendar_add);
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         apiService = new ScheduleApiService(getApplicationContext());
         apiService.setAPIInterface(new WebService());
@@ -361,9 +360,11 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     public void positiveListener(Calendar calendar) {
                         if (calendar.getTimeInMillis() - startCalendar.getTimeInMillis() < (60000)) {
                             showEndDateErrorRemindDialog();
+                            endCalendar = (Calendar) startCalendar.clone();
+                            endCalendar.add(Calendar.MINUTE, intervalMin);
                             return;
                         }
-                        endCalendar = calendar;
+                        endCalendar = (Calendar) calendar.clone();
                         String endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                         endDateText.setText(endDataStr);
                         endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
@@ -453,20 +454,22 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 能否保存提示
      */
     private boolean checkingSaveCalendarEventAvailable() {
-        contentText = inputContentEdit.getText().toString();
+        contentText = inputContentEdit.getText().toString().trim();
         if (StringUtils.isBlank(contentText)) {
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_please_input_title);
             return false;
         }
         if (endCalendar.before(startCalendar)) {
+            LogUtils.LbcDebug(TimeUtils.calendar2FormatString(this,endCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+            LogUtils.LbcDebug(TimeUtils.calendar2FormatString(this,startCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_start_or_end_time_illegal);
             return false;
         }
         if (contentText.length() > 64) {
             ToastUtils.show(getApplicationContext(),
-                    R.string.calendar_tilte_cannot_exceed_64);
+                    R.string.calendar_title_cannot_exceed_num);
             return false;
         }
         return true;
@@ -642,7 +645,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         @Override
         public void returnScheduleDataFromIdFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            if (scheduleEvent == null || TextUtils.isEmpty(scheduleEvent.getId())) finish();
+           finish();
         }
     }
 

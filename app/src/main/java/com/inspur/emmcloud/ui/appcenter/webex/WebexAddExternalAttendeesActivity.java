@@ -21,39 +21,38 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by chenmch on 2018/10/11.
  */
-
-@ContentView(R.layout.activity_webex_add_external_attendees)
 public class WebexAddExternalAttendeesActivity extends BaseActivity {
     public static final String EXTRA_ATTENDEES_LIST = "attendeesList";
     private static final int REQUEST_ADD_ATTENDEES = 1;
-    @ViewInject(R.id.lv_attendees)
-    private ScrollViewWithListView attendeesListView;
-    @ViewInject(R.id.et_add_attendees)
-    private EditText addAttendeesEdit;
-    @ViewInject(R.id.rl_add_attendees)
-    private RelativeLayout addAttendeesLayout;
-    @ViewInject(R.id.sv_content)
-    private ScrollView contentScrollView;
-    @ViewInject(R.id.tv_num)
-    private TextView numText;
+    @BindView(R.id.lv_attendees)
+    ScrollViewWithListView attendeesListView;
+    @BindView(R.id.et_add_attendees)
+    EditText addAttendeesEdit;
+    @BindView(R.id.rl_add_attendees)
+    RelativeLayout addAttendeesLayout;
+    @BindView(R.id.sv_content)
+    ScrollView contentScrollView;
+    @BindView(R.id.tv_num)
+    TextView numText;
     private List<WebexAttendees> webexAttendeesList = new ArrayList<>();
     private List<WebexAttendees> externalWebexAttendeesList = new ArrayList<>();
     private Adapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_webex_add_external_attendees);
+        ButterKnife.bind(this);
         webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
         externalWebexAttendeesList = getExternalAttendeesList();
         numText.setText(getString(R.string.webex_add_invitee_num, webexAttendeesList.size(), 20 - webexAttendeesList.size()));

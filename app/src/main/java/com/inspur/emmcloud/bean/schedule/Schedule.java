@@ -2,7 +2,6 @@ package com.inspur.emmcloud.bean.schedule;
 
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
@@ -218,6 +217,16 @@ public class Schedule implements Serializable {
             if (participant.getRole().equals(Participant.TYPE_CONTACT)) {
                 participantList.add(participant);
             }
+        }
+        return participantList;
+    }
+
+    public List<Participant> getAllParticipantList() {
+        List<Participant> participantList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            Participant participant = new Participant(JSONUtils.getJSONObject(array, i, new JSONObject()));
+                participantList.add(participant);
         }
         return participantList;
     }

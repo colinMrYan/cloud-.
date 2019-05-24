@@ -25,28 +25,29 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/5/25.
  */
 
-@ContentView(R.layout.activity_mine_enterprise_switch)
 public class EnterpriseSwitchActivity extends BaseActivity {
 
-    @ViewInject(R.id.lv_enterprise)
-    private ScrollViewWithListView enterpriseListView;
-    @ViewInject(R.id.rl_setting_close_auto_select)
-    private RelativeLayout closeAutoSelectLayout;
+    @BindView(R.id.lv_enterprise)
+    ScrollViewWithListView enterpriseListView;
+    @BindView(R.id.rl_setting_close_auto_select)
+    RelativeLayout closeAutoSelectLayout;
     private GetMyInfoResult getMyInfoResult;
     private List<Enterprise> enterpriseList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mine_enterprise_switch);
+        ButterKnife.bind(this);
         getEnterpriseList();
         initView();
     }

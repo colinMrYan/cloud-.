@@ -68,9 +68,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -80,35 +78,37 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnLongClick;
+
 /**
  * Created by chenmch on 2018/10/11.
  */
-
-@ContentView(R.layout.activity_webex_detail)
 public class WebexMeetingDetailActivity extends BaseActivity {
     public static final String EXTRA_WEBEXMEETING = "WebexMeeting";
     private final String webexAppPackageName = "com.cisco.webex.meetings";
     private final int REQUEST_SELECT_CONTACT = 1;
-    @ViewInject(R.id.bt_function)
-    private Button functionBtn;
-    @ViewInject(R.id.iv_photo)
-    private CircleTextImageView photoImg;
-    @ViewInject(R.id.tv_name_tips)
-    private TextView titleText;
-    @ViewInject(R.id.tv_owner)
-    private TextView ownerText;
-    @ViewInject(R.id.tv_time)
-    private TextView timeText;
-    @ViewInject(R.id.tv_duration)
-    private TextView durationText;
-    @ViewInject(R.id.tv_meeting_id)
-    private TextView meetingIdText;
-    @ViewInject(R.id.tv_meeting_password)
-    private TextView meetingPasswordText;
-    @ViewInject(R.id.rl_host_key)
-    private RelativeLayout hostKeyLayout;
-    @ViewInject(R.id.tv_host_key)
-    private TextView hostKeyText;
+    @BindView(R.id.bt_function)
+    Button functionBtn;
+    @BindView(R.id.iv_photo)
+    CircleTextImageView photoImg;
+    @BindView(R.id.tv_name_tips)
+    TextView titleText;
+    @BindView(R.id.tv_owner)
+    TextView ownerText;
+    @BindView(R.id.tv_time)
+    TextView timeText;
+    @BindView(R.id.tv_duration)
+    TextView durationText;
+    @BindView(R.id.tv_meeting_id)
+    TextView meetingIdText;
+    @BindView(R.id.tv_meeting_password)
+    TextView meetingPasswordText;
+    @BindView(R.id.rl_host_key)
+    RelativeLayout hostKeyLayout;
+    @BindView(R.id.tv_host_key)
+    TextView hostKeyText;
 
     private WebexMeeting webexMeeting;
     private boolean isOwner = false;
@@ -118,10 +118,11 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     private String shareContent;
     private PopupWindow optionMenuPop;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_webex_detail);
+        ButterKnife.bind(this);
         loadingDialog = new LoadingDialog(this);
         webexMeeting = (WebexMeeting) getIntent().getSerializableExtra(EXTRA_WEBEXMEETING);
         apiService = new WebexAPIService(this);
@@ -130,7 +131,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         getWebexMeeting();
         EventBus.getDefault().register(this);
     }
-
 
     private void showWebexMeetingDetial() {
         titleText.setText(webexMeeting.getConfName());
@@ -211,7 +211,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 .show();
     }
 
-
     private void joinWebexMeeting() {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -224,7 +223,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
 
     public void startWebexMeeting(String tk) {
         try {
@@ -240,7 +238,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         }
 
     }
-
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -353,8 +350,8 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     }
 
-    @Event(value = {R.id.ll_meeting_content}, type = View.OnLongClickListener.class)
-    private boolean onLongClick(View v) {
+    @OnLongClick(R.id.ll_meeting_content)
+    public boolean onLongClick() {
         String content = webexMeeting.getConfName() + "\n" + getString(R.string.webex_time) + timeText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_code) + meetingIdText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_password_tip) + webexMeeting.getMeetingPassword();
@@ -429,8 +426,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                         }
                     });
         }
-
-
     }
 
     @Override
@@ -451,7 +446,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 }
             }
         }
-
     }
 
     /**
@@ -480,9 +474,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 fakeMessageId = message.getId();
                 WSAPIService.getInstance().sendChatTextPlainMsg(message);
             }
-
         }
-
     }
 
     private void getWebexMeeting() {

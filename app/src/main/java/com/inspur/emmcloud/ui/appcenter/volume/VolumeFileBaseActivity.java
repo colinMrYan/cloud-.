@@ -46,19 +46,18 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * 云盘-文件操作基础类
  */
 
-@ContentView(R.layout.activity_volume_file)
 public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     protected static final int REQUEST_MOVE_FILE = 5;
@@ -68,20 +67,20 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
 
-    @ViewInject(R.id.header_text)
-    protected TextView headerText;
+    @BindView(R.id.header_text)
+    TextView headerText;
 
-    @ViewInject(R.id.header_operation_layout)
-    protected RelativeLayout headerOperationLayout;
+    @BindView(R.id.header_operation_layout)
+    RelativeLayout headerOperationLayout;
 
-    @ViewInject(R.id.lv_file)
-    protected RecyclerView fileRecycleView;
+    @BindView(R.id.lv_file)
+    RecyclerView fileRecycleView;
 
-    @ViewInject(R.id.refresh_layout)
-    protected SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
-    @ViewInject(R.id.data_blank_layout)
-    protected LinearLayout dataBlankLayout;
+    @BindView(R.id.data_blank_layout)
+    LinearLayout dataBlankLayout;
 
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
@@ -100,6 +99,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_volume_file);
+        ButterKnife.bind(this);
         initView();
         getVolumeFileList(true);
 
@@ -283,7 +284,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         inputEdit.setText(fileNameNoEx);
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) fileRenameDlg.findViewById(R.id.app_update_title)).setText(R.string.file_rename);
+        ((TextView) fileRenameDlg.findViewById(R.id.app_update_title)).setText(
+                volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? R.string.file_rename : R.string.folder_rename);
         Button okBtn = (Button) fileRenameDlg.findViewById(R.id.ok_btn);
         okBtn.setText(R.string.rename);
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +293,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             public void onClick(View v) {
                 String newName = inputEdit.getText().toString().trim();
                 if (StringUtils.isBlank(newName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_input_file_name);
+                    ToastUtils.show(getApplicationContext(), volumeFile.getType().equals(
+                            VolumeFile.FILE_TYPE_REGULAR) ? R.string.clouddriver_input_file_name : R.string.clouddriver_input_directory_name);
                     return;
                 }
                 if (!FomatUtils.isValidFileName(newName)) {
@@ -327,8 +330,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     /**
      * 设置跟权限相关的layout,可以被继承此Activity的实例重写控制当前页面的layout
-     *
-     * @param haveModifyPrivilege
      */
     protected void setCurrentDirectoryLayoutByPrivilege() {
     }
@@ -407,7 +408,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     /**
      * 移动文件
      *
-     * @param volumeFileList
+     * @param moveVolumeFileList
      */
     protected void moveFile(List<VolumeFile> moveVolumeFileList) {
         this.moveVolumeFileList = moveVolumeFileList;

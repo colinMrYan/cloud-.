@@ -24,6 +24,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.work.MeetingSchedule;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
@@ -39,8 +40,9 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -49,7 +51,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-@ContentView(R.layout.activity_meeting_room_info)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MeetingRoomInfoActivity extends BaseActivity {
 
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
@@ -57,18 +61,18 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private final String dayStartTime = "08:00";
     private final String dayEndTime = "18:00";
     private MeetingRoom meetingRoom;
-    @ViewInject(R.id.tv_meeting_room_name)
-    private TextView meetingRoomNameText;
-    @ViewInject(R.id.tv_meeting_room_floor)
-    private TextView meetingRoomFloorText;
-    @ViewInject(R.id.view_pager)
-    private ViewPager viewPager;
-    @ViewInject(R.id.tv_people_num)
-    private TextView peopleNumText;
-    @ViewInject(R.id.ll_equipment)
-    private LinearLayout equipmentLayout;
-    @ViewInject(R.id.tl_meeting_tab)
-    private TabLayout tabLayout;
+    @BindView(R.id.tv_meeting_room_name)
+    TextView meetingRoomNameText;
+    @BindView(R.id.tv_meeting_room_floor)
+    TextView meetingRoomFloorText;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    @BindView(R.id.tv_people_num)
+    TextView peopleNumText;
+    @BindView(R.id.ll_equipment)
+    LinearLayout equipmentLayout;
+    @BindView(R.id.tl_meeting_tab)
+    TabLayout tabLayout;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private List<List<MeetingSchedule>> allDaysMeetingScheduleList;
@@ -80,9 +84,12 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_room_info);
+        ButterKnife.bind(this);
         meetingRoom = (MeetingRoom) getIntent().getExtras().getSerializable(EXTRA_MEETING_ROOM);
         initView();
         getMeetingListByMeetingRoom();
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -326,6 +333,21 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 initData();
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED:
+                getMeetingListByMeetingRoom();
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     /**

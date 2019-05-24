@@ -23,22 +23,23 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jsoup.helper.StringUtil;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by yufuchang on 2019/4/16.
  */
-@ContentView(R.layout.activity_meeting_detail_new)
 public class MeetingDetailActivity extends BaseActivity {
 
     private static final int MEETING_ATTENDEE = 0;
@@ -46,34 +47,34 @@ public class MeetingDetailActivity extends BaseActivity {
     private static final int MEETING_CONTACT = 2;
     public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
 
-    @ViewInject(R.id.tv_meeting_title)
-    private TextView meetingTitleText;
-    @ViewInject(R.id.tv_meeting_time)
-    private TextView meetingTimeText;
-    @ViewInject(R.id.tv_meeting_remind)
-    private TextView meetingRemindText;
-    @ViewInject(R.id.tv_meeting_distribution)
-    private TextView meetingDistributionText;
-    @ViewInject(R.id.tv_meeting_create)
-    private TextView meetingCreateTimeText;
-    @ViewInject(R.id.tv_attendee)
-    private TextView attendeeText;
-    @ViewInject(R.id.tv_location)
-    private TextView meetingLocationText;
-    @ViewInject(R.id.tv_meeting_record_holder)
-    private TextView meetingRecordHolderText;
-    @ViewInject(R.id.tv_meeting_conference)
-    private TextView meetingConferenceText;
-    @ViewInject(R.id.tv_meeting_note)
-    private TextView meetingNoteText;
-    @ViewInject(R.id.rl_meeting_record_holder)
-    private RelativeLayout meetingRecordHolderLayout;
-    @ViewInject(R.id.rl_meeting_conference)
-    private RelativeLayout meetingConferenceLayout;
-    @ViewInject(R.id.rl_meeting_note)
-    private RelativeLayout meetingNoteLayout;
-    @ViewInject(R.id.iv_meeting_detail_more)
-    private ImageView meetingMoreImg;
+    @BindView(R.id.tv_meeting_title)
+    TextView meetingTitleText;
+    @BindView(R.id.tv_meeting_time)
+    TextView meetingTimeText;
+    @BindView(R.id.tv_meeting_remind)
+    TextView meetingRemindText;
+    @BindView(R.id.tv_meeting_distribution)
+    TextView meetingDistributionText;
+    @BindView(R.id.tv_meeting_create)
+    TextView meetingCreateTimeText;
+    @BindView(R.id.tv_attendee)
+    TextView attendeeText;
+    @BindView(R.id.tv_location)
+    TextView meetingLocationText;
+    @BindView(R.id.tv_meeting_record_holder)
+    TextView meetingRecordHolderText;
+    @BindView(R.id.tv_meeting_conference)
+    TextView meetingConferenceText;
+    @BindView(R.id.tv_meeting_note)
+    TextView meetingNoteText;
+    @BindView(R.id.rl_meeting_record_holder)
+    RelativeLayout meetingRecordHolderLayout;
+    @BindView(R.id.rl_meeting_conference)
+    RelativeLayout meetingConferenceLayout;
+    @BindView(R.id.rl_meeting_note)
+    RelativeLayout meetingNoteLayout;
+    @BindView(R.id.iv_meeting_detail_more)
+    ImageView meetingMoreImg;
 
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
@@ -83,13 +84,14 @@ public class MeetingDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_detail_new);
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         scheduleApiService = new ScheduleApiService(this);
         scheduleApiService.setAPIInterface(new WebService());
         meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
         meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
         if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据  来自通知
-            getDbMeetingFromId(meetingId);
             getMeetingFromId(meetingId);
         } else {                                //id为空是走之前逻辑
             initViews();
@@ -101,8 +103,10 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
-        String locationData = getString(R.string.meeting_detail_location) +new Location(meeting.getLocation()).getBuilding()+ new Location(meeting.getLocation()).getDisplayName();
+        String locationData = getString(R.string.meeting_detail_location) + new Location(meeting.getLocation()).getBuilding() + " " + new Location(meeting.getLocation()).getDisplayName();
         meetingLocationText.setText(locationData);
+        meetingDistributionText.setVisibility(View.VISIBLE);
+        meetingDistributionText.setText(getMeetingCategory(meeting));
         meetingCreateTimeText.setText(getString(R.string.meeting_detail_create, TimeUtils.calendar2FormatString(this,
                 TimeUtils.timeLong2Calendar(meeting.getCreationTime()), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE)));
         attendeeText.setText(getString(R.string.meeting_detail_attendee, getMeetingParticipant(MEETING_ATTENDEE)));
@@ -112,18 +116,25 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
-        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && meeting.getStartTime() > System.currentTimeMillis()) ? View.VISIBLE : View.GONE);
+        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && System.currentTimeMillis() < meeting.getEndTime()) ? View.VISIBLE : View.GONE);
     }
 
-    /**
-     * 通过id获取缓存meeting数据
-     *
-     * @param id
-     */
-    private void getDbMeetingFromId(String id) {
-        meeting = MeetingCacheUtils.getDBMeetingById(this, id);
-        if (meeting != null) initViews();
+    private String getMeetingCategory(Meeting meeting) {
+        String meetingCategory = "";
+        if (meeting.getOwner().equals(MyApplication.getInstance().getUid())) {
+            meetingCategory = getString(R.string.schedule_meeting_my_create);
+        } else {
+            List<Participant> participantList = meeting.getAllParticipantList();
+            for (int i = 0; i < participantList.size(); i++) {
+                if (participantList.get(i).getId().equals(MyApplication.getInstance().getUid())) {
+                    meetingCategory = getString(R.string.schedule_meeting_my_take_part_in);
+                    break;
+                }
+            }
+        }
+        return meetingCategory;
     }
+
 
     /**
      * 通过id获取会议数据
@@ -156,10 +167,10 @@ public class MeetingDetailActivity extends BaseActivity {
         if (participantList.size() == 0) {
             return "";
         } else if (participantList.size() == 1) {
-            return participantList.get(0).getName();
+            return ContactUserCacheUtils.getContactUserByUid(participantList.get(0).getId()).getName();
         } else {
             return getString(R.string.meeting_detail_attendee_num,
-                    participantList.get(0).getName(),
+                    ContactUserCacheUtils.getContactUserByUid(participantList.get(0).getId()).getName(),
                     participantList.size());
         }
     }
@@ -180,11 +191,8 @@ public class MeetingDetailActivity extends BaseActivity {
                     TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_HOUR_MINUTE) +
                     " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_HOUR_MINUTE);
         } else {
-            //先按同一天算
-            duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY) +
-                    TimeUtils.getWeekDay(this, TimeUtils.timeLong2Calendar(startTime)) +
-                    TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_HOUR_MINUTE) +
-                    " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_HOUR_MINUTE);
+            duringTime = TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(startTime), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE) +
+                    " - " + TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(endTime), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         }
         return duringTime;
     }
@@ -275,28 +283,27 @@ public class MeetingDetailActivity extends BaseActivity {
      */
     private void deleteMeeting(Meeting meeting) {
         if (NetUtils.isNetworkConnected(this)) {
+            loadingDlg.show();
             scheduleApiService.deleteMeeting(meeting);
-        } else {
-            ToastUtils.show(this, "");
         }
     }
 
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnDelMeetingSuccess(Meeting meeting) {
-            super.returnDelMeetingSuccess(meeting);
+            LoadingDialog.dimissDlg(loadingDlg);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_DATA_CHANGED, null));
             finish();
         }
 
         @Override
         public void returnDelMeetingFail(String error, int errorCode) {
-            super.returnDelMeetingFail(error, errorCode);
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
         }
 
         @Override
         public void returnMeetingDataFromIdSuccess(Meeting meetingData) {
-            super.returnMeetingDataFromIdSuccess(meetingData);
             LoadingDialog.dimissDlg(loadingDlg);
             if (meetingData != null) {
                 meeting = meetingData;
@@ -306,9 +313,9 @@ public class MeetingDetailActivity extends BaseActivity {
 
         @Override
         public void returnMeetingDataFromIdFail(String error, int errorCode) {
-            super.returnMeetingDataFromIdFail(error, errorCode);
+            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
             LoadingDialog.dimissDlg(loadingDlg);
-            if (meeting == null || TextUtils.isEmpty(meeting.getId())) finish();
+            finish();
         }
     }
 }

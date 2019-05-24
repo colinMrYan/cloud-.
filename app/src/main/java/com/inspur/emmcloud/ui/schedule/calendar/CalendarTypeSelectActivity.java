@@ -15,25 +15,24 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
+import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
-
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by libaochao on 2019/3/29.
  */
-@ContentView(R.layout.activity_calendar_type_select)
 public class CalendarTypeSelectActivity extends BaseActivity {
     MyCalendar calendar;
-    @ViewInject(R.id.lv_calendars)
-    private ListView calendarListView;
+    @BindView(R.id.lv_calendars)
+    ListView calendarListView;
     private WorkAPIService workAPIService;
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
@@ -43,6 +42,8 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calendar_type_select);
+        ButterKnife.bind(this);
         initView();
     }
 

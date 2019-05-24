@@ -32,6 +32,7 @@ import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -48,47 +49,47 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by chenmch on 2019/4/9.
  */
 
-@ContentView(R.layout.activity_meeting_add)
 public class MeetingAddActivity extends BaseActivity {
     private static final int REQUEST_SELECT_ATTENDEE = 1;
     private static final int REQUEST_SELECT_RECORDER = 2;
     private static final int REQUEST_SELECT_LIAISON = 3;
     private static final int REQUEST_SELECT_MEETING_ROOM = 4;
     private static final int REQUEST_SET_REMIND_EVENT = 5;
-    @ViewInject(R.id.et_title)
-    private EditText titleEdit;
-    @ViewInject(R.id.tv_start_date)
-    private TextView startDateText;
-    @ViewInject(R.id.tv_start_time)
-    private TextView startTimeText;
-    @ViewInject(R.id.tv_end_date)
-    private TextView endDateText;
-    @ViewInject(R.id.tv_end_time)
-    private TextView endTimeText;
-    @ViewInject(R.id.tv_meeting_position)
-    private TextView meetingPositionText;
-    @ViewInject(R.id.ll_attendee)
-    private LinearLayout attendeeLayout;
-    @ViewInject(R.id.ll_recorder)
-    private LinearLayout recorderLayout;
-    @ViewInject(R.id.ll_liaison)
-    private LinearLayout liaisonLayout;
-    @ViewInject(R.id.et_notes)
-    private EditText notesEdit;
-    @ViewInject(R.id.tv_reminder)
-    private TextView reminderText;
+    @BindView(R.id.et_title)
+    EditText titleEdit;
+    @BindView(R.id.tv_start_date)
+    TextView startDateText;
+    @BindView(R.id.tv_start_time)
+    TextView startTimeText;
+    @BindView(R.id.tv_end_date)
+    TextView endDateText;
+    @BindView(R.id.tv_end_time)
+    TextView endTimeText;
+    @BindView(R.id.tv_meeting_position)
+    TextView meetingPositionText;
+    @BindView(R.id.ll_attendee)
+    LinearLayout attendeeLayout;
+    @BindView(R.id.ll_recorder)
+    LinearLayout recorderLayout;
+    @BindView(R.id.ll_liaison)
+    LinearLayout liaisonLayout;
+    @BindView(R.id.et_notes)
+    EditText notesEdit;
+    @BindView(R.id.tv_reminder)
+    TextView reminderText;
     private LoadingDialog loadingDlg;
     private ScheduleApiService apiService;
     private Calendar startTimeCalendar;
@@ -102,6 +103,7 @@ public class MeetingAddActivity extends BaseActivity {
     private String title;
     private String note;
     private String meetingPosition;
+    private String meetingOwner = "";
     private RemindEvent remindEvent;
     private Meeting meeting = new Meeting();
     private boolean isMeetingEditModel = false;
@@ -110,6 +112,8 @@ public class MeetingAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_meeting_add);
+        ButterKnife.bind(this);
         initData();
         initView();
     }
@@ -123,6 +127,7 @@ public class MeetingAddActivity extends BaseActivity {
         isMeetingEditModel = getIntent().hasExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
         if (isMeetingEditModel) {
             meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY);
+            meetingOwner = meeting.getOwner();
             location = new Location(JSONUtils.getJSONObject(meeting.getLocation()));
             startTimeCalendar = meeting.getStartTimeCalendar();
             endTimeCalendar = meeting.getEndTimeCalendar();
@@ -130,21 +135,22 @@ public class MeetingAddActivity extends BaseActivity {
             note = meeting.getNote();
             List<String> attendeeList = meeting.getGetParticipantList();
             for (int i = 0; i < attendeeList.size(); i++) {
+                meeting.getRoleParticipantList();
                 JSONObject jsonObject = JSONUtils.getJSONObject(attendeeList.get(i));
-                SearchModel searchModel = new SearchModel();
-                searchModel.setId(JSONUtils.getString(jsonObject, "id", ""));
-                searchModel.setName(JSONUtils.getString(jsonObject, "name", ""));
                 if (Participant.TYPE_COMMON.equals(JSONUtils.getString(jsonObject, "role", ""))) {
+                   SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
                     attendeeSearchModelList.add(searchModel);
                 } else if (Participant.TYPE_CONTACT.equals(JSONUtils.getString(jsonObject, "role", ""))) {
+                    SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
                     liaisonSearchModelList.add(searchModel);
                 } else if (Participant.TYPE_RECORDER.equals(JSONUtils.getString(jsonObject, "role", ""))) {
+                    SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
                     recorderSearchModelList.add(searchModel);
                 }
             }
             remindEvent = meeting.getRemindEventObj();
         } else {
-            String myUid= MyApplication.getInstance().getUid();
+            String myUid = MyApplication.getInstance().getUid();
             SearchModel myInfoSearchModel = new SearchModel();
             ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
             myInfoSearchModel.setName(myInfo.getName());
@@ -153,9 +159,10 @@ public class MeetingAddActivity extends BaseActivity {
             startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
             endTimeCalendar = (Calendar) startTimeCalendar.clone();
             endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
-            if(getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
+            meetingOwner = MyApplication.getInstance().getUid();
+            if (getIntent().hasExtra(MeetingRoomListActivity.EXTRA_START_TIME)
                     && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_END_TIME)
-                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)){
+                    && getIntent().hasExtra(MeetingRoomListActivity.EXTRA_MEETING_ROOM)) {
                 Calendar startTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_START_TIME);
                 Calendar endTimeFromRoomCalendar = (Calendar) getIntent().getSerializableExtra(MeetingRoomListActivity.EXTRA_END_TIME);
                 correctMeetingRoomTime(startTimeFromRoomCalendar, endTimeFromRoomCalendar);
@@ -180,7 +187,7 @@ public class MeetingAddActivity extends BaseActivity {
             showSelectUser(liaisonLayout, liaisonSearchModelList);
             showSelectUser(recorderLayout, recorderSearchModelList);
             reminderText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
-        }else if(location != null){
+        } else if (location != null) {
             meetingPositionText.setText(location.getBuilding() + " " + location.getDisplayName());
         }
         showSelectUser(attendeeLayout, attendeeSearchModelList);
@@ -234,7 +241,7 @@ public class MeetingAddActivity extends BaseActivity {
 
 
     private boolean isInputValid() {
-        title = titleEdit.getText().toString();
+        title = titleEdit.getText().toString().trim();
         meetingPosition = meetingPositionText.getText().toString();
         if (StringUtils.isBlank(title)) {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_room_booking_topic);
@@ -250,13 +257,13 @@ public class MeetingAddActivity extends BaseActivity {
             ToastUtils.show(MyApplication.getInstance(), R.string.meeting_invating_members);
             return false;
         }
-        if (title.length() > 128) {
+        if (title.length() > 149) {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.meeting_topic_too_long));
             return false;
         }
         note = notesEdit.getText().toString();
-        if (!StringUtils.isBlank(note) && note.length() > 127) {
+        if (!StringUtils.isBlank(note) && note.length() > 499) {
             ToastUtils.show(getApplicationContext(),
                     getString(R.string.meeting_notice_too_long));
             return false;
@@ -272,11 +279,6 @@ public class MeetingAddActivity extends BaseActivity {
             return false;
         }
 
-        int count = TimeUtils.getCountdownNum(endTimeCalendar);
-        if (meetingRoom != null && count >= meetingRoom.getMaxAhead()) {
-            ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_day));
-            return false;
-        }
         int countHour = TimeUtils.getCeil(endTimeCalendar, startTimeCalendar);
         if (meetingRoom != null && countHour > Integer.parseInt(meetingRoom.getMaxDuration())) {
             ToastUtils.show(MeetingAddActivity.this, getString(R.string.meeting_more_than_max_time));
@@ -286,10 +288,6 @@ public class MeetingAddActivity extends BaseActivity {
             location = new Location();
         }
 
-        if (!location.getDisplayName().equals(meetingPosition)) {
-            location.setDisplayName(meetingPosition);
-            location.setId("");
-        }
         return true;
     }
 
@@ -342,6 +340,8 @@ public class MeetingAddActivity extends BaseActivity {
                     endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                 } else {
                     if (!calendar.after(startTimeCalendar)) {
+                        endTimeCalendar = (Calendar) startTimeCalendar.clone();
+                        endTimeCalendar.add(Calendar.HOUR_OF_DAY, 2);
                         showTimeInvalidDlg();
                         return;
                     }
@@ -409,6 +409,7 @@ public class MeetingAddActivity extends BaseActivity {
                     meetingPositionText.setText(meetingRoom.getBuilding().getName() + " " + meetingRoom.getName());
                     location = new Location();
                     location.setId(meetingRoom.getId());
+                    LogUtils.LbcDebug("meeting Id"+meetingRoom.getId());
                     location.setBuilding(meetingRoom.getBuilding().getName());
                     location.setDisplayName(meetingRoom.getName());
                     break;
@@ -499,14 +500,16 @@ public class MeetingAddActivity extends BaseActivity {
     }
 
 
-    private Meeting getMeeting(){
+    private Meeting getMeeting() {
         Meeting meeting = new Meeting();
+        meeting.setOwner(meetingOwner);
         meeting.setTitle(title);
         meeting.setType("meeting");
         meeting.setStartTime(startTimeCalendar.getTimeInMillis());
         meeting.setEndTime(endTimeCalendar.getTimeInMillis());
         meeting.setNote(note);
         meeting.setLocation(location.toJSONObject().toString());
+        LogUtils.LbcDebug("location "+location.toJSONObject().toString());
         JSONArray array = new JSONArray();
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {
@@ -534,13 +537,14 @@ public class MeetingAddActivity extends BaseActivity {
             if (remindEvent != null && remindEvent.getAdvanceTimeSpan() != -1) {
                 meeting.setRemindEvent(remindEvent.toJSONObject().toString());
             }
-            if (isMeetingEditModel){
+            if (isMeetingEditModel) {
                 meeting.setId(this.meeting.getId());
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  meeting;
+        return meeting;
     }
 
     /**
@@ -548,6 +552,7 @@ public class MeetingAddActivity extends BaseActivity {
      */
     private void addOrUpdateMeeting() {
         Meeting meeting = getMeeting();
+        LogUtils.LbcDebug("meeting"+meeting.toString());
         loadingDlg.show();
         if (isMeetingEditModel) {
             apiService.updateMeeting(meeting.toJSONObject().toString());

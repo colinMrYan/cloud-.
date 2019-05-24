@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -57,19 +55,17 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
-import com.inspur.emmcloud.widget.dialogs.BatteryWhiteListDialog;
+import com.inspur.emmcloud.widget.dialogs.WhiteListDialog;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -77,34 +73,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@ContentView(R.layout.activity_index)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChangeListener, OnTouchListener {
     private static final int REQUEST_CREATE_GUESTURE = 1;
-    @ViewInject(android.R.id.tabhost)
+    @BindView(android.R.id.tabhost)
     public MyFragmentTabHost mTabHost;
-    @ViewInject(R.id.preload_webview)
+    @BindView(R.id.preload_webview)
     protected WebView webView;
     protected NetworkChangeReceiver networkChangeReceiver;
     private long lastBackTime;
     private TextView newMessageTipsText;
     private RelativeLayout newMessageTipsLayout;
     private boolean batteryDialogIsShow = true;
-    @ViewInject(R.id.tip)
-    private TipsView tipsView;
+    @BindView(R.id.tip)
+    TipsView tipsView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;// 控制如果是系统切换的tab则不计入用户行为
     private String tabId = "";
     // protected ConnectivityManager.NetworkCallback networkCallback;
     // protected ConnectivityManager connectivityManager;
-    private BatteryWhiteListDialog confirmDialog;
+    private WhiteListDialog confirmDialog;
     private ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_index);
+        ButterKnife.bind(this);
         clearOldMainTabData();
-        x.view().inject(this);
         setStatus();
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
@@ -314,23 +312,26 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if (!hasIgnored) {
-                    confirmDialog = new BatteryWhiteListDialog(context, R.string.battery_tip_content,
+                    confirmDialog = new WhiteListDialog(context, R.string.white_list_tip_content,
                             R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
-                    confirmDialog.setClicklistener(new BatteryWhiteListDialog.ClickListenerInterface() {
+                    confirmDialog.setClicklistener(new WhiteListDialog.ClickListenerInterface() {
                         @Override
                         public void doConfirm() {
                             if (confirmDialog.getIsHide()) {
                                 PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                             }
                             try {
-                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                                intent.setData(Uri.parse("package:" + context.getPackageName()));
-                                startActivity(intent);
+//                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+//                                intent.setData(Uri.parse("package:" + context.getPackageName()));
+//                                startActivity(intent);
+                                //自启动设置  zyj
+                                WhiteListUtil.enterWhiteListSetting(context);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                            } finally {
+                                confirmDialog.dismiss();
                             }
-                            confirmDialog.dismiss();
                         }
 
                         @Override
@@ -454,9 +455,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onReceiveScheme(final SimpleEventMessage simpleEventMessage){
         if(simpleEventMessage.getAction().equals(Constant.APP_TAB_BAR_WORK)){
+            SimpleEventMessage stickyEvent = EventBus.getDefault().getStickyEvent(SimpleEventMessage.class);
+            if(stickyEvent != null) {
+                EventBus.getDefault().removeStickyEvent(stickyEvent);
+            }
             int index = findTargetTabIndex();
             if(mTabHost != null ){
                 mTabHost.setCurrentTab(index);

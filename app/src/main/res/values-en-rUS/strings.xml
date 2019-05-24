@@ -435,6 +435,7 @@
     <string name="schedule_meeting_room_booking">New meeting</string>
     <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
+    <string name="schedule_meeting_room_booking_detail">Meeting room details</string>
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
     <string name="schedule_meeting_add_record_holder_title">Recorder</string>
     <string name="schedule_meeting_add_conference_title">Contact</string>
@@ -453,6 +454,8 @@
     <string name="schedule_choose_common_office">Common office locations</string>
     <string name="schedule_meeting_change">Modify meeting</string>
     <string name="schedule_meeting_cancel">Delete meeting</string>
+    <string name="schedule_meeting_my_create">I created：</string>
+    <string name="schedule_meeting_my_take_part_in"> I involved：</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -540,7 +543,7 @@
     <string name="clouddriver_upload_again">Upload Again</string>>
     <string name="clouddriver_download_size">Download(%1$s)</string>
     <string name="clouddriver_downloading_status">Downloading(%1$s/%2$s)</string>
-    <string name="clouddriver_file_name_invaliad">No special characters can be included in the file name: / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_file_name_invaliad">No special characters can be included in the file name: / \ " : | * ? &lt; &gt;&#038; </string>
     <string name="clouddriver_select_photo">Gallery</string>
     <string name="clouddriver_select_file">File</string>
     <string name="clouddriver_volume_info">Shared Disk Details</string>
@@ -554,8 +557,8 @@
     <string name="clouddriver_add_volume_member">Add Member</string>
     <string name="clouddriver_del_volume_group_member">Delete Member</string>
     <string name="clouddriver_add_volume_group_member">Add Member</string>
-    <string name="clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \ " : | * ? &lt; &gt; </string>
-    <string name="clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \ " : | * ? &lt; &gt; </string>
+    <string name="clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \ " : | * ? &lt; &gt; &#038;</string>
+    <string name="clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \ " : | * ? &lt; &gt; &#038; </string>
     <string name="clouddriver_exists_same_name">Already exists file / folder of the same name</string>
     <string name="clouddriver_volume_group_info">Group Detaiks</string>
     <string name="clouddriver_volume_group_member">Group Member</string>
@@ -589,6 +592,7 @@
     <string name="group">Group</string>
     <string name="people_num">%1$dpeople</string>
     <string name="file_rename">File Rename</string>
+    <string name="folder_rename">Folder Rename</string>
     <string name="refresh">Refresh</string>
 
     <!--Webex 会议-->
@@ -852,8 +856,8 @@
     <string name="meeting_choose_log_members">Choose meeting persons</string>
     <string name="meeting_begin_or_date_time">Select the time</string>
     <string name="meeting_end_time_no_empty">Choose end time</string>
-    <string name="meeting_topic_too_long">Subject cannot exceed 128 characters</string>
-    <string name="meeting_notice_too_long">Notice cannot be more than 128 characters</string>
+    <string name="meeting_topic_too_long">Subject cannot exceed 100 characters</string>
+    <string name="meeting_notice_too_long">Notice cannot be more than 500 characters</string>
     <string name="meeting_booking_error">Reservation error</string>
     <string name="meeting_time_is_word">Time is a character</string>
     <string name="meeting_room_number">S206</string>
@@ -951,7 +955,7 @@
     <string name="calendar_please_input_title">Please enter a title </string>
     <string name="calendar_start_or_end_time_illegal">End time should not be less than the start time</string>
     <string name="calendar_end_time_no_before_current">End time cannot be earlier than current time</string>
-    <string name="calendar_tilte_cannot_exceed_64">Title should not exceed 64 characters</string>
+    <string name="calendar_title_cannot_exceed_num">Title should not exceed 100 characters</string>
     <string name="calendar_select_calendar">Select a calendar type </string>
     <string name="calendar_add_success">Add successfully</string>
     <string name="calendar_every_year">Every Year</string>
@@ -1063,6 +1067,7 @@
 
     <!--电源白名单-->
     <string name="battery_tip_content">System has applied battery optimizations to the App,which may cause messages be delayed or missed,please add this to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
+    <string name="white_list_tip_content">Due to system restrictions, please manually open the software self-startup permission, so as to ensure the best environment for software operation (click "Set")</string>
     <string name="battery_tip_ishide">Don\'t ask again</string>
     <string name="battery_tip_cancel">CANCEL</string>
     <string name="battery_tip_toset">SET</string>

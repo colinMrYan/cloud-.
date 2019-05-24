@@ -130,8 +130,12 @@ public class JpushReceiver extends BroadcastReceiver {
                             + bundle.getString(JPushInterface.EXTRA_EXTRA));
         } else if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent
                 .getAction())) {
+
             boolean connected = intent.getBooleanExtra(
                     JPushInterface.EXTRA_CONNECTION_CHANGE, false);
+            if(connected){
+                PushManagerUtils.setPushFlag(context, Constant.JPUSH_FLAG);
+            }
             Log.w(TAG, "[MyReceiver]" + intent.getAction()
                     + " connected state change to " + connected);
         } else {

@@ -28,22 +28,21 @@ import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2019/4/9.
  */
-@ContentView(R.layout.activity_task_tags_add)
 public class TaskTagAddActivity extends BaseActivity  {
-    @ViewInject(R.id.lv_tag_color)
+    @BindView(R.id.lv_tag_color)
     ListView tagColorList;
-    @ViewInject(R.id.tv_delecte_tag)
+    @BindView(R.id.tv_delecte_tag)
     TextView deleteTagText;
-    @ViewInject(R.id.et_tag_name)
+    @BindView(R.id.et_tag_name)
     EditText tagNameEdit;
 
     private List<TagColorBean> tagColorBeans = new ArrayList<>();
@@ -57,6 +56,8 @@ public class TaskTagAddActivity extends BaseActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_task_tags_add);
+        ButterKnife.bind(this);
         initData();
     }
 
@@ -139,6 +140,7 @@ public class TaskTagAddActivity extends BaseActivity  {
                     ToastUtils.show(this, getString(R.string.schedule_task_tag_name_null_hint));
                     return;
                 }
+                loadingDialog.show();
                 //一种是新建；第二种是更新
                 if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS)) {
                     String userId = PreferencesUtils.getString(
@@ -236,6 +238,7 @@ public class TaskTagAddActivity extends BaseActivity  {
 
         @Override
         public void returnCreateTagFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(TaskTagAddActivity.this, error, errorCode);
         }
 

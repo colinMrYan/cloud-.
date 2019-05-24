@@ -91,8 +91,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.io.Serializable;
@@ -101,7 +99,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@ContentView(R.layout.activity_channel)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ConversationActivity extends ConversationBaseActivity {
 
     private static final int REQUEST_QUIT_CHANNELGROUP = 1;
@@ -117,21 +117,21 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
 
-    @ViewInject(R.id.msg_list)
-    private RecycleViewForSizeChange msgListView;
+    @BindView(R.id.msg_list)
+    RecycleViewForSizeChange msgListView;
 
-    @ViewInject(R.id.refresh_layout)
-    private SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
-    @ViewInject(R.id.chat_input_menu)
-    private ECMChatInputMenu chatInputMenu;
-    @ViewInject(R.id.header_text)
-    private TextView headerText;
+    @BindView(R.id.chat_input_menu)
+    ECMChatInputMenu chatInputMenu;
+    @BindView(R.id.header_text)
+    TextView headerText;
 
-    @ViewInject(R.id.robot_photo_img)
-    private ImageView robotPhotoImg;
-    @ViewInject(R.id.btn_conversation_unread)
-    private QMUIRoundButton unreadQMUIRoundBtn;
+    @BindView(R.id.robot_photo_img)
+    ImageView robotPhotoImg;
+    @BindView(R.id.btn_conversation_unread)
+    QMUIRoundButton unreadQMUIRoundBtn;
     private LinearLayoutManager linearLayoutManager;
     private String robotUid = "BOT6004";
     private List<UIMessage> uiMessageList = new ArrayList<>();
@@ -146,6 +146,8 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_channel);
+        ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         handleMessage();
@@ -268,7 +270,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void setUnReadMessageCount() {
         if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
             final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+//            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
             unreadQMUIRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
             unreadQMUIRoundBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -441,6 +443,22 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 CardClickOperation(ConversationActivity.this, view, uiMessage);
+            }
+
+            @Override
+            public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
+                Message message = uiMessage.getMessage();
+                switch (message.getType()){
+                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                        Bundle bundle = new Bundle();
+                        bundle.putString("mid", message.getId());
+                        bundle.putString(EXTRA_CID, message.getChannel());
+                        IntentUtils.startActivity(ConversationActivity.this,
+                                ChannelMessageDetailActivity.class, bundle);
+
+                        break;
+                }
             }
         });
         adapter.setMessageList(uiMessageList);

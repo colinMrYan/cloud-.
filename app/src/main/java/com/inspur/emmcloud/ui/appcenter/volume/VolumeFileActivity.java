@@ -40,8 +40,6 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 
-import org.xutils.view.annotation.ViewInject;
-
 import java.io.File;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -49,6 +47,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+
+import butterknife.BindView;
 
 
 /**
@@ -60,22 +60,22 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
     private static final int REQUEST_SHOW_FILE_FILTER = 5;
-    @ViewInject(R.id.operation_layout)
-    protected RelativeLayout operationLayout;
-    @ViewInject(R.id.operation_sort_text)
-    private TextView operationSortText;
-    @ViewInject(R.id.batch_operation_bar_layout)
-    private RelativeLayout batchOperationBarLayout;
-    @ViewInject(R.id.batch_operation_header_layout)
-    private RelativeLayout batchOprationHeaderLayout;
-    @ViewInject(R.id.batch_operation_header_text)
-    private TextView batchOprationHeaderText;
-    @ViewInject(R.id.batch_operation_select_all_text)
-    private TextView getBatchOprationSelectAllText;
-    @ViewInject(R.id.batch_operation_delete_text)
-    private TextView batchOperationDeleteText;
-    @ViewInject(R.id.batch_operation_move_text)
-    private TextView batchOperationMoveText;
+    @BindView(R.id.operation_layout)
+    RelativeLayout operationLayout;
+    @BindView(R.id.operation_sort_text)
+    TextView operationSortText;
+    @BindView(R.id.batch_operation_bar_layout)
+    RelativeLayout batchOperationBarLayout;
+    @BindView(R.id.batch_operation_header_layout)
+    RelativeLayout batchOprationHeaderLayout;
+    @BindView(R.id.batch_operation_header_text)
+    TextView batchOprationHeaderText;
+    @BindView(R.id.batch_operation_select_all_text)
+    TextView getBatchOprationSelectAllText;
+    @BindView(R.id.batch_operation_delete_text)
+    TextView batchOperationDeleteText;
+    @BindView(R.id.batch_operation_move_text)
+    TextView batchOperationMoveText;
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
