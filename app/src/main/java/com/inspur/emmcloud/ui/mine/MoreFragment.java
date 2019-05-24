@@ -47,6 +47,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -199,7 +200,7 @@ public class MoreFragment extends BaseFragment {
                     recordUserClick("feedback");
                     break;
                 case "my_customerService_function":
-                    if (MyApplication.getInstance().isV0VersionChat()) {
+                    if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                         Channel customerChannel = ChannelCacheUtils.getCustomerChannel(MyApplication.getInstance());
                         if (customerChannel != null) {
                             Bundle bundle = new Bundle();
@@ -208,7 +209,7 @@ public class MoreFragment extends BaseFragment {
                             bundle.putString("from", "customer");
                             IntentUtils.startActivity(getActivity(), ChannelV0Activity.class, bundle);
                         }
-                    } else if (MyApplication.getInstance().isV1xVersionChat()) {
+                    } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                         Conversation conversation =
                                 ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
                         if (conversation != null) {

@@ -69,6 +69,7 @@ import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -1352,7 +1353,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid, final UIMessage uiMessage) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
@@ -1395,7 +1396,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(ConversationActivity.this, text, sendMessage.getMsgContentTextPlain().getMentionsMap());
         text = spannableString.toString();
         if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (MyApplication.getInstance().isV0VersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             } else {
                 Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
                 WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);

@@ -54,6 +54,7 @@ import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -414,8 +415,8 @@ public class ECMChatInputMenuV0 extends LinearLayout {
 //        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
     }
 
-    @Event({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
-    private void onClick(View view) {
+    @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
+    public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.voice_btn:
                 if (addMenuLayout.isShown()) {
@@ -464,8 +465,6 @@ public class ECMChatInputMenuV0 extends LinearLayout {
             case R.id.voice_input_close_img:
                 voiceInputLayout.setVisibility(View.GONE);
                 voice2StringMessageUtils.stopListening();
-                break;
-            default:
                 break;
         }
     }

@@ -19,12 +19,12 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-
-import org.xutils.view.annotation.Event;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
@@ -35,7 +35,6 @@ public class AboutActivity extends BaseActivity {
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
-    private Handler handler;
     @BindView(R.id.tv_app_version)
     TextView appVersionText;
     @BindView(R.id.iv_logo)
@@ -44,7 +43,7 @@ public class AboutActivity extends BaseActivity {
     RelativeLayout protocolLayout;
     @BindView(R.id.rl_invite_friends)
     RelativeLayout inviteFriendsLayout;
-
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,20 +59,20 @@ public class AboutActivity extends BaseActivity {
         handMessage();
     }
 
-    @Event(value = R.id.iv_logo, type = View.OnLongClickListener.class)
-    private boolean onLongClick(View v) {
+    @OnLongClick(R.id.iv_logo)
+    public boolean onLongClick(View v) {
         new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 //						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
-                .addItem("idm-->" + MyApplication.getInstance().getCloudId())
+                .addItem("idm-->" + WebServiceRouterManager.getInstance().getIDMUrl())
 //						.addItem("ecm-->"+ MyApplication.getInstance().getClusterEcm())
-                .addItem("emm-->" + MyApplication.getInstance().getClusterEmm())
-                .addItem("ecm.chat-->" + MyApplication.getInstance().getClusterChat())
-                .addItem("ecm.schedule-->" + MyApplication.getInstance().getClusterSchedule())
-                .addItem("ecm.distribution-->" + MyApplication.getInstance().getClusterDistribution())
-                .addItem("ecm.news-->" + MyApplication.getInstance().getClusterNews())
-                .addItem("ecm.cloud-drive-->" + MyApplication.getInstance().getClusterCloudDrive())
-                .addItem("ecm.storage.legacy-->" + MyApplication.getInstance().getClusterStorageLegacy())
-                .addItem("ecm.client-registry-->" + MyApplication.getInstance().getClusterClientRegistry())
+                .addItem("emm-->" + WebServiceRouterManager.getInstance().getClusterEmm())
+                .addItem("ecm.chat-->" + WebServiceRouterManager.getInstance().getClusterChat())
+                .addItem("ecm.schedule-->" + WebServiceRouterManager.getInstance().getClusterSchedule())
+                .addItem("ecm.distribution-->" + WebServiceRouterManager.getInstance().getClusterDistribution())
+                .addItem("ecm.news-->" + WebServiceRouterManager.getInstance().getClusterNews())
+                .addItem("ecm.cloud-drive-->" + WebServiceRouterManager.getInstance().getClusterCloudDrive())
+                .addItem("ecm.storage.legacy-->" + WebServiceRouterManager.getInstance().getClusterStorageLegacy())
+                .addItem("ecm.client-registry-->" + WebServiceRouterManager.getInstance().getClusterClientRegistry())
                 .addItem("ClientId-->" + PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
                 .addItem("DeviceToken-->" + PushManagerUtils.getPushId(MyApplication.getInstance()))

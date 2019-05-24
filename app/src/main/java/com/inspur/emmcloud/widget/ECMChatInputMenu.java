@@ -59,6 +59,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -646,8 +647,8 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    @Event({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
-    private void onClick(View view) {
+    @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_btn:
                 if (view.getTag() == null || (int) view.getTag() == TAG_KEYBOARD_INPUT) {

@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -180,17 +181,12 @@ public class CreateGestureActivity extends BaseActivity {
     /**
      * 重新设置手势
      */
-    @Event(R.id.gesture_reset_btn)
-    private void resetGesture(View view) {
-        switch (view.getId()) {
-            case R.id.gesture_reset_btn:
-                mChosenPattern = null;
-                lockPatternIndicator.setDefaultIndicator();
-                updateStatus(Status.DEFAULT, null);
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
-                break;
-        }
-
+    @OnClick(R.id.gesture_reset_btn)
+    public void resetGesture() {
+        mChosenPattern = null;
+        lockPatternIndicator.setDefaultIndicator();
+        updateStatus(Status.DEFAULT, null);
+        lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
     }
 
     public void onClick(View view) {
