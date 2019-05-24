@@ -43,7 +43,6 @@ import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
@@ -56,6 +55,7 @@ import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.MailLoginUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.imp.api.ImpActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -250,7 +250,7 @@ public class SchemeHandleActivity extends Activity {
                             case "ecc-channel":
                                 bundle.putString("cid", host);
                                 bundle.putBoolean(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
-                                if (MyApplication.getInstance().isV0VersionChat()) {
+                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                                     IntentUtils.startActivity(SchemeHandleActivity.this,
                                             ChannelV0Activity.class, bundle, true);
                                 } else {

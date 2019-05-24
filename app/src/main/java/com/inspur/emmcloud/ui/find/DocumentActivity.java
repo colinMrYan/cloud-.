@@ -11,7 +11,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -19,6 +18,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
 import java.io.File;
@@ -54,31 +54,31 @@ public class DocumentActivity extends BaseActivity {
         documentInfo1.setFileName("无需交换签名实现邮件加密的方法V2.0.docx");
         documentInfo1.setSize("1.4M");
         documentInfo1
-                .setUri(MyApplication.getInstance().getClusterEcm() + "res_dev/stream/IUYIOKUUJE8.docx");
+                .setUri(WebServiceRouterManager.getInstance().getClusterEcm() + "res_dev/stream/IUYIOKUUJE8.docx");
 
         DocumentInfo documentInfo2 = new DocumentInfo();
         documentInfo2.setFileName("安卓版手机收发加密邮件配置文档V2.0.docx");
         documentInfo2.setSize("968.0K");
         documentInfo2
-                .setUri(MyApplication.getInstance().getClusterEcm() + "res_dev/stream/M7BIOKVCHWI.docx");
+                .setUri(WebServiceRouterManager.getInstance().getClusterEcm() + "res_dev/stream/M7BIOKVCHWI.docx");
 
         DocumentInfo documentInfo3 = new DocumentInfo();
         documentInfo3.setFileName("苹果版手机收发加密邮件配置文档V2.0.docx");
         documentInfo3.setSize("4.4M");
         documentInfo3
-                .setUri(MyApplication.getInstance().getClusterEcm() + "res_dev/stream/157IOKVD2FD.docx");
+                .setUri(WebServiceRouterManager.getInstance().getClusterEcm() + "res_dev/stream/157IOKVD2FD.docx");
 
         DocumentInfo documentInfo4 = new DocumentInfo();
         documentInfo4.setFileName("浪潮集团数字证书备份及导入手册V2.0.doc");
         documentInfo4.setSize("4.4M");
         documentInfo4
-                .setUri(MyApplication.getInstance().getClusterEcm() + "res_dev/stream/V1JIOL3LX11.doc");
+                .setUri(WebServiceRouterManager.getInstance().getClusterEcm() + "res_dev/stream/V1JIOL3LX11.doc");
 
         DocumentInfo documentInfo5 = new DocumentInfo();
         documentInfo5.setFileName("集团数字证书申请说明V4.0.doc");
         documentInfo5.setSize("4.4M");
         documentInfo5
-                .setUri(MyApplication.getInstance().getClusterEcm() + "res_dev/stream/FYAIOL3LNYD.doc");
+                .setUri(WebServiceRouterManager.getInstance().getClusterEcm() + "res_dev/stream/FYAIOL3LNYD.doc");
         documentInfoList.add(documentInfo1);
         documentInfoList.add(documentInfo2);
         documentInfoList.add(documentInfo3);
