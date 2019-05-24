@@ -25,7 +25,6 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
@@ -50,14 +49,15 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     TextView cancelTextView;
     @BindView(R.id.lv_search_group_show)
     ListView searchGroupListView;
-    @BindView(R.id.lv_search_members_show)
-    ListView searchMembersListView;
+//    @BindView(R.id.lv_search_members_show)
+//    ListView searchMembersListView;
 
 
     public static final String SEARCH_ALL = "search_all";
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
     public static final int REFRESH_DATA = 1;
+    public static final int CLEAR_DATA = 2;
     private Runnable searchRunable;
     private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
@@ -95,7 +95,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         initSearchRunnable();
         groupAdapter = new GroupAdapter();
         contactAdapter = new ContactAdapter();
-        searchMembersListView.setAdapter(contactAdapter);
+        //searchMembersListView.setAdapter(contactAdapter);
         searchGroupListView.setAdapter(groupAdapter);
     }
 
@@ -106,8 +106,9 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                 switch (message.what) {
                     case REFRESH_DATA:
                         /**刷新Ui*/
-                        LogUtils.LbcDebug("刷新数据 searchChannelGroupList::" + searchChannelGroupList.size());
                         groupAdapter.notifyDataSetChanged();
+                        break;
+                    case CLEAR_DATA:
                         break;
                 }
             }
@@ -125,26 +126,30 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                     public void run() {
                         switch (searchArea) {
                             case SEARCH_ALL:
-                                if (MyApplication.getInstance().isV0VersionChat()) {
-                                    searchChannelGroupList = ChannelGroupCacheUtils
-                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
-                                                    searchText);
-                                    LogUtils.LbcDebug("isVo");
-                                } else {
+//                                if (MyApplication.getInstance().isV0VersionChat()) {
+//                                    searchChannelGroupList = ChannelGroupCacheUtils
+//                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
+//                                                    searchText);
+//                                    LogUtils.LbcDebug("isVo");
+//                                } else {
                                     LogUtils.LbcDebug("isV1");
                                     searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-                                }
+//                                }
 
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 3);
                                 break;
                             case SEARCH_GROUP:
                                 LogUtils.LbcDebug("group");
-                                if (MyApplication.getInstance().isV0VersionChat()) {
-                                    searchChannelGroupList = ChannelGroupCacheUtils
-                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
-                                                    searchText);
-                                } else {
+//                                if (MyApplication.getInstance().isV0VersionChat()) {
+//                                    searchChannelGroupList = ChannelGroupCacheUtils
+//                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
+//                                                    searchText);
+//                                } else {
                                     searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+//                                }
+                                LogUtils.LbcDebug("群组个数::"+searchChannelGroupList.size());
+                                if(StringUtils.isBlank(searchText)){
+                                    LogUtils.LbcDebug("这次是空!!!!!!!!!!!!!!");
                                 }
                                 break;
                             case SEARCH_CONTACT:
@@ -232,6 +237,8 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
             } else {
                 lastSearchTime = 0;
                 handler.removeCallbacks(searchRunable);
+                searchChannelGroupList.clear();
+                handler.sendEmptyMessage(REFRESH_DATA);
             }
         }
     }
@@ -302,11 +309,10 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
             }
             //刷新数据
             SearchModel searchModel = searchChannelGroupList.get(i);
-            displayImg(searchModel,searchHolder.headImageView);
+          //  displayImg(searchModel,searchHolder.headImageView);
             searchHolder.nameTextView.setText(searchModel.getName().toString());
             return view;
         }
     }
-
 
 }
