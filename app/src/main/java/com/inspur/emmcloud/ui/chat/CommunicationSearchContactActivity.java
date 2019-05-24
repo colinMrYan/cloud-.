@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,23 +44,21 @@ import butterknife.ButterKnife;
  * Created by libaochao on 2019/5/20.
  */
 
-public class CommunicationSearchContactActivity extends BaseActivity implements View.OnClickListener {
+public class CommunicationSearchContactActivity extends BaseActivity implements View.OnClickListener, ListView.OnItemClickListener {
+    public static final String SEARCH_ALL = "search_all";
+    public static final String SEARCH_CONTACT = "search_contact";
+    public static final String SEARCH_GROUP = "search_group";
+    //    @BindView(R.id.lv_search_members_show)
+//    ListView searchMembersListView;
+    public static final int REFRESH_DATA = 1;
+    public static final int CLEAR_DATA = 2;
     @BindView(R.id.ev_search_input)
     ClearEditText searchEdit;
     @BindView(R.id.tv_cancel)
     TextView cancelTextView;
     @BindView(R.id.lv_search_group_show)
     ListView searchGroupListView;
-//    @BindView(R.id.lv_search_members_show)
-//    ListView searchMembersListView;
-
-
-    public static final String SEARCH_ALL = "search_all";
-    public static final String SEARCH_CONTACT = "search_contact";
-    public static final String SEARCH_GROUP = "search_group";
-    public static final int REFRESH_DATA = 1;
-    public static final int CLEAR_DATA = 2;
-    private Runnable searchRunable;
+    private Runnable searchRunnable;
     private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
@@ -76,7 +76,6 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
             // TODO Auto-generated method stub
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 InputMethodUtils.hide(CommunicationSearchContactActivity.this);
-                //  onSearch(findViewById(R.id.search_btn));
                 return true;
             }
             return false;
@@ -97,6 +96,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         contactAdapter = new ContactAdapter();
         //searchMembersListView.setAdapter(contactAdapter);
         searchGroupListView.setAdapter(groupAdapter);
+        searchGroupListView.setOnItemClickListener(this);
     }
 
     private void handMessage() {
@@ -118,7 +118,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
 
     private void initSearchRunnable() {
-        searchRunable = new Runnable() {
+        searchRunnable = new Runnable() {
             @Override
             public void run() {
                 new Thread(new Runnable() {
@@ -126,27 +126,13 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                     public void run() {
                         switch (searchArea) {
                             case SEARCH_ALL:
-//                                if (MyApplication.getInstance().isV0VersionChat()) {
-//                                    searchChannelGroupList = ChannelGroupCacheUtils
-//                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
-//                                                    searchText);
-//                                    LogUtils.LbcDebug("isVo");
-//                                } else {
                                     LogUtils.LbcDebug("isV1");
                                     searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-//                                }
-
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 3);
                                 break;
                             case SEARCH_GROUP:
                                 LogUtils.LbcDebug("group");
-//                                if (MyApplication.getInstance().isV0VersionChat()) {
-//                                    searchChannelGroupList = ChannelGroupCacheUtils
-//                                            .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
-//                                                    searchText);
-//                                } else {
                                     searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-//                                }
                                 LogUtils.LbcDebug("群组个数::"+searchChannelGroupList.size());
                                 if(StringUtils.isBlank(searchText)){
                                     LogUtils.LbcDebug("这次是空!!!!!!!!!!!!!!");
@@ -175,6 +161,26 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        LogUtils.LbcDebug("111111111111111111111");
+        switch (adapterView.getId()) {
+            case R.id.lv_search_group_show:
+                LogUtils.LbcDebug("2222222222222222222");
+                LogUtils.LbcDebug("searchChannelGroupList.size()" + searchChannelGroupList.size());
+                if ((searchChannelGroupList.size() > 0) && (searchChannelGroupList.get(i) != null)) {
+                    Intent intent = new Intent();
+                    intent.setClass(this, ConversationActivity.class);
+                    intent.putExtra("title", searchChannelGroupList.get(i).getName());
+                    intent.putExtra("cid", searchChannelGroupList.get(i).getId());
+                    intent.putExtra("channelType", searchChannelGroupList.get(i).getType());
+                    startActivity(intent);
+                }
+                break;
+        }
+
     }
 
     /**
@@ -228,15 +234,15 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
             if (!StringUtils.isBlank(searchText)) {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastSearchTime > 500) {
-                    handler.post(searchRunable);
+                    handler.post(searchRunnable);
                 } else {
-                    handler.removeCallbacks(searchRunable);
-                    handler.postDelayed(searchRunable, 500);
+                    handler.removeCallbacks(searchRunnable);
+                    handler.postDelayed(searchRunnable, 500);
                 }
                 lastSearchTime = System.currentTimeMillis();
             } else {
                 lastSearchTime = 0;
-                handler.removeCallbacks(searchRunable);
+                handler.removeCallbacks(searchRunnable);
                 searchChannelGroupList.clear();
                 handler.sendEmptyMessage(REFRESH_DATA);
             }
@@ -307,10 +313,12 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
             }else {
                 searchHolder = (SearchHolder) view.getTag();
             }
-            //刷新数据
             SearchModel searchModel = searchChannelGroupList.get(i);
-          //  displayImg(searchModel,searchHolder.headImageView);
-            searchHolder.nameTextView.setText(searchModel.getName().toString());
+            if (searchModel != null) {
+                displayImg(searchModel, searchHolder.headImageView);
+                searchHolder.nameTextView.setText(searchModel.getName().toString());
+            }
+            //刷新数据
             return view;
         }
     }
