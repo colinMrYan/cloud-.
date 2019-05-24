@@ -48,6 +48,7 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
@@ -68,7 +69,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.view.annotation.Event;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -80,6 +80,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 /**
  * Created by chenmch on 2018/10/11.
@@ -120,7 +121,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webex_detail);
         ButterKnife.bind(this);
         loadingDialog = new LoadingDialog(this);
         webexMeeting = (WebexMeeting) getIntent().getSerializableExtra(EXTRA_WEBEXMEETING);
@@ -129,6 +129,11 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         showWebexMeetingDetial();
         getWebexMeeting();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_detail;
     }
 
     private void showWebexMeetingDetial() {
@@ -349,8 +354,8 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     }
 
-    @Event(value = {R.id.ll_meeting_content}, type = View.OnLongClickListener.class)
-    private boolean onLongClick(View v) {
+    @OnLongClick(R.id.ll_meeting_content)
+    public boolean onLongClick() {
         String content = webexMeeting.getConfName() + "\n" + getString(R.string.webex_time) + timeText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_code) + meetingIdText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_password_tip) + webexMeeting.getMeetingPassword();
@@ -398,7 +403,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid, final String content) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(WebexMeetingDetailActivity.this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
@@ -454,7 +459,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
      */
     private void sendShareMessage(String cid, String content) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (MyApplication.getInstance().isV0VersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                 ChatAPIService apiService = new ChatAPIService(
                         WebexMeetingDetailActivity.this);
                 apiService.setAPIInterface(new WebService());

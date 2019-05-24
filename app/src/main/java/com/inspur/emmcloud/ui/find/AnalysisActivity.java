@@ -33,8 +33,6 @@ public class AnalysisActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_analysis);
-
         analysisList.add(new AnalysisModel(getString(R.string.travel_analysis)));
         analysisListView = (ListView) findViewById(R.id.analysis_list);
         analysisAdapter = new AnalysisAdapter();
@@ -52,6 +50,11 @@ public class AnalysisActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_analysis;
     }
 
     public void onClick(View v) {

@@ -1,6 +1,5 @@
 package com.inspur.imp.plugin.barcode.decoder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import com.funcode.decoder.inspuremmcloud.FunDecode;
 import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
 import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -37,7 +37,7 @@ import java.util.List;
  * Created by chenmch on 2018/11/16.
  */
 
-public class PreviewDecodeActivity extends Activity implements FunDecodeHandler {
+public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHandler {
     private FunDecode mDecode = null;
     private FunDecodeSurfaceView mDecodeView = null;
     private RangeView mRangeView;
@@ -76,6 +76,15 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
             }
 
         });
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return 0;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
 

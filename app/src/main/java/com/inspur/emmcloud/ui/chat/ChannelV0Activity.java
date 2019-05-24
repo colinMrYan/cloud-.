@@ -135,12 +135,16 @@ public class ChannelV0Activity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channelv0);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         init();
         registeRefreshNameReceiver();
         recordUserClickChannel();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_channelv0;
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决

@@ -299,7 +299,6 @@
     <string name="hold_to_talk">Hold to Talk</string>
     <string name="release_to_send">Release to Send</string>
     <string name="release_to_cancel">Release to Cancel</string>
-    <string name="release_to_cancel_dialog">Release to cancel</string>
     <string name="slide_up_to_cancel">Slide up to cancel</string>
     <string name="recording_too_short">Message too short</string>
     <string name="play_fail">Unable to play</string>

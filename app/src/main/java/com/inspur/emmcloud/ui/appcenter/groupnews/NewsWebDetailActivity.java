@@ -66,6 +66,7 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.api.iLog;
@@ -107,11 +108,15 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_newsweb_detail);
         initData();
         initViews();
         EventBus.getDefault().register(this);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_newsweb_detail;
     }
 
     /**
@@ -817,7 +822,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(NewsWebDetailActivity.this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
@@ -854,7 +859,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void sendMsg(String cid) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (MyApplication.getInstance().isV0VersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                 ChatAPIService apiService = new ChatAPIService(
                         NewsWebDetailActivity.this);
                 apiService.setAPIInterface(new WebService());

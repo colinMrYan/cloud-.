@@ -2,7 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.work.WorkSetting;
+import com.inspur.emmcloud.bean.schedule.WorkSetting;
 
 import java.util.ArrayList;
 import java.util.List;

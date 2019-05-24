@@ -54,7 +54,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -69,6 +68,7 @@ import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -100,7 +100,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ConversationActivity extends ConversationBaseActivity {
 
@@ -146,8 +145,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_channel);
-        ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         handleMessage();
@@ -1352,7 +1349,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid, final UIMessage uiMessage) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
@@ -1395,7 +1392,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(ConversationActivity.this, text, sendMessage.getMsgContentTextPlain().getMentionsMap());
         text = spannableString.toString();
         if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (MyApplication.getInstance().isV0VersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             } else {
                 Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
                 WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
@@ -1409,10 +1406,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void transmitImgMsg(String cid, Message sendMessage) {
         String path1 = sendMessage.getMsgContentMediaImage().getPreviewMedia();
         String data = JSONUtils.toJSONString(sendMessage);
-        LogUtils.LbcDebug("data::" + data);
         String path = sendMessage.getLocalPath();
-        LogUtils.LbcDebug("path::" + path);
-        LogUtils.LbcDebug("path1::" + path1);
         if (!StringUtils.isBlank(path) && NetUtils.isNetworkConnected(getApplicationContext())) {
 //                Message localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid,path);
 //                localMessage.getMsgContentMediaImage().setPreviewMedia(path1);

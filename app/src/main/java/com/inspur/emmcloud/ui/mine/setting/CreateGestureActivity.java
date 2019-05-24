@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
@@ -16,13 +15,13 @@ import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.Event;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -118,12 +117,18 @@ public class CreateGestureActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_gesture);
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         init();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_create_gesture;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
+    }
     /**
      * 初始化
      */
@@ -180,17 +185,12 @@ public class CreateGestureActivity extends BaseActivity {
     /**
      * 重新设置手势
      */
-    @Event(R.id.gesture_reset_btn)
-    private void resetGesture(View view) {
-        switch (view.getId()) {
-            case R.id.gesture_reset_btn:
-                mChosenPattern = null;
-                lockPatternIndicator.setDefaultIndicator();
-                updateStatus(Status.DEFAULT, null);
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
-                break;
-        }
-
+    @OnClick(R.id.gesture_reset_btn)
+    public void resetGesture() {
+        mChosenPattern = null;
+        lockPatternIndicator.setDefaultIndicator();
+        updateStatus(Status.DEFAULT, null);
+        lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
     }
 
     public void onClick(View view) {

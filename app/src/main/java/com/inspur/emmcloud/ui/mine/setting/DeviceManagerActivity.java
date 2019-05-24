@@ -41,9 +41,13 @@ public class DeviceManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_device_manager);
         initView();
         getBindDeviceList();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_setting_device_manager;
     }
 
     private void initView() {

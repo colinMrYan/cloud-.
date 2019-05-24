@@ -44,9 +44,13 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volume_group_change_permission);
         ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_volume_group_change_permission;
     }
 
     /**

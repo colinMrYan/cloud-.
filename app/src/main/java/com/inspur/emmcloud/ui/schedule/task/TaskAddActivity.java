@@ -24,7 +24,7 @@ import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
@@ -35,7 +35,7 @@ import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.bean.schedule.task.TaskSubject;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -81,12 +81,12 @@ import cn.carbs.android.segmentcontrolview.library.SegmentControlView;
  * Created by libaochao on 2019/3/28.
  */
 public class TaskAddActivity extends BaseActivity {
+    public static final int REQUEST_CLASS_TAG = 6;
     private static final int REQUEST_MANGER = 1;
     private static final int REQUEST_ALBUM = 2;
     private static final int REQUEST_PARTICIPANT = 3;
     private static final int REQUEST_ALERT_TIME = 4;
     private static final int REQUEST_ATTACHMENT = 5;
-    public static final int REQUEST_CLASS_TAG = 6;
     @BindView(R.id.ll_single_tag)
     LinearLayout singleTagLayout;
     @BindView(R.id.ll_tags)
@@ -123,7 +123,7 @@ public class TaskAddActivity extends BaseActivity {
     TextView titleText;
 
 
-    private WorkAPIService apiService;
+    private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private Task taskResult = new Task();
 
@@ -143,11 +143,15 @@ public class TaskAddActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_add);
         ButterKnife.bind(this);
         initData();
         initView();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_task_add;
     }
 
     private void initData() {
@@ -156,7 +160,7 @@ public class TaskAddActivity extends BaseActivity {
         taskParticipantList = new ArrayList<>();
         attachmentOtherAdapter = new AttachmentAdapter();
         loadingDlg = new LoadingDialog(this);
-        apiService = new WorkAPIService(this);
+        apiService = new ScheduleApiService(this);
         attachmentOthersList.setAdapter(attachmentOtherAdapter);
         apiService.setAPIInterface(new TaskAddActivity.WebService());
 
@@ -646,69 +650,6 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     /**
-     * 附件holder
-     */
-    private class AttachmentHolder {
-        public ImageView attachmentImageView;
-        public TextView attachmentNameText;
-        public TextView attachmentStateText;
-        public ImageView attachmentDeleteImageView;
-    }
-
-    /**
-     * 附件 Adapter
-     */
-    public class AttachmentAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return jsonAttachmentList.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            final int num = i;
-            AttachmentHolder otherHolder = new AttachmentHolder();
-            if (view == null) {
-                view = View.inflate(TaskAddActivity.this, R.layout.item_attachments_abstract, null);
-                otherHolder.attachmentDeleteImageView = view.findViewById(R.id.iv_delete_attachemnt);
-                otherHolder.attachmentImageView = view.findViewById(R.id.iv_attachemnt_img);
-                otherHolder.attachmentNameText = view.findViewById(R.id.tv_add_attachment_name);
-                otherHolder.attachmentStateText = view.findViewById(R.id.tv_attachemnt_upload_state);
-                view.setTag(otherHolder);
-            } else {
-                otherHolder = (AttachmentHolder) view.getTag();
-            }
-            if (JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "type", "").equals("JPEG")) {
-                String imageUri = getImgPreviewUri(jsonAttachmentList.get(i).getJsonAttachment().toString());
-                ImageDisplayUtils.getInstance().displayImage(otherHolder.attachmentImageView,
-                        imageUri, R.drawable.ic_volume_file_typ_img);
-            } else {
-                otherHolder.attachmentImageView.setImageResource(getFileIconByType(JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "type", "")));
-            }
-            otherHolder.attachmentNameText.setText(JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "name", ""));
-            otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(taskType <2)
-                    deleteAttachment(num);
-                }
-            });
-            return view;
-        }
-    }
-
-    /**
      * 获取图片预览路径
      */
     private String getImgPreviewUri(String attachmentJson) {
@@ -822,6 +763,142 @@ public class TaskAddActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 筛选任务获取参与人员的list
+     *
+     * @param getTaskListResult
+     * @return
+     */
+    public ArrayList<String> handleTaskSearchMembers(
+            GetTaskListResult getTaskListResult) {
+        ArrayList<String> membersIds = new ArrayList<String>();
+        for (int i = 0; i < getTaskListResult.getTaskList().size(); i++) {
+            if (getTaskListResult.getTaskList().get(i).getState()
+                    .contains("ACTIVED")
+                    || getTaskListResult.getTaskList().get(i).getState()
+                    .contains("REMOVED")) {
+                membersIds.add(getTaskListResult.getTaskList().get(i)
+                        .getMaster());
+                String masterUid = getTaskListResult.getTaskList().get(i).getMaster();
+                if (!StringUtils.isBlank(masterUid)) {
+                    ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
+                    if (contactUser != null) {
+                        SearchModel searchModel = new SearchModel(contactUser);
+                        orgTaskParticipantList.add(searchModel);
+                        taskParticipantList.add(searchModel);
+                    }
+                }
+
+            }
+        }
+        return membersIds;
+    }
+
+    /**
+     * 获取文件类型对应的图标
+     */
+    public int getFileIconByType(String fileType) {
+        int icId = 0;
+        switch (fileType) {
+            case "TEXT":
+                icId = R.drawable.ic_volume_file_typ_txt;
+                break;
+            case "MS_WORD":
+                icId = R.drawable.ic_volume_file_typ_word;
+                break;
+            case "MS_EXCEL":
+                icId = R.drawable.ic_volume_file_typ_excel;
+                break;
+            case "MS_PPT":
+                icId = R.drawable.ic_volume_file_typ_ppt;
+                break;
+            case "JPEG":
+                icId = R.drawable.ic_volume_file_typ_img;
+                break;
+            default:
+                icId = R.drawable.ic_volume_file_typ_unknown;
+                break;
+        }
+        return icId;
+    }
+
+    /**
+     * 上传任务数据
+     */
+    private String uploadTaskData() {
+        String title = contentInputEdit.getText().toString();
+        int priority = segmentControlView.getSelectedIndex();
+        taskResult.setTitle(title);
+        taskResult.setPriority(priority);
+        taskResult.setTags(taskColorTagList);
+        if (deadLineCalendar != null)
+            taskResult.setDueDate(TimeUtils.localCalendar2UTCCalendar(deadLineCalendar));
+        String taskJson = JSONUtils.toJSONString(taskResult);
+        return taskJson;
+    }
+
+    /**
+     * 附件holder
+     */
+    private class AttachmentHolder {
+        public ImageView attachmentImageView;
+        public TextView attachmentNameText;
+        public TextView attachmentStateText;
+        public ImageView attachmentDeleteImageView;
+    }
+
+    /**
+     * 附件 Adapter
+     */
+    public class AttachmentAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return jsonAttachmentList.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            final int num = i;
+            AttachmentHolder otherHolder = new AttachmentHolder();
+            if (view == null) {
+                view = View.inflate(TaskAddActivity.this, R.layout.item_attachments_abstract, null);
+                otherHolder.attachmentDeleteImageView = view.findViewById(R.id.iv_delete_attachemnt);
+                otherHolder.attachmentImageView = view.findViewById(R.id.iv_attachemnt_img);
+                otherHolder.attachmentNameText = view.findViewById(R.id.tv_add_attachment_name);
+                otherHolder.attachmentStateText = view.findViewById(R.id.tv_attachemnt_upload_state);
+                view.setTag(otherHolder);
+            } else {
+                otherHolder = (AttachmentHolder) view.getTag();
+            }
+            if (JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "type", "").equals("JPEG")) {
+                String imageUri = getImgPreviewUri(jsonAttachmentList.get(i).getJsonAttachment().toString());
+                ImageDisplayUtils.getInstance().displayImage(otherHolder.attachmentImageView,
+                        imageUri, R.drawable.ic_volume_file_typ_img);
+            } else {
+                otherHolder.attachmentImageView.setImageResource(getFileIconByType(JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "type", "")));
+            }
+            otherHolder.attachmentNameText.setText(JSONUtils.getString(jsonAttachmentList.get(i).getJsonAttachment(), "name", ""));
+            otherHolder.attachmentDeleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (taskType < 2)
+                        deleteAttachment(num);
+                }
+            });
+            return view;
+        }
+    }
 
     private class WebService extends APIInterfaceInstance {
         @Override
@@ -1031,37 +1108,6 @@ public class TaskAddActivity extends BaseActivity {
     }
 
     /**
-     * 筛选任务获取参与人员的list
-     *
-     * @param getTaskListResult
-     * @return
-     */
-    public ArrayList<String> handleTaskSearchMembers(
-            GetTaskListResult getTaskListResult) {
-        ArrayList<String> membersIds = new ArrayList<String>();
-        for (int i = 0; i < getTaskListResult.getTaskList().size(); i++) {
-            if (getTaskListResult.getTaskList().get(i).getState()
-                    .contains("ACTIVED")
-                    || getTaskListResult.getTaskList().get(i).getState()
-                    .contains("REMOVED")) {
-                membersIds.add(getTaskListResult.getTaskList().get(i)
-                        .getMaster());
-                String masterUid = getTaskListResult.getTaskList().get(i).getMaster();
-                if (!StringUtils.isBlank(masterUid)) {
-                    ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(masterUid);
-                    if (contactUser != null) {
-                        SearchModel searchModel = new SearchModel(contactUser);
-                        orgTaskParticipantList.add(searchModel);
-                        taskParticipantList.add(searchModel);
-                    }
-                }
-
-            }
-        }
-        return membersIds;
-    }
-
-    /**
      * 附件对象及Uri
      */
     public class JsonAttachmentAndUri {
@@ -1098,48 +1144,5 @@ public class TaskAddActivity extends BaseActivity {
         public void setNew(boolean aNew) {
             isNew = aNew;
         }
-    }
-
-    /**
-     * 获取文件类型对应的图标
-     */
-    public int getFileIconByType(String fileType) {
-        int icId = 0;
-        switch (fileType) {
-            case "TEXT":
-                icId = R.drawable.ic_volume_file_typ_txt;
-                break;
-            case "MS_WORD":
-                icId = R.drawable.ic_volume_file_typ_word;
-                break;
-            case "MS_EXCEL":
-                icId = R.drawable.ic_volume_file_typ_excel;
-                break;
-            case "MS_PPT":
-                icId = R.drawable.ic_volume_file_typ_ppt;
-                break;
-            case "JPEG":
-                icId = R.drawable.ic_volume_file_typ_img;
-                break;
-            default:
-                icId = R.drawable.ic_volume_file_typ_unknown;
-                break;
-        }
-        return icId;
-    }
-
-    /**
-     * 上传任务数据
-     */
-    private String uploadTaskData() {
-        String title = contentInputEdit.getText().toString();
-        int priority = segmentControlView.getSelectedIndex();
-        taskResult.setTitle(title);
-        taskResult.setPriority(priority);
-        taskResult.setTags(taskColorTagList);
-        if (deadLineCalendar != null)
-            taskResult.setDueDate(TimeUtils.localCalendar2UTCCalendar(deadLineCalendar));
-        String taskJson = JSONUtils.toJSONString(taskResult);
-        return taskJson;
     }
 }

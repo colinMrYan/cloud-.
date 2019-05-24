@@ -68,20 +68,19 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
     private static final long SPLASH_PAGE_TIME = 2500;
-    private Handler handler;
-    private long activitySplashShowTime = 0;
-    private Timer timer;
     @BindView(R.id.ibt_skip)
     ImageButton skipImageBtn;
     @BindView(R.id.iv_splash_logo)
     ImageView splashLogoImg;
     @BindView(R.id.iv_splash_ad)
     GifImageView splashAdImg;
+    private Handler handler;
+    private long activitySplashShowTime = 0;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         //解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
@@ -91,6 +90,15 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         initAppAlias();
         checkNecessaryPermission();
 //        IntentUtils.startActivity(this, MeetingOfficeAddActivity.class,true);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_main;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
     private void initAppAlias(){

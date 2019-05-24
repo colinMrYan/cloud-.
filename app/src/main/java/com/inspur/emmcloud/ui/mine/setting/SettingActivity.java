@@ -51,6 +51,7 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -71,7 +72,6 @@ import butterknife.ButterKnife;
 public class SettingActivity extends BaseActivity {
 
     private static final int DATA_CLEAR_SUCCESS = 0;
-    private Handler handler;
     @BindView(R.id.switch_view_setting_web_rotate)
     SwitchView webRotateSwitch;
     @BindView(R.id.switch_view_setting_run_background)
@@ -88,8 +88,6 @@ public class SettingActivity extends BaseActivity {
     TextView languageNameText;
     @BindView(R.id.iv_setting_language_flag)
     ImageView languageFlagImg;
-    private MineAPIService apiService;
-    private LoadingDialog loadingDlg;
     @BindView(R.id.tv_setting_theme_name)
     TextView themeNameText;
     @BindView(R.id.rl_setting_switch_tablayout)
@@ -98,6 +96,9 @@ public class SettingActivity extends BaseActivity {
     TextView tabName;
     @BindView(R.id.switch_view_setting_notification)
     Switch notificationSwitch;
+    private Handler handler;
+    private MineAPIService apiService;
+    private LoadingDialog loadingDlg;
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -151,17 +152,22 @@ public class SettingActivity extends BaseActivity {
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
         initView();
         setLanguage();
         handMessage();
         EventBus.getDefault().register(this);
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_setting;
     }
 
     @Override
@@ -211,7 +217,7 @@ public class SettingActivity extends BaseActivity {
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         runBackgroundSwitch.setOpened(isAppSetRunBackground);
         runBackgroundSwitch.setOnStateChangedListener(onStateChangedListener);
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
@@ -454,7 +460,7 @@ public class SettingActivity extends BaseActivity {
                         PushManagerUtils.getInstance().unregisterPushId2Emm();
                         dialog.dismiss();
                         boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
-                        if (NetUtils.isNetworkConnected(getApplicationContext(), false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist) {
+                        if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
                             loadingDlg.show();
                             WSAPIService.getInstance().sendAppStatus("REMOVED");
                         } else {
@@ -570,7 +576,7 @@ public class SettingActivity extends BaseActivity {
     public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
             LoadingDialog.dimissDlg(loadingDlg);
-            MyApplication.getInstance().signout(true);
+            MyApplication.getInstance().signout();
             stopAppService();
         }
 

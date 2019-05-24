@@ -61,9 +61,9 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     private static final int UPDATE_VOLUME_NAME = 1;
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
-    private List<Volume> shareVolumeList = new ArrayList<>();
     @BindView(R.id.share_volume_list)
     ListView shareVolumeListView;
+    private List<Volume> shareVolumeList = new ArrayList<>();
     private Adapter adapter;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -73,11 +73,15 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_share_volume);
         ButterKnife.bind(this);
         initView();
         getVolumeList(true);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_share_volume;
     }
 
     private void initView() {

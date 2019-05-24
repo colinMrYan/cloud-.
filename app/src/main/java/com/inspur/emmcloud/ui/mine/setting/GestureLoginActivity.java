@@ -21,12 +21,11 @@ import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
-import org.xutils.view.annotation.Event;
-
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -87,11 +86,21 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gesture_login);
         ButterKnife.bind(this);
         init();
         ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_gesture_login;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
+    }
+
+
 
     private void init() {
         //得到当前用户的手势密码
@@ -145,17 +154,10 @@ public class GestureLoginActivity extends BaseActivity {
     /**
      * 忘记手势密码（去账号登录界面）
      */
-    @Event(R.id.forget_gesture_btn)
-    private void forgetGesturePasswrod(View view) {
-        switch (view.getId()) {
-            case R.id.forget_gesture_btn:
-                clearGestureInfo();
-                ((MyApplication) getApplication()).signout();
-                break;
-            default:
-                break;
-        }
-
+    @OnClick(R.id.forget_gesture_btn)
+    public void forgetGesturePasswrod() {
+        clearGestureInfo();
+        ((MyApplication) getApplication()).signout();
     }
 
     /**

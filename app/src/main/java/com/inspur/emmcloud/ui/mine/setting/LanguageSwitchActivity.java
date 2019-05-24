@@ -45,12 +45,41 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        listView = (ListView) findViewById(R.id.lv);
         setContentView(R.layout.activity_mine_language_switch);
         listView =  findViewById(R.id.lv);
         loadingDlg = new LoadingDialog(this);
         getLanguageList();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mine_language_switch;
+    }
+
+    private void handMessage() {
+        // TODO Auto-generated method stub
+        handler = new Handler() {
+
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+                if (loadingDlg != null && loadingDlg.isShowing()) {
+                    loadingDlg.dismiss();
+                }
+                switch (msg.what) {
+                    case GET_LANGUAGE_SUCCESS:
+                        commonLanguageList = languageUtils.getCommonLanguageList();
+                        initData();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+        };
+    }
 
     /**
      * 获取语言列表

@@ -49,6 +49,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
@@ -536,7 +537,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      */
     private void showAllChannelGroup() {
         // TODO Auto-generated method stub
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             openGroupChannelList = SearchModel.channelGroupList2SearchModelList(ChannelGroupCacheUtils
                     .getAllChannelGroupList(MyApplication.getInstance()));
         } else {
@@ -622,7 +623,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             intent.setClass(getActivity().getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getActivity().getApplicationContext(), MyApplication.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
+            intent.setClass(getActivity().getApplicationContext(), WebServiceRouterManager.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -705,7 +706,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     public void run() {
                         switch (searchArea) {
                             case SEARCH_ALL:
-                                if (MyApplication.getInstance().isV0VersionChat()) {
+                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                                     searchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
@@ -716,7 +717,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
                                 break;
                             case SEARCH_CHANNELGROUP:
-                                if (MyApplication.getInstance().isV0VersionChat()) {
+                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                                     searchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
@@ -1082,7 +1083,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             bundle.putString("cid", searchModel.getId());
             bundle.putString("channelType", searchModel.getType());
             IntentUtils.startActivity(getActivity(),
-                    MyApplication.getInstance().isV0VersionChat() ?
+                    WebServiceRouterManager.getInstance().isV0VersionChat() ?
                             ChannelV0Activity.class : ConversationActivity.class, bundle);
 
         }
@@ -1096,7 +1097,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private void creatDirectChannel(String id) {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getActivity().getApplicationContext())) {
-            if (MyApplication.getInstance().isV1xVersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                 new ConversationCreateUtils().createDirectConversation(getActivity(), id,
                         new ConversationCreateUtils.OnCreateDirectConversationListener() {
                             @Override

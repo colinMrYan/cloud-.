@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -13,6 +11,7 @@ import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.horcrux.svg.SvgPackage;
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
@@ -53,7 +52,7 @@ import java.io.File;
  * Created by yufuchang on 2017/3/15.
  */
 
-public class ReactNativeAppActivity extends Activity implements DefaultHardwareBackBtnHandler {
+public class ReactNativeAppActivity extends BaseActivity implements DefaultHardwareBackBtnHandler {
     private ReactInstanceManager mReactInstanceManager;
     private ReactNativeAPIService reactNativeAPIService;
     private String reactNativeAppScheme = "";
@@ -72,6 +71,16 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
 //        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).fitsSystemWindows(true).init();
     }
 
+
+    @Override
+    public int getLayoutResId() {
+        return 0;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
+    }
+
     /**
      * 初始化RN应用Activity
      */
@@ -82,11 +91,6 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
         loadingDialog = new ReactLoadingDlg(this);
         reactNativeAPIService = new ReactNativeAPIService(ReactNativeAppActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 
 

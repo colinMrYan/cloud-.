@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.inspur.emmcloud.MediaPlayBaseActivity;
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -13,6 +14,8 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2018/10/8.
@@ -32,12 +35,17 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         initConversationInfo();
         recordUserClickChannel();
         setConversationUnHide();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_channel;
+    }
     protected void initConversationInfo() {
         if (getIntent().hasExtra(EXTRA_CONVERSATION)) {
             conversation = (Conversation) getIntent().getExtras().getSerializable(EXTRA_CONVERSATION);

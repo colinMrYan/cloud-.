@@ -36,7 +36,7 @@ public class KnowledgeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_file);
+
         ((TextView) findViewById(R.id.header_text)).setText(getString(R.string.knowledge));
         apiService = new FindAPIService(KnowledgeActivity.this);
         apiService.setAPIInterface(new WebService());
@@ -44,6 +44,11 @@ public class KnowledgeActivity extends BaseActivity {
         adapter = new Adapter();
         knowledgeListView = (ListView) findViewById(R.id.lv_file);
         knowledgeListView.setAdapter(adapter);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_file;
     }
 
     private void setKnowlegeList() {
