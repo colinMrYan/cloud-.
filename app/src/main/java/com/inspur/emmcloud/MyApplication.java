@@ -62,7 +62,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.squareup.leakcanary.LeakCanary;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -139,7 +138,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
         WebSocketPush.getInstance().startWebSocket();
 
-        LeakCanary.install(this);
     }
 
 

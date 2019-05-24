@@ -23,7 +23,6 @@ import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -142,7 +141,6 @@ public class TaskListFragment extends BaseFragment {
     }
 
     private void initViews() {
-        LogUtils.jasonDebug("initViews=========");
         currentIndex = getArguments().getInt(TaskFragment.MY_TASK_TYPE, TaskFragment.MY_MINE);
         apiService = new ScheduleApiService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -217,7 +215,6 @@ public class TaskListFragment extends BaseFragment {
      * 获取关注的任务
      */
     protected void getFocusedTasks() {
-        LogUtils.jasonDebug("getFocusedTasks=========");
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFocusedTasks(orderBy, orderType);
@@ -228,7 +225,6 @@ public class TaskListFragment extends BaseFragment {
      * 获取我参与的任务
      */
     protected void getInvolvedTasks() {
-        LogUtils.jasonDebug("getFocusedTasks=========");
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getInvolvedTasks(orderBy, orderType);
@@ -239,7 +235,6 @@ public class TaskListFragment extends BaseFragment {
      * 获取我的任务
      */
     protected void getMineTasks() {
-        LogUtils.jasonDebug("getFocusedTasks=========");
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMineTasks(orderBy, orderType);
@@ -250,7 +245,6 @@ public class TaskListFragment extends BaseFragment {
      * 获取所有任务
      */
     private void getAllFinishTasks() {
-        LogUtils.jasonDebug("getFocusedTasks=========");
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.getFinishTasks(0, 12, "REMOVED");
@@ -263,7 +257,6 @@ public class TaskListFragment extends BaseFragment {
      * @param position
      */
     protected void deleteTasks(int position) {
-        LogUtils.jasonDebug("getFocusedTasks=========");
         if (NetUtils.isNetworkConnected(getActivity())) {
             swipeRefreshLayout.setRefreshing(true);
             apiService.setTaskFinishById(uiTaskList.get(position).getId());

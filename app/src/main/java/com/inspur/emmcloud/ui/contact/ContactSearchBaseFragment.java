@@ -58,7 +58,7 @@ public class ContactSearchBaseFragment extends BaseFragment {
     }
 
     private void handMessage() {
-       handler  = new WeakHandler(getActivity()) {
+        handler = new WeakHandler(getActivity()) {
 
             @Override
             protected void handleMessage(Object o, Message message) {

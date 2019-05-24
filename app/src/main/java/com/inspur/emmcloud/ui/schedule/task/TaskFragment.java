@@ -168,7 +168,7 @@ public class TaskFragment extends BaseFragment {
                     searchEditText.setText("");
                 }
                 tabLayoutSchedule.getTabAt(position).select();
-               // ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
+                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
             }
 
             @Override
@@ -195,8 +195,7 @@ public class TaskFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                LogUtils.jasonDebug("000000000000000000000000000000");
-//                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
+                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
             }
 
             @Override

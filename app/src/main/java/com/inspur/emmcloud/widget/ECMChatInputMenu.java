@@ -33,7 +33,6 @@ import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -662,7 +661,6 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 break;
             case R.id.send_msg_btn:
-                LogUtils.LbcDebug("发送点击事件");
                 List<String> urlList = null;
                 String content = inputEdit.getRichContent(false);
                 Map<String, String> mentionsMap = null;
