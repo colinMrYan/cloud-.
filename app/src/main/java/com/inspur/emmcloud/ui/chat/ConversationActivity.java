@@ -54,7 +54,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -1414,10 +1413,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void transmitImgMsg(String cid, Message sendMessage) {
         String path1 = sendMessage.getMsgContentMediaImage().getPreviewMedia();
         String data = JSONUtils.toJSONString(sendMessage);
-        LogUtils.LbcDebug("data::" + data);
         String path = sendMessage.getLocalPath();
-        LogUtils.LbcDebug("path::" + path);
-        LogUtils.LbcDebug("path1::" + path1);
         if (!StringUtils.isBlank(path) && NetUtils.isNetworkConnected(getApplicationContext())) {
 //                Message localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid,path);
 //                localMessage.getMsgContentMediaImage().setPreviewMedia(path1);

@@ -14,9 +14,9 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
-import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 
@@ -33,7 +33,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     MyCalendar calendar;
     @BindView(R.id.lv_calendars)
     ListView calendarListView;
-    private WorkAPIService workAPIService;
+    private ScheduleApiService scheduleAPIService;
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
     private int selectPosition = -1;
@@ -55,13 +55,13 @@ public class CalendarTypeSelectActivity extends BaseActivity {
         // TODO Auto-generated method stub
         calendarAdapter = new CalendarAdapter();
         calendarListView.setAdapter(calendarAdapter);
-        workAPIService = new WorkAPIService(this);
-        workAPIService.setAPIInterface(new WebService());
+        scheduleAPIService = new ScheduleApiService(this);
+        scheduleAPIService.setAPIInterface(new WebService());
         calendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
         if (calendarList.size() > 0) {
             calendarAdapter.notifyDataSetChanged();
         }
-        workAPIService.getMyCalendar(0, 30);
+        scheduleAPIService.getMyCalendar(0, 30);
         calendarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override

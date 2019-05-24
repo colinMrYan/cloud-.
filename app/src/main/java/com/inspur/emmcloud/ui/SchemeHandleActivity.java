@@ -39,7 +39,6 @@ import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
-import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -468,7 +467,7 @@ public class SchemeHandleActivity extends BaseActivity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
                 }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
-                    openScheduleActivity(query.getQueryParameter("id"),CalActivity.class);
+                    openScheduleActivity(query.getQueryParameter("id"),CalendarAddActivity.class);
                 }
                 finish();
                 break;
