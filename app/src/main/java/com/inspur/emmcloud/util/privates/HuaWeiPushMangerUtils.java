@@ -55,7 +55,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnected() {
-        PushManagerUtils.setPushFlag(contextLocal, Constant.HUAWEI_FLAG);
+        PushManagerUtils.getInstance().setPushFlag(contextLocal, Constant.HUAWEI_FLAG);
         getToken();
         setPassByMsg(true);
     }

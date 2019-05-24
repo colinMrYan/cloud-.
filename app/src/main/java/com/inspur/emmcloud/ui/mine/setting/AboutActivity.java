@@ -21,8 +21,6 @@ import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
-import org.xutils.view.annotation.Event;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnLongClick;
@@ -77,7 +75,7 @@ public class AboutActivity extends BaseActivity {
                 .addItem("ecm.client-registry-->" + MyApplication.getInstance().getClusterClientRegistry())
                 .addItem("ClientId-->" + PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
-                .addItem("DeviceToken-->" + PushManagerUtils.getPushId(MyApplication.getInstance()))
+                .addItem("DeviceToken-->" + PushManagerUtils.getInstance().getPushId(MyApplication.getInstance()))
                 .build()
                 .show();
         return false;

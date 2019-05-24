@@ -85,7 +85,7 @@ public class JpushReceiver extends BroadcastReceiver {
             String regId = bundle
                     .getString(JPushInterface.EXTRA_REGISTRATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-            PushManagerUtils.setPushFlag(context, Constant.JPUSH_FLAG);
+            PushManagerUtils.getInstance().setPushFlag(context, Constant.JPUSH_FLAG);
             PreferencesUtils.putString(context, Constant.JPUSH_REGISTER_ID, regId);
             PushManagerUtils.getInstance().registerPushId2Emm();
             new ClientIDUtils(context).upload();
@@ -134,7 +134,7 @@ public class JpushReceiver extends BroadcastReceiver {
             boolean connected = intent.getBooleanExtra(
                     JPushInterface.EXTRA_CONNECTION_CHANGE, false);
             if(connected){
-                PushManagerUtils.setPushFlag(context, Constant.JPUSH_FLAG);
+                PushManagerUtils.getInstance().setPushFlag(context, Constant.JPUSH_FLAG);
             }
             Log.w(TAG, "[MyReceiver]" + intent.getAction()
                     + " connected state change to " + connected);

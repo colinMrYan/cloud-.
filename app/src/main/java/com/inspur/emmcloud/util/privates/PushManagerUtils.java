@@ -29,6 +29,9 @@ public class PushManagerUtils {
         return mInstance;
     }
 
+    /**
+     * 清空pushFlag
+     */
     public void clearPushFlag(){
         setPushFlag(MyApplication.getInstance(), "");
     }
@@ -38,7 +41,7 @@ public class PushManagerUtils {
      *
      * @return
      */
-    public static String getPushId(Context context) {
+    public String getPushId(Context context) {
         String pushId = "";
         String pushFlag = getPushFlag(MyApplication.getInstance());
         if (AppUtils.getIsHuaWei() && !pushFlag.equals(Constant.JPUSH_FLAG)) {
@@ -71,7 +74,7 @@ public class PushManagerUtils {
      * @param context
      * @return
      */
-    public static String getPushProvider(Context context) {
+    public String getPushProvider(Context context) {
         // 华为 com.hicloud.push
         // 极光 cn.jpush
         // 小米 com.xiaomi.xmpush
@@ -101,7 +104,7 @@ public class PushManagerUtils {
      * @param context
      * @param pushFlag
      */
-    public static void setPushFlag(Context context, String pushFlag) {
+    public void setPushFlag(Context context, String pushFlag) {
         PreferencesUtils.putString(context, Constant.PUSH_FLAG, pushFlag);
     }
 
@@ -112,10 +115,16 @@ public class PushManagerUtils {
      * @param context
      * @return
      */
-    public static String getPushFlag(Context context) {
+    public String getPushFlag(Context context) {
         return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
     }
 
+    /**
+     * 设置极光推送状态
+     * true表示打开极光
+     * false表示关闭极光
+     * @param isOpen
+     */
     public void setJpushStatus(boolean isOpen){
         if (isOpen){
             // 初始化 JPush
@@ -130,7 +139,12 @@ public class PushManagerUtils {
         }
     }
 
-
+    /**
+     * 设置华为推送状态
+     * true表示打开
+     * false表示关闭
+     * @param isOpen
+     */
     private void setHuaWeiPushStatus(boolean isOpen){
         if (isOpen){
             HuaWeiPushMangerUtils.getInstance(MyApplication.getInstance()).connect();
@@ -139,7 +153,12 @@ public class PushManagerUtils {
         }
     }
 
-
+    /**
+     * 设置小米推送状态
+     * true表示打开
+     * false表示关闭
+     * @param isOpen
+     */
     public void setMiPushStatus(boolean isOpen){
         String APP_ID = "2882303761517539689";
         String APP_KEY = "5381753921689";
@@ -193,7 +212,7 @@ public class PushManagerUtils {
             return;
         }
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            String pushId = PushManagerUtils.getPushId(MyApplication.getInstance());
+            String pushId = PushManagerUtils.getInstance().getPushId(MyApplication.getInstance());
             if (!pushId.equals("UNKNOWN")) {
                 AppAPIService appAPIService = new AppAPIService(MyApplication.getInstance());
                 appAPIService.registerPushToken();
