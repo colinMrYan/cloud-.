@@ -40,9 +40,9 @@ import java.util.Map;
  * Constant.PREF_LAST_LANGUAGE只有在没有租户信息的时候使用，记录最后一次设置的语音
  */
 public class LanguageManager {
+    public static final String LANGUAGE_NAME_FOLLOW_SYS = "followSys";
     private static LanguageManager mInstance;
     private GetServerLanguageListener getServerLanguageListener;
-    public static final String LANGUAGE_NAME_FOLLOW_SYS = "followSys";
 
     private LanguageManager() {
     }
@@ -96,9 +96,8 @@ public class LanguageManager {
         String languageJson = null;
         if (MyApplication.getInstance() == null || MyApplication.getInstance().getTanent() == null) {
             languageJson = PreferencesUtils.getString(context, Constant.PREF_LAST_LANGUAGE);
-
         } else {
-            languageJson = PreferencesByTanentUtils.getString(context, Constant.PREF_CURRENT_LANGUAGE);
+            languageJson = getCurrentLanguageJson();
         }
         if (StringUtils.isBlank(languageJson)) {
             return Locale.getDefault();
@@ -115,6 +114,22 @@ public class LanguageManager {
         }
         return new Locale(country, variant);
 
+    }
+
+    public String getCurrentLanguageJson() {
+        return PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
+    }
+
+    public void setCurrentLanguageJson(String json) {
+        PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE, json);
+    }
+
+    public String getCurrentLanguageName() {
+        return PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, "");
+    }
+
+    public void setCurrentLanguageName(String saveLanguageName) {
+        PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, saveLanguageName);
     }
 
     private boolean isNeedUpdate() {
@@ -138,7 +153,7 @@ public class LanguageManager {
      */
     private void setAppLanguage(GetLanguageResult getLanguageResult) {
         List<Language> commonLanguageList = getCommonLanguageList(getLanguageResult);
-        String languageJson = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
+        String languageJson = getCurrentLanguageJson();
         String languageName = "";
         String saveLanguageName = ""; //Preference中保存的语言名字
         // 当本地已经没有存储了languageObj信息时候
@@ -147,7 +162,7 @@ public class LanguageManager {
             saveLanguageName = LANGUAGE_NAME_FOLLOW_SYS;
         } else {
             languageName = new Language(languageJson).getIso();
-            saveLanguageName = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, "");
+            saveLanguageName = getCurrentLanguageName();
         }
         Language language = getContainedLanguage(commonLanguageList,
                 languageName);
@@ -156,8 +171,8 @@ public class LanguageManager {
             saveLanguageName = language.getIso();
         }
 
-        PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE, language.toString());
-        PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, saveLanguageName);
+        setCurrentLanguageJson(language.toString());
+        setCurrentLanguageName(saveLanguageName);
         setLanguageLocal();
     }
 
@@ -166,9 +181,9 @@ public class LanguageManager {
      */
     public void setLanguageLocal() {
         Configuration config = MyApplication.getInstance().getResources().getConfiguration();
-        String languageJson = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
+        String languageJson = getCurrentLanguageJson();
         if (languageJson != null) {
-            String languageName = PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, "");
+            String languageName = getCurrentLanguageName();
             // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
             if (languageName.equals("followSys")) {
                 List<Language> commonLanguageList = getCommonLanguageList(null);
@@ -178,16 +193,14 @@ public class LanguageManager {
                     Language commonLanguage = commonLanguageList.get(i);
                     if (commonLanguage.getIso().contains(
                             Resources.getSystem().getConfiguration().locale.getCountry())) {
-                        PreferencesByTanentUtils.putString(MyApplication.getInstance(),Constant.PREF_CURRENT_LANGUAGE,
-                                commonLanguage.toString());
+                        setCurrentLanguageJson(commonLanguage.toString());
                         languageJson = commonLanguage.toString();
                         isContainDefault = true;
                         break;
                     }
                 }
                 if (!isContainDefault) {
-                    PreferencesByTanentUtils.putString(MyApplication.getInstance(),Constant.PREF_CURRENT_LANGUAGE,
-                            commonLanguageList.get(0).toString());
+                    setCurrentLanguageJson(commonLanguageList.get(0).toString());
                     languageJson = commonLanguageList.get(0).toString();
                 }
             }
@@ -264,9 +277,8 @@ public class LanguageManager {
      * 获取当前应用语言
      * @return
      */
-    public static String getCurrentAppLanguage() {
-        String languageJson =
-                PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
+    public String getCurrentAppLanguage() {
+        String languageJson = getCurrentLanguageJson();
         if (languageJson != null) {
             Language language = new Language(languageJson);
             return language.getIana();
@@ -292,14 +304,14 @@ public class LanguageManager {
         PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_SERVER_SUPPORT_LANGUAGE, json);
     }
 
-    public interface GetServerLanguageListener {
-        void complete();
-    }
-
     private void callback() {
         if (getServerLanguageListener != null) {
             getServerLanguageListener.complete();
         }
+    }
+
+    public interface GetServerLanguageListener {
+        void complete();
     }
 
     private class WebService extends APIInterfaceInstance {

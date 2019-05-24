@@ -2,9 +2,7 @@ package com.inspur.reactnative;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -40,22 +38,6 @@ public class ReactNativeInitInfoUtils {
      */
     public static String getSystemVersion(Context context) {
         return AppUtils.getSystemVersion();
-    }
-
-    /**
-     * 获取当前应用语言
-     *
-     * @param context
-     * @return
-     */
-    public static String getLocalLanguage(Context context) {
-        String languageJson = PreferencesUtils.getString(
-                context, MyApplication.getInstance().getTanent() + "appLanguageObj");
-        if (!StringUtils.isBlank(languageJson)) {
-            Language language = new Language(languageJson);
-            return language.getIana();
-        }
-        return "UNKNOWN";
     }
 
     /**

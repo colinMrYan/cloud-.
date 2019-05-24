@@ -47,6 +47,7 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
@@ -330,8 +331,7 @@ public class SettingActivity extends BaseActivity {
     private void setLanguage() {
         // TODO Auto-generated method stub
         String languageName = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "language", "");
-        String languageJson = PreferencesUtils
-                .getString(this, MyApplication.getInstance().getTanent() + "appLanguageObj");
+        String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
         if (languageJson != null && !languageName.equals("followSys")) {
             Language language = new Language(languageJson);
             languageNameText.setText(new Language(languageJson).getLabel());

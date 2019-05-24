@@ -117,7 +117,7 @@ public class EnterpriseSwitchActivity extends BaseActivity {
         MyApplication.getInstance().clearNotification();
         MyApplication.getInstance().removeAllCookie();
         MyApplication.getInstance().clearUserPhotoMap();
-        PreferencesUtils.putBoolean(EnterpriseSwitchActivity.this, "isMDMStatusPass", false);
+        PreferencesUtils.putBoolean(EnterpriseSwitchActivity.this, Constant.PREF_MDM_STATUS_PASS, false);
         Intent intent = new Intent(EnterpriseSwitchActivity.this,
                 MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

@@ -22,6 +22,7 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -124,7 +125,7 @@ public class FindFragment extends BaseFragment implements DefaultHardwareBackBtn
         //bundle.putString("profile",myInfo);
         bundle.putString("systemName", ReactNativeInitInfoUtils.SYSTEM);
         bundle.putString("systemVersion", ReactNativeInitInfoUtils.getSystemVersion(getActivity()));
-        bundle.putString("locale", ReactNativeInitInfoUtils.getLocalLanguage(getActivity()));
+        bundle.putString("locale", LanguageManager.getInstance().getCurrentAppLanguage());
         bundle.putString("reactNativeVersion", ReactNativeInitInfoUtils.getReactNativeVersion(reactCurrentFilePath));
         bundle.putString("accessToken", ((MyApplication) getActivity().getApplicationContext()).getToken());
         bundle.putString("pushId", ReactNativeInitInfoUtils.getPushId(getActivity()));

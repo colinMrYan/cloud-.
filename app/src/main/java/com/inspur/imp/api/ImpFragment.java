@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
@@ -36,11 +35,11 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.MaxHeightListView;
@@ -478,12 +477,7 @@ public class ImpFragment extends ImpBaseFragment {
         webViewHeaders = new HashMap<>();
         addAuthorizationToken(url);
         webViewHeaders.put("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-        String languageJson = PreferencesUtils.getString(
-                getActivity(), MyApplication.getInstance().getTanent() + "appLanguageObj");
-        if (languageJson != null) {
-            Language language = new Language(languageJson);
-            webViewHeaders.put("Accept-Language", language.getIana());
-        }
+        webViewHeaders.put("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
     }
 
     /**

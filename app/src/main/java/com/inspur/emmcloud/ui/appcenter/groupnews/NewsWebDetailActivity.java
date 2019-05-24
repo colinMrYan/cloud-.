@@ -44,7 +44,6 @@ import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
@@ -54,7 +53,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -63,6 +61,7 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -136,11 +135,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 e.printStackTrace();
             }
             webViewHeaders.put("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            String languageJson = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "appLanguageObj");
-            if (languageJson != null) {
-                Language language = new Language(languageJson);
-                webViewHeaders.put("Accept-Language", language.getIana());
-            }
+            webViewHeaders.put("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         }
         webView.loadUrl(url, webViewHeaders);
     }

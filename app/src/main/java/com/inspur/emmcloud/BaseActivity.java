@@ -9,7 +9,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 
 public abstract class BaseActivity extends Activity {
     protected final int STATUS_NORMAL = 1;

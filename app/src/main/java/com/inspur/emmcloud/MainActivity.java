@@ -25,7 +25,6 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -34,8 +33,8 @@ import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -274,9 +273,8 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getApplicationContext(),
                 "myInfo", "");
-        String languageJson = PreferencesUtils.getString(getApplicationContext(),
-                MyApplication.getInstance().getTanent() + "appLanguageObj");
-        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", true);
+        String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_MDM_STATUS_PASS, true);
         if (!StringUtils.isBlank(accessToken) && (StringUtils.isBlank(myInfo))) {
             new LoginUtils(MainActivity.this, handler).getMyInfo();
         } else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {

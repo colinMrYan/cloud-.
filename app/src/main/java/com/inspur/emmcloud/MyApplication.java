@@ -34,12 +34,9 @@ import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
-import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.imp.api.Res;
@@ -421,7 +418,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getInstance(),
                 "myInfo", "");
-        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getInstance(), "isMDMStatusPass", true);
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
         return (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && isMDMStatusPass);
     }
 

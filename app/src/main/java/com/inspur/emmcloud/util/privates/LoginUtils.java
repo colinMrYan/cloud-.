@@ -106,7 +106,7 @@ public class LoginUtils extends APIInterfaceInstance implements LanguageManager.
             public void MDMStatusPass(int doubleValidation) {
                 // TODO Auto-generated method stub
                 PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, doubleValidation);
-                PreferencesUtils.putBoolean(activity, "isMDMStatusPass", true);
+                PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, true);
                 saveLoginInfo();
                 loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
                 mdm.destroyOnMDMListener();
@@ -314,7 +314,7 @@ public class LoginUtils extends APIInterfaceInstance implements LanguageManager.
         // TODO Auto-generated method stub
         String myInfo = getMyInfoResult.getResponse();
         String name = getMyInfoResult.getName();
-        PreferencesUtils.putBoolean(activity, "isMDMStatusPass", false);
+        PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, false);
         PreferencesUtils.putString(activity, "userRealName", name);
         PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
         PreferencesUtils.putString(activity, "myInfo", myInfo);
