@@ -6,7 +6,6 @@
     <attr name="footer_tab_text_color_nor" format="reference|color"/>
     <attr name="footer_tab_text_color_select" format="reference|color"/>
     <attr name="header_bg" format="reference"/>
-    <attr name="header_search_contact_bg" format="reference"/>
     <attr name="footer_bg" format="reference"/>
 
     <attr name="footer_tab_text_color" format="reference"/>
@@ -393,19 +392,19 @@
     <!--日程组件结束-->
 
     <declare-styleable name="PagerSlidingTabStrip">
-        <attr format="color" name="pstsIndicatorColor"/>
-        <attr format="color" name="pstsUnderlineColor"/>
-        <attr format="color" name="pstsDividerColor"/>
-        <attr format="dimension" name="pstsIndicatorHeight"/>
-        <attr format="dimension" name="pstsUnderlineHeight"/>
-        <attr format="dimension" name="pstsDividerPaddingTopBottom"/>
-        <attr format="dimension" name="pstsTabPaddingLeftRight"/>
-        <attr format="dimension" name="pstsScrollOffset"/>
-        <attr format="reference" name="pstsTabBackground"/>
-        <attr format="boolean" name="pstsShouldExpand"/>
-        <attr format="boolean" name="pstsTextAllCaps"/>
-        <attr format="color" name="pstsTextSelectedColor"/>
-        <attr format="float" name="pstsScaleZoomMax"/>
-        <attr format="boolean" name="pstsSmoothScrollWhenClickTab"/>
+        <attr name="pstsIndicatorColor" format="color" />
+        <attr name="pstsUnderlineColor" format="color" />
+        <attr name="pstsDividerColor" format="color" />
+        <attr name="pstsIndicatorHeight" format="dimension" />
+        <attr name="pstsUnderlineHeight" format="dimension" />
+        <attr name="pstsDividerPaddingTopBottom" format="dimension" />
+        <attr name="pstsTabPaddingLeftRight" format="dimension" />
+        <attr name="pstsScrollOffset" format="dimension" />
+        <attr name="pstsTabBackground" format="reference" />
+        <attr name="pstsShouldExpand" format="boolean" />
+        <attr name="pstsTextAllCaps" format="boolean" />
+        <attr name="pstsTextSelectedColor" format="color" />
+        <attr name="pstsScaleZoomMax" format="float" />
+        <attr name="pstsSmoothScrollWhenClickTab" format="boolean" />
     </declare-styleable>
 </resources>

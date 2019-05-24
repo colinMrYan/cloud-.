@@ -32,6 +32,7 @@
     <color name="bg_other_card">#ECEEF2</color>
     <color name="bg_my_card_press">#e00F7BCA</color>
     <color name="statebar_color">#0C68AB</color>
+    <color name="search_contact_header_bg">#F2F2F2</color>
     <!-- 导航栏原来色值#1596d2 -->
 
 

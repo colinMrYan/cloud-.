@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -24,6 +25,7 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -81,6 +83,10 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int navigationBarColor = R.color.search_contact_header_bg;
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
+        int statusBarColor = ResourceUtils.getResValueOfAttr(CommunicationSearchContactActivity.this, R.attr.header_bg_color);
+        ImmersionBar.with(this).statusBarColor(navigationBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_communication_search_contact);
         ButterKnife.bind(this);
@@ -101,7 +107,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     }
 
     protected int getStatusType() {
-        return STATUS_WHITE_DARK_FONT;
+        return STATUS_NO_SET;
     }
 
 
