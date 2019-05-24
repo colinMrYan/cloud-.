@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -238,7 +237,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     }
 
     class SearchHolder {
-        public ImageView headImageView;
+        public CircleTextImageView headImageView;
         public TextView  nameTextView;
         public TextView  detailTextView;
     }
@@ -304,8 +303,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
             //刷新数据
             SearchModel searchModel = searchChannelGroupList.get(i);
             displayImg(searchModel,searchHolder.headImageView);
-
-
+            searchHolder.nameTextView.setText(searchModel.getName().toString());
             return view;
         }
     }
