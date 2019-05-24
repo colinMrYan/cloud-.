@@ -100,6 +100,11 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         return 0;
     }
 
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
+    }
+
+
     private void handMessage() {
         handler = new WeakHandler(this) {
             @Override
