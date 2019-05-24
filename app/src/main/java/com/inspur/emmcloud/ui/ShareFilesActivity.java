@@ -66,7 +66,6 @@ public class ShareFilesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_share_files);
         ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
         if (!isImageUriList(uriList)) {
@@ -87,6 +86,10 @@ public class ShareFilesActivity extends BaseActivity {
         initViews();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_share_files;
+    }
 
     /**
      * 分享方式

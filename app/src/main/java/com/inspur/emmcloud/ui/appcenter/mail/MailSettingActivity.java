@@ -35,7 +35,6 @@ public class MailSettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mail_setting);
         ButterKnife.bind(this);
         String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         String password = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
@@ -44,6 +43,10 @@ public class MailSettingActivity extends BaseActivity {
         mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_setting;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

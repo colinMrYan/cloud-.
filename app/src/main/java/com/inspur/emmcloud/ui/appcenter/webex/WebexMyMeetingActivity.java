@@ -89,11 +89,15 @@ public class WebexMyMeetingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webex_my_meeting);
         ButterKnife.bind(this);
         initView();
         getWxMeetingList(true);
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_my_meeting;
     }
 
     private void initData() {

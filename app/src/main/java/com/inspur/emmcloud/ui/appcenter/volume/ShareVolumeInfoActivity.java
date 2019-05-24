@@ -53,10 +53,6 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     private static final int UPDATE_VOLUME_NAME = 3;
     private static final int VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION = 0;
     private static final int VOLUME_HAS_WATCH_PERMISSION = 1;
-    private Volume volume;
-    private MyAppAPIService apiService;
-    private LoadingDialog loadingDlg;
-    private VolumeDetail volumeDetail;
     @BindView(R.id.gv_member)
     NoScrollGridView memberGrid;
     @BindView(R.id.volume_member_text)
@@ -73,6 +69,10 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     LinearLayout groupWriteLayout;
     @BindView(R.id.ll_group_watch)
     LinearLayout groupReadLayout;
+    private Volume volume;
+    private MyAppAPIService apiService;
+    private LoadingDialog loadingDlg;
+    private VolumeDetail volumeDetail;
     private VolumeInfoMemberAdapter memberAdapter;
     private VolumeInfoGroupAdapter groupWriteAdapter;
     private VolumeInfoGroupAdapter groupReadAdapter;
@@ -88,7 +88,6 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_share_volumel_info);
         ButterKnife.bind(this);
         volume = (Volume) getIntent().getSerializableExtra("volume");
         loadingDlg = new LoadingDialog(this);
@@ -98,6 +97,11 @@ public class ShareVolumeInfoActivity extends BaseActivity {
         volumeNameArrowImg.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
         registerReceiver();
         getVolumeInfo();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_share_volumel_info;
     }
 
     private void registerReceiver() {

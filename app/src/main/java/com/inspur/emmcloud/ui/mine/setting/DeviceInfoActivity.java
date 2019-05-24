@@ -45,7 +45,6 @@ public class DeviceInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_device_info);
         loadingDialog = new LoadingDialog(this);
         bindingDevice = (BindingDevice) getIntent().getSerializableExtra("binding_device");
         ((TextView) findViewById(R.id.device_model_text)).setText(bindingDevice.getDeviceModel());
@@ -61,6 +60,10 @@ public class DeviceInfoActivity extends BaseActivity {
         getDeviceLog();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_setting_device_info;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

@@ -108,6 +108,11 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_contact_search_more;
+    }
+
     private void initView() {
         // TODO Auto-generated method stub
         flowLayout = (FlowLayout) findViewById(R.id.flowlayout);

@@ -37,32 +37,26 @@ public class GroupInfoActivity extends BaseActivity {
     private static final int ADD_MEMBER = 1;
     private static final int DEL_MEMBER = 2;
     private static final int UPDATE_GROUP_NAME = 3;
+    @BindView(R.id.gv_member)
+    NoScrollGridView memberGrid;
+    @BindView(R.id.volume_member_text)
+    TextView groupMemberText;
+    @BindView(R.id.volume_name_text)
+    TextView groupNameText;
+    @BindView(R.id.volume_name_title)
+    TextView groupNameTitle;
+    @BindView(R.id.header_text)
+    TextView headerText;
     private Volume volume;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
     private Group group;
-
-    @BindView(R.id.gv_member)
-    NoScrollGridView memberGrid;
-
-    @BindView(R.id.volume_member_text)
-    TextView groupMemberText;
-
-    @BindView(R.id.volume_name_text)
-    TextView groupNameText;
-
-    @BindView(R.id.volume_name_title)
-    TextView groupNameTitle;
-
-    @BindView(R.id.header_text)
-    TextView headerText;
     private VolumeInfoMemberAdapter memberAdapter;
     private ArrayList<String> volumeMemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_share_volumel_info);
         ButterKnife.bind(this);
         volume = (Volume) getIntent().getSerializableExtra("volume");
         loadingDlg = new LoadingDialog(this);
@@ -75,6 +69,10 @@ public class GroupInfoActivity extends BaseActivity {
         showGroupDetail();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_share_volumel_info;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

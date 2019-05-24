@@ -176,16 +176,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     /**************************************登出逻辑相关********************************************************/
-    public void signout() {
-        signout(true);
-    }
-
     /**
      * 注销
-     *
-     * @param isWebSocketSignout 是否在此处处理websocket的注销
      */
-    public void signout(boolean isWebSocketSignout) {
+    public void signout() {
         // TODO Auto-generated method stub
         //清除日历提醒极光推送本地通知
         ScheduleAlertUtils.cancelAllCalEventNotification(this);

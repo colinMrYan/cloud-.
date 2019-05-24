@@ -64,10 +64,14 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_network_state_detail);
         checkingNetStateUtils = new CheckingNetStateUtils(this);
         iniView();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_network_state_detail;
     }
 
     @Override

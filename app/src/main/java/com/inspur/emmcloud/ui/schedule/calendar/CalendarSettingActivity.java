@@ -47,7 +47,6 @@ public class CalendarSettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar_setting);
         ButterKnife.bind(this);
         String viewDisplayType = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
@@ -60,6 +59,10 @@ public class CalendarSettingActivity extends BaseActivity {
         calendarsListView.setAdapter(calendarAdapter);
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_calendar_setting;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

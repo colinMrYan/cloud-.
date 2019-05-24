@@ -105,7 +105,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             ToastUtils.show(this, R.string.filetransfer_sd_not_exist);
             finish();
         }
-        setContentView(R.layout.activity_face_verification);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         new ProfileUtils(FaceVerifyActivity.this, new CommonCallBack() {
@@ -116,6 +115,16 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         }).initProfile(false);
         init();
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_face_verification;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
+    }
+
 
     private void init() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);

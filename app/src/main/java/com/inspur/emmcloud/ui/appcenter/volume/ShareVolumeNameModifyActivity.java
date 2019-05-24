@@ -45,7 +45,6 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation_name_modify);
         ButterKnife.bind(this);
         if (getIntent().hasExtra("volume")) {
             isVolumeNameModify = true;
@@ -57,6 +56,11 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
         EditTextUtils.setText(editText, isVolumeNameModify ? volume.getName() : group.getName());
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         loadingDlg = new LoadingDialog(ShareVolumeNameModifyActivity.this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_name_modify;
     }
 
     public void onClick(View v) {

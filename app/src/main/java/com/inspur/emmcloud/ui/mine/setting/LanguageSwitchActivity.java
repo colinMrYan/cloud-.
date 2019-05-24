@@ -48,11 +48,15 @@ public class LanguageSwitchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine_language_switch);
         listView = (ListView) findViewById(R.id.lv);
         loadingDlg = new LoadingDialog(this);
         handMessage();
         getLanguageList();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mine_language_switch;
     }
 
     private void handMessage() {

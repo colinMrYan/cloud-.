@@ -74,9 +74,13 @@ public class FeedBackActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feedback);
         ButterKnife.bind(this);
         feedbackContentEdit.addTextChangedListener(mTextWatcher);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_feedback;
     }
 
     public void onClick(View v) {

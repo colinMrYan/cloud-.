@@ -49,8 +49,6 @@ import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
-import org.xutils.view.annotation.Event;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -811,7 +809,6 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setVoiceImageViewLevel(int volume) {
         //回调函数30多毫秒执行一次
-        LogUtils.LbcDebug("30+毫秒回调函数  ：：" + volume);
         int currentLevel = 0;
         if (0 == volume) {
             currentLevel = 0;

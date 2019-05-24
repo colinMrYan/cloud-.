@@ -21,9 +21,13 @@ public class TravelActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_travel);
         travelListView = (ListView) findViewById(R.id.travel_analysis_list);
         travelListView.setAdapter(new TravelAdapter());
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_travel;
     }
 
     public void onClick(View v) {

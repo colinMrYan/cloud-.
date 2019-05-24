@@ -51,7 +51,6 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webex_add_external_attendees);
         ButterKnife.bind(this);
         webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
         externalWebexAttendeesList = getExternalAttendeesList();
@@ -66,6 +65,10 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
         attendeesListView.setAdapter(adapter);
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_add_external_attendees;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

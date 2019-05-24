@@ -25,11 +25,15 @@ public class WebexAttendeesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webex_attendees);
         ButterKnife.bind(this);
         List<WebexAttendees> webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
         attendeesListView.setAdapter(new WebexAttendeesAdapter(this, webexAttendeesList));
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_attendees;
     }
 
     public void onClick(View v) {

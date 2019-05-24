@@ -50,7 +50,6 @@ public class FileManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.plugin_filemanager_actvitity);
         getIntentParam();
         titleRecyclerview = (RecyclerView) findViewById(R.id.rcv_title);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -157,6 +156,11 @@ public class FileManagerActivity extends BaseActivity {
 //                    .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE )
 //                    .send();
 //        }
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.plugin_filemanager_actvitity;
     }
 
     private void getIntentParam() {

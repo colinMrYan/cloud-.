@@ -52,9 +52,13 @@ public class GroupAlbumActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_album);
         ButterKnife.bind(this);
         init();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_album;
     }
 
     private void init() {

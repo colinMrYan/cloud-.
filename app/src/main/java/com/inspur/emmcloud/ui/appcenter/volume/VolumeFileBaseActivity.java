@@ -66,22 +66,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
-
-    @BindView(R.id.header_text)
-    TextView headerText;
-
-    @BindView(R.id.header_operation_layout)
-    RelativeLayout headerOperationLayout;
-
-    @BindView(R.id.lv_file)
-    RecyclerView fileRecycleView;
-
-    @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
-
-    @BindView(R.id.data_blank_layout)
-    LinearLayout dataBlankLayout;
-
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
@@ -92,6 +76,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected boolean isShowFileUploading = false;  //是否显示正在上传的文件
     protected GetVolumeFileListResult getVolumeFileListResult;
     protected String title = "";
+    @BindView(R.id.header_text)
+    TextView headerText;
+    @BindView(R.id.header_operation_layout)
+    RelativeLayout headerOperationLayout;
+    @BindView(R.id.lv_file)
+    RecyclerView fileRecycleView;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.data_blank_layout)
+    LinearLayout dataBlankLayout;
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
@@ -99,13 +93,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volume_file);
         ButterKnife.bind(this);
         initView();
         getVolumeFileList(true);
 
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_volume_file;
+    }
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         apiServiceBase = new MyAppAPIService(VolumeFileBaseActivity.this);
