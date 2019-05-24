@@ -165,11 +165,8 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        LogUtils.LbcDebug("111111111111111111111");
         switch (adapterView.getId()) {
             case R.id.lv_search_group_show:
-                LogUtils.LbcDebug("2222222222222222222");
-                LogUtils.LbcDebug("searchChannelGroupList.size()" + searchChannelGroupList.size());
                 if ((searchChannelGroupList.size() > 0) && (searchChannelGroupList.get(i) != null)) {
                     Intent intent = new Intent();
                     intent.setClass(this, ConversationActivity.class);
