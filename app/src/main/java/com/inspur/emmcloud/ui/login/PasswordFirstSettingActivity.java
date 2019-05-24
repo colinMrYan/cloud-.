@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -46,9 +45,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_password_first_setting);
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
@@ -57,6 +54,15 @@ public class PasswordFirstSettingActivity extends BaseActivity {
         EditOnTouchListener editOnTouchListener = new EditOnTouchListener();
         passwordNewEdit.setOnTouchListener(editOnTouchListener);
         passwordConfirmEdit.setOnTouchListener(editOnTouchListener);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_password_first_setting;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
     public void onClick(View v) {

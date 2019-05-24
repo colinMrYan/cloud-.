@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -51,7 +50,6 @@ public class LoginBySmsActivity extends BaseActivity {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_SMS_CAPTCHA = 2;
-    private int mode = MODE_LOGIN;
     @BindView(R.id.tv_title)
     TextView titleText;
     @BindView(R.id.text_input_layout_phone)
@@ -66,6 +64,7 @@ public class LoginBySmsActivity extends BaseActivity {
     Button loginBtn;
     @BindView(R.id.tv_login_by_account)
     TextView loginByAccountText;
+    private int mode = MODE_LOGIN;
     private Handler handler;
     private LoadingDialog loadingDlg;
     private String phone;
@@ -75,10 +74,18 @@ public class LoginBySmsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_by_sms);
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         initView();
+    }
+
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_login_by_sms;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
     private void initView() {

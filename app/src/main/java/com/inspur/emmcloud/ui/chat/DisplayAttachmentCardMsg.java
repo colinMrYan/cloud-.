@@ -28,7 +28,6 @@ public class DisplayAttachmentCardMsg {
      * 名片
      *
      * @param context
-     * @param convertView
      * @param message
      */
     public static View getView(final Context context,

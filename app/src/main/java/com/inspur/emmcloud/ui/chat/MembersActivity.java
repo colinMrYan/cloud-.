@@ -90,11 +90,15 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member);
         ButterKnife.bind(this);
         initViews();
         initChannelMemberDataInThread();
         initListener();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_member;
     }
 
     private void initViews() {

@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -100,11 +99,19 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         init();
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_user_info;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {

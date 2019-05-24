@@ -7,51 +7,31 @@ import android.os.Bundle;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
-import com.inspur.emmcloud.ui.chat.ConversationGroupInfoActivity;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
-import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
-import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
-import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
-import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
-import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
-import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
-import com.inspur.imp.plugin.photo.ImageGalleryActivity;
 
-import java.util.Arrays;
-
-public class BaseActivity extends Activity {
-    private static final String[] classNames = {
-            MainActivity.class.getName(),
-//            SchemeHandleActivity.class.getName(),
-            LoginActivity.class.getName(),
-            CaptureActivity.class.getName(),
-            PreviewDecodeActivity.class.getName(),
-            FaceVerifyActivity.class.getName(),
-            ReactNativeAppActivity.class.getName(),
-            ScanQrCodeLoginGSActivity.class.getName(),
-            IMGEditActivity.class.getName(),
-            ImageGalleryActivity.class.getName(),
-            MyInfoActivity.class.getName(),
-            GuideActivity.class.getName(),
-            UserInfoActivity.class.getName(),
-            GestureLoginActivity.class.getName(),
-            ConversationGroupInfoActivity.class.getName(),
-
-    };
-
+public abstract class BaseActivity extends Activity {
+    protected final int STATUS_NORMAL = 1;
+    protected final int STATUS_WHITE = 2;
+    protected final int STATUS_TRANSPARENT = 3;
+    protected final int STATUS_NO_SET = 4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         setTheme();
         super.onCreate(savedInstanceState);
-        setStatus();
+        int layoutResId = getLayoutResId();
+        if (layoutResId != 0) {
+            setContentView(layoutResId);
+        }
+        setStatus(getStatusType());
+    }
+
+    public abstract int getLayoutResId();
+
+    protected int getStatusType() {
+        return STATUS_NORMAL;
     }
 
     //解决调用系统应用后会弹出手势解锁的问题
@@ -66,9 +46,7 @@ public class BaseActivity extends Activity {
         super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
     }
 
-    protected void setTheme() {
-        String className = this.getClass().getCanonicalName();
-        boolean isContain = Arrays.asList(classNames).contains(className);
+    public void setTheme() {
         int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         switch (currentThemeNo) {
             case 1:
@@ -83,24 +61,25 @@ public class BaseActivity extends Activity {
         }
     }
 
-    private void setStatus() {
-        String className = this.getClass().getCanonicalName();
-        boolean isContain = Arrays.asList(classNames).contains(className);
-        int navigationBarColor = R.color.white;
-        if (!isContain) {
-            int statusBarColor = ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
-            boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
-            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
-        } else {
-            ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
+    private void setStatus(int statusType) {
+        int navigationBarColor = android.R.color.white;
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
+        switch (statusType) {
+            case STATUS_NORMAL:
+                int statusBarColor = ResourceUtils.getResValueOfAttr(BaseActivity.this, R.attr.header_bg_color);
+                ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
+                break;
+            case STATUS_WHITE:
+                ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
+                break;
+            case STATUS_TRANSPARENT:
+                ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
+                break;
+            default:
+                break;
         }
+
     }
-
-//    protected void setTransparentStatus() {
-//        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this,R.attr.status_bar_dark_font);
-//        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont).init();
-//    }
-
 
     @Override
     protected void onDestroy() {

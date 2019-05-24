@@ -122,7 +122,6 @@ public class MailDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mail_details);
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         Mail simpleMail = (Mail) getIntent().getSerializableExtra(EXTRA_MAIL);
@@ -131,6 +130,11 @@ public class MailDetailActivity extends BaseActivity {
             getMailDetail();
         }
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_details;
     }
 
     private void initView() {

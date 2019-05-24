@@ -38,10 +38,16 @@ public class LoginMoreActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_more);
         ButterKnife.bind(this);
         initView();
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_login_more;
+    }
+
+
 
     /**
      * 初始化

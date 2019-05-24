@@ -75,9 +75,13 @@ public class MailCertificateInstallActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mail_certificate_install);
         ButterKnife.bind(this);
         init();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_certificate_install;
     }
 
     /**

@@ -18,7 +18,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
  * Created by chenmch on 2018/10/8.
  */
 
-public class ConversationBaseActivity extends MediaPlayBaseActivity {
+public abstract class ConversationBaseActivity extends MediaPlayBaseActivity {
     public static final String EXTRA_CID = "cid";
     public static final String EXTRA_CONVERSATION = "conversation";
     public static final String EXTRA_NEED_GET_NEW_MESSAGE = "get_new_msg";

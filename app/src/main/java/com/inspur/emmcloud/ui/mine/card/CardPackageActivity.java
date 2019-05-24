@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.CardStackAdapter;
@@ -38,11 +37,18 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_package);
         ButterKnife.bind(this);
-        ImmersionBar.with(this).statusBarColor(R.color.content_bg).statusBarDarkFont(true, 0.2f).init();
         initViews();
         getCardPackageListFromNet();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_card_package;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
     /**

@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -45,11 +44,6 @@ public class LoginActivity extends BaseActivity {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int LOGIN_MORE = 2;
-    private String userName;
-    private String password;
-
-    private LoadingDialog LoadingDlg;
-    private Handler handler;
     @BindView(R.id.et_username)
     ClearEditText usernameEdit;
     @BindView(R.id.et_password)
@@ -60,6 +54,10 @@ public class LoginActivity extends BaseActivity {
     TextView currentLoginEnterpriseText;
     @BindView(R.id.tv_welcome)
     TextView welcomeText;
+    private String userName;
+    private String password;
+    private LoadingDialog LoadingDlg;
+    private Handler handler;
     private EmmSecurityKeyboard securityKeyboard;
 
     @Override
@@ -70,10 +68,18 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_login;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
     private void initView() {

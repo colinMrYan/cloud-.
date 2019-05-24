@@ -24,9 +24,13 @@ public class CorrectedSpeechInputActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_corrected_speech_input);
         ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_corrected_speech_input;
     }
 
     /**

@@ -27,8 +27,6 @@ public class ModifyUserInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_modify_userinfo);
         modifyEditText = (ClearEditText) findViewById(R.id.modifyinfo_edit);
         modifyButton = (Button) findViewById(R.id.get_modifyinfo_btn);
         loadingDialog = new LoadingDialog(ModifyUserInfoActivity.this);
@@ -55,6 +53,11 @@ public class ModifyUserInfoActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_modify_userinfo;
     }
 
     public void onClick(View v) {

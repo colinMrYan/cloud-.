@@ -18,12 +18,15 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(Res
-                .getLayoutID("mdm_activity_device_register_fail_detail"));
         bundle = getIntent().getExtras().getBundle("bundle");
         String message = bundle.getString("message");
         ((TextView) findViewById(Res.getWidgetID("reason_text")))
                 .setText(message);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return Res.getLayoutID("mdm_activity_device_register_fail_detail");
     }
 
     public void onClick(View v) {

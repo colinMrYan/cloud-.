@@ -152,17 +152,22 @@ public class SettingActivity extends BaseActivity {
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
         initView();
         setLanguage();
         handMessage();
         EventBus.getDefault().register(this);
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_setting;
     }
 
     @Override

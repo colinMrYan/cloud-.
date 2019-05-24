@@ -44,9 +44,13 @@ public class TaskSetActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_set);
         ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_task_set;
     }
 
     /**

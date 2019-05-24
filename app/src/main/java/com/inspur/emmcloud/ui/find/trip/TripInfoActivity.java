@@ -27,7 +27,6 @@ public class TripInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_info);
         if (getIntent().getExtras().containsKey("tripId")) {
             String tripId = getIntent().getExtras().getString("tripId");
             getTripInfo(tripId);
@@ -38,6 +37,10 @@ public class TripInfoActivity extends BaseActivity {
         PVCollectModelCacheUtils.saveCollectModel("traintickets", "find");
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_trip_info;
+    }
 
     /**
      * 网络获取行程数据

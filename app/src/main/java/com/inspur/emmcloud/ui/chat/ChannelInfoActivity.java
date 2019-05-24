@@ -12,7 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -146,8 +145,6 @@ public class ChannelInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
-        setContentView(R.layout.activity_conversation_group_info);
         channelMemberNumText = findViewById(R.id.tv_member);
         groupMembersText = findViewById(R.id.tv_group_member_size);
         groupMessageSearchLayout = findViewById(R.id.rl_search_messages);
@@ -160,6 +157,15 @@ public class ChannelInfoActivity extends BaseActivity {
         cid = getIntent().getExtras().getString("cid");
         loadingDlg = new LoadingDialog(ChannelInfoActivity.this);
         getChannelInfo();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_group_info;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
     /**

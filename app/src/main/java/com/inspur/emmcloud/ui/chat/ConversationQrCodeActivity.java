@@ -29,7 +29,11 @@ public class ConversationQrCodeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_qrcode);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_qrcode;
     }
 }

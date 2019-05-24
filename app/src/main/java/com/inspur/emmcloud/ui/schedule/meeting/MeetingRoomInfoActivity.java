@@ -60,7 +60,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private static final int REQUEST_MEETING_INFO = 1;
     private final String dayStartTime = "08:00";
     private final String dayEndTime = "18:00";
-    private MeetingRoom meetingRoom;
     @BindView(R.id.tv_meeting_room_name)
     TextView meetingRoomNameText;
     @BindView(R.id.tv_meeting_room_floor)
@@ -73,6 +72,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     LinearLayout equipmentLayout;
     @BindView(R.id.tl_meeting_tab)
     TabLayout tabLayout;
+    private MeetingRoom meetingRoom;
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private List<List<MeetingSchedule>> allDaysMeetingScheduleList;
@@ -84,12 +84,16 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_room_info);
         ButterKnife.bind(this);
         meetingRoom = (MeetingRoom) getIntent().getExtras().getSerializable(EXTRA_MEETING_ROOM);
         initView();
         getMeetingListByMeetingRoom();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_room_info;
     }
 
     private void initView() {

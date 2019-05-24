@@ -9,7 +9,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -144,10 +143,8 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation_group_info);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         String cid = getIntent().getExtras().getString(EXTRA_CID);
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
         if (conversation == null) {
@@ -161,6 +158,14 @@ public class ConversationGroupInfoActivity extends BaseActivity {
 
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_group_info;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
+    }
 
     /**
      * 数据取出后显示ui

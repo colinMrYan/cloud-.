@@ -147,11 +147,15 @@ public class ConversationActivity extends ConversationBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_channel);
         ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         handleMessage();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_channel;
     }
 
     private void handleMessage() {

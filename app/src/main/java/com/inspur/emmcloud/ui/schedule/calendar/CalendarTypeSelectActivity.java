@@ -42,9 +42,13 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar_type_select);
         ButterKnife.bind(this);
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_calendar_type_select;
     }
 
     private void initView() {
