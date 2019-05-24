@@ -63,7 +63,7 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
     }
 
     protected int getStatusType() {
-        return STATUS_WHITE;
+        return STATUS_WHITE_DARK_FONT;
     }
 
 

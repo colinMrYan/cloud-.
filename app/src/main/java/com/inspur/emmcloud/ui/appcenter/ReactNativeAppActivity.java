@@ -77,7 +77,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     }
 
     protected int getStatusType() {
-        return STATUS_WHITE;
+        return STATUS_NO_SET;
     }
 
     /**

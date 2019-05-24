@@ -62,7 +62,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
     }
 
     protected int getStatusType() {
-        return STATUS_WHITE;
+        return STATUS_WHITE_DARK_FONT;
     }
 
     public void onClick(View v) {

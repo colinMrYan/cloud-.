@@ -14,8 +14,9 @@ import com.inspur.emmcloud.util.privates.LanguageUtils;
 public abstract class BaseActivity extends Activity {
     protected final int STATUS_NORMAL = 1;
     protected final int STATUS_WHITE = 2;
-    protected final int STATUS_TRANSPARENT = 3;
-    protected final int STATUS_NO_SET = 4;
+    protected final int STATUS_WHITE_DARK_FONT = 3;
+    protected final int STATUS_TRANSPARENT = 4;
+    protected final int STATUS_NO_SET = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -70,6 +71,9 @@ public abstract class BaseActivity extends Activity {
                 ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
                 break;
             case STATUS_WHITE:
+                ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).init();
+                break;
+            case STATUS_WHITE_DARK_FONT:
                 ImmersionBar.with(this).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
                 break;
             case STATUS_TRANSPARENT:

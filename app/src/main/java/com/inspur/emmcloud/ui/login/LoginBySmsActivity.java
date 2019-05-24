@@ -85,7 +85,7 @@ public class LoginBySmsActivity extends BaseActivity {
     }
 
     protected int getStatusType() {
-        return STATUS_WHITE;
+        return STATUS_WHITE_DARK_FONT;
     }
 
     private void initView() {

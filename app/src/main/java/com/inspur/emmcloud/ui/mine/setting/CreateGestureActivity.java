@@ -127,7 +127,7 @@ public class CreateGestureActivity extends BaseActivity {
     }
 
     protected int getStatusType() {
-        return STATUS_WHITE;
+        return STATUS_WHITE_DARK_FONT;
     }
     /**
      * 初始化
