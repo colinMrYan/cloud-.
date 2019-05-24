@@ -47,8 +47,6 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     public static final String SEARCH_ALL = "search_all";
     public static final String SEARCH_CONTACT = "search_contact";
     public static final String SEARCH_GROUP = "search_group";
-    //    @BindView(R.id.lv_search_members_show)
-//    ListView searchMembersListView;
     public static final int REFRESH_DATA = 1;
     public static final int CLEAR_DATA = 2;
     @BindView(R.id.ev_search_input)
@@ -93,9 +91,13 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         initSearchRunnable();
         groupAdapter = new GroupAdapter();
         contactAdapter = new ContactAdapter();
-        //searchMembersListView.setAdapter(contactAdapter);
         searchGroupListView.setAdapter(groupAdapter);
         searchGroupListView.setOnItemClickListener(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return 0;
     }
 
     private void handMessage() {
@@ -105,7 +107,6 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                 switch (message.what) {
                     case REFRESH_DATA:
                         /**刷新Ui*/
-                        findViewById(R.id.tv_group_name_hint).setVisibility(searchChannelGroupList.size() > 0 ? View.VISIBLE : View.GONE);
                         groupAdapter.notifyDataSetChanged();
                         break;
                     case CLEAR_DATA:
@@ -115,7 +116,6 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
         };
     }
-
 
     private void initSearchRunnable() {
         searchRunnable = new Runnable() {
@@ -167,6 +167,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                     intent.putExtra("cid", searchChannelGroupList.get(i).getId());
                     intent.putExtra("channelType", searchChannelGroupList.get(i).getType());
                     startActivity(intent);
+                    finish();
                 }
                 break;
         }

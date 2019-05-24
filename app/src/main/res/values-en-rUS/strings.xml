@@ -111,6 +111,7 @@
     <string name="help">Help</string>
     <string name="load_data_failed">Failed to load data</string>
     <string name="not_support_upload">Does not support file upload without suffix </string>
+    <string name="communication_search">Search</string>
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>

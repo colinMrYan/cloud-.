@@ -115,6 +115,7 @@
     <string name="news_content_cant_empty">內容不能為空</string>
     <string name="help">幫助</string>
     <string name="load_data_failed">加載數據失敗</string>
+    <string name="communication_search">搜索</string>
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>

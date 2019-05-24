@@ -58,16 +58,16 @@
             android:id="@+id/tv_search_contact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
             android:layout_marginBottom="7dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginTop="7dp"
             android:background="@drawable/bg_search_contact"
             android:gravity="center"
             android:onClick="onClick"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:text="搜索联系人"
+            android:text="@string/communication_search"
             android:textColor="#888888" />
     </RelativeLayout>
 
