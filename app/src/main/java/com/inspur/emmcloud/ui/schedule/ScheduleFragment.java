@@ -170,7 +170,7 @@ public class ScheduleFragment extends BaseFragment implements
                 setScheduleBackToToday();
             }
         });
-        switch (LanguageManager.getCurrentAppLanguage()){
+        switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
             case "zh-Hans":
             case "zh-hant":
                 calendarView.setIsLunarAndFestivalShow(true);

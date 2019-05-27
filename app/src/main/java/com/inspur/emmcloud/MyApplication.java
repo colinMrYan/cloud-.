@@ -22,6 +22,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
@@ -53,7 +54,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
 
 
 /**
@@ -131,7 +131,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         Res.init(this); // 注册imp的资源文件类
         ImageDisplayUtils.getInstance().initImageLoader();
         initTanent();
-        RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
+        RichText.initCacheDir(new File(MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
         RichText.debugMode = true;
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
@@ -246,7 +246,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (currentEnterprise != null) {
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
         }
-        params.addHeader("Accept-Language", LanguageManager.getCurrentAppLanguage());
+        params.addHeader("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         return params;
     }
 
