@@ -14,7 +14,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
-import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
@@ -77,8 +76,17 @@ public class SchemeHandleActivity extends BaseActivity {
         if (isLackNecessaryPermission()) {
             return;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         if (MyApplication.getInstance().isSafeLock()) {
-            EventBus.getDefault().register(this);
+            if (MyApplication.getInstance().isSafeLock()) {
+                EventBus.getDefault().register(this);
+            } else {
+                openScheme();
+            }
         } else {
             openScheme();
         }
@@ -137,8 +145,8 @@ public class SchemeHandleActivity extends BaseActivity {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
+    public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
             new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
                 @Override
                 public void execute() {

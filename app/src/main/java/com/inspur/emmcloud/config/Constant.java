@@ -72,6 +72,7 @@ public class Constant {
     public static final String PREF_CURRENT_LANGUAGE = "current_language";
     public static final String PREF_CURRENT_LANGUAGE_NAME = "current_language_name";
     public static final String PREF_IS_CONTACT_READY = "isContactReady";
+    public static final String PREF_APP_BACKGROUND_TIME = "app_background_time";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

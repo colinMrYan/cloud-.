@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.Constant;
@@ -43,6 +44,10 @@ import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.imp.api.Res;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 import java.util.Timer;
@@ -88,7 +93,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         }
         initAppAlias();
         checkNecessaryPermission();
-//        IntentUtils.startActivity(this, MeetingOfficeAddActivity.class,true);
     }
 
     @Override
@@ -323,23 +327,30 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
      * 开启应用
      */
     private void startApp() {
-        Boolean isFirst = PreferencesUtils.getBoolean(
-                MainActivity.this, "isFirst", true);
-        if (AppUtils.isAppHasUpgraded(getApplicationContext()) || isFirst) {
-            IntentUtils.startActivity(MainActivity.this,
-                    GuideActivity.class, true);
+        //当弹出锁屏界面时不进行跳转，需要解锁完成之后在进行页面跳转，防止出现跳转界面遮盖处锁屏界面
+        if (!MyApplication.getInstance().isSafeLock()) {
+            Boolean isFirst = PreferencesUtils.getBoolean(
+                    MainActivity.this, "isFirst", true);
+            if (AppUtils.isAppHasUpgraded(getApplicationContext()) || isFirst) {
+                IntentUtils.startActivity(MainActivity.this,
+                        GuideActivity.class, true);
+            } else {
+                String accessToken = PreferencesUtils.getString(MainActivity.this,
+                        "accessToken", "");
+                MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
+                        IndexActivity.class : LoginActivity.class, true);
+            }
         } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    String accessToken = PreferencesUtils.getString(MainActivity.this,
-                            "accessToken", "");
-                    MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                    IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
-                            IndexActivity.class : LoginActivity.class, true);
-                }
-            }, 50);
+            EventBus.getDefault().register(this);
+        }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
+            startApp();
         }
     }
 
@@ -396,6 +407,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (handler != null) {
             handler = null;
         }

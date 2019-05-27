@@ -18,7 +18,6 @@ import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
@@ -388,12 +387,12 @@ public class AppAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUploadMDMInfoSuccess(new UploadMDMInfoResult(new String(arg0)));
+                // apiInterface.returnUploadMDMInfoSuccess(new UploadMDMInfoResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUploadMDMInfoFail();
+                // apiInterface.returnUploadMDMInfoFail();
             }
 
             @Override

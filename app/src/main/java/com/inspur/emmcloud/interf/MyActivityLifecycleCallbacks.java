@@ -9,17 +9,16 @@ import android.os.Handler;
 
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.service.SyncCommonAppService;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionActivity;
 import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
@@ -37,7 +36,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     private int count = 0;
     private Activity currentActivity;
-    private WebService webService = new WebService();
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -48,28 +46,25 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public void onActivityStarted(Activity activity) {
         MyApplication.getInstance().setEnterSystemUI(false);
         currentActivity = activity;
-        if (count == 0) {
-
-        }
-        count++;
         //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
         if (isLackNecessaryPermission()) {
+            count++;
             return;
         }
-        //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
-        if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance().isIndexActivityRunning()) {
+        if (count == 0) {
             MyApplication.getInstance().setIsActive(true);
-            //当用通知打开特定Activity或者第一个打开的是SchemeActivity时，此处不作处理，交由SchemeActivity处理
-            if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
-                showSafeVerificationPage();
+            if (!isLackNecessaryPermission() && MyApplication.getInstance().isHaveLogin()) {
+                long appBackgroundTime = PreferencesUtils.getLong(MyApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
+                //进入后台后重新进入应用需要间隔3分钟以上才弹出二次验证
+                if (System.currentTimeMillis() - appBackgroundTime >= 180000) {
+                    showSafeVerificationPage();
+                }
+                uploadMDMInfo(activity);
+                new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
             }
-            uploadMDMInfo(activity);
-            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         }
-        //防止应用防止时间很久，Application被销毁后isActive变量被置为默认false
-        if (activity instanceof IndexActivity) {
-            MyApplication.getInstance().setIsActive(true);
-        }
+        count++;
+
     }
 
     private boolean isLackNecessaryPermission() {
@@ -98,12 +93,16 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     @Override
     public void onActivityStopped(Activity activity) {
         count--;
-        if (count == 0 && !MyApplication.getInstance().isEnterSystemUI()) { // app 进入后台
+        if (count == 0) { // app 进入后台
+            PreferencesUtils.putLong(MyApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
             MyApplication.getInstance().setIsActive(false);
-            startUploadPVCollectService(MyApplication.getInstance());
-            startSyncCommonAppService(MyApplication.getInstance());
-            new ClientIDUtils(MyApplication.getInstance()).upload();
             WebSocketPush.getInstance().closeWebsocket();
+            if (MyApplication.getInstance().isHaveLogin()) {
+                startUploadPVCollectService(MyApplication.getInstance());
+                startSyncCommonAppService(MyApplication.getInstance());
+                new ClientIDUtils(MyApplication.getInstance()).upload();
+            }
+
         }
     }
 
@@ -129,20 +128,31 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      * 弹出进入app安全验证界面
      */
     private void showSafeVerificationPage() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(MyApplication.getInstance())) {
+
+        if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(MyApplication.getInstance())) {
+            MyApplication.getInstance().setSafeLock(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
                     Intent intent = new Intent(currentActivity, FaceVerifyActivity.class);
                     intent.putExtra("isFaceVerifyExperience", false);
                     currentActivity.startActivity(intent);
-                } else if (getIsNeedGestureCode(MyApplication.getInstance())) {
+                }
+            }, 200);
+
+
+        } else if (getIsNeedGestureCode(MyApplication.getInstance())) {
+            MyApplication.getInstance().setSafeLock(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
                     Intent intent = new Intent(currentActivity, GestureLoginActivity.class);
                     intent.putExtra("gesture_code_change", "login");
                     currentActivity.startActivity(intent);
                 }
-            }
-        }, 200);
+            }, 200);
+        }
+
     }
 
     /**
@@ -160,7 +170,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     private void uploadMDMInfo(Context context) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             AppAPIService appAPIService = new AppAPIService(context);
-            appAPIService.setAPIInterface(webService);
             appAPIService.uploadMDMInfo();
         }
 
@@ -192,11 +201,4 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     }
 
 
-    private class WebService extends APIInterfaceInstance {
-
-//        @Override
-//        public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
-//            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, uploadMDMInfoResult.getDoubleValidation());
-//        }
-    }
 }

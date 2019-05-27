@@ -21,6 +21,8 @@ import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -65,6 +67,7 @@ public class GestureLoginActivity extends BaseActivity {
                         } else if (command.equals("login")) {
                             isLogin = true;
                             //发送解锁广播是，SchemeHandleActivity中接收处理
+                            MyApplication.getInstance().setSafeLock(false);
                             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
                             finish();
                         } else if (command.equals("close")) {
@@ -81,10 +84,19 @@ public class GestureLoginActivity extends BaseActivity {
         }
     };
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
+            finish();
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         init();
         ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();
     }
@@ -178,7 +190,7 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
     private enum Status {
