@@ -118,15 +118,7 @@ public class TaskFragment extends BaseFragment {
             @Override
             public void onTabSelected(final TabLayout.Tab tab) {
                 //带“全部”代码
-//                int index = tab.getPosition();
-//                taskViewPager.setCurrentItem(index + 1);
-                taskViewPager.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        taskViewPager.setCurrentItem(tab.getPosition());
-                    }
-                },100);
-
+                taskViewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
