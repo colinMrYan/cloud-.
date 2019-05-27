@@ -55,11 +55,10 @@ public class MarkDownLinkCacheUtils {
      * @param context
      * @return
      */
-    public static List<MarkDownLink> getMarkDownLinkList(Context context, String mid,String url) {
+    public static List<MarkDownLink> getMarkDownLinkList(Context context, String mid, String url) {
         List<MarkDownLink> markDownLinks = null;
         try {
-          markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("mid","=",mid).findAll();
-           // markDownLinks = DbCacheUtils.getDb(context).findAll(MarkDownLink.class);
+            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("mid", "=", mid).findAll();
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -79,8 +78,7 @@ public class MarkDownLinkCacheUtils {
     public static List<MarkDownLink> getMarkDownLinkListById(Context context, String id) {
         List<MarkDownLink> markDownLinks = null;
         try {
-            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("id","=",id).findAll();
-            // markDownLinks = DbCacheUtils.getDb(context).findAll(MarkDownLink.class);
+            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("id", "=", id).findAll();
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
