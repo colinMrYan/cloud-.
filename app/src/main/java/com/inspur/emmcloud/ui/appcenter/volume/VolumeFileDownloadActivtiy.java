@@ -42,35 +42,27 @@ import butterknife.ButterKnife;
  */
 public class VolumeFileDownloadActivtiy extends BaseActivity {
 
-    private String fileSavePath = "";
     @BindView(R.id.download_status_layout)
     LinearLayout downloadStatusLayout;
-
     @BindView(R.id.download_btn)
     Button downloadBtn;
-
     @BindView(R.id.download_progress)
     ProgressBar progressBar;
-
     @BindView(R.id.progress_text)
     TextView progressText;
-
     @BindView(R.id.tv_file_name)
     TextView fileNameText;
-
     @BindView(R.id.file_type_img)
     ImageView fileTypeImg;
-
     @BindView(R.id.file_time_text)
     TextView fileTimeText;
-
+    private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volume_file_download);
         ButterKnife.bind(this);
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
@@ -87,6 +79,11 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 downloadFile();
             }
         }
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_volume_file_download;
     }
 
     public void onClick(View v) {

@@ -1,12 +1,12 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
@@ -14,7 +14,7 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
  * Created by yufuchang on 2018/5/4.
  */
 
-public class NoPermissionDialogActivity extends Activity {
+public class NoPermissionDialogActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,4 +33,12 @@ public class NoPermissionDialogActivity extends Activity {
         dialog.show();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return 0;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
+    }
 }

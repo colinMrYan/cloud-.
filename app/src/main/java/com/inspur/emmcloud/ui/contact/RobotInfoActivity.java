@@ -44,6 +44,11 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
         getRobotInfo();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_cast_info;
+    }
+
     /**
      * 初始化Views
      */

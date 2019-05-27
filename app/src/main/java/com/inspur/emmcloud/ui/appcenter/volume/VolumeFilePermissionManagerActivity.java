@@ -54,10 +54,14 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_volume_file_permission_manager);
         ButterKnife.bind(this);
         initViews();
         getVolumeFileGroup();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_volume_file_permission_manager;
     }
 
     /**

@@ -10,6 +10,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
@@ -34,7 +35,7 @@ public class APIUri {
 //    }
 
     public static String getEcmUrl() {
-        return MyApplication.getInstance().getClusterEcm();
+        return WebServiceRouterManager.getInstance().getClusterEcm();
     }
 
     /**
@@ -43,7 +44,7 @@ public class APIUri {
      * @return
      */
     public static String getEMMBaseUrl() {
-        return MyApplication.getInstance().getClusterEmm();
+        return WebServiceRouterManager.getInstance().getClusterEmm();
     }
 
     /**
@@ -52,7 +53,7 @@ public class APIUri {
      * @return
      */
     public static String getECMChatUrl() {
-        return MyApplication.getInstance().getClusterChat();
+        return WebServiceRouterManager.getInstance().getClusterChat();
     }
 
     /**
@@ -61,7 +62,7 @@ public class APIUri {
      * @return
      */
     public static String getECMScheduleUrl() {
-        return MyApplication.getInstance().getClusterSchedule();
+        return WebServiceRouterManager.getInstance().getClusterSchedule();
     }
 
     /**
@@ -70,7 +71,7 @@ public class APIUri {
      * @return
      */
     public static String getECMDistribution() {
-        return MyApplication.getInstance().getClusterDistribution();
+        return WebServiceRouterManager.getInstance().getClusterDistribution();
     }
 
     /**
@@ -79,7 +80,7 @@ public class APIUri {
      * @return
      */
     public static String getECMNews() {
-        return MyApplication.getInstance().getClusterNews();
+        return WebServiceRouterManager.getInstance().getClusterNews();
     }
 
     /**
@@ -88,7 +89,7 @@ public class APIUri {
      * @return
      */
     public static String getCloudDriver() {
-        return MyApplication.getInstance().getClusterCloudDrive();
+        return WebServiceRouterManager.getInstance().getClusterCloudDrive();
     }
 
     /**
@@ -97,7 +98,7 @@ public class APIUri {
      * @return
      */
     public static String getStorageLegacy() {
-        return MyApplication.getInstance().getClusterStorageLegacy();
+        return WebServiceRouterManager.getInstance().getClusterStorageLegacy();
     }
 
     public static String getUrlBaseVolume() {
@@ -150,7 +151,7 @@ public class APIUri {
 
 
     public static String getAppConfigUrl(boolean isGetCommonAppConfig, boolean isGetWorkPortletAppConfig, boolean isGetWebAutoRotate) {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWorkPortletAppConfig ? "&key=WorkPortlet" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/array?key=PosReportTimeInterval" + (isGetCommonAppConfig ? "&key=CommonFunctions" : "") + (isGetWorkPortletAppConfig ? "&key=WorkPortlet" : "") + (isGetWebAutoRotate ? "&key=WebAutoRotate" : "");
     }
 
     /**
@@ -176,7 +177,7 @@ public class APIUri {
      * @return
      */
     public static String saveAppConfigUrl(String key) {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/" + key;
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/" + key;
     }
 
     /**
@@ -185,7 +186,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPositionUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v6.0/app/pos";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/pos";
     }
 
     /**
@@ -194,7 +195,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPushInfoUrl() {
-        return MyApplication.getInstance().getClusterClientRegistry() + "/client";
+        return WebServiceRouterManager.getInstance().getClusterClientRegistry() + "/client";
     }
 
     /**
@@ -203,7 +204,7 @@ public class APIUri {
      * @return
      */
     public static String getAllConfigVersionUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
     }
 
 
@@ -216,7 +217,7 @@ public class APIUri {
      * @return
      */
     public static String getLoginSMSCaptchaUrl(String mobile) {
-        return MyApplication.getInstance().getCloudId() + "api/v1/passcode?phone=" + mobile;
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "api/v1/passcode?phone=" + mobile;
     }
 
     /**
@@ -225,7 +226,7 @@ public class APIUri {
      * @return
      */
     public static String getSMSRegisterCheckUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "/api?module=register&method=verify_smscode";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "/api?module=register&method=verify_smscode";
     }
 
     /**
@@ -234,14 +235,14 @@ public class APIUri {
      * @return
      */
     public static String getMyInfoUrl() {
-        return MyApplication.getInstance().getCloudId() + "oauth2.0/profile";
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
     }
 
     /**
      * 修改密码
      **/
     public static String getChangePsdUrl() {
-        return MyApplication.getInstance().getCloudId() + "console/api/v1/account/password";
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "console/api/v1/account/password";
     }
 
 
@@ -251,7 +252,7 @@ public class APIUri {
      * @return
      */
     public static String getOauthSigninUrl() {
-        return MyApplication.getInstance().getCloudId() + "oauth2.0/token";
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token";
     }
 
     /**
@@ -260,7 +261,7 @@ public class APIUri {
      * @return
      */
     public static String getOauthMyInfoUrl() {
-        return MyApplication.getInstance().getCloudId() + "oauth2.0/token/profile";
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token/profile";
     }
 
     /**
@@ -269,7 +270,7 @@ public class APIUri {
      * @return
      */
     public static String getRefreshToken() {
-        return MyApplication.getInstance().getCloudId() + "oauth2.0/token";
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token";
     }
 
 
@@ -279,7 +280,7 @@ public class APIUri {
      * @return
      */
     public static String getWebLoginUrl() {
-        return MyApplication.getInstance().getCloudId() + "oauth2.0/authorize";
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/authorize";
     }
 
 
@@ -299,7 +300,7 @@ public class APIUri {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             if (contactUser != null) {
                 if (contactUser.getHasHead() == 1) {
-                    headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
+                    headImgUrl = WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
                     String lastQueryTime = contactUser.getLastQueryTime();
                     if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
                         headImgUrl = headImgUrl + "?" + lastQueryTime;
@@ -341,7 +342,7 @@ public class APIUri {
         String headImgUrl = "";
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         if (contactUser != null) {
-            headImgUrl = MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
+            headImgUrl = WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
             String lastQueryTime = contactUser.getLastQueryTime();
             if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
                 headImgUrl = headImgUrl + "?" + lastQueryTime;
@@ -368,9 +369,9 @@ public class APIUri {
      */
     public static String getECMChatChannelUrl() {
         String channelUrl = "";
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             channelUrl = getECMChatUrl();
-        } else if (MyApplication.getInstance().isV1xVersionChat()) {
+        } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             channelUrl = (getWebsocketConnectUrl() + "/" + MyApplication.getInstance().getTanent());
         }
         return channelUrl;
@@ -393,7 +394,7 @@ public class APIUri {
      * @return
      */
     public static String getUserInfoPhotoUrl(String url) {
-        return MyApplication.getInstance().getClusterEmm() + url;
+        return WebServiceRouterManager.getInstance().getClusterEmm() + url;
     }
 
     /**
@@ -468,7 +469,7 @@ public class APIUri {
      * @return
      */
     public static String getAllBotInfo() {
-        return MyApplication.getInstance().getClusterBot();
+        return WebServiceRouterManager.getInstance().getClusterBot();
     }
 
     /**
@@ -477,7 +478,7 @@ public class APIUri {
      * @return
      */
     public static String getBotInfoById() {
-        return MyApplication.getInstance().getClusterBot();
+        return WebServiceRouterManager.getInstance().getClusterBot();
     }
 
     /**
@@ -486,7 +487,7 @@ public class APIUri {
      * @return
      */
     public static String getWebsocketConnectUrl() {
-        return MyApplication.getInstance().getClusterChatSocket();
+        return WebServiceRouterManager.getInstance().getClusterChatSocket();
     }
 
 
@@ -703,7 +704,7 @@ public class APIUri {
      * @return
      */
     public static String getAllApps() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/getAllApps";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/getAllApps";
     }
 
     /**
@@ -712,7 +713,7 @@ public class APIUri {
      * @return
      */
     public static String getNewAllApps() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/appCenterList";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/appCenterList";
     }
 
     /**
@@ -721,7 +722,7 @@ public class APIUri {
      * @return
      */
     public static String getAppAuthCodeUri() {
-        return MyApplication.getInstance().getCloudId() + "oauth2.0/quick_authz_code";
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/quick_authz_code";
     }
 
     /**
@@ -730,7 +731,7 @@ public class APIUri {
      * @return
      */
     public static String getMyAppWidgetsUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v6.0/app/recommend/apps";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/recommend/apps";
     }
 
     /**
@@ -739,7 +740,7 @@ public class APIUri {
      * @return
      */
     public static String getUserApps() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.1/imp_app/userApps";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.1/imp_app/userApps";
     }
 
     /**
@@ -748,7 +749,7 @@ public class APIUri {
      * @return
      */
     public static String getAppInfo() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/getAppInfo";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/getAppInfo";
     }
 
     /**
@@ -757,7 +758,7 @@ public class APIUri {
      * @returnsunqx
      */
     public static String addApp() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/installApp";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/installApp";
     }
 
     /**
@@ -766,7 +767,7 @@ public class APIUri {
      * @return
      */
     public static String removeApp() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/uninstallApp";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/uninstallApp";
     }
 
     /**
@@ -775,7 +776,7 @@ public class APIUri {
      * @return
      */
     public static String checkUpgrade() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/checkVersion";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/checkVersion";
     }
 
 
@@ -785,7 +786,7 @@ public class APIUri {
      * @return
      */
     public static String getContactUserUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/users";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/users";
     }
 
     /**
@@ -794,7 +795,7 @@ public class APIUri {
      * @return
      */
     public static String getContactUserUrlUpdate() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/users";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/users";
     }
 
 
@@ -804,7 +805,7 @@ public class APIUri {
      * @return
      */
     public static String getContactOrgUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/orgs";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v4.0/contacts/orgs";
     }
 
     /**
@@ -813,7 +814,7 @@ public class APIUri {
      * @return
      */
     public static String getContactOrgUrlUpdate() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/orgs";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/contacts/orgs";
     }
 
 
@@ -821,7 +822,7 @@ public class APIUri {
      * 行政审批验证密码
      */
     public static String getVeriryApprovalPasswordUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "proxy/shenpi/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "proxy/shenpi/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
     }
 
 
@@ -888,7 +889,7 @@ public class APIUri {
      * @return
      */
     public static String getReactNativeInstallUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/queryByUri";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/queryByUri";
     }
 
     /**
@@ -1199,7 +1200,7 @@ public class APIUri {
      */
     public static String getMeetingsUrl() {
         String meetingUrl = "";
-        if (MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v0") || MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v1")) {
+        if (WebServiceRouterManager.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v0") || WebServiceRouterManager.getInstance().getClusterScheduleVersion().toLowerCase().startsWith("v1")) {
             meetingUrl = getMeetingBaseUrl() + "room/bookings";
         }
         return meetingUrl;
@@ -1303,7 +1304,7 @@ public class APIUri {
      * @return
      */
     public static String getCalendarUrl() {
-        String scheduleVersion = MyApplication.getInstance().getClusterScheduleVersion().toLowerCase();
+        String scheduleVersion = WebServiceRouterManager.getInstance().getClusterScheduleVersion().toLowerCase();
         String calendarUrl = "";
         if (scheduleVersion.startsWith("v0")) {
             calendarUrl = getECMScheduleUrl() + "/api/v0";
@@ -1320,7 +1321,7 @@ public class APIUri {
      * @return
      */
     private static String getToDoBaseUrl() {
-        String scheduleVersion = MyApplication.getInstance().getClusterScheduleVersion().toLowerCase();
+        String scheduleVersion = WebServiceRouterManager.getInstance().getClusterScheduleVersion().toLowerCase();
         String todoUrl = "";
         if (scheduleVersion.startsWith("v0")) {
             todoUrl = getECMScheduleUrl() + "/api/v0/todo/";
@@ -1462,7 +1463,7 @@ public class APIUri {
      * @return
      */
     public static String getAppBadgeNumUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mam/v6.0/app/badge";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/badge";
     }
 
 
@@ -1474,7 +1475,7 @@ public class APIUri {
      * @return
      */
     public static String getRecommandAppUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "admin/share_qr";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "admin/share_qr";
     }
 
     /**
@@ -1483,14 +1484,14 @@ public class APIUri {
      * @return
      */
     public static String getUserProfileUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/displayconfig";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/displayconfig";
     }
 
     /**
      * 获取个人信息及其显示配置
      */
     public static String getUserProfileAndDisPlayUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/detail";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/detail";
     }
 
 
@@ -1500,7 +1501,7 @@ public class APIUri {
      * @param
      */
     public static String getUpdateUserHeadUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/user/update_head";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/user/update_head";
     }
 
     /**
@@ -1509,7 +1510,7 @@ public class APIUri {
      * @return
      */
     public static String getModifyUserInfoUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api?module=user&method=update_baseinfo";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api?module=user&method=update_baseinfo";
     }
 
 
@@ -1519,7 +1520,7 @@ public class APIUri {
      * @return
      */
     public static String getFaceSettingUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/face/save";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/face/save";
     }
 
     /**
@@ -1528,7 +1529,7 @@ public class APIUri {
      * @return
      */
     public static String getFaceVerifyUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/face/verify";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/face/verify";
     }
 
     /***********设备管理******************
@@ -1538,7 +1539,7 @@ public class APIUri {
      * @return
      */
     public static String getUnBindDeviceUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mdm/v3.0/device/unbind ";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/device/unbind ";
     }
 
     /**
@@ -1547,7 +1548,7 @@ public class APIUri {
      * @return
      */
     public static String getBindingDevicesUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mdm/v3.0/device/getUserDevices";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/device/getUserDevices";
     }
 
     /**
@@ -1566,7 +1567,7 @@ public class APIUri {
      * @return
      */
     public static String getDeviceLogUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mdm/v3.0/device/getDeviceLogs";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/device/getDeviceLogs";
     }
 
     /**
@@ -1575,7 +1576,7 @@ public class APIUri {
      * @return
      */
     public static String getMDMStateUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/mdm_state";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/mdm_state";
     }
 
     /**
@@ -1584,7 +1585,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadMDMInfoUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/mdm_check";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/mdm_check";
     }
 
     /**
@@ -1593,7 +1594,7 @@ public class APIUri {
      * @return
      */
     public static String getDeviceCheckUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/check_state";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/check_state";
     }
 
     /**
@@ -1602,7 +1603,7 @@ public class APIUri {
      * @return
      */
     public static String getCardPackageUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/buildinapp/v6.0/CardPackage";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/buildinapp/v6.0/CardPackage";
     }
 
     /**
@@ -1611,11 +1612,11 @@ public class APIUri {
      * @return
      */
     public static String getUserExperienceUpgradeFlagUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/checkExperiencePlan";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/checkExperiencePlan";
     }
 
     public static String getUpdateUserExperienceUpgradeFlagUrl(int flag) {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/joinExperiencePlan?flag=" + flag;
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/upgrade/joinExperiencePlan?flag=" + flag;
     }
 
     /**
@@ -1624,7 +1625,7 @@ public class APIUri {
      * @return
      */
     public static String getUserCardMenusUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/config/UserCardMenus";
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/UserCardMenus";
     }
 
     /**
@@ -1700,9 +1701,9 @@ public class APIUri {
      */
     public static String getBadgeCountUrl() {
         String badgeCountUrl = "";
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             badgeCountUrl = getECMChatUrl() + "/unread-count";
-        } else if (MyApplication.getInstance().isV1xVersionChat()) {
+        } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             badgeCountUrl = getECMChatUrl() + "/rest/v1/unread-count";
         }
         return badgeCountUrl;
@@ -1724,7 +1725,7 @@ public class APIUri {
     }
 
     public static String getCancelTokenUrl() {
-        return MyApplication.getInstance().getCloudId() + "oauth2.0/profile";
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
     }
 
     public static String getScheduleListUrl() {
@@ -1807,5 +1808,6 @@ public class APIUri {
     public static String getDecideCardBotRequestUrl(){
         return "https://api.inspuronline.com/bot/v1/action/trigger/";
     }
+
 
 }

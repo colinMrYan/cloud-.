@@ -1,6 +1,5 @@
 package com.inspur.imp.plugin.barcode.scan;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -22,6 +21,8 @@ import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -45,7 +46,7 @@ import java.util.List;
 import java.util.Vector;
 
 
-public class CaptureActivity extends Activity implements Callback {
+public class CaptureActivity extends BaseActivity implements Callback {
 
     private static final float BEEP_VOLUME = 0.10f;
     private static final long VIBRATE_DURATION = 200L;
@@ -81,7 +82,6 @@ public class CaptureActivity extends Activity implements Callback {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-        setContentView(Res.getLayoutID("plugin_barcode_capture"));
         CameraManager.init(this);
         btn_torch = (Button) findViewById(Res.getWidgetID("btn_torch"));
         viewfinderView = (ViewfinderView) findViewById(Res.getWidgetID("viewfinder_view"));
@@ -115,6 +115,15 @@ public class CaptureActivity extends Activity implements Callback {
                 }
             }
         });
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.plugin_barcode_capture;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
     @Override

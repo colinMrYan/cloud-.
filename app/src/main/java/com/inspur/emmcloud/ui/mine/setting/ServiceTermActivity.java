@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.os.Bundle;
 import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -14,10 +13,8 @@ import com.inspur.emmcloud.R;
 public class ServiceTermActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_service_term);
+    public int getLayoutResId() {
+        return R.layout.activity_service_term;
     }
 
     public void onClick(View v) {

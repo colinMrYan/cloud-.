@@ -31,6 +31,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -89,11 +90,15 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member);
         ButterKnife.bind(this);
         initViews();
         initChannelMemberDataInThread();
         initListener();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_member;
     }
 
     private void initViews() {
@@ -126,7 +131,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             public void run() {
                 if (!StringUtils.isBlank(channelId)) {
                     List<String> uidList = null;
-                    if (MyApplication.getInstance().isV1xVersionChat()) {
+                    if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                         Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), channelId);
                         uidList = conversation.getMemberList();
                     } else {

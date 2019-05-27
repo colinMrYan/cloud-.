@@ -109,6 +109,11 @@ public class MailSendActivity extends BaseActivity {
         init();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_send;
+    }
+
     /**
      * 初始化
      */

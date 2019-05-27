@@ -35,10 +35,14 @@ public class AppGroupActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_app);
         ButterKnife.bind(this);
         appList.addAll((List<App>) getIntent().getSerializableExtra("appGroupList"));
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_app;
     }
 
     /**

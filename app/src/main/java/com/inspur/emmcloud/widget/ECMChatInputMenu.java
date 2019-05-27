@@ -49,8 +49,6 @@ import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
-import org.xutils.view.annotation.Event;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,6 +57,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -646,8 +645,8 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    @Event({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
-    private void onClick(View view) {
+    @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_btn:
                 if (view.getTag() == null || (int) view.getTag() == TAG_KEYBOARD_INPUT) {
@@ -809,7 +808,6 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setVoiceImageViewLevel(int volume) {
         //回调函数30多毫秒执行一次
-        LogUtils.LbcDebug("30+毫秒回调函数  ：：" + volume);
         int currentLevel = 0;
         if (0 == volume) {
             currentLevel = 0;

@@ -87,7 +87,6 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webex_schedule_meeting);
         ButterKnife.bind(this);
         String hourStr = getString(R.string.hour);
         String minStr = getString(R.string.min);
@@ -110,6 +109,11 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         EditTextUtils.setText(passwordEdit, password);
     }
 
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_schedule_meeting;
+    }
 
     /**
      * 弹出日期选择Dialog

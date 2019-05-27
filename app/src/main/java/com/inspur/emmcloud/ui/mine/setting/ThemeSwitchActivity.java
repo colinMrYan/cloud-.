@@ -40,7 +40,6 @@ public class ThemeSwitchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine_language_switch);
         ButterKnife.bind(this);
         headerText.setText(R.string.mine_theme_switch);
         listView.setAdapter(new Adapter());
@@ -60,6 +59,11 @@ public class ThemeSwitchActivity extends BaseActivity {
 
             }
         });
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mine_language_switch;
     }
 
     public void onClick(View v) {

@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -40,14 +39,10 @@ import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
-import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
@@ -57,6 +52,7 @@ import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.MailLoginUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.imp.api.ImpActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -73,13 +69,12 @@ import java.util.regex.Pattern;
  * scheme统一处理类
  */
 
-public class SchemeHandleActivity extends Activity {
+public class SchemeHandleActivity extends BaseActivity {
     private BroadcastReceiver unlockReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme();
         if (isLackNecessaryPermission()) {
             return;
         }
@@ -103,25 +98,16 @@ public class SchemeHandleActivity extends Activity {
                 openScheme();
             }
         }).initProfile();
-//        ImmersionBar.with(this) .hideBar(BarHide.FLAG_HIDE_STATUS_BAR).init();
-//        setTransparentStatus();
     }
 
-    protected void setTheme() {
-        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-        switch (currentThemeNo) {
-            case 1:
-                setTheme(R.style.AppTheme_Transparent_1);
-                break;
-            case 2:
-                setTheme(R.style.AppTheme_Transparent_2);
-                break;
-            default:
-                setTheme(R.style.AppTheme_Transparent_0);
-                break;
-        }
-        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
-        ImmersionBar.with(this).transparentStatusBar().statusBarDarkFont(isStatusBarDarkFont, 0.2f).navigationBarColor(R.color.white).navigationBarDarkIcon(true, 1.0f).init();
+    @Override
+    public int getLayoutResId() {
+        return 0;
+    }
+
+    @Override
+    public int getStatusType() {
+        return STATUS_TRANSPARENT;
     }
 
     private boolean isLackNecessaryPermission() {
@@ -251,7 +237,7 @@ public class SchemeHandleActivity extends Activity {
                             case "ecc-channel":
                                 bundle.putString("cid", host);
                                 bundle.putBoolean(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
-                                if (MyApplication.getInstance().isV0VersionChat()) {
+                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                                     IntentUtils.startActivity(SchemeHandleActivity.this,
                                             ChannelV0Activity.class, bundle, true);
                                 } else {
@@ -481,7 +467,7 @@ public class SchemeHandleActivity extends Activity {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
                 }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
-                    openScheduleActivity(query.getQueryParameter("id"),CalActivity.class);
+                    openScheduleActivity(query.getQueryParameter("id"),CalendarAddActivity.class);
                 }
                 finish();
                 break;

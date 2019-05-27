@@ -40,7 +40,6 @@ public class RecommendAppActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recommend_app);
         ButterKnife.bind(this);
         webView.loadUrl(RECOMMAND_APP_URL);
 
@@ -50,6 +49,11 @@ public class RecommendAppActivity extends BaseActivity {
 //        UMShareAPI.get(this);
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_recommend_app;
     }
 
     public void onClick(View v) {

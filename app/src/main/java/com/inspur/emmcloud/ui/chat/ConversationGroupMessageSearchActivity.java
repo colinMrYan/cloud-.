@@ -42,9 +42,13 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation_group_message_search);
         ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_group_message_search;
     }
 
     private void initViews() {

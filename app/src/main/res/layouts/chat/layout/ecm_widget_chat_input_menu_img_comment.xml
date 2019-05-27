@@ -12,7 +12,6 @@
        android:paddingTop="13dp"
        android:paddingLeft="15dp"
        android:paddingRight="15dp"
-       android:onClick="onClick"
        android:text="@string/cancel"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content" />
@@ -36,11 +35,9 @@
         android:paddingRight="15dp"
         android:background="@null"
         android:layout_alignParentRight="true"
-        android:onClick="onClick"
         android:text="@string/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
 
     <com.inspur.emmcloud.widget.ChatInputEdit
         android:id="@+id/input_edit"

@@ -42,11 +42,10 @@ import butterknife.ButterKnife;
  */
 public class MeetingDetailActivity extends BaseActivity {
 
+    public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
     private static final int MEETING_ATTENDEE = 0;
     private static final int MEETING_RECORD_HOLDER = 1;
     private static final int MEETING_CONTACT = 2;
-    public static final String EXTRA_MEETING_ENTITY = "extra_meeting_entity";
-
     @BindView(R.id.tv_meeting_title)
     TextView meetingTitleText;
     @BindView(R.id.tv_meeting_time)
@@ -84,7 +83,6 @@ public class MeetingDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_detail_new);
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         scheduleApiService = new ScheduleApiService(this);
@@ -96,6 +94,11 @@ public class MeetingDetailActivity extends BaseActivity {
         } else {                                //id为空是走之前逻辑
             initViews();
         }
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_detail_new;
     }
 
     private void initViews() {

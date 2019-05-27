@@ -44,7 +44,6 @@ public class TabLayoutSwitchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine_tab_layout_switch);
         ButterKnife.bind(this);
         naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
         headerText.setText(R.string.mine_tab_layout);
@@ -58,35 +57,13 @@ public class TabLayoutSwitchActivity extends BaseActivity {
         });
     }
 
-    public void onClick(View v) {
-        finish();
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mine_tab_layout_switch;
     }
 
-    private class Adapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(TabLayoutSwitchActivity.this).inflate(R.layout.mine_setting_tab_layout_list_item, null);
-            TextView tabLayoutNameText = view.findViewById(R.id.tv_tab_layout_name);
-            ImageView selectImg = view.findViewById(R.id.iv_select);
-            tabLayoutNameText.setText(getTabLayoutName(i));
-            selectImg.setVisibility(getSelectedShow(i));
-            return view;
-        }
+    public void onClick(View v) {
+        finish();
     }
 
     /**
@@ -159,5 +136,32 @@ public class TabLayoutSwitchActivity extends BaseActivity {
             }
         }
         return View.GONE;
+    }
+
+    private class Adapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = LayoutInflater.from(TabLayoutSwitchActivity.this).inflate(R.layout.mine_setting_tab_layout_list_item, null);
+            TextView tabLayoutNameText = view.findViewById(R.id.tv_tab_layout_name);
+            ImageView selectImg = view.findViewById(R.id.iv_select);
+            tabLayoutNameText.setText(getTabLayoutName(i));
+            selectImg.setVisibility(getSelectedShow(i));
+            return view;
+        }
     }
 }
