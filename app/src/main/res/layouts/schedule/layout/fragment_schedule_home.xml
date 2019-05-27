@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@android:color/white">
+        android:background="?attr/header_bg">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout_schedule"
@@ -23,21 +23,6 @@
             app:tabTextColor="#888888"
             app:tabSelectedTextColor="#333333"
             />
-
-        <Button
-            android:id="@+id/bt_today"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/ibt_add"
-            android:text="30"
-            android:textSize="12sp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:textColor="#444444"
-            android:scaleType="centerInside"
-            android:background="@drawable/ic_schedule_today" />
-
         <ImageButton
             android:id="@+id/ibt_add"
             android:layout_width="42dp"
@@ -47,8 +32,32 @@
             android:layout_centerVertical="true"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:tint="?attr/header_text_color"
             android:scaleType="centerInside"
             android:src="@drawable/ic_add" />
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="58dp"
+            android:textColor="?attr/header_text_color"
+            android:layout_centerVertical="true"
+            />
+        <ImageButton
+            android:id="@+id/ibt_today"
+            android:layout_width="22dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="58dp"
+            android:layout_alignParentRight="true"
+            android:tint="?attr/header_text_color"
+            android:layout_centerVertical="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_schedule_today" />
+
+
 
 
     </RelativeLayout>

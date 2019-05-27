@@ -272,6 +272,9 @@
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
         <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
         <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+        <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
+        <item name="schedule_tab_text_color_select">@color/header_text_black</item>
+
 
     </style>
 
@@ -308,6 +311,8 @@
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
         <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
         <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+        <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
+        <item name="schedule_tab_text_color_select">@color/header_text_black</item>
     </style>
 
     <style name="AppTheme_2"  parent="AppTheme">
@@ -343,6 +348,8 @@
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
         <item name="mine_my_info_menu_tint_color">@android:color/white</item>
         <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_blue</item>
+        <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
+        <item name="schedule_tab_text_color_select">@android:color/white</item>
     </style>
 
 
