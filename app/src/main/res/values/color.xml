@@ -35,7 +35,7 @@
     <!-- 导航栏原来色值#1596d2 -->
 
 
-
+    <color name="schedule_tab_text_normal_blue">#8bbbdf</color>
     <color name="content_bg">#f8f9fb</color>
     <color name="footer_tab_text_nor">#979EA3</color>
     <!-- 原底部文字颜色#698fa7 -->
