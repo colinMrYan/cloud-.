@@ -50,7 +50,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 
 @ContentView(R.layout.activity_meeting_room_info)
@@ -378,59 +378,55 @@ public class MeetingRoomInfoActivity extends BaseActivity {
      */
     private void initData() {
         allDaysMeetingScheduleList = new ArrayList<>();
-        for (int i = 0; i < meetingRoom.getMaxAhead(); i++) {
-            boolean isMeetingBeforeDayStartTime = false;
-            boolean isMeetingAfterDayEndTime = false;
-            long dayStartTimeLong = TimeUtils.getTimeLongFromTargetTime(currentCalendar, i, dayStartTime);
-            long dayEndTimeLong = TimeUtils.getTimeLongFromTargetTime(currentCalendar, i, dayEndTime);
-            List<Meeting> dayMeetingList = new ArrayList<>();
-            Calendar calendar = (Calendar) currentCalendar.clone();
-            calendar.add(Calendar.DAY_OF_YEAR, i);
-            HashSet<Long> set = new HashSet<>();
-            for (Meeting meeting : allMeetingList) {
-                if (TimeUtils.isContainTargetCalendarDay(calendar, meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar())) {
-                    dayMeetingList.add(meeting);
-                    long meetingFromLong = meeting.getDayStartTime(calendar);
-                    long meetingToLong = meeting.getDayEndTime(calendar);
-                    if (meetingFromLong <= dayStartTimeLong) {
-                        isMeetingBeforeDayStartTime = true;
+        if (allMeetingList.size() > 0) {
+            Collections.sort(allMeetingList, new Comparator<Meeting>() {
+                @Override
+                public int compare(Meeting o1, Meeting o2) {
+                    int startDiff = (int) (o1.getStartTime() - o2.getStartTime());
+                    if (startDiff == 0) {
+                        int endDiff = (int) (o1.getEndTime() - o2.getEndTime());
+                        return endDiff;
+                    } else {
+                        return startDiff;
                     }
-                    if (meetingToLong >= dayEndTimeLong) {
-                        isMeetingAfterDayEndTime = true;
-                    }
-                    set.add(meetingFromLong);
-                    set.add(meetingToLong);
                 }
-            }
-            List<MeetingSchedule> dayMeetingScheduleList = new ArrayList<>();
-            if (!isMeetingBeforeDayStartTime) {
-                set.add(dayStartTimeLong);
-            }
-            if (!isMeetingAfterDayEndTime) {
-                set.add(dayEndTimeLong);
-            }
-            List<Long> listWithoutDup = new ArrayList<Long>();
-            listWithoutDup.addAll(set);
-            Collections.sort(listWithoutDup);// 排序
-            // 将所有时间点整理成时间片段
-            for (int j = 1; j < listWithoutDup.size(); j++) {
-                MeetingSchedule meetingSchedule = new MeetingSchedule();
-                meetingSchedule.setFrom(listWithoutDup.get(j - 1));
-                meetingSchedule.setTo(listWithoutDup.get(j));
-                dayMeetingScheduleList.add(meetingSchedule);
-            }
+            });
+            for (int i = 0; i < meetingRoom.getMaxAhead(); i++) {
+                long dayStartTimeLong = TimeUtils.getTimeLongFromTargetTime(currentCalendar, i, dayStartTime);
+                long dayEndTimeLong = TimeUtils.getTimeLongFromTargetTime(currentCalendar, i, dayEndTime);
+                List<Meeting> dayMeetingList = new ArrayList<>();
+                Calendar calendar = (Calendar) currentCalendar.clone();
+                calendar.add(Calendar.DAY_OF_YEAR, i);
+                for (Meeting meeting : allMeetingList) {
+                    if (TimeUtils.isContainTargetCalendarDay(calendar, meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar())) {
+                        dayMeetingList.add(meeting);
+                    }
+                }
 
-            // 给meetingSchedule的meeting 成员变量赋值
-            for (int j = 0; j < dayMeetingScheduleList.size(); j++) {
-                MeetingSchedule meetingSchedule = dayMeetingScheduleList.get(j);
-                for (int k = 0; k < dayMeetingList.size(); k++) {
-                    Meeting meeting = dayMeetingList.get(k);
-                    if (meetingSchedule.getFrom() == meeting.getStartTime())
-                        meetingSchedule.setMeeting(meeting);
+                List<MeetingSchedule> dayMeetingScheduleList = new ArrayList<>();
+                for (int j = 0; j < dayMeetingList.size(); j++) {
+                    Meeting meeting = dayMeetingList.get(j);
+
+                    long meetingDayStartTime = meeting.getDayStartTime(calendar);
+                    long meetingDayEndTime = meeting.getDayEndTime(calendar);
+                    long LastMeetingEnd = (j > 0) ? dayMeetingList.get(j - 1).getDayEndTime(calendar) : dayStartTimeLong;
+                    if (meetingDayStartTime > LastMeetingEnd) {
+                        MeetingSchedule meetingSchedule = new MeetingSchedule(LastMeetingEnd, meetingDayStartTime, null);
+                        dayMeetingScheduleList.add(meetingSchedule);
+                    }
+                    MeetingSchedule meetingSchedule = new MeetingSchedule(meetingDayStartTime, meetingDayEndTime, meeting);
+                    dayMeetingScheduleList.add(meetingSchedule);
                 }
+                long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
+                if (dayLastMeetingEnd < dayEndTimeLong) {
+                    MeetingSchedule meetingSchedule = new MeetingSchedule(dayLastMeetingEnd, dayEndTimeLong, null);
+                    dayMeetingScheduleList.add(meetingSchedule);
+                }
+                allDaysMeetingScheduleList.add(dayMeetingScheduleList);
             }
-            allDaysMeetingScheduleList.add(dayMeetingScheduleList);
         }
+
+
         initListView();
     }
 
