@@ -246,7 +246,6 @@ public class ImpWebViewClient extends WebViewClient {
                 Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 intent.setComponent(null);
                 webView.getContext().startActivity(intent);
-                MyApplication.getInstance().setEnterSystemUI(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

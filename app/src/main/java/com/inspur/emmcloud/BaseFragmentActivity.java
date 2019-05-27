@@ -1,7 +1,6 @@
 package com.inspur.emmcloud;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -19,13 +18,6 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme();
         super.onCreate(savedInstanceState);
-    }
-
-    //解决调用系统应用后会弹出手势解锁的问题
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        MyApplication.getInstance().setEnterSystemUI(false);
     }
 
     @Override

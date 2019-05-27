@@ -32,7 +32,6 @@ import android.widget.TextView;
 import com.github.zafarkhaja.semver.Version;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
@@ -250,25 +249,6 @@ public class AppUtils {
         return dynamicPassword;
     }
 
-    /**
-     * 获取IMEI号
-     *
-     * @param context
-     * @return
-     */
-    public static String getIMEICode(Context context) {
-        /**
-         * 唯一的设备ID：
-         * GSM手机的 IMEI 和 CDMA手机的 MEID.
-         * Return null if device ID is not available.
-         */
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = tm.getDeviceId();// String
-        if (StringUtils.isBlank(imei)) {
-            return "";
-        }
-        return imei;
-    }
 
     /**
      * 获取设备UUID
@@ -571,7 +551,6 @@ public class AppUtils {
      * 调用文件系统
      */
     public static void openFileSystem(Activity activity, int requestCode) {
-        MyApplication.getInstance().setEnterSystemUI(true);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -632,7 +611,6 @@ public class AppUtils {
     }
 
     private static void openCameraAfterCheckPermission(Activity activity, String fileName, int requestCode) {
-        MyApplication.getInstance().setEnterSystemUI(true);
         File appDir = new File(Environment.getExternalStorageDirectory(), "DCIM");
         if (!appDir.exists()) {
             appDir.mkdir();
@@ -697,7 +675,6 @@ public class AppUtils {
      * @param requestCode
      */
     public static void sendSMS(Activity activity, String phoneNum, int requestCode) {
-        MyApplication.getInstance().setEnterSystemUI(true);
         Uri smsToUri = Uri.parse("smsto:" + phoneNum);
         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
         activity.startActivityForResult(intent, requestCode);
@@ -716,9 +693,14 @@ public class AppUtils {
                 new PermissionRequestCallback() {
                     @Override
                     public void onPermissionRequestSuccess(List<String> permissions) {
-                        MyApplication.getInstance().setEnterSystemUI(true);
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNum));
-                        activity.startActivityForResult(intent, requestCode);
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNum));
+                            activity.startActivityForResult(intent, requestCode);
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                            activity.finish();
+                        }
+
                     }
 
                     @Override
@@ -738,7 +720,6 @@ public class AppUtils {
      * @param requestCode
      */
     public static void sendMail(Activity activity, String mail, int requestCode) {
-        MyApplication.getInstance().setEnterSystemUI(true);
         Uri uri = Uri.parse("mailto:" + mail);
         Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
         activity.startActivityForResult(
@@ -789,16 +770,22 @@ public class AppUtils {
      * @return
      */
     private static String getDeviceUUID(final Context context) {
-        final String[] uniqueId = new String[1];
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        uniqueId[0] = deviceUuid.toString();
-        return uniqueId[0];
+        try {
+            final String[] uniqueId = new String[1];
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String tmDevice, tmSerial, androidId;
+            tmDevice = "" + tm.getDeviceId();
+            tmSerial = "" + tm.getSimSerialNumber();
+            androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
+                    android.provider.Settings.Secure.ANDROID_ID);
+            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            uniqueId[0] = deviceUuid.toString();
+            return uniqueId[0];
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            return "";
+        }
+
     }
 
     /**

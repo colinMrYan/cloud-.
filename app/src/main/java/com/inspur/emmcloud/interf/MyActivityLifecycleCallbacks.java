@@ -44,7 +44,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityStarted(Activity activity) {
-        MyApplication.getInstance().setEnterSystemUI(false);
         currentActivity = activity;
         //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
         if (isLackNecessaryPermission()) {

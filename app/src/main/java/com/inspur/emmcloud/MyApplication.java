@@ -145,7 +145,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         PushManagerUtils.getInstance().clearPushFlag();
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
-                "isContactReady", false);
+                Constant.PREF_IS_CONTACT_READY, false);
         uid = PreferencesUtils.getString(getInstance(), "userID");
         accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
@@ -568,14 +568,5 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setCurrentChannelCid(String currentChannelCid) {
         this.currentChannelCid = currentChannelCid;
-    }
-
-    /*****************************是否进入第三方系统界面，判断app前后台***********************************************/
-    public boolean isEnterSystemUI() {
-        return isEnterSystemUI;
-    }
-
-    public void setEnterSystemUI(boolean enterSystemUI) {
-        isEnterSystemUI = enterSystemUI;
     }
 }
