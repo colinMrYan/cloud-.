@@ -11,6 +11,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -71,6 +72,7 @@ public class MiPushReceiver extends PushMessageReceiver {
         LogUtils.debug(TAG,"onReceivePassThroughMessage is called. " + message.toString());
         if (!TextUtils.isEmpty(message.getTopic())) {
             mTopic = message.getTopic();
+            ECMTransparentUtils.handleTransparentMsg(context, mTopic);
         } else if (!TextUtils.isEmpty(message.getAlias())) {
             mAlias = message.getAlias();
         }
