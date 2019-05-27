@@ -1,15 +1,15 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ListView;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.WebexAttendeesAdapter;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
 
-import java.util.List;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,10 +25,13 @@ public class WebexAttendeesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         List<WebexAttendees> webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
         attendeesListView.setAdapter(new WebexAttendeesAdapter(this, webexAttendeesList));
-
     }
 
     @Override

@@ -1,22 +1,21 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.TextView;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.TextView;
 
 public class ChannelMemActivity extends BaseActivity {
 
@@ -26,13 +25,17 @@ public class ChannelMemActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         String title = getIntent().getStringExtra("title");
         ((TextView) findViewById(R.id.header_text)).setText(title);
         memberArray = getIntent().getStringArrayExtra("members");
         if (memberArray != null && memberArray.length > 0) {
             GridView memberGrid = (GridView) findViewById(R.id.gv_member);
             memberGrid.setAdapter(new Adapter());
-            memberGrid.setOnItemClickListener(new OnItemClickListener() {
+            memberGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
@@ -46,7 +49,6 @@ public class ChannelMemActivity extends BaseActivity {
                 }
             });
         }
-
     }
 
     @Override

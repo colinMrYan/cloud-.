@@ -1,11 +1,9 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -14,10 +12,12 @@ import com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,6 +117,10 @@ public class CreateGestureActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         init();
     }

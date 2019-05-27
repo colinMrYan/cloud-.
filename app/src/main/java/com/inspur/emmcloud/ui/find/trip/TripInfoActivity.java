@@ -1,10 +1,5 @@
 package com.inspur.emmcloud.ui.find.trip;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -17,6 +12,11 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
 public class TripInfoActivity extends BaseActivity {
 
     private static final int EDIT_TRIP_INFO = 1;
@@ -27,6 +27,10 @@ public class TripInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         if (getIntent().getExtras().containsKey("tripId")) {
             String tripId = getIntent().getExtras().getString("tripId");
             getTripInfo(tripId);

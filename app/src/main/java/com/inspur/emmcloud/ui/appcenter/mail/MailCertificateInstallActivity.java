@@ -1,13 +1,12 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.InputType;
-import android.util.Base64;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -28,13 +27,14 @@ import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.InputType;
+import android.util.Base64;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,6 +75,10 @@ public class MailCertificateInstallActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         init();
     }

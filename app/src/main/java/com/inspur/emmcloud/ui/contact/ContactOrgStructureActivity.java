@@ -1,6 +1,17 @@
 package com.inspur.emmcloud.ui.contact;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.contact.ContactOrg;
+import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,17 +21,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.contact.ContactOrg;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * 系統組織功能顯示
@@ -35,6 +35,10 @@ public class ContactOrgStructureActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         init();
         adapter = new OrgStrContactAdapter(this, orgNameList);
         listView = (ListView) findViewById(R.id.lv_org_structure);

@@ -1,13 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.TextView;
+import java.util.List;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
@@ -26,7 +19,14 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,6 +91,10 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         init();
         ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();

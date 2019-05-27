@@ -1,11 +1,8 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.View;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -29,9 +26,12 @@ import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,13 +70,16 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         initView();
         startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_TIME);
         endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_TIME);
         setMeetingTime();
         onRefresh();
-
     }
 
     @Override

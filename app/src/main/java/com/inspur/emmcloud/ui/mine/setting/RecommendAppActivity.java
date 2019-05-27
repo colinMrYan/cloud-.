@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
+import java.lang.ref.WeakReference;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -21,7 +19,9 @@ import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
-import java.lang.ref.WeakReference;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +40,10 @@ public class RecommendAppActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         webView.loadUrl(RECOMMAND_APP_URL);
 

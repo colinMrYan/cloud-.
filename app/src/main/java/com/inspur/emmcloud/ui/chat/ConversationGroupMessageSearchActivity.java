@@ -1,14 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -20,8 +13,15 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +42,10 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         initViews();
     }

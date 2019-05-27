@@ -1,5 +1,12 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,13 +17,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +40,10 @@ public class ThemeSwitchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         headerText.setText(R.string.mine_theme_switch);
         listView.setAdapter(new Adapter());

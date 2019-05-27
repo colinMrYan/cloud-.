@@ -1,9 +1,8 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.view.View;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
@@ -14,9 +13,10 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.sildemenu.AllInterface;
 import com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +37,10 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         setContentView(R.layout.activity_mail_home);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);

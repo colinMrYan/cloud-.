@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.RelativeLayout;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -12,6 +8,10 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.widget.SwitchView;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +33,10 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         initView();
     }

@@ -1,19 +1,8 @@
 package com.inspur.emmcloud;
 
-import android.content.ComponentName;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
@@ -25,6 +14,7 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -43,9 +33,20 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.imp.api.Res;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -148,6 +149,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
                         @Override
                         public void onPermissionRequestFail(List<String> permissions) {
+                                    LogUtils.YfcDebug("权限授权失败");
                             ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this, permissions));
                             MyApplication.getInstance().exit();
                         }
@@ -158,6 +160,11 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         } else {
             init();
         }
+    }
+
+    @Override
+    public void onCreate() {
+
     }
 
     /**

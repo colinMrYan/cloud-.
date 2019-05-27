@@ -1,14 +1,8 @@
 package com.inspur.emmcloud.ui.find;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -21,9 +15,15 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * 文档页面 com.inspur.emmcloud.ui.DocumentActivity create at 2016年9月5日 上午10:03:42
@@ -37,6 +37,10 @@ public class DocumentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ((TextView) findViewById(R.id.header_text))
                 .setText(getString(R.string.docunment));
         setDocumentList();

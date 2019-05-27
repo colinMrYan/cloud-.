@@ -1,12 +1,12 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
 
 /**
  * Created by libaochao on 2018/11/23.
@@ -17,6 +17,11 @@ public class NetHardConnectCheckActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
+
     }
 
     @Override

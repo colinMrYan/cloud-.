@@ -1,8 +1,7 @@
 package com.inspur.emmcloud.ui.mine.card;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -18,8 +17,9 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.cardstack.RxAdapterAllMoveDownAnimator;
 import com.inspur.emmcloud.widget.cardstack.RxCardStackView;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +37,10 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         initViews();
         getCardPackageListFromNet();

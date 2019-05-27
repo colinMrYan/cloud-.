@@ -1,12 +1,12 @@
 package com.inspur.emmcloud.ui.chat;
 
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +24,10 @@ public class CorrectedSpeechInputActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         initViews();
     }

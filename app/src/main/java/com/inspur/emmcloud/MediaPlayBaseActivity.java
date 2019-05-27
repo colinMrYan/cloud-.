@@ -1,5 +1,9 @@
 package com.inspur.emmcloud;
 
+import com.inspur.emmcloud.broadcastreceiver.HeadsetReceiver;
+import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
+
 import android.bluetooth.BluetoothHeadset;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,10 +15,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
-
-import com.inspur.emmcloud.broadcastreceiver.HeadsetReceiver;
-import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
 
 /**
  * Created by chenmch on 2018/8/25.
@@ -31,17 +31,6 @@ public abstract class MediaPlayBaseActivity extends BaseActivity implements Sens
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        playerManager = MediaPlayerManagerUtils.getManager();
-        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        receiver = new HeadsetReceiver();
-        playerManager.setWakeLockReleaseListener(new CommonCallBack() {
-            @Override
-            public void execute() {
-                releaseWakeLock();
-            }
-        });
     }
 
 
@@ -72,6 +61,21 @@ public abstract class MediaPlayBaseActivity extends BaseActivity implements Sens
                 setScreenOff();
             }
         }
+    }
+
+    @Override
+    public void onCreate() {
+        playerManager = MediaPlayerManagerUtils.getManager();
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        receiver = new HeadsetReceiver();
+        playerManager.setWakeLockReleaseListener(new CommonCallBack() {
+            @Override
+            public void execute() {
+                releaseWakeLock();
+            }
+        });
     }
 
     @Override

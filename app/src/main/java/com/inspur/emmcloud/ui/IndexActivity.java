@@ -1,12 +1,10 @@
 package com.inspur.emmcloud.ui;
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -33,6 +31,7 @@ import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.NotificationSetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -56,11 +55,13 @@ import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.WeakHandler;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 /**
  * 主页面
@@ -77,6 +78,7 @@ public class IndexActivity extends IndexBaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.YfcDebug("执行IndexActivity OnCreate方法");
         initAppEnvironment();
         initView();
         getInitData();

@@ -1,5 +1,38 @@
 package com.inspur.emmcloud.ui.appcenter;
 
+import static com.inspur.emmcloud.ui.appcenter.AppCenterMoreActivity.APP_CENTER_APPLIST;
+import static com.inspur.emmcloud.ui.appcenter.AppCenterMoreActivity.APP_CENTER_CATEGORY_NAME;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.bean.appcenter.AppAdsBean;
+import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
+import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.AdsViewPager;
+import com.inspur.emmcloud.widget.CircularProgress;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.widget.ScrollViewWithListView;
+import com.inspur.imp.api.ImpActivity;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,39 +61,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppAdsBean;
-import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
-import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.AdsViewPager;
-import com.inspur.emmcloud.widget.CircularProgress;
-import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.imp.api.ImpActivity;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import static com.inspur.emmcloud.ui.appcenter.AppCenterMoreActivity.APP_CENTER_APPLIST;
-import static com.inspur.emmcloud.ui.appcenter.AppCenterMoreActivity.APP_CENTER_CATEGORY_NAME;
 
 /**
  * 应用中心页面 com.inspur.emmcloud.ui.AppCenterActivity create at 2016年8月31日
@@ -93,6 +93,10 @@ public class AppCenterActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         setContentView(R.layout.activity_app_center);
         initView();
         getAllApp();

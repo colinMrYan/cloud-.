@@ -1,5 +1,58 @@
 package com.inspur.emmcloud.ui;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import com.inspur.emmcloud.BaseFragmentActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
+import com.inspur.emmcloud.bean.contact.ContactClickMessage;
+import com.inspur.emmcloud.bean.system.ChangeTabBean;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
+import com.inspur.emmcloud.bean.system.MainTabPayLoad;
+import com.inspur.emmcloud.bean.system.MainTabResult;
+import com.inspur.emmcloud.bean.system.MainTabTitleResult;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.system.TabBean;
+import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
+import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
+import com.inspur.emmcloud.ui.chat.CommunicationFragment;
+import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.ui.find.FindFragment;
+import com.inspur.emmcloud.ui.mine.MoreFragment;
+import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
+import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
+import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
+import com.inspur.emmcloud.util.common.SelectorUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppTabUtils;
+import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
+import com.inspur.emmcloud.util.privates.WhiteListUtil;
+import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.widget.MyFragmentTabHost;
+import com.inspur.emmcloud.widget.dialogs.WhiteListDialog;
+import com.inspur.emmcloud.widget.tipsview.TipsView;
+import com.inspur.imp.api.ImpFragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,59 +73,6 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
-
-import com.inspur.emmcloud.BaseFragmentActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
-import com.inspur.emmcloud.bean.contact.ContactClickMessage;
-import com.inspur.emmcloud.bean.system.ChangeTabBean;
-import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabPayLoad;
-import com.inspur.emmcloud.bean.system.MainTabResult;
-import com.inspur.emmcloud.bean.system.MainTabTitleResult;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
-import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
-import com.inspur.emmcloud.ui.chat.CommunicationFragment;
-import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.find.FindFragment;
-import com.inspur.emmcloud.ui.mine.MoreFragment;
-import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
-import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
-import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
-import com.inspur.emmcloud.bean.system.TabBean;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.SelectorUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.WhiteListUtil;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.MyFragmentTabHost;
-import com.inspur.emmcloud.widget.dialogs.WhiteListDialog;
-import com.inspur.emmcloud.widget.tipsview.TipsView;
-import com.inspur.imp.api.ImpFragment;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,6 +101,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         setContentView(R.layout.activity_index);
         ButterKnife.bind(this);
         clearOldMainTabData();
@@ -112,7 +116,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //super.onSaveInstanceState(outState);
+        // super.onSaveInstanceState(outState);
     }
 
     @Override

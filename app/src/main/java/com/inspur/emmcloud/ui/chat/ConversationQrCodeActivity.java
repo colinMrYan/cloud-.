@@ -1,13 +1,13 @@
 package com.inspur.emmcloud.ui.chat;
 
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.widget.CircleTextImageView;
+
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +29,10 @@ public class ConversationQrCodeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
     }
 

@@ -1,5 +1,17 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
+import com.inspur.emmcloud.util.common.FomatUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.widget.ScrollViewWithListView;
+
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -12,18 +24,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
-import com.inspur.emmcloud.util.common.FomatUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.widget.ScrollViewWithListView;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +51,10 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         webexAttendeesList = (List<WebexAttendees>) getIntent().getSerializableExtra(EXTRA_ATTENDEES_LIST);
         externalWebexAttendeesList = getExternalAttendeesList();

@@ -1,5 +1,12 @@
 package com.inspur.emmcloud.ui.mine.feedback;
 
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
@@ -9,13 +16,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +74,10 @@ public class FeedBackActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         feedbackContentEdit.addTextChangedListener(mTextWatcher);
     }

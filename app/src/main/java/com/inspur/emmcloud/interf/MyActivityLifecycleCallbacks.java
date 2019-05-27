@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.interf;
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -29,6 +22,13 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+
 /**
  * Created by chenmch on 2017/9/13.
  */
@@ -50,9 +50,9 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         currentActivity = activity;
         count++;
         //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
-        if (isLackNecessaryPermission()) {
-            return;
-        }
+        // if (isLackNecessaryPermission()) {
+        // return;
+        // }
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
         if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance().isIndexActivityRunning()) {
             MyApplication.getInstance().setIsActive(true);

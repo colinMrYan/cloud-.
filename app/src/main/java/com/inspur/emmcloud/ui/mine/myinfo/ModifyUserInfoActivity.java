@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.mine.myinfo;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -15,6 +9,12 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 public class ModifyUserInfoActivity extends BaseActivity {
 
@@ -27,6 +27,10 @@ public class ModifyUserInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         modifyEditText = (ClearEditText) findViewById(R.id.modifyinfo_edit);
         modifyButton = (Button) findViewById(R.id.get_modifyinfo_btn);
         loadingDialog = new LoadingDialog(ModifyUserInfoActivity.this);

@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -25,7 +23,9 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
-import org.greenrobot.eventbus.EventBus;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +51,10 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(ConversationCastInfoActivity.this);
         String cid = getIntent().getExtras().getString(EXTRA_CID);
@@ -66,7 +70,6 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
         } else {
             showRobotInfo(robot);
         }
-
     }
 
     @Override

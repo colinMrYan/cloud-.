@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -15,7 +13,9 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 
-import org.greenrobot.eventbus.EventBus;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +44,10 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         initViews();
     }

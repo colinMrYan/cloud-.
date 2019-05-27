@@ -1,12 +1,7 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
@@ -25,8 +20,13 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +44,10 @@ public class GuideActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         ImmersionBar.with(this).init();
         deleteReactNativeResource();

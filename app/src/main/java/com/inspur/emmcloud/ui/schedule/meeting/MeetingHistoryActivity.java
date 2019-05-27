@@ -1,11 +1,11 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
+import com.inspur.emmcloud.BaseFragmentActivity;
+import com.inspur.emmcloud.R;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
-import com.inspur.emmcloud.BaseFragmentActivity;
-import com.inspur.emmcloud.R;
 
 import butterknife.ButterKnife;
 
@@ -21,6 +21,10 @@ public class MeetingHistoryActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         setContentView(R.layout.activity_meeting_history);
         ButterKnife.bind(this);
         setStatus();
