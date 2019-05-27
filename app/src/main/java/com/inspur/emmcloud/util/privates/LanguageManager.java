@@ -17,11 +17,11 @@ import android.os.LocaleList;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.system.ClientConfigItem;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -41,6 +41,7 @@ import java.util.Map;
  */
 public class LanguageManager {
     public static final String LANGUAGE_NAME_FOLLOW_SYS = "followSys";
+    private static final Language defaultLanguage = new Language("中文简体", "zh-CN", "zh-Hans", "zh-CN", "zh-CN", "zh-Hans");
     private static LanguageManager mInstance;
     private GetServerLanguageListener getServerLanguageListener;
 
@@ -268,7 +269,7 @@ public class LanguageManager {
         }
         if (commonLanguageList.size() == 0) {
             //使用中文
-            commonLanguageList.add(MyAppConfig.getDefaultLanguage);
+            commonLanguageList.add(defaultLanguage);
         }
         return commonLanguageList;
     }

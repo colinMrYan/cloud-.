@@ -7,8 +7,8 @@ import android.view.View;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.sildemenu.AllInterface;

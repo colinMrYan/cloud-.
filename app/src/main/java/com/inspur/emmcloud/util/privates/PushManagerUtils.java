@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -26,10 +26,6 @@ public class PushManagerUtils {
             }
         }
         return mInstance;
-    }
-
-    public void clearPushFlag(){
-        setPushFlag(MyApplication.getInstance(), "");
     }
 
     /**
@@ -104,7 +100,6 @@ public class PushManagerUtils {
         PreferencesUtils.putString(context, Constant.PUSH_FLAG, pushFlag);
     }
 
-
     /**
      * 获取PUSH_FLAG
      *
@@ -113,6 +108,10 @@ public class PushManagerUtils {
      */
     public static String getPushFlag(Context context) {
         return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
+    }
+
+    public void clearPushFlag() {
+        setPushFlag(MyApplication.getInstance(), "");
     }
 
     public void setJpushStatus(boolean isOpen){

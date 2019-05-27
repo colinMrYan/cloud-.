@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.WebView;
@@ -14,6 +15,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
@@ -26,7 +28,6 @@ import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -54,7 +55,6 @@ import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.WeakHandler;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -70,7 +70,7 @@ import java.util.List;
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;
-    private WeakHandler handler;
+    private Handler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
 
@@ -270,10 +270,10 @@ public class IndexActivity extends IndexBaseActivity {
 
     private void handMessage() {
         // TODO Auto-generated method stub
-        handler = new WeakHandler(IndexActivity.this) {
+        handler = new Handler() {
 
             @Override
-            protected void handleMessage(Object o, Message msg) {
+            public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case SYNC_ALL_BASE_DATA_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);

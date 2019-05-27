@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.config;
+package com.inspur.emmcloud.basemodule.config;
 
 import android.os.Environment;
 

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;

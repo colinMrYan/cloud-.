@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.CustomImageDownloader;

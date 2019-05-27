@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;

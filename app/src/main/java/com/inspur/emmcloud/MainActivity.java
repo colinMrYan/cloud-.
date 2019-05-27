@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
@@ -63,7 +63,7 @@ import pl.droidsonroids.gif.GifImageView;
  *
  * @author Administrator
  */
-public class MainActivity extends BaseActivity { // 此处不能继承BaseActivity 推送会有问题
+public class MainActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;

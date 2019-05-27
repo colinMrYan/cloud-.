@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.config;
+package com.inspur.emmcloud.basemodule.config;
 
 /**
  * Created by yufuchang on 2017/3/4.

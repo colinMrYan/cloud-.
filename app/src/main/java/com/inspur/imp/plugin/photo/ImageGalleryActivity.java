@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.imp.plugin.photo.loader.UniversalImageLoader;
 import com.inspur.imp.plugin.photo.style.index.CircleIndexIndicator;

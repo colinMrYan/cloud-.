@@ -23,7 +23,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;

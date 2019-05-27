@@ -10,8 +10,8 @@ import android.os.Message;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,7 +40,7 @@ public class CheckingNetStateUtils {
             super.handleMessage(msg);
         }
     };
-
+    private List<PingUrlAndConnectState> pingUrlAndConnectStates = new ArrayList<>();
     /**
      * 发送最终的网络异常状态
      */
@@ -57,9 +57,6 @@ public class CheckingNetStateUtils {
             EventBus.getDefault().post(new SimpleEventMessage(pingUrlStateAction.getAction(), ResultState));
         }
     };
-
-
-    private List<PingUrlAndConnectState> pingUrlAndConnectStates = new ArrayList<>();
 
     public CheckingNetStateUtils(Context context) {
         this.context = context;

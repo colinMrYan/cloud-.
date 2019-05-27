@@ -1,13 +1,13 @@
 package com.inspur.emmcloud.api.apiservice;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.RelatedLink;
 import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;

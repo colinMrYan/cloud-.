@@ -6,8 +6,8 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.StringUtils;

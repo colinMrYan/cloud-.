@@ -21,7 +21,6 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.WeakHandler;
 
 import java.util.List;
 
@@ -58,10 +57,10 @@ public class ContactSearchBaseFragment extends BaseFragment {
     }
 
     private void handMessage() {
-        handler = new WeakHandler(getActivity()) {
+        handler = new Handler() {
 
             @Override
-            protected void handleMessage(Object o, Message message) {
+            public void handleMessage(Message message) {
                 switch (message.what) {
                     case REFRESH_DATA:
                         showSearchPop();

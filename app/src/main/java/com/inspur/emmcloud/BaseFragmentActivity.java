@@ -8,7 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.WindowManager;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;

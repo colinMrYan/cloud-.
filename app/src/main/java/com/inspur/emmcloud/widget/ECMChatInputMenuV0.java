@@ -24,10 +24,10 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.bean.system.VoiceResult;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -43,8 +43,6 @@ import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManag
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
-
-import org.xutils.view.annotation.Event;
 
 import java.util.ArrayList;
 import java.util.List;

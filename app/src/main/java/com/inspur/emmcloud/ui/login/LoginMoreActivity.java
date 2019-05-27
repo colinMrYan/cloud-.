@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.login.LoginMoreBean;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.find.ScanResultActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;

@@ -2,7 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
