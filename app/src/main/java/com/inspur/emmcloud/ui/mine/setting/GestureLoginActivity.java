@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,12 +12,15 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleTextImageView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -64,10 +65,7 @@ public class GestureLoginActivity extends BaseActivity {
                         } else if (command.equals("login")) {
                             isLogin = true;
                             //发送解锁广播是，SchemeHandleActivity中接收处理
-                            Intent intent = new Intent();
-                            intent.setAction(Constant.ACTION_SAFE_UNLOCK);
-                            MyApplication.getInstance().setIsActive(true);
-                            LocalBroadcastManager.getInstance(GestureLoginActivity.this).sendBroadcast(intent);
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
                             finish();
                         } else if (command.equals("close")) {
                             clearGestureInfo();

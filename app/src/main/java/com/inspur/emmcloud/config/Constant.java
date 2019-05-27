@@ -76,7 +76,6 @@ public class Constant {
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
     public static final String ACTION_CALENDAR = "com.inspur.calendar";
-    public static final String ACTION_SAFE_UNLOCK = "com.inspur.safe.unlock";
     public static final String ACTION_VOLUME_INFO_UPDATE = "com.inspur.volume.info.update";
 
     public static final String DEFAULT_CLUSTER_EMM = "https://emm.inspur.com/";//EMM默认
@@ -122,7 +121,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
     public static final String EVENTBUS_TAG_SELECT_CALENDAR_CHANGED = "tag_select_calendar_changed";
-
+    public static final String EVENTBUS_TAG_SAFE_UNLOCK = "tag_safe_unlock";//二次认证（刷脸、手势认证通过）
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";

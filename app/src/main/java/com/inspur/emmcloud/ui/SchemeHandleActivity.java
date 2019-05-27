@@ -1,14 +1,11 @@
 package com.inspur.emmcloud.ui;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
@@ -17,6 +14,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
+import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
@@ -56,6 +54,8 @@ import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.imp.api.ImpActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -70,7 +70,6 @@ import java.util.regex.Pattern;
  */
 
 public class SchemeHandleActivity extends BaseActivity {
-    private BroadcastReceiver unlockReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,26 +77,11 @@ public class SchemeHandleActivity extends BaseActivity {
         if (isLackNecessaryPermission()) {
             return;
         }
-        new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
-            @Override
-            public void execute() {
-                if (MyApplication.getInstance().getOPenNotification()) {
-                    MyApplication.getInstance().setOpenNotification(false);
-                    if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
-                        registerReiceiver();
-                        MyApplication.getInstance().setIsActive(true);
-                        faceVerify();
-                        return;
-                    } else if (getIsNeedGestureCode()) {
-                        registerReiceiver();
-                        MyApplication.getInstance().setIsActive(true);
-                        gestureVerify();
-                        return;
-                    }
-                }
-                openScheme();
-            }
-        }).initProfile();
+        if (MyApplication.getInstance().isSafeLock()) {
+            EventBus.getDefault().register(this);
+        } else {
+            openScheme();
+        }
     }
 
     @Override
@@ -151,6 +135,20 @@ public class SchemeHandleActivity extends BaseActivity {
         }).initProfile();
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
+            new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
+                @Override
+                public void execute() {
+                    openScheme();
+                }
+            }).initProfile(false);
+
+        }
+    }
+
     private void faceVerify() {
         Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
         intent.putExtra("isFaceVerifyExperience", false);
@@ -164,21 +162,6 @@ public class SchemeHandleActivity extends BaseActivity {
     }
 
 
-    /**
-     * 注册安全解锁监听广播
-     */
-    private void registerReiceiver() {
-        unlockReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                openScheme();
-            }
-        };
-
-        IntentFilter myIntentFilter = new IntentFilter();
-        myIntentFilter.addAction(Constant.ACTION_SAFE_UNLOCK);
-        LocalBroadcastManager.getInstance(this).registerReceiver(unlockReceiver, myIntentFilter);
-    }
 
     /**
      * 打开具体的要么
@@ -561,10 +544,7 @@ public class SchemeHandleActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (unlockReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(unlockReceiver);
-            unlockReceiver = null;
-        }
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

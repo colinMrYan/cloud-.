@@ -19,7 +19,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -37,6 +36,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
@@ -53,6 +53,8 @@ import com.inspur.imp.plugin.camera.mycamera.CameraUtils;
 import com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -114,6 +116,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             }
         }).initProfile(false);
         init();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -410,6 +413,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (handler != null) {
             handler.removeCallbacks(takePhotoRunnable);
             handler.removeCallbacks(keepBodyRunnable);
@@ -433,11 +437,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 } else if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 } else if (!isFaceVerityTest) {
-                    //发送解锁广播是，SchemeHandleActivity中接收处理
-                    Intent intent = new Intent();
-                    MyApplication.getInstance().setIsActive(true);
-                    intent.setAction(Constant.ACTION_SAFE_UNLOCK);
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
                 }
                 finish();
                 break;

@@ -97,6 +97,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     private String currentChannelCid = "";
     private boolean isEnterSystemUI = false;  //是否进入第三方系统界面，判断app前后台
+    private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
 
     /**
      * 单例获取application实例
@@ -460,6 +461,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public List<Activity> getActivityList() {
         return activityList;
+    }
+
+    public boolean isSafeLock() {
+        return isSafeLock;
+    }
+
+    public void setSafeLock(boolean safeLock) {
+        isSafeLock = safeLock;
     }
 
     /**
