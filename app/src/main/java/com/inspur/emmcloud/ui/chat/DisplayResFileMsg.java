@@ -19,7 +19,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
-import com.inspur.emmcloud.widget.RoundAngleImageView;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -35,10 +34,10 @@ import java.io.File;
 public class DisplayResFileMsg {
     /**
      * 文件卡片
-     *
      * @param context
-     * @param childView
      * @param msg
+     * @param isMsgDetial
+     * @return
      */
     public static View displayResFileMsg(final Context context,
                                          final Msg msg, boolean isMsgDetial) {
@@ -63,9 +62,8 @@ public class DisplayResFileMsg {
         String fileSize = JSONUtils.getString(msgBody, "size", "");
         String fileName = JSONUtils.getString(msgBody, "name", "");
         final String downloadUri = JSONUtils.getString(msgBody, "key", "");
-        RoundAngleImageView roundAngleImageView = (RoundAngleImageView) cardContentView
-                .findViewById(R.id.file_type_img);
-        ImageDisplayUtils.getInstance().displayImage(roundAngleImageView, "drawable://" + FileUtils.getIconResId(downloadUri));
+        ImageView fileTypeImg = cardContentView.findViewById(R.id.file_type_img);
+        ImageDisplayUtils.getInstance().displayImage(fileTypeImg, "drawable://" + FileUtils.getIconResId(downloadUri));
         fileTitleText.setText(fileName);
         fileSizeText.setText(FileUtils.formatFileSize(fileSize));
         File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);

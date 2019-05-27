@@ -32,7 +32,6 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuImgCommentV0;
 import com.inspur.emmcloud.widget.HackyViewPager;
-import com.inspur.emmcloud.widget.ImageDetailFragment;
 import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
 
 import org.greenrobot.eventbus.EventBus;

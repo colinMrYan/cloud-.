@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget;
+package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +21,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.widget.SmoothImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
