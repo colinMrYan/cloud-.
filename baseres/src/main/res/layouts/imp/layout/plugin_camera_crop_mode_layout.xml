@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/three_four_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:paddingBottom="15dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:paddingTop="15dp"
+        android:text="3:4"
+        android:textColor="#FFFFFB"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/four_three_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:paddingBottom="15dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:paddingTop="15dp"
+        android:text="4:3"
+        android:textColor="#FFFFFB"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/nine_sixteen_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:paddingBottom="15dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:paddingTop="15dp"
+        android:text="9:16"
+        android:textColor="#FFFFFB"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/sixteen_nine_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:paddingBottom="15dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:paddingTop="15dp"
+        android:text="16:9"
+        android:textColor="#FFFFFB"
+        android:textSize="16sp" />
+
+</LinearLayout>

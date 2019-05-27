@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.inspur.emmcloud.MainActivity"
+    tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <ImageView
+            android:id="@+id/iv_task_no_result"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_task_default"/>
+
+        <TextView
+            android:id="@+id/tv_no_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_task_no_result"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/schedule_task_no_task_today"
+            android:textColor="#999999"
+            android:textSize="16sp" />
+
+        <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <ListView
+                android:id="@+id/lv_task"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/color_list_divider"
+                android:dividerHeight="0.5px"
+                 />
+        </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_no_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="100dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/reset_btn"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_login_btn_nor"
+            android:onClick="onClick"
+            android:text="@string/mession_reset"
+            android:textColor="#ffffff"
+            android:textSize="18sp" >
+        </Button>
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_login_btn_nor"
+            android:onClick="onClick"
+            android:text="@string/mession_cancel"
+            android:textColor="#ffffff"
+            android:textSize="18sp" >
+        </Button>
+    </LinearLayout>
+</RelativeLayout>

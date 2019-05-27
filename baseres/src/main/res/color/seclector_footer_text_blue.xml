@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/footer_tab_text_sel_blue" android:state_selected="true"></item>
+    <item android:color="@color/footer_tab_text_nor_blue" android:state_selected="false"></item>
+    <item  android:color="@color/footer_tab_text_nor_blue"></item>
+</selector>

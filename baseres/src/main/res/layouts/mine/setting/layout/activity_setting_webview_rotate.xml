@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="?attr/header_bg">
+
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="?attr/ic_back_btn" />
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Web页面自动旋转"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_header"
+        android:background="@color/content_bg"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+
+        <RelativeLayout
+            android:id="@+id/open_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:onClick="onClick"
+            android:paddingLeft="2dp"
+            android:paddingRight="12dp">
+
+            <TextView
+                android:id="@+id/open_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:text="打开"
+                android:textColor="#ff323232"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/open_img"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_contact_selected"
+                android:visibility="invisible" />
+            />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/split_line"></View>
+        <RelativeLayout
+            android:id="@+id/close_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:onClick="onClick"
+            android:paddingLeft="2dp"
+            android:paddingRight="12dp">
+
+            <TextView
+                android:id="@+id/close_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:text="关闭"
+                android:textColor="#ff323232"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/close_img"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_contact_selected"
+                android:visibility="invisible" />
+            />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

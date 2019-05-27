@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linear_list_card_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:stackHeaderHeight="185dp">
+    <TextView
+        android:id="@+id/tv_company_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_top_rectangle_with_radius"
+        android:gravity="center_vertical"
+        android:paddingLeft="22dp"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bottom_rectangle_with_radius"
+        android:orientation="vertical"
+        android:paddingBottom="17dp"
+        android:paddingLeft="22dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="17dp"
+            android:text="@string/card_package_taxpayer"
+            android:textColor="#ACACAC"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_taxpayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#666666"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/txt_bank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ACACAC"
+            android:textSize="12sp"
+            />
+        <TextView
+            android:id="@+id/tv_bank_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#666666"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/card_package_address"
+            android:textColor="#ACACAC"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#666666"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/card_package_phone_number"
+            android:textColor="#ACACAC"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#666666"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

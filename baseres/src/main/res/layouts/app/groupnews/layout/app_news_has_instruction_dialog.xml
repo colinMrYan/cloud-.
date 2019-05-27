@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:paddingBottom="20dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_upgrade_dialog"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/news_instruction_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingBottom="7dp"
+                android:paddingTop="12dp"
+                android:text="@string/news_has_instructions_news"
+                android:textColor="@color/black"
+                android:textSize="@dimen/bigger_textsize"
+                />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/content_border" />
+
+            <TextView
+                android:id="@+id/news_has_instrcution_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="43dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="33dp"
+                android:background="@null"
+                android:hint=""
+                android:lineSpacingMultiplier="1.1"
+                android:maxHeight="500dp"
+                android:maxLines="10"
+                android:scrollbars="vertical"
+                android:textColor="@color/app_dialog_title_color"
+                android:textSize="@dimen/header_textsize" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/content_border" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+<!--
+                <Button
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/cancel"
+                    android:textColor="@color/app_dialog_title_color"
+                    android:textSize="@dimen/header_textsize" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/content_border" />
+-->
+                <Button
+                    android:id="@+id/ok_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/news_has_instructions_known"
+                    android:textColor="@color/app_dialog_update_color"
+                    android:textSize="@dimen/header_textsize" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

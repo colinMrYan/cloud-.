@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_vertical_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/card_vertical_num_txt"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/card_vertical_name_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/card_vertical_num_txt"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="13sp"/>
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/post_comment_layout"
+        android:background="@color/white">
+
+        <ListView
+            android:id="@+id/news_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#dddddd"
+            android:dividerHeight="0.5px"
+             />
+
+    </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+
+</RelativeLayout>

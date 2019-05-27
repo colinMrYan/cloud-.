@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="header_bg_color" format="reference|color"/>
+    <attr name="header_text_color" format="reference|color"/>
+    <attr name="footer_bg_color" format="reference|color"/>
+    <attr name="footer_tab_text_color_nor" format="reference|color"/>
+    <attr name="footer_tab_text_color_select" format="reference|color"/>
+    <attr name="header_bg" format="reference"/>
+    <attr name="footer_bg" format="reference"/>
+
+    <attr name="footer_tab_text_color" format="reference"/>
+
+    <attr name="bg_tab_app" format="reference"/>
+    <attr name="bg_tab_cloud_tweet" format="reference"/>
+    <attr name="bg_tab_communicate" format="reference"/>
+    <attr name="bg_tab_contact" format="reference"/>
+    <attr name="bg_tab_find" format="reference"/>
+    <attr name="bg_tab_mine" format="reference"/>
+    <attr name="bg_tab_unknown" format="reference"/>
+    <attr name="bg_tab_work" format="reference"/>
+    <attr name="ic_message_header_contact" format="reference"/>
+    <attr name="ic_add" format="reference"/>
+    <attr name="ic_config" format="reference"/>
+    <attr name="ic_appcenter_enter" format="reference"/>
+    <attr name="ic_appcenter_config" format="reference"/>
+    <attr name="ic_header_option" format="reference"/>
+    <attr name="status_bar_dark_font" format="boolean"/>
+    <attr name="ic_back_btn" format="reference"/>
+    <attr name="ic_appcenter_search" format="reference"/>
+    <attr name="plugin_ic_header_title_drop_down" format="reference"/>
+    <attr name="plugin_ic_header_title_drop_up" format="reference"/>
+    <attr name="mine_my_info_card_name_color" format="reference|color"/>
+    <attr name="mine_my_info_card_enterprise_color" format="reference|color"/>
+    <attr name="mine_my_info_card_bg" format="reference"/>
+    <attr name="mine_my_info_menu_tint_color" format="reference|color"/>
+    <attr name="mine_my_info_switch_enterprise" format="reference"/>
+    <attr name="schedule_tab_text_color_normal" format="reference|color"/>
+    <attr name="schedule_tab_text_color_select" format="reference|color"/>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="border_overlay" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="FlowLayout">
+        <attr name="android:gravity" />
+    </declare-styleable>
+    <declare-styleable name="FlowLayout_Layout">
+        <attr name="android:layout_gravity" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundAngleImageView">
+        <attr name="roundWidth" format="dimension" />
+        <attr name="roundHeight" format="dimension" />
+        <attr name="roundlefttop" format="boolean" />
+        <attr name="roundleftdown" format="boolean" />
+        <attr name="roundrighttop" format="boolean" />
+        <attr name="roundrightdown" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="HorizontalProgressBarWithNumber">
+        <attr name="progress_unreached_color" format="color" />
+        <attr name="progress_reached_color" format="color" />
+        <attr name="progress_reached_bar_height" format="dimension" />
+        <attr name="progress_unreached_bar_height" format="dimension" />
+        <attr name="progress_text_size" format="dimension" />
+        <attr name="progress_text_color" format="color" />
+        <attr name="progress_text_offset" format="dimension" />
+        <attr name="progress_text_visibility" format="enum">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="1" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="NumberCircleProgressBar">
+        <attr name="progress" format="integer" />
+        <attr name="max" format="integer" />
+        <attr name="cirprogress_unreached_color" format="color" />
+        <attr name="cirprogress_reached_color" format="color" />
+        <attr name="cirprogress_text_size" format="dimension" />
+        <attr name="cirprogress_text_color" format="color" />
+        <attr name="cirprogress_circle_radius" format="dimension" />
+        <attr name="cirprogress_text_visibility" format="enum">
+            <enum name="visible" value="0" />
+            <enum name="invisible" value="1" />
+        </attr>
+        <attr name="cirprogress_fill_mode" format="enum">
+            <enum name="rotate" value="0" />
+            <enum name="rising_water" value="1" />
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="Themes">
+        <attr name="numberProgressBarStyle" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="HorizontalListView">
+        <attr name="dividerWidth" format="dimension" />
+        <attr name="android:divider" />
+        <attr name="android:requiresFadingEdge" />
+        <attr name="android:fadingEdgeLength" />
+    </declare-styleable>
+    <declare-styleable name="SegmentControl">
+        <attr name="segCornerRadius" format="dimension|reference" />
+        <attr name="selectedBackgroundColors" format="color|reference" />
+        <attr name="selectedTextColors" format="color|reference" />
+        <attr name="texts" format="string|reference" />
+        <attr name="android:textSize" />
+        <attr name="direction" format="enum">
+            <enum name="horizon" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="gaps" format="dimension|reference" />
+        <attr name="horizonGap" format="dimension|reference" />
+        <attr name="verticalGap" format="dimension|reference" />
+        <attr name="selectedIndex" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="MyFlowLayout">
+        <attr name="horizontalSpacing" format="dimension" />
+        <attr name="verticalSpacing" format="dimension" />
+        <attr name="orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="debugDraw" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="FlowLayout_LayoutParams">
+        <attr name="layout_newLine" format="boolean" />
+        <attr name="layout_horizontalSpacing" format="dimension" />
+        <attr name="layout_verticalSpacing" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="CircleTextImageView">
+        <attr name="citv_border_width" format="dimension" />
+        <attr name="citv_border_color" format="color" />
+        <attr name="citv_border_overlay" format="boolean" />
+        <attr name="citv_fill_color" format="color" />
+        <attr name="citv_text_text" format="string" />
+        <attr name="citv_text_color" format="color" />
+        <attr name="citv_text_size" format="dimension" />
+        <attr name="citv_text_padding" format="dimension" />
+    </declare-styleable>
+
+    <!-- 自定义TextView -->
+    <attr name="textwidth" format="integer" />
+    <attr name="typeface">
+        <enum name="normal" value="0" />
+        <enum name="sans" value="1" />
+        <enum name="serif" value="2" />
+        <enum name="monospace" value="3" />
+    </attr>
+
+    <declare-styleable name="CYTextView">
+        <attr name="textwidth" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="reference|color" />
+        <attr name="lineSpacingExtra" format="dimension" />
+        <attr name="typeface" />
+    </declare-styleable>
+    <declare-styleable name="CropImageView">
+        <attr name="guidelines">
+            <enum name="on" value="2"/>
+            <enum name="onTouch" value="1"/>
+            <enum name="off" value="0"/>
+        </attr>
+        <attr name="fixAspectRatio" format="boolean"/>
+        <attr name="aspectRatioX" format="integer"/>
+        <attr name="aspectRatioY" format= "integer"/>
+        <attr name="imageResource" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="ECMChatInputMenu">
+        <attr name="layoutType" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="CircleFrameLayout">
+        <attr name="radius" format="dimension" />
+        <attr name="topLeftRadius" format="dimension" />
+        <attr name="topRightRadius" format="dimension" />
+        <attr name="bottomLeftRadius" format="dimension" />
+        <attr name="bottomRightRadius" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="FocusSurfaceView">
+        <attr name="focus_mode">
+            <enum name="fit_image" value="0"/>
+            <enum name="ratio_4_3" value="1"/>
+            <enum name="ratio_3_4" value="2"/>
+            <enum name="square" value="3"/>
+            <enum name="ratio_16_9" value="4"/>
+            <enum name="ratio_9_16" value="5"/>
+            <enum name="free" value="6"/>
+            <enum name="custom" value="7"/>
+            <enum name="circle" value="8"/>
+            <enum name="circle_square" value="9"/>
+        </attr>
+        <attr name="focus_overlay_color" format="reference|color"/>
+        <attr name="focus_frame_color" format="reference|color"/>
+        <attr name="focus_handle_color" format="reference|color"/>
+        <attr name="focus_guide_color" format="reference|color"/>
+        <attr name="focus_guide_show_mode">
+            <enum name="show_always" value="1"/>
+            <enum name="show_on_touch" value="2"/>
+            <enum name="not_show" value="3"/>
+        </attr>
+        <attr name="focus_handle_show_mode">
+            <enum name="show_always" value="1"/>
+            <enum name="show_on_touch" value="2"/>
+            <enum name="not_show" value="3"/>
+        </attr>
+        <attr name="focus_handle_size" format="dimension"/>
+        <attr name="focus_touch_padding" format="dimension"/>
+        <attr name="focus_min_frame_size" format="dimension"/>
+        <attr name="focus_frame_stroke_weight" format="dimension"/>
+        <attr name="focus_guide_stroke_weight" format="dimension"/>
+        <attr name="focus_crop_enabled" format="boolean"/>
+        <attr name="focus_initial_frame_scale" format="float"/>
+        <attr name="focus_set_max_initial_frame_scale" format="boolean"/>
+        <attr name="focus_animation_enabled" format="boolean"/>
+        <attr name="focus_animation_duration" format="integer"/>
+        <attr name="focus_handle_shadow_enabled" format="boolean"/>
+        <attr name="focus_crop_width" format="dimension"/>
+        <attr name="focus_crop_height" format="dimension"/>
+        <attr name="focus_frame_can_change" format="boolean"/>
+        <attr name="focus_frame_background" format="reference|color"/>
+        <attr name="focus_frame_ratio_x" format="float"/>
+        <attr name="focus_frame_ratio_y" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="WaterWaveProgress">
+        <attr name="progressWidth" format="dimension" />
+        <attr name="fontSize" format="dimension" />
+        <attr name="progressColor" format="color" />
+        <attr name="progressBgColor" format="color" />
+        <attr name="waterWaveColor" format="color" />
+        <attr name="waterWaveBgColor" format="color" />
+        <attr name="progress2WaterWidth" format="dimension" />
+        <attr name="showProgress" format="boolean" />
+        <attr name="showNumerical" format="boolean" />
+        <attr name="waveProgressTextColor" format="color" />
+        <attr name="waveProgress" format="integer" />
+        <attr name="maxProgress" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="BubbleLayout">
+        <attr name="bl_arrowWidth" format="dimension|reference" />
+        <attr name="bl_cornersRadius" format="dimension|reference" />
+        <attr name="bl_arrowHeight" format="dimension|reference" />
+        <attr name="bl_arrowPosition" format="dimension|reference" />
+        <attr name="bl_bubbleColor" format="color|reference" />
+        <attr name="bl_strokeWidth" format="dimension|reference" />
+        <attr name="bl_strokeColor" format="color|reference" />
+
+        <attr name="bl_arrowDirection" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+            <enum name="top" value="2" />
+            <enum name="bottom" value="3" />
+            <enum name="left_center" value="4"/>
+            <enum name="right_center" value="5"/>
+            <enum name="top_center" value="6"/>
+            <enum name="bottom_center" value="7"/>
+            <enum name="top_right" value="8"/>
+        </attr>
+    </declare-styleable>
+
+    <!--日程组件-->
+    <declare-styleable name="CalendarView">
+
+        <attr name="calendar_padding" format="dimension" /><!--日历内部左右padding-->
+
+        <attr name="week_background" format="color" /><!--周背景-->
+        <attr name="week_line_background" format="color" /><!--线条颜色-->
+        <attr name="week_text_color" format="color" /><!--周栏字体颜色-->
+        <attr name="week_text_size" format="dimension" /><!--周栏字体大小-->
+        <attr name="week_line_margin" format="dimension" /><!--线条margin-->
+
+        <attr name="month_view" format="string" /><!--完全自定义月视图-->
+        <attr name="week_view" format="string" /> <!--完全自定义周视图-->
+        <attr name="year_view" format="string" /> <!--完全自定义年视图-->
+        <attr name="week_bar_height" format="dimension" /> <!--星期栏的高度-->
+        <attr name="week_bar_view" format="string" /> <!--如果需要的话使用自定义星期栏-->
+
+        <attr name="scheme_text" format="string" />
+        <attr name="day_text_size" format="dimension" />
+        <attr name="lunar_text_size" format="dimension" />
+        <attr name="calendar_height" format="dimension" />
+        <attr name="scheme_text_color" format="color" />
+        <attr name="scheme_month_text_color" format="color" />
+        <attr name="scheme_lunar_text_color" format="color" />
+        <attr name="scheme_theme_color" format="color" />
+
+        <attr name="selected_theme_color" format="color" />
+        <attr name="selected_text_color" format="color" />
+        <attr name="selected_lunar_text_color" format="color" />
+
+        <attr name="current_day_text_color" format="color" />
+        <attr name="current_day_lunar_text_color" format="color" />
+        <attr name="current_month_text_color" format="color" />
+        <attr name="other_month_text_color" format="color" />
+        <attr name="current_month_lunar_text_color" format="color" />
+        <attr name="other_month_lunar_text_color" format="color" />
+
+
+        <!-- 年视图相关 -->
+        <attr name="year_view_month_text_size" format="dimension" />
+        <attr name="year_view_day_text_size" format="dimension" />
+        <attr name="year_view_month_text_color" format="color" />
+        <attr name="year_view_current_day_text_color" format="color" />
+        <attr name="year_view_day_text_color" format="color" />
+        <attr name="year_view_select_text_color" format="color" />
+        <attr name="year_view_scheme_color" format="color" />
+        <attr name="year_view_background" format="color" />
+        <attr name="year_view_month_height" format="dimension" />
+        <attr name="year_view_week_height" format="dimension" />
+        <attr name="year_view_week_text_size" format="dimension" />
+        <attr name="year_view_week_text_color" format="color" />
+        <attr name="year_view_padding" format="dimension" />
+        <attr name="year_view_month_margin_top" format="dimension" />
+        <attr name="year_view_month_margin_bottom" format="dimension" />
+
+        <!--日期范围-->
+        <attr name="min_year" format="integer" />
+        <attr name="max_year" format="integer" />
+        <attr name="min_year_month" format="integer" />
+        <attr name="max_year_month" format="integer" />
+        <attr name="min_year_day" format="integer" />
+        <attr name="max_year_day" format="integer" />
+
+
+        <!--月视图是否可滚动-->
+        <attr name="month_view_scrollable" format="boolean" />
+        <!--周视图是否可滚动-->
+        <attr name="week_view_scrollable" format="boolean" />
+        <!--年视图是否可滚动-->
+        <attr name="year_view_scrollable" format="boolean" />
+
+        <!-- 月份显示模式 -->
+        <attr name="month_view_show_mode">
+            <enum name="mode_all" value="0" />
+            <enum name="mode_only_current" value="1" />
+            <enum name="mode_fix" value="2" />
+        </attr>
+
+        <!-- 自定义周起始 -->
+        <attr name="week_start_with">
+            <enum name="sun" value="1" />
+            <enum name="mon" value="2" />
+            <enum name="sat" value="7" />
+        </attr>
+
+        <!-- 自定义选择模式 -->
+        <attr name="select_mode">
+            <enum name="default_mode" value="0" />
+            <enum name="single_mode" value="1" />
+            <enum name="range_mode" value="2" />
+            <enum name="multi_mode" value="3" />
+        </attr>
+
+        <!-- when select_mode = multi_mode -->
+        <attr name="max_multi_select_size" format="integer" />
+
+        <!-- when select_mode = range_mode -->
+        <attr name="min_select_range" format="integer" />
+        <attr name="max_select_range" format="integer" />
+    </declare-styleable>
+
+
+    <declare-styleable name="CalendarLayout">
+        <attr name="default_status">
+            <enum name="expand" value="0" />
+            <enum name="shrink" value="1" />
+        </attr>
+
+
+        <!-- 手势模式 -->
+        <attr name="gesture_mode">
+            <enum name="default_mode" value="0" />
+            <!--<enum name="only_calendar" value="1" />-->
+            <enum name="disabled" value="2" />
+        </attr>
+
+        <attr name="calendar_show_mode">
+            <enum name="both_month_week_view" value="0" />
+            <enum name="only_week_view" value="1" />
+            <enum name="only_month_view" value="2" />
+        </attr>
+
+        <attr name="calendar_content_view_id" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="GroupRecyclerView">
+        <attr name="group_height" format="dimension" />
+        <attr name="group_child_offset" format="dimension" />
+        <attr name="group_background" format="color" />
+        <attr name="group_text_color" format="color" />
+        <attr name="group_text_size" format="dimension" />
+        <attr name="group_center" format="boolean" />
+        <attr name="group_padding_left" format="dimension" />
+        <attr name="group_padding_right" format="dimension" />
+        <attr name="group_has_header" format="boolean" />
+    </declare-styleable>
+    <!--日程组件结束-->
+
+    <declare-styleable name="PagerSlidingTabStrip">
+        <attr name="pstsIndicatorColor" format="color" />
+        <attr name="pstsUnderlineColor" format="color" />
+        <attr name="pstsDividerColor" format="color" />
+        <attr name="pstsIndicatorHeight" format="dimension" />
+        <attr name="pstsUnderlineHeight" format="dimension" />
+        <attr name="pstsDividerPaddingTopBottom" format="dimension" />
+        <attr name="pstsTabPaddingLeftRight" format="dimension" />
+        <attr name="pstsScrollOffset" format="dimension" />
+        <attr name="pstsTabBackground" format="reference" />
+        <attr name="pstsShouldExpand" format="boolean" />
+        <attr name="pstsTextAllCaps" format="boolean" />
+        <attr name="pstsTextSelectedColor" format="color" />
+        <attr name="pstsScaleZoomMax" format="float" />
+        <attr name="pstsSmoothScrollWhenClickTab" format="boolean" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:id="@+id/app_center_recommand_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/app_center_recommand_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="13dp"
+            android:text="热门推荐"
+            android:textColor="#000000"
+            android:textSize="@dimen/content_normal_textsize" />
+
+        <TextView
+            android:id="@+id/app_center_more_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="9dp"
+            android:layout_marginTop="13dp"
+            android:text="@string/app_center_more_apps"
+            android:textColor="#999999"
+            android:textSize="@dimen/content_normal_textsize" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/app_center_recomand_recycleview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_center_recommand_layout"
+        android:layout_marginBottom="13dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+    </android.support.v7.widget.RecyclerView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/app_center_recomand_recycleview"
+        android:background="#C8C7CC"/>
+
+</RelativeLayout>

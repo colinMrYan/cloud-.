@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FAFAFA"
+        android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_line_color" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f7f7f7"
+            android:paddingBottom="5dp"
+            android:paddingTop="7dp">
+
+            <Button
+                android:id="@+id/voice_btn"
+                android:layout_width="31dp"
+                android:layout_height="31dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/ic_chat_input_voice" />
+
+            <com.inspur.emmcloud.widget.ChatInputEdit
+                android:id="@+id/input_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/right_layout"
+                android:layout_toRightOf="@id/voice_btn"
+                android:background="@drawable/bg_corner_fill_white_no_border"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:maxLines="5"
+                android:paddingBottom="9dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="9dp"
+                android:textSize="15sp"></com.inspur.emmcloud.widget.ChatInputEdit>
+
+            <RelativeLayout
+                android:id="@+id/right_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="7dp">
+
+                <Button
+                    android:id="@+id/send_msg_btn"
+                    android:layout_width="47dp"
+                    android:layout_height="35dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_chat_input_send_btn_disable"
+                    android:gravity="center"
+                    android:text="@string/send"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/add_btn"
+                    android:layout_width="47dp"
+                    android:layout_height="31dp"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:onClick="onClick"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_chat_btn_add" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/add_menu_layout"
+            android:layout_width="match_parent"
+            android:layout_height="274dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="25dp"
+            android:visibility="gone">
+
+            <com.inspur.emmcloud.widget.ECMChatInputMenuViewpageLayout
+                android:id="@+id/viewpager_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/voice_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:paddingTop="60dp"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/volume_level_img"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_chat_input_voice_level"
+            />
+        <ImageView
+            android:id="@+id/voice_input_close_img"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:padding="25dp"
+            android:src="@drawable/ic_arrow_down"
+            />
+    </LinearLayout>
+</RelativeLayout>

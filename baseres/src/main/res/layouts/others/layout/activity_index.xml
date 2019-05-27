@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true"
+    >
+
+    <LinearLayout
+        android:id="@+id/index_root_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <WebView
+            android:id="@+id/preload_webview"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:visibility="gone"></WebView>
+
+        <FrameLayout
+            android:id="@+id/realtabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:background="#fafafa" />
+
+        <!-- 添加这行代码可以让上下颜色一致 -->
+        <!-- android:paddingTop="18dp" -->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/footer_bg" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <com.inspur.emmcloud.widget.MyFragmentTabHost
+                    android:id="@android:id/tabhost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <com.inspur.emmcloud.widget.tipsview.TipsView
+        android:id="@+id/tip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

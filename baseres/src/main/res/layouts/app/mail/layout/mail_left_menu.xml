@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f9f9f9">
+        <ImageButton
+            android:id="@+id/ibt_menu_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_back_btn_white" />
+
+        <TextView
+            android:id="@+id/tv_mail_acount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:onClick="onClick"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp"
+        android:background="#C8C7CC">
+    </View>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:focusableInTouchMode="true">
+        <RelativeLayout
+            android:id="@+id/rl_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

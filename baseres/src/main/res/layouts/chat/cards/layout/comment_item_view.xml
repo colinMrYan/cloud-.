@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <com.inspur.emmcloud.widget.CircleTextImageView
+        android:id="@+id/msg_img"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp"
+        android:focusable="false" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <RelativeLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/commentdetail_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="12dp"
+                android:textColor="@color/text_grey"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/commentdetail_time_text"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/header_bg_blue"
+                android:textSize="@dimen/content_normal_textsize" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout"
+            android:layout_marginTop="3dp"
+            android:textColor="#6a7d84"
+            android:textSize="@dimen/content_normal_textsize" />
+    </RelativeLayout>
+
+</LinearLayout>

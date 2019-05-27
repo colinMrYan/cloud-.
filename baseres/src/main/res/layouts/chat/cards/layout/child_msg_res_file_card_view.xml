@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/shape_fileupround_layout" >
+
+
+        <ImageView
+            android:id="@+id/filecard_download_img"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/icon_file_download" />
+
+        <com.inspur.emmcloud.widget.RoundAngleImageView
+            android:id="@+id/file_type_img"
+            android:layout_width="50dp"
+            android:layout_height="66dp"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_word2003"
+            app:roundleftdown="false"
+            app:roundlefttop="false"
+            app:roundrightdown="false"
+            app:roundrighttop="false" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/rl_header"
+        android:layout_marginTop="0.6dp"
+        android:background="@drawable/shape_filedownround_layout"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/tv_file_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="3.5"
+            android:ellipsize="middle"
+            android:gravity="left"
+            android:singleLine="true"
+            android:text="@string/name"
+            android:textColor="#999999"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_file_size"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="@string/size"
+            android:textColor="#999999"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber
+        android:id="@+id/file_download_progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="25dp" />
+
+</RelativeLayout>

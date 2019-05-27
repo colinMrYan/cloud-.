@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".MainActivity" >
+
+    <ImageView
+        android:id="@+id/iv_splash_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
+         />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/iv_splash_ad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/iv_splash_logo"
+        android:scaleType="centerCrop"
+        />
+
+    <ImageButton
+        android:id="@+id/ibt_skip"
+        android:layout_width="80dp"
+        android:layout_height="46dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="18dp"
+        android:onClick="onClick"
+        android:padding="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_splash_skip"
+        android:visibility="gone" />
+
+    <com.inspur.emmcloud.widget.CircularProgress
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="180dp"
+        android:visibility="gone"
+        app:borderWidth="3dp" />
+
+</RelativeLayout>

@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    tools:context=".MainActivity" >
+    <com.inspur.emmcloud.widget.CircleTextImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_person_default" />
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/bt_function"
+        android:layout_toRightOf="@id/iv_photo"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingRight="15dp"
+            android:paddingTop="6dp"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_name_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingBottom="4dp"
+            android:paddingRight="15dp"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_owner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp"
+            android:paddingRight="15dp"
+            android:textColor="#9b9b9b"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_function"
+        android:layout_width="60dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_webex_buttion_add_enable"
+        android:focusable="false"
+        android:gravity="center"
+        android:minHeight="0dp"
+        android:onClick="onClick"
+        android:padding="0dp"
+        android:textColor="#ffffff"
+        android:textSize="15sp"
+        />
+    <View
+        android:id="@+id/v_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"
+        android:layout_below="@id/ll_content"
+        android:background="@color/color_list_divider"></View>
+</RelativeLayout>
