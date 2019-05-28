@@ -1,12 +1,14 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import java.io.File;
+import java.text.SimpleDateFormat;
+
+import org.xutils.x;
+import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -23,15 +25,12 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
-import org.xutils.common.Callback;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.http.app.RedirectHandler;
-import org.xutils.http.request.UriRequest;
-import org.xutils.x;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,9 +59,9 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());

@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import android.content.Intent;
-import android.os.Bundle;
+import java.io.File;
 
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.BuildConfig;
@@ -45,7 +44,8 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 import com.reactnativenavigation.bridge.NavigationReactPackage;
 
-import java.io.File;
+import android.content.Intent;
+import android.os.Bundle;
 
 /**
  * Created by yufuchang on 2017/3/15.
@@ -62,8 +62,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
 //    private String installUri = "";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         init();
         checkSource();
         initReactNativeApp();

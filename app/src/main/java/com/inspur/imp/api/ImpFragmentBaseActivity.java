@@ -7,4 +7,8 @@ import com.inspur.emmcloud.BaseFragmentActivity;
  */
 
 public class ImpFragmentBaseActivity extends BaseFragmentActivity {
+    @Override
+    public void onCreate() {
+
+    }
 }

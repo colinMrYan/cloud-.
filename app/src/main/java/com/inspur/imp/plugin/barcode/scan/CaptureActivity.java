@@ -1,23 +1,13 @@
 package com.inspur.imp.plugin.barcode.scan;
 
-import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.graphics.Bitmap;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Vibrator;
-import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Vector;
+
+import org.xutils.x;
+import org.xutils.common.Callback.CommonCallback;
+import org.xutils.http.RequestParams;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -36,14 +26,24 @@ import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
 import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
 import com.inspur.imp.plugin.barcode.view.ViewfinderView;
 
-import org.xutils.common.Callback.CommonCallback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Vector;
+import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Vibrator;
+import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 public class CaptureActivity extends BaseActivity implements Callback {
@@ -80,6 +80,10 @@ public class CaptureActivity extends BaseActivity implements Callback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         CameraManager.init(this);
