@@ -414,7 +414,7 @@ public class DropPopMenu {
         public View getView(final int position, View view, ViewGroup viewGroup) {
             ViewHolder holder;
             if (view == null || view.getTag() == null) {
-                view = LayoutInflater.from(mContext).inflate(R.layout.pop_menu_item, null);
+                view = LayoutInflater.from(mContext).inflate(R.layout.basewidget_pop_menu_item, null);
                 holder = new ViewHolder(view);
                 view.setTag(holder);
             } else {

@@ -76,7 +76,6 @@ import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
@@ -280,10 +279,7 @@ public class MyAppFragment extends BaseFragment {
             if (recommendAppWidgetListView == null) {
                 recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
                 (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.VISIBLE);
-                ECMRecyclerViewLinearLayoutManager layoutManager = new ECMRecyclerViewLinearLayoutManager(getActivity());
-                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                layoutManager.setCanScrollHorizontally(false);
-                recommendAppWidgetListView.setLayoutManager(layoutManager);
+                recommendAppWidgetListView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recommendAppWidgetListView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
                 recommendAppWidgetListAdapter = new RecommendAppWidgetListAdapter(getActivity());
                 recommendAppWidgetListView.setAdapter(recommendAppWidgetListAdapter);

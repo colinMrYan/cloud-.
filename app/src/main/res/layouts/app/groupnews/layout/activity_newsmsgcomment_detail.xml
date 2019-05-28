@@ -16,10 +16,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -41,7 +41,7 @@
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg" >
 
-        <include layout="@layout/pull_refresh_head" />
+         <include layout="@layout/basewidget_pull_refresh_head" />
         <!-- 支持所有实现Pullable接口的View -->
 
         <com.inspur.emmcloud.widget.pullableview.PullableScrollView
@@ -59,7 +59,7 @@
             android:stretchMode="columnWidth"
             android:verticalSpacing="3dp" />
 
-        <include layout="@layout/pull_load_more" />
+         <include layout="@layout/basewidget_pull_load_more" />
     </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
     
 
@@ -67,10 +67,10 @@
         android:id="@+id/post_comment_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:background="#FAFAFA"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -85,7 +85,6 @@
                 android:background="@color/grey_line_color" />
 
             <ImageView
-                android:visibility="gone"
                 android:id="@+id/add_comment_img"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -95,7 +94,8 @@
                 android:onClick="onClick"
                 android:padding="6dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/selector_add_comment_btn" />
+                android:src="@drawable/selector_add_comment_btn"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/comment_edit"

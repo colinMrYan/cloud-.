@@ -1,0 +1,109 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="20dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_upgrade_dialog"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/app_update_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingTop="23dp"
+                android:textColor="@color/app_dialog_title_color"
+                android:textSize="@dimen/bigger_textsize"
+                />
+            <TextView
+                android:id="@+id/app_update_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingTop="17dp"
+                android:textColor="@color/app_dialog_sub_title_color"
+                android:textSize="@dimen/content_title_textsize"
+                />
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="12dp"
+                android:adjustViewBounds="true"
+                android:fadeScrollbars="false"
+                android:lineSpacingMultiplier="1.1"
+                android:maxHeight="310dp"
+                android:scrollbarSize="4dp"
+                android:scrollbarStyle="insideInset"
+                android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
+                android:scrollbars="vertical"
+                android:textColor="@color/app_dialog_title_color"
+                android:textSize="@dimen/header_textsize" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/content_border" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <Button
+                    android:id="@+id/cancel_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/cancel"
+                    android:textColor="@color/app_dialog_title_color"
+                    android:textSize="@dimen/header_function_textsize" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/content_border" />
+
+                <Button
+                    android:id="@+id/ok_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/ok"
+                    android:textColor="@color/app_dialog_update_color"
+                    android:textSize="@dimen/header_function_textsize" />
+            </LinearLayout>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/icon_aircraft"
+            android:layout_width="67dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="17dp"
+            android:src="@drawable/icon_aircraft"
+            />
+    </RelativeLayout>
+ 
+</LinearLayout>

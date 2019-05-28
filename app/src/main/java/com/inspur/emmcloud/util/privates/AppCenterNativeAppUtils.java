@@ -107,7 +107,7 @@ public class AppCenterNativeAppUtils {
      */
     private void showPasswordInputDlg() {
         passwordInputDlg = new MyDialog(context,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         passwordInputDlg.setCancelable(false);
         final EditText inputEdit = (EditText) passwordInputDlg.findViewById(R.id.edit);
         (passwordInputDlg.findViewById(R.id.ok_btn)).setOnClickListener(new View.OnClickListener() {

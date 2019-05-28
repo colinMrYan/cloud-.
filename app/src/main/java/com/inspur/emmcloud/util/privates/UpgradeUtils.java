@@ -195,7 +195,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
     private void showSelectUpgradeDlg() {
         final MyDialog dialog = new MyDialog(context,
-                R.layout.dialog_two_buttons);
+                R.layout.basewidget_dialog_two_buttons);
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.ok_btn);
         okBtn.setText(context.getString(R.string.upgrade));
@@ -234,7 +234,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
     private void showForceUpgradeDlg() {
         // TODO Auto-generated method stub
         final MyDialog dialog = new MyDialog(context,
-                R.layout.dialog_two_buttons);
+                R.layout.basewidget_dialog_two_buttons);
         dialog.setCancelable(false);
         Button okBtn = dialog.findViewById(R.id.ok_btn);
         okBtn.setText(context.getString(R.string.upgrade));
@@ -270,7 +270,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
     private void showDownloadDialog() {
         cancelUpdate = false;
-        progressDownloadDialog = new MyDialog(context, R.layout.dialog_down_progress_one_button);
+        progressDownloadDialog = new MyDialog(context, R.layout.app_dialog_down_progress_one_button);
         progressDownloadDialog.setDimAmount(0.2f);
         progressDownloadDialog.setCancelable(false);
         progressDownloadDialog.setCanceledOnTouchOutside(false);

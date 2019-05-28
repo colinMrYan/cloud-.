@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -336,11 +336,6 @@
         <!-- 模糊 -->
         <item name="android:windowBackground">@null</item>
         <!-- 背景透明 -->
-    </style>
-
-    <style name="SplashTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <declare-styleable name="RxCardStackView">

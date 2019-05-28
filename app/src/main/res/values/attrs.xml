@@ -88,21 +88,6 @@
         <attr name="android:requiresFadingEdge" />
         <attr name="android:fadingEdgeLength" />
     </declare-styleable>
-    <declare-styleable name="SegmentControl">
-        <attr name="cornerRadius" format="dimension|reference" />
-        <attr name="selectedBackgroundColors" format="color|reference" />
-        <attr name="selectedTextColors" format="color|reference" />
-        <attr name="texts" format="string|reference" />
-        <attr name="android:textSize" />
-        <attr name="direction" format="enum">
-            <enum name="horizon" value="0" />
-            <enum name="vertical" value="1" />
-        </attr>
-        <attr name="gaps" format="dimension|reference" />
-        <attr name="horizonGap" format="dimension|reference" />
-        <attr name="verticalGap" format="dimension|reference" />
-        <attr name="selectedIndex" format="integer" />
-    </declare-styleable>
     <declare-styleable name="FlowLayout_LayoutParams">
         <attr name="layout_newLine" format="boolean" />
         <attr name="layout_horizontalSpacing" format="dimension" />
@@ -148,13 +133,6 @@
     </declare-styleable>
     <declare-styleable name="ECMChatInputMenu">
         <attr name="layoutType" format="string"/>
-    </declare-styleable>
-    <declare-styleable name="CircleFrameLayout">
-        <attr name="radius" format="dimension" />
-        <attr name="topLeftRadius" format="dimension" />
-        <attr name="topRightRadius" format="dimension" />
-        <attr name="bottomLeftRadius" format="dimension" />
-        <attr name="bottomRightRadius" format="dimension" />
     </declare-styleable>
     <declare-styleable name="FocusSurfaceView">
         <attr name="focus_mode">

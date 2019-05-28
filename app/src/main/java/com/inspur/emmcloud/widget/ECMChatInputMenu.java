@@ -33,7 +33,6 @@ import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -133,7 +132,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
     private void initView(final Context context, AttributeSet attrs) {
         // TODO Auto-generated method stub
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu, this, true);
+        View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu, this, true);
         ButterKnife.bind(this, view);
         initInputEdit();
         initVoiceInput();

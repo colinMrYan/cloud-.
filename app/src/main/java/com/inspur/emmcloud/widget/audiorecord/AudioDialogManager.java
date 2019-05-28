@@ -67,7 +67,7 @@ public class AudioDialogManager {
         // 用layoutinflater来引用布局
         dialog.getWindow().setBackgroundDrawable(new BitmapDrawable());
         dialog.getWindow().setDimAmount(0);
-        View view = LayoutInflater.from(mContext).inflate(R.layout.basewidget_dialog_record_manager, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.communication_dialog_record_manager, null);
         dialog.setContentView(view);
         recorderImg = (ImageView) dialog.findViewById(R.id.iv_recorder);
         labelText = (TextView) dialog.findViewById(R.id.tv_recorder);
@@ -185,7 +185,7 @@ public class AudioDialogManager {
         // 用layoutinflater来引用布局
         dialog.getWindow().setBackgroundDrawable(new BitmapDrawable());
         dialog.getWindow().setDimAmount(0);
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_voice_word_manager, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.communication_dialog_voice_word_manager, null);
         dialog.setContentView(view);
         imageViewList.add((ImageView) dialog.findViewById(R.id.iv_arrow_first));
         imageViewList.add((ImageView) dialog.findViewById(R.id.iv_arrow_second));

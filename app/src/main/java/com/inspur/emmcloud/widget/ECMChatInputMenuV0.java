@@ -44,8 +44,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
-import org.xutils.view.annotation.Event;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +121,7 @@ public class ECMChatInputMenuV0 extends LinearLayout {
     private void initView(final Context context, AttributeSet attrs) {
         // TODO Auto-generated method stub
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu, this, true);
+        View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu, this, true);
         ButterKnife.bind(this, view);
         initInputEdit();
         initVoiceInput();

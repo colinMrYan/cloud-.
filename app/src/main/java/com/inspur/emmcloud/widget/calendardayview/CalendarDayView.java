@@ -54,7 +54,7 @@ public class CalendarDayView extends RelativeLayout {
     }
 
     private void initView() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.calendar_day_view, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_view, this, true);
         initTimeHourLayout(view);
     }
 
@@ -67,7 +67,7 @@ public class CalendarDayView extends RelativeLayout {
         eventLayout = view.findViewById(R.id.rl_event);
         timeHourLayout = view.findViewById(R.id.ll_time_hour);
         for (int i = 0; i < dayHourTimes.length; i++) {
-            View hourLayout = LayoutInflater.from(getContext()).inflate(R.layout.calendar_day_view_hour, null, false);
+            View hourLayout = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_view_hour, null, false);
             hourLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TIME_HOUR_HEIGHT));
             TextView hourText = hourLayout.findViewById(R.id.tv_hour);
             hourText.setText(dayHourTimes[i]);
@@ -238,7 +238,7 @@ public class CalendarDayView extends RelativeLayout {
     }
 
     private void setEventLayout(final Event event, RelativeLayout.LayoutParams eventLayoutParams) {
-        View eventView = LayoutInflater.from(getContext()).inflate(R.layout.calendar_day_event_view, null);
+        View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
         eventView.setBackgroundResource(R.drawable.ic_schedule_calendar_view_event_bg);
         if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(),24)){
             ImageView eventImg = eventView.findViewById(R.id.iv_event);
