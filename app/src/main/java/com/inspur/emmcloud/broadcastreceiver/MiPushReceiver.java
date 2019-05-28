@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.broadcastreceiver;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.text.TextUtils;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -19,9 +19,9 @@ import com.xiaomi.mipush.sdk.MiPushCommandMessage;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.text.TextUtils;
 
 /**
  * 1、PushMessageReceiver 是个抽象类，该类继承了 BroadcastReceiver。<br/>
@@ -131,9 +131,10 @@ public class MiPushReceiver extends PushMessageReceiver {
                 PushManagerUtils.getInstance().registerPushId2Emm();
                 new ClientIDUtils(context).upload();
                 WebSocketPush.getInstance().startWebSocket();
-            } else {
-                PushManagerUtils.getInstance().setJpushStatus(true);
             }
+            // else {
+            // PushManagerUtils.getInstance().setJpushStatus(true);
+            // }
         }
 
     }
@@ -151,7 +152,7 @@ public class MiPushReceiver extends PushMessageReceiver {
 
             @Override
             public void onPermissionRequestFail(List<String> permissions) {
-                PushManagerUtils.getInstance().setJpushStatus(true);
+                        // PushManagerUtils.getInstance().setJpushStatus(true);
             }
         });
 

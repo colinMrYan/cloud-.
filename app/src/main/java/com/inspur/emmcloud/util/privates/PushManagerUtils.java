@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.content.Context;
-
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.config.Constant;
@@ -9,6 +7,8 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.xiaomi.mipush.sdk.MiPushClient;
+
+import android.content.Context;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -44,13 +44,13 @@ public class PushManagerUtils {
     public String getPushId(Context context) {
         String pushId = "";
         String pushFlag = getPushFlag(MyApplication.getInstance());
-        if (AppUtils.getIsHuaWei() && !pushFlag.equals(Constant.JPUSH_FLAG)) {
+        if (AppUtils.getIsHuaWei()) {
             // 需要对华为单独推送的时候解开这里
             String hwtoken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
             if (!StringUtils.isBlank(hwtoken)) {
                 pushId = hwtoken + Constant.PUSH_HUAWEI_COM;
             }
-        } else  if (AppUtils.getIsXiaoMi() && !pushFlag.equals(Constant.JPUSH_FLAG)) {
+        } else if (AppUtils.getIsXiaoMi()) {
             String registerId =  PreferencesUtils.getString(context, Constant.MIPUSH_REGISTER_ID, "");
             if (!StringUtils.isBlank(registerId)){
                 pushId = registerId + Constant.PUSH_XIAOMI_COM;
@@ -107,7 +107,6 @@ public class PushManagerUtils {
     public void setPushFlag(Context context, String pushFlag) {
         PreferencesUtils.putString(context, Constant.PUSH_FLAG, pushFlag);
     }
-
 
     /**
      * 获取PUSH_FLAG
@@ -170,16 +169,14 @@ public class PushManagerUtils {
         }
     }
 
-
     /**
      * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
      * 目前使用的位置有ActionReceiver，IndexActivity 截止到181030
      */
     public void startPush() {
-        String pushFlag = getPushFlag(MyApplication.getInstance());
-        if (AppUtils.getIsHuaWei() && !pushFlag.equals(Constant.JPUSH_FLAG)){
+        if (AppUtils.getIsHuaWei()) {
             setHuaWeiPushStatus(true);
-        }else if(AppUtils.getIsXiaoMi() && !pushFlag.equals(Constant.JPUSH_FLAG)){
+        } else if (AppUtils.getIsXiaoMi()) {
             setMiPushStatus(true);
         }else {
             setJpushStatus(true);
@@ -190,10 +187,9 @@ public class PushManagerUtils {
      * 关闭推送
      */
     public void stopPush() {
-        String pushFlag = getPushFlag(MyApplication.getInstance());
-        if (AppUtils.getIsHuaWei() && !pushFlag.equals(Constant.JPUSH_FLAG)){
+        if (AppUtils.getIsHuaWei()) {
             setHuaWeiPushStatus(false);
-        }else if(AppUtils.getIsXiaoMi() && !pushFlag.equals(Constant.JPUSH_FLAG)){
+        } else if (AppUtils.getIsXiaoMi()) {
             setMiPushStatus(false);
         }else {
             setJpushStatus(false);

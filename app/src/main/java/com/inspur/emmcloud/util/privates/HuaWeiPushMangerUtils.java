@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.content.Context;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-
 import com.huawei.hms.api.ConnectionResult;
 import com.huawei.hms.api.HuaweiApiClient;
 import com.huawei.hms.api.HuaweiApiClient.ConnectionCallbacks;
@@ -12,10 +8,12 @@ import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
-import static android.os.Looper.getMainLooper;
+import android.content.Context;
+import android.support.annotation.NonNull;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -55,6 +53,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnected() {
+        LogUtils.YfcDebug("华为推送连接成功");
         PushManagerUtils.getInstance().setPushFlag(contextLocal, Constant.HUAWEI_FLAG);
         getToken();
         setPassByMsg(true);
@@ -67,7 +66,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        startJpushInMainThread();
+        // startJpushInMainThread();
 //        保留下来做参照的代码，这里如果华为没有连上，华为SDK有一个处理，这里改为自己处理
 //        if (mResolvingError) {
 //            return;
@@ -80,16 +79,16 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 //        }
     }
 
-    /**
-     * 连接Jpush
-     */
-    private void startJpush() {
-        if (client != null) {
-            stopPush();
-            client.disconnect();
-        }
-        PushManagerUtils.getInstance().setJpushStatus(true);
-    }
+    // /**
+    // * 连接Jpush
+    // */
+    // private void startJpush() {
+    // if (client != null) {
+    // stopPush();
+    // client.disconnect();
+    // }
+    // PushManagerUtils.getInstance().setJpushStatus(true);
+    // }
 
     /**
      * 设置是否接收透传消息
@@ -116,29 +115,29 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
                     PendingResult<TokenResult> token = HuaweiPush.HuaweiPushApi.getToken(client);
                     TokenResult tokenResult = token.await();
                     //处理connect成功，获取token失败的情况
-                    if (tokenResult.getTokenRes().getRetCode() != 0) {
-                        startJpushInMainThread();
-                    }
+                    // if (tokenResult.getTokenRes().getRetCode() != 0) {
+                    // startJpushInMainThread();
+                    // }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    startJpushInMainThread();
+                    // startJpushInMainThread();
                 }
 
             }
         }).start();
     }
 
-    /**
-     * 从主线程启动Jpush
-     */
-    private void startJpushInMainThread() {
-        new Handler(getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                startJpush();
-            }
-        });
-    }
+    // /**
+    // * 从主线程启动Jpush
+    // */
+    // private void startJpushInMainThread() {
+    // new Handler(getMainLooper()).post(new Runnable() {
+    // @Override
+    // public void run() {
+    // startJpush();
+    // }
+    // });
+    // }
 
 
     /**
