@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.os.Bundle;
-import android.view.View;
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -21,7 +20,7 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.greenrobot.eventbus.EventBus;
+import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,9 +39,7 @@ public class ConversationNameModifyActivity extends BaseActivity {
     private String name;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         String id = getIntent().getStringExtra("cid");
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), id);

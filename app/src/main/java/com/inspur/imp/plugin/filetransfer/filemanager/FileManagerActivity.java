@@ -1,15 +1,10 @@
 package com.inspur.imp.plugin.filetransfer.filemanager;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -22,11 +17,16 @@ import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileBean;
 import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileType;
 import com.inspur.imp.plugin.filetransfer.filemanager.bean.TitlePath;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 public class FileManagerActivity extends BaseActivity {
@@ -50,6 +50,10 @@ public class FileManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         getIntentParam();
         titleRecyclerview = (RecyclerView) findViewById(R.id.rcv_title);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

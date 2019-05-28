@@ -1,19 +1,7 @@
 package com.inspur.imp.plugin.barcode.decoder;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Rect;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.util.DisplayMetrics;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import com.funcode.decoder.inspuremmcloud.FunDecode;
 import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
@@ -29,8 +17,20 @@ import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManag
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.imp.api.Res;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Rect;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -51,6 +51,10 @@ public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHand
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+    }
+
+    @Override
+    public void onCreate() {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             //全屏显示

@@ -1,24 +1,15 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.annotation.TargetApi;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.xutils.x;
+import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -54,16 +45,25 @@ import com.inspur.emmcloud.widget.NoScrollWebView;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.qmuiteam.qmui.widget.QMUIObservableScrollView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.common.Callback;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.List;
+import android.annotation.TargetApi;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -119,9 +119,9 @@ public class MailDetailActivity extends BaseActivity {
     private MailApiService apiService;
     private LoadingDialog loadingDlg;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         Mail simpleMail = (Mail) getIntent().getSerializableExtra(EXTRA_MAIL);

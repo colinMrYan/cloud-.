@@ -1,11 +1,9 @@
 package com.inspur.imp.plugin.photo;
 
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import java.io.File;
+import java.util.List;
+
+import org.xutils.common.Callback;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -18,10 +16,12 @@ import com.inspur.imp.plugin.photo.style.progress.ProgressPieIndicator;
 import com.inspur.imp.plugin.photo.transfer.TransferConfig;
 import com.inspur.imp.plugin.photo.transfer.TransferLayout;
 
-import org.xutils.common.Callback;
-
-import java.io.File;
-import java.util.List;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +46,10 @@ public class ImageGalleryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         ButterKnife.bind(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 

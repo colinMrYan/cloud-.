@@ -89,8 +89,7 @@ public class AppCenterActivity extends BaseActivity {
     private RelativeLayout adsPagerContainer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         setContentView(R.layout.activity_app_center);
         initView();
         getAllApp();
