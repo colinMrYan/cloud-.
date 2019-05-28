@@ -101,6 +101,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         }
     }
 
+
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
 
