@@ -507,29 +507,6 @@ public class MyQMUIDialog extends Dialog {
     }
 
     /**
-     * 菜单类型的对话框 Builder
-     */
-    public static class MenuDialogBuilder extends MenuBaseDialogBuilder<MenuDialogBuilder> {
-
-        public MenuDialogBuilder(Context context) {
-            super(context);
-        }
-
-        /**
-         * 添加菜单项
-         *
-         * @param items    所有菜单项的文字
-         * @param listener 菜单项的点击事件
-         */
-        public MenuDialogBuilder addItems(CharSequence[] items, OnClickListener listener) {
-            for (CharSequence item : items) {
-                addItem(new QMUIDialogMenuItemView.TextItemView(mContext, item), listener);
-            }
-            return this;
-        }
-    }
-
-    /**
      * 单选类型的对话框 Builder
      */
     public static class CheckableDialogBuilder extends MenuBaseDialogBuilder<CheckableDialogBuilder> {

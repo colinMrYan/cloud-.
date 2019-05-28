@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -416,5 +416,7 @@
         <item name="android:textColorPrimary">#333333</item>
 
     </style>
+
+    <style name="cus_dialog_style" parent="AlertDialog.AppCompat.Light" />
 
 </resources>

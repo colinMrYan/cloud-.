@@ -56,9 +56,7 @@ import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -252,24 +250,17 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void showNotificationCloseDlg() {
-            new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+        new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                     .setMessage(R.string.notification_switch_cant_recive)
-                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            notificationSwitch.setChecked(true);
-                            dialog.dismiss();
-                        }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    notificationSwitch.setChecked(true);
+                    dialog.dismiss();
                     })
-                    .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            notificationSwitch.setChecked(false);
-                            PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,false);
-                            switchPush();
-                        }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    notificationSwitch.setChecked(false);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
+                    switchPush();
                     })
                     .show();
     }
@@ -421,22 +412,15 @@ public class SettingActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void showNotificationDlg() {
         if(!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)){
-            new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+            new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                     .setMessage(getString(R.string.notification_switch_open_setting))
-                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            notificationSwitch.setChecked(false);
-                        }
+                    .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                        dialog.dismiss();
+                        notificationSwitch.setChecked(false);
                     })
-                    .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            NotificationSetUtils.openNotificationSetting(SettingActivity.this);
-                        }
+                    .setPositiveButton(R.string.ok, (dialog, index) -> {
+                        dialog.dismiss();
+                        NotificationSetUtils.openNotificationSetting(SettingActivity.this);
                     })
                     .show();
         }
@@ -446,28 +430,22 @@ public class SettingActivity extends BaseActivity {
      * 弹出注销提示框
      */
     private void showSignoutDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+        new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(R.string.if_confirm_signout)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        PushManagerUtils.getInstance().unregisterPushId2Emm();
-                        dialog.dismiss();
-                        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
-                        if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
-                            loadingDlg.show();
-                            WSAPIService.getInstance().sendAppStatus("REMOVED");
-                        } else {
-                            MyApplication.getInstance().signout();
-                        }
-                        stopAppService();
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    PushManagerUtils.getInstance().unregisterPushId2Emm();
+                    dialog.dismiss();
+                    boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
+                    if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
+                        loadingDlg.show();
+                        WSAPIService.getInstance().sendAppStatus("REMOVED");
+                    } else {
+                        MyApplication.getInstance().signout();
                     }
+                    stopAppService();
                 })
                 .show();
     }
@@ -487,8 +465,8 @@ public class SettingActivity extends BaseActivity {
     private void showClearCacheDlg() {
         // TODO Auto-generated method stub
         final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
-        new QMUIDialog.MenuDialogBuilder(SettingActivity.this)
-                .addItems(items, new DialogInterface.OnClickListener() {
+        new CustomDialog.ListDialogBuilder(SettingActivity.this)
+                .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -512,8 +490,7 @@ public class SettingActivity extends BaseActivity {
                                 break;
                         }
                     }
-                })
-                .show();
+                }).show();
     }
 
     /**
@@ -521,41 +498,35 @@ public class SettingActivity extends BaseActivity {
      */
     private void showClearCacheWarningDlg() {
         // TODO Auto-generated method stub
-        new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+        new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(getString(R.string.my_setting_tips_quit))
-                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        DataCleanManager.cleanWebViewCache(SettingActivity.this);
-                        ((MyApplication) getApplicationContext()).deleteAllDb();
-                        String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
-                        String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-                        DataCleanManager.cleanApplicationData(SettingActivity.this,
-                                msgCachePath, imgCachePath);
-                        MyApplication.getInstance().setIsContactReady(false);
-                        //当清除所有缓存的时候清空以db形式存储数据的configVersion
-                        ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
-                        ImageDisplayUtils.getInstance().clearAllCache();
-                        MyAppCacheUtils.clearMyAppList(SettingActivity.this);
-                        //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
+                    DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                    ((MyApplication) getApplicationContext()).deleteAllDb();
+                    String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
+                    String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                    DataCleanManager.cleanApplicationData(SettingActivity.this,
+                            msgCachePath, imgCachePath);
+                    MyApplication.getInstance().setIsContactReady(false);
+                    //当清除所有缓存的时候清空以db形式存储数据的configVersion
+                    ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
+                    ImageDisplayUtils.getInstance().clearAllCache();
+                    MyAppCacheUtils.clearMyAppList(SettingActivity.this);
+                    //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
-                        ToastUtils.show(getApplicationContext(),
-                                R.string.data_clear_success);
-                        //((MyApplication) getApplicationContext()).exit();
-                        Intent intent = new Intent(SettingActivity.this,
-                                IndexActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
-                    }
+                    ToastUtils.show(getApplicationContext(),
+                            R.string.data_clear_success);
+                    //((MyApplication) getApplicationContext()).exit();
+                    Intent intent = new Intent(SettingActivity.this,
+                            IndexActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                 })
                 .show();
     }

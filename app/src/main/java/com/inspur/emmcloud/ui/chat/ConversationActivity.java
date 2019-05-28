@@ -78,12 +78,12 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import org.greenrobot.eventbus.EventBus;
@@ -1540,8 +1540,8 @@ public class ConversationActivity extends ConversationBaseActivity {
             String operation = context.getResources().getString(operationsId[i]);
             operations[i] = operation;
         }
-        new QMUIDialog.MenuDialogBuilder(context)
-                .addItems(operations, new DialogInterface.OnClickListener() {
+        new CustomDialog.ListDialogBuilder(context)
+                .setItems(operations, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
@@ -1573,8 +1573,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                         dialog.dismiss();
                     }
-                })
-                .create(R.style.QMUI_Dialog).show();
+                }).show();
+//                .create(R.style.QMUI_Dialog).show();
     }
 
     /**

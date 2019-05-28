@@ -142,6 +142,10 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
     // applicationVariants are e.g. debug, release
     //android studio对于jni调用及运行闪退无法加载库的问题解决方案
     applicationVariants.all { variant ->
