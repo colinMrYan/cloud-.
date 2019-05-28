@@ -64,11 +64,6 @@ public class ShareFilesActivity extends BaseActivity {
     private List<String> uriList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));

@@ -61,12 +61,6 @@ public class LoginActivity extends BaseActivity {
     private EmmSecurityKeyboard securityKeyboard;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);

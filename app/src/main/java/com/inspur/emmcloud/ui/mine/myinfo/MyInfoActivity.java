@@ -89,12 +89,6 @@ public class MyInfoActivity extends BaseActivity {
     private boolean isUpdateUserPhoto = false; // 标记是否更改了头像
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);

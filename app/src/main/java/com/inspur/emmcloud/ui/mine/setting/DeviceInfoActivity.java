@@ -24,7 +24,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +40,6 @@ public class DeviceInfoActivity extends BaseActivity {
     private LoadingDialog loadingDialog;
     private ScrollViewWithListView deviceLogListView;
     private MineAPIService apiService;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

@@ -4,7 +4,6 @@ import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 
 import butterknife.ButterKnife;
@@ -17,11 +16,6 @@ public class MeetingHistoryActivity extends BaseFragmentActivity {
     private static String EXTRA_IS_HISTORY_MEETING="is_history_meeting";
 
     private MeetingFragment meetingFragment;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

@@ -17,7 +17,6 @@ import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.TextView;
@@ -35,11 +34,6 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
     private TextView robotNameText, functionIntroductionText, supportText;
     private SwitchView setTopSwitch;
     private String cid;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

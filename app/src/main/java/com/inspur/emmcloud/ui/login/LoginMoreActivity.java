@@ -16,7 +16,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,11 +33,6 @@ public class LoginMoreActivity extends BaseActivity {
     TextView currentEnterpriseNameText;
     @BindView(R.id.ll_reset_enterprise)
     LinearLayout resetEnterpriseLayout;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

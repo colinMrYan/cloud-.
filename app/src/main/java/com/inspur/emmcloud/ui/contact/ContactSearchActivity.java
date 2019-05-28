@@ -3,8 +3,6 @@ package com.inspur.emmcloud.ui.contact;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
 
-import android.os.Bundle;
-
 /**
  * 通讯录选择界面
  *
@@ -13,11 +11,6 @@ import android.os.Bundle;
 public class ContactSearchActivity extends BaseFragmentActivity {
 
     private ContactSearchFragment fragment;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

@@ -20,7 +20,6 @@ import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -53,11 +52,6 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
     private String fileSavePath = "";
     private Callback.Cancelable cancelable;
     private Message message;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

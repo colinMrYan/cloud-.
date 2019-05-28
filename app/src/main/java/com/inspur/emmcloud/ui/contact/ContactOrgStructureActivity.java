@@ -13,7 +13,6 @@ import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +29,6 @@ public class ContactOrgStructureActivity extends BaseActivity {
     private OrgStrContactAdapter adapter;
     private ListView listView;
     private List<String> orgNameList = new ArrayList<>();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

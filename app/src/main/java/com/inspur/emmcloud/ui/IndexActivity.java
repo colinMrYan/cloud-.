@@ -56,7 +56,6 @@ import com.inspur.emmcloud.widget.WeakHandler;
 
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.WebView;
@@ -73,11 +72,6 @@ public class IndexActivity extends IndexBaseActivity {
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

@@ -28,7 +28,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.View;
@@ -72,10 +71,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private String certificatePassWord;
     private MailCertificateDetail myCertificate;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

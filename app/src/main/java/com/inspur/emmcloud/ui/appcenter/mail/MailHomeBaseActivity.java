@@ -34,10 +34,6 @@ public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInt
     View shadowView;
     private MailLeftMenuFragment mailLeftMenuFragment;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

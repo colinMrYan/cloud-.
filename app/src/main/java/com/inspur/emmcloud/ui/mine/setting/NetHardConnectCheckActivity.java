@@ -4,7 +4,6 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 
@@ -13,11 +12,6 @@ import android.view.View;
  */
 
 public class NetHardConnectCheckActivity extends BaseActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

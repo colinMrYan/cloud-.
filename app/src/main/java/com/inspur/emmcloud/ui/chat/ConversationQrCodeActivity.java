@@ -4,7 +4,6 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
-import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,11 +24,6 @@ public class ConversationQrCodeActivity extends BaseActivity {
     ImageView groupQrCodeImage;
     @BindView(R.id.btn_share_group_qrcode)
     Button shareGroupQrCodeBtn;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

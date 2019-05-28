@@ -119,10 +119,6 @@ public class MailDetailActivity extends BaseActivity {
     private MailApiService apiService;
     private LoadingDialog loadingDlg;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

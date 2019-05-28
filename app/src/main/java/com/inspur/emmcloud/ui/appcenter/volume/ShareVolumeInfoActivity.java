@@ -86,11 +86,6 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         volume = (Volume) getIntent().getSerializableExtra("volume");

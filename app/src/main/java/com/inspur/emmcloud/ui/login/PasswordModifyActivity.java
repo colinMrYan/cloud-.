@@ -13,7 +13,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -43,12 +42,6 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
     private EmmSecurityKeyboard emmSecurityKeyboard;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

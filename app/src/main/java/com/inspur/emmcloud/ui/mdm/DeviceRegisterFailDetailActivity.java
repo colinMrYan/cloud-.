@@ -15,12 +15,6 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
     private Bundle bundle;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         bundle = getIntent().getExtras().getBundle("bundle");
         String message = bundle.getString("message");

@@ -14,7 +14,6 @@ import com.inspur.emmcloud.bean.find.KnowledgeInfo;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +30,6 @@ public class KnowledgeActivity extends BaseActivity {
 
     private FindAPIService apiService;
     private Adapter adapter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

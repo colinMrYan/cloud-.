@@ -13,7 +13,6 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +32,6 @@ public class ChannelMembersDelActivity extends BaseActivity {
     private ChannelMemDelAdapter adapter;
     private ArrayList<String> memberDelUidList = new ArrayList<>();
     private boolean isRemoveMyself = true;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

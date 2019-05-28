@@ -18,7 +18,6 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.method.PasswordTransformationMethod;
@@ -47,11 +46,6 @@ public class MailLoginActivity extends BaseActivity {
     private MailApiService apiService;
     private String mail = "";
     private String password = "";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

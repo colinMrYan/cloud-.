@@ -10,7 +10,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 
-import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -31,11 +30,6 @@ public class MailSettingActivity extends BaseActivity {
     TextView mailPasswrodText;
     @BindView(R.id.ibt_mail_password_visible)
     ImageButton mailPasswordVisibleImgBtn;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

@@ -68,11 +68,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private MeetingRoom selectMeetingRoom;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         initView();

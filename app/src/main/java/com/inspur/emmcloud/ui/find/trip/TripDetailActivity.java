@@ -30,7 +30,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Selection;
 import android.text.Spannable;
@@ -64,11 +63,6 @@ public class TripDetailActivity extends BaseActivity {
     private Trip uploadTrip;
     private FindAPIService apiService;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

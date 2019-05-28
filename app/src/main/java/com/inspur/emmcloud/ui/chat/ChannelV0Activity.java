@@ -132,19 +132,14 @@ public class ChannelV0Activity extends BaseActivity {
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver refreshNameReceiver;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         init();
         registeRefreshNameReceiver();
         recordUserClickChannel();
-    }
-
-    @Override
-    public void onCreate() {
-
     }
 
     @Override

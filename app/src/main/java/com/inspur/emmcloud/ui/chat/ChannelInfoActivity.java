@@ -142,12 +142,6 @@ public class ChannelInfoActivity extends BaseActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         channelMemberNumText = findViewById(R.id.tv_member);
         groupMembersText = findViewById(R.id.tv_group_member_size);

@@ -8,7 +8,6 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +19,6 @@ import android.widget.TextView;
 public class ChannelMemActivity extends BaseActivity {
 
     private String[] memberArray;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public void onCreate() {
         String title = getIntent().getStringExtra("title");

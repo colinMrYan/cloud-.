@@ -13,7 +13,6 @@ import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,11 +22,6 @@ public class TripInfoActivity extends BaseActivity {
     private Trip trip;
     private LoadingDialog loadingDlg;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

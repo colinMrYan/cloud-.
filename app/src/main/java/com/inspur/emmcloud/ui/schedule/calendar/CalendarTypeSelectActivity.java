@@ -13,7 +13,6 @@ import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +36,6 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
     private int selectPosition = -1;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

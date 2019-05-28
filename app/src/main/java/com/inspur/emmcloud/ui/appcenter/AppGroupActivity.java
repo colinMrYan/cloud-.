@@ -12,7 +12,6 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -32,10 +31,6 @@ public class AppGroupActivity extends BaseActivity {
     TextView textView;
     private List<App> appList = new ArrayList<>();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

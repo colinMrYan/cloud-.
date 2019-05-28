@@ -97,11 +97,6 @@ public class UserInfoActivity extends BaseActivity {
     private String parentUid;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         init();

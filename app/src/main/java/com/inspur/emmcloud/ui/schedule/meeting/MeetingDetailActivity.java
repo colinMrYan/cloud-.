@@ -81,11 +81,6 @@ public class MeetingDetailActivity extends BaseActivity {
     private String meetingId;   //会议id
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);

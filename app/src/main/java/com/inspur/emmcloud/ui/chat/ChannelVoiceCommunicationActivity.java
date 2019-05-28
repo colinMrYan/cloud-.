@@ -28,7 +28,6 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
-import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -112,10 +111,6 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationUtils voiceCommunicationUtils;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

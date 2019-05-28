@@ -36,7 +36,6 @@ import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
@@ -86,11 +85,6 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     private List<PersonDto> selectedUserList = new ArrayList<>();//选中的群成员list
     private List<PersonDto> allReadySelectPersonDtoList = new ArrayList<>();
     private int state = -1;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

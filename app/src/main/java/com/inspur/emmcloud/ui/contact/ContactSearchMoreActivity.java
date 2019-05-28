@@ -41,7 +41,6 @@ import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -96,16 +95,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
     private int selectLimit = 5000;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_search_more);
-    }
-
     @Override
     public void onCreate() {
+        setContentView(R.layout.activity_contact_search_more);
         handMessage();
         initView();
         getIntentData();

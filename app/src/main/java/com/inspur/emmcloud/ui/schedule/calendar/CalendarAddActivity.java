@@ -36,7 +36,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -111,11 +110,6 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private String contentText = "";
     private int intervalMin = 0;
     private String id;// 日程id
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

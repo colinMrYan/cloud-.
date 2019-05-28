@@ -15,7 +15,6 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,12 +31,6 @@ public class DocumentActivity extends BaseActivity {
 
     private ListView fileListView;
     private List<DocumentInfo> documentInfoList = new ArrayList<DocumentInfo>();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

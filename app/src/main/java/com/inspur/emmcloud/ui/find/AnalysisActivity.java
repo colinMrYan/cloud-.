@@ -10,7 +10,6 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +27,6 @@ public class AnalysisActivity extends BaseActivity {
     private ListView analysisListView;
     private ArrayList<AnalysisModel> analysisList = new ArrayList<AnalysisModel>();
     private AnalysisAdapter analysisAdapter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

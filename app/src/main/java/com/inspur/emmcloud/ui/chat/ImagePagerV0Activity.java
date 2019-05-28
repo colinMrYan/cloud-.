@@ -78,8 +78,8 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+        super.onCreate(savedInstanceState);
     }
 
     @Override

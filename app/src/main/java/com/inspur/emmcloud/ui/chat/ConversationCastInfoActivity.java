@@ -23,7 +23,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -47,11 +46,6 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
     private ChatAPIService apiService;
     private LoadingDialog loadingDlg;
     private WebService webService;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

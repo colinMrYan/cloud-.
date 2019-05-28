@@ -22,7 +22,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
@@ -43,10 +42,6 @@ public class EnterpriseSwitchActivity extends BaseActivity {
     private GetMyInfoResult getMyInfoResult;
     private List<Enterprise> enterpriseList;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

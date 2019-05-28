@@ -16,7 +16,6 @@ import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
-import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +41,6 @@ public class CalendarSettingActivity extends BaseActivity {
     ImageView daySelectImageView;
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

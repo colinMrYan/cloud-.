@@ -8,7 +8,6 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +34,6 @@ public class ThemeSwitchActivity extends BaseActivity {
     public static String getThemeName() {
         int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         return MyApplication.getInstance().getString(THEME_NAME[currentThemeNo]);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override

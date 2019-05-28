@@ -20,7 +20,6 @@ import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.animation.Animation;
@@ -88,10 +87,6 @@ public class GestureLoginActivity extends BaseActivity {
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

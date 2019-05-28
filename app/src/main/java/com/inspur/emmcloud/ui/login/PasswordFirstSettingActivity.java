@@ -15,7 +15,6 @@ import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -41,11 +40,6 @@ public class PasswordFirstSettingActivity extends BaseActivity {
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
     private EmmSecurityKeyboard emmSecurityKeyboard;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

@@ -29,7 +29,6 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -67,11 +66,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private long activitySplashShowTime = 0;
     private Timer timer;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // checkNecessaryPermission();
-    }
 
     @Override
     public int getLayoutResId() {

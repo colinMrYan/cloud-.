@@ -19,7 +19,6 @@ import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -52,11 +51,6 @@ public class TaskTagAddActivity extends BaseActivity  {
     private LoadingDialog loadingDialog;
     private ScheduleApiService scheduleAPIService;
     private TaskColorTag taskColorTag;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

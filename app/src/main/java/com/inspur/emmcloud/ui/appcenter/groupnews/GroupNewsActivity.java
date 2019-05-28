@@ -15,7 +15,6 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.graphics.Color;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -34,10 +33,6 @@ public class GroupNewsActivity extends BaseFragmentActivity {
     private MyPagerAdapter pagerAdapter;
     private LoadingDialog loadingDlg;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

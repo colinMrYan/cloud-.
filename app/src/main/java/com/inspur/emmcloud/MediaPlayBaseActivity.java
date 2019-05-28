@@ -12,7 +12,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
-import android.os.Bundle;
 import android.os.PowerManager;
 import android.view.KeyEvent;
 
@@ -29,10 +28,19 @@ public abstract class MediaPlayBaseActivity extends BaseActivity implements Sens
     private HeadsetReceiver receiver;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        playerManager = MediaPlayerManagerUtils.getManager();
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        receiver = new HeadsetReceiver();
+        playerManager.setWakeLockReleaseListener(new CommonCallBack() {
+            @Override
+            public void execute() {
+                releaseWakeLock();
+            }
+        });
     }
-
 
     @Override
     protected void onStart() {
@@ -63,20 +71,7 @@ public abstract class MediaPlayBaseActivity extends BaseActivity implements Sens
         }
     }
 
-    @Override
-    public void onCreate() {
-        playerManager = MediaPlayerManagerUtils.getManager();
-        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        receiver = new HeadsetReceiver();
-        playerManager.setWakeLockReleaseListener(new CommonCallBack() {
-            @Override
-            public void execute() {
-                releaseWakeLock();
-            }
-        });
-    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

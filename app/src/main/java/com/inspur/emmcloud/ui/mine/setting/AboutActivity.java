@@ -46,12 +46,6 @@ public class AboutActivity extends BaseActivity {
     private Handler handler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         String version = AppUtils.getVersion(this).replace("beta", "b");

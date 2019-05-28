@@ -21,7 +21,6 @@ import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,12 +38,6 @@ public class GuideActivity extends BaseActivity {
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     private List<View> guideViewList = new ArrayList<>();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

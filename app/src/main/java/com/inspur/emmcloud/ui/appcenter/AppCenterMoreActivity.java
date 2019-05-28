@@ -27,12 +27,6 @@ public class AppCenterMoreActivity extends BaseActivity {
     private List<App> appList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public void onCreate() {
         initView();
     }

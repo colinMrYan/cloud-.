@@ -21,7 +21,6 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ExpandableListView;
 
@@ -41,11 +40,6 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     private MeetingOfficeAdapter adapter;
     private List<Office> officeList = new ArrayList<>();
     private List<String> officeIdList = new ArrayList<>();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

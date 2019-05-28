@@ -72,11 +72,6 @@ public class LoginBySmsActivity extends BaseActivity {
     private MyCountDownTimer myCountDownTimer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         initView();

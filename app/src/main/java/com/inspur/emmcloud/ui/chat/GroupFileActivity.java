@@ -32,7 +32,6 @@ import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,11 +70,6 @@ public class GroupFileActivity extends BaseActivity {
     private PopupWindow sortOperationPop;
     private GroupFileAdapter adapter;
     private FileSortComparable fileSortComparable;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

@@ -17,7 +17,6 @@ import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
 import android.widget.TextView;
@@ -41,11 +40,6 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     private Group group;
     private boolean isVolumeNameModify = false;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

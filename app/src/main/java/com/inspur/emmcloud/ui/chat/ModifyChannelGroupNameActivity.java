@@ -14,7 +14,6 @@ import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
@@ -29,12 +28,6 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
     private String cid;
     private LoadingDialog loadingDlg;
     private String name;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

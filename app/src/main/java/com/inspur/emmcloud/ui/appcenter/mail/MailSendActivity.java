@@ -101,10 +101,6 @@ public class MailSendActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private String mailMode = MODE_NEW;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

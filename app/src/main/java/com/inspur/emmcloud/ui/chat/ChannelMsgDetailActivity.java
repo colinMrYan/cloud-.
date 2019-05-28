@@ -85,11 +85,6 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private ECMChatInputMenuV0 chatInputMenu;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         initView();
         initData();

@@ -19,7 +19,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -43,12 +42,6 @@ public class LanguageSwitchActivity extends BaseActivity {
     private Handler handler;
     private List<Language> commonLanguageList = new ArrayList<Language>();
     private LoadingDialog loadingDlg;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

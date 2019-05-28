@@ -62,7 +62,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
 /**
@@ -71,11 +70,6 @@ import android.support.v4.content.LocalBroadcastManager;
 
 public class SchemeHandleActivity extends BaseActivity {
     private BroadcastReceiver unlockReceiver;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

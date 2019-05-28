@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.find.trip;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,6 @@ import android.widget.BaseAdapter;
 
 public class TravelStarsActivity extends BaseActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-
-
-    }
 
     @Override
     public void onCreate() {

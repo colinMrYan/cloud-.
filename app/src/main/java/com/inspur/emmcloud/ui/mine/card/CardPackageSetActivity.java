@@ -7,7 +7,6 @@ import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.interf.OnCardPackageClickListener;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
 
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -23,11 +22,6 @@ public class CardPackageSetActivity extends BaseActivity {
     @BindView(R.id.recyclerview_card_package)
     RecyclerView cardPackageRecyclerView;
     private CardPackageAdapter cardPackageAdapter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

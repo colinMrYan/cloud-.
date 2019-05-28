@@ -18,7 +18,6 @@ import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -50,11 +49,6 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity {
     private VolumeGroupPermissionManagerAdapter volumeGroupPermissionManagerAdapter;
 
     private LoadingDialog loadingDialog;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

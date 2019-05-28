@@ -20,7 +20,6 @@ import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 
 import butterknife.BindView;
@@ -36,11 +35,6 @@ public class RecommendAppActivity extends BaseActivity {
     @BindView(R.id.webview)
     ProgressWebView webView;
     private CustomShareListener mShareListener;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

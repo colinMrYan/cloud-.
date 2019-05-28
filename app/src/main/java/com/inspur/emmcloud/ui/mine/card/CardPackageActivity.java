@@ -18,7 +18,6 @@ import com.inspur.emmcloud.widget.cardstack.RxAdapterAllMoveDownAnimator;
 import com.inspur.emmcloud.widget.cardstack.RxCardStackView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 
 import butterknife.BindView;
@@ -33,11 +32,6 @@ public class CardPackageActivity extends BaseActivity implements RxCardStackView
     RxCardStackView cardStackView;
     private CardStackAdapter cardStackAdapter;
     private LoadingDialog loadingDialog;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

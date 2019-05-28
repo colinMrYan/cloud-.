@@ -90,10 +90,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

@@ -40,11 +40,6 @@ public class ConversationGroupMessageSearchActivity extends BaseActivity {
     private String cid;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         initViews();

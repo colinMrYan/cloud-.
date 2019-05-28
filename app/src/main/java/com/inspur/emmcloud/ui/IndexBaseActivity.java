@@ -99,11 +99,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     private ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         setContentView(R.layout.activity_index);
         ButterKnife.bind(this);

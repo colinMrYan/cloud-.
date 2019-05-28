@@ -50,11 +50,6 @@ public class GroupAlbumActivity extends BaseActivity {
     private GroupAlbumAdapter groupAlbumAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         init();

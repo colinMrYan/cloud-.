@@ -20,7 +20,6 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import android.os.Bundle;
 import android.view.View;
 
 import butterknife.BindView;
@@ -38,12 +37,6 @@ public class ConversationNameModifyActivity extends BaseActivity {
     private Conversation conversation;
     private LoadingDialog loadingDlg;
     private String name;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

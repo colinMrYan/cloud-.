@@ -141,11 +141,6 @@ public class TaskAddActivity extends BaseActivity {
     private int taskType = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         initData();

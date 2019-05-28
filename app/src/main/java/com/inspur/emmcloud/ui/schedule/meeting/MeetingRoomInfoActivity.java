@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,16 +49,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,12 +78,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private List<View> viewList = new ArrayList<>();
     private List<Meeting> allMeetingList = new ArrayList<>();
     private Calendar currentCalendar = Calendar.getInstance();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

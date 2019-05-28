@@ -55,11 +55,6 @@ public class GroupInfoActivity extends BaseActivity {
     private ArrayList<String> volumeMemList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         volume = (Volume) getIntent().getSerializableExtra("volume");

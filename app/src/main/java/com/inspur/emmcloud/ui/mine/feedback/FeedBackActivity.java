@@ -7,7 +7,6 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 
-import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.Selection;
@@ -69,12 +68,6 @@ public class FeedBackActivity extends BaseActivity {
         public void afterTextChanged(Editable s) {
         }
     };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

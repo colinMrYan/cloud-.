@@ -13,7 +13,6 @@ import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -112,11 +111,6 @@ public class CreateGestureActivity extends BaseActivity {
      */
     public static void putGestureCodeIsOpenByUser(Context context, boolean isGestureCodeOpen) {
         PreferencesByUsersUtils.putBoolean(context, GESTURE_CODE_ISOPEN, isGestureCodeOpen);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override

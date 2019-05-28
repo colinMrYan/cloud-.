@@ -12,7 +12,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,11 +39,6 @@ public class TaskSetActivity extends BaseActivity {
     @BindView(R.id.lv_task_list)
     ListView setListView;
     private ArrayList<MessionSetModel> taskSetModel = new ArrayList<MessionSetModel>();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

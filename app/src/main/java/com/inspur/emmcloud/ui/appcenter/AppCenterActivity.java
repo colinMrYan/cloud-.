@@ -90,10 +90,6 @@ public class AppCenterActivity extends BaseActivity {
     private View recommendView;
     private RelativeLayout adsPagerContainer;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

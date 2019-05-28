@@ -13,7 +13,6 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,11 +39,6 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     SwitchView readPermissionSwitch;
     private MyAppAPIService myAppAPIService;
     private LoadingDialog loadingDialog;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

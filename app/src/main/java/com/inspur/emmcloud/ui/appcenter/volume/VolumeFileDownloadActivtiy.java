@@ -25,7 +25,6 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -60,10 +59,6 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

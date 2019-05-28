@@ -17,7 +17,6 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -43,11 +42,6 @@ public class TaskTagsManageActivity extends BaseActivity {
     private ArrayList<TaskColorTag> selectTags = new ArrayList<TaskColorTag>();
     private ScheduleApiService scheduleAPIService;
     private boolean isHaveExtra = false;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

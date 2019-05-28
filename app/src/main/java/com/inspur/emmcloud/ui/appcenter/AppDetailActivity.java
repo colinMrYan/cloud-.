@@ -22,7 +22,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,10 +47,6 @@ public class AppDetailActivity extends BaseActivity {
     private App app;
     private long lastOnItemClickTime = 0;//防止多次点击
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {

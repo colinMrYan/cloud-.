@@ -31,11 +31,6 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     RelativeLayout resetFaceLayout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         initView();

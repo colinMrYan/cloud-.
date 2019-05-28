@@ -16,7 +16,6 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +36,6 @@ public class DeviceManagerActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private List<BindingDevice> currentBindingDeviceList = new ArrayList<>();
     private List<BindingDevice> historyBindingDeviceList = new ArrayList<>();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {
