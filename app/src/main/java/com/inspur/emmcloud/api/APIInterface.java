@@ -79,14 +79,21 @@ import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
+import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
+import com.inspur.emmcloud.bean.schedule.task.Attachment;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
+import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
@@ -97,17 +104,6 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.bean.schedule.task.Attachment;
-import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
-import com.inspur.emmcloud.bean.work.GetLocationResult;
-import com.inspur.emmcloud.bean.work.GetMeetingReplyResult;
-import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
-import com.inspur.emmcloud.bean.work.GetMeetingsResult;
-import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.work.GetTagResult;
-import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
-import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 
 import java.util.Calendar;
 import java.util.List;
@@ -226,12 +222,6 @@ public interface APIInterface {
 
     void returnGroupNewsDetailFail(String error, int errorCode, int page);
 
-    void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult);
-
-    void returnMeetingsFail(String error, int errorCode);
-
-    void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, int page);
-
     void returnMeetingRoomListSuccess(GetMeetingRoomListResult getMeetingRoomsResult);
 
     void returnMeetingRoomListFail(String error, int errorCode);
@@ -270,10 +260,6 @@ public interface APIInterface {
 
     void returnCreateChannelGroupFail(String error, int errorCode);
 
-    void returnGetMeetingReplySuccess(GetMeetingReplyResult getMeetingReplyResult);
-
-    void returnGetMeetingReplyFail(String error, int errorCode);
-
     void returnTripSuccess(Trip trip);
 
     void returnTripFail(String error, int errorCode);
@@ -285,12 +271,6 @@ public interface APIInterface {
     void returnUpdateChannelGroupNameSuccess(GetBoolenResult getBoolenResult);
 
     void returnUpdateChannelGroupNameFail(String error, int errorCode);
-
-    void returnMeetingListSuccess(com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult, String date);
-
-    void returnMeetingListSuccess(com.inspur.emmcloud.bean.work.GetMeetingListResult getMeetingListResult);
-
-    void returnMeetingListFail(String error, int errorCode);
 
     void returnUploadTrainTicketSuccess();
 
@@ -366,25 +346,9 @@ public interface APIInterface {
 
     void returnUpdateTaskFail(String error, int errorCode, int position);
 
-    void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult, boolean isRefresh);
-
-    void returnCalEventsFail(String error, boolean isRefresh, int errorCode);
-
-    void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult);
-
-    void returnCalEventsFail(String error, int errorCode);
-
     void returnAttachmentSuccess(Task taskResult);
 
     void returnAttachmentFail(String error, int errorCode);
-
-    void returnUpdateCalEventSuccess();
-
-    void returnUpdateCalEventFail(String error, int errorCode);
-
-    void returnDeleteCalEventSuccess();
-
-    void returnDeleteCalEventFail(String error, int errorCode);
 
     void returnAddAttachMentSuccess(Attachment attachment);
 
@@ -884,6 +848,8 @@ public interface APIInterface {
     void returnScheduleDataFromIdFail(String error, int errorCode);
 
     void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
+
+    void returnMeetingListFail(String error, int errorCode);
 
     void returnMeetingListByMeetingRoomFail(String error, int errorCode);
 

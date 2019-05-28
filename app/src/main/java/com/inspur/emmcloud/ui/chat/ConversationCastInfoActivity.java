@@ -33,31 +33,24 @@ import butterknife.ButterKnife;
 public class ConversationCastInfoActivity extends BaseActivity implements OnStateChangedListener {
 
     public static final String EXTRA_CID = "cid";
+    @BindView(R.id.img_photo)
+    CircleTextImageView robotIconImg;
+    @BindView(R.id.tv_name)
+    TextView robotNameText;
+    @BindView(R.id.function_introduction_text)
+    TextView introductionText;
+    @BindView(R.id.support_text)
+    TextView supportText;
+    @BindView(R.id.sv_stick)
+    SwitchView stickSwitch;
     private Conversation conversation;
     private ChatAPIService apiService;
     private LoadingDialog loadingDlg;
-
-    @BindView(R.id.img_photo)
-    CircleTextImageView robotIconImg;
-
-    @BindView(R.id.tv_name)
-    TextView robotNameText;
-
-    @BindView(R.id.function_introduction_text)
-    TextView introductionText;
-
-    @BindView(R.id.support_text)
-    TextView supportText;
-
-    @BindView(R.id.sv_stick)
-    SwitchView stickSwitch;
-
     private WebService webService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation_cast_info);
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(ConversationCastInfoActivity.this);
         String cid = getIntent().getExtras().getString(EXTRA_CID);
@@ -74,6 +67,11 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
             showRobotInfo(robot);
         }
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_cast_info;
     }
 
     /**

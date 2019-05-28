@@ -68,11 +68,15 @@ public class TripDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_detail);
         initView();
         initData();
         apiService = new FindAPIService(TripDetailActivity.this);
         apiService.setAPIInterface(new WebService());
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_trip_detail;
     }
 
     private void initView() {

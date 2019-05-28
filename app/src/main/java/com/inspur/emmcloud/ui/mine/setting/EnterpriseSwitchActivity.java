@@ -46,10 +46,14 @@ public class EnterpriseSwitchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine_enterprise_switch);
         ButterKnife.bind(this);
         getEnterpriseList();
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mine_enterprise_switch;
     }
 
     private void getEnterpriseList() {

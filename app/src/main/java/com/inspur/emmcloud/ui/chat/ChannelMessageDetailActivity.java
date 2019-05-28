@@ -87,10 +87,14 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel_message_detail);
         EventBus.getDefault().register(this);
         initView();
         initData();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_channel_message_detail;
     }
 
     /**

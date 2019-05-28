@@ -51,7 +51,6 @@ public class AppDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_app_detail);
         loadingDlg = new LoadingDialog(AppDetailActivity.this);
         app = ((App) getIntent().getExtras().getSerializable("app"));
         apiService = new MyAppAPIService(this);
@@ -59,6 +58,12 @@ public class AppDetailActivity extends BaseActivity {
         initView();
         getAppInfoById(app.getAppID());
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_app_detail;
+    }
+
 
     private void initView() {
         appIconImg = (ImageView) findViewById(R.id.app_icon_img);

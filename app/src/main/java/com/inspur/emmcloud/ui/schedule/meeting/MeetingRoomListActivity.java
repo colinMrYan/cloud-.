@@ -13,10 +13,10 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
-import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -70,7 +70,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_room_list);
         ButterKnife.bind(this);
         initView();
         startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_TIME);
@@ -78,6 +77,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         setMeetingTime();
         onRefresh();
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_room_list;
     }
 
     private void initView() {

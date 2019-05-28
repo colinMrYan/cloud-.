@@ -27,7 +27,7 @@ public class ECMTransparentUtils {
             //首先应用需要在前台，如果不在前台直接设置角标不做其他改动
             //如果应用在前台，socket连接或者v1环境中有一个条件（或两个）不为true，则发起http请求
             //如果符合条件则等服务器返回再改变桌面角标
-            if (MyApplication.getInstance().getIsActive() && !(WebSocketPush.getInstance().isSocketConnect() && MyApplication.getInstance().isV1xVersionChat())) {
+            if (MyApplication.getInstance().getIsActive() && !(WebSocketPush.getInstance().isSocketConnect() && WebServiceRouterManager.getInstance().isV1xVersionChat())) {
                 new AppBadgeUtils(context).getAppBadgeCountFromServer();
             } else {
                 ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context, transparentBean.getBadgeNumber());

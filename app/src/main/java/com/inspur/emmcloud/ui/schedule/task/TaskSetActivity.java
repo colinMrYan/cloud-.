@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.MessionSetModel;
+import com.inspur.emmcloud.bean.schedule.task.MessionSetModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -44,9 +44,13 @@ public class TaskSetActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_set);
         ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_task_set;
     }
 
     /**

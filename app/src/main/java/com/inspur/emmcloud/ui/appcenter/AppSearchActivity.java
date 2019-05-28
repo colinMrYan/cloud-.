@@ -68,8 +68,12 @@ public class AppSearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_app_search);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_app_search;
     }
 
     /**

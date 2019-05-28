@@ -94,6 +94,11 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
     }
 
     @Override
+    protected void setTheme() {
+        //不使用Base中的主题，使用自定义主题
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);

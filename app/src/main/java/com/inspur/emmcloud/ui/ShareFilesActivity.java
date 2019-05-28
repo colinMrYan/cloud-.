@@ -31,6 +31,7 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
 import org.json.JSONArray;
@@ -65,7 +66,6 @@ public class ShareFilesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_share_files);
         ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
         if (!isImageUriList(uriList)) {
@@ -86,6 +86,10 @@ public class ShareFilesActivity extends BaseActivity {
         initViews();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_share_files;
+    }
 
     /**
      * 分享方式
@@ -233,7 +237,7 @@ public class ShareFilesActivity extends BaseActivity {
         bundle.putString("cid", cid);
         bundle.putString("share_type", isImageUriList(uriList) ? "image" : "file");
         bundle.putSerializable("share_paths", (Serializable) uriList);
-        IntentUtils.startActivity(ShareFilesActivity.this, MyApplication.getInstance().isV0VersionChat() ?
+        IntentUtils.startActivity(ShareFilesActivity.this, WebServiceRouterManager.getInstance().isV0VersionChat() ?
                 ChannelV0Activity.class : ConversationActivity.class, bundle, true);
     }
 
@@ -243,7 +247,7 @@ public class ShareFilesActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(ShareFilesActivity.this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override

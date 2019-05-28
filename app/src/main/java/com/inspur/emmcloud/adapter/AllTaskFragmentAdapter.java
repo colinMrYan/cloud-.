@@ -3,6 +3,7 @@ package com.inspur.emmcloud.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import com.inspur.emmcloud.ui.schedule.task.TaskListFragment;
 
@@ -33,5 +34,10 @@ public class AllTaskFragmentAdapter extends FragmentPagerAdapter {
 
     public List<TaskListFragment> getTaskListFragment() {
         return taskListFragmentList;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
     }
 }

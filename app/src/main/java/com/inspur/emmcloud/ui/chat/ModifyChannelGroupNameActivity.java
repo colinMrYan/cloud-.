@@ -34,12 +34,16 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation_name_modify);
         editText = (ClearEditText) findViewById(R.id.edit);
         String name = getIntent().getStringExtra("name");
         cid = getIntent().getStringExtra("cid");
         EditTextUtils.setText(editText, name);
         loadingDlg = new LoadingDialog(ModifyChannelGroupNameActivity.this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_name_modify;
     }
 
     public void onClick(View v) {

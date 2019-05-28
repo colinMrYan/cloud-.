@@ -46,7 +46,6 @@ public class ImageGalleryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.plugin_activity_image_gallery);
         ButterKnife.bind(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 
@@ -69,6 +68,15 @@ public class ImageGalleryActivity extends BaseActivity {
         checkConfig();
         transLayout.apply(transConfig);
         transLayout.show();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.plugin_activity_image_gallery;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
     /**

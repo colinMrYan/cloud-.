@@ -43,13 +43,17 @@ public class ConversationNameModifyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation_name_modify);
         ButterKnife.bind(this);
         String id = getIntent().getStringExtra("cid");
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), id);
         name = conversation.getName();
         EditTextUtils.setText(editText, name);
         loadingDlg = new LoadingDialog(ConversationNameModifyActivity.this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_name_modify;
     }
 
     public void onClick(View v) {

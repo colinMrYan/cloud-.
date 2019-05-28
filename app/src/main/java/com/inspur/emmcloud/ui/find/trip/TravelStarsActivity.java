@@ -15,9 +15,13 @@ public class TravelStarsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_travel_stars);
 
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_travel_stars;
     }
 
     public void onClick(View v) {

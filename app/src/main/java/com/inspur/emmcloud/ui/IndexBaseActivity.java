@@ -47,7 +47,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
-import com.inspur.emmcloud.ui.work.TabBean;
+import com.inspur.emmcloud.bean.system.TabBean;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.SelectorUtils;
@@ -55,6 +55,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -83,12 +84,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     @BindView(R.id.preload_webview)
     protected WebView webView;
     protected NetworkChangeReceiver networkChangeReceiver;
+    @BindView(R.id.tip)
+    TipsView tipsView;
     private long lastBackTime;
     private TextView newMessageTipsText;
     private RelativeLayout newMessageTipsLayout;
     private boolean batteryDialogIsShow = true;
-    @BindView(R.id.tip)
-    TipsView tipsView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;// 控制如果是系统切换的tab则不计入用户行为
     private String tabId = "";
@@ -181,7 +182,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                         case Constant.APP_TAB_TYPE_NATIVE:
                             switch (mainTabResult.getUri()) {
                                 case Constant.APP_TAB_BAR_COMMUNACATE:
-                                    if (MyApplication.getInstance().isV0VersionChat()) {
+                                    if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                                         tabBean = new TabBean(getString(R.string.communicate), CommunicationV0Fragment.class,
                                                 mainTabResult);
                                     } else {
@@ -557,7 +558,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 Constant.PREF_BADGE_NUM_APPSTORE, 0);
         int momentTabBarNumber =
                 PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_BADGE_NUM_SNS, 0);
-        return (MyApplication.getInstance().isV0VersionChat() ? 0 : communicationTabBarNumber)
+        return (WebServiceRouterManager.getInstance().isV0VersionChat() ? 0 : communicationTabBarNumber)
                 + (appStoreTabBarNumber >= 0 ? appStoreTabBarNumber : 0)
                 + (momentTabBarNumber >= 0 ? momentTabBarNumber : 0);
     }

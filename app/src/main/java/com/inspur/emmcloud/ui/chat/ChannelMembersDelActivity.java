@@ -37,7 +37,6 @@ public class ChannelMembersDelActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channelmem_del);
         final List<String> memberUidList = (List<String>) getIntent().getSerializableExtra("memberUidList");
         memberContactUserList = ContactUserCacheUtils.getContactUserListById(memberUidList);
         if (getIntent().hasExtra("title")) {
@@ -64,6 +63,11 @@ public class ChannelMembersDelActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_channelmem_del;
     }
 
     public void onClick(View v) {

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.bean.work.MeetingSchedule;
+import com.inspur.emmcloud.bean.schedule.meeting.MeetingSchedule;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 

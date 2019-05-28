@@ -33,9 +33,13 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_safe_guestur_face_setting);
         ButterKnife.bind(this);
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_safe_guestur_face_setting;
     }
 
     private void initView() {

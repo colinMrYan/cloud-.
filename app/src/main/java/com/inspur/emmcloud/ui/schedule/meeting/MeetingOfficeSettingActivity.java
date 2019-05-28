@@ -11,10 +11,10 @@ import com.inspur.emmcloud.adapter.MeetingOfficeAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
+import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingLocation;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
-import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -45,12 +45,16 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meeting_office_setting);
         ButterKnife.bind(this);
         getMyMeetingOfficeIdList();
         initView();
         getOfficeList();
         getMeetingLocation();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_office_setting;
     }
 
     private void initView() {

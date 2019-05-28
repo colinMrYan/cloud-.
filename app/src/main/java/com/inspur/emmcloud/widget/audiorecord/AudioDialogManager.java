@@ -114,7 +114,7 @@ public class AudioDialogManager {
         if (dialog != null && dialog.isShowing()) {
             isStatusRecording = false;
             recorderImg.setImageResource(R.drawable.ic_recorder_cancel);
-            labelText.setText(R.string.release_to_cancel_dialog);
+            labelText.setText(R.string.release_to_cancel);
             labelText.setBackgroundResource(R.drawable.bg_record_dialog_text);
         }
     }

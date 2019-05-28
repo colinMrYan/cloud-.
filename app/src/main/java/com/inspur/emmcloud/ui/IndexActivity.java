@@ -49,6 +49,7 @@ import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -372,7 +373,7 @@ public class IndexActivity extends IndexBaseActivity {
      */
     private void getAllChannelGroup() {
         // TODO Auto-generated method stub
-        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterChatVersion()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(WebServiceRouterManager.getInstance().getClusterChatVersion()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllGroupChannelList();
@@ -422,7 +423,7 @@ public class IndexActivity extends IndexBaseActivity {
      * 获取所有的Robot
      */
     private void getAllRobotInfo() {
-        if (!StringUtils.isBlank(MyApplication.getInstance().getClusterBot()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+        if (!StringUtils.isBlank(WebServiceRouterManager.getInstance().getClusterBot()) && NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllRobotInfo();
@@ -663,7 +664,9 @@ public class IndexActivity extends IndexBaseActivity {
             super.returnNaviBarModelSuccess(naviBarModel);
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
             ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, naviBarModel.getLastNaviLocalVersion());
-            updateNaviTabbar();
+            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() != 0){
+                updateNaviTabbar();
+            }
         }
 
         @Override

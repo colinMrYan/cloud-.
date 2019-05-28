@@ -91,6 +91,8 @@
     <string name="end">結束</string>
     <string name="yesterday">昨天</string>
     <string name="the_day_before_yesterday">前天</string>
+    <string name="days_ago">%1$d天前</string>
+    <string name="days_after">%1$d天後</string>
     <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>
     <string name="format_year_month_day">yyyy\'年\'MM\'月\'dd\'日\'</string>
@@ -304,7 +306,6 @@
     <string name="hold_to_talk">按住 說話</string>
     <string name="release_to_send">鬆開 結束</string>
     <string name="release_to_cancel">鬆開手指，取消發送</string>
-    <string name="release_to_cancel_dialog">鬆開手指，取消發送</string>
     <string name="slide_up_to_cancel">手指上滑，取消發送</string>
     <string name="recording_too_short">錄音時間過短</string>
     <string name="play_fail">播放失败</string>

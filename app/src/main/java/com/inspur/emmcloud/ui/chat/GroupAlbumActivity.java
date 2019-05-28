@@ -18,6 +18,7 @@ import com.inspur.emmcloud.util.common.GroupUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
@@ -51,9 +52,13 @@ public class GroupAlbumActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_album);
         ButterKnife.bind(this);
         init();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_album;
     }
 
     private void init() {
@@ -63,7 +68,7 @@ public class GroupAlbumActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(GroupAlbumActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         albumRecyclerView.setLayoutManager(linearLayoutManager);
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             groupAlbumAdapter = new GroupAlbumAdapter(this, msgGroupByDayMap, GROUP_TYPE_MSG);
         } else {
             groupAlbumAdapter = new GroupAlbumAdapter(this, messageGroupByDayMap, GROUP_TYPE_MESSAGE);
@@ -84,7 +89,7 @@ public class GroupAlbumActivity extends BaseActivity {
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
                 bundle.putInt(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
                 bundle.putStringArrayList(ImagePagerActivity.EXTRA_IMAGE_URLS, imgUrlList);
-                if (MyApplication.getInstance().isV0VersionChat()) {
+                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
                     IntentUtils.startActivity(GroupAlbumActivity.this, ImagePagerV0Activity.class, bundle);
@@ -99,7 +104,7 @@ public class GroupAlbumActivity extends BaseActivity {
     }
 
     private void getImgMsgList() {
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(MyApplication.getInstance(), cid);
             for (Msg msg : imgTypeMsgList) {
                 String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());

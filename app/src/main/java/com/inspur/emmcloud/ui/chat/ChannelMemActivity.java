@@ -26,7 +26,6 @@ public class ChannelMemActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel_mem);
         String title = getIntent().getStringExtra("title");
         ((TextView) findViewById(R.id.header_text)).setText(title);
         memberArray = getIntent().getStringArrayExtra("members");
@@ -48,6 +47,11 @@ public class ChannelMemActivity extends BaseActivity {
             });
         }
 
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_channel_mem;
     }
 
     public void onClick(View v) {

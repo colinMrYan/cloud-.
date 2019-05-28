@@ -19,6 +19,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,6 +43,11 @@ public class ShareLinkActivity extends BaseActivity {
             ToastUtils.show(ShareLinkActivity.this, getString(R.string.news_share_fail));
             finish();
         }
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return 0;
     }
 
     /**
@@ -100,7 +106,7 @@ public class ShareLinkActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(ShareLinkActivity.this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
@@ -139,7 +145,7 @@ public class ShareLinkActivity extends BaseActivity {
         bundle.putString("cid", cid);
         bundle.putString("share_type", "link");
         bundle.putSerializable(Constant.SHARE_LINK, conbineGroupNewsContent());
-        IntentUtils.startActivity(ShareLinkActivity.this, MyApplication.getInstance().isV0VersionChat() ?
+        IntentUtils.startActivity(ShareLinkActivity.this, WebServiceRouterManager.getInstance().isV0VersionChat() ?
                 ChannelV0Activity.class : ConversationActivity.class, bundle, true);
     }
 
