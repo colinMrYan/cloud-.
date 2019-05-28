@@ -5,7 +5,6 @@ import java.util.List;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -85,7 +84,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
                             });
                 }
             });
-            LogUtils.YfcDebug("33333333333333333333");
             permissionDialog.show();
         } else {
             onCreate();

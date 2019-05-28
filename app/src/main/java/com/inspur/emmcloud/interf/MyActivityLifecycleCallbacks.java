@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.interf;
 
-import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
@@ -13,10 +12,6 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionActivity;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
@@ -69,19 +64,21 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         }
     }
 
-    private boolean isLackNecessaryPermission() {
-        //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
-        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
-            if (!(currentActivity instanceof MainActivity || currentActivity instanceof EmmPermissionActivity)) {
-                Intent intent = new Intent(currentActivity, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                currentActivity.startActivity(intent);
-            }
-            return true;
-        }
-        return false;
-    }
+    // private boolean isLackNecessaryPermission() {
+    // //如果没有存储权限则跳转到MainActivity进行处理
+    // String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new
+    // String[]{Permissions.READ_PHONE_STATE});
+    // if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(),
+    // necessaryPermissionArray)) {
+    // if (!(currentActivity instanceof MainActivity || currentActivity instanceof EmmPermissionActivity)) {
+    // Intent intent = new Intent(currentActivity, MainActivity.class);
+    // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    // currentActivity.startActivity(intent);
+    // }
+    // return true;
+    // }
+    // return false;
+    // }
 
 
     @Override
