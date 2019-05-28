@@ -149,7 +149,7 @@ public class CustomWeekView extends WeekView {
     protected void onDrawText(Canvas canvas, EmmCalendar calendar, int x, boolean hasScheme, boolean isSelected) {
         int cx = x + mItemWidth / 2;
         int top = -(int) (mItemHeight / 5.5);
-        String day = calendar.isCurrentDay() ? "今" : String.valueOf(calendar.getDay());
+        String day = (calendar.isCurrentDay() && isLunarAndFestivalShow()) ? "今" : String.valueOf(calendar.getDay());
         String lunar = TextUtils.isEmpty(calendar.getSchemeLunar()) ? calendar.getLunar() : calendar.getSchemeLunar();
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());

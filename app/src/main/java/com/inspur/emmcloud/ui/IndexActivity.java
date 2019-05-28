@@ -667,7 +667,9 @@ public class IndexActivity extends IndexBaseActivity {
             super.returnNaviBarModelSuccess(naviBarModel);
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
             ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, naviBarModel.getLastNaviLocalVersion());
-            updateNaviTabbar();
+            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() != 0){
+                updateNaviTabbar();
+            }
         }
 
         @Override

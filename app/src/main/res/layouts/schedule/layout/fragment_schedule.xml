@@ -118,6 +118,7 @@
 
                 <RelativeLayout
                     android:id="@+id/rl_all_day"
+                    android:visibility="gone"
                     android:layout_below="@id/tv_schedule_sum"
                     android:background="#ffffff"
                     android:layout_width="match_parent"
@@ -193,23 +194,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"></android.support.v7.widget.RecyclerView>
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/rl_schedule_list_default"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:background="@color/content_bg"
-                android:gravity="center">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/content_bg">
                 <ImageView
                     android:id="@+id/iv_schedule_list_view_default"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_schedule_default"/>
                 <TextView
                     android:text="@string/schedule_calendar_no_schedule_today"
                     android:layout_below="@id/iv_schedule_list_view_default"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="30dp"
                     android:layout_marginTop="18dp"
                     android:layout_width="wrap_content"
@@ -217,7 +217,7 @@
                     android:textSize="16sp"
                     android:textColor="#999999"
                     android:singleLine="true"/>
-            </RelativeLayout>
+            </LinearLayout>
 
         </com.inspur.emmcloud.widget.CalendarLinearLayout>
     </com.inspur.emmcloud.widget.calendarview.CalendarLayout>
