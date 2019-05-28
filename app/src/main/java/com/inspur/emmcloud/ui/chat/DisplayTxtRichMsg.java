@@ -102,13 +102,13 @@ public class DisplayTxtRichMsg {
                                     : R.color.header_bg_blue));
 
         }
-        contentText.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                copyContentToPasteBoard(context, contentText);
-                return true;
-            }
-        });
+//        contentText.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                copyContentToPasteBoard(context, contentText);
+//                return true;
+//            }
+//        });
         return cardContentView;
     }
 
