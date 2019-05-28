@@ -201,28 +201,6 @@
 
     <style name="CameraPreview" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen"></style>
 
-    <style name="myProgressBarStyle">
-
-
-        　　
-        <item name="android:indeterminateDrawable">@drawable/loading_progress</item>
-
-
-        　　
-        <item name="android:minWidth">36dip</item>
-
-
-        　　
-        <item name="android:maxWidth">36dip</item>
-
-
-        　　
-        <item name="android:minHeight">36dip</item>
-
-
-        　　
-        <item name="android:maxHeight">36dip</item>
-    </style>
     <!-- 增加加号部分的style -->
     <style name="transparentFrameWindowStyle" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
@@ -251,10 +229,6 @@
         <item name="android:windowExitAnimation">@anim/pup_dialog_out_anim</item>
     </style>
 
-    <style name="meetting_datepicker_animstyle">
-        <item name="android:windowEnterAnimation">@anim/meetting_dialog_in_anim</item>
-        <item name="android:windowExitAnimation">@anim/meetting_dialog_out_anim</item>
-    </style>
 
     <style name="Transparent" parent="android:Theme.Light">
 
@@ -301,9 +275,6 @@
         <item name="android:button">@drawable/checkbox_style</item>
     </style>
 
-    <style name="SearchCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/search_check_style</item>
-    </style>
 
     <style name="imp_plugin_fullScreenDialog" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:backgroundDimEnabled">false</item>
@@ -317,11 +288,6 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:backgroundDimAmount">0.6</item>
-        <item name="android:windowBackground">@color/react_native_big_bg</item>
-    </style>
 
     <style name="dialog_activity" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
