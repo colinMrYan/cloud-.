@@ -26,8 +26,6 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
-import org.xutils.view.annotation.Event;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +74,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
     private void initView(final Context context) {
         // TODO Auto-generated method stub
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_comment, this, true);
+        View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu_img_comment, this, true);
         ButterKnife.bind(this, view);
         initInputEdit();
         sendBtn.setEnabled(false);

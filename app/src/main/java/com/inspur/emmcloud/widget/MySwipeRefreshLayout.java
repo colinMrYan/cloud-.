@@ -40,7 +40,7 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
     public MySwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         // 填充底部加载布局
-        mFooterView = View.inflate(context, R.layout.swiperefreshlayout_view_footer, null);
+        mFooterView = View.inflate(context, R.layout.basewidget_swiperefreshlayout_view_footer, null);
 
         // 表示控件移动的最小距离，手移动的距离大于这个距离才能拖动控件
         mScaledTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();

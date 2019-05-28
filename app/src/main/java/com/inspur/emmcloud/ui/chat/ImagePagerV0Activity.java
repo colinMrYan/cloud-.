@@ -25,7 +25,6 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuImgCommentV0;
 import com.inspur.emmcloud.widget.HackyViewPager;
-import com.inspur.emmcloud.widget.ImageDetailFragment;
 import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
 
 import android.app.Dialog;
@@ -179,7 +178,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
      * 显示评论输入框
      */
     private void showCommentInputDlg() {
-        View view = getLayoutInflater().inflate(R.layout.dialog_chat_img_input_v0, null);
+        View view = getLayoutInflater().inflate(R.layout.communication_dialog_chat_img_input_v0, null);
         commentInputDlg = new Dialog(this, R.style.transparentFrameWindowStyle);
         //commentInputDlg = new Dialog(this, android.R.style.Theme_Holo_Light_Dialog);  lbc
         commentInputDlg.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

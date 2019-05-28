@@ -14,7 +14,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import android.content.Intent;
@@ -66,10 +65,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        ECMRecyclerViewLinearLayoutManager layoutManager = new ECMRecyclerViewLinearLayoutManager(VolumeFilePermissionManagerActivity.this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        layoutManager.setCanScrollHorizontally(false);
-        groupRecyclerView.setLayoutManager(layoutManager);
+        groupRecyclerView.setLayoutManager(new LinearLayoutManager(VolumeFilePermissionManagerActivity.this));
         volumeGroupPermissionManagerAdapter = new VolumeGroupPermissionManagerAdapter(VolumeFilePermissionManagerActivity.this);
         volumeGroupPermissionManagerAdapter.setVolumeGroupPermissionManagerInterfaceListener(new VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerInterface() {
             @Override

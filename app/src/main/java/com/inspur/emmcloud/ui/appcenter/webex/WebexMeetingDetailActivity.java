@@ -291,7 +291,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private void showOptionMenuPop(View view) {
-        View contentView = LayoutInflater.from(this).inflate(R.layout.pop_webex_meeting_detail_option, null);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.webex_pop_meeting_detail_option, null);
         optionMenuPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);

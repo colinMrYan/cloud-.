@@ -55,7 +55,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
     }
 
     private void init(Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_container, this, true);
+        View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu_container, this, true);
         ButterKnife.bind(this, view);
     }
 
@@ -97,7 +97,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
     }
 
     private View getGridChildView(int i) {
-        View view = View.inflate(getContext(), R.layout.ecm_widget_chat_input_menu_grid, null);
+        View view = View.inflate(getContext(), R.layout.communication_widget_chat_input_menu_grid, null);
         NoScrollGridView gridView = (NoScrollGridView) view.findViewById(R.id.grid);
         final List<InputTypeBean> pageInputTypeBeanList = new ArrayList<>();
         int startInd = (i - 1) * 8;

@@ -1,38 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import static com.inspur.emmcloud.ui.appcenter.AppCenterMoreActivity.APP_CENTER_APPLIST;
-import static com.inspur.emmcloud.ui.appcenter.AppCenterMoreActivity.APP_CENTER_CATEGORY_NAME;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppAdsBean;
-import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
-import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.AdsViewPager;
-import com.inspur.emmcloud.widget.CircularProgress;
-import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.imp.api.ImpActivity;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +29,38 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.bean.appcenter.AppAdsBean;
+import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
+import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.AdsViewPager;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.widget.ScrollViewWithListView;
+import com.inspur.imp.api.ImpActivity;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.inspur.emmcloud.ui.appcenter.AppCenterMoreActivity.APP_CENTER_APPLIST;
+import static com.inspur.emmcloud.ui.appcenter.AppCenterMoreActivity.APP_CENTER_CATEGORY_NAME;
+
 /**
  * 应用中心页面 com.inspur.emmcloud.ui.AppCenterActivity create at 2016年8月31日
  * 下午2:54:47
@@ -72,7 +71,6 @@ public class AppCenterActivity extends BaseActivity {
     private static final String APP_CENTER_CATEGORY_PROTOCOL = "ecc-app-store://category";
     private static final String APP_CENTER_APP_NAME_PROTOCOL = "ecc-app-store://app";
     private ViewPager viewPager;
-    private CircularProgress recommendCircleProgress, classCircleProgress;
     private ListView classListView;
     private ScrollViewWithListView recommendListView;
     private SwipeRefreshLayout classSwipeRefreshLayout;
@@ -89,7 +87,6 @@ public class AppCenterActivity extends BaseActivity {
     private AdsAppPagerAdapter adspagerAdapter;
     private View recommendView;
     private RelativeLayout adsPagerContainer;
-
 
     @Override
     public void onCreate() {
@@ -142,8 +139,6 @@ public class AppCenterActivity extends BaseActivity {
                 IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
             }
         });
-        recommendCircleProgress = (CircularProgress) recommendView.findViewById(R.id.circle_progress);
-        classCircleProgress = (CircularProgress) classView.findViewById(R.id.app_center_categories_circle_progress);
         List<View> viewList = new ArrayList<View>();
         viewList.add(recommendView);
         viewList.add(classView);
@@ -176,6 +171,8 @@ public class AppCenterActivity extends BaseActivity {
      */
     private void getAllApp() {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            recommendSwipeRefreshLayout.setRefreshing(true);
+            classSwipeRefreshLayout.setRefreshing(true);
             MyAppAPIService apiService = new MyAppAPIService(AppCenterActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getNewAllApps();
@@ -617,8 +614,6 @@ public class AppCenterActivity extends BaseActivity {
     public class WebService extends APIInterfaceInstance {
         @Override
         public void returnAllAppsSuccess(GetAllAppResult getAllAppResult) {
-            recommendCircleProgress.setVisibility(View.GONE);
-            classCircleProgress.setVisibility(View.GONE);
             appList = getAllAppResult.getRecommendList();
             adsList = getAllAppResult.getAdsList();
             initAdsViewPager();   //lbc
@@ -632,8 +627,6 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public void returnAllAppsFail(String error, int errorCode) {
             WebServiceMiddleUtils.hand(AppCenterActivity.this, error, errorCode);
-            recommendCircleProgress.setVisibility(View.GONE);
-            classCircleProgress.setVisibility(View.GONE);
             recommendSwipeRefreshLayout.setRefreshing(false);
             classSwipeRefreshLayout.setRefreshing(false);
         }

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    
-  	<!-- 是否是静音 -->
-        <string name="is_mute">請檢查是否是靜音或振動狀態!</string>
-
-</resources>

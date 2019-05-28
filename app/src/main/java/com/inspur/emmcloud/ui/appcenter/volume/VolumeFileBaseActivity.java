@@ -222,7 +222,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showCreateFolderDlg() {
         createFolderDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
         inputEdit.setHint(getString(R.string.clouddriver_input_directory_name));
@@ -273,7 +273,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         final String fileNameNoEx = volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? FileUtils.getFileNameWithoutExtension(fileName) : fileName;
         final String fileExtension = fileName.replace(fileNameNoEx, "");
         fileRenameDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         fileRenameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) fileRenameDlg.findViewById(R.id.edit);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});

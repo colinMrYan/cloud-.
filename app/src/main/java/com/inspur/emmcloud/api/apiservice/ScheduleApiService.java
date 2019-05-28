@@ -712,7 +712,7 @@ public class ScheduleApiService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnMeetingListFail(error, responseCode);
+                apiInterface.returnMeetingListByMeetingRoomFail(error, responseCode);
             }
         });
     }

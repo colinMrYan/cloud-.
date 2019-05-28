@@ -69,7 +69,7 @@ public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHand
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                setContentView(Res.getLayoutID("activity_preview_decode"));
+                setContentView(R.layout.activity_preview_decode);
                 initView();
             }
 

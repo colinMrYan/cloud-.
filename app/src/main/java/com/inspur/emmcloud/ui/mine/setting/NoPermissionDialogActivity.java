@@ -17,7 +17,7 @@ public class NoPermissionDialogActivity extends BaseActivity {
     @Override
     public void onCreate() {
         final Dialog dialog = new MyDialog(this,
-                R.layout.dialog_one_button);
+                R.layout.basewidget_dialog_one_button);
         dialog.setCanceledOnTouchOutside(false);
         ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.cluster_no_permission);
         dialog.findViewById(R.id.ok_btn).setOnClickListener(new View.OnClickListener() {

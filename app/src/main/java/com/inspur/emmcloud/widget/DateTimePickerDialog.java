@@ -53,7 +53,7 @@ public class DateTimePickerDialog {
      * @return
      */
     private View initDatePicker(Boolean isAllDay) {
-        View inflate = LayoutInflater.from(context).inflate(R.layout.dialog_date_time_picker, null);
+        View inflate = LayoutInflater.from(context).inflate(R.layout.basewidget_dialog_date_time_picker, null);
         datePicker = inflate.findViewById(R.id.datePicker_no_head);
         resizePikcer(datePicker);
         hideDatePickerHeader(datePicker);

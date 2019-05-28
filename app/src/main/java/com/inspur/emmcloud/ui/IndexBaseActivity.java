@@ -49,7 +49,7 @@ import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
-import com.inspur.emmcloud.widget.dialogs.WhiteListDialog;
+import com.inspur.emmcloud.widget.dialogs.ConfirmDialog;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
 
@@ -95,7 +95,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     private String tabId = "";
     // protected ConnectivityManager.NetworkCallback networkCallback;
     // protected ConnectivityManager connectivityManager;
-    private WhiteListDialog confirmDialog;
+    private ConfirmDialog confirmDialog;
     private ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
 
     @Override
@@ -312,9 +312,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if (!hasIgnored) {
-                    confirmDialog = new WhiteListDialog(context, R.string.white_list_tip_content,
+                    confirmDialog = new ConfirmDialog(context, R.string.white_list_tip_content,
                             R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
-                    confirmDialog.setClicklistener(new WhiteListDialog.ClickListenerInterface() {
+                    confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
                         @Override
                         public void doConfirm() {
                             if (confirmDialog.getIsHide()) {
