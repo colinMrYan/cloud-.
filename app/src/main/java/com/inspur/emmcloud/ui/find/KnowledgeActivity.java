@@ -1,14 +1,8 @@
 package com.inspur.emmcloud.ui.find;
 
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -20,8 +14,13 @@ import com.inspur.emmcloud.bean.find.KnowledgeInfo;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class KnowledgeActivity extends BaseActivity {
@@ -33,10 +32,7 @@ public class KnowledgeActivity extends BaseActivity {
     private Adapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-
+    public void onCreate() {
         ((TextView) findViewById(R.id.header_text)).setText(getString(R.string.knowledge));
         apiService = new FindAPIService(KnowledgeActivity.this);
         apiService.setAPIInterface(new WebService());

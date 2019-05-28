@@ -1,13 +1,5 @@
 package com.inspur.emmcloud.interf;
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-
-import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
@@ -20,14 +12,17 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionActivity;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 
 /**
  * Created by chenmch on 2017/9/13.
@@ -50,9 +45,9 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         currentActivity = activity;
         count++;
         //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
-        if (isLackNecessaryPermission()) {
-            return;
-        }
+        // if (isLackNecessaryPermission()) {
+        // return;
+        // }
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
         if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance().isIndexActivityRunning()) {
             MyApplication.getInstance().setIsActive(true);
@@ -69,19 +64,21 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         }
     }
 
-    private boolean isLackNecessaryPermission() {
-        //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
-        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
-            if (!(currentActivity instanceof MainActivity || currentActivity instanceof EmmPermissionActivity)) {
-                Intent intent = new Intent(currentActivity, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                currentActivity.startActivity(intent);
-            }
-            return true;
-        }
-        return false;
-    }
+    // private boolean isLackNecessaryPermission() {
+    // //如果没有存储权限则跳转到MainActivity进行处理
+    // String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new
+    // String[]{Permissions.READ_PHONE_STATE});
+    // if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(),
+    // necessaryPermissionArray)) {
+    // if (!(currentActivity instanceof MainActivity || currentActivity instanceof EmmPermissionActivity)) {
+    // Intent intent = new Intent(currentActivity, MainActivity.class);
+    // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    // currentActivity.startActivity(intent);
+    // }
+    // return true;
+    // }
+    // return false;
+    // }
 
 
     @Override
@@ -103,6 +100,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             WebSocketPush.getInstance().closeWebsocket();
         }
     }
+
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {

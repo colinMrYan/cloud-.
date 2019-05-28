@@ -1,10 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -15,8 +12,10 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,9 +31,9 @@ public class AppGroupActivity extends BaseActivity {
     TextView textView;
     private List<App> appList = new ArrayList<>();
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         appList.addAll((List<App>) getIntent().getSerializableExtra("appGroupList"));
         initViews();

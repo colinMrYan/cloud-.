@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.view.View;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+
+import android.view.View;
 
 /**
  * 服务条款页面
@@ -11,6 +11,11 @@ import com.inspur.emmcloud.R;
  * @author Administrator
  */
 public class ServiceTermActivity extends BaseActivity {
+
+    @Override
+    public void onCreate() {
+
+    }
 
     @Override
     public int getLayoutResId() {

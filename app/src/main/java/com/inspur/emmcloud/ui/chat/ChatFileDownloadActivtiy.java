@@ -1,12 +1,9 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import java.io.File;
+import java.text.SimpleDateFormat;
+
+import org.xutils.common.Callback;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -23,10 +20,12 @@ import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
-import org.xutils.common.Callback;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,8 +54,7 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
     private Message message;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         message = (Message) getIntent().getSerializableExtra("message");
         MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();

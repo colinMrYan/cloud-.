@@ -1,14 +1,14 @@
 package com.inspur.emmcloud.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
@@ -55,15 +55,14 @@ import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.imp.api.ImpActivity;
 
-import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 
 /**
  * scheme统一处理类
@@ -73,8 +72,7 @@ public class SchemeHandleActivity extends BaseActivity {
     private BroadcastReceiver unlockReceiver;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         if (isLackNecessaryPermission()) {
             return;
         }
