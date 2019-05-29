@@ -19,4 +19,6 @@
         <item name="android:textColorSecondary">#333333</item>
     </style>
 
+    <style name="CusButtonBase" parent="android:Widget.Material.Light.Button" />
+
 </resources>

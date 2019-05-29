@@ -16,14 +16,14 @@
         android:textSize="15sp"
         android:visibility="gone" />
 
-    <com.qmuiteam.qmui.widget.QMUILoadingView
+    <com.inspur.emmcloud.widget.CustomLoadingView
         android:id="@+id/qlv_downloading_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="6dp"
         android:color="#666666"
         android:visibility="gone"
-        app:qmui_loading_view_size="18dp" />
+        app:cus_loading_view_size="18dp" />
 
     <TextView
         android:id="@+id/tv_duration_left"
@@ -96,12 +96,12 @@
         android:textSize="15sp"
         android:visibility="gone" />
 
-    <com.qmuiteam.qmui.widget.QMUILoadingView
+    <com.inspur.emmcloud.widget.CustomLoadingView
         android:id="@+id/qlv_downloading_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dp"
         android:color="#666666"
         android:visibility="gone"
-        app:qmui_loading_view_size="18dp" />
+        app:cus_loading_view_size="18dp" />
 </LinearLayout>

@@ -59,9 +59,7 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -401,23 +399,17 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     }
 
     private void showRecentChannelOperationDlg(final int position) {
-        new MyQMUIDialog.MessageDialogBuilder(getActivity())
+        new CustomDialog.MessageDialogBuilder(getActivity())
                 .setMessage(R.string.if_delect_current_item)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        SearchModel searchModel = commonContactList.get(position);
-                        CommonContactCacheUtils.delectCommonContact(getActivity().getApplicationContext(), searchModel);
-                        commonContactList.remove(position);
-                        secondGroupListAdapter.notifyDataSetChanged();
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    SearchModel searchModel = commonContactList.get(position);
+                    CommonContactCacheUtils.delectCommonContact(getActivity().getApplicationContext(), searchModel);
+                    commonContactList.remove(position);
+                    secondGroupListAdapter.notifyDataSetChanged();
                 })
                 .show();
 

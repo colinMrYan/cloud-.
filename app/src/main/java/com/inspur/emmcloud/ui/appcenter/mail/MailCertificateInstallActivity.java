@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +25,8 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.io.FileInputStream;
 import java.security.KeyStore;
@@ -170,29 +170,28 @@ public class MailCertificateInstallActivity extends BaseActivity {
      * @param path
      */
     private void showInputCreKeyWordDialog(final String path) {
-        final QMUIDialog.EditTextDialogBuilder builder = new QMUIDialog.EditTextDialogBuilder(this);
+        final CustomDialog.EditDialogBuilder builder = new CustomDialog.EditDialogBuilder(this);
+        final EditText editText = new EditText(this);
+        editText.setHint("请在此输入证书密码：");
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+
         builder.setTitle("证书密码：")
-                .setPlaceholder("请在此输入证书密码：")
-                .setInputType(InputType.TYPE_CLASS_TEXT)
-                .addAction("取消", new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setView(editText)
+//                .setPlaceholder("请在此输入证书密码：")
+//                .setInputType(InputType.TYPE_CLASS_TEXT)
+                .setNegativeButton("取消", (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction("确定", new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        CharSequence text = builder.getEditText().getText();
-                        String key = text.toString().trim();
-                        if (getCertificate(path, key)) {
-                            certificatePassWord = key;
-                            String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
-                            uploadCertificateFile(mail, path, certificatePassWord);
-                            dialog.dismiss();
-                        } else {
-                            Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
-                        }
+                .setPositiveButton("确定", (dialog, index) -> {
+                    CharSequence text = editText.getText();
+                    String key = text.toString().trim();
+                    if (getCertificate(path, key)) {
+                        certificatePassWord = key;
+                        String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+                        uploadCertificateFile(mail, path, certificatePassWord);
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
                     }
                 }).show();
     }

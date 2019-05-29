@@ -123,4 +123,28 @@ public class CustomDialog extends AlertDialog {
             return dialog;
         }
     }
+
+    /**
+     * 单选类型的对话框 Builder
+     */
+    public static class SingleChoiceDialogBuilder extends AlertDialog.Builder {
+        private Context context;
+
+        public SingleChoiceDialogBuilder(Context context) {
+            super(context);
+            this.context = context;
+        }
+    }
+
+    /**
+     * 编辑框builder
+     */
+    public static class EditDialogBuilder extends AlertDialog.Builder {
+        private Context context;
+
+        public EditDialogBuilder(Context context) {
+            super(context);
+            this.context = context;
+        }
+    }
 }

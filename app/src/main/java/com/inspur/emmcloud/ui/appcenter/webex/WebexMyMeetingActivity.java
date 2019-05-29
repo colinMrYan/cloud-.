@@ -39,9 +39,7 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -277,21 +275,15 @@ public class WebexMyMeetingActivity extends BaseActivity {
      * 安装提示
      */
     private void showInstallDialog() {
-        new MyQMUIDialog.MessageDialogBuilder(WebexMyMeetingActivity.this)
+        new CustomDialog.MessageDialogBuilder(WebexMyMeetingActivity.this)
                 .setMessage(getString(R.string.webex_install_tips))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
-                        new AppDownloadUtils().showDownloadDialog(WebexMyMeetingActivity.this, downloadUrl);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
+                    new AppDownloadUtils().showDownloadDialog(WebexMyMeetingActivity.this, downloadUrl);
                 })
                 .show();
     }

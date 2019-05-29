@@ -219,4 +219,12 @@
     <color name="schedule_week_bg_color">#F8F9FB</color>
 
     <color name="app_font_color">#35A4F6</color>
+
+    <color name="btn_color_blue">#00A8E1</color>
+    <color name="btn_color_blue_disabled">#8000A8E1</color>
+    <color name="btn_color_blue_pressed">#c000A8E1</color>
+
+    <color name="btn_filled_blue_bg_normal">#416f96</color>
+    <color name="btn_filled_blue_bg_pressed">#243f55</color>
+    <color name="btn_filled_blue_bg_disabled">#80416f96</color>
 </resources>

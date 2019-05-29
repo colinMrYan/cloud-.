@@ -28,7 +28,6 @@
 
     </style>
 
-
     <style name="AppTheme_0"  parent="AppTheme">
         <item name="header_bg_color">@color/header_bg_white</item>
         <item name="header_bg">@drawable/shape_header_bg_white</item>
@@ -66,6 +65,24 @@
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
 
+        <!-- button  init-->
+        <item name="CustomButtonStyle">@style/CusButtonBase</item>
+        <item name="cus_round_btn_bg_color">@color/s_btn_blue_bg</item>
+        <item name="cus_round_btn_border_color">@color/s_btn_blue_border</item>
+        <item name="cus_round_btn_text_color">@color/s_btn_blue_text</item>
+        <item name="cus_content_spacing_horizontal">20dp</item>
+        <item name="cus_content_padding_horizontal">16dp</item>
+        <item name="cus_round_btn_text_size">16sp</item>
+        <item name="cus_round_btn_border_width">1dp</item>
+
+        <item name="cus_isRadiusAdjustBounds">true</item>
+        <item name="cus_backgroundColor">@color/transparent</item>
+        <item name="cus_borderWidth">1dp</item>
+        <item name="cus_borderColor">@color/s_btn_blue_border</item>
+
+        <item name="cus_loading_view_size">20dp</item>
+        <item name="android:color">#858C96</item>
+        <item name="CusLoadingStyle">@style/CusLoadingBase</item>
 
     </style>
 
@@ -418,5 +435,10 @@
     </style>
 
     <style name="cus_dialog_style" parent="AlertDialog.AppCompat.Light" />
+
+    <style name="CusButtonBase" parent="android:Widget.Holo.Light.Button" />
+
+    <style name="CusLoadingBase" parent="@style/AppRootTheme" />
+
 
 </resources>

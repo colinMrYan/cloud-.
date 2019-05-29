@@ -76,14 +76,15 @@
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_chat_msg_send_fail"
                         android:visibility="gone" />
-                    <com.qmuiteam.qmui.widget.QMUILoadingView
+
+                    <com.inspur.emmcloud.widget.CustomLoadingView
                         android:id="@+id/qlv_sending"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:color="#666666"
                         android:visibility="gone"
-                        app:qmui_loading_view_size="18dp" />
+                        app:cus_loading_view_size="18dp" />
                 </RelativeLayout>
 
                 <RelativeLayout

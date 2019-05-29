@@ -36,9 +36,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -246,39 +244,27 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     }
 
     private void showQuitGroupWarningDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
+        new CustomDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
-                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        quitChannelGroup();
-                    }
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
+                    quitChannelGroup();
                 })
                 .show();
     }
 
     private void showDimissGroupWarningDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
+        new CustomDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
                 .setMessage(getString(R.string.dismiss_group_warning_text))
-                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        deleteConversation();
-                    }
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
+                    deleteConversation();
                 })
                 .show();
     }
