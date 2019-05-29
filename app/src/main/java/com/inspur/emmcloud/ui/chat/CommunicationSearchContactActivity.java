@@ -82,14 +82,13 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
         int navigationBarColor = R.color.search_contact_header_bg;
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
         int statusBarColor = ResourceUtils.getResValueOfAttr(CommunicationSearchContactActivity.this, R.attr.header_bg_color);
         ImmersionBar.with(this).statusBarColor(navigationBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_communication_search_contact);
-        ButterKnife.bind(this);
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchEdit.addTextChangedListener(new SearchWatcher());
         cancelTextView.setOnClickListener(this);
@@ -102,8 +101,13 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     }
 
     @Override
+    public void onCreate() {
+
+    }
+
+    @Override
     public int getLayoutResId() {
-        return 0;
+        return R.layout.activity_communication_search_contact;
     }
 
     protected int getStatusType() {
@@ -215,6 +219,11 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         }
         ImageDisplayUtils.getInstance().displayImage(
                 photoImg, icon, defaultIcon);
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 
