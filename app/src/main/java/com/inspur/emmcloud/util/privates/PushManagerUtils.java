@@ -43,7 +43,6 @@ public class PushManagerUtils {
      */
     public String getPushId(Context context) {
         String pushId = "";
-        String pushFlag = getPushFlag(MyApplication.getInstance());
         if (AppUtils.getIsHuaWei()) {
             // 需要对华为单独推送的时候解开这里
             String hwtoken = PreferencesUtils.getString(context, Constant.HUAWEI_PUSH_TOKEN, "");
@@ -124,7 +123,7 @@ public class PushManagerUtils {
      * false表示关闭极光
      * @param isOpen
      */
-    public void setJpushStatus(boolean isOpen){
+    private void setJpushStatus(boolean isOpen) {
         if (isOpen){
             // 初始化 JPush
             JPushInterface.init(MyApplication.getInstance());
@@ -156,6 +155,7 @@ public class PushManagerUtils {
      * 设置小米推送状态
      * true表示打开
      * false表示关闭
+     * 因为小米需要在PushReceiver中获取到权限时才能连接所以这里需要用public
      * @param isOpen
      */
     public void setMiPushStatus(boolean isOpen){
