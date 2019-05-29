@@ -1555,11 +1555,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                         SpannableString spannableString;
                         switch (operationsId[which]) {
                             case R.string.chat_long_click_copy:
-                                String text = message.getMsgContentTextPlain().getText();
-                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
-                                text = spannableString.toString();
-                                if (!StringUtils.isBlank(text))
-                                    copyToClipboard(context, text);
+                                content = copyToClipboardContentOptimized(context, uiMessage);
+                                if (!StringUtils.isBlank(content))
+                                    copyToClipboard(context, content);
                                 break;
                             case R.string.chat_long_click_transmit:
                                 shareMessageToFrinds(context);
@@ -1572,7 +1570,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                                     addTextToSchedule(content);
                                 break;
                             case R.string.chat_long_click_copy_text:
-                                content = copyToClipboardContentOptimized(context, uiMessage);
+                                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
                                 if (!StringUtils.isBlank(content))
                                     copyToClipboard(context, content);
                                 break;
@@ -1597,7 +1595,10 @@ public class ConversationActivity extends ConversationBaseActivity {
                 }
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
+                String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
+                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text,
+                        uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
+                content = spannableString.toString();
                 break;
         }
         return content;
