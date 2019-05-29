@@ -1,10 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/iv_splash_logo"
@@ -25,24 +24,15 @@
 
     <ImageButton
         android:id="@+id/ibt_skip"
-        android:layout_alignParentRight="true"
-        android:visibility="gone"
-        android:src="@drawable/icon_splash_skip"
-        android:scaleType="fitXY"
-        android:onClick="onClick"
-        android:layout_marginTop="18dp"
-        android:layout_marginRight="8dp"
-        android:padding="10dp"
         android:layout_width="80dp"
-        android:layout_height="46dp" />
-
-    <com.inspur.emmcloud.widget.CircularProgress
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="180dp"
-        android:visibility="gone"
-        app:borderWidth="3dp" />
+        android:layout_height="46dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="18dp"
+        android:onClick="onClick"
+        android:padding="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_splash_skip"
+        android:visibility="gone" />
 
 </RelativeLayout>

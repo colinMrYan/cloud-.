@@ -1,12 +1,10 @@
 package com.inspur.emmcloud.ui;
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -56,11 +54,12 @@ import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.WeakHandler;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 /**
  * 主页面
@@ -75,8 +74,8 @@ public class IndexActivity extends IndexBaseActivity {
     private LoadingDialog loadingDlg;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        super.onCreate();
         initAppEnvironment();
         initView();
         getInitData();
@@ -662,7 +661,9 @@ public class IndexActivity extends IndexBaseActivity {
             super.returnNaviBarModelSuccess(naviBarModel);
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
             ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, naviBarModel.getLastNaviLocalVersion());
-            updateNaviTabbar();
+            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() != 0){
+                updateNaviTabbar();
+            }
         }
 
         @Override

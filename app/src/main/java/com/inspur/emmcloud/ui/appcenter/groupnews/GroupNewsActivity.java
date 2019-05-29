@@ -1,14 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.groupnews;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.WindowManager;
+import java.util.List;
 
 import com.gxz.PagerSlidingTabStrip;
 import com.inspur.emmcloud.BaseFragmentActivity;
@@ -22,7 +14,14 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import java.util.List;
+import android.graphics.Color;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.WindowManager;
 
 /**
  * 集团新闻
@@ -34,9 +33,9 @@ public class GroupNewsActivity extends BaseFragmentActivity {
     private MyPagerAdapter pagerAdapter;
     private LoadingDialog loadingDlg;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         setContentView(R.layout.activity_group_news);
         loadingDlg = new LoadingDialog(GroupNewsActivity.this);
         getNewTitles();

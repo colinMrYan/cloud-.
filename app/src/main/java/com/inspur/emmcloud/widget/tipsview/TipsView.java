@@ -93,7 +93,7 @@ public class TipsView extends FrameLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         exploredImageView = new ImageView(getContext());
         exploredImageView.setLayoutParams(params);
-        exploredImageView.setImageResource(R.drawable.tips_bubble);
+        exploredImageView.setImageResource(R.drawable.basewidget_tips_bubble);
         exploredImageView.setVisibility(View.INVISIBLE);
         addView(exploredImageView);
     }
@@ -248,7 +248,7 @@ public class TipsView extends FrameLayout {
                                 - exploredImageView.getHeight() / 2);
                         exploredImageView.setVisibility(View.VISIBLE);
                         exploredImageView
-                                .setImageResource(R.drawable.tips_bubble);
+                                .setImageResource(R.drawable.basewidget_tips_bubble);
                         ((AnimationDrawable) exploredImageView.getDrawable())
                                 .stop();
                         ((AnimationDrawable) exploredImageView.getDrawable())

@@ -6,6 +6,9 @@ import com.inspur.emmcloud.bean.chat.MarkDownLink;
 
 import org.xutils.db.sqlite.WhereBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by libaochao on 2019/5/22.
  */
@@ -40,9 +43,50 @@ public class MarkDownLinkCacheUtils {
             }
             DbCacheUtils.getDb(context).saveOrUpdate(markDownLink);
         } catch (Exception e) {
+            // TODO: handle
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 获取缓存中的MarkDownList
+     *
+     * @param context
+     * @return
+     */
+    public static List<MarkDownLink> getMarkDownLinkList(Context context, String mid, String url) {
+        List<MarkDownLink> markDownLinks = null;
+        try {
+            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("mid", "=", mid).findAll();
+        } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
+        if (markDownLinks == null) {
+            markDownLinks = new ArrayList<>();
+        }
+        return markDownLinks;
+    }
+
+    /**
+     * 获取缓存中的MarkDownList
+     *
+     * @param context
+     * @return
+     */
+    public static List<MarkDownLink> getMarkDownLinkListById(Context context, String id) {
+        List<MarkDownLink> markDownLinks = null;
+        try {
+            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("id", "=", id).findAll();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        if (markDownLinks == null) {
+            markDownLinks = new ArrayList<>();
+        }
+        return markDownLinks;
     }
 
 
