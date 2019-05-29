@@ -1,18 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.Html;
-import android.text.SpannableString;
-import android.view.View;
-import android.webkit.WebSettings;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
@@ -47,8 +36,19 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.Html;
+import android.text.SpannableString;
+import android.view.View;
+import android.webkit.WebSettings;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,9 +101,9 @@ public class MailSendActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private String mailMode = MODE_NEW;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         setContentView(R.layout.activity_mail_send);
         ButterKnife.bind(this);
         init();

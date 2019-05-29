@@ -1,14 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -29,7 +21,14 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import java.util.List;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 /**
  * Created by Administrator on 2017/5/15.
@@ -43,8 +42,7 @@ public class DeviceInfoActivity extends BaseActivity {
     private MineAPIService apiService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         loadingDialog = new LoadingDialog(this);
         bindingDevice = (BindingDevice) getIntent().getSerializableExtra("binding_device");
         ((TextView) findViewById(R.id.device_model_text)).setText(bindingDevice.getDeviceModel());

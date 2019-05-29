@@ -1,15 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -20,8 +12,15 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * 删除成员的Activity
@@ -35,8 +34,7 @@ public class ChannelMembersDelActivity extends BaseActivity {
     private boolean isRemoveMyself = true;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         final List<String> memberUidList = (List<String>) getIntent().getSerializableExtra("memberUidList");
         memberContactUserList = ContactUserCacheUtils.getContactUserListById(memberUidList);
         if (getIntent().hasExtra("title")) {
@@ -62,7 +60,6 @@ public class ChannelMembersDelActivity extends BaseActivity {
                 adapter.notifyDataSetChanged();
             }
         });
-
     }
 
     @Override

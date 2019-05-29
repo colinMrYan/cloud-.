@@ -219,7 +219,7 @@ public class ActionSheetDialog extends Dialog {
 
         @SuppressLint("ResourceAsColor")
         private View buildViews() {
-            View wrapperView = View.inflate(mContext, R.layout.widget_actionsheet, null);
+            View wrapperView = View.inflate(mContext, R.layout.basewidget_actionsheet, null);
             mTitleTv = (TextView) wrapperView.findViewById(R.id.title);
             mTitleTv.setTextColor(titleColor);
             mContainerView = (ListView) wrapperView.findViewById(R.id.sheetList);
@@ -299,7 +299,7 @@ public class ActionSheetDialog extends Dialog {
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
                 final ActionSheetListItemData data = getItem(position);
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.widget_actionsheet_item_view, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.basewidget_actionsheet_item_view, parent, false);
                 TextView textView = (TextView) convertView.findViewById(R.id.content);
                 textView.setTextColor(itemColor);
                 textView.setText(data.text);

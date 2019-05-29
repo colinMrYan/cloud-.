@@ -235,7 +235,7 @@ public class LoginUtils extends APIInterfaceInstance {
      * @param enterpriseList
      */
     private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList) {
-        final MyDialog myDialog = new MyDialog(activity, R.layout.dialog_login_select_tanent);
+        final MyDialog myDialog = new MyDialog(activity, R.layout.login_dialog_select_tanent);
         final SwitchView switchView = myDialog.findViewById(R.id.auto_select_switch);
         switchView.setOpened(true);
         MaxHeightListView enterpriseListView = myDialog.findViewById(R.id.enterprise_list);

@@ -1,21 +1,18 @@
 package com.inspur.emmcloud.ui.find.trip;
 
-import android.os.Bundle;
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-
 public class TravelStarsActivity extends BaseActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
 
+    @Override
+    public void onCreate() {
 
     }
 
