@@ -8,6 +8,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -38,6 +40,16 @@ import com.inspur.emmcloud.widget.bubble.BubbleLayout;
  */
 public class DisplayTxtMarkdownMsg {
 
+    private static final DrawableGetter drawableGetter = new DrawableGetter() {
+        @Override
+        public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
+            Bitmap bmp = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_image);
+            Drawable drawable = new BitmapDrawable(MyApplication.getInstance().getResources(), bmp);
+            drawable.setBounds(0, 0, bmp.getWidth(), bmp.getHeight());
+            return drawable;
+        }
+    };
+
     /**
      * 富文本卡片
      *
@@ -67,9 +79,25 @@ public class DisplayTxtMarkdownMsg {
             showContentByMarkdown(context,title,titleText,isMyMsg);
         }
         showContentByMarkdown(context,content,contentText,isMyMsg);
+        contentText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //防止改动ui层级后报错
+                try {
+                    ViewParent parent = v.getParent().getParent();
+                    if (parent instanceof ViewGroup) {
+                        // 获取被点击控件的父容器，让父容器执行点击；
+                        ((ViewGroup) parent).performLongClick();
+                    }
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
         return cardContentView;
     }
-
 
     private static void showContentByMarkdown(final Context context, final String content, TextView textView, final boolean isMyMsg) {
         final int holderWidth = ResolutionUtils.getWidth(context) - DensityUtil.dip2px(MyApplication.getInstance(), 141);
@@ -127,15 +155,4 @@ public class DisplayTxtMarkdownMsg {
                 .autoFix(true)
                 .into(textView);
     }
-
-
-    private static final DrawableGetter drawableGetter = new DrawableGetter() {
-        @Override
-        public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
-            Bitmap bmp = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_image);
-            Drawable drawable = new BitmapDrawable(MyApplication.getInstance().getResources(),bmp);
-            drawable.setBounds(0,0,bmp.getWidth(),bmp.getHeight());
-            return drawable;
-        }
-    };
 }
