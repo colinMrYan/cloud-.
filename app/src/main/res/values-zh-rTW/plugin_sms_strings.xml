@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    
-  	<!-- 短信 -->
-    <string name="tel_or_msg_cannot_be_null">電話號碼或資訊不能為空！</string>
-
-</resources>

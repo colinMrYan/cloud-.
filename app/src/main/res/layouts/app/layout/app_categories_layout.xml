@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
@@ -13,18 +12,11 @@
         android:id="@+id/app_center_categories_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:overScrollMode="never"
-        android:dividerHeight="0px"
         android:divider="#00000000"
+        android:dividerHeight="0px"
+        android:overScrollMode="never"
+        android:scrollbars="none"
          />
     </android.support.v4.widget.SwipeRefreshLayout>
-<!--android:dividerHeight="10dp"-->
-    <com.inspur.emmcloud.widget.CircularProgress
-        android:id="@+id/app_center_categories_circle_progress"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        app:borderWidth="2dp" />
 
 </RelativeLayout>

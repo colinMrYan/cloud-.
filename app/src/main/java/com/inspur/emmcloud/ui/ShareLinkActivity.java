@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.ui;
 
-import android.content.Intent;
-import android.os.Bundle;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -21,8 +21,8 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.content.Intent;
+import android.os.Bundle;
 
 /**
  * Created by yufuchang on 2018/7/18.
@@ -36,6 +36,10 @@ public class ShareLinkActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         shareLink = getIntent().getExtras().getString(Constant.SHARE_LINK);
         if (!StringUtils.isBlank(shareLink)) {
             shareLinkToFriends();

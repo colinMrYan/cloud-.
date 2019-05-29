@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:Android="http://schemas.android.com/apk/res/android">
-
-    <item Android:drawable="@drawable/text_bg_sel" Android:state_selected="true"/>
-    <item Android:drawable="@drawable/text_bg_sel" Android:state_pressed="true"/>
-    <item Android:drawable="@drawable/wheeltext_bg_nor"/>
-
-</selector>

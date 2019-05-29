@@ -89,6 +89,8 @@
     <string name="begin">开始</string>
     <string name="end">结束</string>
     <string name="yesterday">昨天</string>
+    <string name="days_ago">%1$d天前</string>
+    <string name="days_after">%1$d天后</string>
     <string name="the_day_before_yesterday">前天</string>
     <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
     <string name="format_date_group_by">yyyy-MM-dd</string>

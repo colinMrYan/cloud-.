@@ -152,7 +152,7 @@ public class CustomMonthView extends MonthView {
     protected void onDrawText(Canvas canvas, EmmCalendar calendar, int x, int y, boolean hasScheme, boolean isSelected) {
         int cx = x + mItemWidth / 2;
         int top = y - (int) (mItemHeight / 5.5);
-        String day = calendar.isCurrentDay() ? "今" : String.valueOf(calendar.getDay());
+        String day = (calendar.isCurrentDay() && isLunarAndFestivalShow()) ? "今" : String.valueOf(calendar.getDay());
         String lunar = TextUtils.isEmpty(calendar.getSchemeLunar()) ? calendar.getLunar() : calendar.getSchemeLunar();
         if (hasScheme) {
             mTextPaint.setColor(calendar.getSchemeColor());

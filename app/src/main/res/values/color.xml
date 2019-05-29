@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 
-    <color name="progress_grey">#c1c1c1</color>
     <color name="content_border">#c8c7cc</color>
 
 
@@ -27,20 +26,14 @@
     <color name="footer_tab_text_sel_grey">#36A5F6</color>
     <color name="footer_tab_text_sel_blue">#36A5F6</color>
 
-    <color name="contact_header_bg">#EFEFF4</color>
     <color name="bg_my_card">#36A5F6</color>
     <color name="bg_other_card">#ECEEF2</color>
-    <color name="bg_my_card_press">#e00F7BCA</color>
-    <color name="statebar_color">#0C68AB</color>
     <!-- 导航栏原来色值#1596d2 -->
 
-
     <color name="mark_down_url_read">#ADC1D1</color>
-
+    <color name="schedule_tab_text_normal_blue">#8bbbdf</color>
     <color name="content_bg">#f8f9fb</color>
-    <color name="footer_tab_text_nor">#979EA3</color>
     <!-- 原底部文字颜色#698fa7 -->
-    <color name="footer_tab_text_sel">#36A5F6</color>
     <!-- 原底部文字颜色#64abe9 -->
     <color name="login_btn_nor">#38a4f0</color>
     <color name="login_btn_sel">#008cee</color>
@@ -50,25 +43,12 @@
     <color name="list_item_white_tran">#09ffffff</color>
     <color name="list_item_sel">#FFF3F3F7</color>
     <color name="list_item_sel_tran">#bfF3F3F7</color>
-    <color name="grid_item_sel">#EBEDED</color>
     <color name="login_btn_unable_bg">#95d0f8</color>
-    <color name="background_tab_pressed">#6633B5E5</color>
     <color name="grey_line_color">#FFCDCDCD</color>
     <color name="text_grey">#4f87a2</color>
-    <color name="text_light_black">#6a7d84</color>
-    <color name="text_blue_select">#7bbcff</color>
-    <color name="text_lightblue">#007aff</color>
-    <color name="item_select_bg">#D9D9D9</color>
-    <color name="set_textColor">#d10100</color>
-    <color name="set_item1_bgColor">#ffffff</color>
-    <color name="onekey_username_textcolor">#359fdd</color>
-    <color name="onekey_line_view">#cfd3d6</color>
-    <color name="onekey_content_text">#4f87a2</color>
     <color name="hightlight_in_blue_bg">#4CFFFD</color>
 
     <!--新闻导航栏-->
-    <color name="app_news_head_color">#323C49</color>
-    <color name="app_news_background_color">#2A3441</color>
     <!--app的dialog-->
     <color name="app_dialog_title_color">#666666</color>
     <color name="app_dialog_sub_title_color">#FF9F00</color>
@@ -83,7 +63,6 @@
     <!--新闻夜间模式配色-->
     <color name="app_dialog_night_background_layout">#FF5E6875</color>
     <color name="app_dialog_night_background_btn">#FF3B4451</color>
-    <color name="app_dialog_night_font_color">#FF999999</color>
     <color name="app_dialog_night_line_color">#FF161E29</color>
     <color name="app_dialog_night_font_size_color">#FF1D2128</color>
 
@@ -98,11 +77,8 @@
     <color name="green">#00CC00</color>
 
     <!-- 日期 -->
-    <color name="province_line_border">#C7C7C7</color>
 
     <!-- 通讯录 -->
-    <color name="yellow_page_search_bg">#fffffbfa</color>
-    <color name="login_form_hint">#ffb5b5b5</color>
     <color name="yellow_light">#ffefa717</color>
     <color name="comment_file_color">#0f7bca</color>
 
@@ -115,61 +91,22 @@
     -->
     <color name="msg_content_color">#888888</color>
     <color name="msg_time_color">#4f87a2</color>
-    <color name="msg_sendtime_color">#8f8e94</color>
-    <color name="msg_name_color">#383838</color>
-    <color name="meetting_time_color">#0f7bca</color>
-    <color name="meetting_loc_color">#030303</color>
-    <color name="blue">#ff33b5e5</color>
-    <color name="item_press">#F0F0F0</color>
 
     <!-- 日历相关颜色 -->
     <color name="normal_day">#ff333333</color>
-    <color name="weekend_normal_day">#ffA6A6A6</color>
-    <color name="selected_day_background">#FF0F7BCA</color>
-    <color name="selected_day_text">#ffffffff</color>
-    <color name="split_line">#FFCDCDCD</color>
     <color name="cal_pink">#FFC0CB</color>
     <color name="cal_orange">#FFFF7625</color>
     <color name="cal_yellow">#F8F8FF00</color>
     <color name="cal_green">#FF71C614</color>
     <color name="cal_blue">#FF70AFF7</color>
     <color name="cal_purple">#800080</color>
-    <color name="cal_brown">#A52A2A</color>
-    <color name="meetinglist_color">#203b4f</color>
 
     <!-- 集成九宫格排序 -->
-    <item name="subscribe_item_text_color_normal_night" type="color">@color/default_text_night</item>
 
-    <color name="default_text_night">#ff747474</color>
-    <color name="subscribe_item_text_color_pressed_night">#ff303030</color>
-    <color name="subscribe_item_selected_stroke_night">#ffbc494d</color>
-    <color name="subscribe_item_drag_stroke">#ffd2d2d2</color>
-    <color name="subscribe_item_drag_bg">#fff5f5f5</color>
-    <color name="subscribe_item_selected_bg">#ffffffff</color>
-    <color name="subscribe_item_selected_stroke">#ffcc3131</color>
-    <color name="subscribe_item_disabled_stroke">#ffd9d9d9</color>
-    <color name="subscribe_item_disabled_bg">#ffefefef</color>
-    <color name="subscribe_item_pressed_stroke">#ffcdcdcd</color>
-    <color name="subscribe_item_pressed_bg">#fff9f9f9</color>
-    <color name="subscribe_item_normal_stroke">#ffcdcdcd</color>
-    <color name="subscribe_item_normal_bg">#fff5f5f5</color>
 
-    <item name="subscribe_item_text_color_normal" type="color">@color/default_text</item>
 
-    <color name="default_text">#ff454545</color>
-    <color name="subscribe_item_text_color_pressed">#ffb9b9b9</color>
-    <color name="category_subscribe_text">#ffffffff</color>
-    <color name="drawer_item_bg">#ff5d5d5d</color>
-    <color name="drawer_line_color">#ff444444</color>
-    <color name="title_text_color">#ffffffff</color>
-    <color name="subscribe_tip_text">#ff2e2e2e</color>
-    <color name="subscribe_activity_bg">#ffefefef</color>
-    <color name="subscribe_bg">#fff5f5f5</color>
-    <color name="subscribe_seperate_line">#ffcdcdcd</color>
 
-    <color name="react_native_big_bg">#B2FFFFFF</color>
     <color name="scan_result_color">#E8E8E8</color>
-    <color name="react_native_statebar_color">#FAFAFA</color>
 
     <!--九宫格-->
     <color name="grey_b2b2b2">#B2B2B2</color>
@@ -181,7 +118,6 @@
 
     <color name="grey_f6f6f6">#f6f6f6</color>
     <color name="grey_a5a5a5">#777777</color>
-    <color name="grey_dde1e7">#DDE1E7</color>
     <color name="red_f4333c">#F4333C</color>
     <color name="color_list_divider">#dddddd</color>
     <color name="color_list_divider_tran">#99dddddd</color>
@@ -191,33 +127,16 @@
     <color name="colorAccent">#FF4081</color>
 -->
 
-    <color name="custom_progress_green_header">#ff99cc00</color>
-    <color name="custom_progress_green_progress">#ff669900</color>
-    <color name="custom_progress_green_progress_half">#7f669900</color>
 
-    <color name="custom_progress_orange_header">#ffffbb33</color>
-    <color name="custom_progress_orange_progress">#ffff8800</color>
-    <color name="custom_progress_orange_progress_half">#7fff8800</color>
 
-    <color name="custom_progress_blue_header">#ff33b5e5</color>
-    <color name="custom_progress_blue_progress">#ff0099cc</color>
-    <color name="custom_progress_blue_progress_half">#7f0099cc</color>
 
-    <color name="custom_progress_purple_header">#ffaa66cc</color>
-    <color name="custom_progress_purple_progress">#ff9933cc</color>
-    <color name="custom_progress_purple_progress_half">#7f9933cc</color>
 
-    <color name="custom_progress_red_header">#ffcc0000</color>
-    <color name="custom_progress_red_progress">#ffff4444</color>
-    <color name="custom_progress_red_progress_half">#7fff4444</color>
     <color name="voice_communication_function_select">#3CA6F7</color>
     <color name="voice_communication_function_default">#333333</color>
     <color name="voice_communication_function_unavailiable_text">#CBCCCE</color>
 
-    <color name="line_color">#e7e7e7</color>
     <color name="content_background">#f2f2f2</color>
 
-    <color name="schedule_week_bg_color">#F8F9FB</color>
 
     <color name="app_font_color">#35A4F6</color>
 </resources>

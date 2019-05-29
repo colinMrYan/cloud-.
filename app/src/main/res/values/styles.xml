@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -63,6 +63,9 @@
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
         <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
         <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+        <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
+        <item name="schedule_tab_text_color_select">@color/header_text_black</item>
+
 
     </style>
 
@@ -99,6 +102,8 @@
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
         <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
         <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+        <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
+        <item name="schedule_tab_text_color_select">@color/header_text_black</item>
     </style>
 
     <style name="AppTheme_2"  parent="AppTheme">
@@ -134,6 +139,8 @@
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
         <item name="mine_my_info_menu_tint_color">@android:color/white</item>
         <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_blue</item>
+        <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
+        <item name="schedule_tab_text_color_select">@android:color/white</item>
     </style>
 
 
@@ -194,28 +201,6 @@
 
     <style name="CameraPreview" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen"></style>
 
-    <style name="myProgressBarStyle">
-
-
-        　　
-        <item name="android:indeterminateDrawable">@drawable/loading_progress</item>
-
-
-        　　
-        <item name="android:minWidth">36dip</item>
-
-
-        　　
-        <item name="android:maxWidth">36dip</item>
-
-
-        　　
-        <item name="android:minHeight">36dip</item>
-
-
-        　　
-        <item name="android:maxHeight">36dip</item>
-    </style>
     <!-- 增加加号部分的style -->
     <style name="transparentFrameWindowStyle" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
@@ -244,10 +229,6 @@
         <item name="android:windowExitAnimation">@anim/pup_dialog_out_anim</item>
     </style>
 
-    <style name="meetting_datepicker_animstyle">
-        <item name="android:windowEnterAnimation">@anim/meetting_dialog_in_anim</item>
-        <item name="android:windowExitAnimation">@anim/meetting_dialog_out_anim</item>
-    </style>
 
     <style name="Transparent" parent="android:Theme.Light">
 
@@ -294,9 +275,6 @@
         <item name="android:button">@drawable/checkbox_style</item>
     </style>
 
-    <style name="SearchCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/search_check_style</item>
-    </style>
 
     <style name="imp_plugin_fullScreenDialog" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:backgroundDimEnabled">false</item>
@@ -310,11 +288,6 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
-    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:backgroundDimAmount">0.6</item>
-        <item name="android:windowBackground">@color/react_native_big_bg</item>
-    </style>
 
     <style name="dialog_activity" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -329,11 +302,6 @@
         <!-- 模糊 -->
         <item name="android:windowBackground">@null</item>
         <!-- 背景透明 -->
-    </style>
-
-    <style name="SplashTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <declare-styleable name="RxCardStackView">

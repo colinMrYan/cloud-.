@@ -1,14 +1,13 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
@@ -36,10 +35,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 /**
  * Created by chenmch on 2019/4/6.
  */
@@ -49,14 +44,10 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
 
     private static String EXTRA_IS_HISTORY_MEETING = "is_history_meeting";
 
-    @BindView(R.id.swipe_refresh_layout)
-    MySwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.lv_view_meeting)
-    ListView meetingListView;
-    @BindView(R.id.ev_search)
-    ClearEditText searchEdit;
-    @BindView(R.id.rl_meeting_list_default)
-    RelativeLayout meetingListDefaultLayout;
+    private MySwipeRefreshLayout swipeRefreshLayout;
+    private ListView meetingListView;
+    private ClearEditText searchEdit;
+    private LinearLayout meetingListDefaultLayout;
     private ScheduleMeetingListAdapter scheduleMeetingListAdapter;
     private List<Meeting> meetingList = new ArrayList<>();
     private List<Meeting> uiMeetingList = new ArrayList<>();
@@ -65,29 +56,24 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     private int currentPageSize = 50;
     private boolean isPullUp = false;
     private boolean isHistoryMeeting = false;
+    private View rootView;
+
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_meeting, null);
         if (getArguments() != null) {
             isHistoryMeeting = getArguments().getBoolean(EXTRA_IS_HISTORY_MEETING, false);
         }
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_schedule_meeting, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
+        meetingListView = rootView.findViewById(R.id.lv_view_meeting);
+        searchEdit = rootView.findViewById(R.id.ev_search);
+        meetingListDefaultLayout = rootView.findViewById(R.id.rl_meeting_list_default);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setOnLoadListener(this);
-        if (isHistoryMeeting){
+        if (isHistoryMeeting) {
             swipeRefreshLayout.setCanLoadMore(true);
         }
         scheduleMeetingListAdapter = new ScheduleMeetingListAdapter(getActivity());
@@ -114,6 +100,20 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         });
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater
+                    .inflate(R.layout.fragment_schedule_meeting, container, false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
+    }
+
     private void searchMeeting(Editable s) {
         String searchContent = s.toString();
         uiMeetingList.clear();
@@ -124,7 +124,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         }
         scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
         scheduleMeetingListAdapter.notifyDataSetChanged();
-        meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
+        meetingListDefaultLayout.setVisibility(uiMeetingList.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -157,7 +157,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         getMeetingList();
     }
 
-    @OnClick(R.id.rl_meeting_search)
+    @Event(value = R.id.rl_meeting_search)
     public void onClick(View view) {
 
     }
@@ -169,15 +169,15 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     }
 
     public void getMeetingList() {
-        if (isHistoryMeeting){
+        if (isHistoryMeeting) {
             getMeetingHistoryListByPage(pageNum);
-        }else{
+        } else {
             getMeetingListByStartTime();
         }
     }
 
     private void getMeetingListByStartTime() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             long startTime = TimeUtils.getDayBeginCalendar(Calendar.getInstance()).getTimeInMillis();
             swipeRefreshLayout.setRefreshing(true);
             apiService.getMeetingListByTime(startTime);
@@ -187,7 +187,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
     }
 
     private void getMeetingHistoryListByPage(int page) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             apiService.getMeetingHistoryListByPage(page);
         } else {
             swipeRefreshLayout.setCanLoadMore(false);
@@ -203,7 +203,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             uiMeetingList.addAll(meetingList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
-            meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
+            meetingListDefaultLayout.setVisibility(uiMeetingList.size() > 0 ? View.GONE : View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setCanLoadMore(false);
             swipeRefreshLayout.setLoading(false);
@@ -232,7 +232,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
             uiMeetingList.addAll(meetingHistoryList);
             scheduleMeetingListAdapter.setMeetingList(uiMeetingList);
             scheduleMeetingListAdapter.notifyDataSetChanged();
-            meetingListDefaultLayout.setVisibility(uiMeetingList.size()>0?View.GONE:View.VISIBLE);
+            meetingListDefaultLayout.setVisibility(uiMeetingList.size() > 0 ? View.GONE : View.VISIBLE);
             pageNum++;
         }
 
