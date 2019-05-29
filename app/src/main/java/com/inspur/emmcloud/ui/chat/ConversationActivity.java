@@ -58,6 +58,7 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
@@ -446,7 +447,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
                 Message message = uiMessage.getMessage();
-                switch (message.getType()){
+                switch (message.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                         Bundle bundle = new Bundle();
@@ -1430,6 +1431,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 break;
@@ -1570,7 +1572,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                                     addTextToSchedule(content);
                                 break;
                             case R.string.chat_long_click_copy_text:
-                                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
+                                content = copyToClipboardContentOptimized(context, uiMessage);
                                 if (!StringUtils.isBlank(content))
                                     copyToClipboard(context, content);
                                 break;
@@ -1579,6 +1581,26 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                 })
                 .create(R.style.QMUI_Dialog).show();
+    }
+
+    private String copyToClipboardContentOptimized(Context context, final UIMessage uiMessage) {
+        String content = null;
+        switch (uiMessage.getMessage().getType()) {
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(
+                        MyApplication.getInstance(),
+                        uiMessage.getMessage().getMsgContentTextMarkdown().getText(),
+                        uiMessage.getMessage().getMsgContentTextMarkdown().getMentionsMap());
+                content = spannableString.toString();
+                if (!StringUtils.isBlank(content)) {
+                    content = MarkDown.fromMarkdown(content);
+                }
+                break;
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
+                break;
+        }
+        return content;
     }
 
     /**
