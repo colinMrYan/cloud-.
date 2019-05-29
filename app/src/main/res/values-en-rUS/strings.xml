@@ -359,10 +359,10 @@
     <string name="work_search_hint">Search calendars, tasks</string>
     <string name="work_mession">Task</string>
     <string name="work_schedule">Schedule</string>
-    <string name="work_task_mine">Created</string>
-    <string name="work_task_involved">Involved</string>
-    <string name="work_task_focused">Focused</string>
-    <string name="work_task_done">Finished</string>
+    <string name="work_task_mine">Mine</string>
+    <string name="work_task_involved">Participant</string>
+    <string name="work_task_focused">Attention</string>
+    <string name="work_task_done">Completed</string>
     <string name="work_task_all">Whole</string>
     <string name="work_task_end">%1$s End</string>
 
