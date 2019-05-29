@@ -131,7 +131,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void onCreate() {
         super.onCreate();
         init();
-        LogUtils.isDebug = true;
+        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
