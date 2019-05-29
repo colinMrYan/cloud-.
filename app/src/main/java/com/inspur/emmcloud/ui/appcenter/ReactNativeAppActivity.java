@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import java.io.File;
+import android.content.Intent;
+import android.os.Bundle;
 
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.BuildConfig;
@@ -17,13 +18,13 @@ import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -45,8 +46,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 import com.reactnativenavigation.bridge.NavigationReactPackage;
 
-import android.content.Intent;
-import android.os.Bundle;
+import java.io.File;
 
 /**
  * Created by yufuchang on 2017/3/15.

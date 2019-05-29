@@ -6,7 +6,7 @@ import android.util.Base64;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MailApiService;
-import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity;
 import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.util.common.EncryptUtils;

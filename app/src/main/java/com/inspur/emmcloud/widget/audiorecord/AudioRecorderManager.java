@@ -5,7 +5,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Environment;
 
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 

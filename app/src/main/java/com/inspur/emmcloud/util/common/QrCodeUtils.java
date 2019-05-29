@@ -19,7 +19,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.config.MyAppConfig;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

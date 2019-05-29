@@ -1,19 +1,5 @@
 package com.inspur.emmcloud;
 
-import java.util.List;
-
-import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
-
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,10 +11,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.widget.dialogs.MyDialog;
+
+import java.util.List;
 
 public abstract class BaseFragmentActivity extends FragmentActivity {
     @Override

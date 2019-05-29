@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.chat.Channel;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;

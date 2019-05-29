@@ -1,12 +1,12 @@
 /**
  * MyAppConfig.java
- * classes : com.inspur.emmcloud.basemodule.config.MyAppConfig
+ * classes : com.inspur.emmcloud.config.MyAppConfig
  *
  * @author Jason Chen
  * V 1.0.0
  * Create at 2016年8月23日 上午10:00:28
  */
-package com.inspur.emmcloud.basemodule.config;
+package com.inspur.emmcloud.config;
 
 import android.content.Context;
 import android.os.Environment;
@@ -19,7 +19,7 @@ import java.util.Map;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * com.inspur.emmcloud.basemodule.config.MyAppConfig
+ * com.inspur.emmcloud.config.MyAppConfig
  *
  * @author Jason Chen; create at 2016年8月23日 上午10:00:28
  */

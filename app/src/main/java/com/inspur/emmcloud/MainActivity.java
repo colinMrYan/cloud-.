@@ -1,13 +1,22 @@
 package com.inspur.emmcloud;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
@@ -31,20 +40,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import android.content.ComponentName;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

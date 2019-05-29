@@ -1,15 +1,18 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.List;
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.EnterpriseAdapter;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -21,10 +24,7 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import android.content.Intent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.RelativeLayout;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -5,17 +5,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
@@ -30,9 +28,6 @@ import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
-import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
-import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
@@ -42,8 +37,6 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.MailLoginUtils;
@@ -69,26 +62,33 @@ import java.util.regex.Pattern;
  */
 
 public class SchemeHandleActivity extends BaseActivity {
+    private boolean isFirst = true;
 
     @Override
     public void onCreate() {
-        if (isLackNecessaryPermission()) {
-            return;
-        }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (MyApplication.getInstance().isSafeLock()) {
+        //因为MyActivityLifecycleCallbacks需要在onActivityStarted的时候处理二次验证问题，所有openScheme
+        // 需要在onStart中执行，同时要防止onStart方法多次执行
+        if (isFirst) {
             if (MyApplication.getInstance().isSafeLock()) {
-                EventBus.getDefault().register(this);
+                if (MyApplication.getInstance().isSafeLock()) {
+                    if (!EventBus.getDefault().isRegistered(this)) {
+                        EventBus.getDefault().register(this);
+                    }
+                } else {
+                    openScheme();
+                }
             } else {
                 openScheme();
             }
-        } else {
-            openScheme();
+            isFirst = false;
         }
+
     }
 
     @Override
@@ -101,50 +101,17 @@ public class SchemeHandleActivity extends BaseActivity {
         return STATUS_TRANSPARENT;
     }
 
-    private boolean isLackNecessaryPermission() {
-        //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
-        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
-            Intent intent = new Intent(SchemeHandleActivity.this, MainActivity.class);
-            startActivity(intent);
-            MyApplication.getInstance().closeOtherActivity(MainActivity.class.getSimpleName());
-            return true;
-        }
-        return false;
-    }
-
-
     @Override
     protected void onNewIntent(Intent intent) {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        if (isLackNecessaryPermission()) {
-            return;
-        }
-        new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
-            @Override
-            public void execute() {
-                if (MyApplication.getInstance().getOPenNotification()) {
-                    MyApplication.getInstance().setOpenNotification(false);
-                    if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
-                        MyApplication.getInstance().setIsActive(true);
-                        faceVerify();
-                        return;
-                    } else if (getIsNeedGestureCode()) {
-                        MyApplication.getInstance().setIsActive(true);
-                        gestureVerify();
-                        return;
-                    }
-                }
-                openScheme();
-            }
-        }).initProfile();
+        openScheme();
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
+    public void onReceiveSafeUnLockMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
             new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
                 @Override
@@ -155,20 +122,6 @@ public class SchemeHandleActivity extends BaseActivity {
 
         }
     }
-
-    private void faceVerify() {
-        Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
-        intent.putExtra("isFaceVerifyExperience", false);
-        startActivity(intent);
-    }
-
-    private void gestureVerify() {
-        Intent intent = new Intent(this, GestureLoginActivity.class);
-        intent.putExtra("gesture_code_change", "login");
-        startActivity(intent);
-    }
-
-
 
     /**
      * 打开具体的要么
@@ -397,14 +350,6 @@ public class SchemeHandleActivity extends BaseActivity {
         finish();
     }
 
-    /**
-     * 是否应该显示显示手势解锁
-     *
-     * @return
-     */
-    private boolean getIsNeedGestureCode() {
-        return CreateGestureActivity.getGestureCodeIsOpenByUser(this);
-    }
 
 
     /**

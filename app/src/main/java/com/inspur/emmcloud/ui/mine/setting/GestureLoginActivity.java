@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,8 +11,8 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
@@ -26,13 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.TextView;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -29,7 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;

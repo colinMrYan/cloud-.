@@ -1,34 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import java.io.File;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VolumeFileAdapter;
-import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
-import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
-import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
-import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
-import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
-import com.inspur.imp.util.compressor.Compressor;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +18,35 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.VolumeFileAdapter;
+import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
+import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
+import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.inspur.imp.util.compressor.Compressor;
+
+import java.io.File;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 

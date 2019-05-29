@@ -1,9 +1,14 @@
 package com.inspur.emmcloud.ui.login;
 
+import android.content.Intent;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.login.LoginMoreBean;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.find.ScanResultActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -14,11 +19,6 @@ import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
-
-import android.content.Intent;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

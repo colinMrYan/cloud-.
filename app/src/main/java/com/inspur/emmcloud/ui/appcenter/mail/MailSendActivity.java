@@ -1,7 +1,18 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.Html;
+import android.text.SpannableString;
+import android.view.View;
+import android.webkit.WebSettings;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
@@ -9,7 +20,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MailApiService;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailRecipient;
@@ -18,6 +28,7 @@ import com.inspur.emmcloud.bean.appcenter.mail.MailSend;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.util.common.EncryptUtils;
@@ -36,19 +47,8 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.Html;
-import android.text.SpannableString;
-import android.view.View;
-import android.webkit.WebSettings;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

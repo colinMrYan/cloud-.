@@ -1,8 +1,11 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -10,11 +13,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -26,12 +29,9 @@ import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.View;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.io.File;

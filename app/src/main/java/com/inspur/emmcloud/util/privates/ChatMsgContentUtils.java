@@ -4,8 +4,8 @@ import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
 
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.spans.URLClickableSpan;

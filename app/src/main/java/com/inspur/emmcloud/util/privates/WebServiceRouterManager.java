@@ -3,10 +3,10 @@ package com.inspur.emmcloud.util.privates;
 import android.net.Uri;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.login.ClusterBean;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 

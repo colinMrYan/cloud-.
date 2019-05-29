@@ -1,35 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.File;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
-import com.inspur.emmcloud.api.APIDownloadCallBack;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.bean.chat.GroupFileInfo;
-import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
-
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -46,6 +16,36 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.chat.GroupFileInfo;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
+import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
+
+import java.io.File;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

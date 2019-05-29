@@ -1,20 +1,20 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import android.content.Intent;
+import android.text.InputType;
+import android.util.Base64;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MailApiService;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.EncryptUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -27,13 +27,13 @@ import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import android.content.Intent;
-import android.text.InputType;
-import android.util.Base64;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

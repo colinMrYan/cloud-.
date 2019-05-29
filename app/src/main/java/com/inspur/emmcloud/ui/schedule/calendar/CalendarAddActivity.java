@@ -1,23 +1,27 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -35,15 +39,11 @@ import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import android.content.Intent;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Switch;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

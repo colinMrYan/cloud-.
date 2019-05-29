@@ -4,11 +4,11 @@ import android.content.Context;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 

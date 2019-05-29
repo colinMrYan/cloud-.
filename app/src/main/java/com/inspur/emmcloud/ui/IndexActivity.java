@@ -1,13 +1,7 @@
 package com.inspur.emmcloud.ui;
 
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -20,7 +14,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
@@ -33,6 +26,7 @@ import com.inspur.emmcloud.bean.system.ClientConfigItem;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -60,6 +54,12 @@ import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 /**
  * 主页面

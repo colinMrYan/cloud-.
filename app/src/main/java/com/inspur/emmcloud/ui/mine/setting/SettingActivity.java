@@ -1,10 +1,20 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -13,8 +23,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.Language;
@@ -22,6 +30,8 @@ import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -51,21 +61,11 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Switch;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

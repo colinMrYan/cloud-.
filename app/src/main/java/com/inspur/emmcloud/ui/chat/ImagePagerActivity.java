@@ -1,32 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import com.inspur.emmcloud.BaseFragmentActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.GetMessageCommentCountResult;
-import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
-import com.inspur.emmcloud.widget.HackyViewPager;
-import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -43,6 +16,33 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseFragmentActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.GetMessageCommentCountResult;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
+import com.inspur.emmcloud.widget.HackyViewPager;
+import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**

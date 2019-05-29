@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.privates.AppUtils;
 
 /**

@@ -1,13 +1,14 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -15,7 +16,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.Location;
@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
@@ -45,15 +46,14 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

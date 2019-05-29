@@ -1,20 +1,5 @@
 package com.inspur.emmcloud.ui.find;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIDownloadCallBack;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +8,21 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
+import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 文档页面 com.inspur.emmcloud.ui.DocumentActivity create at 2016年9月5日 上午10:03:42

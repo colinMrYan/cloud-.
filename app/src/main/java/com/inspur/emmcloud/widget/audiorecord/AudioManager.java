@@ -2,7 +2,7 @@ package com.inspur.emmcloud.widget.audiorecord;
 
 import android.media.MediaRecorder;
 
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.config.MyAppConfig;
 
 import java.io.File;
 import java.io.IOException;

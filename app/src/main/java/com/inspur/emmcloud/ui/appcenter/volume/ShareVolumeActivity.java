@@ -1,37 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.Volume;
-import com.inspur.emmcloud.bean.system.ClearShareDataBean;
-import com.inspur.emmcloud.util.common.FomatUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -48,6 +16,38 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.bean.system.ClearShareDataBean;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FomatUtils;
+import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

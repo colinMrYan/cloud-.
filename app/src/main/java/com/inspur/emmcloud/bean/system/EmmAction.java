@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.system;
 
-import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 

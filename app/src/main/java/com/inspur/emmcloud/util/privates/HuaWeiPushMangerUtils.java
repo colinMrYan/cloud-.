@@ -11,7 +11,7 @@ import com.huawei.hms.api.HuaweiApiClient.OnConnectionFailedListener;
 import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
-import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
