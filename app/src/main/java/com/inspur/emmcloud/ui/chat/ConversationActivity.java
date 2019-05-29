@@ -803,7 +803,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                             if (channelGroupArray.length() > 0) {
                                 JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
                                 String cid = JSONUtils.getString(cidObj, "cid", "");
-                                transmitTextMsg(cid, backUiMessage.getMessage());
+                                transmitTextMsg(cid, backUiMessage);
                             }
                         }
                     }
@@ -1374,10 +1374,13 @@ public class ConversationActivity extends ConversationBaseActivity {
         String msgType = uiMessage.getMessage().getType();
         switch (msgType) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                transmitTextMsg(cid, uiMessage.getMessage());
+                transmitTextMsg(cid, uiMessage);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 //  transmitImgMsg(cid, uiMessage.getMessage());
+                break;
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                transmitTextMsg(cid, uiMessage);
                 break;
             default:
                 break;
@@ -1389,10 +1392,8 @@ public class ConversationActivity extends ConversationBaseActivity {
      *
      * @param cid
      */
-    private void transmitTextMsg(String cid, Message sendMessage) {
-        String text = sendMessage.getMsgContentTextPlain().getText();
-        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(ConversationActivity.this, text, sendMessage.getMsgContentTextPlain().getMentionsMap());
-        text = spannableString.toString();
+    private void transmitTextMsg(String cid, UIMessage uiMessage) {
+        String text = uiMessage2Content(uiMessage);
         if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
             if (MyApplication.getInstance().isV0VersionChat()) {
             } else {
@@ -1551,7 +1552,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
-                        content = copyToClipboardContentOptimized(context, uiMessage);
+                        content = uiMessage2Content(uiMessage);
                         if (StringUtils.isBlank(content)) {
                             content = "";
                         }
@@ -1575,7 +1576,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 .create(R.style.QMUI_Dialog).show();
     }
 
-    private String copyToClipboardContentOptimized(Context context, final UIMessage uiMessage) {
+    private String uiMessage2Content(UIMessage uiMessage) {
         String content = null;
         switch (uiMessage.getMessage().getType()) {
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
@@ -1590,7 +1591,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 break;
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
                 String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
-                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text,
+                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), text,
                         uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
                 content = spannableString.toString();
                 break;
