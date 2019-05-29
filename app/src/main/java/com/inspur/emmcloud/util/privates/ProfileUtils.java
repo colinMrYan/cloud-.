@@ -81,7 +81,7 @@ public class ProfileUtils {
     private void showPromptDialog() {
         //当强制更新或者统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
         if (!MyApplication.getInstance().isIndexActivityRunning() && isForceUpdateProfile()) {
-            final Dialog dialog = new MyDialog(activity, R.layout.dialog_one_button);
+            final Dialog dialog = new MyDialog(activity, R.layout.basewidget_dialog_one_button);
             dialog.setCancelable(false);
             ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.net_work_fail);
             dialog.findViewById(R.id.ok_btn).setOnClickListener(new View.OnClickListener() {

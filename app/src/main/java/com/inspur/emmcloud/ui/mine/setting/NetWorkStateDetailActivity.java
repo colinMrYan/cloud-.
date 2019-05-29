@@ -1,13 +1,11 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.graphics.drawable.Drawable;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -21,12 +19,14 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
+import android.graphics.drawable.Drawable;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  * Created by libaochao on 2018/11/8.
@@ -64,9 +64,13 @@ public class NetWorkStateDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onCreate() {
         checkingNetStateUtils = new CheckingNetStateUtils(this);
         iniView();
-        EventBus.getDefault().register(this);
     }
 
     @Override

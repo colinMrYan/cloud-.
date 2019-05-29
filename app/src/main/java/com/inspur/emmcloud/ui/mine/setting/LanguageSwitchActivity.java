@@ -39,12 +39,8 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
     private LoadingDialog loadingDlg;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         listView = (ListView) findViewById(R.id.lv);
-        setContentView(R.layout.activity_mine_language_switch);
-        listView =  findViewById(R.id.lv);
         loadingDlg = new LoadingDialog(this);
         getLanguageList();
     }

@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -16,6 +10,12 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+
 public class ScanQrCodeLoginGSActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
 
@@ -23,6 +23,10 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         loadingDlg = new LoadingDialog(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
     }

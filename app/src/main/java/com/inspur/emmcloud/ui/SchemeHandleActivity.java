@@ -71,8 +71,7 @@ import java.util.regex.Pattern;
 public class SchemeHandleActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         if (isLackNecessaryPermission()) {
             return;
         }

@@ -1,15 +1,7 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -20,8 +12,15 @@ import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,9 +38,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
     private int selectPosition = -1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         initView();
     }

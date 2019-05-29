@@ -1,12 +1,10 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -23,11 +21,13 @@ import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 
@@ -58,11 +58,10 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private List<Uri> shareUriList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        super.onCreate();
         isFunctionCopy = getIntent().getBooleanExtra("isFunctionCopy", true);
         initViews();
-
     }
 
     private void initViews() {

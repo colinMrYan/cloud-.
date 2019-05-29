@@ -1,6 +1,17 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
-import android.os.Bundle;
+import java.util.ArrayList;
+
+import org.greenrobot.eventbus.EventBus;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.schedule.task.MessionSetModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +53,7 @@ public class TaskSetActivity extends BaseActivity {
     private ArrayList<MessionSetModel> taskSetModel = new ArrayList<MessionSetModel>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         initViews();
     }

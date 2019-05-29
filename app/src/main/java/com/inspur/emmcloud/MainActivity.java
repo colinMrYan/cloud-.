@@ -1,19 +1,7 @@
 package com.inspur.emmcloud;
 
-import android.content.ComponentName;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -24,15 +12,10 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
@@ -41,7 +24,6 @@ import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.imp.api.Res;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -52,6 +34,17 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,16 +76,15 @@ public class MainActivity extends BaseActivity {
     private Timer timer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
-        //解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
+        // 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }
         initAppAlias();
-        checkNecessaryPermission();
+        init();
     }
 
     @Override
@@ -120,48 +112,6 @@ public class MainActivity extends BaseActivity {
                             MainActivity.this, getPackageName() + "." + appFirstLoadAlis),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
-        }
-    }
-
-    private void checkNecessaryPermission() {
-        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
-        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
-            final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
-            permissionDialog.setDimAmount(0.2f);
-            permissionDialog.setCancelable(false);
-            permissionDialog.setCanceledOnTouchOutside(false);
-            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE) ? View.VISIBLE : View.GONE);
-            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE) ? View.VISIBLE : View.GONE);
-            if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
-                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE)) {
-                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
-                layout.setLayoutParams(params);
-            }
-            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
-            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
-            permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    permissionDialog.dismiss();
-                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(MainActivity.this, necessaryPermissionArray, new PermissionRequestCallback() {
-                        @Override
-                        public void onPermissionRequestSuccess(List<String> permissions) {
-                            init();
-                        }
-
-                        @Override
-                        public void onPermissionRequestFail(List<String> permissions) {
-                            ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this, permissions));
-                            MyApplication.getInstance().exit();
-                        }
-                    });
-                }
-            });
-            permissionDialog.show();
-        } else {
-            init();
         }
     }
 

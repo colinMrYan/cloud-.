@@ -45,11 +45,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     @Override
     public void onActivityStarted(Activity activity) {
         currentActivity = activity;
-        //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
-        if (isLackNecessaryPermission()) {
-            count++;
-            return;
-        }
         if (count == 0) {
             MyApplication.getInstance().setIsActive(true);
             if (!isLackNecessaryPermission() && MyApplication.getInstance().isHaveLogin()) {
@@ -66,19 +61,21 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     }
 
-    private boolean isLackNecessaryPermission() {
-        //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
-        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
-            if (!(currentActivity instanceof MainActivity || currentActivity instanceof EmmPermissionActivity)) {
-                Intent intent = new Intent(currentActivity, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                currentActivity.startActivity(intent);
-            }
-            return true;
-        }
-        return false;
-    }
+    // private boolean isLackNecessaryPermission() {
+    // //如果没有存储权限则跳转到MainActivity进行处理
+    // String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new
+    // String[]{Permissions.READ_PHONE_STATE});
+    // if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(),
+    // necessaryPermissionArray)) {
+    // if (!(currentActivity instanceof MainActivity || currentActivity instanceof EmmPermissionActivity)) {
+    // Intent intent = new Intent(currentActivity, MainActivity.class);
+    // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    // currentActivity.startActivity(intent);
+    // }
+    // return true;
+    // }
+    // return false;
+    // }
 
 
     @Override
@@ -104,6 +101,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
         }
     }
+
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {

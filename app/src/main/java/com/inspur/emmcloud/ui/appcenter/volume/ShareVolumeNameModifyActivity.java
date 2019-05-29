@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.InputFilter;
-import android.view.View;
-import android.widget.TextView;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -21,6 +15,11 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import android.content.Intent;
+import android.text.InputFilter;
+import android.view.View;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,10 +40,9 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     private Group group;
     private boolean isVolumeNameModify = false;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         if (getIntent().hasExtra("volume")) {
             isVolumeNameModify = true;

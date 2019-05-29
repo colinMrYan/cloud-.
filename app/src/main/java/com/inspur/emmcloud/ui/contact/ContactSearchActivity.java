@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.ui.contact;
 
-import android.os.Bundle;
-
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
 
@@ -15,8 +13,7 @@ public class ContactSearchActivity extends BaseFragmentActivity {
     private ContactSearchFragment fragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         setContentView(R.layout.activity_contact_search_hold);
         //必需继承FragmentActivity,嵌套fragment只需要这行代码
         fragment = new ContactSearchFragment();

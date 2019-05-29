@@ -30,7 +30,7 @@ public class LoadingDialog extends Dialog {
         this.setCancelable(false);
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.dialog_loading, null);
+        View view = inflater.inflate(R.layout.basewidget_dialog_loading, null);
         loadtext = (TextView) view.findViewById(R.id.loading_text);
         loadtext.setText(text);
         setContentView(view);

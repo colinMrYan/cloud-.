@@ -1,11 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -15,7 +10,11 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 
-import org.greenrobot.eventbus.EventBus;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +32,7 @@ public class MailSettingActivity extends BaseActivity {
     ImageButton mailPasswordVisibleImgBtn;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         String password = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");

@@ -104,6 +104,10 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             ToastUtils.show(this, R.string.filetransfer_sd_not_exist);

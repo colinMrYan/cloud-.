@@ -1,25 +1,14 @@
 package com.inspur.emmcloud.ui;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Configuration;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TextView;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -60,19 +49,30 @@ import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
-import com.inspur.emmcloud.widget.dialogs.WhiteListDialog;
+import com.inspur.emmcloud.widget.dialogs.ConfirmDialog;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,12 +95,11 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     private String tabId = "";
     // protected ConnectivityManager.NetworkCallback networkCallback;
     // protected ConnectivityManager connectivityManager;
-    private WhiteListDialog confirmDialog;
+    private ConfirmDialog confirmDialog;
     private ArrayList<MainTabResult> mainTabResultList = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         setContentView(R.layout.activity_index);
         ButterKnife.bind(this);
         clearOldMainTabData();
@@ -112,7 +111,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //super.onSaveInstanceState(outState);
+        // super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -313,9 +312,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
                 boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
                 if (!hasIgnored) {
-                    confirmDialog = new WhiteListDialog(context, R.string.white_list_tip_content,
+                    confirmDialog = new ConfirmDialog(context, R.string.white_list_tip_content,
                             R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
-                    confirmDialog.setClicklistener(new WhiteListDialog.ClickListenerInterface() {
+                    confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
                         @Override
                         public void doConfirm() {
                             if (confirmDialog.getIsHide()) {

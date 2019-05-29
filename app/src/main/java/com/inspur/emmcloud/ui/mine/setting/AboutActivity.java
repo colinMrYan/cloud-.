@@ -1,13 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -21,6 +13,14 @@ import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,9 +46,7 @@ public class AboutActivity extends BaseActivity {
     private Handler handler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         String version = AppUtils.getVersion(this).replace("beta", "b");
         appVersionText.setText(AppUtils.getAppName(this) + "  " + version);

@@ -1,29 +1,13 @@
 package com.inspur.emmcloud.ui.contact;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -55,14 +39,29 @@ import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRefreshLayout.OnLoadListener {
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
@@ -96,11 +95,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
     private int selectLimit = 5000;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         setContentView(R.layout.activity_contact_search_more);
         handMessage();
         initView();

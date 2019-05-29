@@ -1,13 +1,9 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
-import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -20,10 +16,13 @@ import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.support.v7.widget.SwitchCompat;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,9 +43,7 @@ public class CalendarSettingActivity extends BaseActivity {
     private CalendarAdapter calendarAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         String viewDisplayType = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);

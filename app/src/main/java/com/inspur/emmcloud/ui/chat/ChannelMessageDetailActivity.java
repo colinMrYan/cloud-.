@@ -1,20 +1,13 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.SpannableString;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -49,14 +42,21 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.SpannableString;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 
 /**
@@ -88,6 +88,10 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onCreate() {
         initView();
         initData();
     }

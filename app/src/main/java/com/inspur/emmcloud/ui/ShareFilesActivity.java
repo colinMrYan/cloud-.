@@ -1,14 +1,12 @@
 package com.inspur.emmcloud.ui;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -34,13 +32,15 @@ import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,8 +64,7 @@ public class ShareFilesActivity extends BaseActivity {
     private List<String> uriList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
         if (!isImageUriList(uriList)) {
