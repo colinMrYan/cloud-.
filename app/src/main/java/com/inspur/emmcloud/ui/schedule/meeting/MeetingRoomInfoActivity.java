@@ -1,18 +1,17 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -40,18 +39,19 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 @ContentView(R.layout.activity_meeting_room_info)
 public class MeetingRoomInfoActivity extends BaseActivity {
@@ -286,6 +286,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             }
         });
         viewPager.setCurrentItem(0);
+        tabLayout.getTabAt(0).select();
     }
 
 
