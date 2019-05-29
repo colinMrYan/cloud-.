@@ -1551,28 +1551,22 @@ public class ConversationActivity extends ConversationBaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
-                        Message message = uiMessage.getMessage();
-                        SpannableString spannableString;
+                        content = copyToClipboardContentOptimized(context, uiMessage);
+                        if (StringUtils.isBlank(content)) {
+                            content = "";
+                        }
                         switch (operationsId[which]) {
                             case R.string.chat_long_click_copy:
-                                content = copyToClipboardContentOptimized(context, uiMessage);
-                                if (!StringUtils.isBlank(content))
-                                    copyToClipboard(context, content);
+                                copyToClipboard(context, content);
                                 break;
                             case R.string.chat_long_click_transmit:
                                 shareMessageToFrinds(context);
                                 break;
                             case R.string.chat_long_click_schedule:
-                                content = message.getMsgContentTextPlain().getText();
-                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, content, message.getMsgContentTextPlain().getMentionsMap());
-                                content = spannableString.toString();
-                                if (!StringUtils.isBlank(content))
-                                    addTextToSchedule(content);
+                                addTextToSchedule(content);
                                 break;
                             case R.string.chat_long_click_copy_text:
-                                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
-                                if (!StringUtils.isBlank(content))
-                                    copyToClipboard(context, content);
+                                copyToClipboard(context, content);
                                 break;
                         }
                         dialog.dismiss();
