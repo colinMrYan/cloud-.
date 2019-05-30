@@ -27,6 +27,7 @@ public class CheckingNetStateUtils {
     private Context context;
 
     private String[] urls;
+    private String[] httpUrls;
 
     /**
      * 针对单个Url 检测通断的发送处理结果
@@ -40,7 +41,7 @@ public class CheckingNetStateUtils {
             super.handleMessage(msg);
         }
     };
-
+    private List<PingUrlAndConnectState> pingUrlAndConnectStates = new ArrayList<>();
     /**
      * 发送最终的网络异常状态
      */
@@ -58,20 +59,22 @@ public class CheckingNetStateUtils {
         }
     };
 
-
-    private List<PingUrlAndConnectState> pingUrlAndConnectStates = new ArrayList<>();
-
     public CheckingNetStateUtils(Context context) {
         this.context = context;
     }
 
-    public CheckingNetStateUtils(Context context, String[] Urls) {
+    public CheckingNetStateUtils(Context context, String[] Urls, String[] httpUrls) {
         this.context = context;
         for (int i = 0; i < Urls.length; i++) {
             PingUrlAndConnectState pingUrlAndConnectState = new PingUrlAndConnectState(Urls[i]);
             pingUrlAndConnectStates.add(pingUrlAndConnectState);
         }
+        for (int i = 0; i < httpUrls.length; i++) {
+            PingUrlAndConnectState pingUrlAndConnectState = new PingUrlAndConnectState(httpUrls[i]);
+            pingUrlAndConnectStates.add(pingUrlAndConnectState);
+        }
         this.urls = Urls;
+        this.httpUrls = httpUrls;
     }
 
     /**
@@ -104,14 +107,14 @@ public class CheckingNetStateUtils {
                }
            } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && !NetUtils.isVpnConnected()) {
                clearUrlsStates();
-               CheckNetPingThreadStartForHint(urls, timeout, action, handlerNetHint);
+               // CheckNetPingThreadStartForHint(urls, timeout, action, handlerNetHint);
+               CheckNetPingAndHttpThreadStartForHint(urls, httpUrls, timeout, action, handlerNetHint);
            } else if (isAppOnForeground) {
                PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", false);
                Message message = new Message();
                message.obj = pingActionState;
                handlerNetHint.sendMessage(message);
            }
-
        }catch (Exception e){
            e.printStackTrace();
        }
@@ -166,6 +169,32 @@ public class CheckingNetStateUtils {
                 }
             }).start();
         }
+    }
+
+    /**
+     * Ping  网络通断状态检测（用于显示网络状态异常框）
+     */
+    public void CheckNetPingAndHttpThreadStartForHint(final String[] StrUrl, final String[] httpUrls, final int WaiteTime, final String eventBusAction, final Handler handlerHint) {
+        for (int i = 0; i < StrUrl.length; i++) {
+            final int finalI = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        PingNetEntity pingNetEntity = new PingNetEntity(StrUrl[finalI], 1, WaiteTime, new StringBuffer());
+                        pingNetEntity = NetUtils.ping(pingNetEntity, (long) WaiteTime);
+                        PingUrlStateAction pingUrlStateAction = new PingUrlStateAction(eventBusAction, StrUrl[finalI], pingNetEntity.isResult());
+                        Message message = new Message();
+                        message.obj = pingUrlStateAction;
+                        handlerHint.sendMessage(message);
+                        LogUtils.LbcDebug("Pinf发送网络EventBus事件:" + " Action" + eventBusAction + "URL" + StrUrl[finalI] + "状态" + pingNetEntity.isResult());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+        CheckNetHttpThreadStart(httpUrls);
     }
 
     /**
@@ -234,7 +263,7 @@ public class CheckingNetStateUtils {
                 @Override
                 public void run() {
                     LogUtils.LbcDebug("http 返回成功" + url);
-                    CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction("", url, true);
+                    CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, url, true);
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingUrlStateAction));
                 }
             });
@@ -246,7 +275,7 @@ public class CheckingNetStateUtils {
                 @Override
                 public void run() {
                     LogUtils.LbcDebug("http 返回失败");
-                    CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction("", url, false);
+                    CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, url, false);
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingUrlStateAction));
                 }
             });
