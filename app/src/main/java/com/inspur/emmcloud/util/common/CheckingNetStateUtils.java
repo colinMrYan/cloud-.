@@ -50,20 +50,20 @@ public class CheckingNetStateUtils {
         public void handleMessage(Message msg) {
             PingUrlStateAction pingUrlStateAction = (PingUrlStateAction) msg.obj;
             boolean ResultState = false;
-            if (StringUtils.isBlank(pingUrlStateAction.getUrl())) {
-                ResultState = pingUrlStateAction.isPingState();
-            } else {
-                ResultState = isPingConnectedNet(pingUrlStateAction.getUrl(), pingUrlStateAction.isPingState());
+            int netResult = getPingConnectedNet(pingUrlStateAction.getUrl(), pingUrlStateAction.isPingState());
+            if (netResult >= 0) {
+                if (netResult == 0) {
+                    ResultState = false;
+                } else if (netResult == 1) {
+                    ResultState = true;
+                }
+
+                if (!NetUtils.isNetworkConnected(context, false)) {
+                    ResultState = false;
+                }
+                EventBus.getDefault().post(new SimpleEventMessage(pingUrlStateAction.getAction(), ResultState));
             }
 
-            if (NetUtils.isNetworkConnected(context, false)) {
-//                if (WebSocketPush.getInstance().isSocketConnect()) {
-//                    ResultState = true;
-//                }
-            } else {
-                ResultState = false;
-            }
-            EventBus.getDefault().post(new SimpleEventMessage(pingUrlStateAction.getAction(), ResultState));
         }
     };
 
@@ -88,45 +88,45 @@ public class CheckingNetStateUtils {
     /**
      * 获取网络状态最终结果并显示于UI
      */
-    public void getNetStateResult( int timeout) {
-       final String action = Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT;
-       try {
-           Context context = MyApplication.getInstance();
-           ConnectivityManager conMan = (ConnectivityManager) context
-                   .getSystemService(Context.CONNECTIVITY_SERVICE);
-           NetworkInfo.State mobile = conMan.getNetworkInfo(
-                   ConnectivityManager.TYPE_MOBILE).getState();
-           NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-                   .getState();
-           boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
-           if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
-               if (isAppOnForeground) {
-                   PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
-                   Message message = new Message();
-                   message.obj = pingActionState;
-                   handlerNetHint.sendMessage(message);
-               }
-           } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && NetUtils.isVpnConnected()) {
-               if (isAppOnForeground) {
-                   PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
-                   Message message = new Message();
-                   message.obj = pingActionState;
-                   handlerNetHint.sendMessage(message);
-               }
-           } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && !NetUtils.isVpnConnected()) {
-               clearUrlsStates();
-               // CheckNetPingThreadStartForHint(urls, timeout, action, handlerNetHint);
-               CheckNetPingAndHttpThreadStartForHint(urls, httpUrls, timeout, action, handlerNetHint);
-           } else if (isAppOnForeground) {
-               PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", false);
-               Message message = new Message();
-               message.obj = pingActionState;
-               handlerNetHint.sendMessage(message);
-           }
+    public void getNetStateResult(int timeout) {
+        final String action = Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT;
+        try {
+            Context context = MyApplication.getInstance();
+            ConnectivityManager conMan = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo.State mobile = conMan.getNetworkInfo(
+                    ConnectivityManager.TYPE_MOBILE).getState();
+            NetworkInfo.State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+                    .getState();
+            boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
+            if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
+                if (isAppOnForeground) {
+                    PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
+                    Message message = new Message();
+                    message.obj = pingActionState;
+                    handlerNetHint.sendMessage(message);
+                }
+            } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && NetUtils.isVpnConnected()) {
+                if (isAppOnForeground) {
+                    PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
+                    Message message = new Message();
+                    message.obj = pingActionState;
+                    handlerNetHint.sendMessage(message);
+                }
+            } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && !NetUtils.isVpnConnected()) {
+                clearUrlsStates();
+                // CheckNetPingThreadStartForHint(urls, timeout, action, handlerNetHint);
+                CheckNetPingAndHttpThreadStartForHint(urls, httpUrls, timeout, action, handlerNetHint);
+            } else if (isAppOnForeground) {
+                PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", false);
+                Message message = new Message();
+                message.obj = pingActionState;
+                handlerNetHint.sendMessage(message);
+            }
 
-       }catch (Exception e){
-           e.printStackTrace();
-       }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -229,28 +229,40 @@ public class CheckingNetStateUtils {
             return false;
         }
     }
+    /***/
+
 
     /**
      * 多个Url 有一个连接即返回true
      */
-    public boolean isPingConnectedNet(String Url, boolean connectedState) {
+    public int getPingConnectedNet(String Url, boolean connectedState) {
         int isFalse = 0;
+        //检测1
+        for (int i = 0; i < pingUrlAndConnectStates.size(); i++) {
+            if (pingUrlAndConnectStates.get(i).getState() == 1) {
+                return -1;
+            }
+        }
+        //赋值
         for (int i = 0; i < pingUrlAndConnectStates.size(); i++) {
             if (Url.equals(pingUrlAndConnectStates.get(i).getUrl())) {
                 int intConnectedState = connectedState ? 1 : 0;
                 pingUrlAndConnectStates.get(i).setState(intConnectedState);
+                if (intConnectedState == 1) {
+                    return 1;
+                }
             }
         }
+        //求和，判定为0
+        int sum = 0;
         for (int i = 0; i < pingUrlAndConnectStates.size(); i++) {
-            if (1 == pingUrlAndConnectStates.get(i).getState()) {
-                return true;
-            }
-            isFalse = isFalse + pingUrlAndConnectStates.get(i).getState();
-            if (i == (pingUrlAndConnectStates.size() - 1) && (isFalse == 0)) {
-                return false;
-            }
+            sum = sum + pingUrlAndConnectStates.get(i).getState();
         }
-        return true;
+        if (sum == 0) {
+            return 0;
+        } else {
+            return -1;
+        }
     }
 
     /**
