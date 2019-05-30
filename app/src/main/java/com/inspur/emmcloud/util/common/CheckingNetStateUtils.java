@@ -53,6 +53,7 @@ public class CheckingNetStateUtils {
             if (StringUtils.isBlank(pingUrlStateAction.getUrl())) {
                 ResultState = pingUrlStateAction.isPingState();
             } else {
+                LogUtils.LbcDebug("url::" + pingUrlStateAction.getUrl() + "state::" + pingUrlStateAction.isPingState());
                 ResultState = isPingConnectedNet(pingUrlStateAction.getUrl(), pingUrlStateAction.isPingState());
             }
             EventBus.getDefault().post(new SimpleEventMessage(pingUrlStateAction.getAction(), ResultState));
@@ -259,11 +260,15 @@ public class CheckingNetStateUtils {
     public class WebHttpService extends APIInterfaceInstance {
         @Override
         public void returnCheckCloudPluseConnectionSuccess(byte[] arg0, final String url) {
+            CheckingNetStateUtils.PingUrlStateAction handlerUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, url, true);
+            Message message = new Message();
+            message.obj = handlerUrlStateAction;
+            handlerNetHint.sendMessage(message);
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
                     LogUtils.LbcDebug("http 返回成功" + url);
-                    CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, url, true);
+                    CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction("", url, true);
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingUrlStateAction));
                 }
             });
@@ -271,11 +276,15 @@ public class CheckingNetStateUtils {
 
         @Override
         public void returnCheckCloudPluseConnectionError(String error, int responseCode, final String url) {
+            CheckingNetStateUtils.PingUrlStateAction handlerUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, url, false);
+            Message message = new Message();
+            message.obj = handlerUrlStateAction;
+            handlerNetHint.sendMessage(message);
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
                     LogUtils.LbcDebug("http 返回失败");
-                    CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, url, false);
+                    CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction("", url, false);
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingUrlStateAction));
                 }
             });
