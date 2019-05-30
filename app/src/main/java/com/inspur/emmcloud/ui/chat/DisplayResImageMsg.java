@@ -15,12 +15,12 @@ import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
+import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.io.Serializable;
 import java.util.List;
@@ -44,7 +44,7 @@ public class DisplayResImageMsg {
                 R.layout.chat_msg_card_child_res_img_view, null);
         final RoundedImageView imageView = (RoundedImageView) cardContentView
                 .findViewById(R.id.content_img);
-        final QMUILoadingView loadingView = cardContentView.findViewById(R.id.qlv_downloading_left);
+        final CustomLoadingView loadingView = cardContentView.findViewById(R.id.qlv_downloading_left);
         final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
         String imageUri = JSONUtils.getString(msg.getBody(), "key", "");
         DisplayImageOptions options = new DisplayImageOptions.Builder()

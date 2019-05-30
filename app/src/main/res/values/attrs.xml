@@ -370,4 +370,48 @@
         <attr name="pstsScaleZoomMax" format="float" />
         <attr name="pstsSmoothScrollWhenClickTab" format="boolean" />
     </declare-styleable>
+
+    <attr name="CustomButtonStyle" format="reference" />
+
+    <attr name="cus_backgroundColor" format="color" />
+    <attr name="cus_borderColor" format="color" />
+    <attr name="cus_borderWidth" format="dimension" />
+    <!-- 圆角是否要自适应为 View 高度的一半 -->
+    <attr name="cus_isRadiusAdjustBounds" format="boolean" />
+    <!-- 同时指定四个方向的圆角大小 -->
+    <attr name="cus_radius" format="dimension" />
+    <!-- 指定左上方圆角的大小 -->
+    <attr name="cus_radiusTopLeft" format="dimension" />
+    <!-- 指定右上方圆角的大小 -->
+    <attr name="cus_radiusTopRight" format="dimension" />
+    <!-- 指定左下方圆角的大小 -->
+    <attr name="cus_radiusBottomLeft" format="dimension" />
+    <!-- 指定右下方圆角的大小 -->
+    <attr name="cus_radiusBottomRight" format="dimension" />
+    <declare-styleable name="CusRoundButton">
+        <attr name="cus_backgroundColor" />
+        <attr name="cus_borderColor" />
+        <attr name="cus_borderWidth" />
+        <attr name="cus_isRadiusAdjustBounds" />
+        <attr name="cus_radius" />
+        <attr name="cus_radiusTopLeft" />
+        <attr name="cus_radiusTopRight" />
+        <attr name="cus_radiusBottomLeft" />
+        <attr name="cus_radiusBottomRight" />
+    </declare-styleable>
+
+    <attr name="cus_content_padding_horizontal" format="dimension" />
+    <attr name="cus_content_spacing_horizontal" format="dimension" /> <!-- 内容通用水平间距 -->
+    <attr name="cus_round_btn_text_size" format="dimension" />
+    <attr name="cus_round_btn_border_width" format="dimension" />
+    <!-- android 5.0一下不能再selector中用?attr,必须要整个drawable由使用者提供 -->
+    <attr name="cus_round_btn_bg_color" format="color" />
+    <attr name="cus_round_btn_border_color" format="color" />
+    <attr name="cus_round_btn_text_color" format="color" />
+
+    <!--************ CustomLoading ***********-->
+    <declare-styleable name="CusLoadingView">
+        <attr name="cus_loading_view_size" format="dimension" />
+    </declare-styleable>
+    <attr name="CusLoadingStyle" format="reference" />
 </resources>

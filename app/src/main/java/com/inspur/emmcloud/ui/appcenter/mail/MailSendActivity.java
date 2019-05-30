@@ -32,9 +32,7 @@ import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollWebView;
 import com.inspur.emmcloud.widget.RichEdit;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -309,25 +307,19 @@ public class MailSendActivity extends BaseActivity {
     private void noSignOrEncryptHintDialog() {
         if (!myCertificate.isSignedMail() || !myCertificate.isEncryptedMail()) {
             String mailHint = "该邮件未" + (myCertificate.isSignedMail() ? "" : "加签") + (myCertificate.isEncryptedMail() ? "" : "加密") + "确定发送？";
-            new MyQMUIDialog.MessageDialogBuilder(MailSendActivity.this)
+            new CustomDialog.MessageDialogBuilder(MailSendActivity.this)
                     .setMessage(mailHint)
-                    .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                        }
+                    .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                        dialog.dismiss();
                     })
-                    .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            try {
-                                sendMail();   //发送邮件
-                            } catch (Exception e) {
-                                LogUtils.LbcDebug("Error");
-                                e.printStackTrace();
-                            }
-                            dialog.dismiss();
+                    .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                        try {
+                            sendMail();   //发送邮件
+                        } catch (Exception e) {
+                            LogUtils.LbcDebug("Error");
+                            e.printStackTrace();
                         }
+                        dialog.dismiss();
                     }).show();
         } else {
             try {

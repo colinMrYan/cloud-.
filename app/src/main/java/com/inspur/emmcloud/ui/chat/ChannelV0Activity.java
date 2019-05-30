@@ -66,13 +66,11 @@ import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
 import com.inspur.emmcloud.widget.ECMChatInputMenuV0.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -423,20 +421,14 @@ public class ChannelV0Activity extends BaseActivity {
      * @param msg
      */
     private void showResendMessageDlg(final Msg msg) {
-        new MyQMUIDialog.MessageDialogBuilder(ChannelV0Activity.this)
+        new CustomDialog.MessageDialogBuilder(ChannelV0Activity.this)
                 .setMessage(R.string.sure_to_resend_message)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        resendMessage(msg);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    resendMessage(msg);
                 })
                 .show();
     }

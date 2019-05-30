@@ -4,18 +4,18 @@
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
     android:layout_gravity="center"
-    android:background="@drawable/qmui_tip_dialog_bg"
+    android:background="@drawable/custom_tip_dialog_bg"
     android:gravity="center"
     android:minHeight="56dp"
     android:minWidth="120dp"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <com.qmuiteam.qmui.widget.QMUILoadingView
+    <com.inspur.emmcloud.widget.CustomLoadingView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:color="#ffffff"
-        app:qmui_loading_view_size="32dp" />
+        app:cus_loading_view_size="32dp" />
 
     <TextView
         android:id="@+id/loading_text"

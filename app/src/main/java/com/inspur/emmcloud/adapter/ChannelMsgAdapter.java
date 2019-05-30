@@ -35,8 +35,8 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
-import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -337,7 +337,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
         private ImageView sendFailImg;
-        private QMUILoadingView sendingLoadingView;
+        private CustomLoadingView sendingLoadingView;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
             super(view);
@@ -354,7 +354,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                     .findViewById(R.id.iv_sender_photo_right);
             sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
             sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
-            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
+            sendingLoadingView = (CustomLoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
