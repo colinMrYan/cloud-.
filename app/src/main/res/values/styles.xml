@@ -6,20 +6,12 @@
 
 
     -->
-
+    <style name="AppRootTheme" parent="Theme.AppCompat.Light" />
     <!-- Application theme. -->
-    <style name="AppTheme" parent="QMUI.Compat.NoActionBar">
-        <item name="qmui_dialog_content_message_text_size">17sp</item>
-        <item name="qmui_dialog_action_button_text_size">15sp</item>
-        <item name="qmui_dialog_content_list_item_text_size">16sp</item>
-        <item name="qmui_dialog_bg">@drawable/bg_my_qmui_dialog</item>
-        <item name="qmui_dialog_content_padding_top_when_no_title">20dp</item>
-        <item name="qmui_dialog_margin_horizontal">50dp</item>
-        <item name="qmui_dialog_content_padding_bottom">20dp</item>
-        <item name="qmui_dialog_content_list_item_height">44dp</item>
-        <item name="qmui_dialog_content_padding_top">10dp</item>
-        <item name="qmui_dialog_title_margin_top">20dp</item>
-        <item name="qmui_config_color_blue">@color/transparent</item>
+    <style name="AppTheme" parent="AppRootTheme">
+        <!--no Action Bar-->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="colorAccent">#36A5F6</item>
     </style>
     <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
@@ -29,6 +21,7 @@
     </style>
 
     <style name="AppTheme_0"  parent="AppTheme">
+        <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_white</item>
         <item name="header_bg">@drawable/shape_header_bg_white</item>
         <item name="footer_bg">@drawable/footer_bg_white</item>
@@ -439,6 +432,10 @@
     <style name="CusButtonBase" parent="android:Widget.Holo.Light.Button" />
 
     <style name="CusLoadingBase" parent="@style/AppRootTheme" />
+
+    <style name="CusImageButton" parent="android:Widget.Holo.Light.ImageButton">
+        <item name="android:background">@color/transparent</item>
+    </style>
 
 
 </resources>

@@ -1,24 +1,22 @@
 <resources>
     <!-- Application theme. -->
-    <style name="AppTheme" parent="QMUI.Compat.NoActionBar">
+    <style name="AppRootTheme" parent="Theme.AppCompat.Light" />
+
+    <style name="AppTheme" parent="AppRootTheme">
         <item name="android:colorPrimaryDark">#FFFFFF</item>
-        <item name="qmui_dialog_content_message_text_size">17sp</item>
-        <item name="qmui_dialog_action_button_text_size">15sp</item>
-        <item name="qmui_dialog_content_list_item_text_size">16sp</item>
-        <item name="qmui_dialog_bg">@drawable/bg_my_qmui_dialog</item>
-        <item name="qmui_dialog_content_padding_top_when_no_title">20dp</item>
-        <item name="qmui_dialog_margin_horizontal">50dp</item>
-        <item name="qmui_dialog_content_padding_bottom">20dp</item>
-        <item name="qmui_dialog_content_list_item_height">44dp</item>
-        <item name="qmui_dialog_content_padding_top">10dp</item>
-        <item name="qmui_dialog_title_margin_top">20dp</item>
-        <!--<item name="qmui_config_color_blue">#36A5F6</item>-->
         <item name="colorAccent">#36A5F6</item>
         <item name="android:navigationBarColor" >@color/white</item>
         <item name="android:textColorPrimary">#333333</item>
         <item name="android:textColorSecondary">#333333</item>
+        <!--no Action Bar-->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="CusButtonBase" parent="android:Widget.Material.Light.Button" />
+
+    <style name="CusImageButton" parent="android:Widget.Material.Light.ImageButton">
+        <item name="android:background">@color/transparent</item>
+    </style>
 
 </resources>

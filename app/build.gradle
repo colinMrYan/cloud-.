@@ -221,7 +221,7 @@ dependencies {
         exclude module: 'support-annotations'
     }
     compile(name: 'xutils-3.5.0.2', ext: 'aar')
-    compile(name: 'qmui-1.0.4', ext: 'aar')
+//    compile(name: 'qmui-1.0.4', ext: 'aar')
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('libs/jpush-android-3.1.1.jar')
     compile files('libs/jcore-android-1.1.9.jar')

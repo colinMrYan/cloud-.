@@ -34,7 +34,7 @@ public class CustomLoadingView extends View {
     }
 
     public CustomLoadingView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.QMUILoadingStyle);
+        this(context, attrs, R.attr.CusLoadingStyle);
     }
 
     public CustomLoadingView(Context context, AttributeSet attrs, int defStyleAttr) {
