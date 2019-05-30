@@ -81,7 +81,7 @@ import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -804,8 +804,8 @@ public class CommunicationV0Fragment extends BaseFragment {
                 .isChannelSetTop(getActivity(), displayChannelList
                         .get(position).getCid());
         final String[] items = new String[]{getString(isChannelSetTop ? R.string.chanel_cancel_top : R.string.channel_set_top), getString(R.string.channel_hide_chat)};
-        new QMUIDialog.MenuDialogBuilder(getActivity())
-                .addItems(items, new DialogInterface.OnClickListener() {
+        new CustomDialog.ListDialogBuilder(getActivity())
+                .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

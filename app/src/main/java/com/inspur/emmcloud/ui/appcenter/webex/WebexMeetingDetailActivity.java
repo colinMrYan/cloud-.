@@ -51,9 +51,7 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -200,21 +198,15 @@ public class WebexMeetingDetailActivity extends BaseActivity {
      * 安装提示
      */
     private void showInstallDialog() {
-        new MyQMUIDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
+        new CustomDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
                 .setMessage(getString(R.string.webex_install_tips))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
-                        new AppDownloadUtils().showDownloadDialog(WebexMeetingDetailActivity.this, downloadUrl);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
+                    new AppDownloadUtils().showDownloadDialog(WebexMeetingDetailActivity.this, downloadUrl);
                 })
                 .show();
     }
@@ -368,20 +360,14 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private void showDeleteMeetingWarningDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
+        new CustomDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
                 .setMessage(getString(R.string.webex_remove_meeting_warning_info))
-                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        removeWebexMeeting();
-                    }
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
+                    removeWebexMeeting();
                 })
                 .show();
     }

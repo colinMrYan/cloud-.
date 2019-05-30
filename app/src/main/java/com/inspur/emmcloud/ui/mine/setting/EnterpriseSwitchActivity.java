@@ -20,9 +20,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import java.util.List;
 
@@ -85,20 +83,14 @@ public class EnterpriseSwitchActivity extends BaseActivity {
      * @param enterprise
      */
     private void showSwitchEnterpriseConfirmDlg(final Enterprise enterprise) {
-        new MyQMUIDialog.MessageDialogBuilder(EnterpriseSwitchActivity.this)
+        new CustomDialog.MessageDialogBuilder(EnterpriseSwitchActivity.this)
                 .setMessage(getString(R.string.sure_switch_to, enterprise.getName()))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        switchToEnterprise(enterprise);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    switchToEnterprise(enterprise);
                 })
                 .show();
     }

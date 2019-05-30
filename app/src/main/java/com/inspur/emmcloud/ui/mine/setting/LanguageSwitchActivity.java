@@ -1,5 +1,20 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,8 +36,6 @@ import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,36 +114,31 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
     private void showChangeLanguageDlg(final int position) {
         // TODO Auto-generated method stub
 
-        new MyQMUIDialog.MessageDialogBuilder(LanguageSwitchActivity.this)
+        new CustomDialog.MessageDialogBuilder(LanguageSwitchActivity.this)
                 .setMessage(getString(R.string.confirm_modify_language))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        //清空我的应用统一更新版本信息防止切换语言不刷新列表
-                        ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
-                        Language language = commonLanguageList.get(position);
-                        String languageName = "";
-                        if (position == 0) {
-                            languageName = "followSys";
-                        } else {
-                            languageName = language.getIso();
-                        }
-                        LanguageManager.getInstance().setCurrentLanguageName(languageName);
-                        LanguageManager.getInstance().setCurrentLanguageJson(language.toString());
-                        LanguageManager.getInstance().setLanguageLocal();
-                        Intent intentLog = new Intent(LanguageSwitchActivity.this,
-                                IndexActivity.class);
-                        intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intentLog.putExtra(LANGUAGE_CHANGE, true);
-                        startActivity(intentLog);
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    //清空我的应用统一更新版本信息防止切换语言不刷新列表
+                    ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
+                    Language language = commonLanguageList.get(position);
+                    String languageName = "";
+                    if (position == 0) {
+                        languageName = "followSys";
+                    } else {
+                        languageName = language.getIso();
+                    }
+                    LanguageManager.getInstance().setCurrentLanguageName(languageName);
+                    LanguageManager.getInstance().setCurrentLanguageJson(language.toString());
+                    LanguageManager.getInstance().setLanguageLocal();
+                    Intent intentLog = new Intent(LanguageSwitchActivity.this,
+                            IndexActivity.class);
+                    intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intentLog.putExtra(LANGUAGE_CHANGE, true);
+                    startActivity(intentLog);
                     }
                 })
                 .show();

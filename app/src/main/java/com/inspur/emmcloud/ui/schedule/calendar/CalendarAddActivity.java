@@ -36,8 +36,7 @@ import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -285,12 +284,9 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 结束时间早于起始时间提醒
      */
     private void showEndDateErrorRemindDialog() {
-        new QMUIDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog qmuiDialog, int i) {
-                        qmuiDialog.dismiss();
-                    }
+        new CustomDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
                 }).show();
     }
 

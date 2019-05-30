@@ -17,11 +17,11 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
+            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:onClick="onClick"
-            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -29,11 +29,11 @@
             android:id="@+id/iv_config"
             android:layout_width="43dp"
             android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:paddingLeft="5dp"
+            android:onClick="onClick"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:onClick="onClick"
-            android:paddingLeft="5dp"
-            android:paddingRight="16dp"
             android:scaleType="centerInside"
             android:src="?attr/ic_config" />
 
@@ -74,13 +74,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+
+            <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
                 android:id="@+id/btn_conversation_unread"
                 android:layout_width="104dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="14dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="14dp"
                 android:elevation="1dp"
                 android:gravity="center"
                 android:onClick="onClick"
@@ -89,10 +90,9 @@
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:visibility="gone"
-                app:qmui_backgroundColor="#7f36A5F6"
-                app:qmui_borderWidth="0dp"
-                app:qmui_isRadiusAdjustBounds="true"
-                />
+                app:cus_backgroundColor="#7f36A5F6"
+                app:cus_borderWidth="0dp"
+                app:cus_isRadiusAdjustBounds="true" />
 
             <com.inspur.emmcloud.widget.RecycleViewForSizeChange
                 android:id="@+id/msg_list"

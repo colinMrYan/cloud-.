@@ -58,8 +58,8 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_feedback_content"
-        android:hint="@string/feed_back_contact_hint"
         android:maxLines="1"
+        android:hint="@string/feed_back_contact_hint"
         android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
@@ -89,24 +89,24 @@
             android:layout_toRightOf="@id/tv_anonymous" />
     </RelativeLayout>
 
-    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+    <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
         android:id="@+id/bt_submit_feedback"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="45dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
+        android:layout_marginBottom="45dp"
         android:elevation="1dp"
         android:gravity="center"
         android:onClick="onClick"
         android:text="@string/feed_back_submit"
         android:textColor="@android:color/white"
         android:textSize="15sp"
-        app:qmui_backgroundColor="#36A5F6"
-        app:qmui_borderWidth="0dp"
-        app:qmui_isRadiusAdjustBounds="true" />
+        app:cus_backgroundColor="#36A5F6"
+        app:cus_borderWidth="0dp"
+        app:cus_isRadiusAdjustBounds="true" />
 
 
 </RelativeLayout>

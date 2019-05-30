@@ -60,7 +60,7 @@
             android:text="@string/create_gesture_guid"
             android:textSize="16sp" />
 
-        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+        <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
             android:id="@+id/bt_create_gesture"
             android:layout_width="match_parent"
             android:layout_height="42dp"
@@ -73,10 +73,9 @@
             android:text="@string/create_gesture_code"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            app:qmui_backgroundColor="#36A5F6"
-            app:qmui_borderWidth="0dp"
-            app:qmui_isRadiusAdjustBounds="true"
-            />
+            app:cus_backgroundColor="#36A5F6"
+            app:cus_borderWidth="0dp"
+            app:cus_isRadiusAdjustBounds="true" />
     </RelativeLayout>
 
 

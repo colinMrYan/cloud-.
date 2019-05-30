@@ -136,7 +136,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         RichText.debugMode = true;
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
-            protected boolean removeEldestEntry(Entry<String, String> eldest) {
+            protected boolean removeEldestEntry(java.util.Map.Entry<String, String> eldest) {
                 // TODO Auto-generated method stub
                 return size() > 40;
 

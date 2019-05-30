@@ -19,10 +19,10 @@
             <ImageButton
                 android:id="@+id/ibt_back"
                 android:layout_width="44dp"
+                android:padding="11dp"
                 android:layout_height="44dp"
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
-                android:padding="11dp"
                 android:scaleType="fitXY"
                 android:src="?attr/ic_back_btn" />
 
@@ -57,8 +57,8 @@
                     android:paddingRight="10dp"
                     android:paddingTop="14dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_volume_new_forder"
-                    android:tint="?attr/header_text_color" />
+                    android:tint="?attr/header_text_color"
+                    android:src="@drawable/ic_volume_new_forder" />
 
                 <ImageView
                     android:id="@+id/upload_img"
@@ -72,8 +72,8 @@
                     android:paddingRight="12dp"
                     android:paddingTop="15dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_volume_upload_file_white"
-                    android:tint="?attr/header_text_color" />
+                    android:tint="?attr/header_text_color"
+                    android:src="@drawable/ic_volume_upload_file_white" />
             </RelativeLayout>
 
             <TextView
@@ -233,8 +233,8 @@
                 android:layout_height="match_parent"
                 android:background="@color/content_bg"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:paddingBottom="120dp">
+                android:paddingBottom="120dp"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="80dp"
@@ -253,7 +253,7 @@
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
-                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
                     android:id="@+id/refresh_btn"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
@@ -264,9 +264,9 @@
                     android:text="@string/refresh"
                     android:textColor="#2586CD"
                     android:visibility="gone"
-                    app:qmui_borderColor="#2586CD"
-                    app:qmui_borderWidth="0.6dp"
-                    app:qmui_radius="4dp" />
+                    app:cus_borderColor="#2586CD"
+                    app:cus_borderWidth="0.6dp"
+                    app:cus_radius="4dp" />
             </LinearLayout>
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -371,13 +371,13 @@
                 android:id="@+id/tv_location_select_upload_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
                 android:padding="12dp"
                 android:text="@string/clouddriver_volume_upload_file"
                 android:textColor="#444444"
-                android:textSize="15sp"
-                android:visibility="gone" />
+                android:textSize="15sp" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
