@@ -1,33 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import static android.Manifest.permission.CAMERA;
-
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
-import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.inspur.imp.plugin.camera.mycamera.CameraUtils;
-import com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
