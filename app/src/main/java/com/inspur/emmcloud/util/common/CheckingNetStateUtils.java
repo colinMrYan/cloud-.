@@ -54,7 +54,6 @@ public class CheckingNetStateUtils {
             if (StringUtils.isBlank(pingUrlStateAction.getUrl())) {
                 ResultState = pingUrlStateAction.isPingState();
             } else {
-                LogUtils.LbcDebug("url::" + pingUrlStateAction.getUrl() + "state::" + pingUrlStateAction.isPingState());
                 ResultState = isPingConnectedNet(pingUrlStateAction.getUrl(), pingUrlStateAction.isPingState());
             }
 
@@ -125,6 +124,7 @@ public class CheckingNetStateUtils {
                message.obj = pingActionState;
                handlerNetHint.sendMessage(message);
            }
+
        }catch (Exception e){
            e.printStackTrace();
        }
