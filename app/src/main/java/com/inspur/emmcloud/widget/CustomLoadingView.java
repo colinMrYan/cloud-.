@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.inspur.emmcloud.R;
-import com.reactnativenavigation.utils.ViewUtils;
+import com.inspur.emmcloud.util.common.DensityUtil;
 
 /**
  * Created by chenmch on 2019/5/9.
@@ -47,7 +47,7 @@ public class CustomLoadingView extends View {
             }
         };
         TypedArray array = this.getContext().obtainStyledAttributes(attrs, R.styleable.CusLoadingView, defStyleAttr, 0);
-        this.mSize = array.getDimensionPixelSize(R.styleable.CusLoadingView_cus_loading_view_size, (int) ViewUtils.convertDpToPixel(32));
+        this.mSize = array.getDimensionPixelSize(R.styleable.CusLoadingView_cus_loading_view_size, DensityUtil.dip2px(context, 32));
         this.mPaintColor = Color.parseColor("#858C96");
         array.recycle();
         this.initPaint();
