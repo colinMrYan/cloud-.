@@ -12,6 +12,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.push.WebSocketPush;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -55,6 +56,14 @@ public class CheckingNetStateUtils {
             } else {
                 LogUtils.LbcDebug("url::" + pingUrlStateAction.getUrl() + "state::" + pingUrlStateAction.isPingState());
                 ResultState = isPingConnectedNet(pingUrlStateAction.getUrl(), pingUrlStateAction.isPingState());
+            }
+
+            if (NetUtils.isNetworkConnected(context, false)) {
+                if (WebSocketPush.getInstance().isSocketConnect()) {
+                    ResultState = true;
+                }
+            } else {
+                ResultState = false;
             }
             EventBus.getDefault().post(new SimpleEventMessage(pingUrlStateAction.getAction(), ResultState));
         }

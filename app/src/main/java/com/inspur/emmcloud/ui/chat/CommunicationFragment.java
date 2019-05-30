@@ -362,8 +362,6 @@ public class CommunicationFragment extends BaseFragment {
             if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }
-        } else {
-            conversationAdapter.setNetExceptionView(true);
         }
     }
 
