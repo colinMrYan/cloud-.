@@ -108,9 +108,11 @@ public class AmapLocateService extends ImpPlugin implements
         // 初始化定位参数 默认连续定位
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         mLocationOption.setInterval(1000);
+        mLocationOption.setLocationCacheEnable(false);
+        mLocationOption.setWifiScan(true);
         // 设置定位参数
         mlocationClient.setLocationOption(mLocationOption);
-        mLocationOption.setWifiScan(true);
+
         // 设置定位回调监听
         mlocationClient.setLocationListener(this);
         mlocationClient.startLocation();
@@ -136,6 +138,11 @@ public class AmapLocateService extends ImpPlugin implements
         locationCount++;
         if (amapLocation != null && (amapLocation.getErrorCode() == 0)) {
             aMapLocationList.add(amapLocation);
+            double longitudeD = amapLocation.getLongitude();
+            double latitudeD = amapLocation.getLatitude();
+            LogUtils.jasonDebug("amapLocation.getAccuracy()=" + amapLocation.getAccuracy());
+            LogUtils.jasonDebug("longitudeD=" + longitudeD);
+            LogUtils.jasonDebug("latitudeD=" + latitudeD);
         }
         if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy() < 60)) {
             mlocationClient.stopLocation();

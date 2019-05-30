@@ -167,7 +167,7 @@ dependencies {
     compile 'com.android.support:design:27.1.1'
     compile 'com.facebook.react:react-native:+'
     compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'com.amap.api:location:3.8.0'
+    compile 'com.amap.api:location:4.6.0'
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.alibaba:fastjson:1.2.24'
