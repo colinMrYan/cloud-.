@@ -101,27 +101,17 @@ public class CheckingNetStateUtils {
             boolean isAppOnForeground = ((MyApplication) context.getApplicationContext()).getIsActive();
             if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
                 if (isAppOnForeground) {
-                    PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
-                    Message message = new Message();
-                    message.obj = pingActionState;
-                    handlerNetHint.sendMessage(message);
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, true));
                 }
             } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && NetUtils.isVpnConnected()) {
                 if (isAppOnForeground) {
-                    PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", true);
-                    Message message = new Message();
-                    message.obj = pingActionState;
-                    handlerNetHint.sendMessage(message);
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, true));
                 }
             } else if ((wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) && !NetUtils.isVpnConnected()) {
                 clearUrlsStates();
-                // CheckNetPingThreadStartForHint(urls, timeout, action, handlerNetHint);
                 CheckNetPingAndHttpThreadStartForHint(urls, httpUrls, timeout, action, handlerNetHint);
             } else if (isAppOnForeground) {
-                PingUrlStateAction pingActionState = new PingUrlStateAction(action, "", false);
-                Message message = new Message();
-                message.obj = pingActionState;
-                handlerNetHint.sendMessage(message);
+                EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT, false));
             }
 
         } catch (Exception e) {
