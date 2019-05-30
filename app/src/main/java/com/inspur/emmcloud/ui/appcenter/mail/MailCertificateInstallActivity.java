@@ -1,5 +1,12 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -28,13 +35,13 @@ import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
-import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import android.content.Intent;
+import android.text.InputType;
+import android.util.Base64;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,9 +79,9 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private String certificatePassWord;
     private MailCertificateDetail myCertificate;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         init();
     }

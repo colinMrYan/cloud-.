@@ -78,9 +78,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private Calendar currentCalendar = Calendar.getInstance();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         meetingRoom = (MeetingRoom) getIntent().getExtras().getSerializable(EXTRA_MEETING_ROOM);
         initView();

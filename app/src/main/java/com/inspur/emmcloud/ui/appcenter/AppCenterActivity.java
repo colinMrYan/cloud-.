@@ -46,7 +46,6 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.AdsViewPager;
-import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
@@ -72,7 +71,6 @@ public class AppCenterActivity extends BaseActivity {
     private static final String APP_CENTER_CATEGORY_PROTOCOL = "ecc-app-store://category";
     private static final String APP_CENTER_APP_NAME_PROTOCOL = "ecc-app-store://app";
     private ViewPager viewPager;
-    private CircularProgress recommendCircleProgress, classCircleProgress;
     private ListView classListView;
     private ScrollViewWithListView recommendListView;
     private SwipeRefreshLayout classSwipeRefreshLayout;
@@ -91,8 +89,7 @@ public class AppCenterActivity extends BaseActivity {
     private RelativeLayout adsPagerContainer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         setContentView(R.layout.activity_app_center);
         initView();
         getAllApp();
@@ -142,8 +139,6 @@ public class AppCenterActivity extends BaseActivity {
                 IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
             }
         });
-        recommendCircleProgress = (CircularProgress) recommendView.findViewById(R.id.circle_progress);
-        classCircleProgress = (CircularProgress) classView.findViewById(R.id.app_center_categories_circle_progress);
         List<View> viewList = new ArrayList<View>();
         viewList.add(recommendView);
         viewList.add(classView);
@@ -176,6 +171,8 @@ public class AppCenterActivity extends BaseActivity {
      */
     private void getAllApp() {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            recommendSwipeRefreshLayout.setRefreshing(true);
+            classSwipeRefreshLayout.setRefreshing(true);
             MyAppAPIService apiService = new MyAppAPIService(AppCenterActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getNewAllApps();
@@ -617,8 +614,6 @@ public class AppCenterActivity extends BaseActivity {
     public class WebService extends APIInterfaceInstance {
         @Override
         public void returnAllAppsSuccess(GetAllAppResult getAllAppResult) {
-            recommendCircleProgress.setVisibility(View.GONE);
-            classCircleProgress.setVisibility(View.GONE);
             appList = getAllAppResult.getRecommendList();
             adsList = getAllAppResult.getAdsList();
             initAdsViewPager();   //lbc
@@ -632,8 +627,6 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public void returnAllAppsFail(String error, int errorCode) {
             WebServiceMiddleUtils.hand(AppCenterActivity.this, error, errorCode);
-            recommendCircleProgress.setVisibility(View.GONE);
-            classCircleProgress.setVisibility(View.GONE);
             recommendSwipeRefreshLayout.setRefreshing(false);
             classSwipeRefreshLayout.setRefreshing(false);
         }

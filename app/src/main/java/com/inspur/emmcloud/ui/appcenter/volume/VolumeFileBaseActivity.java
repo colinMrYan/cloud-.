@@ -1,21 +1,8 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -44,9 +31,22 @@ import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,13 +88,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         initView();
         getVolumeFileList(true);
-
     }
 
     @Override
@@ -215,7 +214,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showCreateFolderDlg() {
         createFolderDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
         inputEdit.setHint(getString(R.string.clouddriver_input_directory_name));
@@ -266,7 +265,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         final String fileNameNoEx = volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? FileUtils.getFileNameWithoutExtension(fileName) : fileName;
         final String fileExtension = fileName.replace(fileNameNoEx, "");
         fileRenameDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         fileRenameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) fileRenameDlg.findViewById(R.id.edit);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});

@@ -1,10 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.RelativeLayout;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
@@ -23,7 +19,10 @@ import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import java.util.List;
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,9 +40,9 @@ public class EnterpriseSwitchActivity extends BaseActivity {
     private GetMyInfoResult getMyInfoResult;
     private List<Enterprise> enterpriseList;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         getEnterpriseList();
         initView();

@@ -1,16 +1,21 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.view.View;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.IntentUtils;
+
+import android.view.View;
 
 /**
  * 账号、设备安全
  */
 
 public class SafeCenterActivity extends BaseActivity {
+
+    @Override
+    public void onCreate() {
+
+    }
 
     @Override
     public int getLayoutResId() {

@@ -79,7 +79,7 @@ public class AppDownloadUtils {
      */
     public void showDownloadDialog(Activity activity, String appUrl) {
         this.activity = activity;
-        downloadingDialog = new MyDialog(activity, R.layout.dialog_app_update_progress);
+        downloadingDialog = new MyDialog(activity, R.layout.app_dialog_update_progress);
         downloadingDialog.setCancelable(false);
         progressTv = (TextView) downloadingDialog.findViewById(R.id.ratio_text);
         Button cancelBtn = (Button) downloadingDialog.findViewById(R.id.cancel_bt);

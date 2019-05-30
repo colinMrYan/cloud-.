@@ -1,7 +1,22 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
+
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -15,22 +30,6 @@ import android.widget.ListView;
 import android.widget.Space;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
 public class LanguageSwitchActivity extends BaseActivity {
 
     public static final String LANGUAGE_CHANGE = "change_language";
@@ -43,9 +42,7 @@ public class LanguageSwitchActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         listView = (ListView) findViewById(R.id.lv);
         loadingDlg = new LoadingDialog(this);
         handMessage();

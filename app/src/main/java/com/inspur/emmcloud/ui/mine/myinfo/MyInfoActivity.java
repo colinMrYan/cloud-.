@@ -1,13 +1,7 @@
 package com.inspur.emmcloud.ui.mine.myinfo;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -38,8 +32,14 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,9 +89,7 @@ public class MyInfoActivity extends BaseActivity {
     private boolean isUpdateUserPhoto = false; // 标记是否更改了头像
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(MyInfoActivity.this);
@@ -99,7 +97,6 @@ public class MyInfoActivity extends BaseActivity {
         getUserProfile();
         getUserInfoConfig();
         showMyInfo();
-
     }
 
     @Override

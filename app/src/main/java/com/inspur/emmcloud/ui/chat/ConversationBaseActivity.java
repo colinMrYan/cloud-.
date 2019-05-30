@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
-import android.os.Bundle;
-
 import com.inspur.emmcloud.MediaPlayBaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -14,6 +11,9 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import android.content.Intent;
+import android.os.Bundle;
 
 import butterknife.ButterKnife;
 
@@ -35,6 +35,11 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         initConversationInfo();

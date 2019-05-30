@@ -18,7 +18,7 @@ public class DropPopLayout extends LinearLayout {
     private TriangleIndicatorView mTriangleDownIndicatorView;
     private LinearLayout mContainerLayout;
 
-    private int mBackgroundResource = R.drawable.shap_drop_pop_menu_bg;
+    private int mBackgroundResource = R.drawable.basewidget_shap_drop_pop_menu_bg;
 
     public DropPopLayout(Context context) {
         super(context);

@@ -206,7 +206,7 @@ public class StartAppService extends ImpPlugin {
      * @param appUrl
      */
     private void showDownloadDialog(String appUrl) {
-        downloadingDialog = new MyDialog(getActivity(), R.layout.dialog_app_update_progress);
+        downloadingDialog = new MyDialog(getActivity(), R.layout.app_dialog_update_progress);
         downloadingDialog.setCancelable(false);
         progressTv = (TextView) downloadingDialog.findViewById(R.id.ratio_text);
         Button cancelBtn = (Button) downloadingDialog.findViewById(R.id.cancel_bt);
