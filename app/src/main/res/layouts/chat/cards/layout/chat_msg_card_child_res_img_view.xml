@@ -13,13 +13,14 @@
         app:riv_corner_radius = "6dp"
         app:riv_border_width="0.5px"
         />
-    <com.qmuiteam.qmui.widget.QMUILoadingView
+
+    <com.inspur.emmcloud.widget.CustomLoadingView
         android:id="@+id/qlv_downloading_left"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:color="#999999"
-        app:qmui_loading_view_size="22dp" />
+        app:cus_loading_view_size="22dp" />
     <TextView
         android:id="@+id/long_img_text"
         android:layout_width="wrap_content"

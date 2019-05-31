@@ -17,10 +17,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -28,11 +28,11 @@
             android:id="@+id/iv_config"
             android:layout_width="43dp"
             android:layout_height="match_parent"
-            android:paddingRight="16dp"
-            android:paddingLeft="5dp"
-            android:onClick="onClick"
             android:layout_alignParentRight="true"
             android:clickable="true"
+            android:onClick="onClick"
+            android:paddingLeft="5dp"
+            android:paddingRight="16dp"
             android:scaleType="centerInside"
             android:src="?attr/ic_config" />
 
@@ -58,8 +58,7 @@
             android:layout_height="45dp"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -73,25 +72,25 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+
+            <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
                 android:id="@+id/btn_conversation_unread"
                 android:layout_width="104dp"
                 android:layout_height="30dp"
-                android:visibility="gone"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="14dp"
                 android:elevation="1dp"
                 android:gravity="center"
                 android:onClick="onClick"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="14dp"
-                android:paddingRight="8dp"
                 android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
-                app:qmui_backgroundColor="#7f36A5F6"
-                app:qmui_borderWidth="0dp"
-                app:qmui_isRadiusAdjustBounds="true"
-                />
+                android:visibility="gone"
+                app:cus_backgroundColor="#7f36A5F6"
+                app:cus_borderWidth="0dp"
+                app:cus_isRadiusAdjustBounds="true" />
 
             <com.inspur.emmcloud.widget.RecycleViewForSizeChange
                 android:id="@+id/msg_list"
@@ -111,6 +110,6 @@
     <com.inspur.emmcloud.widget.ECMChatInputMenu
         android:id="@+id/chat_input_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -36,7 +36,7 @@
                 android:tint="?attr/header_text_color" />
         </RelativeLayout>
 
-        <com.qmuiteam.qmui.widget.QMUIObservableScrollView
+        <com.inspur.emmcloud.widget.ObservableScrollView
             android:id="@+id/sv_slide_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -347,7 +347,7 @@
             </RelativeLayout>
 
 
-        </com.qmuiteam.qmui.widget.QMUIObservableScrollView>
+        </com.inspur.emmcloud.widget.ObservableScrollView>
 
         <RelativeLayout
             android:id="@+id/rl_mail_operation"

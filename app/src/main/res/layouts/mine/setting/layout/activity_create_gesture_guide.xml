@@ -14,10 +14,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -36,8 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
-        android:paddingBottom="38dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="38dp">
 
         <ImageView
             android:id="@+id/img"
@@ -49,34 +49,33 @@
             android:src="@drawable/gesture_code_img" />
 
         <TextView
-            android:layout_below="@id/img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="37dp"
-            android:paddingRight="37dp"
+            android:layout_below="@id/img"
             android:layout_marginTop="40dp"
             android:gravity="center"
             android:maxLines="3"
+            android:paddingLeft="37dp"
+            android:paddingRight="37dp"
             android:text="@string/create_gesture_guid"
             android:textSize="16sp" />
 
-        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+        <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
             android:id="@+id/bt_create_gesture"
             android:layout_width="match_parent"
             android:layout_height="42dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_alignParentBottom="true"
             android:elevation="1dp"
             android:gravity="center"
             android:onClick="onClick"
             android:text="@string/create_gesture_code"
             android:textColor="@android:color/white"
             android:textSize="15sp"
-            app:qmui_backgroundColor="#36A5F6"
-            app:qmui_borderWidth="0dp"
-            app:qmui_isRadiusAdjustBounds="true"
-            />
+            app:cus_backgroundColor="#36A5F6"
+            app:cus_borderWidth="0dp"
+            app:cus_isRadiusAdjustBounds="true" />
     </RelativeLayout>
 
 

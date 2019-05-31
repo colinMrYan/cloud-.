@@ -26,9 +26,7 @@ import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -253,20 +251,14 @@ public class UserInfoActivity extends BaseActivity {
 
     private void showCallUserDialog(final String mobile) {
         if (!contactUser.getId().equals(MyApplication.getInstance().getUid())) {
-            new MyQMUIDialog.MessageDialogBuilder(UserInfoActivity.this)
+            new CustomDialog.MessageDialogBuilder(UserInfoActivity.this)
                     .setMessage(mobile)
-                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                        }
+                    .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                        dialog.dismiss();
                     })
-                    .addAction(R.string.user_call, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
-                        }
+                    .setPositiveButton(R.string.user_call, (dialog, index) -> {
+                        dialog.dismiss();
+                        AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
                     })
                     .show();
         }

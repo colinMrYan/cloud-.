@@ -26,9 +26,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -281,20 +279,12 @@ public class TaskListFragment extends Fragment {
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        final int position, long id) {
             if (currentIndex == 0 || currentIndex == 1) {
-                new MyQMUIDialog.MessageDialogBuilder(getActivity())
+                new CustomDialog.MessageDialogBuilder(getActivity())
                         .setMessage(R.string.mession_set_finish)
-                        .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                            @Override
-                            public void onClick(QMUIDialog dialog, int index) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                            @Override
-                            public void onClick(QMUIDialog dialog, int index) {
-                                dialog.dismiss();
-                                deleteTasks(position);
-                            }
+                        .setNegativeButton(getString(R.string.cancel), (dialog, index) -> dialog.dismiss())
+                        .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                            dialog.dismiss();
+                            deleteTasks(position);
                         })
                         .show();
 
