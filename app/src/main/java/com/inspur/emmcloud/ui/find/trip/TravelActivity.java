@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.ui.find.trip;
 
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,20 +12,20 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-
 public class TravelActivity extends BaseActivity {
 
     private ListView travelListView;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_travel);
+    public void onCreate() {
         travelListView = (ListView) findViewById(R.id.travel_analysis_list);
         travelListView.setAdapter(new TravelAdapter());
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_travel;
     }
 
     public void onClick(View v) {

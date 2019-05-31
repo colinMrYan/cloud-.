@@ -1,11 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.os.Bundle;
-import android.support.v4.util.ArrayMap;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.RelativeLayout;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -18,30 +18,29 @@ import com.inspur.emmcloud.util.common.GroupUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.os.Bundle;
+import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.RelativeLayout;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_group_album)
 public class GroupAlbumActivity extends BaseActivity {
 
     public static final int GROUP_TYPE_MSG = 1;
     public static final int GROUP_TYPE_MESSAGE = 2;
-    //    @ViewInject(R.id.gv_album)
 //    private GridView albumGrid;
-    @ViewInject(R.id.rl_no_channel_album)
-    private RelativeLayout noChannelAlbumLayout;
-    @ViewInject(R.id.recycler_view_album)
-    private RecyclerView albumRecyclerView;
+    @BindView(R.id.rl_no_channel_album)
+    RelativeLayout noChannelAlbumLayout;
+    @BindView(R.id.recycler_view_album)
+    RecyclerView albumRecyclerView;
     private String cid;
     private ArrayList<String> imgUrlList = new ArrayList<>();
     private List<Msg> imgTypeMsgList;
@@ -51,9 +50,14 @@ public class GroupAlbumActivity extends BaseActivity {
     private GroupAlbumAdapter groupAlbumAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         init();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_album;
     }
 
     private void init() {
@@ -63,7 +67,7 @@ public class GroupAlbumActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(GroupAlbumActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         albumRecyclerView.setLayoutManager(linearLayoutManager);
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             groupAlbumAdapter = new GroupAlbumAdapter(this, msgGroupByDayMap, GROUP_TYPE_MSG);
         } else {
             groupAlbumAdapter = new GroupAlbumAdapter(this, messageGroupByDayMap, GROUP_TYPE_MESSAGE);
@@ -84,7 +88,7 @@ public class GroupAlbumActivity extends BaseActivity {
                 bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
                 bundle.putInt(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
                 bundle.putStringArrayList(ImagePagerActivity.EXTRA_IMAGE_URLS, imgUrlList);
-                if (MyApplication.getInstance().isV0VersionChat()) {
+                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
                     bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
                     IntentUtils.startActivity(GroupAlbumActivity.this, ImagePagerV0Activity.class, bundle);
@@ -99,7 +103,7 @@ public class GroupAlbumActivity extends BaseActivity {
     }
 
     private void getImgMsgList() {
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(MyApplication.getInstance(), cid);
             for (Msg msg : imgTypeMsgList) {
                 String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());

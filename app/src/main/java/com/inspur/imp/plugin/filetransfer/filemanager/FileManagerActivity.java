@@ -1,15 +1,10 @@
 package com.inspur.imp.plugin.filetransfer.filemanager;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -22,11 +17,16 @@ import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileBean;
 import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileType;
 import com.inspur.imp.plugin.filetransfer.filemanager.bean.TitlePath;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 public class FileManagerActivity extends BaseActivity {
@@ -50,7 +50,10 @@ public class FileManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.plugin_filemanager_actvitity);
+    }
+
+    @Override
+    public void onCreate() {
         getIntentParam();
         titleRecyclerview = (RecyclerView) findViewById(R.id.rcv_title);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -59,6 +62,9 @@ public class FileManagerActivity extends BaseActivity {
         titleAdapter = new TitleAdapter(FileManagerActivity.this, new ArrayList<TitlePath>());
         titleRecyclerview.setAdapter(titleAdapter);
         okText = (TextView) findViewById(R.id.tv_ok);
+        if(1==maximum){
+            okText.setVisibility(View.GONE);
+        }
         setOKTextStatus();
         fileRecyclerView = (RecyclerView) findViewById(R.id.rcv_file);
 
@@ -156,6 +162,11 @@ public class FileManagerActivity extends BaseActivity {
 //        }
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.plugin_filemanager_actvitity;
+    }
+
     private void getIntentParam() {
         maximum = getIntent().getIntExtra(EXTRA_MAXIMUM, 1);
         filterFileTypeList = getIntent().getStringArrayListExtra(EXTRA_FILTER_FILE_TYPE);
@@ -236,7 +247,8 @@ public class FileManagerActivity extends BaseActivity {
             } else if (file1.isFile() && file2.isDirectory()) {
                 return 1;
             } else {
-                return file1.getName().toLowerCase().compareTo(file2.getName().toString());
+                return file1.getName().toLowerCase().compareTo(file2.getName().toLowerCase().toString());
+
             }
         }
     }

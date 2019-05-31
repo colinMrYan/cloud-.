@@ -1,14 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -20,30 +13,41 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2019/3/4.
  * 搜索群消息页面
  */
-@ContentView(R.layout.activity_conversation_group_message_search)
 public class ConversationGroupMessageSearchActivity extends BaseActivity {
-    @ViewInject(R.id.ev_message_search)
-    private EditText messageSearchEditText;
-    @ViewInject(R.id.recycler_view_group_message_search)
-    private RecyclerView groupMessageSearchRecylerView;
+    @BindView(R.id.ev_message_search)
+    EditText messageSearchEditText;
+    @BindView(R.id.recycler_view_group_message_search)
+    RecyclerView groupMessageSearchRecylerView;
     private List<Message> searchResultList = new ArrayList<>();
     private GroupMessageSearchAdapter groupMessageSearchAdapter;
     private String cid;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_group_message_search;
     }
 
     private void initViews() {

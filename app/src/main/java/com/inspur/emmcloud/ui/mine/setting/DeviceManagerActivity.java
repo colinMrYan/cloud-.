@@ -1,14 +1,7 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -22,8 +15,14 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Created by Administrator on 2017/5/15.
@@ -39,11 +38,14 @@ public class DeviceManagerActivity extends BaseActivity {
     private List<BindingDevice> historyBindingDeviceList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_device_manager);
+    public void onCreate() {
         initView();
         getBindDeviceList();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_setting_device_manager;
     }
 
     private void initView() {

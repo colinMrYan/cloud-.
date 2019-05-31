@@ -3,7 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.text.SpannableString;
 import android.text.Spanned;
 
-import com.inspur.emmcloud.bean.work.MentionsAndUrl;
+import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.spans.URLClickableSpan;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class MentionsAndUrlShowUtils {
 

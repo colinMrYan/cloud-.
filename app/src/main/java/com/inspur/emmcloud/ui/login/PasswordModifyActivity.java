@@ -1,14 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -22,37 +13,39 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 修改密码
  */
 
-@ContentView(R.layout.activity_password_modify)
 public class PasswordModifyActivity extends BaseActivity implements View.OnTouchListener {
 
-    @ViewInject(R.id.bt_save)
-    private Button saveBtn;
-    @ViewInject(R.id.et_password_origin)
-    private EditText passwordOriginEdit;
-    @ViewInject(R.id.et_password_new)
-    private EditText passwordNewEdit;
-    @ViewInject(R.id.et_password_confirm)
-    private EditText passwordConfirmEdit;
+    @BindView(R.id.bt_save)
+    Button saveBtn;
+    @BindView(R.id.et_password_origin)
+    EditText passwordOriginEdit;
+    @BindView(R.id.et_password_new)
+    EditText passwordNewEdit;
+    @BindView(R.id.et_password_confirm)
+    EditText passwordConfirmEdit;
     private String passwordOrigin;
     private String passwordNew;
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
     private EmmSecurityKeyboard emmSecurityKeyboard;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        x.view().inject(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
+    public void onCreate() {
+        ButterKnife.bind(this);
         EditWatcher editWatcher = new EditWatcher();
         passwordOriginEdit.addTextChangedListener(editWatcher);
         passwordNewEdit.addTextChangedListener(editWatcher);
@@ -60,6 +53,15 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
         loadingDlg = new LoadingDialog(this);
         emmSecurityKeyboard = new EmmSecurityKeyboard(this);
         initListeners();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_password_modify;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
     }
 
     private void initListeners() {
@@ -78,7 +80,7 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
                 if (passwordNew.equals(passwordOrigin)) {
                     ToastUtils.show(PasswordModifyActivity.this, R.string.modify_new_old_same);
                 }
-                if (passwordNew.length() < 8 || passwordNew.length() > 128 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
                     ToastUtils.show(MyApplication.getInstance(), R.string.modify_password_invalid);
                     return;
                 }
@@ -138,7 +140,7 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
             passwordOrigin = passwordOriginEdit.getText().toString();
             passwordNew = passwordNewEdit.getText().toString();
             passwordConfirm = passwordConfirmEdit.getText().toString();
-            boolean isInputValaid = !StringUtils.isBlank(passwordOrigin) && passwordNew.length() > 7 && passwordConfirm.length() > 7;
+            boolean isInputValaid = !StringUtils.isBlank(passwordOrigin) && passwordNew.length() >= 1 && passwordConfirm.length() >= 1;
             saveBtn.setEnabled(isInputValaid);
             saveBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }

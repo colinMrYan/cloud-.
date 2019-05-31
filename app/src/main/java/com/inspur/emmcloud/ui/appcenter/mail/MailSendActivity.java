@@ -1,18 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.Html;
-import android.text.SpannableString;
-import android.view.View;
-import android.webkit.WebSettings;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
@@ -43,20 +32,28 @@ import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollWebView;
 import com.inspur.emmcloud.widget.RichEdit;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.Html;
+import android.text.SpannableString;
+import android.view.View;
+import android.webkit.WebSettings;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2018/12/20.
  */
-@ContentView(R.layout.activity_mail_send)
 public class MailSendActivity extends BaseActivity {
     public static final String MODE_NEW = "mail_new";
     public static final String MODE_REPLY = "mail_replay";
@@ -66,34 +63,34 @@ public class MailSendActivity extends BaseActivity {
     public static final String EXTRA_MAIL_MODE = "extra_mail_mode";
     private static final int QEQUEST_ADD_MEMBER = 2;
     private static final int QEQUEST_CC_MEMBER = 3;
-    @ViewInject(R.id.rich_edit_recipients)
-    private RichEdit recipientRichEdit;
-    @ViewInject(R.id.rich_edit_cc_recipient)
-    private RichEdit ccRecipientRichEdit;
-    @ViewInject(R.id.et_theme_send)
-    private EditText sendThemeEditText;
-    @ViewInject(R.id.tv_recipients_show)
-    private TextView recipientsShowText;
-    @ViewInject(R.id.tv_cc_recipient_show)
-    private TextView ccRecipientsShowText;
-    @ViewInject(R.id.et_content_send)
-    private EditText contentSendEditText;
-    @ViewInject(R.id.iv_fw_tip)
-    private ImageView fwTipImageView;
-    @ViewInject(R.id.rl_fw_body)
-    private RelativeLayout fwBodyLayout;
-    @ViewInject(R.id.rl_include_origin)
-    private RelativeLayout includeOriginLayout;
-    @ViewInject(R.id.cb_fw_body)
-    private CheckBox fwBodyCheckBox;
-    @ViewInject(R.id.wv_body)
-    private NoScrollWebView bodyWebView;
-    @ViewInject(R.id.tv_header_title)
-    private TextView headerTitleText;
-    @ViewInject(R.id.iv_recipients)
-    private ImageView recipientsImageView;
-    @ViewInject(R.id.iv_cc_recipients)
-    private ImageView ccRecipientsImageView;
+    @BindView(R.id.rich_edit_recipients)
+    RichEdit recipientRichEdit;
+    @BindView(R.id.rich_edit_cc_recipient)
+    RichEdit ccRecipientRichEdit;
+    @BindView(R.id.et_theme_send)
+    EditText sendThemeEditText;
+    @BindView(R.id.tv_recipients_show)
+    TextView recipientsShowText;
+    @BindView(R.id.tv_cc_recipient_show)
+    TextView ccRecipientsShowText;
+    @BindView(R.id.et_content_send)
+    EditText contentSendEditText;
+    @BindView(R.id.iv_fw_tip)
+    ImageView fwTipImageView;
+    @BindView(R.id.rl_fw_body)
+    RelativeLayout fwBodyLayout;
+    @BindView(R.id.rl_include_origin)
+    RelativeLayout includeOriginLayout;
+    @BindView(R.id.cb_fw_body)
+    CheckBox fwBodyCheckBox;
+    @BindView(R.id.wv_body)
+    NoScrollWebView bodyWebView;
+    @BindView(R.id.tv_header_title)
+    TextView headerTitleText;
+    @BindView(R.id.iv_recipients)
+    ImageView recipientsImageView;
+    @BindView(R.id.iv_cc_recipients)
+    ImageView ccRecipientsImageView;
     private ArrayList<String> memberUidList = new ArrayList<>();
     private ArrayList<MailRecipientModel> recipientList = new ArrayList<>();
     private ArrayList<MailRecipientModel> ccRecipientList = new ArrayList<>();
@@ -102,10 +99,17 @@ public class MailSendActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private String mailMode = MODE_NEW;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        setContentView(R.layout.activity_mail_send);
+        ButterKnife.bind(this);
         init();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_send;
     }
 
     /**
@@ -303,25 +307,19 @@ public class MailSendActivity extends BaseActivity {
     private void noSignOrEncryptHintDialog() {
         if (!myCertificate.isSignedMail() || !myCertificate.isEncryptedMail()) {
             String mailHint = "该邮件未" + (myCertificate.isSignedMail() ? "" : "加签") + (myCertificate.isEncryptedMail() ? "" : "加密") + "确定发送？";
-            new MyQMUIDialog.MessageDialogBuilder(MailSendActivity.this)
+            new CustomDialog.MessageDialogBuilder(MailSendActivity.this)
                     .setMessage(mailHint)
-                    .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                        }
+                    .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                        dialog.dismiss();
                     })
-                    .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            try {
-                                sendMail();   //发送邮件
-                            } catch (Exception e) {
-                                LogUtils.LbcDebug("Error");
-                                e.printStackTrace();
-                            }
-                            dialog.dismiss();
+                    .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                        try {
+                            sendMail();   //发送邮件
+                        } catch (Exception e) {
+                            LogUtils.LbcDebug("Error");
+                            e.printStackTrace();
                         }
+                        dialog.dismiss();
                     }).show();
         } else {
             try {

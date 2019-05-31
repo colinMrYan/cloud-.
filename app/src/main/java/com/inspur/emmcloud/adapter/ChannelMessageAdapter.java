@@ -31,9 +31,9 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
-import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,7 +185,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_EXTENDED_SELECTED:
                 LogUtils.YfcDebug("v1决策卡片");
-                cardContentView = DisplayExtendedDecideMsg.getView(message,context);
+                cardContentView = DisplayExtendedDecideMsg.getView(message, context);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 cardContentView = DisplayMediaImageMsg.getView(context, uiMessage);
@@ -209,16 +209,21 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         cardContentView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                return mItemClickListener.onCardItemLongClick(view, uiMessage);
+                if (mItemClickListener != null) {
+                    mItemClickListener.onCardItemLongClick(view, uiMessage);
+                }
+                return true;
             }
         });
         cardContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mItemClickListener.onCardItemClick(view, uiMessage);
+                if (mItemClickListener != null) {
+                    mItemClickListener.onCardItemClick(view, uiMessage);
+                }
+
             }
         });
-
     }
 
     /**
@@ -308,9 +313,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
         void onCardItemClick(View view, UIMessage uiMessage);
 
+        void onCardItemLayoutClick(View view, UIMessage uiMessage);
+
         void onMessageResend(UIMessage uiMessage, View view);
 
-        void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView);
+        void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, CustomLoadingView downloadLoadingView);
 
         void onAdapterDataSizeChange();
     }
@@ -322,7 +329,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public ImageView senderPhotoImgRight;
         public RelativeLayout sendStatusLayout;
         public ImageView sendFailImg;
-        public QMUILoadingView sendingLoadingView;
+        public CustomLoadingView sendingLoadingView;
         public TextView sendTimeText;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
@@ -343,10 +350,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     .findViewById(R.id.iv_sender_photo_right);
             sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
             sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
-            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
+            sendingLoadingView = (CustomLoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
+            itemView.setOnClickListener(this);
+
         }
 
         /**
@@ -356,6 +365,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
          */
         @Override
         public void onClick(View v) {
+            int position = getAdapterPosition();
+            if (mItemClickListener != null && position != -1) {
+                mItemClickListener.onCardItemLayoutClick(v, UIMessageList.get(getAdapterPosition()));
+            }
+
         }
 
         public void onMessageResendClick(UIMessage uiMessage) {

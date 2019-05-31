@@ -3,28 +3,36 @@
     android:id="@+id/bubble_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:bl_bubbleColor="@color/white"
     app:bl_arrowDirection="top"
-    app:bl_arrowHeight="8dp"
+    app:bl_arrowHeight="0dp"
     app:bl_arrowWidth="14dp"
+    app:bl_bubbleColor="@color/white"
     app:bl_cornersRadius="6dp"
     app:bl_strokeColor="#AAAAAA"
     app:bl_strokeWidth="1px">
 
-   <ImageView
-       android:id="@+id/iv_close"
-       android:src="@drawable/ic_recommend_close"
-       android:layout_gravity="right"
-       android:padding="7dp"
-       android:layout_width="25dp"
-       android:layout_height="25dp" />
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="right"
+        android:padding="7dp"
+        android:src="@drawable/ic_recommend_close" />
+
     <com.inspur.emmcloud.widget.MaxHeightListView
-        android:layout_marginTop="25dp"
-        android:dividerHeight="0dp"
-        android:divider="#00000000"
         android:id="@+id/lv_all_day_event"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:paddingBottom="5dp"
+        android:scrollbars="vertical"
+        android:focusable="true"
+        android:fadeScrollbars="false"
+        android:divider="#00000000"
+        android:dividerHeight="0dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbarSize="4dp"
+        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb">
 
     </com.inspur.emmcloud.widget.MaxHeightListView>
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>

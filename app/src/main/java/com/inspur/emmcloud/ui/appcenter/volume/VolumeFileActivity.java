@@ -1,23 +1,12 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.File;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -40,15 +29,26 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 
-import org.xutils.view.annotation.ViewInject;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.io.File;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import butterknife.BindView;
 
 
 /**
@@ -60,30 +60,31 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
     private static final int REQUEST_SHOW_FILE_FILTER = 5;
-    @ViewInject(R.id.operation_layout)
-    protected RelativeLayout operationLayout;
-    @ViewInject(R.id.operation_sort_text)
-    private TextView operationSortText;
-    @ViewInject(R.id.batch_operation_bar_layout)
-    private RelativeLayout batchOperationBarLayout;
-    @ViewInject(R.id.batch_operation_header_layout)
-    private RelativeLayout batchOprationHeaderLayout;
-    @ViewInject(R.id.batch_operation_header_text)
-    private TextView batchOprationHeaderText;
-    @ViewInject(R.id.batch_operation_select_all_text)
-    private TextView getBatchOprationSelectAllText;
-    @ViewInject(R.id.batch_operation_delete_text)
-    private TextView batchOperationDeleteText;
-    @ViewInject(R.id.batch_operation_move_text)
-    private TextView batchOperationMoveText;
+    @BindView(R.id.operation_layout)
+    RelativeLayout operationLayout;
+    @BindView(R.id.operation_sort_text)
+    TextView operationSortText;
+    @BindView(R.id.batch_operation_bar_layout)
+    RelativeLayout batchOperationBarLayout;
+    @BindView(R.id.batch_operation_header_layout)
+    RelativeLayout batchOprationHeaderLayout;
+    @BindView(R.id.batch_operation_header_text)
+    TextView batchOprationHeaderText;
+    @BindView(R.id.batch_operation_select_all_text)
+    TextView getBatchOprationSelectAllText;
+    @BindView(R.id.batch_operation_delete_text)
+    TextView batchOperationDeleteText;
+    @BindView(R.id.batch_operation_move_text)
+    TextView batchOperationMoveText;
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
     private boolean isOpenFromParentDirectory = false;//是否从父级目录打开，如果是的话关闭时直接finish，否则需要打开父级页面
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        super.onCreate();
         this.isShowFileUploading = true;
         isOpenFromParentDirectory = getIntent().getBooleanExtra("isOpenFromParentDirectory", false);
         setListIemClick();

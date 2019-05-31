@@ -1,16 +1,8 @@
 package com.inspur.emmcloud.ui.contact;
 
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -30,79 +22,93 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.util.ArrayList;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 从群聊，单聊，通讯录等位置进入的个人信息页面
  * 规范化改造代码
  */
-@ContentView(R.layout.activity_user_info)
 public class UserInfoActivity extends BaseActivity {
 
     private static final String USER_UID = "uid";
     private static final int USER_INFO_ACTIVITY_REQUEST_CODE = 1;
 
-    @ViewInject(R.id.ll_user_department)
-    private LinearLayout departmentLayout;
-    @ViewInject(R.id.tv_user_department)
-    private TextView departmentText;
-    @ViewInject(R.id.ll_user_telephone)
-    private LinearLayout telLayout;
-    @ViewInject(R.id.tv_user_telephone)
-    private TextView telText;
-    @ViewInject(R.id.ll_user_mail)
-    private LinearLayout mailLayout;
-    @ViewInject(R.id.tv_user_mail)
-    private TextView mailText;
-    @ViewInject(R.id.rl_user_contact)
-    private RelativeLayout contactLayout;
-    @ViewInject(R.id.tv_user_phone_num)
-    private TextView phoneNumText;
-    @ViewInject(R.id.iv_user_photo)
-    private ImageView photoImg;
-    @ViewInject(R.id.tv_user_name)
-    private TextView nameText;
-    @ViewInject(R.id.tv_user_duty)
-    private TextView dutyText;
-    @ViewInject(R.id.iv_start_chat)
-    private TextView startChatImg;
+    @BindView(R.id.ll_user_department)
+    LinearLayout departmentLayout;
+    @BindView(R.id.tv_user_department)
+    TextView departmentText;
+    @BindView(R.id.ll_user_telephone)
+    LinearLayout telLayout;
+    @BindView(R.id.tv_user_telephone)
+    TextView telText;
+    @BindView(R.id.ll_user_mail)
+    LinearLayout mailLayout;
+    @BindView(R.id.tv_user_mail)
+    TextView mailText;
+    @BindView(R.id.rl_user_contact)
+    RelativeLayout contactLayout;
+    @BindView(R.id.tv_user_phone_num)
+    TextView phoneNumText;
+    @BindView(R.id.iv_user_photo)
+    ImageView photoImg;
+    @BindView(R.id.tv_user_name)
+    TextView nameText;
+    @BindView(R.id.tv_user_duty)
+    TextView dutyText;
+    @BindView(R.id.iv_start_chat)
+    TextView startChatImg;
 
-    @ViewInject(R.id.ll_mobile_contact_info)
-    private LinearLayout mobileContactInfoLayout;
-    @ViewInject(R.id.ll_mobile_phone)
-    private LinearLayout mobilePhoneLayout;
-    @ViewInject(R.id.ll_mobile_sms)
-    private LinearLayout mobileSMSLayout;
-    @ViewInject(R.id.ll_mobile_email)
-    private LinearLayout mobileEmailLayout;
-    @ViewInject(R.id.rl_start_chat)
-    private RelativeLayout mobileStartChatLayout;
-    //    @ViewInject(R.id.tv_user_position)
+    @BindView(R.id.ll_mobile_contact_info)
+    LinearLayout mobileContactInfoLayout;
+    @BindView(R.id.ll_mobile_phone)
+    LinearLayout mobilePhoneLayout;
+    @BindView(R.id.ll_mobile_sms)
+    LinearLayout mobileSMSLayout;
+    @BindView(R.id.ll_mobile_email)
+    LinearLayout mobileEmailLayout;
+    @BindView(R.id.rl_start_chat)
+    RelativeLayout mobileStartChatLayout;
+    //    @BindView(R.id.tv_user_position)
 //    private TextView positionText;
-//    @ViewInject(R.id.ll_user_position)
+//    @BindView(R.id.ll_user_position)
 //    private LinearLayout mobilePositionLayout;
-    @ViewInject(R.id.rl_contact_way)
-    private RelativeLayout userContactWayLayout;
+    @BindView(R.id.rl_contact_way)
+    RelativeLayout userContactWayLayout;
 
     private ContactUser contactUser;
     private String parentUid;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
+    public void onCreate() {
+        ButterKnife.bind(this);
         init();
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_user_info;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -245,20 +251,14 @@ public class UserInfoActivity extends BaseActivity {
 
     private void showCallUserDialog(final String mobile) {
         if (!contactUser.getId().equals(MyApplication.getInstance().getUid())) {
-            new MyQMUIDialog.MessageDialogBuilder(UserInfoActivity.this)
+            new CustomDialog.MessageDialogBuilder(UserInfoActivity.this)
                     .setMessage(mobile)
-                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                        }
+                    .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                        dialog.dismiss();
                     })
-                    .addAction(R.string.user_call, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
-                        }
+                    .setPositiveButton(R.string.user_call, (dialog, index) -> {
+                        dialog.dismiss();
+                        AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
                     })
                     .show();
         }
@@ -306,7 +306,7 @@ public class UserInfoActivity extends BaseActivity {
     }
 
     private void createDirectChannel() {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(UserInfoActivity.this, contactUser.getId(),
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override

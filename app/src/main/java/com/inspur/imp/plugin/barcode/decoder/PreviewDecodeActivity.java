@@ -1,6 +1,22 @@
 package com.inspur.imp.plugin.barcode.decoder;
 
-import android.app.Activity;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import com.funcode.decoder.inspuremmcloud.FunDecode;
+import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
+import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.imp.api.Res;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -16,28 +32,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.funcode.decoder.inspuremmcloud.FunDecode;
-import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
-import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.inspur.imp.api.Res;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 
 /**
  * Created by chenmch on 2018/11/16.
  */
 
-public class PreviewDecodeActivity extends Activity implements FunDecodeHandler {
+public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHandler {
     private FunDecode mDecode = null;
     private FunDecodeSurfaceView mDecodeView = null;
     private RangeView mRangeView;
@@ -51,6 +51,10 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+    }
+
+    @Override
+    public void onCreate() {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             //全屏显示
@@ -65,7 +69,7 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                setContentView(Res.getLayoutID("activity_preview_decode"));
+                setContentView(R.layout.activity_preview_decode);
                 initView();
             }
 
@@ -76,6 +80,15 @@ public class PreviewDecodeActivity extends Activity implements FunDecodeHandler 
             }
 
         });
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return 0;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
 

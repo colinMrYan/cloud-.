@@ -1,9 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
+import java.io.File;
 
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.BuildConfig;
@@ -13,6 +10,7 @@ import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.horcrux.svg.SvgPackage;
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
@@ -34,7 +32,6 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
@@ -47,13 +44,14 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 import com.reactnativenavigation.bridge.NavigationReactPackage;
 
-import java.io.File;
+import android.content.Intent;
+import android.os.Bundle;
 
 /**
  * Created by yufuchang on 2017/3/15.
  */
 
-public class ReactNativeAppActivity extends Activity implements DefaultHardwareBackBtnHandler {
+public class ReactNativeAppActivity extends BaseActivity implements DefaultHardwareBackBtnHandler {
     private ReactInstanceManager mReactInstanceManager;
     private ReactNativeAPIService reactNativeAPIService;
     private String reactNativeAppScheme = "";
@@ -64,12 +62,21 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
 //    private String installUri = "";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         init();
         checkSource();
         initReactNativeApp();
 //        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).fitsSystemWindows(true).init();
+    }
+
+
+    @Override
+    public int getLayoutResId() {
+        return 0;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
     /**
@@ -82,11 +89,6 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
         loadingDialog = new ReactLoadingDlg(this);
         reactNativeAPIService = new ReactNativeAPIService(ReactNativeAppActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
     }
 
 
@@ -448,7 +450,9 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
-            finish();
+            if(!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")){
+                finish();
+            }
         }
 
         @Override
@@ -467,7 +471,9 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
-            finish();
+            if(!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")){
+                finish();
+            }
         }
 
     }

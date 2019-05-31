@@ -1,15 +1,10 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Chronometer;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -33,18 +28,22 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.os.SystemClock;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Chronometer;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2018/8/14.
  */
-@ContentView(R.layout.activity_voice_channel)
 public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public static final String VOICE_COMMUNICATION_STATE = "voice_communication_state";//传递页面布局样式的
     public static final String VOICE_TIME = "voice_time";
@@ -55,52 +54,52 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     public static final int COME_BACK_FROM_SERVICE = 3;//预留从小窗口回到聊天页面的状态
     private static final int EXCEPTION_STATE = -1;
     private static int STATE = -1;
-    @ViewInject(R.id.ll_voice_communication_invite)
-    private LinearLayout inviteeLinearLayout;
-    @ViewInject(R.id.img_user_head)
-    private CircleTextImageView userHeadImg;
-    @ViewInject(R.id.tv_user_name)
-    private TextView userNameTv;
-    @ViewInject(R.id.ll_voice_communication_invite_members)
-    private LinearLayout inviteMemebersGroupLinearLayout;
-    @ViewInject(R.id.recyclerview_voice_communication_first)
-    private RecyclerView firstRecyclerview;
-    @ViewInject(R.id.recyclerview_voice_communication_second)
-    private RecyclerView secondRecyclerview;
-    @ViewInject(R.id.ll_voice_communication_memebers)
-    private LinearLayout communicationMembersLinearLayout;
-    @ViewInject(R.id.recyclerview_voice_communication_memebers_first)
-    private RecyclerView communicationMembersFirstRecyclerview;
-    @ViewInject(R.id.recyclerview_voice_communication_memebers_second)
-    private RecyclerView communicationMemberSecondRecyclerview;
-    @ViewInject(R.id.tv_voice_communication_state)
-    private TextView communicationStateTv;
-    @ViewInject(R.id.tv_voice_communication_time)
-    private Chronometer communicationTimeChronometer;
-    @ViewInject(R.id.ll_voice_communication_function_group)
-    private LinearLayout functionLinearLayout;
-    @ViewInject(R.id.img_an_excuse)
-    private ImageView excuseImg;
-    @ViewInject(R.id.tv_an_excuse)
-    private TextView excuseTv;
-    @ViewInject(R.id.img_hands_free)
-    private ImageView handsFreeImg;
-    @ViewInject(R.id.tv_hands_free)
-    private TextView handsFreeTv;
-    @ViewInject(R.id.img_mute)
-    private ImageView muteImg;
-    @ViewInject(R.id.tv_mute)
-    private TextView muteTv;
-    @ViewInject(R.id.img_tran_video)
-    private ImageView tranVideoImg;
-    @ViewInject(R.id.tv_tran_video)
-    private TextView tranVideoTv;
-    @ViewInject(R.id.img_answer_the_phone)
-    private ImageView answerPhoneImg;
-    @ViewInject(R.id.img_hung_up)
-    private ImageView hungUpImg;
-    @ViewInject(R.id.img_voice_communication_pack_up)
-    private ImageView packUpImg;
+    @BindView(R.id.ll_voice_communication_invite)
+    LinearLayout inviteeLinearLayout;
+    @BindView(R.id.img_user_head)
+    CircleTextImageView userHeadImg;
+    @BindView(R.id.tv_user_name)
+    TextView userNameTv;
+    @BindView(R.id.ll_voice_communication_invite_members)
+    LinearLayout inviteMemebersGroupLinearLayout;
+    @BindView(R.id.recyclerview_voice_communication_first)
+    RecyclerView firstRecyclerview;
+    @BindView(R.id.recyclerview_voice_communication_second)
+    RecyclerView secondRecyclerview;
+    @BindView(R.id.ll_voice_communication_memebers)
+    LinearLayout communicationMembersLinearLayout;
+    @BindView(R.id.recyclerview_voice_communication_memebers_first)
+    RecyclerView communicationMembersFirstRecyclerview;
+    @BindView(R.id.recyclerview_voice_communication_memebers_second)
+    RecyclerView communicationMemberSecondRecyclerview;
+    @BindView(R.id.tv_voice_communication_state)
+    TextView communicationStateTv;
+    @BindView(R.id.tv_voice_communication_time)
+    Chronometer communicationTimeChronometer;
+    @BindView(R.id.ll_voice_communication_function_group)
+    LinearLayout functionLinearLayout;
+    @BindView(R.id.img_an_excuse)
+    ImageView excuseImg;
+    @BindView(R.id.tv_an_excuse)
+    TextView excuseTv;
+    @BindView(R.id.img_hands_free)
+    ImageView handsFreeImg;
+    @BindView(R.id.tv_hands_free)
+    TextView handsFreeTv;
+    @BindView(R.id.img_mute)
+    ImageView muteImg;
+    @BindView(R.id.tv_mute)
+    TextView muteTv;
+    @BindView(R.id.img_tran_video)
+    ImageView tranVideoImg;
+    @BindView(R.id.tv_tran_video)
+    TextView tranVideoTv;
+    @BindView(R.id.img_answer_the_phone)
+    ImageView answerPhoneImg;
+    @BindView(R.id.img_hung_up)
+    ImageView hungUpImg;
+    @BindView(R.id.img_voice_communication_pack_up)
+    ImageView packUpImg;
     private ChatAPIService apiService;
     private List<VoiceCommunicationJoinChannelInfoBean> voiceCommunicationUserInfoBeanList = new ArrayList<>();
     private String channelId = "";//声网的channelId
@@ -112,13 +111,19 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private MediaPlayerManagerUtils mediaPlayerManagerUtils;
     private VoiceCommunicationUtils voiceCommunicationUtils;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         voiceCommunicationUserInfoBeanList = (List<VoiceCommunicationJoinChannelInfoBean>) getIntent().getSerializableExtra("userList");
         voiceCommunicationUtils = VoiceCommunicationUtils.getVoiceCommunicationUtils(this);
         recoverData();
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_voice_channel;
     }
 
     /**

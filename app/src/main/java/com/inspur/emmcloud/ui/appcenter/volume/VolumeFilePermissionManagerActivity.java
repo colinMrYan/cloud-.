@@ -1,10 +1,8 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -16,14 +14,15 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 2018/03/01数据
@@ -41,31 +40,32 @@ import org.xutils.view.annotation.ViewInject;
  * }
  * Created by yufuchang on 2018/2/28.
  */
-@ContentView(R.layout.activity_volume_file_permission_manager)
 public class VolumeFilePermissionManagerActivity extends BaseActivity {
 
-    @ViewInject(R.id.rv_volume_file_permission)
-    protected RecyclerView groupRecyclerView;
+    @BindView(R.id.rv_volume_file_permission)
+    RecyclerView groupRecyclerView;
 
     private VolumeGroupPermissionManagerAdapter volumeGroupPermissionManagerAdapter;
 
     private LoadingDialog loadingDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initViews();
         getVolumeFileGroup();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_volume_file_permission_manager;
     }
 
     /**
      * 初始化Views
      */
     private void initViews() {
-        ECMRecyclerViewLinearLayoutManager layoutManager = new ECMRecyclerViewLinearLayoutManager(VolumeFilePermissionManagerActivity.this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        layoutManager.setCanScrollHorizontally(false);
-        groupRecyclerView.setLayoutManager(layoutManager);
+        groupRecyclerView.setLayoutManager(new LinearLayoutManager(VolumeFilePermissionManagerActivity.this));
         volumeGroupPermissionManagerAdapter = new VolumeGroupPermissionManagerAdapter(VolumeFilePermissionManagerActivity.this);
         volumeGroupPermissionManagerAdapter.setVolumeGroupPermissionManagerInterfaceListener(new VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerInterface() {
             @Override

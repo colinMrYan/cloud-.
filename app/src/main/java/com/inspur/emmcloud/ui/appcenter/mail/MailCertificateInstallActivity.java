@@ -1,10 +1,10 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,12 +24,8 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
-
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
 
 import java.io.FileInputStream;
 import java.security.KeyStore;
@@ -39,44 +35,52 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by libaochao on 2018/12/20.
  */
-@ContentView(R.layout.activity_mail_certificate_install)
 public class MailCertificateInstallActivity extends BaseActivity {
     public static final int SELECT_CREDIFICATE_FILE = 10;
     public static String CERTIFICATER_KEY = "certificate";
-    @ViewInject(R.id.rl_installed_certificate)
-    private RelativeLayout installedCerLayout;
-    @ViewInject(R.id.tv_cer_use_state)
-    private TextView cerUseStateText;
-    @ViewInject(R.id.tv_installed_cer_title)
-    private TextView installedCerTitleText;
-    @ViewInject(R.id.tv_installed_cer_owner_name)
-    private TextView cerOwnerNameText;
-    @ViewInject(R.id.tv_installed_cer_issuer_name)
-    private TextView cerIssuerNameText;
-    @ViewInject(R.id.tv_installed_cer_final_data)
-    private TextView cerFinalDataText;
-    @ViewInject(R.id.switchview_encryption_action)
-    private SwitchView encryptionSwitchView;
-    @ViewInject(R.id.switchview_signature_action)
-    private SwitchView signatureSwitchView;
-    @ViewInject(R.id.tv_new_cer_title)
-    private TextView newCerTitleText;
-    @ViewInject(R.id.tv_new_cer_ower_name)
-    private TextView newCerOwnerNameText;
-    @ViewInject(R.id.tv_new_cer_issuer_name)
-    private TextView newCerIssuerNameText;
-    @ViewInject(R.id.tv_new_cer_final_data)
-    private TextView newCerFinalDataText;
+    @BindView(R.id.rl_installed_certificate)
+    RelativeLayout installedCerLayout;
+    @BindView(R.id.tv_cer_use_state)
+    TextView cerUseStateText;
+    @BindView(R.id.tv_installed_cer_title)
+    TextView installedCerTitleText;
+    @BindView(R.id.tv_installed_cer_owner_name)
+    TextView cerOwnerNameText;
+    @BindView(R.id.tv_installed_cer_issuer_name)
+    TextView cerIssuerNameText;
+    @BindView(R.id.tv_installed_cer_final_data)
+    TextView cerFinalDataText;
+    @BindView(R.id.switchview_encryption_action)
+    SwitchView encryptionSwitchView;
+    @BindView(R.id.switchview_signature_action)
+    SwitchView signatureSwitchView;
+    @BindView(R.id.tv_new_cer_title)
+    TextView newCerTitleText;
+    @BindView(R.id.tv_new_cer_ower_name)
+    TextView newCerOwnerNameText;
+    @BindView(R.id.tv_new_cer_issuer_name)
+    TextView newCerIssuerNameText;
+    @BindView(R.id.tv_new_cer_final_data)
+    TextView newCerFinalDataText;
     private String certificatePassWord;
     private MailCertificateDetail myCertificate;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         init();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_certificate_install;
     }
 
     /**
@@ -165,29 +169,28 @@ public class MailCertificateInstallActivity extends BaseActivity {
      * @param path
      */
     private void showInputCreKeyWordDialog(final String path) {
-        final QMUIDialog.EditTextDialogBuilder builder = new QMUIDialog.EditTextDialogBuilder(this);
+        final CustomDialog.EditDialogBuilder builder = new CustomDialog.EditDialogBuilder(this);
+        final EditText editText = new EditText(this);
+        editText.setHint("请在此输入证书密码：");
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+
         builder.setTitle("证书密码：")
-                .setPlaceholder("请在此输入证书密码：")
-                .setInputType(InputType.TYPE_CLASS_TEXT)
-                .addAction("取消", new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setView(editText)
+//                .setPlaceholder("请在此输入证书密码：")
+//                .setInputType(InputType.TYPE_CLASS_TEXT)
+                .setNegativeButton("取消", (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction("确定", new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        CharSequence text = builder.getEditText().getText();
-                        String key = text.toString().trim();
-                        if (getCertificate(path, key)) {
-                            certificatePassWord = key;
-                            String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
-                            uploadCertificateFile(mail, path, certificatePassWord);
-                            dialog.dismiss();
-                        } else {
-                            Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
-                        }
+                .setPositiveButton("确定", (dialog, index) -> {
+                    CharSequence text = editText.getText();
+                    String key = text.toString().trim();
+                    if (getCertificate(path, key)) {
+                        certificatePassWord = key;
+                        String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+                        uploadCertificateFile(mail, path, certificatePassWord);
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
                     }
                 }).show();
     }

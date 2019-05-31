@@ -1,20 +1,15 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.Serializable;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -31,6 +26,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -39,38 +35,42 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
 
-import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.Serializable;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_member)
 public class MembersActivity extends BaseActivity implements TextWatcher {
     public static final String MEMBER_PAGE_STATE = "member_page_state";
     public static final int SELECT_STATE = 1;//选择人员
     public static final int MENTIONS_STATE = 2;//@人员选择
     public static final int CHECK_STATE = 3;//查看人员
     private static final int TOTAL_MEMBERS_NUM = 9;//最多可选择的人数配置，修改这个配置应当同时修改toast提示里的配置数量
-    @ViewInject(R.id.sidrbar_channel_member_select)
-    private SideBar lettersSideBar;
-    @ViewInject(R.id.tv_ok)
-    private TextView okTv;
-    @ViewInject(R.id.lv_channel_member_select)
-    private ListView allMemberListView;
-    @ViewInject(R.id.recyclerview_voice_communication_select_members)
-    private RecyclerView selectedMemberRecylerView;
-    @ViewInject(R.id.header_text)
-    private TextView userHeadText;
-    @ViewInject(R.id.ev_channel_member_search_input)
-    private EditText searchInputEv;
+    @BindView(R.id.sidrbar_channel_member_select)
+    SideBar lettersSideBar;
+    @BindView(R.id.tv_ok)
+    TextView okTv;
+    @BindView(R.id.lv_channel_member_select)
+    ListView allMemberListView;
+    @BindView(R.id.recyclerview_voice_communication_select_members)
+    RecyclerView selectedMemberRecylerView;
+    @BindView(R.id.header_text)
+    TextView userHeadText;
+    @BindView(R.id.ev_channel_member_search_input)
+    EditText searchInputEv;
     private CharacterParser characterParser;// 汉字转拼音
     private PinyinComparator pinyinComparator;// 根据拼音来排列ListView里面的数据类
     private ChannelMemberListAdapter channelMemberListAdapter;
@@ -87,11 +87,16 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
     private int state = -1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initViews();
         initChannelMemberDataInThread();
         initListener();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_member;
     }
 
     private void initViews() {
@@ -124,7 +129,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
             public void run() {
                 if (!StringUtils.isBlank(channelId)) {
                     List<String> uidList = null;
-                    if (MyApplication.getInstance().isV1xVersionChat()) {
+                    if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                         Conversation conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), channelId);
                         uidList = conversation.getMemberList();
                     } else {

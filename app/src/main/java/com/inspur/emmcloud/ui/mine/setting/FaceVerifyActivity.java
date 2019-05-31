@@ -48,11 +48,9 @@ import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.camera.mycamera.CameraUtils;
 import com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -100,12 +98,15 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             ToastUtils.show(this, R.string.filetransfer_sd_not_exist);
             finish();
         }
-        setContentView(R.layout.activity_face_verification);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         new ProfileUtils(FaceVerifyActivity.this, new CommonCallBack() {
@@ -116,6 +117,16 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         }).initProfile(false);
         init();
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_face_verification;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
+    }
+
 
     private void init() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
@@ -487,60 +498,46 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
      */
     private void showFaceVerifyFailDlg() {
         if (isFaceSetting || isFaceVerityTest) {
-            new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
+            new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
-                    .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            finish();
-                        }
+                    .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                        dialog.dismiss();
+                        finish();
                     })
-                    .show(false);
+                    .setCancelable(false)
+                    .show();
         } else if (CreateGestureActivity.getGestureCodeIsOpenByUser(FaceVerifyActivity.this)) {
-            new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
+            new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
-                    .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            startTime = System.currentTimeMillis();
-                            delayTotakePicture(1000);
-                        }
+                    .setNegativeButton(getString(R.string.retry), (dialog, index) -> {
+                        dialog.dismiss();
+                        startTime = System.currentTimeMillis();
+                        delayTotakePicture(1000);
                     })
-                    .addAction(R.string.switch_gesture_unlock, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            Intent intent = new Intent(FaceVerifyActivity.this, GestureLoginActivity.class);
-                            intent.putExtra("gesture_code_change", "login");
-                            startActivity(intent);
-                            finish();
-                        }
+                    .setPositiveButton(R.string.switch_gesture_unlock, (dialog, index) -> {
+                        dialog.dismiss();
+                        Intent intent = new Intent(FaceVerifyActivity.this, GestureLoginActivity.class);
+                        intent.putExtra("gesture_code_change", "login");
+                        startActivity(intent);
+                        finish();
                     })
-                    .show(false);
+                    .setCancelable(false)
+                    .show();
         } else {
-            new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
+            new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
-                    .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            startTime = System.currentTimeMillis();
-                            delayTotakePicture(1000);
-                        }
+                    .setNegativeButton(getString(R.string.retry), (dialog, index) -> {
+                        dialog.dismiss();
+                        startTime = System.currentTimeMillis();
+                        delayTotakePicture(1000);
                     })
-                    .addAction(R.string.off_face_verify_relogin, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                            ((MyApplication) getApplication()).signout();
-                            PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
-                        }
+                    .setPositiveButton(R.string.off_face_verify_relogin, (dialog, index) -> {
+                        ((MyApplication) getApplication()).signout();
+                        PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
                     })
-                    .show(false);
+                    .setCancelable(false)
+                    .show();
         }
-
     }
 
     /**

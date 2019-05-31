@@ -1,21 +1,15 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
-import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.TagColorBean;
-import com.inspur.emmcloud.bean.work.TaskColorTag;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.task.TagColorBean;
+import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -25,40 +19,52 @@ import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2019/4/9.
  */
-@ContentView(R.layout.activity_task_tags_add)
-public class TaskTagAddActivity extends BaseActivity {
-    @ViewInject(R.id.lv_tag_color)
+public class TaskTagAddActivity extends BaseActivity  {
+    @BindView(R.id.lv_tag_color)
     ListView tagColorList;
-    @ViewInject(R.id.tv_delecte_tag)
+    @BindView(R.id.tv_delecte_tag)
     TextView deleteTagText;
-    @ViewInject(R.id.et_tag_name)
-    TextView tagNameEdit;
+    @BindView(R.id.et_tag_name)
+    EditText tagNameEdit;
 
     private List<TagColorBean> tagColorBeans = new ArrayList<>();
     private int selectIndex = 0;
     private ColorTagAdapter colorTagAdapter = new ColorTagAdapter();
     private ArrayList<String> messionTagList=new ArrayList<>();
     private LoadingDialog loadingDialog;
-    private WorkAPIService workAPIService;
+    private ScheduleApiService scheduleAPIService;
     private TaskColorTag taskColorTag;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initData();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_task_tags_add;
+    }
+
     private void initData() {
-        TagColorBean tagColorPink = new TagColorBean("RED", getString(R.string.mession_delete_red));
+        TagColorBean tagColorPink = new TagColorBean("PINK", getString(R.string.mession_delete_red));
         TagColorBean tagColorOrange = new TagColorBean("ORANGE", getString(R.string.mession_delete_orange));
         TagColorBean tagColorYellow = new TagColorBean("YELLOW", getString(R.string.mession_delete_yellow));
         TagColorBean tagColorGreen = new TagColorBean("GREEN", getString(R.string.mession_delete_green));
@@ -86,11 +92,32 @@ public class TaskTagAddActivity extends BaseActivity {
             tagNameEdit.setText(taskColorTag.getTitle());
             deleteTagText.setVisibility(View.VISIBLE);
         }
+        tagNameEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String str = charSequence.toString();
+                if (str.length()>64){
+                    tagNameEdit.setText(str.substring(0,64)); //截取前x位
+                    tagNameEdit.requestFocus();
+                    tagNameEdit.setSelection(tagNameEdit.getText().length()); //光标移动到最后
+                    ToastUtils.show(getBaseContext(),R.string.schedule_task_tag_name_length);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         tagColorList.setAdapter(colorTagAdapter);
         loadingDialog = new LoadingDialog(TaskTagAddActivity.this);
-        workAPIService = new WorkAPIService(this);
-        workAPIService.setAPIInterface(new WebService());
+        scheduleAPIService = new ScheduleApiService(this);
+        scheduleAPIService.setAPIInterface(new WebService());
     }
 
     private int getTagColorIndex(List<TagColorBean> tagColorBeans, String color) {
@@ -108,29 +135,30 @@ public class TaskTagAddActivity extends BaseActivity {
                 //存储条件，网络及名称不能为空
                 String title = tagNameEdit.getText().toString();
                 if (!NetUtils.isNetworkConnected(this)) {
-                    ToastUtils.show(this, "网络无法连接");
+                    ToastUtils.show(this, getString(R.string.net_connected_error));
                     return;
                 }
                 if (StringUtils.isBlank(title)) {
-                    ToastUtils.show(this, "标签名称不能为空");
+                    ToastUtils.show(this, getString(R.string.schedule_task_tag_name_null_hint));
                     return;
                 }
+                loadingDialog.show();
                 //一种是新建；第二种是更新
                 if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS)) {
                     String userId = PreferencesUtils.getString(
                             TaskTagAddActivity.this, "userID");
-                    workAPIService.changeTag(taskColorTag.getId(), title, tagColorBeans.get(selectIndex).getColor(), userId);
+                    scheduleAPIService.changeTag(taskColorTag.getId(), title, tagColorBeans.get(selectIndex).getColor(), userId);
                 } else {
-                    workAPIService.createTag(title, tagColorBeans.get(selectIndex).getColor());
+                    scheduleAPIService.createTag(title, tagColorBeans.get(selectIndex).getColor());
                 }
                 break;
             case R.id.tv_delecte_tag:
                 if (!NetUtils.isNetworkConnected(this)) {
-                    ToastUtils.show(this, "无法连接网络");
+                    ToastUtils.show(this, getString(R.string.net_connected_error));
                     return;
                 }
                 if (getIntent().hasExtra(TaskTagsManageActivity.EXTRA_DELETE_TAGS))
-                    workAPIService.deleteTag(taskColorTag.getId());
+                    scheduleAPIService.deleteTag(taskColorTag.getId());
                 break;
             case R.id.ibt_back:
                 finish();
@@ -212,6 +240,7 @@ public class TaskTagAddActivity extends BaseActivity {
 
         @Override
         public void returnCreateTagFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(TaskTagAddActivity.this, error, errorCode);
         }
 

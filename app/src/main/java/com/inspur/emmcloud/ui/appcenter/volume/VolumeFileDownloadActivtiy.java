@@ -1,12 +1,14 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import java.io.File;
+import java.text.SimpleDateFormat;
+
+import org.xutils.x;
+import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -23,54 +25,44 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
-import org.xutils.common.Callback;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.http.app.RedirectHandler;
-import org.xutils.http.request.UriRequest;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * 云盘下载
  */
-
-@ContentView(R.layout.activity_volume_file_download)
 public class VolumeFileDownloadActivtiy extends BaseActivity {
 
+    @BindView(R.id.download_status_layout)
+    LinearLayout downloadStatusLayout;
+    @BindView(R.id.download_btn)
+    Button downloadBtn;
+    @BindView(R.id.download_progress)
+    ProgressBar progressBar;
+    @BindView(R.id.progress_text)
+    TextView progressText;
+    @BindView(R.id.tv_file_name)
+    TextView fileNameText;
+    @BindView(R.id.file_type_img)
+    ImageView fileTypeImg;
+    @BindView(R.id.file_time_text)
+    TextView fileTimeText;
     private String fileSavePath = "";
-    @ViewInject(R.id.download_status_layout)
-    private LinearLayout downloadStatusLayout;
-
-    @ViewInject(R.id.download_btn)
-    private Button downloadBtn;
-
-    @ViewInject(R.id.download_progress)
-    private ProgressBar progressBar;
-
-    @ViewInject(R.id.progress_text)
-    private TextView progressText;
-
-    @ViewInject(R.id.tv_file_name)
-    private TextView fileNameText;
-
-    @ViewInject(R.id.file_type_img)
-    private ImageView fileTypeImg;
-
-    @ViewInject(R.id.file_time_text)
-    private TextView fileTimeText;
-
     private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         volumeFile = (VolumeFile) getIntent().getSerializableExtra("volumeFile");
         fileNameText.setText(volumeFile.getName());
         fileTypeImg.setImageResource(VolumeFileIconUtils.getIconResId(volumeFile));
@@ -86,6 +78,11 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 downloadFile();
             }
         }
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_volume_file_download;
     }
 
     public void onClick(View v) {

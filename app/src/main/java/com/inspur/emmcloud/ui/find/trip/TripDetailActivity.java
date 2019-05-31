@@ -1,20 +1,14 @@
 package com.inspur.emmcloud.ui.find.trip;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.app.TimePickerDialog.OnTimeSetListener;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.Selection;
-import android.text.Spannable;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.View.OnFocusChangeListener;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TimePicker;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -32,15 +26,20 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextUtils;
+import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
 public class TripDetailActivity extends BaseActivity {
     private static final int SELECT_RIDER = 1;
@@ -64,15 +63,18 @@ public class TripDetailActivity extends BaseActivity {
     private Trip uploadTrip;
     private FindAPIService apiService;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_detail);
+    public void onCreate() {
         initView();
         initData();
         apiService = new FindAPIService(TripDetailActivity.this);
         apiService.setAPIInterface(new WebService());
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_trip_detail;
     }
 
     private void initView() {

@@ -1,6 +1,31 @@
 package com.inspur.imp.plugin.barcode.scan;
 
-import android.app.Activity;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Vector;
+
+import org.xutils.x;
+import org.xutils.common.Callback.CommonCallback;
+import org.xutils.http.RequestParams;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.imp.api.Res;
+import com.inspur.imp.plugin.barcode.camera.CameraManager;
+import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
+import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
+import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
+import com.inspur.imp.plugin.barcode.view.ViewfinderView;
+
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -20,32 +45,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.Result;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.imp.api.Res;
-import com.inspur.imp.plugin.barcode.camera.CameraManager;
-import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
-import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
-import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
-import com.inspur.imp.plugin.barcode.view.ViewfinderView;
 
-import org.xutils.common.Callback.CommonCallback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Vector;
-
-
-public class CaptureActivity extends Activity implements Callback {
+public class CaptureActivity extends BaseActivity implements Callback {
 
     private static final float BEEP_VOLUME = 0.10f;
     private static final long VIBRATE_DURATION = 200L;
@@ -79,9 +80,12 @@ public class CaptureActivity extends Activity implements Callback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-        setContentView(Res.getLayoutID("plugin_barcode_capture"));
         CameraManager.init(this);
         btn_torch = (Button) findViewById(Res.getWidgetID("btn_torch"));
         viewfinderView = (ViewfinderView) findViewById(Res.getWidgetID("viewfinder_view"));
@@ -115,6 +119,15 @@ public class CaptureActivity extends Activity implements Callback {
                 }
             }
         });
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.plugin_barcode_capture;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
     @Override

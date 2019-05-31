@@ -1,7 +1,22 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
+
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -15,24 +30,6 @@ import android.widget.ListView;
 import android.widget.Space;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
 public class LanguageSwitchActivity extends BaseActivity {
 
     public static final String LANGUAGE_CHANGE = "change_language";
@@ -45,14 +42,16 @@ public class LanguageSwitchActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine_language_switch);
+    public void onCreate() {
         listView = (ListView) findViewById(R.id.lv);
         loadingDlg = new LoadingDialog(this);
         handMessage();
         getLanguageList();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mine_language_switch;
     }
 
     private void handMessage() {
@@ -133,41 +132,35 @@ public class LanguageSwitchActivity extends BaseActivity {
     private void showChangeLanguageDlg(final int position) {
         // TODO Auto-generated method stub
 
-        new MyQMUIDialog.MessageDialogBuilder(LanguageSwitchActivity.this)
+        new CustomDialog.MessageDialogBuilder(LanguageSwitchActivity.this)
                 .setMessage(getString(R.string.confirm_modify_language))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        //清空我的应用统一更新版本信息防止切换语言不刷新列表
-                        ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
-                        Language language = commonLanguageList.get(position);
-                        String languageName = "";
-                        if (position == 0) {
-                            languageName = "followSys";
-                        } else {
-                            languageName = language.getIso();
-                        }
-                        PreferencesUtils.putString(getApplicationContext(),
-                                MyApplication.getInstance().getTanent() + "language", languageName);
-                        PreferencesUtils.putString(getApplicationContext(),
-                                MyApplication.getInstance().getTanent() + "appLanguageObj",
-                                language.toString());
-                        ((MyApplication) getApplicationContext())
-                                .setAppLanguageAndFontScale();
-                        Intent intentLog = new Intent(LanguageSwitchActivity.this,
-                                IndexActivity.class);
-                        intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intentLog.putExtra(LANGUAGE_CHANGE, true);
-                        startActivity(intentLog);
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    //清空我的应用统一更新版本信息防止切换语言不刷新列表
+                    ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
+                    Language language = commonLanguageList.get(position);
+                    String languageName = "";
+                    if (position == 0) {
+                        languageName = "followSys";
+                    } else {
+                        languageName = language.getIso();
                     }
+                    PreferencesUtils.putString(getApplicationContext(),
+                            MyApplication.getInstance().getTanent() + "language", languageName);
+                    PreferencesUtils.putString(getApplicationContext(),
+                            MyApplication.getInstance().getTanent() + "appLanguageObj",
+                            language.toString());
+                    ((MyApplication) getApplicationContext())
+                            .setAppLanguageAndFontScale();
+                    Intent intentLog = new Intent(LanguageSwitchActivity.this,
+                            IndexActivity.class);
+                    intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intentLog.putExtra(LANGUAGE_CHANGE, true);
+                    startActivity(intentLog);
                 })
                 .show();
     }

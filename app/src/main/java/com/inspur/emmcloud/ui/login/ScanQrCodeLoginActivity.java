@@ -1,14 +1,7 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
+import java.lang.reflect.Method;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -21,8 +14,10 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -35,28 +30,18 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
     private TextView scanLoginSysType;
     private boolean isLogin = true;
 
-    public static boolean setMiuiStatusBarDarkMode(Activity activity, boolean darkmode) {
-        Class<? extends Window> clazz = activity.getWindow().getClass();
-        try {
-            int darkModeFlag = 0;
-            Class<?> layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
-            Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
-            darkModeFlag = field.getInt(layoutParams);
-            Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
-            extraFlagField.invoke(activity.getWindow(), darkmode ? darkModeFlag : 0, darkModeFlag);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+    @Override
+    public void onCreate() {
+        initViews();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan_qrcode_login_result);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
-        initViews();
+    public int getLayoutResId() {
+        return R.layout.activity_scan_qrcode_login_result;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
     private void initViews() {

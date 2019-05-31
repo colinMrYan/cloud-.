@@ -1,13 +1,10 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.gyf.barlibrary.ImmersionBar;
+import org.greenrobot.eventbus.EventBus;
+
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
@@ -15,21 +12,21 @@ import com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import android.content.Context;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
  * create gesture activity
  * Created by Sym on 2015/12/23.
  */
-@ContentView(R.layout.activity_create_gesture)
 public class CreateGestureActivity extends BaseActivity {
 
     public static final String GESTURE_CODE = "gesture_code";
@@ -37,16 +34,16 @@ public class CreateGestureActivity extends BaseActivity {
     public static final String CREATE_GESTURE_CODE_SUCCESS = "create_gesture_code_success";
     public static final String EXTRA_FORCE_SET = "extra_force_set";
     private static final long DELAYTIME = 600L;
-    @ViewInject(R.id.lockPatterIndicator)
-    private LockPatternIndicator lockPatternIndicator;
-    @ViewInject(R.id.lockPatternView)
-    private LockPatternView lockPatternView;
-    @ViewInject(R.id.gesture_reset_btn)
-    private Button resetBtn;
-    @ViewInject(R.id.gesture_message_text)
-    private TextView gestrueMessage;
-    @ViewInject(R.id.tv_force_gesture_create)
-    private TextView forceGestureCreate;
+    @BindView(R.id.lockPatterIndicator)
+    LockPatternIndicator lockPatternIndicator;
+    @BindView(R.id.lockPatternView)
+    LockPatternView lockPatternView;
+    @BindView(R.id.gesture_reset_btn)
+    Button resetBtn;
+    @BindView(R.id.gesture_message_text)
+    TextView gestrueMessage;
+    @BindView(R.id.tv_force_gesture_create)
+    TextView forceGestureCreate;
     private List<LockPatternView.Cell> mChosenPattern = null;
     /**
      * 手势监听
@@ -117,13 +114,19 @@ public class CreateGestureActivity extends BaseActivity {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
-        x.view().inject(this);
+    public void onCreate() {
+        ButterKnife.bind(this);
         init();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_create_gesture;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
+    }
     /**
      * 初始化
      */
@@ -180,17 +183,12 @@ public class CreateGestureActivity extends BaseActivity {
     /**
      * 重新设置手势
      */
-    @Event(R.id.gesture_reset_btn)
-    private void resetGesture(View view) {
-        switch (view.getId()) {
-            case R.id.gesture_reset_btn:
-                mChosenPattern = null;
-                lockPatternIndicator.setDefaultIndicator();
-                updateStatus(Status.DEFAULT, null);
-                lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
-                break;
-        }
-
+    @OnClick(R.id.gesture_reset_btn)
+    public void resetGesture() {
+        mChosenPattern = null;
+        lockPatternIndicator.setDefaultIndicator();
+        updateStatus(Status.DEFAULT, null);
+        lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
     }
 
     public void onClick(View view) {

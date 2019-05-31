@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.InputFilter;
-import android.view.View;
-import android.widget.TextView;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -22,30 +16,34 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.text.InputFilter;
+import android.view.View;
+import android.widget.TextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 修改共享网盘名称
  */
-@ContentView(R.layout.activity_conversation_name_modify)
 public class ShareVolumeNameModifyActivity extends BaseActivity {
 
-    @ViewInject(R.id.edit)
-    private ClearEditText editText;
+    @BindView(R.id.edit)
+    ClearEditText editText;
 
-    @ViewInject(R.id.header_text)
-    private TextView headerText;
+    @BindView(R.id.header_text)
+    TextView headerText;
 
     private LoadingDialog loadingDlg;
     private Volume volume;
     private Group group;
     private boolean isVolumeNameModify = false;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         if (getIntent().hasExtra("volume")) {
             isVolumeNameModify = true;
             volume = (Volume) getIntent().getSerializableExtra("volume");
@@ -56,6 +54,11 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
         EditTextUtils.setText(editText, isVolumeNameModify ? volume.getName() : group.getName());
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         loadingDlg = new LoadingDialog(ShareVolumeNameModifyActivity.this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_name_modify;
     }
 
     public void onClick(View v) {
@@ -86,8 +89,8 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     /**
      * 修改网盘名称
      *
-     * @param volume
-     * @param name
+     * @param
+     * @param
      */
     private void updateShareVolumeName(String volumeName) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -101,7 +104,6 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
     /**
      * 修改组名称
      *
-     * @param groupId
      * @param groupName
      */
     private void updateGroupName(String groupName) {

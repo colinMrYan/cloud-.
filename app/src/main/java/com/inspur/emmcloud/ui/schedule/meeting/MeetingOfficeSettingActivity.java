@@ -1,8 +1,7 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ExpandableListView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -11,10 +10,10 @@ import com.inspur.emmcloud.adapter.MeetingOfficeAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
+import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingLocation;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
-import com.inspur.emmcloud.bean.work.GetLocationResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -22,20 +21,19 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.view.View;
+import android.widget.ExpandableListView;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2019/4/15.
  */
 
-@ContentView(R.layout.activity_meeting_office_setting)
 public class MeetingOfficeSettingActivity extends BaseActivity implements ExpandableListView.OnChildClickListener {
-    @ViewInject(R.id.expandable_listView)
-    private ExpandableListView expandableListView;
+    @BindView(R.id.expandable_listView)
+    ExpandableListView expandableListView;
     private LoadingDialog loadingDlg;
     private ScheduleApiService apiService;
     private List<MeetingLocation> locationList = new ArrayList<>();
@@ -44,12 +42,17 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     private List<String> officeIdList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         getMyMeetingOfficeIdList();
         initView();
         getOfficeList();
         getMeetingLocation();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_office_setting;
     }
 
     private void initView() {

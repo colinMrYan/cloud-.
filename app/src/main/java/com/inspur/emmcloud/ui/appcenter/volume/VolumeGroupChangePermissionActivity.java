@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -15,36 +13,42 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.view.View;
+import android.widget.TextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2018/3/8.
  */
-@ContentView(R.layout.activity_volume_group_change_permission)
 public class VolumeGroupChangePermissionActivity extends BaseActivity {
 
     private static final int VOLUME_WRITE_PERMISSION = 6;
     private static final int VOLUME_READ_PERMISSION = 4;
     private static final int VOLUME_NO_PERMISSION = 0;
-    @ViewInject(R.id.header_text)
-    protected TextView headerText;
-    @ViewInject(R.id.tv_volume_write_permission)
-    protected TextView writePermissionText;
-    @ViewInject(R.id.tv_volume_read_permission)
-    protected TextView readPermissionText;
-    @ViewInject(R.id.swv_volume_write_permission)
-    protected SwitchView writePermissionSwitch;
-    @ViewInject(R.id.swv_volume_read_permission)
-    protected SwitchView readPermissionSwitch;
+    @BindView(R.id.header_text)
+    TextView headerText;
+    @BindView(R.id.tv_volume_write_permission)
+    TextView writePermissionText;
+    @BindView(R.id.tv_volume_read_permission)
+    TextView readPermissionText;
+    @BindView(R.id.swv_volume_write_permission)
+    SwitchView writePermissionSwitch;
+    @BindView(R.id.swv_volume_read_permission)
+    SwitchView readPermissionSwitch;
     private MyAppAPIService myAppAPIService;
     private LoadingDialog loadingDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_volume_group_change_permission;
     }
 
     /**

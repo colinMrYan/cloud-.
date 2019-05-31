@@ -1,13 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -17,38 +9,45 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:53:14
  */
-@ContentView(R.layout.activity_about)
 public class AboutActivity extends BaseActivity {
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
+    @BindView(R.id.tv_app_version)
+    TextView appVersionText;
+    @BindView(R.id.iv_logo)
+    ImageView logoImg;
+    @BindView(R.id.rl_protocol)
+    RelativeLayout protocolLayout;
+    @BindView(R.id.rl_invite_friends)
+    RelativeLayout inviteFriendsLayout;
     private Handler handler;
-    @ViewInject(R.id.tv_app_version)
-    private TextView appVersionText;
-    @ViewInject(R.id.iv_logo)
-    private ImageView logoImg;
-    @ViewInject(R.id.rl_protocol)
-    private RelativeLayout protocolLayout;
-    @ViewInject(R.id.rl_invite_friends)
-    private RelativeLayout inviteFriendsLayout;
-
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         String version = AppUtils.getVersion(this).replace("beta", "b");
         appVersionText.setText(AppUtils.getAppName(this) + "  " + version);
         ImageDisplayUtils.getInstance().displayImage(logoImg, "drawable://" + AppUtils.getAppIconRes(MyApplication.getInstance()), R.drawable.ic_launcher);
@@ -57,23 +56,28 @@ public class AboutActivity extends BaseActivity {
         handMessage();
     }
 
-    @Event(value = R.id.iv_logo, type = View.OnLongClickListener.class)
-    private boolean onLongClick(View v) {
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_about;
+    }
+
+    @OnLongClick(R.id.iv_logo)
+    public boolean onLongClick(View v) {
         new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 //						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
-                .addItem("idm-->" + MyApplication.getInstance().getCloudId())
+                .addItem("idm-->" + WebServiceRouterManager.getInstance().getIDMUrl())
 //						.addItem("ecm-->"+ MyApplication.getInstance().getClusterEcm())
-                .addItem("emm-->" + MyApplication.getInstance().getClusterEmm())
-                .addItem("ecm.chat-->" + MyApplication.getInstance().getClusterChat())
-                .addItem("ecm.schedule-->" + MyApplication.getInstance().getClusterSchedule())
-                .addItem("ecm.distribution-->" + MyApplication.getInstance().getClusterDistribution())
-                .addItem("ecm.news-->" + MyApplication.getInstance().getClusterNews())
-                .addItem("ecm.cloud-drive-->" + MyApplication.getInstance().getClusterCloudDrive())
-                .addItem("ecm.storage.legacy-->" + MyApplication.getInstance().getClusterStorageLegacy())
-                .addItem("ecm.client-registry-->" + MyApplication.getInstance().getClusterClientRegistry())
+                .addItem("emm-->" + WebServiceRouterManager.getInstance().getClusterEmm())
+                .addItem("ecm.chat-->" + WebServiceRouterManager.getInstance().getClusterChat())
+                .addItem("ecm.schedule-->" + WebServiceRouterManager.getInstance().getClusterSchedule())
+                .addItem("ecm.distribution-->" + WebServiceRouterManager.getInstance().getClusterDistribution())
+                .addItem("ecm.news-->" + WebServiceRouterManager.getInstance().getClusterNews())
+                .addItem("ecm.cloud-drive-->" + WebServiceRouterManager.getInstance().getClusterCloudDrive())
+                .addItem("ecm.storage.legacy-->" + WebServiceRouterManager.getInstance().getClusterStorageLegacy())
+                .addItem("ecm.client-registry-->" + WebServiceRouterManager.getInstance().getClusterClientRegistry())
                 .addItem("ClientId-->" + PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
-                .addItem("DeviceToken-->" + AppUtils.getPushId(MyApplication.getInstance()))
+                .addItem("DeviceToken-->" + PushManagerUtils.getPushId(MyApplication.getInstance()))
                 .build()
                 .show();
         return false;

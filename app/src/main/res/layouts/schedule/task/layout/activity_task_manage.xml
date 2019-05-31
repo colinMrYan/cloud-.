@@ -15,11 +15,11 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
-            android:onClick="onClick"
             android:clickable="true"
+            android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -32,36 +32,38 @@
             android:text="@string/schedule_task_project_manager"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
+
         <ImageButton
             android:id="@+id/ibt_add"
             android:layout_width="43dp"
             android:layout_height="match_parent"
-            android:paddingRight="16dp"
-            android:paddingLeft="5dp"
-            android:onClick="onClick"
             android:layout_alignParentRight="true"
             android:clickable="true"
+            android:onClick="onClick"
+            android:paddingLeft="5dp"
+            android:paddingRight="16dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_add" />
+            android:src="?attr/ic_add" />
     </RelativeLayout>
 
     <ListView
         android:id="@+id/lv_task_manage_tags"
-        android:layout_below="@id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/rl_header"
         android:layout_marginBottom="100dp"
-        android:dividerHeight="0.5px"
         android:background="#FFFFFF"
+        android:dividerHeight="0.5px"
         android:paddingLeft="16dp"></ListView>
-    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+
+    <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
         android:id="@+id/bt_add_tags"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_marginBottom="45dp"
         android:elevation="1dp"
         android:gravity="center"
@@ -69,7 +71,7 @@
         android:text="@string/schedule_task_project_manager_add"
         android:textColor="@android:color/white"
         android:textSize="15sp"
-        app:qmui_backgroundColor="#36A5F6"
-        app:qmui_borderWidth="0dp"
-        app:qmui_isRadiusAdjustBounds="true"/>
+        app:cus_backgroundColor="#36A5F6"
+        app:cus_borderWidth="0dp"
+        app:cus_isRadiusAdjustBounds="true" />
 </RelativeLayout>

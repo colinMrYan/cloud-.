@@ -1,14 +1,10 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Switch;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -16,11 +12,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.common.JSONUtils;
@@ -32,24 +28,28 @@ import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2019/3/29.
  */
-@ContentView(R.layout.activity_calendar_add)
 public class CalendarAddActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
     public static final String EXTRA_SCHEDULE_CALENDAR_EVENT = "schedule_calendar_event";
     public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
@@ -59,42 +59,43 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private static final int REQUEST_CAL_TYPE = 1;
     private static final int REQUEST_REPEAT_TYPE = 2;
     private static final int REQUEST_CAL_ALERT_TIME = 3;
-    @ViewInject(R.id.et_input_title)
-    private EditText inputContentEdit;
-    @ViewInject(R.id.switch_all_day)
-    private Switch allDaySwitch;
-    @ViewInject(R.id.rl_calendar_type_tip)
-    private RelativeLayout calenderTypeTipLayout;
-    @ViewInject(R.id.tv_calendar_type_name)
-    private TextView calendarTypeNameText;
-    @ViewInject(R.id.iv_calendar_type_flag)
-    private ImageView calendarTypeFlagImage;
-    @ViewInject(R.id.tv_start_date)
-    private TextView startDateText;
-    @ViewInject(R.id.tv_start_time)
-    private TextView startTimeText;
-    @ViewInject(R.id.tv_end_date)
-    private TextView endDateText;
-    @ViewInject(R.id.tv_end_time)
-    private TextView endTimeText;
-    @ViewInject(R.id.tv_alert_text)
-    private TextView alertText;
-    @ViewInject(R.id.tv_repeat_text)
-    private TextView repeatText;
-    @ViewInject(R.id.tv_title)
-    private TextView titleText;
-    @ViewInject(R.id.rl_calendar_type)
-    private RelativeLayout calendarTypeLayout;
-    @ViewInject(R.id.ll_start_time)
-    private RelativeLayout startTimeLayout;
-    @ViewInject(R.id.ll_end_time)
-    private RelativeLayout endTimeLayout;
-    @ViewInject(R.id.rl_alert_time)
-    private RelativeLayout alertTimeLayout;
-    @ViewInject(R.id.iv_calendar_detail_more)
-    private ImageView calendarDetailMoreImageView;
-    @ViewInject(R.id.tv_save)
-    private TextView saveTextView;
+    @BindView(R.id.et_input_title)
+    EditText inputContentEdit;
+    @BindView(R.id.switch_all_day)
+    Switch allDaySwitch;
+    @BindView(R.id.rl_calendar_type_tip)
+    RelativeLayout calenderTypeTipLayout;
+    @BindView(R.id.tv_calendar_type_name)
+    TextView calendarTypeNameText;
+    @BindView(R.id.iv_calendar_type_flag)
+    ImageView calendarTypeFlagImage;
+    @BindView(R.id.tv_start_date)
+    TextView startDateText;
+    @BindView(R.id.tv_start_time)
+    TextView startTimeText;
+    @BindView(R.id.tv_end_date)
+    TextView endDateText;
+    @BindView(R.id.tv_end_time)
+    TextView endTimeText;
+    @BindView(R.id.tv_alert_text)
+    TextView alertText;
+    @BindView(R.id.tv_repeat_text)
+    TextView repeatText;
+    @BindView(R.id.tv_title)
+    TextView titleText;
+    @BindView(R.id.rl_calendar_type)
+    RelativeLayout calendarTypeLayout;
+    @BindView(R.id.ll_start_time)
+    RelativeLayout startTimeLayout;
+    @BindView(R.id.ll_end_time)
+    RelativeLayout endTimeLayout;
+    @BindView(R.id.rl_alert_time)
+    RelativeLayout alertTimeLayout;
+    @BindView(R.id.iv_calendar_detail_more)
+    ImageView calendarDetailMoreImageView;
+    @BindView(R.id.tv_save)
+    TextView saveTextView;
+    RemindEvent remindEvent = new RemindEvent();
     private ScheduleApiService apiService;
     private LoadingDialog loadingDlg;
     private Schedule scheduleEvent = new Schedule();
@@ -106,25 +107,32 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     private Calendar startCalendar;
     private Calendar endCalendar;
     private String contentText = "";
-    RemindEvent remindEvent = new RemindEvent();
     private int intervalMin = 0;
+    private String id;// 日程id
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initData();
-        initView();
+    public void onCreate() {
+        ButterKnife.bind(this);
+        loadingDlg = new LoadingDialog(this);
+        apiService = new ScheduleApiService(getApplicationContext());
+        apiService.setAPIInterface(new WebService());
+        init();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_calendar_add;
     }
 
     /**
      * 初始化View
      */
     private void initView() {
-        loadingDlg = new LoadingDialog(this);
         allDaySwitch.setOnCheckedChangeListener(this);
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
-        titleText.setText(isAddCalendar ? getString(R.string.schedule_calendar_add) : getString(R.string.schedule_calendar_detail));
+        titleText.setText(isAddCalendar ? getApplication().getString(R.string.schedule_calendar_add) :
+                getApplication().getString(R.string.schedule_calendar_detail));
         calendarTypeNameText.setText(getApplication().getString(R.string.schedule_calendar_company));
         calendarTypeFlagImage.setImageResource(isAddCalendar ? R.drawable.icon_blue_circle : R.drawable.icon_blue_circle);
         calenderTypeTipLayout.setVisibility(View.VISIBLE);
@@ -136,58 +144,107 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     /**
      * 初始化日期数据
      */
-    private void initData() {
-        apiService = new ScheduleApiService(getApplicationContext());
-        apiService.setAPIInterface(new WebService());
-
+    private void init() {
         if (getIntent().hasExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE)) {
             contentText = getIntent().getStringExtra(Constant.COMMUNICATION_LONG_CLICK_TO_SCHEDULE);
         }
-        if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {
+
+        id = getIntent().getStringExtra(Constant.SCHEDULE_QUERY);   //解析通知字段获取id
+        if (!TextUtils.isEmpty(id)) {        ////来自通知
+            isAddCalendar = false;
+            isEditable = false;
+            getDbCalendarFromId();
+            getNetCalendarFromId();
+        } else if (getIntent().hasExtra(EXTRA_SCHEDULE_CALENDAR_EVENT)) {  //通知没有，列表页跳转过来
             isAddCalendar = false;
             isEditable = false;
             scheduleEvent = (Schedule) getIntent().getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_EVENT);
-            isAllDay = scheduleEvent.getAllDay();
-            startCalendar = scheduleEvent.getStartTimeCalendar();
-            endCalendar = scheduleEvent.getEndTimeCalendar();
-            contentText = scheduleEvent.getTitle();
-            saveTextView.setVisibility(View.GONE);
-            calendarDetailMoreImageView.setVisibility(View.VISIBLE);
-            List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
-            String calendarType = scheduleEvent.getType();
-            for (int i = 0; i < allCalendarList.size(); i++) {
-                if (calendarType.equals(allCalendarList.get(i).getId())) {
-                    myCalendar = allCalendarList.get(i);
-                }
-            }
-            String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
-            remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
-                    JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1),
-                    alertTimeName);
-        } else {
-            Calendar currentCalendar = Calendar.getInstance();
-            startCalendar=currentCalendar;
-            if(getIntent().hasExtra(EXTRA_SELECT_CALENDAR)){
-                startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
-            }
-            startCalendar.set(Calendar.HOUR_OF_DAY,currentCalendar.get(Calendar.HOUR_OF_DAY));
-            startCalendar.set(Calendar.MINUTE,currentCalendar.get(Calendar.MINUTE));
-            startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
-            endCalendar = (Calendar) startCalendar.clone();
-            if (!isAllDay) {
-                endCalendar.add(Calendar.HOUR_OF_DAY, 1);
-            }
-            scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
-            remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+            initscheduleData();     //直接用传过来的数据
+            initView();
+        } else {    //创建日程
+            createCalendar();
         }
+    }
+
+    /**
+     * 设置日程相关数据
+     */
+    private void initscheduleData() {
+        isAllDay = scheduleEvent.getAllDay();
+        startCalendar = scheduleEvent.getStartTimeCalendar();
+        endCalendar = scheduleEvent.getEndTimeCalendar();
+        contentText = scheduleEvent.getTitle();
+        saveTextView.setVisibility(View.GONE);
+        calendarDetailMoreImageView.setVisibility(View.VISIBLE);
+        List<MyCalendar> allCalendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
+        String calendarType = scheduleEvent.getType();
+        for (int i = 0; i < allCalendarList.size(); i++) {
+            if (calendarType.equals(allCalendarList.get(i).getId())) {
+                myCalendar = allCalendarList.get(i);
+            }
+        }
+        String alertTimeName = ScheduleAlertTimeActivity.getAlertTimeNameByTime(JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), isAllDay);
+        remindEvent = new RemindEvent(JSONUtils.getString(scheduleEvent.getRemindEvent(), "remindType", "in_app"),
+                JSONUtils.getInt(scheduleEvent.getRemindEvent(), "advanceTimeSpan", -1), alertTimeName);
         intervalMin = (int) getIntervalMin();
+    }
+
+    /**
+     * 创建日程
+     */
+    private void createCalendar() {
+        Calendar currentCalendar = Calendar.getInstance();
+        if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
+            startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+        }
+        if (startCalendar == null) {
+            startCalendar = (Calendar) currentCalendar.clone();
+        }
+        startCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+        startCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+        startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
+        endCalendar = (Calendar) startCalendar.clone();
+        if (!isAllDay) {
+            endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+        }
+        scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
+        remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
+        intervalMin = (int) getIntervalMin();
+        initView();
+    }
+
+    /**
+     * 从数据库获取日程数据
+     */
+    private void getDbCalendarFromId() {
+        scheduleEvent = ScheduleCacheUtils.getDBScheduleById(this, id);
+        if (scheduleEvent != null) {
+            initscheduleData();
+            initView();
+        }
+    }
+
+    /**
+     * 从网络获取日程数据
+     */
+    private void getNetCalendarFromId() {
+        if (NetUtils.isNetworkConnected(this)) {
+            if (!TextUtils.isEmpty(id)) {
+                if (scheduleEvent == null || TextUtils.isEmpty(scheduleEvent.getId())) { //如果缓存有数据则不显示loading
+                    loadingDlg.show();
+                }
+                apiService.getCalendarDataFromId(id);
+            }
+        } else {
+            ToastUtils.show(this, "");
+        }
     }
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         if (isEditable) {
             isAllDay = b;
-            timeTextChangeByIsAllday(isAllDay);
+            timeTextChangeByIsAllDay(isAllDay);
             remindEvent = new RemindEvent();
             alertText.setText(ScheduleAlertTimeActivity.getAlertTimeNameByTime(-1, isAllDay));
         }
@@ -200,7 +257,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      */
     private void setViewIsEditable(Boolean isEditable) {
         setEditTextState(inputContentEdit, isEditable);
-        allDaySwitch.setEnabled(isEditable);
+        allDaySwitch.setClickable(isEditable);
         calendarTypeLayout.setClickable(isEditable);
         startTimeLayout.setClickable(isEditable);
         endTimeLayout.setClickable(isEditable);
@@ -227,23 +284,20 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 结束时间早于起始时间提醒
      */
     private void showEndDateErrorRemindDialog() {
-        new QMUIDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog qmuiDialog, int i) {
-                        qmuiDialog.dismiss();
-                    }
+        new CustomDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
                 }).show();
     }
 
     /**
      * 全天及非全天UI切换
      */
-    private void timeTextChangeByIsAllday(boolean IsAllday) {
+    private void timeTextChangeByIsAllDay(boolean IsAllDay) {
         String startTime = TimeUtils.calendar2FormatString(this, startCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
         String endTime = TimeUtils.calendar2FormatString(this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
-        startTimeText.setText(IsAllday ? TimeUtils.getWeekDay(this, startCalendar) : startTime);
-        endTimeText.setText(IsAllday ? TimeUtils.getWeekDay(this, endCalendar) : endTime);
+        startTimeText.setText(IsAllDay ? TimeUtils.getWeekDay(this, startCalendar) : startTime);
+        endTimeText.setText(IsAllDay ? TimeUtils.getWeekDay(this, endCalendar) : endTime);
     }
 
     /**
@@ -288,7 +342,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                         endCalendar.add(Calendar.MINUTE, intervalMin);
                         String endDateStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                         endDateText.setText(endDateStr);
-                        timeTextChangeByIsAllday(isAllDay);
+                        timeTextChangeByIsAllDay(isAllDay);
                     }
 
                     @Override
@@ -302,11 +356,13 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                 dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
                     @Override
                     public void positiveListener(Calendar calendar) {
-                        if (calendar.before(startCalendar)) {
+                        if (calendar.getTimeInMillis() - startCalendar.getTimeInMillis() < (60000)) {
                             showEndDateErrorRemindDialog();
+                            endCalendar = (Calendar) startCalendar.clone();
+                            endCalendar.add(Calendar.MINUTE, intervalMin);
                             return;
                         }
-                        endCalendar = calendar;
+                        endCalendar = (Calendar) calendar.clone();
                         String endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
                         endDateText.setText(endDataStr);
                         endDataStr = TimeUtils.calendar2FormatString(CalendarAddActivity.this, endCalendar, TimeUtils.FORMAT_HOUR_MINUTE);
@@ -396,20 +452,22 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 能否保存提示
      */
     private boolean checkingSaveCalendarEventAvailable() {
-        contentText = inputContentEdit.getText().toString();
+        contentText = inputContentEdit.getText().toString().trim();
         if (StringUtils.isBlank(contentText)) {
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_please_input_title);
             return false;
         }
         if (endCalendar.before(startCalendar)) {
+            LogUtils.LbcDebug(TimeUtils.calendar2FormatString(this,endCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+            LogUtils.LbcDebug(TimeUtils.calendar2FormatString(this,startCalendar,TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
             ToastUtils.show(getApplicationContext(),
                     R.string.calendar_start_or_end_time_illegal);
             return false;
         }
         if (contentText.length() > 64) {
             ToastUtils.show(getApplicationContext(),
-                    R.string.calendar_tilte_cannot_exceed_64);
+                    R.string.calendar_title_cannot_exceed_num);
             return false;
         }
         return true;
@@ -570,6 +628,22 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         public void returnDeleteScheduleFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             super.returnDeleteScheduleFail(error, errorCode);
+        }
+
+        @Override
+        public void returnScheduleDataFromIdSuccess(Schedule schedule) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (schedule != null) {
+                scheduleEvent = schedule;
+                initscheduleData();
+                initView();
+            }
+        }
+
+        @Override
+        public void returnScheduleDataFromIdFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+           finish();
         }
     }
 

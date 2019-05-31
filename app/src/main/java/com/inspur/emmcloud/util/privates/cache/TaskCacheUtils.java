@@ -2,7 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.work.Task;
+import com.inspur.emmcloud.bean.schedule.task.Task;
 
 import org.xutils.db.sqlite.WhereBuilder;
 

@@ -1,10 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -15,29 +12,36 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2018/8/8.
  */
-@ContentView(R.layout.activity_group_app)
 public class AppGroupActivity extends BaseActivity {
 
-    @ViewInject(R.id.recyclerview_group_app)
-    private RecyclerView appGroupRecyclerView;
-    @ViewInject(R.id.header_text)
-    private TextView textView;
+    @BindView(R.id.recyclerview_group_app)
+    RecyclerView appGroupRecyclerView;
+    @BindView(R.id.header_text)
+    TextView textView;
     private List<App> appList = new ArrayList<>();
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         appList.addAll((List<App>) getIntent().getSerializableExtra("appGroupList"));
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_app;
     }
 
     /**

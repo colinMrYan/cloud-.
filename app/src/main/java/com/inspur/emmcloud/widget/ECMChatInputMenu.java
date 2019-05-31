@@ -33,7 +33,6 @@ import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -49,15 +48,15 @@ import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
 
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -73,32 +72,32 @@ public class ECMChatInputMenu extends LinearLayout {
     private static final int TAG_KEYBOARD_INPUT = 0;
     private static final int TAG_VOICE_INPUT = 1;
     private static final int TOPDELY_TIMES = 17;
-    @ViewInject(R.id.input_edit)
-    private ChatInputEdit inputEdit;
+    @BindView(R.id.input_edit)
+    ChatInputEdit inputEdit;
 
-    @ViewInject(R.id.add_btn)
-    private ImageButton addBtn;
+    @BindView(R.id.add_btn)
+    ImageButton addBtn;
 
-    @ViewInject(R.id.send_msg_btn)
-    private Button sendMsgBtn;
+    @BindView(R.id.send_msg_btn)
+    Button sendMsgBtn;
 
-    @ViewInject(R.id.add_menu_layout)
-    private RelativeLayout addMenuLayout;
+    @BindView(R.id.add_menu_layout)
+    RelativeLayout addMenuLayout;
 
-    @ViewInject(R.id.viewpager_layout)
-    private ECMChatInputMenuViewpageLayout viewpagerLayout;
+    @BindView(R.id.viewpager_layout)
+    ECMChatInputMenuViewpageLayout viewpagerLayout;
 
-    @ViewInject(R.id.voice_input_layout)
-    private RelativeLayout voiceInputLayout;
+    @BindView(R.id.voice_input_layout)
+    RelativeLayout voiceInputLayout;
 
-    @ViewInject(R.id.voice_btn)
-    private ImageButton voiceBtn;
+    @BindView(R.id.voice_btn)
+    ImageButton voiceBtn;
 
-    @ViewInject(R.id.bt_audio_record)
-    private AudioRecordButton audioRecordBtn;
+    @BindView(R.id.bt_audio_record)
+    AudioRecordButton audioRecordBtn;
 
-    @ViewInject(R.id.wave_progress_input)
-    private WaterWaveProgress waterWaveProgress;
+    @BindView(R.id.wave_progress_input)
+    WaterWaveProgress waterWaveProgress;
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -133,8 +132,8 @@ public class ECMChatInputMenu extends LinearLayout {
 
     private void initView(final Context context, AttributeSet attrs) {
         // TODO Auto-generated method stub
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu, this, true);
-        x.view().inject(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu, this, true);
+        ButterKnife.bind(this, view);
         initInputEdit();
         initVoiceInput();
         initAudioRecord();
@@ -645,8 +644,8 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    @Event({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
-    private void onClick(View view) {
+    @OnClick({R.id.voice_btn, R.id.send_msg_btn, R.id.add_btn, R.id.voice_input_close_img})
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.voice_btn:
                 if (view.getTag() == null || (int) view.getTag() == TAG_KEYBOARD_INPUT) {
@@ -808,7 +807,6 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setVoiceImageViewLevel(int volume) {
         //回调函数30多毫秒执行一次
-        LogUtils.LbcDebug("30+毫秒回调函数  ：：" + volume);
         int currentLevel = 0;
         if (0 == volume) {
             currentLevel = 0;

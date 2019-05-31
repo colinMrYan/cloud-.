@@ -1,26 +1,15 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.AllTaskFragmentAdapter;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
-
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +19,8 @@ import java.util.List;
  * Created by yufuchang on 2019/4/1.
  * 工作主页面下任务页面
  */
-@ContentView(R.layout.fragment_all_task_list)
-public class TaskFragment extends Fragment {
+
+public class TaskFragment extends BaseFragment {
 
     public static final String MY_TASK_TYPE = "task_type";
     public static final int MY_MINE = 0;
@@ -40,42 +29,39 @@ public class TaskFragment extends Fragment {
     public static final int MY_DONE = 3;
     public static final int MY_ALL = 4;
     private static final int MESSION_SET = 5;
-    @ViewInject(R.id.tl_schedule_task)
     private TabLayout tabLayoutSchedule;
-    @ViewInject(R.id.viewpager_calendar_holder)
     private ViewPager taskViewPager;
-    @ViewInject(R.id.v_all_task)
-    private View allTaskView;
-    @ViewInject(R.id.rl_all_task)
-    private RelativeLayout allTaskLayout;
-    @ViewInject(R.id.ev_search)
-    private ClearEditText searchEditText;
+
     private boolean injected = false;
     private TaskListFragment allTaskListFragment, mineTaskListFragment, involvedTaskListFragment, focusedTaskListFragment, allReadyDoneTaskListFragment;
     private AllTaskFragmentAdapter adapter;
     private int lastTaskPosition = 0;
+    private View rootView;
+
+
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initFragmentList();
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_all_task_list, null);
+        initViews();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        injected = true;
-        return x.view().inject(this, inflater, container);
+        if (rootView == null) {
+            rootView = inflater
+                    .inflate(R.layout.fragment_all_task_list, container, false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (!injected) {
-            x.view().inject(this, this.getView());
-        }
-        initViews();
-    }
+
 
     /**
      * 初始化任务列表，并传入type类型
@@ -120,7 +106,9 @@ public class TaskFragment extends Fragment {
 //        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_involved),getIsSelect(1));
 //        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused),getIsSelect(2));
 //        tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_done),getIsSelect(3));
-
+        initFragmentList();
+        tabLayoutSchedule = rootView.findViewById(R.id.tl_schedule_task);
+        taskViewPager = rootView.findViewById(R.id.viewpager_calendar_holder);
         tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_mine), true);
         tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_involved), false);
         tabLayoutSchedule.addTab(tabLayoutSchedule.newTab().setText(R.string.work_task_focused), false);
@@ -128,10 +116,8 @@ public class TaskFragment extends Fragment {
 
         tabLayoutSchedule.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+            public void onTabSelected(final TabLayout.Tab tab) {
                 //带“全部”代码
-//                int index = tab.getPosition();
-//                taskViewPager.setCurrentItem(index + 1);
                 taskViewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -146,7 +132,7 @@ public class TaskFragment extends Fragment {
 //                if(position == 0){
 //                    taskViewPager.setCurrentItem(position + 1);
 //                }
-                taskViewPager.setCurrentItem(tab.getPosition());
+//                taskViewPager.setCurrentItem(tab.getPosition());
             }
         });
 
@@ -170,11 +156,10 @@ public class TaskFragment extends Fragment {
 //                    tabLayoutSchedule.setSelectedTabIndicatorColor(Color.parseColor("#00ffffff"));
 //                    allTaskView.setBackgroundColor(Color.parseColor("#36A5F6"));
 //                }
-                if(!StringUtils.isBlank(searchEditText.getText().toString())){
-                    searchEditText.setText("");
-                }
+
+
                 tabLayoutSchedule.getTabAt(position).select();
-                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
+//                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setCurrentIndex(position);
             }
 
             @Override
@@ -193,31 +178,31 @@ public class TaskFragment extends Fragment {
 //        });
         //将适配器和ViewPager结合
         taskViewPager.setAdapter(adapter);
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+//        searchEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(taskViewPager.getCurrentItem()).setSearchContent(s.toString());
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
     }
 
-    /**
-     * 根据滑动状态改变搜索框和展示数据状态
-     */
-    private void setSearchState(int lastTaskPosition) {
-        searchEditText.setText("");
-        ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(lastTaskPosition).setSearchContent("");
-    }
+//    /**
+//     * 根据滑动状态改变搜索框和展示数据状态
+//     */
+//    private void setSearchState(int lastTaskPosition) {
+//        searchEditText.setText("");
+//        ((AllTaskFragmentAdapter) taskViewPager.getAdapter()).getTaskListFragment().get(lastTaskPosition).setSearchContent("");
+//    }
 
 
     public boolean getIsSelect(int i) {

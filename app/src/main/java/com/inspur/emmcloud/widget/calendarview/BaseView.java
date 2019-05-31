@@ -131,6 +131,8 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      */
     int mCurrentItem = -1;
 
+    boolean isLunarAndFestivalShow = true;
+
     public BaseView(Context context) {
         this(context, null);
     }
@@ -138,6 +140,14 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
     public BaseView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initPaint(context);
+    }
+
+    public boolean isLunarAndFestivalShow() {
+        return isLunarAndFestivalShow;
+    }
+
+    public void setLunarAndFestivalShow(boolean lunarAndFestivalShow) {
+        isLunarAndFestivalShow = lunarAndFestivalShow;
     }
 
     /**
@@ -217,7 +227,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      */
     void setup(CalendarViewDelegate delegate) {
         this.mDelegate = delegate;
-
+        this.isLunarAndFestivalShow = delegate.isLunarAndFestivalShow;
         this.mCurDayTextPaint.setColor(delegate.getCurDayTextColor());
         this.mCurDayLunarTextPaint.setColor(delegate.getCurDayLunarTextColor());
         this.mCurMonthTextPaint.setColor(delegate.getCurrentMonthTextColor());
@@ -282,10 +292,15 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
                 a.setSchemeColor(d.getSchemeColor());
                 a.setSchemes(d.getSchemes());
                 a.setShowSchemePoint(d.getShowSchemePoint());
+                a.setSchemeLunar(d.getSchemeLunar());
+                a.setSchemeLunarColor(d.getSchemeLunarColor());
             } else {
                 a.setScheme("");
                 a.setSchemeColor(0);
                 a.setSchemes(null);
+                a.setShowSchemePoint(false);
+                a.setSchemeLunar("");
+                a.setSchemeLunarColor(0);
             }
         }
     }

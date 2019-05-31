@@ -1,11 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -15,26 +10,30 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2019/1/9.
  */
 
-@ContentView(R.layout.activity_mail_setting)
 public class MailSettingActivity extends BaseActivity {
-    @ViewInject(R.id.tv_mail_account)
+    @BindView(R.id.tv_mail_account)
     TextView mailAccountText;
-    @ViewInject(R.id.tv_mail_password)
+    @BindView(R.id.tv_mail_password)
     TextView mailPasswrodText;
-    @ViewInject(R.id.ibt_mail_password_visible)
+    @BindView(R.id.ibt_mail_password_visible)
     ImageButton mailPasswordVisibleImgBtn;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         String password = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, "");
         mailAccountText.setText(mail);
@@ -42,6 +41,10 @@ public class MailSettingActivity extends BaseActivity {
         mailPasswrodText.setTransformationMethod(PasswordTransformationMethod.getInstance());
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_setting;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

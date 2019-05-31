@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -16,9 +10,12 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
-@ContentView(R.layout.activity_scan_qrcode_login_gs)
 public class ScanQrCodeLoginGSActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
 
@@ -26,10 +23,22 @@ public class ScanQrCodeLoginGSActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
         loadingDlg = new LoadingDialog(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_scan_qrcode_login_gs;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

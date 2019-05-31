@@ -26,11 +26,9 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -190,20 +188,14 @@ public class StartAppService extends ImpPlugin {
      * @param appInstallTips
      */
     private void showInstallDialog(final String appUrl, String appInstallTips) {
-        new MyQMUIDialog.MessageDialogBuilder(getActivity())
+        new CustomDialog.MessageDialogBuilder(getActivity())
                 .setMessage(appInstallTips)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        showDownloadDialog(appUrl);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    showDownloadDialog(appUrl);
                 })
                 .show();
     }
@@ -214,7 +206,7 @@ public class StartAppService extends ImpPlugin {
      * @param appUrl
      */
     private void showDownloadDialog(String appUrl) {
-        downloadingDialog = new MyDialog(getActivity(), R.layout.dialog_app_update_progress);
+        downloadingDialog = new MyDialog(getActivity(), R.layout.app_dialog_update_progress);
         downloadingDialog.setCancelable(false);
         progressTv = (TextView) downloadingDialog.findViewById(R.id.ratio_text);
         Button cancelBtn = (Button) downloadingDialog.findViewById(R.id.cancel_bt);

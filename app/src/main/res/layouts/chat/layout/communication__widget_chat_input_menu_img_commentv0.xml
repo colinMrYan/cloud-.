@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+    
+   <Button
+       android:id="@+id/bt_cancel"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:background="@null"
+       android:paddingLeft="15dp"
+       android:paddingRight="15dp"
+       android:paddingTop="13dp"
+       android:text="@string/cancel"
+       android:textColor="@color/black"
+       android:textSize="17sp" />
+    <TextView
+        android:id="@+id/tv_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClick"
+        android:paddingTop="9dp"
+        android:text="@string/write_comment"
+        android:textColor="@color/black"
+        android:textSize="19sp" />
+
+    <Button
+        android:id="@+id/bt_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="13dp"
+        android:text="@string/send"
+        android:textColor="#999999"
+        android:textSize="17sp" />
+
+
+    <com.inspur.emmcloud.widget.ChatInputEdit
+        android:id="@+id/input_edit"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
+        android:layout_below="@id/tv_comment"
+        android:layout_margin="15dp"
+        android:background="#f6f6f6"
+        android:gravity="top"
+        android:hint="@string/add_new_comment"
+        android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="6dp"
+        android:textColor="@color/black"
+        android:textSize="17sp" />
+    <RelativeLayout
+        android:id="@+id/rl_add_menu"
+        android:layout_width="match_parent"
+        android:layout_height="274dp"
+        android:layout_below="@id/input_edit"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="25dp"
+        android:visibility="gone" >
+    </RelativeLayout>
+</RelativeLayout>

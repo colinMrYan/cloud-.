@@ -1,9 +1,8 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.view.View;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
@@ -14,32 +13,33 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.sildemenu.AllInterface;
 import com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.view.View;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2018/12/20.
  */
 
-@ContentView(R.layout.activity_mail_home)
 public class MailHomeBaseActivity extends BaseFragmentActivity implements AllInterface.OnMenuSlideListener {
 
     protected LoadingDialog loadingDlg;
-    @ViewInject(R.id.ldl_menu)
-    private LeftDrawerLayout leftDrawerLayout;
-    @ViewInject(R.id.v_shadow)
-    private View shadowView;
+    @BindView(R.id.ldl_menu)
+    LeftDrawerLayout leftDrawerLayout;
+    @BindView(R.id.v_shadow)
+    View shadowView;
     private MailLeftMenuFragment mailLeftMenuFragment;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        setContentView(R.layout.activity_mail_home);
+        ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        x.view().inject(this);
         loadingDlg = new LoadingDialog(this);
         addMailLeftMenyu();
         setStatus();

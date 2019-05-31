@@ -1,11 +1,8 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.View;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -13,11 +10,12 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
-import com.inspur.emmcloud.bean.work.GetMeetingRoomListResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -25,39 +23,39 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2019/4/10.
  */
-
-@ContentView(R.layout.activity_meeting_room_list)
 public class MeetingRoomListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, ExpandableListView.OnChildClickListener {
     public static final String EXTRA_START_TIME = "extra_start_time";
     public static final String EXTRA_END_TIME = "extra_end_time";
     public static final String EXTRA_MEETING_ROOM = "extra_meeting_room";
     private static final int REQUEST_MEETING_OFFICE_SETTING = 1;
     private static final int REQUEST_ENTER_MEETING_ROOM_INFO = 2;
-    @ViewInject(R.id.swipe_refresh_layout)
-    private MySwipeRefreshLayout swipeRefreshLayout;
-    @ViewInject(R.id.expandable_list_view)
-    private ExpandableListView expandableListView;
-    @ViewInject(R.id.tv_start_date)
-    private TextView startDateText;
-    @ViewInject(R.id.tv_start_time)
-    private TextView startTimeText;
-    @ViewInject(R.id.tv_end_date)
-    private TextView endDateText;
-    @ViewInject(R.id.tv_end_time)
-    private TextView endTimeText;
+    @BindView(R.id.swipe_refresh_layout)
+    MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.expandable_list_view)
+    ExpandableListView expandableListView;
+    @BindView(R.id.tv_start_date)
+    TextView startDateText;
+    @BindView(R.id.tv_start_time)
+    TextView startTimeText;
+    @BindView(R.id.tv_end_date)
+    TextView endDateText;
+    @BindView(R.id.tv_end_time)
+    TextView endTimeText;
     private Calendar startTimeCalendar;
     private Calendar endTimeCalendar;
     //    private LoadingDialog loadingDlg;
@@ -69,14 +67,18 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
     private MeetingRoom selectMeetingRoom;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initView();
         startTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_TIME);
         endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_TIME);
         setMeetingTime();
         onRefresh();
+    }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_meeting_room_list;
     }
 
     private void initView() {
@@ -179,13 +181,8 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
      * 结束时间早于起始时间提醒
      */
     private void showTimeInvalidDlg() {
-        new QMUIDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog qmuiDialog, int i) {
-                        qmuiDialog.dismiss();
-                    }
-                }).show();
+        new CustomDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
+                .setPositiveButton(R.string.ok, (dialog, index) -> dialog.dismiss()).show();
     }
 
 
@@ -196,9 +193,17 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             if (requestCode == REQUEST_MEETING_OFFICE_SETTING) {
                 getOfficeList();
             } else if (requestCode == REQUEST_ENTER_MEETING_ROOM_INFO) {
-                data.putExtra(EXTRA_MEETING_ROOM, selectMeetingRoom);
-                setResult(RESULT_OK, data);
-                finish();
+                if(getIntent() != null && getIntent().hasExtra(EXTRA_START_TIME)){
+                    data.putExtra(EXTRA_MEETING_ROOM, selectMeetingRoom);
+                    setResult(RESULT_OK, data);
+                    finish();
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(MeetingRoomListActivity.EXTRA_START_TIME,data.getSerializableExtra(EXTRA_START_TIME));
+                    bundle.putSerializable(MeetingRoomListActivity.EXTRA_END_TIME,data.getSerializableExtra(EXTRA_END_TIME));
+                    bundle.putSerializable(MeetingRoomInfoActivity.EXTRA_MEETING_ROOM, selectMeetingRoom);
+                    IntentUtils.startActivity(this,MeetingAddActivity.class,bundle,true);
+                }
             }
         }
     }
@@ -233,7 +238,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             if (!swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(true);
             }
-            apiService.getMeetingRoomList(startTimeCalendar.getTimeInMillis(), endTimeCalendar.getTimeInMillis(), officeIdList, true);
+            apiService.getMeetingRoomList(TimeUtils.getStartTime(), TimeUtils.getStartTime() + 48*60*60*1000, officeIdList, false);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -252,6 +257,10 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             swipeRefreshLayout.setRefreshing(false);
             meetingRoomAreaList = getMeetingRoomListResult.getMeetingRoomAreaList();
             meetingRoomAdapter.setData(meetingRoomAreaList);
+            for (int i=0;i<meetingRoomAreaList.size();i++){
+                expandableListView.collapseGroup(i);
+                expandableListView.expandGroup(i);
+            }
         }
 
         @Override

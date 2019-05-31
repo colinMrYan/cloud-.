@@ -23,6 +23,8 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -129,12 +131,12 @@ public class WebSocketPush {
         if (!MyApplication.getInstance().getIsActive()) {
             return;
         }
-        if (MyApplication.getInstance().isV0VersionChat()) {
-            String pushId = AppUtils.getPushId(MyApplication.getInstance());
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            String pushId = PushManagerUtils.getPushId(MyApplication.getInstance());
             if (!pushId.equals("UNKNOWN")) {
                 WebSocketConnect();
             }
-        } else if (MyApplication.getInstance().isV1xVersionChat()) {
+        } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
                 new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                     @Override
@@ -159,7 +161,7 @@ public class WebSocketPush {
                 return;
             }
             String url = APIUri.getWebsocketConnectUrl();
-            String path = MyApplication.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
+            String path = WebServiceRouterManager.getInstance().isV0VersionChat() ? "/" + MyApplication.getInstance().getCurrentEnterprise().getCode() + "/socket/handshake" :
                     "/chat/socket/handshake";
             sendWebSocketStatusBroadcast(Socket.EVENT_CONNECTING);
             IO.Options opts = new IO.Options();
@@ -167,10 +169,10 @@ public class WebSocketPush {
             opts.forceNew = true;
             Map<String, String> query = new HashMap<>();
             try {
-                if (MyApplication.getInstance().isV0VersionChat()) {
+                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
                     String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
-                    String pushId = AppUtils.getPushId(MyApplication.getInstance());
+                    String pushId = PushManagerUtils.getPushId(MyApplication.getInstance());
                     query.put("device.id", uuid);
                     query.put("device.name", deviceName);
                     query.put("device.push", pushId);
@@ -190,7 +192,7 @@ public class WebSocketPush {
                 opts.forceNew = true;
                 webSocketSignout();
                 Manager manager = new Manager(new URI(url), opts);
-                mSocket = manager.socket(MyApplication.getInstance().getChatSocketNameSpace());
+                mSocket = manager.socket(WebServiceRouterManager.getInstance().getChatSocketNameSpace());
                 mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
                     @Override
                     public void call(Object... args) {
@@ -241,9 +243,9 @@ public class WebSocketPush {
      */
     public boolean isSocketConnect() {
         if (mSocket != null) {
-            if (MyApplication.getInstance().isV0VersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                 return mSocket.connected();
-            } else if (MyApplication.getInstance().isV1xVersionChat()) {
+            } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                 return mSocket.connected() && isWSStatusConnectedV1;
             }
 
@@ -255,7 +257,7 @@ public class WebSocketPush {
     public void sendAppStatus() {
         boolean isActive = MyApplication.getInstance().getIsActive();
         if (isSocketConnect()) {
-            if (MyApplication.getInstance().isV0VersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                 String appStatus = isActive ? "ACTIVED" : "FROZEN";
                 LogUtils.debug(TAG, "发送App状态：" + appStatus);
                 mSocket.emit("state", appStatus);
@@ -272,7 +274,7 @@ public class WebSocketPush {
         if (mSocket != null) {
             if (isSocketConnect()) {
                 LogUtils.debug(TAG, "注销");
-                if (MyApplication.getInstance().isV0VersionChat()) {
+                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     mSocket.emit("state", "SIGNOUT");
                 } else {
                     WSAPIService.getInstance().sendAppStatus("REMOVED");
@@ -346,7 +348,7 @@ public class WebSocketPush {
             @Override
             public void call(Object... arg0) {
                 // TODO Auto-generated method stub
-                if (MyApplication.getInstance().isV0VersionChat()) {
+                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     LogUtils.debug(TAG, "连接成功");
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT);
                     // 当第一次连接成功后发送App目前的状态消息

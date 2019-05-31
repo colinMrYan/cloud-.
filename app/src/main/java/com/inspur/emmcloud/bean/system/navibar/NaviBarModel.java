@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.bean.system.navibar;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
-
 /**
  * Created by yufuchang on 2019/4/12.
  */
@@ -131,31 +129,21 @@ import com.inspur.emmcloud.util.common.JSONUtils;
         }*/
 public class NaviBarModel {
     private String response = "";
-    private String command = "";
-    private String version = "";
     private NaviBarPayload naviBarPayload;
+    private String lastNaviLocalVersion = "";
+
     public NaviBarModel(String response){
         this.response = response;
-        this.command = JSONUtils.getString(response,"command","");
-        this.version = JSONUtils.getString(response,"version","");
-        this.naviBarPayload = new NaviBarPayload(JSONUtils.getString(response,"payload",""));
+        this.naviBarPayload = new NaviBarPayload(response);
+    }
+    public NaviBarModel(String response,String lastNaviLocalVersion){
+        this.response = response;
+//        this.command = JSONUtils.getString(response,"command","");
+//        this.version = JSONUtils.getString(response,"version","");
+        this.naviBarPayload = new NaviBarPayload(response);
+        this.lastNaviLocalVersion = lastNaviLocalVersion;
     }
 
-    public String getCommand() {
-        return command;
-    }
-
-    public void setCommand(String command) {
-        this.command = command;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
 
     public NaviBarPayload getNaviBarPayload() {
         return naviBarPayload;
@@ -171,5 +159,13 @@ public class NaviBarModel {
 
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    public String getLastNaviLocalVersion() {
+        return lastNaviLocalVersion;
+    }
+
+    public void setLastNaviLocalVersion(String lastNaviLocalVersion) {
+        this.lastNaviLocalVersion = lastNaviLocalVersion;
     }
 }

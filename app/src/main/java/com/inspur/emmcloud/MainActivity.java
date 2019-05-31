@@ -1,18 +1,7 @@
 package com.inspur.emmcloud;
 
-import android.content.ComponentName;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
@@ -22,28 +11,34 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
+import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
-import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.imp.api.Res;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.droidsonroids.gif.GifImageView;
 
 
@@ -61,71 +56,27 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
     private static final long SPLASH_PAGE_TIME = 2500;
+    @BindView(R.id.ibt_skip)
+    ImageButton skipImageBtn;
+    @BindView(R.id.iv_splash_logo)
+    ImageView splashLogoImg;
+    @BindView(R.id.iv_splash_ad)
+    GifImageView splashAdImg;
     private Handler handler;
     private long activitySplashShowTime = 0;
     private Timer timer;
-    private ImageButton skipImageBtn;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
-        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            finish();
-            return;
-        }
-        setContentView(R.layout.activity_main);
-        skipImageBtn = findViewById(R.id.ibt_skip);
-        checkNecessaryPermission();
-//        IntentUtils.startActivity(this, MeetingOfficeAddActivity.class,true);
+    public int getLayoutResId() {
+        return R.layout.activity_main;
     }
 
-    private void checkNecessaryPermission() {
-        final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
-        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
-            final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
-            permissionDialog.setDimAmount(0.2f);
-            permissionDialog.setCancelable(false);
-            permissionDialog.setCanceledOnTouchOutside(false);
-            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE) ? View.VISIBLE : View.GONE);
-            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE) ? View.VISIBLE : View.GONE);
-            if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
-                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE)) {
-                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
-                layout.setLayoutParams(params);
-            }
-            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MainActivity.this)));
-            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission, AppUtils.getAppName(MainActivity.this)));
-            permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    permissionDialog.dismiss();
-                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(MainActivity.this, necessaryPermissionArray, new PermissionRequestCallback() {
-                        @Override
-                        public void onPermissionRequestSuccess(List<String> permissions) {
-                            init();
-                        }
-
-                        @Override
-                        public void onPermissionRequestFail(List<String> permissions) {
-                            ToastUtils.show(MainActivity.this, PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this, permissions));
-                            MyApplication.getInstance().exit();
-                        }
-                    });
-                }
-            });
-            permissionDialog.show();
-        } else {
-            init();
-        }
+    protected int getStatusType() {
+        return STATUS_WHITE;
     }
 
-    /**
-     * 初始化
-     */
-    private void init() {
+    private void initAppAlias(){
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
         if (appFirstLoadAlis == null) {
             appFirstLoadAlis = AppUtils.getManifestAppVersionFlag(this);
@@ -142,6 +93,78 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
         }
+    }
+
+    // private void checkNecessaryPermission() {
+    // final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new
+    // String[]{Permissions.READ_PHONE_STATE});
+    // if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
+    // final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
+    // permissionDialog.setDimAmount(0.2f);
+    // permissionDialog.setCancelable(false);
+    // permissionDialog.setCanceledOnTouchOutside(false);
+    // permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,
+    // Permissions.STORAGE) ? View.VISIBLE : View.GONE);
+    // permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,
+    // Permissions.READ_PHONE_STATE) ? View.VISIBLE : View.GONE);
+    // if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
+    // && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE)) {
+    // LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
+    // LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+    // params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
+    // layout.setLayoutParams(params);
+    // }
+    // ((TextView)
+    // permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus,
+    // AppUtils.getAppName(MainActivity.this)));
+    // ((TextView)
+    // permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission,
+    // AppUtils.getAppName(MainActivity.this)));
+    // permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
+    // @Override
+    // public void onClick(View view) {
+    // permissionDialog.dismiss();
+    // PermissionRequestManagerUtils.getInstance().requestRuntimePermission(MainActivity.this, necessaryPermissionArray,
+    // new PermissionRequestCallback() {
+    // @Override
+    // public void onPermissionRequestSuccess(List<String> permissions) {
+    // init();
+    // }
+    //
+    // @Override
+    // public void onPermissionRequestFail(List<String> permissions) {
+    // ToastUtils.show(MainActivity.this,
+    // PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this, permissions));
+    // MyApplication.getInstance().exit();
+    // }
+    // });
+    // }
+    // });
+    // permissionDialog.show();
+    // } else {
+    // init();
+    // }
+    // }
+
+    @Override
+    public void onCreate() {
+        ButterKnife.bind(this);
+        // 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
+        initAppAlias();
+        init();
+    }
+
+    /**
+     * 初始化
+     */
+    private void init() {
+        String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+        int splashLogoResId = Res.getDrawableID("ic_splash_logo_"+appFirstLoadAlis);
+        ImageDisplayUtils.getInstance().displayImage(splashLogoImg,"drawable://"+splashLogoResId,R.drawable.ic_splash_logo);
         activitySplashShowTime = System.currentTimeMillis();
         //进行app异常上传
         startUploadExceptionService();
@@ -195,7 +218,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                     .addShortCut(MainActivity.this);
         }
         handMessage();
-        UpgradeUtils upgradeUtils = new UpgradeUtils(MainActivity.this,
+        NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(MainActivity.this,
                 handler, false);
         upgradeUtils.checkUpdate(false);
 
@@ -340,9 +363,9 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             boolean shouldShow = ((nowTime > splashPageBeanLoacal.getPayload().getEffectiveDate())
                     && (nowTime < splashPageBeanLoacal.getPayload().getExpireDate()));
             if (shouldShow && !StringUtils.isBlank(splashPagePath)) {
-                ImageLoader.getInstance().displayImage("file://" + splashPagePath, (GifImageView) findViewById(R.id.splash_img_top));
+                ImageLoader.getInstance().displayImage("file://" + splashPagePath, splashAdImg);
             } else {
-                findViewById(R.id.splash_img_top).setVisibility(View.GONE);
+                splashAdImg.setVisibility(View.GONE);
             }
         }
     }

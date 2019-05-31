@@ -1,37 +1,96 @@
 package com.inspur.emmcloud;
 
+import java.util.List;
+
+import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.widget.dialogs.MyDialog;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
-import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
-
-import java.util.Arrays;
-
-public class BaseFragmentActivity extends FragmentActivity {
-    private static final String[] classNames = {
-            ImagePagerV0Activity.class.getName(),
-            ImagePagerActivity.class.getName(),
-            MyCameraActivity.class.getName(),
-    };
-
+public abstract class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme();
         super.onCreate(savedInstanceState);
+        checkNecessaryPermission();
     }
 
+    private void checkNecessaryPermission() {
+        final String[] necessaryPermissionArray =
+                StringUtils.concatAll(Permissions.STORAGE, new String[] { Permissions.READ_PHONE_STATE });
+        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
+            final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
+            permissionDialog.setDimAmount(0.2f);
+            permissionDialog.setCancelable(false);
+            permissionDialog.setCanceledOnTouchOutside(false);
+            permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(
+                    !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
+                            ? View.VISIBLE
+                            : View.GONE);
+            permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(
+                    !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE)
+                            ? View.VISIBLE
+                            : View.GONE);
+            if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
+                    && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,
+                            Permissions.READ_PHONE_STATE)) {
+                LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
+                params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
+                layout.setLayoutParams(params);
+            }
+            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(
+                    getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MyApplication.getInstance())));
+            ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(
+                    R.string.permission_necessary_permission, AppUtils.getAppName(MyApplication.getInstance())));
+            permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    permissionDialog.dismiss();
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(MyApplication.getInstance(),
+                            necessaryPermissionArray, new PermissionRequestCallback() {
+                                @Override
+                                public void onPermissionRequestSuccess(List<String> permissions) {
+                                    onCreate();
+                                }
+
+                                @Override
+                                public void onPermissionRequestFail(List<String> permissions) {
+                                    ToastUtils.show(MyApplication.getInstance(),
+                                            PermissionRequestManagerUtils.getInstance()
+                                                    .getPermissionToast(MyApplication.getInstance(), permissions));
+                                    MyApplication.getInstance().exit();
+                                }
+                            });
+                }
+            });
+            permissionDialog.show();
+        } else {
+            onCreate();
+        }
+    }
+
+    public abstract void onCreate();
 
     //解决调用系统应用后会弹出手势解锁的问题
     @Override
@@ -46,33 +105,25 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     protected void setTheme() {
-        String className = this.getClass().getCanonicalName();
-        boolean isContain = Arrays.asList(classNames).contains(className);
-        if (!isContain) {
-            int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
-            switch (currentThemeNo) {
-                case 1:
-                    setTheme(R.style.AppTheme_1);
-                    break;
-                case 2:
-                    setTheme(R.style.AppTheme_2);
-                    break;
-                default:
-                    setTheme(R.style.AppTheme_0);
-                    break;
-            }
+        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        switch (currentThemeNo) {
+            case 1:
+                setTheme(R.style.AppTheme_1);
+                break;
+            case 2:
+                setTheme(R.style.AppTheme_2);
+                break;
+            default:
+                setTheme(R.style.AppTheme_0);
+                break;
         }
     }
 
     protected void setStatus() {
-        String className = this.getClass().getCanonicalName();
-        boolean isContain = Arrays.asList(classNames).contains(className);
-        if (!isContain) {
-            int statusBarColor = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
-            int navigationBarColor = R.color.white;
-            boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
-            ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
-        }
+        int statusBarColor = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
+        int navigationBarColor = android.R.color.white;
+        boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
+        ImmersionBar.with(this).statusBarColor(statusBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
     }
 
     protected void setNavigationBarColor(int color) {

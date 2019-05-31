@@ -1,22 +1,12 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.File;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -34,23 +24,32 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.io.File;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_group_file)
 public class GroupFileActivity extends BaseActivity {
 
     protected static final String SORT_BY_NAME_UP = "sort_by_name_up";
@@ -58,14 +57,14 @@ public class GroupFileActivity extends BaseActivity {
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
     protected String sortType = "sort_by_name_up";
-    @ViewInject(R.id.lv_file)
-    private ListView fileListView;
-    @ViewInject(R.id.rl_no_channel_file)
-    private RelativeLayout noChannelFileLayout;
-    @ViewInject(R.id.tv_order_by_name_asc)
-    private TextView operationSortText;
-    @ViewInject(R.id.tv_filter_by_file_type)
-    private TextView filterByFileTypeText;
+    @BindView(R.id.lv_file)
+    ListView fileListView;
+    @BindView(R.id.rl_no_channel_file)
+    RelativeLayout noChannelFileLayout;
+    @BindView(R.id.tv_order_by_name_asc)
+    TextView operationSortText;
+    @BindView(R.id.tv_filter_by_file_type)
+    TextView filterByFileTypeText;
     private String cid;
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
     private PopupWindow sortOperationPop;
@@ -73,8 +72,8 @@ public class GroupFileActivity extends BaseActivity {
     private FileSortComparable fileSortComparable;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
         noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE : View.GONE);
@@ -85,8 +84,13 @@ public class GroupFileActivity extends BaseActivity {
         adapter.setAndReFreshList(fileInfoList);
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_group_file;
+    }
+
     private void getFileMsgList() {
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
                     GroupFileActivity.this, cid);
             for (Msg msg : fileTypeMsgList) {

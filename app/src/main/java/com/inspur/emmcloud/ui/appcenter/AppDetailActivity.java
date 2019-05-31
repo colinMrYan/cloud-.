@@ -1,17 +1,9 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -28,10 +20,17 @@ import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * 应用详情界面
@@ -48,10 +47,9 @@ public class AppDetailActivity extends BaseActivity {
     private App app;
     private long lastOnItemClickTime = 0;//防止多次点击
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_app_detail);
+    public void onCreate() {
         loadingDlg = new LoadingDialog(AppDetailActivity.this);
         app = ((App) getIntent().getExtras().getSerializable("app"));
         apiService = new MyAppAPIService(this);
@@ -59,6 +57,12 @@ public class AppDetailActivity extends BaseActivity {
         initView();
         getAppInfoById(app.getAppID());
     }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_app_detail;
+    }
+
 
     private void initView() {
         appIconImg = (ImageView) findViewById(R.id.app_icon_img);

@@ -1,10 +1,8 @@
 package com.inspur.emmcloud.ui.mine.card;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.CardStackAdapter;
@@ -19,29 +17,36 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.cardstack.RxAdapterAllMoveDownAnimator;
 import com.inspur.emmcloud.widget.cardstack.RxCardStackView;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2018/7/27.
  */
-@ContentView(R.layout.activity_card_package)
 public class CardPackageActivity extends BaseActivity implements RxCardStackView.ItemExpendListener {
     private static final int CARD_PACKAGE_SET_REQUEST = 1;
-    @ViewInject(R.id.stackview_card_package)
-    private RxCardStackView cardStackView;
+    @BindView(R.id.stackview_card_package)
+    RxCardStackView cardStackView;
     private CardStackAdapter cardStackAdapter;
     private LoadingDialog loadingDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(R.color.content_bg).statusBarDarkFont(true, 0.2f).init();
+    public void onCreate() {
+        ButterKnife.bind(this);
         initViews();
         getCardPackageListFromNet();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_card_package;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
     }
 
     /**

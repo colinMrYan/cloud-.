@@ -16,11 +16,11 @@ import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.util.common.DensityUtil;
 
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 聊天输入菜单
@@ -28,11 +28,11 @@ import java.util.List;
 
 public class ECMChatInputMenuViewpageLayout extends LinearLayout {
 
-    @ViewInject(R.id.viewpager)
-    private ViewPager viewPager;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
 
-    @ViewInject(R.id.page_num_layout)
-    private LinearLayout pageNumLayout;
+    @BindView(R.id.page_num_layout)
+    LinearLayout pageNumLayout;
 
 
     private ImageView[] pageNumImgs;
@@ -55,8 +55,8 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
     }
 
     private void init(Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_container, this, true);
-        x.view().inject(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.communication_widget_chat_input_menu_container, this, true);
+        ButterKnife.bind(this, view);
     }
 
     public void setInputTypeBeanList(List<InputTypeBean> inputTypeBeanList) {
@@ -97,7 +97,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
     }
 
     private View getGridChildView(int i) {
-        View view = View.inflate(getContext(), R.layout.ecm_widget_chat_input_menu_grid, null);
+        View view = View.inflate(getContext(), R.layout.communication_widget_chat_input_menu_grid, null);
         NoScrollGridView gridView = (NoScrollGridView) view.findViewById(R.id.grid);
         final List<InputTypeBean> pageInputTypeBeanList = new ArrayList<>();
         int startInd = (i - 1) * 8;

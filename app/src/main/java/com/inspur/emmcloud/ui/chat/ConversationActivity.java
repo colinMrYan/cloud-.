@@ -1,25 +1,17 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.BroadcastReceiver;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.text.SpannableString;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -54,7 +46,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -66,42 +57,50 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
-import com.inspur.emmcloud.util.privates.UpgradeUtils;
+import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.widget.roundbutton.CustomRoundButton;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
-import com.qmuiteam.qmui.widget.QMUILoadingView;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.text.SpannableString;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import butterknife.BindView;
 
-@ContentView(R.layout.activity_channel)
 public class ConversationActivity extends ConversationBaseActivity {
 
     private static final int REQUEST_QUIT_CHANNELGROUP = 1;
@@ -117,21 +116,21 @@ public class ConversationActivity extends ConversationBaseActivity {
     private static final int REFRESH_OFFLINE_MESSAGE = 8;
     private static final int UNREAD_NUMBER_BORDER = 20;
 
-    @ViewInject(R.id.msg_list)
-    private RecycleViewForSizeChange msgListView;
+    @BindView(R.id.msg_list)
+    RecycleViewForSizeChange msgListView;
 
-    @ViewInject(R.id.refresh_layout)
-    private SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
-    @ViewInject(R.id.chat_input_menu)
-    private ECMChatInputMenu chatInputMenu;
-    @ViewInject(R.id.header_text)
-    private TextView headerText;
+    @BindView(R.id.chat_input_menu)
+    ECMChatInputMenu chatInputMenu;
+    @BindView(R.id.header_text)
+    TextView headerText;
 
-    @ViewInject(R.id.robot_photo_img)
-    private ImageView robotPhotoImg;
-    @ViewInject(R.id.btn_conversation_unread)
-    private QMUIRoundButton unreadQMUIRoundBtn;
+    @BindView(R.id.robot_photo_img)
+    ImageView robotPhotoImg;
+    @BindView(R.id.btn_conversation_unread)
+    CustomRoundButton unreadRoundBtn;
     private LinearLayoutManager linearLayoutManager;
     private String robotUid = "BOT6004";
     private List<UIMessage> uiMessageList = new ArrayList<>();
@@ -148,6 +147,11 @@ public class ConversationActivity extends ConversationBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
         handleMessage();
     }
 
@@ -268,9 +272,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void setUnReadMessageCount() {
         if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
             final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
-            unreadQMUIRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
-            unreadQMUIRoundBtn.setOnClickListener(new View.OnClickListener() {
+//            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
+            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
@@ -279,7 +283,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     adapter.setMessageList(uiMessageList);
                     adapter.notifyDataSetChanged();
                     msgListView.MoveToPosition(0);
-                    unreadQMUIRoundBtn.setVisibility(View.GONE);
+                    unreadRoundBtn.setVisibility(View.GONE);
                     msgListView.scrollToPosition(0);
                 }
             });
@@ -417,8 +421,8 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
 
             @Override
-            public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
-                showMeidaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
+            public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, CustomLoadingView downloadLoadingView) {
+                showMediaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
             }
 
             @Override
@@ -441,6 +445,22 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
                 CardClickOperation(ConversationActivity.this, view, uiMessage);
+            }
+
+            @Override
+            public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
+                Message message = uiMessage.getMessage();
+                switch (message.getType()){
+                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                        Bundle bundle = new Bundle();
+                        bundle.putString("mid", message.getId());
+                        bundle.putString(EXTRA_CID, message.getChannel());
+                        IntentUtils.startActivity(ConversationActivity.this,
+                                ChannelMessageDetailActivity.class, bundle);
+
+                        break;
+                }
             }
         });
         adapter.setMessageList(uiMessageList);
@@ -590,7 +610,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-    private void showMeidaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final QMUILoadingView downloadLoadingView) {
+    private void showMediaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final CustomLoadingView downloadLoadingView) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         mediaVoiceReRecognizerPop = new PopupWindow(contentView,
@@ -641,7 +661,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         });
     }
 
-    private void voiceToWord(String filePath, final UIMessage uiMessage, final QMUILoadingView downloadLoadingView) {
+    private void voiceToWord(String filePath, final UIMessage uiMessage, final CustomLoadingView downloadLoadingView) {
         if (downloadLoadingView != null) {
             downloadLoadingView.setVisibility(View.VISIBLE);
         }
@@ -1334,7 +1354,7 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid, final UIMessage uiMessage) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
@@ -1377,7 +1397,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(ConversationActivity.this, text, sendMessage.getMsgContentTextPlain().getMentionsMap());
         text = spannableString.toString();
         if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (MyApplication.getInstance().isV0VersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             } else {
                 Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
                 WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
@@ -1391,10 +1411,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void transmitImgMsg(String cid, Message sendMessage) {
         String path1 = sendMessage.getMsgContentMediaImage().getPreviewMedia();
         String data = JSONUtils.toJSONString(sendMessage);
-        LogUtils.LbcDebug("data::" + data);
         String path = sendMessage.getLocalPath();
-        LogUtils.LbcDebug("path::" + path);
-        LogUtils.LbcDebug("path1::" + path1);
         if (!StringUtils.isBlank(path) && NetUtils.isNetworkConnected(getApplicationContext())) {
 //                Message localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid,path);
 //                localMessage.getMsgContentMediaImage().setPreviewMedia(path1);
@@ -1512,7 +1529,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 break;
             default:
-                UpgradeUtils upgradeUtils = new UpgradeUtils(context,
+                NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(context,
                         null, true);
                 upgradeUtils.checkUpdate(true);
                 break;
@@ -1528,8 +1545,8 @@ public class ConversationActivity extends ConversationBaseActivity {
             String operation = context.getResources().getString(operationsId[i]);
             operations[i] = operation;
         }
-        new QMUIDialog.MenuDialogBuilder(context)
-                .addItems(operations, new DialogInterface.OnClickListener() {
+        new CustomDialog.ListDialogBuilder(context)
+                .setItems(operations, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
@@ -1561,8 +1578,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                         dialog.dismiss();
                     }
-                })
-                .create(R.style.QMUI_Dialog).show();
+                }).show();
     }
 
     /**

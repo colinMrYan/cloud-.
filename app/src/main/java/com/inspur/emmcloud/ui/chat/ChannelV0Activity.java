@@ -1,20 +1,21 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.provider.MediaStore;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import static android.R.attr.path;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -65,39 +66,36 @@ import com.inspur.emmcloud.widget.ECMChatInputMenuV0;
 import com.inspur.emmcloud.widget.ECMChatInputMenuV0.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static android.R.attr.path;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * com.inspur.emmcloud.ui.ChannelActivity
  *
  * @author Fortune Yu; create at 2016年8月29日
  */
-@ContentView(R.layout.activity_channelv0)
 public class ChannelV0Activity extends BaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
@@ -106,19 +104,19 @@ public class ChannelV0Activity extends BaseActivity {
     private static final int MENTIONS_RESULT = 5;
     private static final int CHOOSE_FILE = 4;
     private static final int REQUEST_QUIT_CHANNELGROUP = 6;
-    @ViewInject(R.id.msg_list)
-    private RecycleViewForSizeChange msgListView;
+    @BindView(R.id.msg_list)
+    RecycleViewForSizeChange msgListView;
 
-    @ViewInject(R.id.refresh_layout)
-    private SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
-    @ViewInject(R.id.chat_input_menu)
-    private ECMChatInputMenuV0 chatInputMenu;
-    @ViewInject(R.id.header_text)
-    private TextView headerText;
+    @BindView(R.id.chat_input_menu)
+    ECMChatInputMenuV0 chatInputMenu;
+    @BindView(R.id.header_text)
+    TextView headerText;
 
-    @ViewInject(R.id.robot_photo_img)
-    private ImageView robotPhotoImg;
+    @BindView(R.id.robot_photo_img)
+    ImageView robotPhotoImg;
     private LinearLayoutManager linearLayoutManager;
     private LoadingDialog loadingDlg;
     private String robotUid = "BOT6006";
@@ -132,13 +130,19 @@ public class ChannelV0Activity extends BaseActivity {
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver refreshNameReceiver;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         init();
         registeRefreshNameReceiver();
         recordUserClickChannel();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_channelv0;
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -417,20 +421,14 @@ public class ChannelV0Activity extends BaseActivity {
      * @param msg
      */
     private void showResendMessageDlg(final Msg msg) {
-        new MyQMUIDialog.MessageDialogBuilder(ChannelV0Activity.this)
+        new CustomDialog.MessageDialogBuilder(ChannelV0Activity.this)
                 .setMessage(R.string.sure_to_resend_message)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        resendMessage(msg);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    resendMessage(msg);
                 })
                 .show();
     }

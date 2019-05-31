@@ -1,10 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -22,48 +19,44 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * 共享网盘详情页面
  */
-
-@ContentView(R.layout.activity_share_volumel_info)
 public class GroupInfoActivity extends BaseActivity {
 
     private static final int ADD_MEMBER = 1;
     private static final int DEL_MEMBER = 2;
     private static final int UPDATE_GROUP_NAME = 3;
+    @BindView(R.id.gv_member)
+    NoScrollGridView memberGrid;
+    @BindView(R.id.volume_member_text)
+    TextView groupMemberText;
+    @BindView(R.id.volume_name_text)
+    TextView groupNameText;
+    @BindView(R.id.volume_name_title)
+    TextView groupNameTitle;
+    @BindView(R.id.header_text)
+    TextView headerText;
     private Volume volume;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
     private Group group;
-
-    @ViewInject(R.id.gv_member)
-    private NoScrollGridView memberGrid;
-
-    @ViewInject(R.id.volume_member_text)
-    private TextView groupMemberText;
-
-    @ViewInject(R.id.volume_name_text)
-    private TextView groupNameText;
-
-    @ViewInject(R.id.volume_name_title)
-    private TextView groupNameTitle;
-
-    @ViewInject(R.id.header_text)
-    private TextView headerText;
     private VolumeInfoMemberAdapter memberAdapter;
     private ArrayList<String> volumeMemList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         volume = (Volume) getIntent().getSerializableExtra("volume");
         loadingDlg = new LoadingDialog(this);
         apiService = new MyAppAPIService(this);
@@ -75,6 +68,10 @@ public class GroupInfoActivity extends BaseActivity {
         showGroupDetail();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_share_volumel_info;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {

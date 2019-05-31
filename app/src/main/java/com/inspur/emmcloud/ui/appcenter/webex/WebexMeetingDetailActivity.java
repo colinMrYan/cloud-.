@@ -1,18 +1,19 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -48,11 +49,10 @@ import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -62,53 +62,51 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.io.Serializable;
-import java.lang.ref.WeakReference;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 /**
  * Created by chenmch on 2018/10/11.
  */
-
-@ContentView(R.layout.activity_webex_detail)
 public class WebexMeetingDetailActivity extends BaseActivity {
     public static final String EXTRA_WEBEXMEETING = "WebexMeeting";
     private final String webexAppPackageName = "com.cisco.webex.meetings";
     private final int REQUEST_SELECT_CONTACT = 1;
-    @ViewInject(R.id.bt_function)
-    private Button functionBtn;
-    @ViewInject(R.id.iv_photo)
-    private CircleTextImageView photoImg;
-    @ViewInject(R.id.tv_name_tips)
-    private TextView titleText;
-    @ViewInject(R.id.tv_owner)
-    private TextView ownerText;
-    @ViewInject(R.id.tv_time)
-    private TextView timeText;
-    @ViewInject(R.id.tv_duration)
-    private TextView durationText;
-    @ViewInject(R.id.tv_meeting_id)
-    private TextView meetingIdText;
-    @ViewInject(R.id.tv_meeting_password)
-    private TextView meetingPasswordText;
-    @ViewInject(R.id.rl_host_key)
-    private RelativeLayout hostKeyLayout;
-    @ViewInject(R.id.tv_host_key)
-    private TextView hostKeyText;
+    @BindView(R.id.bt_function)
+    Button functionBtn;
+    @BindView(R.id.iv_photo)
+    CircleTextImageView photoImg;
+    @BindView(R.id.tv_name_tips)
+    TextView titleText;
+    @BindView(R.id.tv_owner)
+    TextView ownerText;
+    @BindView(R.id.tv_time)
+    TextView timeText;
+    @BindView(R.id.tv_duration)
+    TextView durationText;
+    @BindView(R.id.tv_meeting_id)
+    TextView meetingIdText;
+    @BindView(R.id.tv_meeting_password)
+    TextView meetingPasswordText;
+    @BindView(R.id.rl_host_key)
+    RelativeLayout hostKeyLayout;
+    @BindView(R.id.tv_host_key)
+    TextView hostKeyText;
 
     private WebexMeeting webexMeeting;
     private boolean isOwner = false;
@@ -118,10 +116,14 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     private String shareContent;
     private PopupWindow optionMenuPop;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
+        ButterKnife.bind(this);
         loadingDialog = new LoadingDialog(this);
         webexMeeting = (WebexMeeting) getIntent().getSerializableExtra(EXTRA_WEBEXMEETING);
         apiService = new WebexAPIService(this);
@@ -131,6 +133,10 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_detail;
+    }
 
     private void showWebexMeetingDetial() {
         titleText.setText(webexMeeting.getConfName());
@@ -192,25 +198,18 @@ public class WebexMeetingDetailActivity extends BaseActivity {
      * 安装提示
      */
     private void showInstallDialog() {
-        new MyQMUIDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
+        new CustomDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
                 .setMessage(getString(R.string.webex_install_tips))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
-                        new AppDownloadUtils().showDownloadDialog(WebexMeetingDetailActivity.this, downloadUrl);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
+                    new AppDownloadUtils().showDownloadDialog(WebexMeetingDetailActivity.this, downloadUrl);
                 })
                 .show();
     }
-
 
     private void joinWebexMeeting() {
         try {
@@ -224,7 +223,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
 
     public void startWebexMeeting(String tk) {
         try {
@@ -240,7 +238,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         }
 
     }
-
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -286,7 +283,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private void showOptionMenuPop(View view) {
-        View contentView = LayoutInflater.from(this).inflate(R.layout.pop_webex_meeting_detail_option, null);
+        View contentView = LayoutInflater.from(this).inflate(R.layout.webex_pop_meeting_detail_option, null);
         optionMenuPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -353,8 +350,8 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     }
 
-    @Event(value = {R.id.ll_meeting_content}, type = View.OnLongClickListener.class)
-    private boolean onLongClick(View v) {
+    @OnLongClick(R.id.ll_meeting_content)
+    public boolean onLongClick() {
         String content = webexMeeting.getConfName() + "\n" + getString(R.string.webex_time) + timeText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_code) + meetingIdText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_password_tip) + webexMeeting.getMeetingPassword();
@@ -363,20 +360,14 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     private void showDeleteMeetingWarningDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
+        new CustomDialog.MessageDialogBuilder(WebexMeetingDetailActivity.this)
                 .setMessage(getString(R.string.webex_remove_meeting_warning_info))
-                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        removeWebexMeeting();
-                    }
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
+                    removeWebexMeeting();
                 })
                 .show();
     }
@@ -402,7 +393,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid, final String content) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(WebexMeetingDetailActivity.this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override
@@ -429,8 +420,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                         }
                     });
         }
-
-
     }
 
     @Override
@@ -451,7 +440,6 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 }
             }
         }
-
     }
 
     /**
@@ -461,7 +449,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
      */
     private void sendShareMessage(String cid, String content) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (MyApplication.getInstance().isV0VersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                 ChatAPIService apiService = new ChatAPIService(
                         WebexMeetingDetailActivity.this);
                 apiService.setAPIInterface(new WebService());
@@ -480,9 +468,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                 fakeMessageId = message.getId();
                 WSAPIService.getInstance().sendChatTextPlainMsg(message);
             }
-
         }
-
     }
 
     private void getWebexMeeting() {

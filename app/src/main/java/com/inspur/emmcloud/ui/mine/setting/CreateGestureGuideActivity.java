@@ -1,27 +1,35 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
 /**
  * Created by yufuchang on 2017/9/7.
  */
-@ContentView(R.layout.activity_create_gesture_guide)
 public class CreateGestureGuideActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onCreate() {
+
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_create_gesture_guide;
     }
 
     public void onClick(View view) {

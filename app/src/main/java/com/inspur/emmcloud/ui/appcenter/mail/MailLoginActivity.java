@@ -1,15 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.text.Editable;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Base64;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -28,32 +18,38 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.method.PasswordTransformationMethod;
+import android.util.Base64;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2018/12/28.
  */
-@ContentView(R.layout.activity_mail_login)
 public class MailLoginActivity extends BaseActivity {
 
-    @ViewInject(R.id.et_mail)
-    private ClearEditText mailEdit;
-    @ViewInject(R.id.et_password)
-    private EditText passwordEdit;
-    @ViewInject(R.id.bt_login)
-    private Button loginBtn;
-    @ViewInject(R.id.text_input_layout_username)
-    private TextInputLayout usernameTextInputLayout;
+    @BindView(R.id.et_mail)
+    ClearEditText mailEdit;
+    @BindView(R.id.et_password)
+    EditText passwordEdit;
+    @BindView(R.id.bt_login)
+    Button loginBtn;
+    @BindView(R.id.text_input_layout_username)
+    TextInputLayout usernameTextInputLayout;
     private LoadingDialog loadingDlg;
     private MailApiService apiService;
     private String mail = "";
     private String password = "";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
+    public void onCreate() {
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         apiService = new MailApiService(this);
         apiService.setAPIInterface(new WebServie());
@@ -66,6 +62,15 @@ public class MailLoginActivity extends BaseActivity {
         mailEdit.addTextChangedListener(watcher);
         passwordEdit.addTextChangedListener(watcher);
         passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_login;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
     }
 
     public void onClick(View v) {

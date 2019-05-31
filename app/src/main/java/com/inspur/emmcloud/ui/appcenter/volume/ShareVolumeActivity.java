@@ -1,21 +1,12 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -36,34 +27,41 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 云盘-共享网盘列表页面
  */
 
-@ContentView(R.layout.activity_share_volume)
 public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final int UPDATE_VOLUME_NAME = 1;
-    @ViewInject(R.id.refresh_layout)
-    protected SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.share_volume_list)
+    ListView shareVolumeListView;
     private List<Volume> shareVolumeList = new ArrayList<>();
-    @ViewInject(R.id.share_volume_list)
-    private ListView shareVolumeListView;
     private Adapter adapter;
     private MyAppAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -73,9 +71,19 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onCreate() {
+        ButterKnife.bind(this);
         initView();
         getVolumeList(true);
-        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_share_volume;
     }
 
     private void initView() {
@@ -135,7 +143,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     protected void showCreateShareVolumeDlg() {
         createShareVolumeDlg = new MyDialog(ShareVolumeActivity.this,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         createShareVolumeDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createShareVolumeDlg.findViewById(R.id.edit);
         inputEdit.setHint(R.string.clouddriver_input_volume_name);
@@ -220,20 +228,14 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      * @param volume
      */
     protected void showVolumeDelWranibgDlg(final Volume volume) {
-        new MyQMUIDialog.MessageDialogBuilder(ShareVolumeActivity.this)
+        new CustomDialog.MessageDialogBuilder(ShareVolumeActivity.this)
                 .setMessage(R.string.clouddriver_sure_delete_volume)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        removeShareVolume(volume);
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    removeShareVolume(volume);
+                    dialog.dismiss();
                 })
                 .show();
     }
@@ -245,7 +247,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     private void showUpdateShareVolumeNameDlg(final Volume volume) {
         updateShareVolumeNameDlg = new MyDialog(ShareVolumeActivity.this,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         updateShareVolumeNameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) updateShareVolumeNameDlg.findViewById(R.id.edit);
         inputEdit.setText(volume.getName());

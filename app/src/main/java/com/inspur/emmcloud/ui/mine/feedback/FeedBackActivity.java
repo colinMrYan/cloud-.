@@ -1,6 +1,12 @@
 package com.inspur.emmcloud.ui.mine.feedback;
 
-import android.os.Bundle;
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.Selection;
@@ -10,23 +16,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
-@ContentView(R.layout.activity_feedback)
 public class FeedBackActivity extends BaseActivity {
-    @ViewInject(R.id.et_feedback_content)
+    @BindView(R.id.et_feedback_content)
     EditText feedbackContentEdit;
-    @ViewInject(R.id.et_feedback_contact)
+    @BindView(R.id.et_feedback_contact)
     EditText feedbackContactEdit;
-    @ViewInject(R.id.switch_compat_anonymous)
+    @BindView(R.id.switch_compat_anonymous)
     SwitchCompat anonymousSwitch;
 
     TextWatcher mTextWatcher = new TextWatcher() {
@@ -72,10 +70,14 @@ public class FeedBackActivity extends BaseActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         feedbackContentEdit.addTextChangedListener(mTextWatcher);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_feedback;
     }
 
     public void onClick(View v) {

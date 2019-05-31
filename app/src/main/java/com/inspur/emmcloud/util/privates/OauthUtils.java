@@ -71,7 +71,7 @@ public class OauthUtils {
 
     private class WebService extends APIInterfaceInstance {
         @Override
-        public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
+        public void returnRefreshTokenSuccess(GetLoginResult getLoginResult) {
             // TODO Auto-generated method stub
             String accessToken = getLoginResult.getAccessToken();
             String refreshToken = getLoginResult.getRefreshToken();
@@ -113,7 +113,7 @@ public class OauthUtils {
         }
 
         @Override
-        public void returnOauthSigninFail(String error, int errorCode) {
+        public void returnRefreshTokenFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             saveRefreshTokenException(error, errorCode);
             //当errorCode为400时代表refreshToken也失效，需要重新登录

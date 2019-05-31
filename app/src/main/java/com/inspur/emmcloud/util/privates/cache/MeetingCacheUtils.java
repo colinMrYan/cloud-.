@@ -55,5 +55,18 @@ public class MeetingCacheUtils {
         return meetingList;
     }
 
+    /**
+     *通过id获取缓存meeting数据
+     */
+    public static Meeting getDBMeetingById(Context context, String id) {
+        Meeting meeting = new Meeting();
+        try {
+            meeting = DbCacheUtils.getDb(context).findById(Meeting.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return meeting;
+    }
+
 
 }

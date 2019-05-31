@@ -5,7 +5,7 @@ import android.widget.Chronometer;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.text.ParseException;
@@ -1138,14 +1138,17 @@ public class TimeUtils {
      * @return
      */
     public static boolean isContainTargetCalendarDay(Calendar targetCalendar, Calendar startCalendar, Calendar endCalendar) {
-        Calendar dayBeginCalendar = (Calendar) targetCalendar.clone();
-        dayBeginCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        dayBeginCalendar.set(Calendar.MINUTE, 0);
-        dayBeginCalendar.set(Calendar.SECOND, 0);
-        dayBeginCalendar.set(Calendar.MILLISECOND, 0);
-        Calendar dayEndCalendar = (Calendar) dayBeginCalendar.clone();
-        dayEndCalendar.add(Calendar.DAY_OF_YEAR, 1);
-        return (!dayBeginCalendar.after(startCalendar) && dayEndCalendar.after(endCalendar)) || (dayBeginCalendar.before(endCalendar) && dayBeginCalendar.after(startCalendar)) || (dayEndCalendar.before(endCalendar) && dayEndCalendar.after(startCalendar));
+        if (isSameDay(targetCalendar,startCalendar))
+            return true;
+        if (startCalendar.before(targetCalendar) && endCalendar.after(targetCalendar)){
+            return true;
+        }
+        if (isSameDay(targetCalendar,endCalendar)){
+           if(endCalendar.after(getDayBeginCalendar(targetCalendar))) {
+               return true;
+           }
+        }
+        return false;
     }
 
     /**

@@ -1,26 +1,26 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.os.Bundle;
-import android.view.View;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.IntentUtils;
 
-import org.xutils.view.annotation.ContentView;
+import android.view.View;
 
 /**
  * 账号、设备安全
  */
 
-@ContentView(R.layout.activity_safe_center)
 public class SafeCenterActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_safe_center;
+    }
 
     public void onClick(View view) {
         switch (view.getId()) {

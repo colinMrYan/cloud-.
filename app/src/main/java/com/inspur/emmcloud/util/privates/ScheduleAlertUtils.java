@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
+import android.app.NotificationManager;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
@@ -13,6 +14,8 @@ import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.data.JPushLocalNotification;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class ScheduleAlertUtils {
 
@@ -93,6 +96,8 @@ public class ScheduleAlertUtils {
      * @param context
      */
     public static void cancelAllCalEventNotification(Context context) {
-        JPushInterface.clearLocalNotifications(context);
+//        JPushInterface.clearLocalNotifications(context);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 }

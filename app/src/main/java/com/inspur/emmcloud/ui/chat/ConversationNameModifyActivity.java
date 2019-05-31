@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.os.Bundle;
-import android.view.View;
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -21,33 +20,37 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.view.View;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 修改群组名称
  *
  * @author Administrator
  */
-@ContentView(R.layout.activity_conversation_name_modify)
 public class ConversationNameModifyActivity extends BaseActivity {
 
-    @ViewInject(R.id.edit)
-    private ClearEditText editText;
+    @BindView(R.id.edit)
+    ClearEditText editText;
     private Conversation conversation;
     private LoadingDialog loadingDlg;
     private String name;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         String id = getIntent().getStringExtra("cid");
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), id);
         name = conversation.getName();
         EditTextUtils.setText(editText, name);
         loadingDlg = new LoadingDialog(ConversationNameModifyActivity.this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_name_modify;
     }
 
     public void onClick(View v) {

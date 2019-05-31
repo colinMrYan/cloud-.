@@ -16,6 +16,8 @@ import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -139,7 +141,7 @@ public class LoginUtils extends APIInterfaceInstance {
         if (NetUtils.isNetworkConnected(activity)) {
             loadingDlg.show();
             clearLoginInfo();
-            apiServices.OauthSignin(userName, password);
+            apiServices.OauthSignIn(userName, password);
         } else {
             loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
         }
@@ -231,10 +233,9 @@ public class LoginUtils extends APIInterfaceInstance {
      * 显示选择租户Dialog
      *
      * @param enterpriseList
-     * @param defaultEnterprise
      */
     private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList) {
-        final MyDialog myDialog = new MyDialog(activity, R.layout.dialog_login_select_tanent);
+        final MyDialog myDialog = new MyDialog(activity, R.layout.login_dialog_select_tanent);
         final SwitchView switchView = myDialog.findViewById(R.id.auto_select_switch);
         switchView.setOpened(true);
         MaxHeightListView enterpriseListView = myDialog.findViewById(R.id.enterprise_list);
@@ -259,7 +260,7 @@ public class LoginUtils extends APIInterfaceInstance {
     }
 
     @Override
-    public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
+    public void returnOauthSignInSuccess(GetLoginResult getLoginResult) {
         // TODO Auto-generated method stub
         this.getLoginResult = getLoginResult;
         String accessToken = getLoginResult.getAccessToken();
@@ -270,11 +271,41 @@ public class LoginUtils extends APIInterfaceInstance {
     }
 
     @Override
-    public void returnOauthSigninFail(String error, int errorCode) {
+    public void returnOauthSignInFail(String error, int errorCode,String headerLimitRemaining,String headerRetryAfter) {
         // TODO Auto-generated method stub
-        if (errorCode == 400) {
-            ToastUtils.show(activity, isSMSLogin ? R.string.login_code_verification_failure : R.string.login_invaliad_account_or_pwd);
-        } else {
+        try {
+            if (errorCode == 400) {
+                LogUtils.jasonDebug("headerLimitRemaining="+headerLimitRemaining);
+                LogUtils.jasonDebug("headerRetryAfter="+headerRetryAfter);
+                if (isSMSLogin) {
+                    ToastUtils.show(activity, R.string.login_code_verification_failure);
+                } else {
+                    String code = JSONUtils.getString(error,"code","");
+                    if (code.equals("1002") && !StringUtils.isBlank(headerLimitRemaining)){
+                        int limitRemaining = Integer.parseInt(headerLimitRemaining);
+                        ToastUtils.show(activity, activity.getString(R.string.login_fail_limit_remaining,limitRemaining));
+                    }else if(code.equals("1009") && !StringUtils.isBlank(headerRetryAfter)){
+                        int retryAfter = Integer.parseInt(headerRetryAfter);
+                        if (retryAfter == 0){
+                            retryAfter++;
+                        }
+                        if (retryAfter>59){
+                            retryAfter = new Double(Math.ceil(retryAfter*1.0/60)).intValue();
+                            ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_min,retryAfter));
+                        }else {
+                            ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_second,retryAfter));
+                        }
+                    }
+                    else {
+                        ToastUtils.show(activity, R.string.login_invaliad_account_or_pwd);
+                    }
+                }
+
+            } else {
+                WebServiceMiddleUtils.hand(activity, error, errorCode);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
             WebServiceMiddleUtils.hand(activity, error, errorCode);
         }
         loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);

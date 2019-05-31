@@ -1,12 +1,7 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
@@ -25,39 +20,40 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import android.content.Context;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 功能介绍页面 com.inspur.emmcloud.ui.GuideActivity
  */
-@ContentView(R.layout.activity_guide)
 public class GuideActivity extends BaseActivity {
 
-    @ViewInject(R.id.viewpager)
-    private ViewPager viewPager;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
     private List<View> guideViewList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            //全屏显示
-//            WindowManager.LayoutParams lp = getWindow().getAttributes();
-//            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-//            getWindow().setAttributes(lp);
-//        }
-        x.view().inject(this);
+    public void onCreate() {
+        ButterKnife.bind(this);
         ImmersionBar.with(this).init();
         deleteReactNativeResource();
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_guide;
+    }
+
+    protected int getStatusType() {
+        return STATUS_NO_SET;
     }
 
     /**

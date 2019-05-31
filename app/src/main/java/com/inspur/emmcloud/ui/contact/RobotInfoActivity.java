@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.contact;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.widget.TextView;
-
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -22,6 +16,11 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.TextView;
+
 /**
  * classes : com.inspur.emmcloud.ui.contact.RobotActivity
  * Create at 2016年12月1日 下午5:32:01
@@ -37,11 +36,15 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
     private String cid;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
         setContentView(R.layout.activity_conversation_cast_info);
         initViews();
         getRobotInfo();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_cast_info;
     }
 
     /**

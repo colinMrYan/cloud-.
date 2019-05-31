@@ -1,7 +1,18 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
+
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,52 +22,43 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.work.MyCalendar;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
-
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2019/3/29.
  */
-@ContentView(R.layout.activity_calendar_type_select)
 public class CalendarTypeSelectActivity extends BaseActivity {
     MyCalendar calendar;
-    @ViewInject(R.id.lv_calendars)
-    private ListView calendarListView;
-    private WorkAPIService workAPIService;
+    @BindView(R.id.lv_calendars)
+    ListView calendarListView;
+    private ScheduleApiService scheduleAPIService;
     private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
     private CalendarAdapter calendarAdapter;
     private int selectPosition = -1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_calendar_type_select;
     }
 
     private void initView() {
         // TODO Auto-generated method stub
         calendarAdapter = new CalendarAdapter();
         calendarListView.setAdapter(calendarAdapter);
-        workAPIService = new WorkAPIService(this);
-        workAPIService.setAPIInterface(new WebService());
+        scheduleAPIService = new ScheduleApiService(this);
+        scheduleAPIService.setAPIInterface(new WebService());
         calendarList = MyCalendarCacheUtils.getAllMyCalendarList(getApplicationContext());
         if (calendarList.size() > 0) {
             calendarAdapter.notifyDataSetChanged();
         }
-        workAPIService.getMyCalendar(0, 30);
+        scheduleAPIService.getMyCalendar(0, 30);
         calendarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override

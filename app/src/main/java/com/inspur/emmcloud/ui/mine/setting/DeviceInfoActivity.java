@@ -1,14 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -25,11 +17,16 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import java.util.List;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 /**
  * Created by Administrator on 2017/5/15.
@@ -43,9 +40,7 @@ public class DeviceInfoActivity extends BaseActivity {
     private MineAPIService apiService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_device_info);
+    public void onCreate() {
         loadingDialog = new LoadingDialog(this);
         bindingDevice = (BindingDevice) getIntent().getSerializableExtra("binding_device");
         ((TextView) findViewById(R.id.device_model_text)).setText(bindingDevice.getDeviceModel());
@@ -61,6 +56,10 @@ public class DeviceInfoActivity extends BaseActivity {
         getDeviceLog();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_setting_device_info;
+    }
 
     public void onClick(View v) {
         switch (v.getId()) {
@@ -85,20 +84,14 @@ public class DeviceInfoActivity extends BaseActivity {
      */
     private void showUnbindDevicePromptDlg() {
         String warningText = bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext())) ? getString(R.string.device_current_unbind_warning) : getString(R.string.device_other_unbind_warning, bindingDevice.getDeviceModel());
-        new MyQMUIDialog.MessageDialogBuilder(DeviceInfoActivity.this)
+        new CustomDialog.MessageDialogBuilder(DeviceInfoActivity.this)
                 .setMessage(warningText)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        unbindDevice();
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    unbindDevice();
                 })
                 .show();
     }

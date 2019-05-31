@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -25,38 +23,33 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.view.View;
+import android.widget.TextView;
 
-@ContentView(R.layout.activity_conversation_cast_info)
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ConversationCastInfoActivity extends BaseActivity implements OnStateChangedListener {
 
     public static final String EXTRA_CID = "cid";
+    @BindView(R.id.img_photo)
+    CircleTextImageView robotIconImg;
+    @BindView(R.id.tv_name)
+    TextView robotNameText;
+    @BindView(R.id.function_introduction_text)
+    TextView introductionText;
+    @BindView(R.id.support_text)
+    TextView supportText;
+    @BindView(R.id.sv_stick)
+    SwitchView stickSwitch;
     private Conversation conversation;
     private ChatAPIService apiService;
     private LoadingDialog loadingDlg;
-
-    @ViewInject(R.id.img_photo)
-    private CircleTextImageView robotIconImg;
-
-    @ViewInject(R.id.tv_name)
-    private TextView robotNameText;
-
-    @ViewInject(R.id.function_introduction_text)
-    private TextView introductionText;
-
-    @ViewInject(R.id.support_text)
-    private TextView supportText;
-
-    @ViewInject(R.id.sv_stick)
-    private SwitchView stickSwitch;
-
     private WebService webService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(ConversationCastInfoActivity.this);
         String cid = getIntent().getExtras().getString(EXTRA_CID);
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
@@ -71,7 +64,11 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
         } else {
             showRobotInfo(robot);
         }
+    }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_cast_info;
     }
 
     /**
@@ -122,9 +119,6 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
 
     /**
      * 设置频道是否置顶
-     *
-     * @param id
-     * @param isStick
      */
     private void setConversationStick() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {

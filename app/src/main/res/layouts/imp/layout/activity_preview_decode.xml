@@ -15,7 +15,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
-
         <com.inspur.imp.plugin.barcode.decoder.RangeView
             android:id="@+id/rv"
             android:layout_width="fill_parent"
@@ -57,9 +56,9 @@
                     android:id="@+id/bt_torch"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:onClick="onClick"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/icon_lamp_off"
+                    android:onClick="onClick"
                     android:textSize="18sp" />
 
                 <TextView

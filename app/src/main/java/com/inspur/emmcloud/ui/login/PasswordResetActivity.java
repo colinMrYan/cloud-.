@@ -1,14 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -21,33 +12,36 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2019/1/19.
  */
 
-@ContentView(R.layout.activity_password_reset)
 public class PasswordResetActivity extends BaseActivity implements View.OnTouchListener {
     public static final String EXTRA_CAPTCHA = "extra_captcha";
-    @ViewInject(R.id.bt_ok)
-    private Button okBtn;
-    @ViewInject(R.id.et_password_new)
-    private EditText passwordNewEdit;
-    @ViewInject(R.id.et_password_confirm)
-    private EditText passwordConfirmEdit;
+    @BindView(R.id.bt_ok)
+    Button okBtn;
+    @BindView(R.id.et_password_new)
+    EditText passwordNewEdit;
+    @BindView(R.id.et_password_confirm)
+    EditText passwordConfirmEdit;
     private String passwordNew;
     private String passwordConfirm;
     private LoadingDialog loadingDlg;
     private EmmSecurityKeyboard emmSecurityKeyboard;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        x.view().inject(this);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
+    public void onCreate() {
+        ButterKnife.bind(this);
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
@@ -61,6 +55,16 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
         passwordConfirmEdit.setOnTouchListener(this);
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_password_reset;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
+    }
+
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_ok:
@@ -68,7 +72,7 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
                     ToastUtils.show(PasswordResetActivity.this, R.string.modify_not_same);
                     return;
                 }
-                if (passwordNew.length() < 8 || passwordNew.length() > 128 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
                     ToastUtils.show(MyApplication.getInstance(), R.string.modify_password_invalid);
                     return;
                 }
@@ -141,7 +145,7 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
             // TODO Auto-generated method stub
             passwordNew = passwordNewEdit.getText().toString();
             passwordConfirm = passwordConfirmEdit.getText().toString();
-            boolean isInputValaid = passwordNew.length() > 7 && passwordConfirm.length() > 7;
+            boolean isInputValaid = passwordNew.length() >= 1 && passwordConfirm.length() >= 1;
             okBtn.setEnabled(isInputValaid);
             okBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }

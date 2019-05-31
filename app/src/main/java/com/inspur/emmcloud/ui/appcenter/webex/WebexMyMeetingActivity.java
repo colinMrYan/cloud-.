@@ -1,21 +1,16 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
-import android.content.Intent;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.Html;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -39,44 +34,45 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.database.DataSetObserver;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2018/10/11.
  */
-
-@ContentView(R.layout.activity_webex_my_meeting)
 public class WebexMyMeetingActivity extends BaseActivity {
     private static final int REQUEST_SCHEDULE_WEBEX_MEETING = 1;
     private static final int REQUEST_REMOVE_WEBEX_MEETING = 1;
     private final String webexAppPackageName = "com.cisco.webex.meetings";
-    @ViewInject(R.id.srl)
-    private MySwipeRefreshLayout swipeRefreshLayout;
-    @ViewInject(R.id.elv_meeting)
-    private ExpandableListView expandListView;
-    @ViewInject(R.id.ll_no_meeting)
-    private LinearLayout noMeetingLayout;
-    @ViewInject(R.id.rl_mask)
-    private RelativeLayout maskLayout;
-    @ViewInject(R.id.tv_no_meeting)
-    private TextView noMeetingText;
+    @BindView(R.id.srl)
+    MySwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.elv_meeting)
+    ExpandableListView expandListView;
+    @BindView(R.id.ll_no_meeting)
+    LinearLayout noMeetingLayout;
+    @BindView(R.id.rl_mask)
+    RelativeLayout maskLayout;
+    @BindView(R.id.tv_no_meeting)
+    TextView noMeetingText;
     private WebexMeetingAdapter adapter;
     private WebexAPIService apiService;
     private List<WebexMeeting> webexMeetingList = new ArrayList<>();
@@ -91,9 +87,18 @@ public class WebexMyMeetingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
+        ButterKnife.bind(this);
         initView();
         getWxMeetingList(true);
+    }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_my_meeting;
     }
 
     private void initData() {
@@ -273,21 +278,15 @@ public class WebexMyMeetingActivity extends BaseActivity {
      * 安装提示
      */
     private void showInstallDialog() {
-        new MyQMUIDialog.MessageDialogBuilder(WebexMyMeetingActivity.this)
+        new CustomDialog.MessageDialogBuilder(WebexMyMeetingActivity.this)
                 .setMessage(getString(R.string.webex_install_tips))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
-                        new AppDownloadUtils().showDownloadDialog(WebexMyMeetingActivity.this, downloadUrl);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
+                    new AppDownloadUtils().showDownloadDialog(WebexMyMeetingActivity.this, downloadUrl);
                 })
                 .show();
     }

@@ -1,16 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -21,30 +11,36 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2019/4/12.
  */
 
-@ContentView(R.layout.activity_mine_tab_layout_switch)
 public class TabLayoutSwitchActivity extends BaseActivity {
-    @ViewInject(R.id.tv_header)
-    private TextView headerText;
-    @ViewInject(R.id.lv)
-    private ListView listView;
+    @BindView(R.id.tv_header)
+    TextView headerText;
+    @BindView(R.id.lv)
+    ListView listView;
     private NaviBarModel naviBarModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
         headerText.setText(R.string.mine_tab_layout);
         listView.setAdapter(new Adapter());
@@ -57,35 +53,13 @@ public class TabLayoutSwitchActivity extends BaseActivity {
         });
     }
 
-    public void onClick(View v) {
-        finish();
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mine_tab_layout_switch;
     }
 
-    private class Adapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            view = LayoutInflater.from(TabLayoutSwitchActivity.this).inflate(R.layout.mine_setting_tab_layout_list_item, null);
-            TextView tabLayoutNameText = view.findViewById(R.id.tv_tab_layout_name);
-            ImageView selectImg = view.findViewById(R.id.iv_select);
-            tabLayoutNameText.setText(getTabLayoutName(i));
-            selectImg.setVisibility(getSelectedShow(i));
-            return view;
-        }
+    public void onClick(View v) {
+        finish();
     }
 
     /**
@@ -119,23 +93,17 @@ public class TabLayoutSwitchActivity extends BaseActivity {
     private void showTabLayoutSwitch(final int selectIndex){
         final String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
         final String selectedTabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(selectIndex).getName();
-        new MyQMUIDialog.MessageDialogBuilder(this)
+        new CustomDialog.MessageDialogBuilder(this)
                 .setMessage(getString(R.string.mine_tab_layout_switch,getTabLayoutName(selectIndex)))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        if(!currentTabLayoutName.equals(selectedTabLayoutName)){
-                            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,selectedTabLayoutName);
-                            Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    if (!currentTabLayoutName.equals(selectedTabLayoutName)) {
+                        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, selectedTabLayoutName);
+                        Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                     }
                 })
                 .show();
@@ -158,5 +126,32 @@ public class TabLayoutSwitchActivity extends BaseActivity {
             }
         }
         return View.GONE;
+    }
+
+    private class Adapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = LayoutInflater.from(TabLayoutSwitchActivity.this).inflate(R.layout.mine_setting_tab_layout_list_item, null);
+            TextView tabLayoutNameText = view.findViewById(R.id.tv_tab_layout_name);
+            ImageView selectImg = view.findViewById(R.id.iv_select);
+            tabLayoutNameText.setText(getTabLayoutName(i));
+            selectImg.setVisibility(getSelectedShow(i));
+            return view;
+        }
     }
 }

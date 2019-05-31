@@ -11,7 +11,8 @@ public enum ClientConfigItem {
     CLIENT_CONFIG_ROUTER("client_config_router"),
     CLIENT_CONFIG_MY_APP("client_config_my_app"),
     CLIENT_CONFIG_CONTACT_USER("client_config_contact_user"),
-    CLIENT_CONFIG_CONTACT_ORG("client_config_contact_org");
+    CLIENT_CONFIG_CONTACT_ORG("client_config_contact_org"),
+    CLIENT_CONFIG_NAVI_TAB("client_config_navi_tab");
     private final String value;
 
     ClientConfigItem(String value) {

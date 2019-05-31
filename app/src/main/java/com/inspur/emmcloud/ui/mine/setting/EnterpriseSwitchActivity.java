@@ -1,10 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.RelativeLayout;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
@@ -19,35 +15,42 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/5/25.
  */
 
-@ContentView(R.layout.activity_mine_enterprise_switch)
 public class EnterpriseSwitchActivity extends BaseActivity {
 
-    @ViewInject(R.id.lv_enterprise)
-    private ScrollViewWithListView enterpriseListView;
-    @ViewInject(R.id.rl_setting_close_auto_select)
-    private RelativeLayout closeAutoSelectLayout;
+    @BindView(R.id.lv_enterprise)
+    ScrollViewWithListView enterpriseListView;
+    @BindView(R.id.rl_setting_close_auto_select)
+    RelativeLayout closeAutoSelectLayout;
     private GetMyInfoResult getMyInfoResult;
     private List<Enterprise> enterpriseList;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         getEnterpriseList();
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mine_enterprise_switch;
     }
 
     private void getEnterpriseList() {
@@ -80,20 +83,14 @@ public class EnterpriseSwitchActivity extends BaseActivity {
      * @param enterprise
      */
     private void showSwitchEnterpriseConfirmDlg(final Enterprise enterprise) {
-        new MyQMUIDialog.MessageDialogBuilder(EnterpriseSwitchActivity.this)
+        new CustomDialog.MessageDialogBuilder(EnterpriseSwitchActivity.this)
                 .setMessage(getString(R.string.sure_switch_to, enterprise.getName()))
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        switchToEnterprise(enterprise);
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    switchToEnterprise(enterprise);
                 })
                 .show();
     }
@@ -107,7 +104,7 @@ public class EnterpriseSwitchActivity extends BaseActivity {
         WebSocketPush.getInstance().closeWebsocket();
         PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_CURRENT_ENTERPRISE_ID, enterprise.getId());
         MyApplication.getInstance().initTanent();
-        MyApplication.getInstance().stopPush();
+        PushManagerUtils.getInstance().stopPush();
         MyApplication.getInstance().clearNotification();
         MyApplication.getInstance().removeAllCookie();
         MyApplication.getInstance().clearUserPhotoMap();

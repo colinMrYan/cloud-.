@@ -81,7 +81,7 @@ public class ProfileUtils {
     private void showPromptDialog() {
         //当强制更新或者统一更新接口无法返回正确消息，同时路由又无法获取成功时暂时不弹出提示框
         if (!MyApplication.getInstance().isIndexActivityRunning() && isForceUpdateProfile()) {
-            final Dialog dialog = new MyDialog(activity, R.layout.dialog_one_button);
+            final Dialog dialog = new MyDialog(activity, R.layout.basewidget_dialog_one_button);
             dialog.setCancelable(false);
             ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.net_work_fail);
             dialog.findViewById(R.id.ok_btn).setOnClickListener(new View.OnClickListener() {
@@ -132,9 +132,9 @@ public class ProfileUtils {
                 String myInfoOld = PreferencesUtils.getString(activity, "myInfo", "");
                 PreferencesUtils.putString(activity, Constant.PREF_MY_INFO_OLD, myInfoOld);
                 PreferencesUtils.putString(activity, "myInfo", getMyInfoResult.getResponse());
-                ClusterBean chatClusterBeanOld = MutilClusterUtils.getClusterBean(MutilClusterUtils.ECM_CHAT);
+                ClusterBean chatClusterBeanOld = WebServiceRouterManager.getInstance().getClusterBean(WebServiceRouterManager.ECM_CHAT);
                 MyApplication.getInstance().initTanent();
-                ClusterBean chatClusterBeanNew = MutilClusterUtils.getClusterBean(MutilClusterUtils.ECM_CHAT);
+                ClusterBean chatClusterBeanNew = WebServiceRouterManager.getInstance().getClusterBean(WebServiceRouterManager.ECM_CHAT);
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER, saveConfigVersion);
                 String appVersion = AppUtils.getVersion(activity);
                 PreferencesUtils.putString(activity, Constant.PREF_APP_PREVIOUS_VERSION,

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget.dialogs;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +53,8 @@ public class ActionSheetDialog extends Dialog {
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         params.gravity = Gravity.BOTTOM | Gravity.CENTER;
         getWindow().setWindowAnimations(R.style.main_menu_animstyle);
-        int screenWidth = QMUIDisplayHelper.getScreenWidth(getContext());
-        int screenHeight = QMUIDisplayHelper.getScreenHeight(getContext());
+        int screenWidth = ResolutionUtils.getWidth(getContext());
+        int screenHeight = ResolutionUtils.getHeight((Activity) getContext());
         params.width = screenWidth < screenHeight ? screenWidth : screenHeight;
         params.width = (int) (params.width * 0.9);
         params.dimAmount = 0.31f;
@@ -219,7 +220,7 @@ public class ActionSheetDialog extends Dialog {
 
         @SuppressLint("ResourceAsColor")
         private View buildViews() {
-            View wrapperView = View.inflate(mContext, R.layout.widget_actionsheet, null);
+            View wrapperView = View.inflate(mContext, R.layout.basewidget_actionsheet, null);
             mTitleTv = (TextView) wrapperView.findViewById(R.id.title);
             mTitleTv.setTextColor(titleColor);
             mContainerView = (ListView) wrapperView.findViewById(R.id.sheetList);
@@ -299,7 +300,7 @@ public class ActionSheetDialog extends Dialog {
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
                 final ActionSheetListItemData data = getItem(position);
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.widget_actionsheet_item_view, parent, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.basewidget_actionsheet_item_view, parent, false);
                 TextView textView = (TextView) convertView.findViewById(R.id.content);
                 textView.setTextColor(itemColor);
                 textView.setText(data.text);

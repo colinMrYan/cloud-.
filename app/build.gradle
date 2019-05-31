@@ -23,7 +23,6 @@ def enableProguardInReleaseBuilds = false
 Properties properties = new Properties()
 properties.load(new FileInputStream(SIGN_PROPERTIES))
 
-
 android {
     signingConfigs {
         config {
@@ -41,8 +40,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 79
-        versionName "3.1.0-beta.6"
+        versionCode 82
+        versionName "3.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -143,6 +142,10 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
     // applicationVariants are e.g. debug, release
     //android studio对于jni调用及运行闪退无法加载库的问题解决方案
     applicationVariants.all { variant ->
@@ -218,7 +221,7 @@ dependencies {
         exclude module: 'support-annotations'
     }
     compile(name: 'xutils-3.5.0.2', ext: 'aar')
-    compile(name: 'qmui-1.0.4', ext: 'aar')
+//    compile(name: 'qmui-1.0.4', ext: 'aar')
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('libs/jpush-android-3.1.1.jar')
     compile files('libs/jcore-android-1.1.9.jar')
@@ -253,6 +256,10 @@ dependencies {
         exclude group: 'com.nineoldandroids', module: 'library'
     }
     compile 'cn.carbs.android:SegmentControlView:1.0.0'
+    implementation 'com.jakewharton:butterknife:8.8.1',{
+        exclude group: 'com.android.support'
+    }
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.hjq:toast:6.0'
 }
 repositories { flatDir { dirs 'aars' } }
@@ -260,7 +267,7 @@ repositories { flatDir { dirs 'aars' } }
 protobuf {
 //    protoc {
 //        artifact = 'com.google.protobuf:protoc:3.5.1'
-//    }
+//            }
     generateProtoTasks {
         all().each { task ->
             task.builtins {

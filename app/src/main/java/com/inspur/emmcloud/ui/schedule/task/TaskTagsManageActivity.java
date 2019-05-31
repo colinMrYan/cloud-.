@@ -1,7 +1,22 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
+import java.util.ArrayList;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
+import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -10,46 +25,33 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.GetTagResult;
-import com.inspur.emmcloud.bean.work.TaskColorTag;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
-import java.util.ArrayList;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by libaochao on 2019/4/8.
  */
-@ContentView(R.layout.activity_task_manage)
 public class TaskTagsManageActivity extends BaseActivity {
     public static String EXTRA_TAGS = "tags";
     public static String EXTRA_DELETE_TAGS = "tags";
-    @ViewInject(R.id.lv_task_manage_tags)
-    private ListView taskManageTagsList;
+    @BindView(R.id.lv_task_manage_tags)
+    ListView taskManageTagsList;
     private TaskTagsAdapter taskTagsAdapter;
     private LoadingDialog loadingDialog;
     private ArrayList<TaskColorTag> allTags = new ArrayList<TaskColorTag>();
     private ArrayList<TaskColorTag> selectTags = new ArrayList<TaskColorTag>();
-    private WorkAPIService workAPIService;
+    private ScheduleApiService scheduleAPIService;
     private boolean isHaveExtra = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initData();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_task_manage;
     }
 
     /**
@@ -80,8 +82,8 @@ public class TaskTagsManageActivity extends BaseActivity {
             }
         });
         loadingDialog = new LoadingDialog(this);
-        workAPIService = new WorkAPIService(this);
-        workAPIService.setAPIInterface(new WebService());
+        scheduleAPIService = new ScheduleApiService(this);
+        scheduleAPIService.setAPIInterface(new WebService());
         getTags();
         if (getIntent().hasExtra(EXTRA_TAGS)) {
             if (getIntent().getSerializableExtra(EXTRA_TAGS) != null) {
@@ -105,7 +107,7 @@ public class TaskTagsManageActivity extends BaseActivity {
     private void getTags() {
         if (NetUtils.isNetworkConnected(TaskTagsManageActivity.this)) {
             loadingDialog.show();
-            workAPIService.getTags();
+            scheduleAPIService.getTags();
         }
     }
 
@@ -191,11 +193,9 @@ public class TaskTagsManageActivity extends BaseActivity {
         @Override
         public void returnGetTagResultSuccess(GetTagResult getTagResult) {
             super.returnGetTagResultSuccess(getTagResult);
-            LogUtils.LbcDebug("111111111111111111111");
             LoadingDialog.dimissDlg(loadingDialog);
             allTags = getTagResult.getArrayList();
             allTags.size();
-            LogUtils.LbcDebug("AllTags Size:::" + allTags.size());
             taskTagsAdapter.notifyDataSetChanged();
             String userId = ((MyApplication) getApplicationContext()).getUid();
             PreferencesUtils.putString(TaskTagsManageActivity.this,
@@ -205,7 +205,6 @@ public class TaskTagsManageActivity extends BaseActivity {
 
         @Override
         public void returnGetTagResultFail(String error, int errorCode) {
-            LogUtils.LbcDebug("22222222222222222222222");
             LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(TaskTagsManageActivity.this, error, errorCode);
         }

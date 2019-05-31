@@ -1,18 +1,10 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
-import android.view.View;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.TimePicker;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -34,42 +26,46 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2018/10/11.
  */
-
-@ContentView(R.layout.activity_webex_schedule_meeting)
 public class WebexScheduleMeetingActivity extends BaseActivity {
     private static final int REQUEST_ADD_ATTENDEES = 1;
-    @ViewInject(R.id.et_title)
-    private EditText titleEdit;
-    @ViewInject(R.id.tv_start_date)
-    private TextView startDateText;
-    @ViewInject(R.id.tv_start_time)
-    private TextView startTimeText;
-    @ViewInject(R.id.tv_duration_hour)
-    private TextView durationHourText;
-    @ViewInject(R.id.tv_duration_min)
-    private TextView durationMinText;
-    @ViewInject(R.id.tv_invite)
-    private TextView inviteText;
-    @ViewInject(R.id.et_password)
-    private ClearEditText passwordEdit;
-    @ViewInject(R.id.iv_password_visible)
-    private ImageView passwordVisibleImg;
+    @BindView(R.id.et_title)
+    EditText titleEdit;
+    @BindView(R.id.tv_start_date)
+    TextView startDateText;
+    @BindView(R.id.tv_start_time)
+    TextView startTimeText;
+    @BindView(R.id.tv_duration_hour)
+    TextView durationHourText;
+    @BindView(R.id.tv_duration_min)
+    TextView durationMinText;
+    @BindView(R.id.tv_invite)
+    TextView inviteText;
+    @BindView(R.id.et_password)
+    ClearEditText passwordEdit;
+    @BindView(R.id.iv_password_visible)
+    ImageView passwordVisibleImg;
     //    private final String[] durationHourItems = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "18", "24"};
 //    private final Integer[] durationHourSumMin = new Integer[]{0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 1080, 1440};
 //    private final String[] durationMinItems = new String[]{"0", "10", "15", "20", "30", "40", "45", "50"};
@@ -89,6 +85,11 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate() {
+        ButterKnife.bind(this);
         String hourStr = getString(R.string.hour);
         String minStr = getString(R.string.min);
         String hoursStr = getString(R.string.hours);
@@ -110,6 +111,11 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         EditTextUtils.setText(passwordEdit, password);
     }
 
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_webex_schedule_meeting;
+    }
 
     /**
      * 弹出日期选择Dialog
@@ -148,10 +154,10 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showDurationHourChoiceDialog() {
-        new MyQMUIDialog.CheckableSumDialogBuilder(WebexScheduleMeetingActivity.this)
+        new CustomDialog.SingleChoiceDialogBuilder(WebexScheduleMeetingActivity.this)
                 .setTitle(getString(R.string.webex_meeting_duration))
-                .setCheckedIndex(durationHourChoiceIndex)
-                .addItems(durationHourItems, new DialogInterface.OnClickListener() {
+//                .set(durationHourChoiceIndex)
+                .setSingleChoiceItems(durationHourItems, durationHourChoiceIndex, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -163,10 +169,10 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showDurationMinChoiceDialog() {
-        new MyQMUIDialog.CheckableSumDialogBuilder(WebexScheduleMeetingActivity.this)
+        new CustomDialog.SingleChoiceDialogBuilder(WebexScheduleMeetingActivity.this)
                 .setTitle(getString(R.string.webex_meeting_duration))
-                .setCheckedIndex(durationMinChoiceIndex)
-                .addItems(durationMinItems, new DialogInterface.OnClickListener() {
+//                .setCheckedIndex(durationMinChoiceIndex)
+                .setSingleChoiceItems(durationMinItems, durationMinChoiceIndex, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -252,15 +258,11 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showStartDateErrorDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(WebexScheduleMeetingActivity.this)
+        new CustomDialog.MessageDialogBuilder(WebexScheduleMeetingActivity.this)
                 .setTitle(getString(R.string.webex_start_time_error))
                 .setMessage(getString(R.string.webex_start_time_error_info))
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-
-                    }
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
                 })
                 .show();
     }

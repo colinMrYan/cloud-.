@@ -1,34 +1,43 @@
 package com.inspur.emmcloud.ui.schedule;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragment;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleHomeFragmentAdapter;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingFragment;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingHistoryActivity;
+import com.inspur.emmcloud.ui.schedule.meeting.MeetingRoomListActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskFragment;
 import com.inspur.emmcloud.ui.schedule.task.TaskSetActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CustomScrollViewPager;
 import com.inspur.emmcloud.widget.popmenu.DropPopMenu;
 import com.inspur.emmcloud.widget.popmenu.MenuItem;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,23 +55,30 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
     private View rootView;
     private TabLayout tabLayout;
     private CustomScrollViewPager viewPager;
-    private Button todayBtn;
+    private ImageButton todayImgBtn;
     private ScheduleFragment scheduleFragment;
     private MeetingFragment meetingFragment;
     private TaskFragment taskFragment;
+    private TextView dateText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         initView();
+        EventBus.getDefault().register(this);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setFragmentStatusBarWhite();
+        setFragmentStatusBarCommon();
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.fragment_schedule_home, container,
                     false);
@@ -72,6 +88,37 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             parent.removeView(rootView);
         }
         return rootView;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveFragmentScheme(SimpleEventMessage scheme){
+        if(scheme.getAction().equals(Constant.SCHEDULE_DETAIL)){
+            switch ((String)scheme.getMessageObj()){
+                case Constant.ACTION_CALENDAR:
+                    if(tabLayout != null){
+                        tabLayout.getTabAt(0).select();
+                    }
+                    break;
+                case Constant.ACTION_MEETING:
+                    if(tabLayout != null){
+                        tabLayout.getTabAt(1).select();
+                        if(meetingFragment != null){
+                            meetingFragment.getMeetingList();
+                        }
+                    }
+                    break;
+                case Constant.ACTION_TASK:
+                    if(tabLayout != null){
+                        tabLayout.getTabAt(2).select();
+                    }
+                    break;
+                default:
+                    if(tabLayout != null){
+                        tabLayout.getTabAt(0).select();
+                    }
+                    break;
+            }
+        }
     }
 
     /**
@@ -85,9 +132,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
 
     private void initView() {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_home, null);
-        todayBtn = rootView.findViewById(R.id.bt_today);
-        todayBtn.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
-        todayBtn.setOnClickListener(this);
+        dateText = rootView.findViewById(R.id.tv_date);
+        todayImgBtn = rootView.findViewById(R.id.ibt_today);
+        dateText.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "");
+        todayImgBtn.setOnClickListener(this);
         rootView.findViewById(R.id.ibt_add).setOnClickListener(this);
         initTabLayout();
         viewPager = rootView.findViewById(R.id.view_pager_all_schedule);
@@ -141,11 +189,10 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                if (viewPager != null) {
-                    viewPager.setCurrentItem(position);
-                }
-                todayBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
+                final int position = tab.getPosition();
+                viewPager.setCurrentItem(position);
+                dateText.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
+                todayImgBtn.setVisibility((position == 0) ? View.VISIBLE : View.INVISIBLE);
                 updateTabLayoutTextStatus(tab, true);
             }
 
@@ -171,7 +218,9 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         TextView textView = tab.getCustomView().findViewById(R.id.tv_tab);
         tab.getCustomView().findViewById(R.id.tv_tab).setSelected(isSelect);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, isSelect ? 20 : 18);
-        textView.setTextColor(Color.parseColor(isSelect ? "#333333" : "#888888"));
+        int textColorNormal = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.schedule_tab_text_color_normal);
+        int textColorSelect = ResourceUtils.getResValueOfAttr(getActivity(), R.attr.schedule_tab_text_color_select);
+        textView.setTextColor(ContextCompat.getColor(MyApplication.getInstance(),isSelect?textColorSelect:textColorNormal));
     }
 
 
@@ -189,14 +238,26 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                         IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
                         break;
                     case 2:
-                        recordUserClickWorkFunction(PV_COLLECTION_MISSION);
-                        IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
+                        if(viewPager.getCurrentItem() == 2){
+                            recordUserClickWorkFunction(PV_COLLECTION_MISSION);
+                            IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
+                        }else{
+                            recordUserClickWorkFunction(PV_COLLECTION_MEETING);
+                            IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                        }
                         break;
                     case 3:
+                        if(viewPager.getCurrentItem() == 0){
+                            recordUserClickWorkFunction(PV_COLLECTION_MISSION);
+                            IntentUtils.startActivity(getActivity(), TaskAddActivity.class);
+                        }else if(viewPager.getCurrentItem() == 1){
+                            recordUserClickWorkFunction(PV_COLLECTION_MEETING);
+                            IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                        }
                         break;
                     case 4:
                         recordUserClickWorkFunction(PV_COLLECTION_MEETING);
-                        IntentUtils.startActivity(getActivity(), MeetingAddActivity.class, bundle);
+                        IntentUtils.startActivity(getActivity(), MeetingRoomListActivity.class);
                         break;
                     case 5:
                         if (viewPager.getCurrentItem() == 0) {
@@ -207,6 +268,8 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
                             IntentUtils.startActivity(getActivity(), TaskSetActivity.class);
                         }
                         break;
+                        default:
+                            break;
                 }
             }
         });
@@ -220,13 +283,13 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
         switch (viewPager.getCurrentItem()) {
             case 0:
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_calendar, 1, getActivity().getString(R.string.schedule_calendar_create)));
-                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 2, getActivity().getString(R.string.schedule_task_create)));
-                // menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 2, getString(R.string.schedule_meeting_room_booking)));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_task, 3, getActivity().getString(R.string.schedule_task_create)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_setting, 5, getString(R.string.settings)));
                 break;
             case 1:
-                //  menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, "新建会议"));
+                menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting, 3, getString(R.string.schedule_meeting_room_booking)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_add_meeting_room, 4, getActivity().getString(R.string.schedule_meeting_booking_room)));
                 menuItemList.add(new MenuItem(R.drawable.ic_schedule_meeting_history, 5, getActivity().getString(R.string.schedule_meeting_history)));
                 break;
@@ -244,7 +307,7 @@ public class ScheduleHomeFragment extends BaseFragment implements View.OnClickLi
             case R.id.ibt_add:
                 showAddPopMenu(view);
                 break;
-            case R.id.bt_today:
+            case R.id.ibt_today:
                 scheduleFragment.setScheduleBackToToday();
                 break;
         }

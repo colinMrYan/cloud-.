@@ -34,6 +34,8 @@
     <attr name="mine_my_info_card_bg" format="reference"/>
     <attr name="mine_my_info_menu_tint_color" format="reference|color"/>
     <attr name="mine_my_info_switch_enterprise" format="reference"/>
+    <attr name="schedule_tab_text_color_normal" format="reference|color"/>
+    <attr name="schedule_tab_text_color_select" format="reference|color"/>
 
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />
@@ -46,15 +48,7 @@
     <declare-styleable name="FlowLayout_Layout">
         <attr name="android:layout_gravity" />
     </declare-styleable>
-    
-    <declare-styleable name="RoundAngleImageView">
-        <attr name="roundWidth" format="dimension" />
-        <attr name="roundHeight" format="dimension" />
-        <attr name="roundlefttop" format="boolean" />
-        <attr name="roundleftdown" format="boolean" />
-        <attr name="roundrighttop" format="boolean" />
-        <attr name="roundrightdown" format="boolean" />
-    </declare-styleable>
+
     <declare-styleable name="HorizontalProgressBarWithNumber">
         <attr name="progress_unreached_color" format="color" />
         <attr name="progress_reached_color" format="color" />
@@ -94,30 +88,6 @@
         <attr name="android:requiresFadingEdge" />
         <attr name="android:fadingEdgeLength" />
     </declare-styleable>
-    <declare-styleable name="SegmentControl">
-        <attr name="cornerRadius" format="dimension|reference" />
-        <attr name="selectedBackgroundColors" format="color|reference" />
-        <attr name="selectedTextColors" format="color|reference" />
-        <attr name="texts" format="string|reference" />
-        <attr name="android:textSize" />
-        <attr name="direction" format="enum">
-            <enum name="horizon" value="0" />
-            <enum name="vertical" value="1" />
-        </attr>
-        <attr name="gaps" format="dimension|reference" />
-        <attr name="horizonGap" format="dimension|reference" />
-        <attr name="verticalGap" format="dimension|reference" />
-        <attr name="selectedIndex" format="integer" />
-    </declare-styleable>
-    <declare-styleable name="MyFlowLayout">
-        <attr name="horizontalSpacing" format="dimension" />
-        <attr name="verticalSpacing" format="dimension" />
-        <attr name="orientation" format="enum">
-            <enum name="horizontal" value="0" />
-            <enum name="vertical" value="1" />
-        </attr>
-        <attr name="debugDraw" format="boolean" />
-    </declare-styleable>
     <declare-styleable name="FlowLayout_LayoutParams">
         <attr name="layout_newLine" format="boolean" />
         <attr name="layout_horizontalSpacing" format="dimension" />
@@ -150,7 +120,7 @@
         <attr name="lineSpacingExtra" format="dimension" />
         <attr name="typeface" />
     </declare-styleable>
-<declare-styleable name="CropImageView">
+    <declare-styleable name="CropImageView">
         <attr name="guidelines">
             <enum name="on" value="2"/>
             <enum name="onTouch" value="1"/>
@@ -163,13 +133,6 @@
     </declare-styleable>
     <declare-styleable name="ECMChatInputMenu">
         <attr name="layoutType" format="string"/>
-    </declare-styleable>
-    <declare-styleable name="CircleFrameLayout">
-        <attr name="radius" format="dimension" />
-        <attr name="topLeftRadius" format="dimension" />
-        <attr name="topRightRadius" format="dimension" />
-        <attr name="bottomLeftRadius" format="dimension" />
-        <attr name="bottomRightRadius" format="dimension" />
     </declare-styleable>
     <declare-styleable name="FocusSurfaceView">
         <attr name="focus_mode">
@@ -392,19 +355,63 @@
     <!--日程组件结束-->
 
     <declare-styleable name="PagerSlidingTabStrip">
-        <attr format="color" name="pstsIndicatorColor"/>
-        <attr format="color" name="pstsUnderlineColor"/>
-        <attr format="color" name="pstsDividerColor"/>
-        <attr format="dimension" name="pstsIndicatorHeight"/>
-        <attr format="dimension" name="pstsUnderlineHeight"/>
-        <attr format="dimension" name="pstsDividerPaddingTopBottom"/>
-        <attr format="dimension" name="pstsTabPaddingLeftRight"/>
-        <attr format="dimension" name="pstsScrollOffset"/>
-        <attr format="reference" name="pstsTabBackground"/>
-        <attr format="boolean" name="pstsShouldExpand"/>
-        <attr format="boolean" name="pstsTextAllCaps"/>
-        <attr format="color" name="pstsTextSelectedColor"/>
-        <attr format="float" name="pstsScaleZoomMax"/>
-        <attr format="boolean" name="pstsSmoothScrollWhenClickTab"/>
+        <attr name="pstsIndicatorColor" format="color" />
+        <attr name="pstsUnderlineColor" format="color" />
+        <attr name="pstsDividerColor" format="color" />
+        <attr name="pstsIndicatorHeight" format="dimension" />
+        <attr name="pstsUnderlineHeight" format="dimension" />
+        <attr name="pstsDividerPaddingTopBottom" format="dimension" />
+        <attr name="pstsTabPaddingLeftRight" format="dimension" />
+        <attr name="pstsScrollOffset" format="dimension" />
+        <attr name="pstsTabBackground" format="reference" />
+        <attr name="pstsShouldExpand" format="boolean" />
+        <attr name="pstsTextAllCaps" format="boolean" />
+        <attr name="pstsTextSelectedColor" format="color" />
+        <attr name="pstsScaleZoomMax" format="float" />
+        <attr name="pstsSmoothScrollWhenClickTab" format="boolean" />
     </declare-styleable>
+
+    <attr name="CustomButtonStyle" format="reference" />
+
+    <attr name="cus_backgroundColor" format="color" />
+    <attr name="cus_borderColor" format="color" />
+    <attr name="cus_borderWidth" format="dimension" />
+    <!-- 圆角是否要自适应为 View 高度的一半 -->
+    <attr name="cus_isRadiusAdjustBounds" format="boolean" />
+    <!-- 同时指定四个方向的圆角大小 -->
+    <attr name="cus_radius" format="dimension" />
+    <!-- 指定左上方圆角的大小 -->
+    <attr name="cus_radiusTopLeft" format="dimension" />
+    <!-- 指定右上方圆角的大小 -->
+    <attr name="cus_radiusTopRight" format="dimension" />
+    <!-- 指定左下方圆角的大小 -->
+    <attr name="cus_radiusBottomLeft" format="dimension" />
+    <!-- 指定右下方圆角的大小 -->
+    <attr name="cus_radiusBottomRight" format="dimension" />
+    <declare-styleable name="CusRoundButton">
+        <attr name="cus_backgroundColor" />
+        <attr name="cus_borderColor" />
+        <attr name="cus_borderWidth" />
+        <attr name="cus_isRadiusAdjustBounds" />
+        <attr name="cus_radius" />
+        <attr name="cus_radiusTopLeft" />
+        <attr name="cus_radiusTopRight" />
+        <attr name="cus_radiusBottomLeft" />
+        <attr name="cus_radiusBottomRight" />
+    </declare-styleable>
+
+    <attr name="cus_content_padding_horizontal" format="dimension" />
+    <attr name="cus_content_spacing_horizontal" format="dimension" /> <!-- 内容通用水平间距 -->
+    <attr name="cus_round_btn_text_size" format="dimension" />
+    <attr name="cus_round_btn_border_width" format="dimension" />
+    <!-- android 5.0一下不能再selector中用?attr,必须要整个drawable由使用者提供 -->
+    <attr name="cus_round_btn_bg_color" format="color" />
+    <attr name="cus_round_btn_border_color" format="color" />
+    <attr name="cus_round_btn_text_color" format="color" />
+
+    <!--************ CustomLoading ***********-->
+    <declare-styleable name="CusLoadingView">
+        <attr name="cus_loading_view_size" format="dimension" />
+    </declare-styleable>
+    <attr name="CusLoadingStyle" format="reference" />
 </resources>

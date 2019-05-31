@@ -110,8 +110,8 @@ public final class WeekViewPager extends ViewPager {
      * @return 获取当前周数据
      */
     List<EmmCalendar> getCurrentWeekCalendars() {
-        List<EmmCalendar> emmCalendars = CalendarUtil.getWeekCalendars(mDelegate.mIndexEmmCalendar,
-                mDelegate);
+        List<EmmCalendar> emmCalendars = CalendarUtil.getWeekCalendars(mDelegate.mSelectedEmmCalendar,  // mDelegate.mIndexEmmCalendar =>mDelegate.mSelectedEmmCalendar
+                mDelegate);                                                                             // 解决跨月选择日期时，数据显示异常问题
         mDelegate.addSchemesFromMap(emmCalendars);
         return emmCalendars;
     }

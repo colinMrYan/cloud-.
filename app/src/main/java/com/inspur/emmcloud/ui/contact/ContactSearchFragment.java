@@ -49,6 +49,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
@@ -58,9 +59,7 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -400,23 +399,17 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     }
 
     private void showRecentChannelOperationDlg(final int position) {
-        new MyQMUIDialog.MessageDialogBuilder(getActivity())
+        new CustomDialog.MessageDialogBuilder(getActivity())
                 .setMessage(R.string.if_delect_current_item)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        SearchModel searchModel = commonContactList.get(position);
-                        CommonContactCacheUtils.delectCommonContact(getActivity().getApplicationContext(), searchModel);
-                        commonContactList.remove(position);
-                        secondGroupListAdapter.notifyDataSetChanged();
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    SearchModel searchModel = commonContactList.get(position);
+                    CommonContactCacheUtils.delectCommonContact(getActivity().getApplicationContext(), searchModel);
+                    commonContactList.remove(position);
+                    secondGroupListAdapter.notifyDataSetChanged();
                 })
                 .show();
 
@@ -536,7 +529,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
      */
     private void showAllChannelGroup() {
         // TODO Auto-generated method stub
-        if (MyApplication.getInstance().isV0VersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             openGroupChannelList = SearchModel.channelGroupList2SearchModelList(ChannelGroupCacheUtils
                     .getAllChannelGroupList(MyApplication.getInstance()));
         } else {
@@ -622,7 +615,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             intent.setClass(getActivity().getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getActivity().getApplicationContext(), MyApplication.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
+            intent.setClass(getActivity().getApplicationContext(), WebServiceRouterManager.getInstance().isV0VersionChat() ? ChannelV0Activity.class : ConversationActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
@@ -705,7 +698,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     public void run() {
                         switch (searchArea) {
                             case SEARCH_ALL:
-                                if (MyApplication.getInstance().isV0VersionChat()) {
+                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                                     searchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
@@ -716,7 +709,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                                 searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 4);
                                 break;
                             case SEARCH_CHANNELGROUP:
-                                if (MyApplication.getInstance().isV0VersionChat()) {
+                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                                     searchChannelGroupList = ChannelGroupCacheUtils
                                             .getSearchChannelGroupSearchModelList(MyApplication.getInstance(),
                                                     searchText);
@@ -1082,7 +1075,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             bundle.putString("cid", searchModel.getId());
             bundle.putString("channelType", searchModel.getType());
             IntentUtils.startActivity(getActivity(),
-                    MyApplication.getInstance().isV0VersionChat() ?
+                    WebServiceRouterManager.getInstance().isV0VersionChat() ?
                             ChannelV0Activity.class : ConversationActivity.class, bundle);
 
         }
@@ -1096,7 +1089,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private void creatDirectChannel(String id) {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getActivity().getApplicationContext())) {
-            if (MyApplication.getInstance().isV1xVersionChat()) {
+            if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                 new ConversationCreateUtils().createDirectConversation(getActivity(), id,
                         new ConversationCreateUtils.OnCreateDirectConversationListener() {
                             @Override

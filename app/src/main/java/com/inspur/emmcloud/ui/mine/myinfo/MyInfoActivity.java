@@ -1,15 +1,8 @@
 package com.inspur.emmcloud.ui.mine.myinfo;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -39,50 +32,55 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_my_info)
 public class MyInfoActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_SELECT_IMG = 1;
     private static final int USER_INFO_CHANGE = 10;
 
-    @ViewInject(R.id.iv_photo)
-    private ImageView photoImg;
-    @ViewInject(R.id.tv_name)
-    private TextView nameText;
-    @ViewInject(R.id.rl_employee_no)
-    private RelativeLayout employeeNOLayout;
-    @ViewInject(R.id.rl_office_phone)
-    private RelativeLayout officePhoneLayout;
-    @ViewInject(R.id.rl_phone)
-    private RelativeLayout phoneLayout;
-    @ViewInject(R.id.rl_enterprise)
-    private RelativeLayout enterpriseLayout;
-    @ViewInject(R.id.rl_mail)
-    private RelativeLayout mailLayout;
-    @ViewInject(R.id.rl_photo)
-    private RelativeLayout photoLayout;
-    @ViewInject(R.id.tv_employee_no)
-    private TextView employeeNOText;
-    @ViewInject(R.id.tv_office_phone)
-    private TextView officePhoneText;
-    @ViewInject(R.id.tv_phone)
-    private TextView phoneText;
-    @ViewInject(R.id.tv_enterprise)
-    private TextView enterpriseText;
-    @ViewInject(R.id.tv_mail)
-    private TextView mailText;
-    @ViewInject(R.id.tv_department)
-    private TextView departmentText;
-    @ViewInject(R.id.rl_password_modify)
-    private RelativeLayout passwordModifyLayout;
-    @ViewInject(R.id.rl_password_reset)
-    private RelativeLayout passwordResetLayout;
+    @BindView(R.id.iv_photo)
+    ImageView photoImg;
+    @BindView(R.id.tv_name)
+    TextView nameText;
+    @BindView(R.id.rl_employee_no)
+    RelativeLayout employeeNOLayout;
+    @BindView(R.id.rl_office_phone)
+    RelativeLayout officePhoneLayout;
+    @BindView(R.id.rl_phone)
+    RelativeLayout phoneLayout;
+    @BindView(R.id.rl_enterprise)
+    RelativeLayout enterpriseLayout;
+    @BindView(R.id.rl_mail)
+    RelativeLayout mailLayout;
+    @BindView(R.id.rl_photo)
+    RelativeLayout photoLayout;
+    @BindView(R.id.tv_employee_no)
+    TextView employeeNOText;
+    @BindView(R.id.tv_office_phone)
+    TextView officePhoneText;
+    @BindView(R.id.tv_phone)
+    TextView phoneText;
+    @BindView(R.id.tv_enterprise)
+    TextView enterpriseText;
+    @BindView(R.id.tv_mail)
+    TextView mailText;
+    @BindView(R.id.tv_department)
+    TextView departmentText;
+    @BindView(R.id.rl_password_modify)
+    RelativeLayout passwordModifyLayout;
+    @BindView(R.id.rl_password_reset)
+    RelativeLayout passwordResetLayout;
 
     private MineAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -91,17 +89,23 @@ public class MyInfoActivity extends BaseActivity {
     private boolean isUpdateUserPhoto = false; // 标记是否更改了头像
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
+    public void onCreate() {
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());
         getUserProfile();
         getUserInfoConfig();
         showMyInfo();
+    }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_my_info;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
     }
 
     /**

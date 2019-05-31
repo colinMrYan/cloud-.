@@ -1,20 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-
-import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -33,47 +18,66 @@ import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * 登录页面
  */
-
-@ContentView(R.layout.activity_login)
 public class LoginActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int LOGIN_MORE = 2;
+    @BindView(R.id.et_username)
+    ClearEditText usernameEdit;
+    @BindView(R.id.et_password)
+    EditText passwordEdit;
+    @BindView(R.id.bt_login)
+    Button loginBtn;
+    @BindView(R.id.tv_current_login_enterprise)
+    TextView currentLoginEnterpriseText;
+    @BindView(R.id.tv_welcome)
+    TextView welcomeText;
     private String userName;
     private String password;
-
     private LoadingDialog LoadingDlg;
     private Handler handler;
-    @ViewInject(R.id.et_username)
-    private ClearEditText usernameEdit;
-    @ViewInject(R.id.et_password)
-    private EditText passwordEdit;
-    @ViewInject(R.id.bt_login)
-    private Button loginBtn;
-    @ViewInject(R.id.tv_current_login_enterprise)
-    private TextView currentLoginEnterpriseText;
-    @ViewInject(R.id.tv_welcome)
-    private TextView welcomeText;
     private EmmSecurityKeyboard securityKeyboard;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
         PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true, 0.2f).init();
         MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_login;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
     }
 
     private void initView() {
@@ -235,7 +239,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-            boolean isInputValaid = passwordEdit.getText().toString().length() >= 6
+            boolean isInputValaid = passwordEdit.getText().toString().length() >= 1
                     && !StringUtils.isBlank(usernameEdit.getText()
                     .toString());
             loginBtn.setEnabled(isInputValaid);

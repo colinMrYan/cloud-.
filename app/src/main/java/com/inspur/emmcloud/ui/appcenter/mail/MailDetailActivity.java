@@ -1,24 +1,15 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.annotation.TargetApi;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.xutils.x;
+import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -51,77 +42,87 @@ import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollWebView;
+import com.inspur.emmcloud.widget.ObservableScrollView;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.qmuiteam.qmui.widget.QMUIObservableScrollView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.common.Callback;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
+import android.annotation.TargetApi;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by chenmch on 2018/12/24.
  */
 
-@ContentView(R.layout.activity_mail_details)
 public class MailDetailActivity extends BaseActivity {
     public static final String EXTRA_MAIL = "extra_mail";
     public static final String EXTRA_MAIL_ID = "extra_mail_id";
-    @ViewInject(R.id.sv_slide_data)
-    QMUIObservableScrollView scrollView;
-    @ViewInject(R.id.tv_mail_sender)
-    private TextView senderText;
-    @ViewInject(R.id.tv_mail_receiver_collapse)
-    private TextView receiverCollapseText;
-    @ViewInject(R.id.fl_mail_receiver_expand)
-    private FlowLayout receiverFlowLayout;
-    @ViewInject(R.id.tv_mail_receiver_expand)
-    private TextView receiverExpandText;
-    @ViewInject(R.id.rl_receiver_collapse)
-    private RelativeLayout receiverCollapseLayout;
-    @ViewInject(R.id.rl_mail_cc)
-    private RelativeLayout ccLayout;
-    @ViewInject(R.id.fl_mail_cc_expand)
-    private FlowLayout ccFlowLayout;
-    @ViewInject(R.id.tv_mail_cc_expand)
-    private TextView ccExpandText;
-    @ViewInject(R.id.tv_mail_cc_collapse)
-    private TextView ccCollapseText;
-    @ViewInject(R.id.rl_cc_collapse)
-    private RelativeLayout ccCollapseLayout;
-    @ViewInject(R.id.iv_flag_encrypt)
-    private ImageView encryptImg;
-    @ViewInject(R.id.iv_flag_sign)
-    private ImageView signImg;
-    @ViewInject(R.id.tv_topic)
-    private TextView topicText;
-    @ViewInject(R.id.tv_mail_send_time)
-    private TextView sendTimeText;
-    @ViewInject(R.id.lv_attachment)
-    private ScrollViewWithListView mailAttachmentListView;
-    @ViewInject(R.id.wv_content)
-    private NoScrollWebView contentWebView;
-    @ViewInject(R.id.rl_mail_operation)
-    private RelativeLayout mailOperationLayout;
-    @ViewInject(R.id.progress_bar_load)
-    private ProgressBar loadProgressBar;
+    @BindView(R.id.sv_slide_data)
+    ObservableScrollView scrollView;
+    @BindView(R.id.tv_mail_sender)
+    TextView senderText;
+    @BindView(R.id.tv_mail_receiver_collapse)
+    TextView receiverCollapseText;
+    @BindView(R.id.fl_mail_receiver_expand)
+    FlowLayout receiverFlowLayout;
+    @BindView(R.id.tv_mail_receiver_expand)
+    TextView receiverExpandText;
+    @BindView(R.id.rl_receiver_collapse)
+    RelativeLayout receiverCollapseLayout;
+    @BindView(R.id.rl_mail_cc)
+    RelativeLayout ccLayout;
+    @BindView(R.id.fl_mail_cc_expand)
+    FlowLayout ccFlowLayout;
+    @BindView(R.id.tv_mail_cc_expand)
+    TextView ccExpandText;
+    @BindView(R.id.tv_mail_cc_collapse)
+    TextView ccCollapseText;
+    @BindView(R.id.rl_cc_collapse)
+    RelativeLayout ccCollapseLayout;
+    @BindView(R.id.iv_flag_encrypt)
+    ImageView encryptImg;
+    @BindView(R.id.iv_flag_sign)
+    ImageView signImg;
+    @BindView(R.id.tv_topic)
+    TextView topicText;
+    @BindView(R.id.tv_mail_send_time)
+    TextView sendTimeText;
+    @BindView(R.id.lv_attachment)
+    ScrollViewWithListView mailAttachmentListView;
+    @BindView(R.id.wv_content)
+    NoScrollWebView contentWebView;
+    @BindView(R.id.rl_mail_operation)
+    RelativeLayout mailOperationLayout;
+    @BindView(R.id.progress_bar_load)
+    ProgressBar loadProgressBar;
     private MailAttachmentListAdapter mailAttachmentListAdapter;
 
     private Mail mail;
     private MailApiService apiService;
     private LoadingDialog loadingDlg;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         Mail simpleMail = (Mail) getIntent().getSerializableExtra(EXTRA_MAIL);
         mail = MailCacheUtils.getMail(simpleMail.getId());
@@ -129,6 +130,11 @@ public class MailDetailActivity extends BaseActivity {
             getMailDetail();
         }
         initView();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_mail_details;
     }
 
     private void initView() {
@@ -219,9 +225,10 @@ public class MailDetailActivity extends BaseActivity {
             });
         }
 
-        scrollView.addOnScrollChangedListener(new QMUIObservableScrollView.OnScrollChangedListener() {
+
+        scrollView.addOnScrollChangedListener(new ObservableScrollView.OnScrollChangedListener() {
             @Override
-            public void onScrollChanged(QMUIObservableScrollView qmuiObservableScrollView, int i, int i1, int i2, int i3) {
+            public void onScrollChanged(ObservableScrollView observableScrollView, int i, int i1, int i2, int i3) {
                 int oldt = i3;
                 int t = i1;
                 if (oldt > t && oldt - t > 20) {

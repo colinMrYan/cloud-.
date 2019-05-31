@@ -1,21 +1,8 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -41,24 +28,34 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
  * 云盘-文件操作基础类
  */
 
-@ContentView(R.layout.activity_volume_file)
 public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     protected static final int REQUEST_MOVE_FILE = 5;
@@ -67,22 +64,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
     protected static final String SORT_BY_TIME_UP = "sort_by_time_up";
     protected static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
-
-    @ViewInject(R.id.header_text)
-    protected TextView headerText;
-
-    @ViewInject(R.id.header_operation_layout)
-    protected RelativeLayout headerOperationLayout;
-
-    @ViewInject(R.id.lv_file)
-    protected RecyclerView fileRecycleView;
-
-    @ViewInject(R.id.refresh_layout)
-    protected SwipeRefreshLayout swipeRefreshLayout;
-
-    @ViewInject(R.id.data_blank_layout)
-    protected LinearLayout dataBlankLayout;
-
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表
@@ -93,18 +74,32 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected boolean isShowFileUploading = false;  //是否显示正在上传的文件
     protected GetVolumeFileListResult getVolumeFileListResult;
     protected String title = "";
+    @BindView(R.id.header_text)
+    TextView headerText;
+    @BindView(R.id.header_operation_layout)
+    RelativeLayout headerOperationLayout;
+    @BindView(R.id.lv_file)
+    RecyclerView fileRecycleView;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.data_blank_layout)
+    LinearLayout dataBlankLayout;
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initView();
         getVolumeFileList(true);
-
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_volume_file;
+    }
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         apiServiceBase = new MyAppAPIService(VolumeFileBaseActivity.this);
@@ -200,22 +195,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * @param volumeFile
      */
     protected void showFileDelWranibgDlg(final VolumeFile volumeFile) {
-        new MyQMUIDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
+        new CustomDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
                 .setMessage(R.string.clouddriver_sure_delete_file)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
-                        deleteVolumeFileList.add(volumeFile);
-                        deleteFile(deleteVolumeFileList);
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
+                    deleteVolumeFileList.add(volumeFile);
+                    deleteFile(deleteVolumeFileList);
+                    dialog.dismiss();
                 })
                 .show();
     }
@@ -225,7 +214,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showCreateFolderDlg() {
         createFolderDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
         inputEdit.setHint(getString(R.string.clouddriver_input_directory_name));
@@ -276,14 +265,15 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         final String fileNameNoEx = volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? FileUtils.getFileNameWithoutExtension(fileName) : fileName;
         final String fileExtension = fileName.replace(fileNameNoEx, "");
         fileRenameDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         fileRenameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) fileRenameDlg.findViewById(R.id.edit);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         inputEdit.setText(fileNameNoEx);
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) fileRenameDlg.findViewById(R.id.app_update_title)).setText(R.string.file_rename);
+        ((TextView) fileRenameDlg.findViewById(R.id.app_update_title)).setText(
+                volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? R.string.file_rename : R.string.folder_rename);
         Button okBtn = (Button) fileRenameDlg.findViewById(R.id.ok_btn);
         okBtn.setText(R.string.rename);
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +281,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             public void onClick(View v) {
                 String newName = inputEdit.getText().toString().trim();
                 if (StringUtils.isBlank(newName)) {
-                    ToastUtils.show(getApplicationContext(), R.string.clouddriver_input_file_name);
+                    ToastUtils.show(getApplicationContext(), volumeFile.getType().equals(
+                            VolumeFile.FILE_TYPE_REGULAR) ? R.string.clouddriver_input_file_name : R.string.clouddriver_input_directory_name);
                     return;
                 }
                 if (!FomatUtils.isValidFileName(newName)) {
@@ -327,8 +318,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     /**
      * 设置跟权限相关的layout,可以被继承此Activity的实例重写控制当前页面的layout
-     *
-     * @param haveModifyPrivilege
      */
     protected void setCurrentDirectoryLayoutByPrivilege() {
     }
@@ -407,7 +396,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     /**
      * 移动文件
      *
-     * @param volumeFileList
+     * @param moveVolumeFileList
      */
     protected void moveFile(List<VolumeFile> moveVolumeFileList) {
         this.moveVolumeFileList = moveVolumeFileList;

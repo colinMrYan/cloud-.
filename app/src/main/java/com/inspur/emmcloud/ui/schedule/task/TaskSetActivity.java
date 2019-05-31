@@ -1,6 +1,17 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
-import android.os.Bundle;
+import java.util.ArrayList;
+
+import org.greenrobot.eventbus.EventBus;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.schedule.task.MessionSetModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,24 +20,12 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.bean.work.MessionSetModel;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-
-import org.greenrobot.eventbus.EventBus;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
-
-import java.util.ArrayList;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2019/4/9.
  */
-@ContentView(R.layout.activity_task_set)
 public class TaskSetActivity extends BaseActivity {
 
     public static final String TASK_ORDER_BY = "order_by";
@@ -37,14 +36,19 @@ public class TaskSetActivity extends BaseActivity {
     public static final String TASK_ORDER = "order";
     public static final String TASK_ORDER_PRIORITY = "PRIORITY";
     public static final String TASK_ORDER_DUE_DATE = "DUE_DATE";
-    @ViewInject(R.id.lv_task_list)
-    private ListView setListView;
+    @BindView(R.id.lv_task_list)
+    ListView setListView;
     private ArrayList<MessionSetModel> taskSetModel = new ArrayList<MessionSetModel>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         initViews();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_task_set;
     }
 
     /**
@@ -97,10 +101,6 @@ public class TaskSetActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibt_back:
-                setResult(RESULT_OK);
-                finish();
-                break;
-            case R.id.tv_task_save:
                 setResult(RESULT_OK);
                 finish();
                 break;

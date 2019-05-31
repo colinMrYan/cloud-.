@@ -26,15 +26,15 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
-import org.xutils.x;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -43,14 +43,14 @@ import java.util.regex.Pattern;
 public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
 
     private static final int MENTIONS_RESULT = 5;
-    @ViewInject(R.id.input_edit)
-    private ChatInputEdit inputEdit;
+    @BindView(R.id.input_edit)
+    ChatInputEdit inputEdit;
 
 
-    @ViewInject(R.id.bt_send)
-    private Button sendMsgBtn;
-    @ViewInject(R.id.rl_add_menu)
-    private RelativeLayout addMenuLayout;
+    @BindView(R.id.bt_send)
+    Button sendMsgBtn;
+    @BindView(R.id.rl_add_menu)
+    RelativeLayout addMenuLayout;
 
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
@@ -74,8 +74,8 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
 
     private void initView(final Context context) {
         // TODO Auto-generated method stub
-        View view = LayoutInflater.from(context).inflate(R.layout.ecm_widget_chat_input_menu_img_commentv0, this, true);
-        x.view().inject(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.communication__widget_chat_input_menu_img_commentv0, this, true);
+        ButterKnife.bind(this, view);
         initInputEdit();
     }
 
@@ -180,8 +180,8 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
         }
     }
 
-    @Event({R.id.bt_send, R.id.bt_cancel})
-    private void onClick(View view) {
+    @OnClick({R.id.bt_send, R.id.bt_cancel})
+    public void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.bt_send:
                 if (NetUtils.isNetworkConnected(getContext())) {
@@ -202,8 +202,6 @@ public class ECMChatInputMenuImgCommentV0 extends LinearLayout {
                 if (chatInputMenuListener != null) {
                     chatInputMenuListener.hideChatInputMenu();
                 }
-                break;
-            default:
                 break;
         }
     }

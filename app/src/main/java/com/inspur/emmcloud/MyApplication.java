@@ -45,13 +45,13 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
-import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
@@ -76,8 +76,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import cn.jpush.android.api.JPushInterface;
 
 import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
 
@@ -120,20 +118,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
-    private String clusterEcm = "";//多云ecm服务
-    private String clusterChat = "";
-    private String clusterSchedule = "";
-    private String clusterDistribution = "";
-    private String clusterNews = "";
-    private String clusterCloudDrive = "";
-    private String clusterStorageLegacy = "";
-    private String socketPath = "";
-    private String clusterChatVersion = "";//仅标识chat的version
-    private String clusterChatSocket = "";
-    private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
-    private String clusterClientRegistry = "";
-    private String clusterScheduleVersion = "";//仅标识Schedule
-    private String clusterBot = "";
+
     private String currentChannelCid = "";
     private boolean isEnterSystemUI = false;  //是否进入第三方系统界面，判断app前后台
 
@@ -157,10 +142,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         WebSocketPush.getInstance().startWebSocket();
     }
 
-    public String getCloudId() {
-        String clusterId = PreferencesUtils.getString(this, Constant.PREF_CLOUD_IDM, Constant.DEFAULT_CLUSTER_ID);
-        return StringUtils.isBlank(clusterId) ? Constant.DEFAULT_CLUSTER_ID : clusterId;
-    }
 
     private void init() {
         // TODO Auto-generated method stub
@@ -177,13 +158,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         RichText.debugMode = true;
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
-            protected boolean removeEldestEntry(Entry<String, String> eldest) {
+            protected boolean removeEldestEntry(java.util.Map.Entry<String, String> eldest) {
                 // TODO Auto-generated method stub
                 return size() > 40;
 
             }
         };
-        AppUtils.setPushFlag(this, "");
+        PushManagerUtils.getInstance().clearPushFlag();
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 "isContactReady", false);
@@ -197,20 +178,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     /**************************************登出逻辑相关********************************************************/
-    public void signout() {
-        signout(true);
-    }
-
     /**
      * 注销
-     *
-     * @param isWebSocketSignout 是否在此处处理websocket的注销
      */
-    public void signout(boolean isWebSocketSignout) {
+    public void signout() {
         // TODO Auto-generated method stub
         //清除日历提醒极光推送本地通知
         ScheduleAlertUtils.cancelAllCalEventNotification(this);
-        stopPush();
+        PushManagerUtils.getInstance().stopPush();
         clearNotification();
         removeAllCookie();
         removeAllSessionCookie();
@@ -238,56 +213,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         appAPIService.cancelToken();
     }
 
-    /**
-     * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
-     * 目前使用的位置有ActionReceiver，IndexActivity 截止到181030
-     */
-    public void startPush() {
-        if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
-            HuaWeiPushMangerUtils.getInstance(this).connect();
-        } else {
-            startJPush();
-        }
-    }
-
-    /**
-     * 开启极光推送
-     */
-    public void startJPush() {
-        // 初始化 JPush
-        JPushInterface.init(this);
-        if (JPushInterface.isPushStopped(this)) {
-            JPushInterface.resumePush(this);
-        }
-        // 设置开启日志,发布时请关闭日志
-        JPushInterface.setDebugMode(true);
-    }
-
-    /**
-     * 判断是否可以连接华为推了送
-     *
-     * @return
-     */
-    private boolean canConnectHuawei() {
-        String pushFlag = AppUtils.getPushFlag(this);
-        return (StringUtils.isBlank(pushFlag) || pushFlag.equals(Constant.HUAWEI_FLAG));
-    }
-
 
 /************************ Cookie相关 *****************************/
-
-    /**
-     * 关闭推送
-     */
-    public void stopPush() {
-        if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
-            HuaWeiPushMangerUtils.getInstance(this).stopPush();
-        } else {
-            JPushInterface.stopPush(this);
-        }
-        //清除日历提醒极光推送本地通知
-        ScheduleAlertUtils.cancelAllCalEventNotification(getInstance());
-    }
 
     /**
      * 清除所有的SessionCookie
@@ -474,99 +401,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             if (currentEnterprise == null && enterpriseList.size() > 0) {
                 currentEnterprise = enterpriseList.get(0);
             }
-            MutilClusterUtils.setClusterBaseUrl(currentEnterprise);
+            WebServiceRouterManager.getInstance().setWebServiceRouter(currentEnterprise);
             tanent = currentEnterprise.getCode();
         }
     }
 
-    /**
-     * 获取ecm云
-     *
-     * @return
-     */
-    public String getClusterEcm() {
-        return clusterEcm;
-    }
 
-    /**
-     * 设置ecm云
-     *
-     * @param clusterEcm
-     */
-    public void setClusterEcm(String clusterEcm) {
-        this.clusterEcm = clusterEcm;
-    }
 
-    /**
-     * 获取emm云
-     *
-     * @return
-     */
-    public String getClusterEmm() {
-        return clusterEmm;
-    }
-
-    /**
-     * 设置emm云
-     *
-     * @return
-     */
-    public void setClusterEmm(String clusterEmm) {
-        this.clusterEmm = clusterEmm;
-    }
-
-    /**
-     * 沟通相关
-     *
-     * @return
-     */
-    public String getClusterChat() {
-        return clusterChat;
-    }
-
-    public void setClusterChat(String clusterChat) {
-        this.clusterChat = clusterChat;
-    }
-
-    public String getClusterSchedule() {
-        return clusterSchedule;
-    }
-
-    public void setClusterSchedule(String clusterSchedule) {
-        this.clusterSchedule = clusterSchedule;
-    }
-
-    public String getClusterDistribution() {
-        return clusterDistribution;
-    }
-
-    public void setClusterDistribution(String clusterDistribution) {
-        this.clusterDistribution = clusterDistribution;
-    }
-
-    public String getClusterNews() {
-        return clusterNews;
-    }
-
-    public void setClusterNews(String clusterNews) {
-        this.clusterNews = clusterNews;
-    }
-
-    public String getClusterCloudDrive() {
-        return clusterCloudDrive;
-    }
-
-    public void setClusterCloudDrive(String clusterCloudDrive) {
-        this.clusterCloudDrive = clusterCloudDrive;
-    }
-
-    public String getClusterStorageLegacy() {
-        return clusterStorageLegacy;
-    }
-
-    public void setClusterStorageLegacy(String clusterStorageLegacy) {
-        this.clusterStorageLegacy = clusterStorageLegacy;
-    }
 
     public String getTanent() {
         return tanent;
@@ -574,83 +415,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public Enterprise getCurrentEnterprise() {
         return currentEnterprise;
-    }
-
-    public String getSocketPath() {
-        return socketPath;
-    }
-
-    public void setSocketPath(String socketPath) {
-        this.socketPath = socketPath;
-    }
-
-    public String getClusterChatVersion() {
-        return clusterChatVersion;
-    }
-
-    public void setClusterChatVersion(String clusterChatVersion) {
-        this.clusterChatVersion = clusterChatVersion;
-    }
-
-    public String getClusterChatSocket() {
-        return clusterChatSocket;
-    }
-
-    public void setClusterChatSocket(String clusterChatSocket) {
-        this.clusterChatSocket = clusterChatSocket;
-    }
-
-    public String getClusterClientRegistry() {
-        return clusterClientRegistry;
-    }
-
-    public void setClusterClientRegistry(String clusterClientRegistry) {
-        this.clusterClientRegistry = clusterClientRegistry;
-    }
-
-    public String getClusterScheduleVersion() {
-        return clusterScheduleVersion;
-    }
-
-    public void setClusterScheduleVersion(String clusterScheduleVersion) {
-        this.clusterScheduleVersion = clusterScheduleVersion;
-    }
-
-    public String getClusterBot() {
-        return clusterBot;
-    }
-
-    public void setClusterBot(String clusterBot) {
-        this.clusterBot = clusterBot;
-    }
-
-    public boolean isV0VersionChat() {
-        return getClusterChatVersion().toLowerCase().startsWith(Constant.SERVICE_VERSION_CHAT_V0);
-    }
-
-    /**
-     * namespace
-     * v1版及v1.x版返回/api/v1
-     * v0版返回/
-     *
-     * @return
-     */
-    public String getChatSocketNameSpace() {
-        if (getClusterChatVersion().toLowerCase().startsWith("v0")) {
-            return "/";
-        } else if (getClusterChatVersion().toLowerCase().startsWith("v1")) {
-            return "/api/v1";
-        }
-        return "";
-    }
-
-    /**
-     * 判断是v1.x版本
-     *
-     * @return
-     */
-    public boolean isV1xVersionChat() {
-        return getClusterChatVersion().toLowerCase().startsWith(Constant.SERVICE_VERSION_CHAT_V1);
     }
 
     /*****************************通讯录头像缓存********************************************/

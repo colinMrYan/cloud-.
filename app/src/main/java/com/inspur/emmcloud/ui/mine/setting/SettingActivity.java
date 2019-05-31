@@ -1,16 +1,10 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.List;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -34,7 +28,9 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.NotificationSetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -42,56 +38,68 @@ import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushIdManagerUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-@ContentView(R.layout.activity_setting)
 public class SettingActivity extends BaseActivity {
 
     private static final int DATA_CLEAR_SUCCESS = 0;
+    @BindView(R.id.switch_view_setting_web_rotate)
+    SwitchView webRotateSwitch;
+    @BindView(R.id.switch_view_setting_run_background)
+    SwitchView runBackgroundSwitch;
+    @BindView(R.id.switch_view_setting_voice_2_word)
+    SwitchView voice2WordSwitch;
+    @BindView(R.id.rl_setting_voice_2_word)
+    RelativeLayout voice2WordLayout;
+    @BindView(R.id.rl_setting_experience_upgrade)
+    RelativeLayout experienceUpgradeLayout;
+    @BindView(R.id.switch_view_setting_experience_upgrade)
+    SwitchView experienceUpgradeSwitch;
+    @BindView(R.id.tv_setting_language_name)
+    TextView languageNameText;
+    @BindView(R.id.iv_setting_language_flag)
+    ImageView languageFlagImg;
+    @BindView(R.id.tv_setting_theme_name)
+    TextView themeNameText;
+    @BindView(R.id.rl_setting_switch_tablayout)
+    RelativeLayout switchTabLayout;
+    @BindView(R.id.tv_setting_tab_name)
+    TextView tabName;
+    @BindView(R.id.switch_view_setting_notification)
+    Switch notificationSwitch;
     private Handler handler;
-    @ViewInject(R.id.switch_view_setting_web_rotate)
-    private SwitchView webRotateSwitch;
-    @ViewInject(R.id.switch_view_setting_run_background)
-    private SwitchView runBackgroundSwitch;
-    @ViewInject(R.id.switch_view_setting_voice_2_word)
-    private SwitchView voice2WordSwitch;
-    @ViewInject(R.id.rl_setting_voice_2_word)
-    private RelativeLayout voice2WordLayout;
-    @ViewInject(R.id.rl_setting_experience_upgrade)
-    private RelativeLayout experienceUpgradeLayout;
-    @ViewInject(R.id.switch_view_setting_experience_upgrade)
-    private SwitchView experienceUpgradeSwitch;
-    @ViewInject(R.id.tv_setting_language_name)
-    private TextView languageNameText;
-    @ViewInject(R.id.iv_setting_language_flag)
-    private ImageView languageFlagImg;
     private MineAPIService apiService;
     private LoadingDialog loadingDlg;
-    @ViewInject(R.id.tv_setting_theme_name)
-    private TextView themeNameText;
-    @ViewInject(R.id.rl_setting_switch_tablayout)
-    private RelativeLayout switchTabLayout;
-    @ViewInject(R.id.tv_setting_tab_name)
-    private TextView tabName;
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void toggleToOn(View view) {
             switch (view.getId()) {
@@ -142,14 +150,63 @@ public class SettingActivity extends BaseActivity {
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onCreate() {
+        ButterKnife.bind(this);
         initView();
         setLanguage();
         handMessage();
-        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_setting;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        notificationSwitch.setChecked(getSwitchOpen());
+        switchPush();
+    }
+
+    /**
+     * 开关push并向服务器发出信号
+     */
+    private void switchPush() {
+        boolean switchFlag = PreferencesByUserAndTanentUtils.getBoolean(this,
+                Constant.PUSH_SWITCH_FLAG,false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setPushStatus(NotificationSetUtils.isNotificationEnabled(this) && switchFlag);
+        }else{
+            setPushStatus(switchFlag);
+        }
+    }
+
+    private void setPushStatus(boolean openPush) {
+        if(openPush){
+            PushManagerUtils.getInstance().stopPush();
+            PushManagerUtils.getInstance().unregisterPushId2Emm();
+        }else {
+            PushManagerUtils.getInstance().startPush();
+            PushManagerUtils.getInstance().registerPushId2Emm();
+        }
+    }
+
+    private boolean getSwitchOpen() {
+        boolean isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !NotificationSetUtils.isNotificationEnabled(this)) {
+            isOpen = false;
+        }
+        return isOpen;
     }
 
     private void initView() {
@@ -161,11 +218,27 @@ public class SettingActivity extends BaseActivity {
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         runBackgroundSwitch.setOpened(isAppSetRunBackground);
         runBackgroundSwitch.setOnStateChangedListener(onStateChangedListener);
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
             voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
         }
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        showNotificationDlg();
+                    }
+                    notificationSwitch.setChecked(true);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+                    switchPush();
+                }else{
+                    showNotificationCloseDlg();
+
+                }
+            }
+        });
         if (AppUtils.isAppVersionStandard()) {
             getUserExperienceUpgradeFlag();
             experienceUpgradeLayout.setVisibility(View.VISIBLE);
@@ -175,35 +248,69 @@ public class SettingActivity extends BaseActivity {
         }
         themeNameText.setText(ThemeSwitchActivity.getThemeName());
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
-        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>0?View.VISIBLE:View.GONE);
+        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>1?View.VISIBLE:View.GONE);
         tabName.setText(getTabLayoutName());
+    }
+
+    private void showNotificationCloseDlg() {
+        new CustomDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setMessage(R.string.notification_switch_cant_recive)
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    notificationSwitch.setChecked(true);
+                    dialog.dismiss();
+                    })
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
+                    notificationSwitch.setChecked(false);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
+                    switchPush();
+                    })
+                    .show();
     }
 
     private String getTabLayoutName() {
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
         String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
+        if(StringUtils.isBlank(currentTabLayoutName)){
+            currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
+        }
+        String tabName = "";
         for (int i = 0; i < naviBarSchemeList.size(); i++) {
-            if(naviBarSchemeList.get(i).getName().equals(currentTabLayoutName)){
-                Configuration config = getResources().getConfiguration();
-                String environmentLanguage = config.locale.getLanguage();
-                String tabName = "";
-                switch (environmentLanguage.toLowerCase()) {
-                    case "zh-hant":
-                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getZhHans();
-                        break;
-                    case "en":
-                    case "en-us":
-                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getEnUS();
-                        break;
-                    default:
-                        tabName = naviBarSchemeList.get(i).getNaviBarTitleResult().getZhHans();
-                        break;
+            NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
+            if(naviBarScheme.getName().equals(currentTabLayoutName)){
+                return getTabNameByLangudge(naviBarScheme);
+            }
+        }
+        if(StringUtils.isBlank(tabName)){
+            String defaultScheme = naviBarModel.getNaviBarPayload().getDefaultScheme();
+            for (int i = 0; i < naviBarSchemeList.size(); i++) {
+                NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
+                if(naviBarSchemeList.get(i).getName().equals(defaultScheme)){
+                    return getTabNameByLangudge(naviBarScheme);
                 }
-                return tabName;
             }
         }
         return "";
+    }
+
+    private String getTabNameByLangudge(NaviBarScheme naviBarScheme) {
+        String tempTabName = "";
+        Configuration config = getResources().getConfiguration();
+        String environmentLanguage = config.locale.getLanguage();
+        switch (environmentLanguage.toLowerCase()) {
+            case "zh-hant":
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getZhHans();
+                break;
+            case "en":
+            case "en-us":
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getEnUS();
+                break;
+            default:
+                tempTabName = naviBarScheme.getNaviBarTitleResult().getZhHans();
+                break;
+        }
+        return tempTabName;
     }
 
     private void setWebAutoRotateState() {
@@ -305,29 +412,43 @@ public class SettingActivity extends BaseActivity {
     /**
      * 弹出注销提示框
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void showNotificationDlg() {
+        if(!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)){
+            new CustomDialog.MessageDialogBuilder(SettingActivity.this)
+                    .setMessage(getString(R.string.notification_switch_open_setting))
+                    .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                        dialog.dismiss();
+                        notificationSwitch.setChecked(false);
+                    })
+                    .setPositiveButton(R.string.ok, (dialog, index) -> {
+                        dialog.dismiss();
+                        NotificationSetUtils.openNotificationSetting(SettingActivity.this);
+                    })
+                    .show();
+        }
+    }
+
+    /**
+     * 弹出注销提示框
+     */
     private void showSignoutDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+        new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(R.string.if_confirm_signout)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        new PushIdManagerUtils(SettingActivity.this).unregisterPushId2Emm();
-                        dialog.dismiss();
-                        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
-                        if (NetUtils.isNetworkConnected(getApplicationContext(), false) && MyApplication.getInstance().isV1xVersionChat() && isCommunicateExist) {
-                            loadingDlg.show();
-                            WSAPIService.getInstance().sendAppStatus("REMOVED");
-                        } else {
-                            MyApplication.getInstance().signout();
-                        }
-                        stopAppService();
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    PushManagerUtils.getInstance().unregisterPushId2Emm();
+                    dialog.dismiss();
+                    boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
+                    if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
+                        loadingDlg.show();
+                        WSAPIService.getInstance().sendAppStatus("REMOVED");
+                    } else {
+                        MyApplication.getInstance().signout();
                     }
+                    stopAppService();
                 })
                 .show();
     }
@@ -347,8 +468,8 @@ public class SettingActivity extends BaseActivity {
     private void showClearCacheDlg() {
         // TODO Auto-generated method stub
         final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
-        new QMUIDialog.MenuDialogBuilder(SettingActivity.this)
-                .addItems(items, new DialogInterface.OnClickListener() {
+        new CustomDialog.ListDialogBuilder(SettingActivity.this)
+                .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -372,8 +493,7 @@ public class SettingActivity extends BaseActivity {
                                 break;
                         }
                     }
-                })
-                .show();
+                }).show();
     }
 
     /**
@@ -381,41 +501,35 @@ public class SettingActivity extends BaseActivity {
      */
     private void showClearCacheWarningDlg() {
         // TODO Auto-generated method stub
-        new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
+        new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(getString(R.string.my_setting_tips_quit))
-                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        DataCleanManager.cleanWebViewCache(SettingActivity.this);
-                        ((MyApplication) getApplicationContext()).deleteAllDb();
-                        String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
-                        String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-                        DataCleanManager.cleanApplicationData(SettingActivity.this,
-                                msgCachePath, imgCachePath);
-                        MyApplication.getInstance().setIsContactReady(false);
-                        //当清除所有缓存的时候清空以db形式存储数据的configVersion
-                        ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
-                        ImageDisplayUtils.getInstance().clearAllCache();
-                        MyAppCacheUtils.clearMyAppList(SettingActivity.this);
-                        //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
+                    DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                    ((MyApplication) getApplicationContext()).deleteAllDb();
+                    String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
+                    String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                    DataCleanManager.cleanApplicationData(SettingActivity.this,
+                            msgCachePath, imgCachePath);
+                    MyApplication.getInstance().setIsContactReady(false);
+                    //当清除所有缓存的时候清空以db形式存储数据的configVersion
+                    ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
+                    ImageDisplayUtils.getInstance().clearAllCache();
+                    MyAppCacheUtils.clearMyAppList(SettingActivity.this);
+                    //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
-                        ToastUtils.show(getApplicationContext(),
-                                R.string.data_clear_success);
-                        //((MyApplication) getApplicationContext()).exit();
-                        Intent intent = new Intent(SettingActivity.this,
-                                IndexActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
-                    }
+                    ToastUtils.show(getApplicationContext(),
+                            R.string.data_clear_success);
+                    //((MyApplication) getApplicationContext()).exit();
+                    Intent intent = new Intent(SettingActivity.this,
+                            IndexActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                 })
                 .show();
     }
@@ -436,7 +550,7 @@ public class SettingActivity extends BaseActivity {
     public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
             LoadingDialog.dimissDlg(loadingDlg);
-            MyApplication.getInstance().signout(true);
+            MyApplication.getInstance().signout();
             stopAppService();
         }
 

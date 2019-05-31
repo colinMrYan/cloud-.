@@ -1,18 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.gyf.barlibrary.ImmersionBar;
+import org.greenrobot.eventbus.EventBus;
+
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -45,15 +38,19 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import org.greenrobot.eventbus.EventBus;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * 频道详情页面
@@ -143,11 +140,7 @@ public class ChannelInfoActivity extends BaseActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        ImmersionBar.with(this).statusBarColor(android.R.color.white).statusBarDarkFont(true).init();
-        setContentView(R.layout.activity_conversation_group_info);
+    public void onCreate() {
         channelMemberNumText = findViewById(R.id.tv_member);
         groupMembersText = findViewById(R.id.tv_group_member_size);
         groupMessageSearchLayout = findViewById(R.id.rl_search_messages);
@@ -160,6 +153,15 @@ public class ChannelInfoActivity extends BaseActivity {
         cid = getIntent().getExtras().getString("cid");
         loadingDlg = new LoadingDialog(ChannelInfoActivity.this);
         getChannelInfo();
+    }
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_conversation_group_info;
+    }
+
+    protected int getStatusType() {
+        return STATUS_WHITE_DARK_FONT;
     }
 
     /**
@@ -279,20 +281,14 @@ public class ChannelInfoActivity extends BaseActivity {
     }
 
     private void showQuitGroupWarningDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(ChannelInfoActivity.this)
+        new CustomDialog.MessageDialogBuilder(ChannelInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
-                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        quitChannelGroup();
-                    }
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
+                    quitChannelGroup();
                 })
                 .show();
     }

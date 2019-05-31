@@ -1,14 +1,12 @@
 package com.inspur.emmcloud.ui;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -31,40 +29,43 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by yufuchang on 2018/5/12.
  */
-@ContentView(R.layout.activity_share_files)
 public class ShareFilesActivity extends BaseActivity {
 
     private final static int SHARE_IMAGE_OR_FILES = 0;
-    @ViewInject(R.id.rv_file_list)
-    private RecyclerView recyclerView;
-    @ViewInject(R.id.img_file_icon)
-    private ImageView imageView;
-    @ViewInject(R.id.rl_channel_share)
-    private RelativeLayout channelRelativeLayout;
-    @ViewInject(R.id.rl_volume_share)
-    private RelativeLayout volumeRelativeLayout;
-    @ViewInject(R.id.view_line_volume)
-    private View viewLineVolume;
+    @BindView(R.id.rv_file_list)
+    RecyclerView recyclerView;
+    @BindView(R.id.img_file_icon)
+    ImageView imageView;
+    @BindView(R.id.rl_channel_share)
+    RelativeLayout channelRelativeLayout;
+    @BindView(R.id.rl_volume_share)
+    RelativeLayout volumeRelativeLayout;
+    @BindView(R.id.view_line_volume)
+    View viewLineVolume;
     private List<String> uriList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate() {
+        ButterKnife.bind(this);
         this.uriList.addAll((List<String>) getIntent().getSerializableExtra(Constant.SHARE_FILE_URI_LIST));
         if (!isImageUriList(uriList)) {
             if (uriList.size() <= 1) {
@@ -84,6 +85,10 @@ public class ShareFilesActivity extends BaseActivity {
         initViews();
     }
 
+    @Override
+    public int getLayoutResId() {
+        return R.layout.activity_share_files;
+    }
 
     /**
      * 分享方式
@@ -231,7 +236,7 @@ public class ShareFilesActivity extends BaseActivity {
         bundle.putString("cid", cid);
         bundle.putString("share_type", isImageUriList(uriList) ? "image" : "file");
         bundle.putSerializable("share_paths", (Serializable) uriList);
-        IntentUtils.startActivity(ShareFilesActivity.this, MyApplication.getInstance().isV0VersionChat() ?
+        IntentUtils.startActivity(ShareFilesActivity.this, WebServiceRouterManager.getInstance().isV0VersionChat() ?
                 ChannelV0Activity.class : ConversationActivity.class, bundle, true);
     }
 
@@ -241,7 +246,7 @@ public class ShareFilesActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid) {
-        if (MyApplication.getInstance().isV1xVersionChat()) {
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             new ConversationCreateUtils().createDirectConversation(ShareFilesActivity.this, uid,
                     new ConversationCreateUtils.OnCreateDirectConversationListener() {
                         @Override

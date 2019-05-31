@@ -221,6 +221,16 @@ public class Schedule implements Serializable {
         return participantList;
     }
 
+    public List<Participant> getAllParticipantList() {
+        List<Participant> participantList = new ArrayList<>();
+        JSONArray array = JSONUtils.getJSONArray(participants, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            Participant participant = new Participant(JSONUtils.getJSONObject(array, i, new JSONObject()));
+                participantList.add(participant);
+        }
+        return participantList;
+    }
+
     //为了支持跨天，支持特定日期当天的会议开始时间
     public Calendar getDayStartTimeCalendar(Calendar calendar) {
         Calendar startTimeCalendar = getStartTimeCalendar();
