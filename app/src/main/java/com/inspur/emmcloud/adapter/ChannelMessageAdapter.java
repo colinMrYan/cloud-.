@@ -170,7 +170,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
-                        message);
+                        message, uiMessage.getMarkDownLinkList());
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 cardContentView = DisplayRegularFileMsg.getView(context,
