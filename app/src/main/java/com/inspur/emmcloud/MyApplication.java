@@ -42,6 +42,8 @@ import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
+import com.luojilab.component.componentlib.router.Router;
+import com.luojilab.component.componentlib.router.ui.UIRouter;
 import com.oblador.vectoricons.VectorIconsPackage;
 
 import org.xutils.http.RequestParams;
@@ -117,6 +119,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
         WebSocketPush.getInstance().startWebSocket();
+
+        UIRouter.enableDebug();
+        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
 
     }
 

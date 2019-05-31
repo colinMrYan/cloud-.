@@ -440,22 +440,6 @@ public class SchemeHandleActivity extends BaseActivity {
     }
 
     /**
-     * 判断query是否合法
-     *
-     * @param query
-     * @return
-     */
-    private boolean getQueryLegal(Uri query) {
-        if (query == null) {
-            return false;
-        }
-        if (StringUtils.isBlank(query.getQueryParameter("id"))) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * 打开日程的Activity
      *
      * @param query

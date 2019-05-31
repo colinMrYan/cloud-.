@@ -21,7 +21,9 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.luojilab.component.componentlib.router.ui.UIRouter;
 
 /**
  * Created by chenmch on 2017/9/13.
@@ -104,40 +106,25 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      * 弹出进入app安全验证界面
      */
     private void showSafeVerificationPage() {
-
-        if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(MyApplication.getInstance())) {
+        //判断是否开启刷脸验证
+        if (PreferencesByUsersUtils.getBoolean(MyApplication.getInstance(), FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false)) {
             MyApplication.getInstance().setSafeLock(true);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(currentActivity, FaceVerifyActivity.class);
-                    intent.putExtra("isFaceVerifyExperience", false);
-                    currentActivity.startActivity(intent);
-                }
+            new Handler().postDelayed(() -> {
+                UIRouter.getInstance().registerUI("app");
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isFaceVerifyExperience", false);
+                boolean isSuccess = UIRouter.getInstance().openUri(MyApplication.getInstance(), "DDComp://app/faceVerify", bundle);
             }, 200);
-
-
-        } else if (getIsNeedGestureCode(MyApplication.getInstance())) {
+            //判断是否开启手势验证
+        } else if (PreferencesByUsersUtils.getBoolean(MyApplication.getInstance(), CreateGestureActivity.GESTURE_CODE_ISOPEN, false)) {
             MyApplication.getInstance().setSafeLock(true);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(currentActivity, GestureLoginActivity.class);
-                    intent.putExtra("gesture_code_change", "login");
-                    currentActivity.startActivity(intent);
-                }
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(currentActivity, GestureLoginActivity.class);
+                intent.putExtra("gesture_code_change", "login");
+                currentActivity.startActivity(intent);
             }, 200);
         }
 
-    }
-
-    /**
-     * 判断收需要打开手势解锁
-     *
-     * @return
-     */
-    private boolean getIsNeedGestureCode(Context context) {
-        return CreateGestureActivity.getGestureCodeIsOpenByUser(context);
     }
 
     /**

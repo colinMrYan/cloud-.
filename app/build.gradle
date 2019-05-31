@@ -47,6 +47,11 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         multiDexEnabled true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [host: "app"]
+            }
+        }
     }
     sourceSets.main {
         jniLibs.srcDirs = ['libs']
