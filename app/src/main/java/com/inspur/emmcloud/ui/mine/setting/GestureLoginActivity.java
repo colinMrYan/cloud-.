@@ -18,6 +18,7 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleTextImageView;
+import com.luojilab.router.facade.annotation.RouteNode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +34,7 @@ import butterknife.OnClick;
 /**
  * Created by Sym on 2015/12/24.
  */
+@RouteNode(path = "/gestureUnlock", desc = "手势解锁")
 public class GestureLoginActivity extends BaseActivity {
 
     private static final int GESTURE_CODE_TIMES = 5;
@@ -68,7 +70,6 @@ public class GestureLoginActivity extends BaseActivity {
                             //发送解锁广播是，SchemeHandleActivity中接收处理
                             MyApplication.getInstance().setSafeLock(false);
                             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
-                            finish();
                         } else if (command.equals("close")) {
                             clearGestureInfo();
                             finish();

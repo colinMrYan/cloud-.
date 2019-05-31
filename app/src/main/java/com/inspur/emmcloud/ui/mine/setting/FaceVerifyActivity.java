@@ -66,7 +66,7 @@ import static android.Manifest.permission.CAMERA;
 /**
  * 面容解锁识别页面
  */
-@RouteNode(path = "/faceVerify", desc = "面容解锁")
+@RouteNode(path = "/faceUnlock", desc = "面容解锁")
 public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Callback {
 
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
