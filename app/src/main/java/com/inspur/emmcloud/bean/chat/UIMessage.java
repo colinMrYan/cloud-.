@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean.chat;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MarkDownLinkCacheUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class UIMessage implements Serializable {
     private Long creationDate;
     private String senderPhotoUrl;
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
+    private List<MarkDownLink> markDownLinkList = new ArrayList<>();
 
     public UIMessage(Message message) {
         this.message = message;
@@ -23,6 +25,9 @@ public class UIMessage implements Serializable {
         this.sendStatus = message.getSendStatus();
         senderName = ContactUserCacheUtils.getUserName(message.getFromUser());
         senderPhotoUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), message.getFromUser());
+        if (message.getType().equals(Message.MESSAGE_TYPE_TEXT_MARKDOWN)) {
+            markDownLinkList = MarkDownLinkCacheUtils.getMarkDownLinkListByMid(MyApplication.getInstance(), message.getId());
+        }
     }
 
     public UIMessage() {
@@ -81,6 +86,14 @@ public class UIMessage implements Serializable {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public List<MarkDownLink> getMarkDownLinkList() {
+        return markDownLinkList;
+    }
+
+    public void setMarkDownLinkList(List<MarkDownLink> markDownLinkList) {
+        this.markDownLinkList = markDownLinkList;
     }
 
     public String getSenderPhotoUrl() {
