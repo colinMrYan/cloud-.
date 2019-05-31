@@ -260,6 +260,7 @@ dependencies {
         exclude group: 'com.android.support'
     }
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.hjq:toast:6.0'
 }
 repositories { flatDir { dirs 'aars' } }
 
