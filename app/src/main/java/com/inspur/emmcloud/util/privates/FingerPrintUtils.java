@@ -1,5 +1,11 @@
 package com.inspur.emmcloud.util.privates;
 
+import org.greenrobot.eventbus.EventBus;
+
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -7,12 +13,6 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v4.os.CancellationSignal;
-import android.widget.Toast;
-
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by yufuchang on 2017/9/1.
@@ -37,7 +37,7 @@ public class FingerPrintUtils {
              */
             @Override
             public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
-                Toast.makeText(context, "指纹识别成功", Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(context, "指纹识别成功");
                 EventBus.getDefault().post("success");
             }
 
@@ -47,7 +47,7 @@ public class FingerPrintUtils {
             @Override
             public void onAuthenticationFailed() {
                 LogUtils.YfcDebug("指纹识别失败");
-                Toast.makeText(context, "指纹识别失败", Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(context, "指纹识别失败");
             }
 
             /**
@@ -57,7 +57,7 @@ public class FingerPrintUtils {
             @Override
             public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
                 LogUtils.YfcDebug("指纹识别帮助");
-                Toast.makeText(context, helpString, Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(context, helpString);
             }
 
             /**
@@ -95,7 +95,7 @@ public class FingerPrintUtils {
     private boolean checkHasFingerPrint() {
         //是否有指纹录入
         if (!mFingerprintManager.hasEnrolledFingerprints()) {
-            Toast.makeText(context, "您还未录入指纹", Toast.LENGTH_LONG).show();
+            ToastUtils.show(context, "您还未录入指纹");
             return false;
         }
         return true;
@@ -119,7 +119,7 @@ public class FingerPrintUtils {
     private boolean checkFingerPrintHardware() {
         //硬件是否支持指纹识别
         if (!mFingerprintManager.isHardwareDetected()) {
-            Toast.makeText(context, "您手机不支持指纹识别功能", Toast.LENGTH_LONG).show();
+            ToastUtils.show(context, "您手机不支持指纹识别功能");
             return false;
         }
         return true;
@@ -132,7 +132,7 @@ public class FingerPrintUtils {
      */
     private boolean checkFingerPrintPermission() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(context, "请开启指纹识别权限", Toast.LENGTH_LONG).show();
+            ToastUtils.show(context, "请开启指纹识别权限");
             return false;
         }
         return true;

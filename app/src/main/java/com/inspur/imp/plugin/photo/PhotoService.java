@@ -1,16 +1,18 @@
 package com.inspur.imp.plugin.photo;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Environment;
-import android.util.Base64;
-import android.widget.Toast;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -23,12 +25,10 @@ import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.util.Base64;
 
 public class PhotoService extends ImpPlugin {
 
@@ -199,9 +199,7 @@ public class PhotoService extends ImpPlugin {
                 getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.PHOTO_SERVICE_CAMERA_REQUEST);
             }
         } else {
-            Toast.makeText(getFragmentContext(),
-                    Res.getStringID("filetransfer_sd_not_exist"),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), Res.getStringID("filetransfer_sd_not_exist"));
         }
     }
 
@@ -251,7 +249,7 @@ public class PhotoService extends ImpPlugin {
                         public void uploadPhotoFail() {
                             // TODO Auto-generated method stub
                             LoadingDialog.dimissDlg(loadingDlg);
-                            Toast.makeText(getFragmentContext(), R.string.img_upload_fail, Toast.LENGTH_SHORT).show();
+                            ToastUtils.show(getFragmentContext(), R.string.img_upload_fail);
                         }
                     }).upload(parm_uploadUrl, originImagePath, encodingType, parm_context, watermarkObj);
                 } catch (Exception e) {
@@ -336,7 +334,7 @@ public class PhotoService extends ImpPlugin {
                             if (loadingDlg != null && loadingDlg.isShowing()) {
                                 loadingDlg.dismiss();
                             }
-                            Toast.makeText(getFragmentContext(), R.string.img_upload_fail, Toast.LENGTH_SHORT).show();
+                            ToastUtils.show(getFragmentContext(), R.string.img_upload_fail);
                         }
                     }).upload(parm_uploadUrl, originImagePathList, encodingType, parm_context, watermarkObj);
                 } catch (Exception e) {
