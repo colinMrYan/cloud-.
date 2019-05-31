@@ -12,12 +12,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.reactnativenavigation.utils.ViewUtils;
+import com.inspur.emmcloud.util.common.DensityUtil;
 
 import java.lang.reflect.Field;
 
 public class CustomDialog extends AlertDialog {
-    public static float btnTextSize = ViewUtils.convertDpToPixel(7);
+    public static float btnTextSize = 14;
     public static int btnTextColor = Color.parseColor("#00A8E1");
     Context mContext;
 
@@ -78,10 +78,10 @@ public class CustomDialog extends AlertDialog {
                 Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
                 mMessage.setAccessible(true);
                 TextView mMessageTv = (TextView) mMessage.get(mAlertController);
-                int left = (int) ViewUtils.convertDpToPixel(24);
-                int top = (int) ViewUtils.convertDpToPixel(10);
-                int right = (int) ViewUtils.convertDpToPixel(24);
-                int bottom = (int) ViewUtils.convertDpToPixel(20);
+                int left = DensityUtil.dip2px(24);
+                int top = DensityUtil.dip2px(10);
+                int right = DensityUtil.dip2px(24);
+                int bottom = DensityUtil.dip2px(20);
                 mMessageTv.setPadding(left, top, right, bottom);
                 mMessageTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
@@ -95,12 +95,12 @@ public class CustomDialog extends AlertDialog {
         private void setActionBtnAttr(AlertDialog dialog) {
             Button positiveBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             Button negativeBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            int btnPadding = (int) ViewUtils.convertDpToPixel(12);
+            int btnPadding = DensityUtil.dip2px(12);
             positiveBtn.setPadding(btnPadding, 0, btnPadding, btnPadding);
-            positiveBtn.setTextSize(btnTextSize);
+            positiveBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
             positiveBtn.setTextColor(btnTextColor);
             negativeBtn.setPadding(btnPadding, btnPadding, btnPadding, btnPadding);
-            negativeBtn.setTextSize(btnTextSize);
+            negativeBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
             negativeBtn.setTextColor(btnTextColor);
         }
     }
