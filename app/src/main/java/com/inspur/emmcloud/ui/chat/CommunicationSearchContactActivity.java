@@ -28,7 +28,6 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.ResourceUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.ClearEditText;
@@ -59,14 +58,12 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
     ListView searchGroupListView;
     private Runnable searchRunnable;
     private List<SearchModel> searchChannelGroupList = new ArrayList<>(); // 群组搜索结果
-    private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
     private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
     private String searchArea = SEARCH_GROUP;
     private String searchText;
     private Handler handler;
     private long lastSearchTime = 0;
     private GroupAdapter groupAdapter;
-    private ContactAdapter contactAdapter;
 
 
     private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
@@ -95,7 +92,6 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         handMessage();
         initSearchRunnable();
         groupAdapter = new GroupAdapter();
-        contactAdapter = new ContactAdapter();
         searchGroupListView.setAdapter(groupAdapter);
         searchGroupListView.setOnItemClickListener(this);
     }
@@ -141,14 +137,12 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                     public void run() {
                         switch (searchArea) {
                             case SEARCH_ALL:
-                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 3);
+                                searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 break;
                             case SEARCH_GROUP:
-                                    searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
+                                searchChannelGroupList = ConversationCacheUtils.getSearchConversationSearchModelList(MyApplication.getInstance(), searchText);
                                 break;
                             case SEARCH_CONTACT:
-                                searchContactList = ContactUserCacheUtils.getSearchContact(searchText, excludeContactList, 3);
                                 break;
                             default:
                                 break;
@@ -262,34 +256,8 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
     class SearchHolder {
         public CircleTextImageView headImageView;
-        public TextView  nameTextView;
-        public TextView  detailTextView;
-    }
-
-    /**
-     * 联系人Adapter
-     */
-    class ContactAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            return null;
-        }
+        public TextView nameTextView;
+        public TextView detailTextView;
     }
 
     /**
@@ -315,13 +283,13 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             SearchHolder searchHolder = new SearchHolder();
-            if(view==null){
+            if (view == null) {
                 view = LayoutInflater.from(CommunicationSearchContactActivity.this).inflate(R.layout.communication_search_contact_item, null);
-                searchHolder.headImageView =view.findViewById(R.id.iv_contact_head);
-                searchHolder.nameTextView=view.findViewById(R.id.tv_contact_name);
-                searchHolder.detailTextView=view.findViewById(R.id.tv_contact_detail);
+                searchHolder.headImageView = view.findViewById(R.id.iv_contact_head);
+                searchHolder.nameTextView = view.findViewById(R.id.tv_contact_name);
+                searchHolder.detailTextView = view.findViewById(R.id.tv_contact_detail);
                 view.setTag(searchHolder);
-            }else {
+            } else {
                 searchHolder = (SearchHolder) view.getTag();
             }
             SearchModel searchModel = searchChannelGroupList.get(i);
