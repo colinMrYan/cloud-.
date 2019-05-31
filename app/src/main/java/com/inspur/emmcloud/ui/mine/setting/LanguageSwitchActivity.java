@@ -1,22 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +19,7 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,7 +124,7 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
                     intentLog.putExtra(LANGUAGE_CHANGE, true);
                     startActivity(intentLog);
                     }
-                })
+                )
                 .show();
     }
 

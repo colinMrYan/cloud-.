@@ -105,6 +105,13 @@ android {
         }
     }
 
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
     //资源文件目录
     sourceSets {
         main {
