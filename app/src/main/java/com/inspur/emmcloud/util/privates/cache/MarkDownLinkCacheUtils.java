@@ -75,10 +75,12 @@ public class MarkDownLinkCacheUtils {
      * @param context
      * @return
      */
-    public static List<MarkDownLink> getMarkDownLinkListById(Context context, String id) {
+    public static List<MarkDownLink> getMarkDownLinkListByMid(Context context, String mid) {
         List<MarkDownLink> markDownLinks = null;
         try {
-            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where("id", "=", id).findAll();
+            WhereBuilder b = WhereBuilder.b();
+            b.and("mid", "=", mid);
+            markDownLinks = DbCacheUtils.getDb(context).selector(MarkDownLink.class).where(b).findAll();
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
