@@ -1,13 +1,12 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import android.content.Intent;
-import android.text.InputType;
-import android.util.Base64;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -21,19 +20,20 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
-import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import android.content.Intent;
+import android.text.InputType;
+import android.util.Base64;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -155,7 +155,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
                     LogUtils.LbcDebug("path" + pathList.get(0));
                     showInputCreKeyWordDialog(pathList.get(0));
                 } else {
-                    Toast.makeText(getBaseContext(), "选取文件失败", Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getBaseContext(), "选取文件失败");
                 }
                 break;
             default:
@@ -190,7 +190,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
                         uploadCertificateFile(mail, path, certificatePassWord);
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
+                        ToastUtils.show(getBaseContext(), "密码无效或证书有误，请重试");
                     }
                 }).show();
     }
@@ -348,7 +348,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
-            Toast.makeText(getBaseContext(), "证书安装成功", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getBaseContext(), "证书安装成功");
             PreferencesByUsersUtils.putObject(MailCertificateInstallActivity.this, myCertificate, CERTIFICATER_KEY);
             updataCertificateUI(myCertificate);
             super.returnMailCertificateUploadSuccess(arg0);
@@ -356,7 +356,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         @Override
         public void returnMailCertificateUploadFail(String error, int errorCode) {
-            Toast.makeText(getBaseContext(), "证书安装失败", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getBaseContext(), "证书安装失败");
             super.returnMailCertificateUploadFail(error, errorCode);
         }
     }

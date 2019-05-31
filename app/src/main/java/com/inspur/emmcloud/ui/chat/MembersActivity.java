@@ -48,7 +48,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -159,8 +158,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     if (msg.what == 0) {
                         initData();
                     } else {
-                        Toast.makeText(MembersActivity.this, getString(R.string.load_data_failed),
-                                Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(MembersActivity.this, getString(R.string.load_data_failed));
                     }
                     LoadingDialog.dimissDlg(loadingDlg);
                 }

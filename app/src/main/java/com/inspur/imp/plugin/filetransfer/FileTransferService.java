@@ -1,36 +1,7 @@
 package com.inspur.imp.plugin.filetransfer;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.imp.api.ImpFragment;
-import com.inspur.imp.api.Res;
-import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
-import com.inspur.imp.util.StrUtil;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import static android.app.Activity.RESULT_OK;
+import static com.inspur.imp.util.StrUtil.strIsNotNull;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -54,8 +25,37 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
-import static android.app.Activity.RESULT_OK;
-import static com.inspur.imp.util.StrUtil.strIsNotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.imp.api.ImpFragment;
+import com.inspur.imp.api.Res;
+import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
+import com.inspur.imp.util.StrUtil;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class FileTransferService extends ImpPlugin {
     public static final String SUCCESS = "1";
@@ -127,7 +127,7 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-                    Toast.makeText(getFragmentContext(), Res.getStringID("filetransfer_download_failed"), Toast.LENGTH_LONG).show();
+                ToastUtils.show(getFragmentContext(), Res.getStringID("filetransfer_download_failed"));
                     getActivity().runOnUiThread(new Runnable() {
 
                         @Override
@@ -248,15 +248,12 @@ public class FileTransferService extends ImpPlugin {
         // 判断是否含有sd卡
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(getFragmentContext(), Res.getString("filetransfer_sd_not_exist"),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), Res.getString("filetransfer_sd_not_exist"));
             return;
         }
         // 判断网络是否连接
         if (!NetUtils.isNetworkConnected(getFragmentContext())) {
-            Toast.makeText(getFragmentContext(),
-                    Res.getString("filetransfer_network_disconnected"), Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtils.show(getFragmentContext(), Res.getString("filetransfer_network_disconnected"));
             return;
         }
         // 文件存放路径

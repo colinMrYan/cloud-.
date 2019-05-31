@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,8 +43,7 @@ public class FeedBackActivity extends BaseActivity {
             int len = editable.length();
 
             if (len > 200) {
-                Toast.makeText(FeedBackActivity.this, getString(R.string.feed_back_out_of_length),
-                        Toast.LENGTH_SHORT).show();
+                ToastUtils.show(FeedBackActivity.this, getString(R.string.feed_back_out_of_length));
                 int selEndIndex = Selection.getSelectionEnd(editable);
                 String str = editable.toString();
                 //截取新字符串

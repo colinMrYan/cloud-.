@@ -1,18 +1,18 @@
 package com.inspur.imp.plugin.dialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.imp.api.Res;
+import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.StrUtil;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.inspur.imp.api.Res;
-import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.StrUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * 设置消息提示框类
@@ -127,7 +127,7 @@ public class DialogService extends ImpPlugin {
         }
         if (StrUtil.strIsNotNull(msg))
             // 利用Toast方式显示消息内容
-            Toast.makeText(getFragmentContext(), msg, Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), msg);
     }
 
     /**

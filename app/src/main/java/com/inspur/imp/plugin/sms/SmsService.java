@@ -1,5 +1,21 @@
 package com.inspur.imp.plugin.sms;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.imp.api.ImpFragment;
+import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.StrUtil;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -10,23 +26,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
-import android.widget.Toast;
-
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.imp.api.ImpFragment;
-import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.StrUtil;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 发送短信
@@ -111,7 +110,7 @@ public class SmsService extends ImpPlugin {
             e.printStackTrace();
         }
         if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-            Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), "电话号码或信息不能为空！");
             return;
         }
         Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
@@ -146,7 +145,7 @@ public class SmsService extends ImpPlugin {
             try {
                 String tel = tels.getString(i);
                 if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-                    Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(getFragmentContext(), "电话号码或信息不能为空！");
                     return;
                 }
                 // 短信管理器
@@ -221,7 +220,7 @@ public class SmsService extends ImpPlugin {
             e.printStackTrace();
         }
         if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-            Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), "电话号码或信息不能为空！");
             return;
         }
         // 短信管理器
