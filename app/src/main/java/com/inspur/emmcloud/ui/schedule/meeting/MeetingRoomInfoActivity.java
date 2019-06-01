@@ -1,17 +1,18 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.ViewInject;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -39,19 +40,18 @@ import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @ContentView(R.layout.activity_meeting_room_info)
 public class MeetingRoomInfoActivity extends BaseActivity {
@@ -379,7 +379,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
      */
     private void initData() {
         allDaysMeetingScheduleList = new ArrayList<>();
-        if (allMeetingList.size() > 0) {
             Collections.sort(allMeetingList, new Comparator<Meeting>() {
                 @Override
                 public int compare(Meeting o1, Meeting o2) {
@@ -418,15 +417,19 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                     MeetingSchedule meetingSchedule = new MeetingSchedule(meetingDayStartTime, meetingDayEndTime, meeting);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }
-                long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
-                if (dayLastMeetingEnd < dayEndTimeLong) {
-                    MeetingSchedule meetingSchedule = new MeetingSchedule(dayLastMeetingEnd, dayEndTimeLong, null);
+                if (dayMeetingList.size() > 0) {
+                    long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
+                    if (dayLastMeetingEnd < dayEndTimeLong) {
+                        MeetingSchedule meetingSchedule = new MeetingSchedule(dayLastMeetingEnd, dayEndTimeLong, null);
+                        dayMeetingScheduleList.add(meetingSchedule);
+                    }
+                } else {
+                    MeetingSchedule meetingSchedule = new MeetingSchedule(dayStartTimeLong, dayEndTimeLong, null);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }
+
                 allDaysMeetingScheduleList.add(dayMeetingScheduleList);
             }
-        }
-
 
         initListView();
     }
@@ -471,6 +474,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         public void returnMeetingListByMeetingRoomFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MeetingRoomInfoActivity.this, error, errorCode);
+            initData();
         }
 
         @Override
