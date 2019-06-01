@@ -770,10 +770,10 @@ public class CommunicationFragment extends BaseFragment {
                 Message receivedWSMessage = new Message(contentObj);
                 //验重处理
                 if (MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId()) == null) {
-                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(), receivedWSMessage);
                     if (MyApplication.getInstance().getCurrentChannelCid().equals(receivedWSMessage.getChannel())) {
                         receivedWSMessage.setRead(Message.MESSAGE_READ);
                     }
+                    MessageCacheUtil.handleRealMessage(MyApplication.getInstance(), receivedWSMessage);
                     //如果是音频消息，需要检查本地是否有音频文件，没有则下载
                     if (receivedWSMessage.getType().equals(Message.MESSAGE_TYPE_MEDIA_VOICE)) {
                         String fileSavePath = MyAppConfig.getCacheVoiceFilePath(receivedWSMessage.getChannel(), receivedWSMessage.getId());
