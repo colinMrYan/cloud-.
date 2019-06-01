@@ -222,7 +222,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
      */
     private void getOfficeList() {
         String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
-        if (officeIdListJson == null) {
+        if (officeIdListJson != null) {
+            officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
+        }
+
+        if (officeIdList.size() == 0) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                 if (!swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(true);
@@ -232,7 +236,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                 swipeRefreshLayout.setRefreshing(false);
             }
         } else {
-            officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
             getMeetingRoomList();
         }
     }
@@ -272,11 +275,10 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             officeIdList = getOfficeListResult.getOfficeIdList();
             if (officeIdList.size() > 0) {
                 PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
-                getMeetingRoomList();
             } else {
-                swipeRefreshLayout.setRefreshing(false);
                 setMeetingOffice();
             }
+            getMeetingRoomList();
         }
 
 
