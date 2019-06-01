@@ -378,6 +378,7 @@ public class ECMChatInputMenu extends LinearLayout {
         if (inputs.equals("0")) {
             this.setVisibility(View.GONE);
         } else {
+            this.setVisibility(View.VISIBLE);
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
