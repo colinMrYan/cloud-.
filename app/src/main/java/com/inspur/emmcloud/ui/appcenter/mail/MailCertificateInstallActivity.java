@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -17,6 +16,7 @@ import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.privates.FileUtils;

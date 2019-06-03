@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Base64;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.privates.FileUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;

@@ -5,10 +5,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.imp.plugin.photo.loader.UniversalImageLoader;

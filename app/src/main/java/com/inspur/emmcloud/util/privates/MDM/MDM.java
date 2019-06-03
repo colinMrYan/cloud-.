@@ -6,11 +6,11 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity;
 import com.inspur.emmcloud.util.privates.NetUtils;

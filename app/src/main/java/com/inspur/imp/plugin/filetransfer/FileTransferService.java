@@ -15,11 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.util.privates.FileUtils;
 import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.imp.api.ImpFragment;

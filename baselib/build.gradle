@@ -106,4 +106,5 @@ dependencies {
     androidTestApi('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'
     }
+    api 'com.hjq:toast:6.0'
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
+import android.view.Gravity;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -16,6 +17,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.github.zafarkhaja.semver.Version;
+import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.ToastBlackStyle;
 import com.horcrux.svg.SvgPackage;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;

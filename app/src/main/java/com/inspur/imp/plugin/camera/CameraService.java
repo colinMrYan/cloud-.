@@ -1,27 +1,21 @@
 package com.inspur.imp.plugin.camera;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Environment;
+import android.util.Base64;
 
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.privates.FileUtils;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.imp.api.ImpFragment;
@@ -35,14 +29,15 @@ import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.util.compressor.Compressor;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.Environment;
-import android.util.Base64;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -519,11 +514,8 @@ public class CameraService extends ImpPlugin {
 
     /**
      * IMP代码修改处
-     *
-     * @param originalBitmap  原图Bitmap
-     * @param thumbnailBitmap 缩略图Bitmap
-     * @param saveUri         原图URI
-     * @param uri             缩略图URI
+     * @param originImgPath
+     * @param thumbnailImgPath
      */
     private void callbackData(String originImgPath, String thumbnailImgPath) {
         // TODO Auto-generated method stub
@@ -550,11 +542,8 @@ public class CameraService extends ImpPlugin {
 
     /**
      * IMP代码修改处
-     *
-     * @param originalBitmaps  原图Bitmap数组
-     * @param bitmaps          缩略图Bitmap数组
-     * @param selectedDataList 原图路径List
-     * @param filePaths        缩略图路径List
+     * @param originImgPaths
+     * @param thumbnailImgPaths
      */
     private void callbackDatas(String[] originImgPaths, String[] thumbnailImgPaths) {
         // TODO Auto-generated method stub
@@ -596,9 +585,8 @@ public class CameraService extends ImpPlugin {
 
     /**
      * 处理异常网络请求
-     *
+     * @param function
      * @param error
-     * @param responseCode
      */
     private void saveNetException(String function, String error) {
         AppExceptionCacheUtils.saveAppException(getFragmentContext(), 4, function, error, 0);
