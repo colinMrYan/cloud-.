@@ -5,7 +5,7 @@
     <style name="AppTheme" parent="AppRootTheme">
         <item name="android:colorPrimaryDark">#FFFFFF</item>
         <item name="colorAccent">#36A5F6</item>
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:textColorPrimary">#333333</item>
         <item name="android:textColorSecondary">#333333</item>
         <!--no Action Bar-->
@@ -16,7 +16,7 @@
     <style name="CusButtonBase" parent="android:Widget.Material.Light.Button" />
 
     <style name="CusImageButton" parent="android:Widget.Material.Light.ImageButton">
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
 </resources>
