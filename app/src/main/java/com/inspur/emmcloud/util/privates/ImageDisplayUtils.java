@@ -1,18 +1,13 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.widget.CustomImageDownloader;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.imp.plugin.camera.imagepicker.loader.ImagePickerLoader;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -24,6 +19,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
@@ -50,16 +46,15 @@ public class ImageDisplayUtils implements ImagePickerLoader {
         return mInstance;
     }
 
-    public void initImageLoader() {
+    public void initImageLoader(Context context, BaseImageDownloader imageDownloader, String cacheDirPath) {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(MyApplication.getInstance())
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
                 .memoryCacheExtraOptions(1280, 1280)
                 .defaultDisplayImageOptions(options)
-                .imageDownloader(
-                        new CustomImageDownloader(MyApplication.getInstance()))
+                .imageDownloader(imageDownloader)
                 .threadPoolSize(6)
                 .threadPriority(Thread.NORM_PRIORITY - 1)
                 .denyCacheImageMultipleSizesInMemory()
@@ -71,7 +66,7 @@ public class ImageDisplayUtils implements ImagePickerLoader {
                 .diskCacheFileNameGenerator(new HashCodeFileNameGenerator());
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            File cacheDir = new File(MyAppConfig.LOCAL_CACHE_PATH);
+            File cacheDir = new File(cacheDirPath);
             if (!cacheDir.exists()) {
                 cacheDir.mkdirs();
             }
@@ -195,7 +190,6 @@ public class ImageDisplayUtils implements ImagePickerLoader {
      *
      * @param imageView
      * @param uri
-     * @param defaultDrawableId
      */
     public void displayImageNoCache(final ImageView imageView, String uri) {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -208,22 +202,21 @@ public class ImageDisplayUtils implements ImagePickerLoader {
 
     /**
      * 展示固定大小的图片
-     *
-     * @param activity
      * @param uri
      * @param imageView
      * @param width
      * @param height
+     * @param defaultDrawableId
      */
     @Override
-    public void displayImage(Activity activity, String uri,
-                             ImageView imageView, int width, int height) {
+    public void displayImage(String uri,
+                             ImageView imageView, int width, int height, Integer defaultDrawableId) {
         // TODO Auto-generated method stub
         if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:") && !uri.startsWith("content:") && !uri.startsWith("assets:") && !uri.startsWith("drawable:")) {
             uri = "file://" + uri;
         }
         ImageSize size = new ImageSize(width, height);
-        DisplayImageOptions options = getDefaultOptions(R.drawable.default_image);
+        DisplayImageOptions options = getDefaultOptions(defaultDrawableId);
         ImageLoader.getInstance().displayImage(uri, new ImageViewAware(imageView), options, size, null, null);
     }
 

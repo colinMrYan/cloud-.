@@ -16,8 +16,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 public class VoiceHoldService extends Service {

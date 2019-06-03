@@ -1,9 +1,5 @@
 package com.inspur.emmcloud;
 
-import com.inspur.emmcloud.broadcastreceiver.HeadsetReceiver;
-import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
-
 import android.bluetooth.BluetoothHeadset;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,6 +10,10 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.PowerManager;
 import android.view.KeyEvent;
+
+import com.inspur.emmcloud.broadcastreceiver.HeadsetReceiver;
+import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 
 /**
  * Created by chenmch on 2018/8/25.

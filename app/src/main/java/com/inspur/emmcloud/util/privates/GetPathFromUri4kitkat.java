@@ -11,8 +11,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 
 public class GetPathFromUri4kitkat {

@@ -24,6 +24,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.SelectorUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
@@ -48,10 +52,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.SelectorUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -379,7 +379,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
             }
             tabText.setText(tabBean.getTabName());
             if (tabBean.getMainTabResult().getIcon().startsWith("http")) {
-                SelectorUtils.addSelectorFromNet(IndexBaseActivity.this, tabBean.getMainTabResult().getIcon(), tabImg);
+                SelectorUtils.addSelectorFromNet(IndexBaseActivity.this, tabBean.getMainTabResult().getIcon(), tabImg, R.drawable.ic_tab_net_unknown, R.drawable.ic_tab_net_unknown_selected);
             } else {
                 tabImg.setImageResource(getIconFromLocalByIco(tabBean.getMainTabResult().getIcon()));
             }

@@ -1,18 +1,18 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Intent;
+import android.os.Bundle;
+
 import com.inspur.emmcloud.MediaPlayBaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-
-import android.content.Intent;
-import android.os.Bundle;
 
 import butterknife.ButterKnife;
 

@@ -3,10 +3,10 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.system.ECMErrorBean;
 import com.inspur.emmcloud.bean.system.EMMErrorBean;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 
 /**
  * 网络请求结果中间件，处理异常

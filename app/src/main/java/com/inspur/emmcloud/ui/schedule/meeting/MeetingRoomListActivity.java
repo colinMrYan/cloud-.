@@ -13,14 +13,14 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -218,7 +218,12 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
      */
     private void getOfficeList() {
         String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
-        if (officeIdListJson == null) {
+        if (officeIdListJson != null) {
+            officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
+        }
+        if (officeIdList.size() > 0) {
+            getMeetingRoomList();
+        } else {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                 if (!swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(true);
@@ -227,9 +232,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             } else {
                 swipeRefreshLayout.setRefreshing(false);
             }
-        } else {
-            officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
-            getMeetingRoomList();
         }
     }
 

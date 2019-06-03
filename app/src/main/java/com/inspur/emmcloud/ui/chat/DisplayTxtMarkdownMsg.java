@@ -12,24 +12,24 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.chat.MarkDownLink;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.richtext.CacheType;
-import com.inspur.emmcloud.util.common.richtext.ImageHolder;
-import com.inspur.emmcloud.util.common.richtext.LinkHolder;
-import com.inspur.emmcloud.util.common.richtext.RichText;
-import com.inspur.emmcloud.util.common.richtext.RichTextConfig;
-import com.inspur.emmcloud.util.common.richtext.RichType;
-import com.inspur.emmcloud.util.common.richtext.callback.DrawableGetter;
-import com.inspur.emmcloud.util.common.richtext.callback.ImageFixCallback;
-import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
-import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
-import com.inspur.emmcloud.util.common.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.MarkDownLinkCacheUtils;
+import com.inspur.emmcloud.util.privates.richtext.CacheType;
+import com.inspur.emmcloud.util.privates.richtext.ImageHolder;
+import com.inspur.emmcloud.util.privates.richtext.LinkHolder;
+import com.inspur.emmcloud.util.privates.richtext.RichText;
+import com.inspur.emmcloud.util.privates.richtext.RichTextConfig;
+import com.inspur.emmcloud.util.privates.richtext.RichType;
+import com.inspur.emmcloud.util.privates.richtext.callback.DrawableGetter;
+import com.inspur.emmcloud.util.privates.richtext.callback.ImageFixCallback;
+import com.inspur.emmcloud.util.privates.richtext.callback.LinkFixCallback;
+import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlClickListener;
+import com.inspur.emmcloud.util.privates.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -41,6 +41,16 @@ import java.util.List;
  * @author sunqx 展示富文本卡片 2016-08-19
  */
 public class DisplayTxtMarkdownMsg {
+
+    private static final DrawableGetter drawableGetter = new DrawableGetter() {
+        @Override
+        public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
+            Bitmap bmp = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_image);
+            Drawable drawable = new BitmapDrawable(MyApplication.getInstance().getResources(), bmp);
+            drawable.setBounds(0, 0, bmp.getWidth(), bmp.getHeight());
+            return drawable;
+        }
+    };
 
     /**
      * 富文本卡片
@@ -73,7 +83,6 @@ public class DisplayTxtMarkdownMsg {
         showContentByMarkdown(context,content,contentText,isMyMsg,msg.getId());
         return cardContentView;
     }
-
 
     private static void showContentByMarkdown(final Context context, final String content, final TextView textView, final boolean isMyMsg,final String mid) {
         final int holderWidth = ResolutionUtils.getWidth(context) - DensityUtil.dip2px(MyApplication.getInstance(), 141);
@@ -142,15 +151,4 @@ public class DisplayTxtMarkdownMsg {
                 .autoFix(true)
                 .into(textView);
     }
-
-
-    private static final DrawableGetter drawableGetter = new DrawableGetter() {
-        @Override
-        public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
-            Bitmap bmp = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_image);
-            Drawable drawable = new BitmapDrawable(MyApplication.getInstance().getResources(),bmp);
-            drawable.setBounds(0,0,bmp.getWidth(),bmp.getHeight());
-            return drawable;
-        }
-    };
 }

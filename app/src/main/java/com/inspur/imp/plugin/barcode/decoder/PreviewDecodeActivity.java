@@ -1,22 +1,5 @@
 package com.inspur.imp.plugin.barcode.decoder;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import com.funcode.decoder.inspuremmcloud.FunDecode;
-import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
-import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.privates.LanguageManager;
-import com.inspur.imp.api.Res;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -31,6 +14,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.funcode.decoder.inspuremmcloud.FunDecode;
+import com.funcode.decoder.inspuremmcloud.FunDecodeHandler;
+import com.funcode.decoder.inspuremmcloud.FunDecodeSurfaceView;
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.imp.api.Res;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 
 /**

@@ -12,10 +12,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.ImpFragment;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;

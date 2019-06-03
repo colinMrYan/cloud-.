@@ -1,13 +1,13 @@
 package com.inspur.emmcloud.util.privates.cache;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.PinyinUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.PinyinUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;

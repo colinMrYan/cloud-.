@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 
 
 /**

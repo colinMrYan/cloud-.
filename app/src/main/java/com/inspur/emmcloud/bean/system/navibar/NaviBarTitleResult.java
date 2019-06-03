@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.system.navibar;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 /**
  * Created by yufuchang on 2019/4/12.

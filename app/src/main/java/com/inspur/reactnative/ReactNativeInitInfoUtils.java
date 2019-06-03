@@ -2,10 +2,10 @@ package com.inspur.reactnative;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 
 import static com.inspur.emmcloud.config.Constant.PUSH_FLAG;

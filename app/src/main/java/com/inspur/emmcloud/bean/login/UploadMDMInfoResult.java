@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.login;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 /**
  * Created by chenmch on 2019/2/14.

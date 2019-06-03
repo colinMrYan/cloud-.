@@ -5,7 +5,6 @@ import android.os.Environment;
 import android.webkit.WebView;
 
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
 
 import java.io.File;
 import java.math.BigDecimal;

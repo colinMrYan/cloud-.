@@ -3,7 +3,7 @@ package com.inspur.imp.plugin.camera.mycamera;
 import android.app.Activity;
 import android.hardware.Camera.Size;
 
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 
 import java.util.Collections;
 import java.util.Comparator;

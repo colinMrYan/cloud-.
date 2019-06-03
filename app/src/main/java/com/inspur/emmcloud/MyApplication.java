@@ -19,6 +19,9 @@ import com.github.zafarkhaja.semver.Version;
 import com.horcrux.svg.SvgPackage;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
@@ -26,10 +29,6 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
@@ -40,6 +39,8 @@ import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.inspur.emmcloud.util.privates.richtext.RichText;
+import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.luojilab.component.componentlib.router.Router;
@@ -135,7 +136,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         x.Ext.setDebug(true);
         SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
-        ImageDisplayUtils.getInstance().initImageLoader();
+        ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
         RichText.initCacheDir(new File(MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
         RichText.debugMode = true;

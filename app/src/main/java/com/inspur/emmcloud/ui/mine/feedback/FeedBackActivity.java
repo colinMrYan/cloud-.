@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui.mine.feedback;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.Selection;
@@ -15,6 +8,13 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

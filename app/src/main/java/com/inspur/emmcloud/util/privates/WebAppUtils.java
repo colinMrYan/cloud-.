@@ -5,7 +5,6 @@ import android.content.Context;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 /**

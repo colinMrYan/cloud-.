@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 
 import java.util.ArrayList;
 import java.util.List;

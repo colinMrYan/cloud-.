@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 import org.json.JSONObject;
 

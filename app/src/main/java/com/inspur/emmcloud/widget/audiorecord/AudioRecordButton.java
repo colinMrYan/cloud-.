@@ -12,12 +12,12 @@ import android.widget.Button;
 import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
+import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
 import com.shuyu.waveview.FileUtils;
 
 import java.util.List;

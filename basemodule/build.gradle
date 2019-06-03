@@ -30,6 +30,6 @@ android {
 }
 
 dependencies {
-    api project(':basewidget')
+    api project(':baselib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
