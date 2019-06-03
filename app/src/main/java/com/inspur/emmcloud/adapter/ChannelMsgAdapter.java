@@ -185,7 +185,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 break;
             case "text/markdown":
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
-                        message);
+                        message, new ArrayList<>());
                 break;
             case "attachment/file":
                 cardContentView = DisplayRegularFileMsg.getView(context,

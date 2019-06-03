@@ -203,7 +203,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 mCamera.setParameters(mParameters);
                 mCamera.setPreviewDisplay(mHolder);
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+                ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
                 finish();
                 e.printStackTrace();
             }
@@ -231,7 +231,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         break;
                     }
                 }
-                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+            ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
                 finish();
                 break;
         }

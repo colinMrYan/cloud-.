@@ -111,7 +111,7 @@ public class SmsService extends ImpPlugin {
             e.printStackTrace();
         }
         if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-            Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), "电话号码或信息不能为空！");
             return;
         }
         Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
@@ -146,7 +146,7 @@ public class SmsService extends ImpPlugin {
             try {
                 String tel = tels.getString(i);
                 if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-                    Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(getFragmentContext(), "电话号码或信息不能为空！");
                     return;
                 }
                 // 短信管理器
@@ -221,7 +221,7 @@ public class SmsService extends ImpPlugin {
             e.printStackTrace();
         }
         if (!StrUtil.strIsNotNull(tel) || !StrUtil.strIsNotNull(msg)) {
-            Toast.makeText(getFragmentContext(), "电话号码或信息不能为空！", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), "电话号码或信息不能为空！");
             return;
         }
         // 短信管理器

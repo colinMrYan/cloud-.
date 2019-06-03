@@ -150,7 +150,7 @@ public class ImageGalleryActivity extends BaseActivity {
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                Toast.makeText(getApplicationContext(), R.string.download_fail, Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getApplicationContext(), R.string.download_fail);
             }
 
             @Override
@@ -159,7 +159,7 @@ public class ImageGalleryActivity extends BaseActivity {
 
             @Override
             public void onFinished() {
-                Toast.makeText(getApplicationContext(), "图片已保存至IMP-Cloud/download/文件夹", Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getApplicationContext(), "图片已保存至IMP-Cloud/download/文件夹");
             }
         });
     }

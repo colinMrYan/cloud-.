@@ -199,9 +199,7 @@ public class PhotoService extends ImpPlugin {
                 getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.PHOTO_SERVICE_CAMERA_REQUEST);
             }
         } else {
-            Toast.makeText(getFragmentContext(),
-                    Res.getStringID("filetransfer_sd_not_exist"),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), Res.getStringID("filetransfer_sd_not_exist"));
         }
     }
 
@@ -251,7 +249,7 @@ public class PhotoService extends ImpPlugin {
                         public void uploadPhotoFail() {
                             // TODO Auto-generated method stub
                             LoadingDialog.dimissDlg(loadingDlg);
-                            Toast.makeText(getFragmentContext(), R.string.img_upload_fail, Toast.LENGTH_SHORT).show();
+                            ToastUtils.show(getFragmentContext(), R.string.img_upload_fail);
                         }
                     }).upload(parm_uploadUrl, originImagePath, encodingType, parm_context, watermarkObj);
                 } catch (Exception e) {
@@ -336,7 +334,7 @@ public class PhotoService extends ImpPlugin {
                             if (loadingDlg != null && loadingDlg.isShowing()) {
                                 loadingDlg.dismiss();
                             }
-                            Toast.makeText(getFragmentContext(), R.string.img_upload_fail, Toast.LENGTH_SHORT).show();
+                            ToastUtils.show(getFragmentContext(), R.string.img_upload_fail);
                         }
                     }).upload(parm_uploadUrl, originImagePathList, encodingType, parm_context, watermarkObj);
                 } catch (Exception e) {

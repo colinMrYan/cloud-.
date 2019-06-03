@@ -155,7 +155,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
                     LogUtils.LbcDebug("path" + pathList.get(0));
                     showInputCreKeyWordDialog(pathList.get(0));
                 } else {
-                    Toast.makeText(getBaseContext(), "选取文件失败", Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getBaseContext(), "选取文件失败");
                 }
                 break;
             default:
@@ -188,7 +188,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
                         uploadCertificateFile(mail, path, certificatePassWord);
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
+                        ToastUtils.show(getBaseContext(), "密码无效或证书有误，请重试");
                     }
                 }).show();
     }
@@ -346,7 +346,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
-            Toast.makeText(getBaseContext(), "证书安装成功", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getBaseContext(), "证书安装成功");
             PreferencesByUsersUtils.putObject(MailCertificateInstallActivity.this, myCertificate, CERTIFICATER_KEY);
             updataCertificateUI(myCertificate);
             super.returnMailCertificateUploadSuccess(arg0);
@@ -354,7 +354,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         @Override
         public void returnMailCertificateUploadFail(String error, int errorCode) {
-            Toast.makeText(getBaseContext(), "证书安装失败", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getBaseContext(), "证书安装失败");
             super.returnMailCertificateUploadFail(error, errorCode);
         }
     }

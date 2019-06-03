@@ -224,7 +224,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setParameters(mParameters);
             mCamera.setPreviewDisplay(mHolder);
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+            ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
             finish();
             e.printStackTrace();
         }
@@ -249,7 +249,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                         break;
                     }
                 }
-                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+            ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
                 finish();
                 break;
         }

@@ -91,8 +91,7 @@ public class MDM extends APIInterfaceInstance {
                 break;
             case STATUS_NOT_REGISTERED:
                 goDeviceRegister();
-                Toast.makeText(context, Res.getStringID("device_not_register"),
-                        Toast.LENGTH_SHORT).show();
+            ToastUtils.show(context, Res.getStringID("device_not_register"));
                 break;
             case STATUS_IN_BLACKLIST:
                 showWraningDlg(STATUS_IN_BLACKLIST);

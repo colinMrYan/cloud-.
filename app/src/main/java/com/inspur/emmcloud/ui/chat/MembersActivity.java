@@ -159,8 +159,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     if (msg.what == 0) {
                         initData();
                     } else {
-                        Toast.makeText(MembersActivity.this, getString(R.string.load_data_failed),
-                                Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(MembersActivity.this, getString(R.string.load_data_failed));
                     }
                     LoadingDialog.dimissDlg(loadingDlg);
                 }

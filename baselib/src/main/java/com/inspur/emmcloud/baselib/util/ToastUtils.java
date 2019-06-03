@@ -14,6 +14,14 @@ public class ToastUtils {
         throw new AssertionError();
     }
 
+    public static void show(int resId){
+        com.hjq.toast.ToastUtils.show(resId);
+    }
+
+    public static void show(String text){
+        com.hjq.toast.ToastUtils.show(text);
+    }
+
     public static void show(Context context, int resId) {
         show(context, context.getResources().getText(resId), Toast.LENGTH_SHORT);
     }
@@ -27,7 +35,8 @@ public class ToastUtils {
     }
 
     public static void show(Context context, CharSequence text, int duration) {
-        Toast.makeText(context, text, duration).show();
+//        Toast.makeText(context, text, duration).show();
+        com.hjq.toast.ToastUtils.show(text);
     }
 
     public static void show(Context context, int resId, Object... args) {
