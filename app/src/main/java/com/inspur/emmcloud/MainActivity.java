@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity {
         return STATUS_WHITE;
     }
 
-    private void initAppAlias(){
+    private void initAppAlias() {
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
         if (appFirstLoadAlis == null) {
             appFirstLoadAlis = AppUtils.getManifestAppVersionFlag(this);
@@ -117,8 +117,8 @@ public class MainActivity extends BaseActivity {
      */
     private void init() {
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
-        int splashLogoResId = Res.getDrawableID("ic_splash_logo_"+appFirstLoadAlis);
-        ImageDisplayUtils.getInstance().displayImage(splashLogoImg,"drawable://"+splashLogoResId,R.drawable.ic_splash_logo);
+        int splashLogoResId = Res.getDrawableID("ic_splash_logo_" + appFirstLoadAlis);
+        ImageDisplayUtils.getInstance().displayImage(splashLogoImg, "drawable://" + splashLogoResId, R.drawable.ic_splash_logo);
         activitySplashShowTime = System.currentTimeMillis();
         //进行app异常上传
         startUploadExceptionService();

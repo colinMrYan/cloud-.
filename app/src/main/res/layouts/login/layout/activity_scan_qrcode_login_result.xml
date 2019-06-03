@@ -9,7 +9,7 @@
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/scan_result_color" >
+        android:background="@color/scan_result_color">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
+            android:paddingRight="12dp">
 
             <ImageView
                 android:id="@+id/back_btn"
@@ -30,6 +30,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_back_btn_blue"
                 android:visibility="gone" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -50,7 +51,8 @@
         android:layout_below="@id/rl_header"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="109dp"
-        android:src="@drawable/icon_default"/>
+        android:src="@drawable/icon_default" />
+
     <TextView
         android:id="@+id/scan_login_desktop_sys_type_text"
         android:layout_width="match_parent"
@@ -62,7 +64,7 @@
         android:text="Windows云＋登录确认"
         android:textColor="@color/normal_day"
         android:textSize="17sp" />
-    
+
     <Button
         android:id="@+id/scan_login_desktop_button"
         android:layout_width="135dp"
@@ -74,6 +76,7 @@
         android:onClick="onClick"
         android:text="登录"
         android:textColor="@color/comment_file_color" />
+
     <Button
         android:id="@+id/scan_cancle_login_desktop_button"
         android:layout_width="135dp"

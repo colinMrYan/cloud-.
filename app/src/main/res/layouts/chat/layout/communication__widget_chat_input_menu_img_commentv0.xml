@@ -3,18 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
-    
-   <Button
-       android:id="@+id/bt_cancel"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:background="@null"
-       android:paddingLeft="15dp"
-       android:paddingRight="15dp"
-       android:paddingTop="13dp"
-       android:text="@string/cancel"
-       android:textColor="@color/black"
-       android:textSize="17sp" />
+
+    <Button
+        android:id="@+id/bt_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="13dp"
+        android:text="@string/cancel"
+        android:textColor="@color/black"
+        android:textSize="17sp" />
+
     <TextView
         android:id="@+id/tv_comment"
         android:layout_width="wrap_content"
@@ -55,6 +56,7 @@
         android:paddingTop="6dp"
         android:textColor="@color/black"
         android:textSize="17sp" />
+
     <RelativeLayout
         android:id="@+id/rl_add_menu"
         android:layout_width="match_parent"
@@ -63,6 +65,5 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="25dp"
-        android:visibility="gone" >
-    </RelativeLayout>
+        android:visibility="gone"></RelativeLayout>
 </RelativeLayout>

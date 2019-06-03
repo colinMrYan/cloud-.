@@ -36,7 +36,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
 
     private void checkNecessaryPermission() {
         final String[] necessaryPermissionArray =
-                StringUtils.concatAll(Permissions.STORAGE, new String[] { Permissions.READ_PHONE_STATE });
+                StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
         if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
             final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
@@ -52,7 +52,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
                             : View.GONE);
             if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
                     && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,
-                            Permissions.READ_PHONE_STATE)) {
+                    Permissions.READ_PHONE_STATE)) {
                 LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);

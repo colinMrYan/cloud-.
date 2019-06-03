@@ -7,8 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:elevation="5dp"
-        >
+        android:elevation="5dp">
 
         <TextView
             android:id="@+id/tv_permission_dialog_title"
@@ -31,6 +30,7 @@
             android:text="@string/permission_necessary_permission"
             android:textColor="#3E4A59"
             android:textSize="14sp" />
+
         <LinearLayout
             android:id="@+id/ll_permission_necessary"
             android:layout_width="match_parent"
@@ -39,18 +39,21 @@
             android:layout_marginTop="40dp"
             android:gravity="center"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:id="@+id/ll_permission_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+
                 <ImageView
                     android:id="@+id/iv_permission_dialog_phone"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/icon_permission_phone"/>
+                    android:src="@drawable/icon_permission_phone" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,12 +70,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+
                 <ImageView
                     android:id="@+id/iv_permission_dialog_storage"
                     android:layout_width="52dp"
                     android:layout_height="52dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/icon_permission_storage"/>
+                    android:src="@drawable/icon_permission_storage" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

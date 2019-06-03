@@ -1,14 +1,14 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
+
     <include
         android:id="@+id/top_bar"
-        layout="@layout/include_top_bar"/>
+        layout="@layout/include_top_bar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:paddingRight="2dp"
             android:paddingTop="2dp"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="2dp"/>
+            android:verticalSpacing="2dp" />
 
         <RelativeLayout
             android:id="@+id/footer_bar"
@@ -53,7 +53,7 @@
                 android:text="@string/all_images"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btn_preview"
@@ -67,14 +67,14 @@
                 android:text="@string/preview"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
-                android:background="#cc111111"/>
+                android:background="#cc111111" />
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

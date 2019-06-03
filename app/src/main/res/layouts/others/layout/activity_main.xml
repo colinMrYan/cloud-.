@@ -11,16 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="30dp"
-        android:adjustViewBounds="true"
-         />
+        android:adjustViewBounds="true" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/iv_splash_ad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/iv_splash_logo"
-        android:scaleType="centerCrop"
-        />
+        android:scaleType="centerCrop" />
 
     <ImageButton
         android:id="@+id/ibt_skip"

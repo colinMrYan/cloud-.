@@ -3,7 +3,7 @@
     android:id="@+id/actionbarLayoutId"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rlRichpushTitleBar"
@@ -50,6 +50,7 @@
         android:layout_height="1dp"
         android:progress="0"
         android:progressDrawable="@drawable/jpush_richpush_progressbar" />
+
     <WebView
         android:id="@+id/fullWebView"
         android:layout_width="match_parent"

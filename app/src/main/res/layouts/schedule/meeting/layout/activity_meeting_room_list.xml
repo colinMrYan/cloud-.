@@ -134,6 +134,7 @@
                     android:textSize="17sp" />
             </LinearLayout>
         </LinearLayout>
+
         <com.inspur.emmcloud.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"

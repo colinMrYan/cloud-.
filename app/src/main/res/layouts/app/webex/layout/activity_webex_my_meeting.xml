@@ -16,6 +16,7 @@
             android:layout_height="@dimen/header_height"
             android:layout_alignParentTop="true"
             android:background="?attr/header_bg">
+
             <ImageButton
                 android:id="@+id/ibt_back"
                 android:layout_width="44dp"
@@ -62,11 +63,12 @@
             <com.inspur.emmcloud.widget.MySwipeRefreshLayout
                 android:id="@+id/srl"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <ExpandableListView
                         android:id="@+id/elv_meeting"
                         android:layout_width="match_parent"
@@ -74,6 +76,7 @@
                         android:divider="@null"
                         android:dividerHeight="0dp"
                         android:listSelector="#00000000" />
+
                     <LinearLayout
                         android:id="@+id/ll_no_meeting"
                         android:layout_width="match_parent"
@@ -89,6 +92,7 @@
                             android:layout_gravity="center_horizontal"
                             android:adjustViewBounds="true"
                             android:src="@drawable/ic_webex_no_meeting" />
+
                         <TextView
                             android:id="@+id/tv_no_meeting"
                             android:layout_width="wrap_content"
@@ -124,6 +128,7 @@
             android:layout_marginTop="50dp"
             android:adjustViewBounds="true"
             android:src="@drawable/mask_guide_webex_schedule" />
+
         <ImageView
             android:id="@+id/iv_schedule_ok"
             android:layout_width="90dp"

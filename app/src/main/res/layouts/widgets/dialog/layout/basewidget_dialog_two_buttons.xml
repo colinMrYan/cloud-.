@@ -6,8 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="20dp"
-        >
+        android:paddingBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,6 +16,7 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_upgrade_dialog"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/app_update_title"
                 android:layout_width="match_parent"
@@ -24,8 +24,8 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="23dp"
                 android:textColor="@color/app_dialog_title_color"
-                android:textSize="@dimen/bigger_textsize"
-                />
+                android:textSize="@dimen/bigger_textsize" />
+
             <TextView
                 android:id="@+id/app_update_version"
                 android:layout_width="match_parent"
@@ -33,8 +33,8 @@
                 android:gravity="center_horizontal"
                 android:paddingTop="17dp"
                 android:textColor="@color/app_dialog_sub_title_color"
-                android:textSize="@dimen/content_title_textsize"
-                />
+                android:textSize="@dimen/content_title_textsize" />
+
             <TextView
                 android:id="@+id/text"
                 android:layout_width="match_parent"
@@ -97,13 +97,13 @@
                     android:textSize="@dimen/header_function_textsize" />
             </LinearLayout>
         </LinearLayout>
+
         <ImageView
             android:id="@+id/icon_aircraft"
             android:layout_width="67dp"
             android:layout_height="80dp"
             android:layout_marginLeft="17dp"
-            android:src="@drawable/icon_aircraft"
-            />
+            android:src="@drawable/icon_aircraft" />
     </RelativeLayout>
- 
+
 </LinearLayout>

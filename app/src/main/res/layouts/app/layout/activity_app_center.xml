@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -31,8 +31,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:scaleType="centerInside"
-            android:src="?attr/ic_appcenter_search" >
-        </ImageView>
+            android:src="?attr/ic_appcenter_search"></ImageView>
 
         <TextView
             android:id="@+id/header_text"
@@ -49,13 +48,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/recommand_tab_text"
@@ -96,7 +95,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-2dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <View
                 android:id="@+id/recommand_tab_footer_view"
@@ -120,8 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_weight="1" >
-        </android.support.v4.view.ViewPager>
+            android:layout_weight="1"></android.support.v4.view.ViewPager>
         <!--android:layout_marginTop="5dp"-->
     </LinearLayout>
 

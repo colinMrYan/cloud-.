@@ -11,15 +11,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/iv_task_no_result"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_task_default"/>
+            android:src="@drawable/ic_task_default" />
 
         <TextView
             android:id="@+id/tv_no_result"
@@ -35,14 +34,14 @@
         <com.inspur.emmcloud.widget.MySwipeRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
+
             <ListView
                 android:id="@+id/lv_task"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@color/color_list_divider"
-                android:dividerHeight="0.5px"
-                 />
+                android:dividerHeight="0.5px" />
         </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
 
     </RelativeLayout>
@@ -54,7 +53,7 @@
         android:layout_marginBottom="100dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <Button
             android:id="@+id/reset_btn"
@@ -66,8 +65,7 @@
             android:onClick="onClick"
             android:text="@string/mession_reset"
             android:textColor="#ffffff"
-            android:textSize="18sp" >
-        </Button>
+            android:textSize="18sp"></Button>
 
         <Button
             android:id="@+id/cancel_btn"
@@ -80,7 +78,6 @@
             android:onClick="onClick"
             android:text="@string/mession_cancel"
             android:textColor="#ffffff"
-            android:textSize="18sp" >
-        </Button>
+            android:textSize="18sp"></Button>
     </LinearLayout>
 </RelativeLayout>

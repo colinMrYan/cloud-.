@@ -14,12 +14,14 @@
         android:layout_marginRight="5dp"
         android:background="@drawable/app_news_dialog_day_background"
         android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/app_imp_crm_help_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -42,9 +44,11 @@
                 android:textSize="@dimen/content_title_textsize"
                 android:visibility="visible" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
-            android:layout_height="12dp"/>
+            android:layout_height="12dp" />
+
         <TextView
             android:id="@+id/app_imp_crm_font_text"
             android:layout_width="wrap_content"

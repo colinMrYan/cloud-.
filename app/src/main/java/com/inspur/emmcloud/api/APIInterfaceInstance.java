@@ -110,6 +110,10 @@ import java.util.Calendar;
 import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
+    public APIInterfaceInstance() {
+        super();
+    }
+
     @Override
     public void returnOauthSignInSuccess(GetLoginResult getLoginResult) {
         // TODO Auto-generated method stub
@@ -128,10 +132,6 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnRefreshTokenFail(String error, int errorCode) {
 
-    }
-
-    public APIInterfaceInstance() {
-        super();
     }
 
     @Override
@@ -1007,7 +1007,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnLanguageSuccess(GetLanguageResult getLanguageResult,String languageConfigVersion) {
+    public void returnLanguageSuccess(GetLanguageResult getLanguageResult, String languageConfigVersion) {
     }
 
     @Override

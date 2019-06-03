@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <!-- 網路狀態 -->
+    <!-- 網路狀態 -->
     <string name="app_network_disconnected">網路未連接！</string>
-    
-  	<!-- 應用管理 -->
-  	<string name="app_downloading">正在下載</string>
+
+    <!-- 應用管理 -->
+    <string name="app_downloading">正在下載</string>
     <string name="app_begin_download">開始下載</string>
     <string name="app_download_failed">下載失敗！</string>
     <string name="app_download_success">下載成功！</string>
@@ -17,7 +17,7 @@
     <string name="beginUnpacked">下載成功,開始解壓</string>
     <string name="being_unpacked">解壓縮中。。。</string>
     <string name="complete_update">更新完成</string>
-  <string name="web_load_fail">加載出錯，輕觸屏幕重新加載</string>
-  <string name="web_reload">網絡診斷</string>
-    
+    <string name="web_load_fail">加載出錯，輕觸屏幕重新加載</string>
+    <string name="web_reload">網絡診斷</string>
+
 </resources>

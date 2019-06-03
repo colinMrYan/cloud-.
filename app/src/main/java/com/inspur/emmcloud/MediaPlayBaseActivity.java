@@ -72,7 +72,6 @@ public abstract class MediaPlayBaseActivity extends BaseActivity implements Sens
     }
 
 
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 

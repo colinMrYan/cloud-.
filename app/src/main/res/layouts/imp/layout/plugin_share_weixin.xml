@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:text="@string/send_take_photo"
         android:visibility="gone" />
-    
+
     <Button
         android:id="@+id/send_music"
         android:layout_width="match_parent"

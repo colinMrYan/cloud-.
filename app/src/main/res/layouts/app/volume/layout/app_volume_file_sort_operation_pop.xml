@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:onClick="onClick">
+
         <TextView
             android:id="@+id/sort_by_name_up_text"
             android:layout_width="match_parent"
@@ -20,6 +21,7 @@
             android:text="@string/clouddriver_sort_by_name_asc"
             android:textColor="#666666"
             android:textSize="15sp" />
+
         <ImageView
             android:id="@+id/sort_by_name_up_select_img"
             android:layout_width="13dp"
@@ -31,16 +33,19 @@
 
         </ImageView>
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/color_list_divider" />
+
     <RelativeLayout
         android:id="@+id/sort_by_name_down_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:onClick="onClick">
+
         <TextView
             android:id="@+id/sort_by_name_down_text"
             android:layout_width="match_parent"
@@ -50,6 +55,7 @@
             android:text="@string/clouddriver_sort_by_name_dasc"
             android:textColor="#666666"
             android:textSize="15sp" />
+
         <ImageView
             android:id="@+id/sort_by_name_down_select_img"
             android:layout_width="13dp"
@@ -61,16 +67,19 @@
 
         </ImageView>
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/color_list_divider" />
+
     <RelativeLayout
         android:id="@+id/sort_by_time_up_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:onClick="onClick">
+
         <TextView
             android:id="@+id/sort_by_time_up_text"
             android:layout_width="match_parent"
@@ -80,6 +89,7 @@
             android:text="@string/clouddriver_sort_by_time_asc"
             android:textColor="#666666"
             android:textSize="15sp" />
+
         <ImageView
             android:id="@+id/sort_by_time_up_select_img"
             android:layout_width="13dp"
@@ -91,7 +101,7 @@
 
         </ImageView>
     </RelativeLayout>
-    
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -103,6 +113,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:onClick="onClick">
+
         <TextView
             android:id="@+id/sort_by_time_down_text"
             android:layout_width="match_parent"
@@ -112,6 +123,7 @@
             android:text="@string/clouddriver_sort_by_time_dasc"
             android:textColor="#666666"
             android:textSize="15sp" />
+
         <ImageView
             android:id="@+id/sort_by_time_down_select_img"
             android:layout_width="13dp"

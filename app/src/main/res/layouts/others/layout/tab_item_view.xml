@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="-2dp"
             android:textColor="?attr/footer_tab_text_color"
-            android:textSize="10sp"/>
+            android:textSize="10sp" />
     </LinearLayout>
 
     <RelativeLayout

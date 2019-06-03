@@ -24,20 +24,20 @@
             android:src="?attr/ic_back_btn" />
 
         <!--<ImageView-->
-            <!--android:id="@+id/iv_config"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:adjustViewBounds="true"-->
-            <!--android:clickable="true"-->
-            <!--android:onClick="onClick"-->
-            <!--android:paddingBottom="13dp"-->
-            <!--android:paddingLeft="12dp"-->
-            <!--android:paddingRight="15dp"-->
-            <!--android:paddingTop="13dp"-->
-            <!--android:scaleType="fitXY"-->
-            <!--android:src="@drawable/ic_config" />-->
+        <!--android:id="@+id/iv_config"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:clickable="true"-->
+        <!--android:onClick="onClick"-->
+        <!--android:paddingBottom="13dp"-->
+        <!--android:paddingLeft="12dp"-->
+        <!--android:paddingRight="15dp"-->
+        <!--android:paddingTop="13dp"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:src="@drawable/ic_config" />-->
 
         <ImageView
             android:id="@+id/iv_config"
@@ -74,8 +74,7 @@
             android:layout_height="45dp"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout

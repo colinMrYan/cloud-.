@@ -94,9 +94,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_arrow_right"
-             />
+            android:src="@drawable/ic_arrow_right" />
     </RelativeLayout>
+
     <View
         android:id="@+id/view_line_volume"
         android:layout_width="match_parent"
@@ -104,6 +104,7 @@
         android:layout_below="@id/rl_channel_share"
         android:layout_marginLeft="20dp"
         android:background="@color/color_list_divider" />
+
     <RelativeLayout
         android:id="@+id/rl_volume_share"
         android:layout_width="match_parent"
@@ -138,9 +139,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_arrow_right"
-             />
+            android:src="@drawable/ic_arrow_right" />
     </RelativeLayout>
+
     <View
         android:id="@+id/view_line_bottom"
         android:layout_width="match_parent"

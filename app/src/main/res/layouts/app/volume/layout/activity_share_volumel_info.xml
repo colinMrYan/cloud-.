@@ -154,12 +154,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/color_list_divider" />
+
             <LinearLayout
                 android:id="@+id/ll_write_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -177,8 +179,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
                     android:divider="@null"
-                    android:dividerHeight="0dp">
-                </com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:dividerHeight="0dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             </LinearLayout>
 
@@ -188,6 +189,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -205,8 +207,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
                     android:divider="@null"
-                    android:dividerHeight="0dp">
-                </com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:dividerHeight="0dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             </LinearLayout>
         </LinearLayout>

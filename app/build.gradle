@@ -116,7 +116,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-
     //资源文件目录
     sourceSets {
         main {

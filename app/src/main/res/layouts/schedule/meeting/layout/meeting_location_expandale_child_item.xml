@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:paddingLeft="16dp">
+
     <ImageView
         android:id="@+id/iv_select"
         android:layout_width="16dp"
@@ -11,6 +12,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="15dp" />
+
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
@@ -23,8 +25,8 @@
         android:paddingTop="11dp"
         android:singleLine="true"
         android:textColor="#FF333333"
-        android:textSize="16sp"
-        />
+        android:textSize="16sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"

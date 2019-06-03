@@ -39,7 +39,7 @@
         android:layout_below="@id/rl_header"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:src="@drawable/icon_channel_group_default"/>
+        android:src="@drawable/icon_channel_group_default" />
 
     <TextView
         android:id="@+id/tv_group_name"
@@ -57,18 +57,19 @@
         android:layout_marginTop="83dp"
         android:background="@color/white"
         android:elevation="5dp">
+
         <ImageView
             android:id="@+id/iv_group_qrcode"
             android:layout_width="312dp"
             android:layout_height="312dp" />
+
         <Button
             android:id="@+id/btn_share_group_qrcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_group_qrcode"
             android:background="@null"
-            android:drawableLeft="@drawable/icon_channel"
-            />
+            android:drawableLeft="@drawable/icon_channel" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -351,7 +351,6 @@ public class SchemeHandleActivity extends BaseActivity {
     }
 
 
-
     /**
      * 打开web应用
      *
@@ -401,8 +400,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
-                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
-                    openScheduleActivity(query.getQueryParameter("id"),CalendarAddActivity.class);
+                } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
+                    openScheduleActivity(query.getQueryParameter("id"), CalendarAddActivity.class);
                 }
                 finish();
                 break;
@@ -410,8 +409,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_TASK);
                     EventBus.getDefault().post(simpleEventMessage);
-                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
-                    openScheduleActivity(query.getQueryParameter("id"),TaskAddActivity.class);
+                } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
+                    openScheduleActivity(query.getQueryParameter("id"), TaskAddActivity.class);
                 }
                 finish();
                 break;
@@ -419,8 +418,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
                     EventBus.getDefault().postSticky(simpleEventMessage);
-                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
-                    openScheduleActivity(query.getQueryParameter("id"),MeetingDetailActivity.class);
+                } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
+                    openScheduleActivity(query.getQueryParameter("id"), MeetingDetailActivity.class);
                 }
                 finish();
                 break;

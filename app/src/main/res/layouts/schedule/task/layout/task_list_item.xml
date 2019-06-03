@@ -9,11 +9,12 @@
     android:paddingBottom="8dp"
     android:paddingTop="8dp"
     tools:context=".MainActivity">
+
     <RelativeLayout
         android:id="@+id/ll_category_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/iv_task_color"
             android:layout_width="8dp"
@@ -44,7 +45,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="16dp"
-            android:src="@drawable/ic_task_level"/>
+            android:src="@drawable/ic_task_level" />
     </RelativeLayout>
 
     <TextView

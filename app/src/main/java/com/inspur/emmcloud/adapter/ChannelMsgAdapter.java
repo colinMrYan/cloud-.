@@ -204,7 +204,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
 //                break;
             case "experimental/selects":
                 LogUtils.YfcDebug("v0决策卡片");
-                cardContentView = DisplayExtendedDecideMsg.getView(message,context);
+                cardContentView = DisplayExtendedDecideMsg.getView(message, context);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context,

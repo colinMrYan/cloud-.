@@ -115,7 +115,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            if (onItemClickLister != null && position >-1) {
+            if (onItemClickLister != null && position > -1) {
                 onItemClickLister.onItemClick(view, getAdapterPosition(), eventList.get(getAdapterPosition()));
             }
 

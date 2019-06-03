@@ -62,8 +62,8 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
-            app:passwordToggleEnabled="true"
-            >
+            app:passwordToggleEnabled="true">
+
             <EditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -36,13 +36,13 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg"
-        android:scrollbars="none" >
-        <ImageView 
+        android:scrollbars="none">
+
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:src="@drawable/icon_trip_star"
-            />
+            android:src="@drawable/icon_trip_star" />
     </ScrollView>
 
 </RelativeLayout>

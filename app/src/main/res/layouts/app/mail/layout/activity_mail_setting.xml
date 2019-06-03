@@ -19,6 +19,7 @@
             android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,6 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#C8C7CC" />
+
         <RelativeLayout
             android:id="@+id/rl_mail_cert"
             android:layout_width="match_parent"
@@ -148,8 +150,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_mail_cert_tips"
-                >
+                android:layout_below="@id/tv_mail_cert_tips">
 
                 <TextView
                     android:id="@+id/tv_cert"
@@ -180,6 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#C8C7CC" />
+
         <RelativeLayout
             android:id="@+id/rl_mail_account_manager"
             android:layout_width="match_parent"

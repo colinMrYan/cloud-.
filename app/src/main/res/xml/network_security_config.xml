@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--解决AndroidP只允许https的限制 -->
+<?xml version="1.0" encoding="utf-8"?><!--解决AndroidP只允许https的限制 -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="true">
         <trust-anchors>

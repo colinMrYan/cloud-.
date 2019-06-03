@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    
+
     <string name="device_disabled_cannot_login">您的设备已被禁用，无法使用此设备登录 </string>
     <string name="device_waitting_verify">您的设备正在审核中，待审核通过后才能使用</string>
     <string name="register_submit_waitting_verify">注册已提交，您的设备正在审核中，需要等待审核通过后才能使用</string>
@@ -24,17 +24,17 @@
     <string name="loading_text">正在加载</string>
     <string name="network_exception">网络不可用，请检查您的网络设置</string>
     <string name="network_timeout">网络超时，请检查您的网络设置</string>
-     <string name="net_request_failed">服务未能正确响应</string>
-      <string name="telephone_input_illegal">输入的手机号格式不正确</string>
+    <string name="net_request_failed">服务未能正确响应</string>
+    <string name="telephone_input_illegal">输入的手机号格式不正确</string>
     <string name="email_input_illegal">输入的邮箱格式不正确</string>
-     <string name="device_registe">设备注册</string>
-     <string name="phone_num">手机号</string>
-     <string name="mail">邮箱</string>
-      <string name="register">注册</string>
-      <string name="remark">备注</string>
-	<string name="uuid">设备唯一标识</string>
-	 <string name="device_has_been_rejected">您的设备审批被拒绝</string>
-	 <string name="device_approval_details">设备审批详情</string>
-	  <string name="copyed_to_paste_board">已复制到剪切板</string>
-	 
+    <string name="device_registe">设备注册</string>
+    <string name="phone_num">手机号</string>
+    <string name="mail">邮箱</string>
+    <string name="register">注册</string>
+    <string name="remark">备注</string>
+    <string name="uuid">设备唯一标识</string>
+    <string name="device_has_been_rejected">您的设备审批被拒绝</string>
+    <string name="device_approval_details">设备审批详情</string>
+    <string name="copyed_to_paste_board">已复制到剪切板</string>
+
 </resources>

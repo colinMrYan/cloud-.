@@ -54,7 +54,6 @@
         android:paddingTop="2dp"
         android:textColor="@color/white"
         android:textSize="10sp"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 </RelativeLayout>

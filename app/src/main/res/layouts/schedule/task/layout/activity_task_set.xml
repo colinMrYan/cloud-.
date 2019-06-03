@@ -33,19 +33,19 @@
             android:textSize="@dimen/header_textsize" />
 
         <!--<TextView-->
-            <!--android:id="@+id/tv_task_save"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:paddingRight="15dp"-->
-            <!--android:clickable="true"-->
-            <!--android:onClick="onClick"-->
-            <!--android:text="@string/save"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:textColor="?attr/header_text_color"-->
-            <!--android:textSize="@dimen/button_textsize"-->
-             <!--/>-->
+        <!--android:id="@+id/tv_task_save"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:paddingRight="15dp"-->
+        <!--android:clickable="true"-->
+        <!--android:onClick="onClick"-->
+        <!--android:text="@string/save"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:textColor="?attr/header_text_color"-->
+        <!--android:textSize="@dimen/button_textsize"-->
+        <!--/>-->
     </RelativeLayout>
 
     <TextView
@@ -96,7 +96,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 style="@style/arrow_right"

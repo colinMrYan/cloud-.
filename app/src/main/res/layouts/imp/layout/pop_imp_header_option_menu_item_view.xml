@@ -4,14 +4,14 @@
     android:layout_height="match_parent"
     android:paddingBottom="12dp"
     android:paddingTop="12dp">
+
     <ImageView
         android:id="@+id/iv_icon"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="12dp"
-        android:scaleType="fitXY"
-         />
+        android:scaleType="fitXY" />
 
     <TextView
         android:id="@+id/tv_text"

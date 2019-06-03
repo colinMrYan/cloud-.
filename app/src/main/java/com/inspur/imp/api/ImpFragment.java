@@ -447,10 +447,10 @@ public class ImpFragment extends ImpBaseFragment {
      * 返回
      */
     public boolean onBackKeyDown() {
-        if (ImpFragment.this.onKeyDownListener != null){
+        if (ImpFragment.this.onKeyDownListener != null) {
             ImpFragment.this.onKeyDownListener.onBackKeyDown();
-        }else {
-            if (!webView.getWebChromeClient().hideCustomView()){
+        } else {
+            if (!webView.getWebChromeClient().hideCustomView()) {
                 if (webView.canGoBack()) {
                     webView.goBack();// 返回上一页面
                     setGoBackTitle();

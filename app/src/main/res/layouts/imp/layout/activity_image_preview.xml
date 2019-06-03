@@ -17,6 +17,7 @@
         android:layout_height="@dimen/header_height"
         android:background="#cc22292c"
         android:clickable="true">
+
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
@@ -50,7 +51,7 @@
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:background="#cc22292c"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <Button
             android:id="@+id/edit_btn"

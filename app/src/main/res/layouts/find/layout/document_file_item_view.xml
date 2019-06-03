@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white" >
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/file_img"
@@ -23,8 +23,7 @@
         android:layout_marginLeft="18.5dp"
         android:layout_marginRight="20dp"
         android:layout_toRightOf="@id/file_img"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_file_name"
@@ -41,7 +40,6 @@
         android:id="@+id/file_download_progressbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-       />
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

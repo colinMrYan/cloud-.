@@ -84,7 +84,7 @@ public class IndexActivity extends IndexBaseActivity {
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
-        if(NetUtils.isNetworkConnected(this,false)){
+        if (NetUtils.isNetworkConnected(this, false)) {
             AppAPIService appAPIService = new AppAPIService(this);
             appAPIService.setAPIInterface(new WebService());
             appAPIService.getAppNaviTabs(naviTabSaveConfigVersion);
@@ -100,12 +100,12 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if(NotificationSetUtils.isNotificationEnabled(this) &&
-                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true))){
+            if (NotificationSetUtils.isNotificationEnabled(this) &&
+                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true))) {
                 PushManagerUtils.getInstance().startPush();
             }
-        }else{
-            if(PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true)){
+        } else {
+            if (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true)) {
                 PushManagerUtils.getInstance().startPush();
             }
         }
@@ -342,7 +342,7 @@ public class IndexActivity extends IndexBaseActivity {
         if (isContactOrgUpdate) {
             getContactOrg();
         }
-        if(isNaviTabUpdate){
+        if (isNaviTabUpdate) {
             getNaviTabData(ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB));
         }
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
@@ -639,11 +639,11 @@ public class IndexActivity extends IndexBaseActivity {
 
         @Override
         public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
-            NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,""));
-            if(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() == 0){
+            NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.APP_TAB_LAYOUT_DATA, ""));
+            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() == 0) {
                 updateMainTabbarWithOrder(getAppMainTabResult);
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
-            }else {
+            } else {
                 PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION,
                         getAppMainTabResult.getMainTabPayLoad().getVersion());
                 PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,
@@ -659,9 +659,9 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
             super.returnNaviBarModelSuccess(naviBarModel);
-            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.APP_TAB_LAYOUT_DATA, naviBarModel.getResponse());
             ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, naviBarModel.getLastNaviLocalVersion());
-            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() != 0){
+            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() != 0) {
                 updateNaviTabbar();
             }
         }

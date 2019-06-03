@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -31,7 +31,7 @@
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
-    <ListView 
+    <ListView
         android:id="@+id/app_center_more_apps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

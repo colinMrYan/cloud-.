@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 
-    
+
     <!-- 上传图片添加的颜色 -->
     <color name="none_color">#00000000</color>
     <color name="plugin_camera_black">#000000</color>

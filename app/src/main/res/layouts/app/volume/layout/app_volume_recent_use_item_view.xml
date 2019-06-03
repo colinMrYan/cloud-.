@@ -4,10 +4,12 @@
     android:layout_height="wrap_content"
     android:background="@drawable/selector_list"
     android:paddingLeft="12dp">
+
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/volume_img"
             android:layout_width="34dp"
@@ -17,8 +19,8 @@
             android:layout_marginRight="12dp"
             android:layout_marginTop="12dp"
             android:scaleType="fitXY"
-            android:src = "@drawable/ic_volume_recent_use"
-            />
+            android:src="@drawable/ic_volume_recent_use" />
+
         <TextView
             android:id="@+id/volume_name_text"
             android:layout_width="match_parent"
@@ -30,6 +32,7 @@
             android:maxLines="1"
             android:textColor="#333333"
             android:textSize="17sp" />
+
         <TextView
             android:id="@+id/volume_capacity_text"
             android:layout_width="wrap_content"

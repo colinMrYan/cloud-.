@@ -5,12 +5,12 @@
 
     <ImageView
         android:id="@+id/back_to_main"
-          android:layout_width="48dp"
+        android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@drawable/selector_back_press"
         android:padding="14dp"
-         android:src="@mipmap/ic_back" />
+        android:src="@mipmap/ic_back" />
 
     <SeekBar
         android:id="@+id/rotate_bar"

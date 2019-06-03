@@ -72,7 +72,7 @@
                 android:layout_height="0.5px"
                 android:layout_below="@+id/listview_list_calendars"
                 android:layout_marginLeft="16dp"
-                android:background="@color/color_list_divider"/>
+                android:background="@color/color_list_divider" />
 
             <TextView
                 android:id="@+id/tv_view"

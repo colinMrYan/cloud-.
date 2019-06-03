@@ -305,6 +305,7 @@
                     android:text="@string/schedule_task_participant_num_0"
                     android:textColor="#888888"
                     android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/iv_task_participant_arrow"
                     android:layout_width="15dp"
@@ -535,7 +536,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rl_attachments_pictures"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:id="@+id/rl_attachments_others"

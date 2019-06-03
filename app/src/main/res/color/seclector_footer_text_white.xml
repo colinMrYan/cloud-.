@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:color="@color/footer_tab_text_sel_white" android:state_selected="true"></item>
     <item android:color="@color/footer_tab_text_nor_white" android:state_selected="false"></item>
-    <item  android:color="@color/footer_tab_text_nor_white"></item>
+    <item android:color="@color/footer_tab_text_nor_white"></item>
 </selector>

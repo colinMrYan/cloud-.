@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -51,7 +51,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg"
-        android:paddingTop="10dp" >
+        android:paddingTop="10dp">
+
         <TextView
             android:id="@+id/tv_edit_gropName_tip"
             android:layout_width="wrap_content"
@@ -60,6 +61,7 @@
             android:text="@string/channel_group_members_name"
             android:textColor="#999999"
             android:textSize="15sp" />
+
         <com.inspur.emmcloud.widget.ClearEditText
             android:id="@+id/edit"
             android:layout_width="fill_parent"

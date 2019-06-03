@@ -61,7 +61,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 /**
  * Application class
  */
@@ -160,8 +159,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
-        ToastUtils.init(this,new ToastBlackStyle());
-        ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM,0,0);
+        ToastUtils.init(this, new ToastBlackStyle());
+        ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
     }
 
     /**************************************登出逻辑相关********************************************************/
@@ -270,7 +269,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setIsContactReady(boolean isContactReady) {
         MyApplication.isContactReady = isContactReady;
-        PreferencesUtils.putBoolean(getInstance(), Constant.PREF_IS_CONTACT_READY,isContactReady);
+        PreferencesUtils.putBoolean(getInstance(), Constant.PREF_IS_CONTACT_READY, isContactReady);
     }
 
     public boolean getIsActive() {
@@ -372,8 +371,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             tanent = currentEnterprise.getCode();
         }
     }
-
-
 
 
     public String getTanent() {

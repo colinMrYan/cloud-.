@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -47,8 +47,7 @@
         android:paddingBottom="8dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:paddingTop="8dp"
-        >
+        android:paddingTop="8dp">
 
         <Button
             android:id="@+id/search_btn"
@@ -70,7 +69,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/search_btn"
             android:background="@drawable/bg_search_frame"
-            android:padding="6dp" >
+            android:padding="6dp">
 
             <ImageView
                 android:id="@+id/search_img"
@@ -94,8 +93,9 @@
                 android:singleLine="true"
                 android:textColor="#000000"
                 android:textSize="@dimen/content_normal_textsize">
+
                 <requestFocus />
-             </com.inspur.emmcloud.widget.ClearEditText>
+            </com.inspur.emmcloud.widget.ClearEditText>
         </RelativeLayout>
     </RelativeLayout>
 
@@ -105,16 +105,16 @@
         android:layout_height="1px"
         android:layout_below="@id/search_layout"
         android:background="#a4b0b9" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/view_layout2" >
+        android:layout_below="@id/view_layout2">
 
         <ListView
             android:id="@+id/search_app_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-        </ListView>
+            android:layout_height="match_parent"></ListView>
     </RelativeLayout>
 
 </RelativeLayout>

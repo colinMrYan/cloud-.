@@ -11,10 +11,12 @@
     app:bl_cornersRadius="8dp"
     app:bl_strokeColor="#AAAAAA"
     app:bl_strokeWidth="0.5px">
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp">
+
         <TextView
             android:id="@+id/comment_title_text"
             android:layout_width="wrap_content"

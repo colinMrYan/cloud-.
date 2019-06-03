@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -31,7 +31,6 @@
             android:textSize="@dimen/header_textsize" />
 
 
-
         <ImageView
             android:id="@+id/share_img"
             android:layout_width="48dp"
@@ -45,7 +44,6 @@
             android:src="?attr/ic_header_option" />
 
 
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -53,12 +51,12 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg"
-        android:orientation="vertical" >
+        android:orientation="vertical">
+
         <com.inspur.emmcloud.widget.ProgressWebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- interpolator 翻译为“内插程序”，
+<?xml version="1.0" encoding="utf-8"?><!-- interpolator 翻译为“内插程序”，
 
 官方文档解释：An interpolator defines the rate of change of an animation.
 This allows the basic animation effects (alpha, scale, translate, rotate)

@@ -10,8 +10,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/plugin_camera_image_bg_top"
-       >
+        android:background="@drawable/plugin_camera_image_bg_top">
 
         <TextView
             android:id="@+id/tv_cancel"
@@ -126,6 +125,7 @@
                 android:textSize="12sp" />
 
         </ViewSwitcher>
+
         <ImageButton
             android:id="@+id/btn_undo"
             android:layout_width="wrap_content"
@@ -144,8 +144,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/plugin_camera_image_bg_bottom"
         android:gravity="center"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/rb_doodle"

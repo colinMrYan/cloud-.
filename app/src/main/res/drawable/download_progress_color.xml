@@ -7,8 +7,7 @@
                 android:centerColor="#EFEFEF"
                 android:centerY="0.75"
                 android:endColor="#EFEFEF"
-                android:startColor="#EFEFEF"
-                />
+                android:startColor="#EFEFEF" />
         </shape>
     </item>
 
@@ -21,8 +20,7 @@
                     android:centerColor="#36A5F6"
                     android:centerY="0.75"
                     android:endColor="#36A5F6"
-                    android:startColor="#36A5F6"
-                    />
+                    android:startColor="#36A5F6" />
             </shape>
         </clip>
     </item>

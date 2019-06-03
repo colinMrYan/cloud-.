@@ -58,7 +58,7 @@
             android:onClick="onClick"
             android:text="@string/cancel"
             android:textColor="#FF000000"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
 
     </RelativeLayout>
 
@@ -66,6 +66,6 @@
         android:id="@+id/recycler_view_group_message_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_header"/>
+        android:layout_below="@id/rl_header" />
 
 </RelativeLayout>

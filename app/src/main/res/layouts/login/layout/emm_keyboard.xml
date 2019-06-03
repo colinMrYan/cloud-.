@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
+
     <RelativeLayout
         android:id="@+id/rl_keyboard_view_title"
         android:layout_width="match_parent"
@@ -14,7 +14,8 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_keyboard_view_sys"/>
+            android:src="@drawable/ic_keyboard_view_sys" />
+
         <TextView
             android:id="@+id/tv_keyboard_name"
             android:layout_width="match_parent"
@@ -24,8 +25,7 @@
             android:background="#212121"
             android:gravity="center"
             android:textColor="#eeeeee"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/iv_keyboard_view_down"
@@ -35,12 +35,13 @@
             android:layout_centerVertical="true"
             android:paddingRight="8dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_emm_keyboard_view_arrow_down"/>
+            android:src="@drawable/ic_emm_keyboard_view_arrow_down" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_alignParentBottom="true"
-            android:background="#666666"/>
+            android:background="#666666" />
     </RelativeLayout>
 
     <android.inputmethodservice.KeyboardView
@@ -58,6 +59,5 @@
         android:paddingRight="8dp"
         android:paddingTop="10dp"
         android:shadowRadius="0.0"
-        android:textStyle="normal"
-        />
+        android:textStyle="normal" />
 </RelativeLayout>

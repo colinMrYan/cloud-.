@@ -4,10 +4,12 @@
     android:layout_height="wrap_content"
     android:background="#fafafa"
     android:orientation="vertical">
-<View
-    android:layout_width="match_parent"
-    android:layout_height="0.5dp"
-    android:background="@color/color_list_divider" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_list_divider" />
+
     <GridView
         android:id="@+id/file_filter_type_grid"
         android:layout_width="match_parent"
@@ -17,6 +19,5 @@
         android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:stretchMode="columnWidth">
-    </GridView>
+        android:stretchMode="columnWidth"></GridView>
 </LinearLayout>

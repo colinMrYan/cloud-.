@@ -133,7 +133,7 @@ public class JpushReceiver extends BroadcastReceiver {
 
             boolean connected = intent.getBooleanExtra(
                     JPushInterface.EXTRA_CONNECTION_CHANGE, false);
-            if(connected){
+            if (connected) {
                 PushManagerUtils.setPushFlag(context, Constant.JPUSH_FLAG);
             }
             Log.w(TAG, "[MyReceiver]" + intent.getAction()
@@ -188,7 +188,7 @@ public class JpushReceiver extends BroadcastReceiver {
 //
 //                    }
 //                } else
-                    if (extraObj.has("action")) {//用scheme打开相应的页面
+                if (extraObj.has("action")) {//用scheme打开相应的页面
                     openScheme(context, extraObj);
                 } else if (extraObj.has("channel")) {
                     String cid = JSONUtils.getString(extraObj, "channel", "");

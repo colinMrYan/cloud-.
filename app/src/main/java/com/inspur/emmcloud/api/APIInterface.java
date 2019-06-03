@@ -94,9 +94,6 @@ import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
-import com.inspur.emmcloud.bean.schedule.task.Attachment;
-import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
-import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
@@ -108,7 +105,6 @@ import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 
-
 import java.util.Calendar;
 import java.util.List;
 
@@ -116,7 +112,7 @@ public interface APIInterface {
 
     void returnOauthSignInSuccess(GetLoginResult getLoginResult);
 
-    void returnOauthSignInFail(String error, int errorCode,String headerLimitRemaining,String headerRetryAfter);
+    void returnOauthSignInFail(String error, int errorCode, String headerLimitRemaining, String headerRetryAfter);
 
     void returnRefreshTokenSuccess(GetLoginResult getLoginResult);
 
@@ -422,7 +418,7 @@ public interface APIInterface {
 
     void returnIsMeetingAdminFail(String error, int errorCode);
 
-    void returnLanguageSuccess(GetLanguageResult getLanguageResult,String languageConfigVersion);
+    void returnLanguageSuccess(GetLanguageResult getLanguageResult, String languageConfigVersion);
 
     void returnLanguageFail(String error, int errorCode);
 
@@ -845,10 +841,12 @@ public interface APIInterface {
 
     //会议-通过id获取
     void returnMeetingDataFromIdSuccess(Meeting meeting);
+
     void returnMeetingDataFromIdFail(String error, int errorCode);
 
     //日程-通过id获取
     void returnScheduleDataFromIdSuccess(Schedule schedule);
+
     void returnScheduleDataFromIdFail(String error, int errorCode);
 
     void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
@@ -871,6 +869,7 @@ public interface APIInterface {
     void returnUpdateMeetingFail(String error, int errorCode);
 
     void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult);
+
     void returnHolidayDataFail(String error, int errorCode);
 
 }

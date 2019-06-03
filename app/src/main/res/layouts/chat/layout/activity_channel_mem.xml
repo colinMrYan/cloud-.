@@ -3,7 +3,7 @@
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -35,31 +35,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
-        >
-		<RelativeLayout 
-		    android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-		    android:layout_marginBottom="10dp"
+        android:background="@color/content_bg">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:background="@color/white"
-		    >
-		    <GridView
+            android:background="@color/white">
+
+            <GridView
                 android:id="@+id/gv_member"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:horizontalSpacing="25dp"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="4"
-                 android:paddingBottom="8dp"
+                android:paddingBottom="8dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="10dp"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="5dp" >
-            </GridView>
-		</RelativeLayout>
-            
+                android:verticalSpacing="5dp"></GridView>
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

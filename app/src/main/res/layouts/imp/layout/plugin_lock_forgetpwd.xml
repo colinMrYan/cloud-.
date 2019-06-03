@@ -1,20 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center" 
-    >
-	<Button
-	    android:id="@+id/check"
-	    android:layout_width="fill_parent"
-	    android:layout_height="40dp"
-        android:text="@string/button_ok"
-	    />
+    android:gravity="center">
+
+    <Button
+        android:id="@+id/check"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:text="@string/button_ok" />
 
     <EditText
         android:id="@+id/content"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/check"
-        />
+        android:layout_below="@id/check" />
 
 </RelativeLayout>

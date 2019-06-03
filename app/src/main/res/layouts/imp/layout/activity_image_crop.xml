@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#000"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
     android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:orientation="vertical">
 
-    <include layout="@layout/include_top_bar"/>
+    <include layout="@layout/include_top_bar" />
 
-   <!-- <com.inspur.imp.plugin.camera.imagepicker.view.CropImageView
-        android:id="@+id/cv_crop_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>-->
+    <!-- <com.inspur.imp.plugin.camera.imagepicker.view.CropImageView
+         android:id="@+id/cv_crop_image"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"/>-->
 
     <com.inspur.imp.plugin.camera.imagepicker.view.CropImageView
         android:id="@+id/cv_crop_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="48dp"
-        android:scaleType="fitXY"/>
+        android:scaleType="fitXY" />
 
     <Button
         android:id="@+id/cv_rotate_btn"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="500dp"
-        android:text="@string/rotate"/>
+        android:text="@string/rotate" />
 
     <!-- <com.inspur.imp.plugin.camera.imagepicker.view.crop.CropImageView2
          android:id="@+id/cv_crop_image"

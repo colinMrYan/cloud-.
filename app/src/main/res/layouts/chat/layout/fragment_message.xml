@@ -10,40 +10,40 @@
         android:background="?attr/header_bg">
 
         <!--<ImageView-->
-            <!--android:id="@+id/contact_img"-->
-            <!--android:layout_width="52dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:clickable="true"-->
-            <!--android:paddingLeft="18dp"-->
-            <!--android:paddingRight="13dp"-->
-            <!--android:adjustViewBounds="true"-->
-            <!--android:scaleType="centerInside"-->
-            <!--android:tint="?attr/header_text_color"-->
-            <!--android:src="@drawable/ic_message_header_contact" />-->
+        <!--android:id="@+id/contact_img"-->
+        <!--android:layout_width="52dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:clickable="true"-->
+        <!--android:paddingLeft="18dp"-->
+        <!--android:paddingRight="13dp"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:scaleType="centerInside"-->
+        <!--android:tint="?attr/header_text_color"-->
+        <!--android:src="@drawable/ic_message_header_contact" />-->
 
         <!--<TextView-->
-            <!--android:id="@+id/header_text"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:text="@string/communicate"-->
-            <!--android:textColor="?attr/header_text_color"-->
-            <!--android:textSize="@dimen/header_textsize" />-->
+        <!--android:id="@+id/header_text"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:text="@string/communicate"-->
+        <!--android:textColor="?attr/header_text_color"-->
+        <!--android:textSize="@dimen/header_textsize" />-->
 
         <!--<ImageView-->
-            <!--android:id="@+id/more_function_list_img"-->
-            <!--android:layout_width="52dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:clickable="true"-->
-            <!--android:paddingLeft="16dp"-->
-            <!--android:paddingRight="16dp"-->
-            <!--android:tint="?attr/header_text_color"-->
-            <!--android:scaleType="centerInside"-->
-            <!--android:src="@drawable/ic_add" />-->
+        <!--android:id="@+id/more_function_list_img"-->
+        <!--android:layout_width="52dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:clickable="true"-->
+        <!--android:paddingLeft="16dp"-->
+        <!--android:paddingRight="16dp"-->
+        <!--android:tint="?attr/header_text_color"-->
+        <!--android:scaleType="centerInside"-->
+        <!--android:src="@drawable/ic_add" />-->
 
 
         <TextView
@@ -131,7 +131,6 @@
             android:layout_marginTop="18dp"
             android:text="@string/no_chat_content"
             android:textColor="#999999"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
     </RelativeLayout>
 </RelativeLayout>

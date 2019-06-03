@@ -5,7 +5,7 @@
     <style name="AppTheme" parent="AppRootTheme">
         <item name="android:colorPrimaryDark">#FFFFFF</item>
         <item name="colorAccent">#36A5F6</item>
-        <item name="android:navigationBarColor" >@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item>
         <item name="android:textColorPrimary">#333333</item>
         <item name="android:textColorSecondary">#333333</item>
         <!--no Action Bar-->

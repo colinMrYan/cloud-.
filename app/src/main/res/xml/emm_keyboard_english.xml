@@ -109,25 +109,25 @@
     <Row android:rowEdgeFlags="bottom">
 
         <!--<Key-->
-            <!--android:codes="32"-->
-            <!--android:keyLabel="space"-->
-            <!--android:keyWidth="75.299998%p" />-->
+        <!--android:codes="32"-->
+        <!--android:keyLabel="space"-->
+        <!--android:keyWidth="75.299998%p" />-->
         <Key
             android:codes="-10"
             android:keyIcon="@drawable/ic_safe_keyboard_normal"
-            android:keyWidth="11.0%p"/>
+            android:keyWidth="11.0%p" />
         <Key
             android:codes="-7"
             android:keyLabel="123"
-            android:keyWidth="11.0%p"/>
+            android:keyWidth="11.0%p" />
         <Key
             android:codes="-9"
             android:keyLabel="@string/emm_keyboard_symbol"
-            android:keyWidth="11.0%p"/>
+            android:keyWidth="11.0%p" />
         <Key
-        android:codes="32"
-        android:keyLabel="@string/emm_keyboard_space"
-        android:keyWidth="36.0%p" />
+            android:codes="32"
+            android:keyLabel="@string/emm_keyboard_space"
+            android:keyWidth="36.0%p" />
         <Key
             android:codes="-3"
             android:keyEdgeFlags="right"

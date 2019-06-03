@@ -44,7 +44,7 @@ dependencies {
     api deps.support.multidex
     testApi deps.junit
     api deps.jimu.componentLib
-    api (deps.butterknife.butterknife) {
+    api(deps.butterknife.butterknife) {
         exclude group: 'com.android.support'
     }
     api deps.gson
@@ -55,13 +55,13 @@ dependencies {
     api deps.amapLocation
 
     api deps.baiduMapLocation
-    api (deps.socket) {
+    api(deps.socket) {
         exclude group: 'org.json', module: 'json'
     }
     api deps.pinyin4j
     api deps.universalImageLoader
     api deps.zxing
-    api (deps.PhotoView){
+    api(deps.PhotoView) {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
     }
@@ -88,7 +88,7 @@ dependencies {
     api deps.semver
     api deps.bmelnychukAtv
     api deps.immersionbar
-    api (deps.pagerslidingtabstrip){
+    api(deps.pagerslidingtabstrip) {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.nineoldandroids', module: 'library'
     }
@@ -100,11 +100,11 @@ dependencies {
     api project(':react-native-vector-icons')
     api project(':react-native-navigation')
 
-    androidTestApi (deps.support.test.runner) {
+    androidTestApi(deps.support.test.runner) {
         exclude module: 'support-annotations'
     }
     androidTestApi('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'
     }
-    api 'com.hjq:toast:6.0'
+    api deps.Toast
 }

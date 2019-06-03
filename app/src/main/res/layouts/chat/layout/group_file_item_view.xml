@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white" >
+    android:background="@color/white">
 
     <View
         android:id="@id/v_line"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginLeft="15dp"
-        android:background="#DDDDDD"/>
+        android:background="#DDDDDD" />
 
     <TextView
         android:id="@+id/tv_file_month"
@@ -20,8 +20,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="12dp"
         android:textColor="#999999"
-        android:textSize="13sp"
-        />
+        android:textSize="13sp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:layout_toRightOf="@id/file_img"
             android:orientation="vertical"
             android:paddingBottom="15dp"
-            android:paddingTop="13dp" >
+            android:paddingTop="13dp">
 
             <TextView
                 android:id="@+id/tv_file_name"
@@ -62,7 +62,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp" >
+                android:layout_marginTop="3dp">
 
                 <TextView
                     android:id="@+id/tv_file_size"

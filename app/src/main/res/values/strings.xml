@@ -946,8 +946,6 @@
     <string name="meeting_detail_attendee_num">%1$s等%2$d人</string>
 
 
-
-
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部门信息缺失</string>
     <string name="meeting_time_earlier_than_permission">预定时间早于规定时间（现在）</string>

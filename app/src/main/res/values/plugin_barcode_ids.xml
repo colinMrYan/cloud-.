@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-  <!-- Messages IDs -->
+    <!-- Messages IDs -->
     <item name="auto_focus" type="id" />
     <item name="decode" type="id" />
     <item name="decode_failed" type="id" />

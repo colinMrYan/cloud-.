@@ -46,14 +46,17 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <EditText
                 android:id="@+id/et_tag_name"
                 android:layout_width="match_parent"
@@ -65,9 +68,11 @@
                 android:paddingTop="11dp"
                 android:textColorHint="#999999"
                 android:textSize="16sp" />
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5sp"/>
+                android:layout_height="0.5sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,12 +82,14 @@
                 android:text="@string/schedule_task_label_color"
                 android:textColor="#999999"
                 android:textSize="13sp" />
+
             <com.inspur.emmcloud.widget.ScrollViewWithListView
                 android:id="@+id/lv_tag_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:paddingLeft="16dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+
             <TextView
                 android:id="@+id/tv_delecte_tag"
                 android:layout_width="match_parent"
@@ -96,7 +103,7 @@
                 android:text="@string/schedule_task_delete_the_tag"
                 android:textColor="#FF4242"
                 android:textSize="16sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

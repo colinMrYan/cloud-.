@@ -37,13 +37,13 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg">
+
         <ListView
             android:id="@+id/lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@android:color/transparent"
-            android:listSelector="#00000000"
-            />
+            android:listSelector="#00000000" />
     </RelativeLayout>
 
 

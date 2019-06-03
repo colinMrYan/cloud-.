@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/content_bg"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/content_bg" >
+        android:background="@color/content_bg">
 
         <ImageButton
             android:id="@+id/ibt_back"
@@ -20,6 +20,7 @@
             android:padding="11dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_back_btn_white" />
+
         <ImageView
             android:id="@+id/tv_set"
             android:layout_width="56dp"
@@ -30,10 +31,9 @@
             android:onClick="onClick"
             android:padding="17dp"
             android:scaleType="fitXY"
-            android:src="@drawable/icon_card_package_set"
- />
+            android:src="@drawable/icon_card_package_set" />
     </RelativeLayout>
-    
+
     <RelativeLayout
         android:id="@+id/rl_card_package"
         android:layout_width="match_parent"
@@ -41,12 +41,14 @@
         android:layout_below="@id/rl_header"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal">
+
         <ImageView
             android:id="@+id/img_card_package_icon"
             android:layout_width="81dp"
             android:layout_height="79dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/icon_card_package"/>
+            android:src="@drawable/icon_card_package" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,24 +56,25 @@
             android:layout_marginLeft="25dp"
             android:layout_toRightOf="@id/img_card_package_icon"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tv_name_tips"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/card_package_welcome"
                 android:textColor="#ff333333"
-                android:textSize="19sp"
-                />
+                android:textSize="19sp" />
+
             <TextView
                 android:id="@+id/tv_digest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/card_package_collect"
                 android:textColor="#ff666666"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
     </RelativeLayout>
+
     <com.inspur.emmcloud.widget.cardstack.RxCardStackView
         android:id="@+id/stackview_card_package"
         android:layout_width="match_parent"
@@ -80,6 +83,6 @@
         android:clipToPadding="false"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:paddingTop="132dp"/>
+        android:paddingTop="132dp" />
 
 </RelativeLayout>

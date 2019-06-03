@@ -12,6 +12,7 @@
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:src="@drawable/message_popwindow_list_arrow_white" />
+
     <ListView
         android:id="@+id/lv_menu"
         android:layout_width="match_parent"
@@ -23,6 +24,5 @@
         android:divider="#e3e3e3"
         android:dividerHeight="0.5dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp">
-    </ListView>
+        android:paddingRight="15dp"></ListView>
 </RelativeLayout>

@@ -5,12 +5,14 @@
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="15dp">
-     <ImageView
-         android:id="@+id/iv_attachemnt_img"
-         android:layout_width="48dp"
-         android:layout_height="48dp"
-         android:layout_centerVertical="true"
-         android:scaleType="fitXY"/>
+
+    <ImageView
+        android:id="@+id/iv_attachemnt_img"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:scaleType="fitXY" />
+
     <TextView
         android:id="@+id/tv_add_attachment_name"
         android:layout_width="wrap_content"
@@ -23,7 +25,8 @@
         android:singleLine="true"
         android:text="文件名称及后缀"
         android:textColor="#333333"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/tv_attachemnt_upload_state"
         android:layout_width="wrap_content"
@@ -39,11 +42,12 @@
         android:text="已上传"
         android:textColor="#888888"
         android:textSize="13sp" />
+
     <ImageView
         android:id="@+id/iv_delete_attachemnt"
         android:layout_width="21.2dp"
         android:layout_height="21.2dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/icon_receiver_delete"/>
+        android:src="@drawable/icon_receiver_delete" />
 </RelativeLayout>

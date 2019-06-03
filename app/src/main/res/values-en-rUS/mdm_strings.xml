@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    
+
     <string name="device_disabled_cannot_login">Your device is disabled and can not sign in with this device. </string>
     <string name="device_waitting_verify">Your device is under review and pending approval.</string>
     <string name="register_submit_waitting_verify">Your device has been submitted for review. Your device is under review and will need to wait for approval before it can be used.</string>
@@ -24,17 +24,17 @@
     <string name="loading_text">Loading</string>
     <string name="network_exception">Network unavailable,please check</string>
     <string name="network_timeout">Network timeout, please check</string>
-     <string name="net_request_failed">The server failed to respond correctly</string>
-      <string name="telephone_input_illegal">Enter the phone number format is not correct</string>
+    <string name="net_request_failed">The server failed to respond correctly</string>
+    <string name="telephone_input_illegal">Enter the phone number format is not correct</string>
     <string name="email_input_illegal">The format of the entered mailbox is incorrect</string>
-     <string name="device_registe">Device registration</string>
-     <string name="phone_num">Mobile number</string>
-     <string name="mail">Email</string>
-       <string name="register">Register</string>
-      <string name="remark">Remarks</string>
-	<string name="uuid">Equipment unique identification</string>
-	 <string name="device_has_been_rejected">Your device has been rejected.</string>
-	 <string name="device_approval_details">Device approval details</string>
-	 <string name="copyed_to_paste_board">Copy to clipboard</string>
+    <string name="device_registe">Device registration</string>
+    <string name="phone_num">Mobile number</string>
+    <string name="mail">Email</string>
+    <string name="register">Register</string>
+    <string name="remark">Remarks</string>
+    <string name="uuid">Equipment unique identification</string>
+    <string name="device_has_been_rejected">Your device has been rejected.</string>
+    <string name="device_approval_details">Device approval details</string>
+    <string name="copyed_to_paste_board">Copy to clipboard</string>
 
 </resources>
