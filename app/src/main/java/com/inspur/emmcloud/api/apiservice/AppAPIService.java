@@ -702,8 +702,8 @@ public class AppAPIService {
             registerPushTokenJsonObject.put("deviceId", AppUtils.getMyUUID(context));
             registerPushTokenJsonObject.put("appId", context.getPackageName());
             registerPushTokenJsonObject.put("appVersion", AppUtils.getVersion(context));
-            registerPushTokenJsonObject.put("type", PushManagerUtils.getPushProvider(context));
-            registerPushTokenJsonObject.put("token", PushManagerUtils.getPushId(context));
+            registerPushTokenJsonObject.put("type", PushManagerUtils.getInstance().getPushProvider(context));
+            registerPushTokenJsonObject.put("token", PushManagerUtils.getInstance().getPushId(context));
             registerPushTokenJsonObject.put("inspurId", MyApplication.getInstance().getUid());
             registerPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getCurrentEnterprise().getId());
             registerPushTokenJsonObject.put("deviceModel", AppUtils.GetChangShang() + "/" + AppUtils.GetModel());
@@ -755,8 +755,8 @@ public class AppAPIService {
             unregisterPushTokenJsonObject.put("deviceId", AppUtils.getMyUUID(context));
             unregisterPushTokenJsonObject.put("appId", context.getPackageName());
             unregisterPushTokenJsonObject.put("appVersion", AppUtils.getVersion(context));
-            unregisterPushTokenJsonObject.put("type", PushManagerUtils.getPushProvider(context));
-            unregisterPushTokenJsonObject.put("token", PushManagerUtils.getPushId(context));
+            unregisterPushTokenJsonObject.put("type", PushManagerUtils.getInstance().getPushProvider(context));
+            unregisterPushTokenJsonObject.put("token", PushManagerUtils.getInstance().getPushId(context));
             unregisterPushTokenJsonObject.put("inspurId", MyApplication.getInstance().getUid());
             unregisterPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getCurrentEnterprise().getId());
             unregisterPushTokenJsonObject.put("deviceModel", AppUtils.GetChangShang() + "/" + AppUtils.GetModel());

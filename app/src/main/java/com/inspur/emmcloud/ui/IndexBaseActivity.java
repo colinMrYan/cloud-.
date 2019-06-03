@@ -310,41 +310,41 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && batteryDialogIsShow) {
             try {
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-                boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
-                if (!hasIgnored) {
-                    confirmDialog = new ConfirmDialog(context, R.string.white_list_tip_content,
-                            R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
-                    confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
-                        @Override
-                        public void doConfirm() {
-                            if (confirmDialog.getIsHide()) {
-                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                            }
-                            try {
+//                boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+//                if (!hasIgnored) {
+                confirmDialog = new ConfirmDialog(context, R.string.white_list_tip_content,
+                        R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
+                confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
+                    @Override
+                    public void doConfirm() {
+                        if (confirmDialog.getIsHide()) {
+                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                        }
+                        try {
 //                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
 //                                intent.setData(Uri.parse("package:" + context.getPackageName()));
 //                                startActivity(intent);
-                                //自启动设置  zyj
-                                WhiteListUtil.enterWhiteListSetting(context);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                            } finally {
-                                confirmDialog.dismiss();
-                            }
-                        }
-
-                        @Override
-                        public void doCancel() {
-                            if (confirmDialog.getIsHide()) {
-                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                            }
-                            // TODO Auto-generated method stub
+                            //自启动设置  zyj
+                            WhiteListUtil.enterWhiteListSetting(context);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                        } finally {
                             confirmDialog.dismiss();
                         }
-                    });
-                    confirmDialog.show();
-                }
+                    }
+
+                    @Override
+                    public void doCancel() {
+                        if (confirmDialog.getIsHide()) {
+                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                        }
+                        // TODO Auto-generated method stub
+                        confirmDialog.dismiss();
+                    }
+                });
+                confirmDialog.show();
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

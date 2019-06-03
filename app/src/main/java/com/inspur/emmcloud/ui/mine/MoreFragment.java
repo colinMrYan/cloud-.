@@ -365,6 +365,7 @@ public class MoreFragment extends BaseFragment {
         private void setUserCardMenuLayout(LinearLayout userCardMenuLayout, List<MineLayoutItem> mineLayoutItemList) {
             for (final MineLayoutItem mineLayoutItem : mineLayoutItemList) {
                 ImageButton menuImgBtn = new ImageButton(getActivity());
+                menuImgBtn.setBackground(null);
                 int height = DensityUtil.dip2px(MyApplication.getInstance(), 42);
                 int width = DensityUtil.dip2px(MyApplication.getInstance(), 48);
                 int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 8);

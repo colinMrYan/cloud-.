@@ -323,16 +323,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         DbCacheUtils.initDb(getInstance());
     }
 
-//    /******************************Websocket********************************************/
-//
-//    /**
-//     * 开启websocket推送
-//     */
-//    public void startWebSocket(boolean isForceNew) {
-//        if (isHaveLogin()) {
-//            WebSocketPush.getInstance().startWebSocket(isForceNew);
-//        }
-//    }
 
     /**
      * 删除此用户在此实例的所有db

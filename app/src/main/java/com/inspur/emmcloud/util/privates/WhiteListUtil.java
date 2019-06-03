@@ -14,7 +14,16 @@ public class WhiteListUtil {
         try {
             context.startActivity(getSettingIntent(context));
         } catch (Exception e) {
-            context.startActivity(new Intent(Settings.ACTION_SETTINGS));
+            // 针对于其他设备，调整当前系统app查看详情界面
+            try {
+                Intent intent = new Intent();
+                intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                intent.setData(Uri.fromParts("package", context.getPackageName(), null));
+                context.startActivity(intent);
+            } catch (Exception e1) {
+                context.startActivity(new Intent(Settings.ACTION_SETTINGS));
+            }
+
         }
     }
 

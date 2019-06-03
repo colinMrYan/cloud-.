@@ -57,9 +57,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/setting_safe_center"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -91,8 +92,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/settings_language"
                     android:textSize="16sp" />
 
@@ -112,8 +114,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/iv_setting_language_arrow"
                     android:gravity="right"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/follow_system"
                     android:textColor="#888888"
                     android:textSize="16sp" />
@@ -147,9 +149,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/mine_theme_switch"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
 
@@ -160,8 +163,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/tv_setting_switch_theme_arrow"
                     android:gravity="right"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:textColor="#888888"
                     android:textSize="16sp" />
 
@@ -194,8 +197,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/mine_tab_layout"
                     android:textSize="16sp" />
 
@@ -207,8 +210,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/tv_setting_switch_tab_arrow"
                     android:gravity="right"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:textColor="#888888"
                     android:textSize="16sp" />
 
@@ -243,9 +246,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/settings_clear_cache"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
 
@@ -276,8 +280,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/web_app_auto_rotate"
                     android:textSize="16sp" />
 
@@ -309,8 +314,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/voice_word_setting"
                     android:textSize="16sp" />
 
@@ -341,8 +347,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
                     android:text="@string/notification_switch"
                     android:textSize="16sp" />
 
@@ -375,8 +381,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/run_background"
                     android:textSize="16sp" />
 
@@ -410,8 +417,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
                     android:paddingTop="11dp"
+                    android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/setting_join_experience_plan"
                     android:textSize="16sp" />
 
@@ -439,9 +447,9 @@
             android:layout_height="42dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="45dp"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
+            android:layout_marginBottom="45dp"
             android:elevation="1dp"
             android:gravity="center"
             android:onClick="onClick"
