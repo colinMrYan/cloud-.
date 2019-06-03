@@ -73,6 +73,7 @@ import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
@@ -806,7 +807,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                             if (channelGroupArray.length() > 0) {
                                 JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
                                 String cid = JSONUtils.getString(cidObj, "cid", "");
-                                transmitTextMsg(cid, backUiMessage.getMessage());
+                                transmitTextMsg(cid, backUiMessage);
                             }
                         }
                     }
@@ -1377,7 +1378,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         String msgType = uiMessage.getMessage().getType();
         switch (msgType) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                transmitTextMsg(cid, uiMessage.getMessage());
+                transmitTextMsg(cid, uiMessage);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 //  transmitImgMsg(cid, uiMessage.getMessage());

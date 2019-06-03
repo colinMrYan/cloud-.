@@ -40,6 +40,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     private MeetingOfficeAdapter adapter;
     private List<Office> officeList = new ArrayList<>();
     private List<String> officeIdList = new ArrayList<>();
+    private boolean isMeetingOfficeChanged = false;
 
     @Override
     public void onCreate() {
