@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.chat.MarkDownLink;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
@@ -28,8 +29,12 @@ import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.util.common.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.util.privates.cache.MarkDownLinkCacheUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DisplayTxtRichMsg
@@ -38,13 +43,23 @@ import com.inspur.emmcloud.widget.bubble.BubbleLayout;
  */
 public class DisplayTxtMarkdownMsg {
 
+    private static final DrawableGetter drawableGetter = new DrawableGetter() {
+        @Override
+        public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
+            Bitmap bmp = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_image);
+            Drawable drawable = new BitmapDrawable(MyApplication.getInstance().getResources(), bmp);
+            drawable.setBounds(0, 0, bmp.getWidth(), bmp.getHeight());
+            return drawable;
+        }
+    };
+
     /**
      * 富文本卡片
      *
      * @param context
      * @param msg
      */
-    public static View getView(final Context context, Message msg) {
+    public static View getView(final Context context, Message msg, List<MarkDownLink> markDownLinkList) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_markdown_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(MyApplication.getInstance().getUid());
@@ -64,15 +79,16 @@ public class DisplayTxtMarkdownMsg {
             titleText.setVisibility(View.GONE);
         } else {
             titleText.setVisibility(View.VISIBLE);
-            showContentByMarkdown(context,title,titleText,isMyMsg);
+            showContentByMarkdown(context, title, titleText, isMyMsg, msg.getId(), markDownLinkList);
         }
-        showContentByMarkdown(context,content,contentText,isMyMsg);
+        showContentByMarkdown(context, content, contentText, isMyMsg, msg.getId(), markDownLinkList);
         return cardContentView;
     }
 
-
-    private static void showContentByMarkdown(final Context context, final String content, TextView textView, final boolean isMyMsg) {
+    private static void showContentByMarkdown(final Context context, final String content, final TextView textView,
+                                              final boolean isMyMsg, final String mid, final List<MarkDownLink> markDownLinks) {
         final int holderWidth = ResolutionUtils.getWidth(context) - DensityUtil.dip2px(MyApplication.getInstance(), 141);
+        List<MarkDownLink> markDownLinkList = markDownLinks;
         RichText.from(content)
                 .type(RichType.markdown)
                 .scaleType(ImageHolder.ScaleType.center_crop)
@@ -83,15 +99,35 @@ public class DisplayTxtMarkdownMsg {
                         holder.setColor(context.getResources().getColor(
                                 isMyMsg ? R.color.hightlight_in_blue_bg
                                         : R.color.header_bg_blue));
+                        for (int i = 0; i < markDownLinkList.size(); i++) {
+                            if (holder.getUrl().equals(markDownLinkList.get(i).getLink())) {
+                                holder.setColor(context.getResources().getColor(R.color.mark_down_url_read));
+                            }
+                        }
                     }
                 })
                 .urlClick(new OnUrlClickListener() {
                     @Override
                     public boolean urlClicked(String url) {
+                        List<MarkDownLink> clickedLinkList = new ArrayList<>();
+                        for (int i = 0; i < markDownLinkList.size(); i++) {
+                            if (url.equals(markDownLinkList.get(i).getLink())) {
+                                MarkDownLink markDownLink = new MarkDownLink(mid, url);
+                                clickedLinkList.add(markDownLink);
+                                break;
+                            }
+                        }
+                        if (!(clickedLinkList.size() > 0)) {
+                            MarkDownLink markDownLink = new MarkDownLink(mid, url);
+                            markDownLinkList.add(markDownLink);
+                            MarkDownLinkCacheUtils.saveMarkDownLink(context,markDownLink);
+                            showContentByMarkdown(context, content, textView, isMyMsg, mid, markDownLinkList);
+                        }
                         if (url.startsWith("http")) {
                             UriUtils.openUrl((Activity) context, url);
                             return true;
                         }
+                        /**加上这个目的是为了重新刷新该Ui*/
                         return false;
                     }
                 })
@@ -127,15 +163,4 @@ public class DisplayTxtMarkdownMsg {
                 .autoFix(true)
                 .into(textView);
     }
-
-
-    private static final DrawableGetter drawableGetter = new DrawableGetter() {
-        @Override
-        public Drawable getDrawable(ImageHolder holder, RichTextConfig config, TextView textView) {
-            Bitmap bmp = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.drawable.default_image);
-            Drawable drawable = new BitmapDrawable(MyApplication.getInstance().getResources(),bmp);
-            drawable.setBounds(0,0,bmp.getWidth(),bmp.getHeight());
-            return drawable;
-        }
-    };
 }

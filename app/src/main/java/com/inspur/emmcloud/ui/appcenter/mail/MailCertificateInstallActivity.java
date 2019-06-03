@@ -20,20 +20,20 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.content.Intent;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -155,7 +155,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
                     LogUtils.LbcDebug("path" + pathList.get(0));
                     showInputCreKeyWordDialog(pathList.get(0));
                 } else {
-                    Toast.makeText(getBaseContext(), "选取文件失败", Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getBaseContext(), "选取文件失败");
                 }
                 break;
             default:
@@ -169,29 +169,28 @@ public class MailCertificateInstallActivity extends BaseActivity {
      * @param path
      */
     private void showInputCreKeyWordDialog(final String path) {
-        final QMUIDialog.EditTextDialogBuilder builder = new QMUIDialog.EditTextDialogBuilder(this);
+        final CustomDialog.EditDialogBuilder builder = new CustomDialog.EditDialogBuilder(this);
+        final EditText editText = new EditText(this);
+        editText.setHint("请在此输入证书密码：");
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+
         builder.setTitle("证书密码：")
-                .setPlaceholder("请在此输入证书密码：")
-                .setInputType(InputType.TYPE_CLASS_TEXT)
-                .addAction("取消", new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setView(editText)
+//                .setPlaceholder("请在此输入证书密码：")
+//                .setInputType(InputType.TYPE_CLASS_TEXT)
+                .setNegativeButton("取消", (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction("确定", new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        CharSequence text = builder.getEditText().getText();
-                        String key = text.toString().trim();
-                        if (getCertificate(path, key)) {
-                            certificatePassWord = key;
-                            String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
-                            uploadCertificateFile(mail, path, certificatePassWord);
-                            dialog.dismiss();
-                        } else {
-                            Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
-                        }
+                .setPositiveButton("确定", (dialog, index) -> {
+                    CharSequence text = editText.getText();
+                    String key = text.toString().trim();
+                    if (getCertificate(path, key)) {
+                        certificatePassWord = key;
+                        String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+                        uploadCertificateFile(mail, path, certificatePassWord);
+                        dialog.dismiss();
+                    } else {
+                        ToastUtils.show(getBaseContext(), "密码无效或证书有误，请重试");
                     }
                 }).show();
     }
@@ -349,7 +348,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
-            Toast.makeText(getBaseContext(), "证书安装成功", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getBaseContext(), "证书安装成功");
             PreferencesByUsersUtils.putObject(MailCertificateInstallActivity.this, myCertificate, CERTIFICATER_KEY);
             updataCertificateUI(myCertificate);
             super.returnMailCertificateUploadSuccess(arg0);
@@ -357,7 +356,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         @Override
         public void returnMailCertificateUploadFail(String error, int errorCode) {
-            Toast.makeText(getBaseContext(), "证书安装失败", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getBaseContext(), "证书安装失败");
             super.returnMailCertificateUploadFail(error, errorCode);
         }
     }

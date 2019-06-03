@@ -1,14 +1,14 @@
 package com.inspur.imp.plugin.camera;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.Environment;
-import android.util.Base64;
-import android.widget.Toast;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
@@ -16,6 +16,7 @@ import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.imp.api.ImpFragment;
@@ -29,15 +30,14 @@ import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.util.compressor.Compressor;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Environment;
+import android.util.Base64;
 
 
 /**
@@ -212,8 +212,7 @@ public class CameraService extends ImpPlugin {
                 getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST);
             }
         } else {
-            Toast.makeText(getFragmentContext(), Res.getString("invalidSD"),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), Res.getString("invalidSD"));
         }
         File savePath = new File(saveDir);
         if (!savePath.exists()) {

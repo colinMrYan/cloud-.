@@ -26,9 +26,7 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -156,10 +154,10 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showDurationHourChoiceDialog() {
-        new MyQMUIDialog.CheckableSumDialogBuilder(WebexScheduleMeetingActivity.this)
+        new CustomDialog.SingleChoiceDialogBuilder(WebexScheduleMeetingActivity.this)
                 .setTitle(getString(R.string.webex_meeting_duration))
-                .setCheckedIndex(durationHourChoiceIndex)
-                .addItems(durationHourItems, new DialogInterface.OnClickListener() {
+//                .set(durationHourChoiceIndex)
+                .setSingleChoiceItems(durationHourItems, durationHourChoiceIndex, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -171,10 +169,10 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showDurationMinChoiceDialog() {
-        new MyQMUIDialog.CheckableSumDialogBuilder(WebexScheduleMeetingActivity.this)
+        new CustomDialog.SingleChoiceDialogBuilder(WebexScheduleMeetingActivity.this)
                 .setTitle(getString(R.string.webex_meeting_duration))
-                .setCheckedIndex(durationMinChoiceIndex)
-                .addItems(durationMinItems, new DialogInterface.OnClickListener() {
+//                .setCheckedIndex(durationMinChoiceIndex)
+                .setSingleChoiceItems(durationMinItems, durationMinChoiceIndex, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -260,15 +258,11 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showStartDateErrorDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(WebexScheduleMeetingActivity.this)
+        new CustomDialog.MessageDialogBuilder(WebexScheduleMeetingActivity.this)
                 .setTitle(getString(R.string.webex_start_time_error))
                 .setMessage(getString(R.string.webex_start_time_error_info))
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-
-                    }
+                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
+                    dialog.dismiss();
                 })
                 .show();
     }

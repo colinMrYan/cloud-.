@@ -82,7 +82,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class NewsWebDetailActivity extends BaseActivity {
@@ -892,8 +891,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 弹出分享失败toast
      */
     private void showShareFailToast() {
-        Toast.makeText(NewsWebDetailActivity.this,
-                getString(R.string.news_share_fail), Toast.LENGTH_SHORT).show();
+        ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_fail));
     }
 
     /**
@@ -956,9 +954,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             if (fakeMessageId != null && String.valueOf(eventMessage.getId()).equals(fakeMessageId)) {
                 if (eventMessage.getStatus() == 200) {
-                    Toast.makeText(NewsWebDetailActivity.this,
-                            getString(R.string.news_share_success), Toast.LENGTH_SHORT)
-                            .show();
+                    ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_success));
                 } else {
                     showShareFailToast();
                 }
@@ -1057,9 +1053,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            Toast.makeText(NewsWebDetailActivity.this,
-                    getString(R.string.news_share_success), Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_success));
         }
 
         @Override
@@ -1078,9 +1072,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             intrcutionDialog.dismiss();
             groupNews.setEditorCommentCreated(true);
             sendInstructionEvent();
-            Toast.makeText(NewsWebDetailActivity.this,
-                    getString(R.string.news_instructions_success_text), Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_instructions_success_text));
         }
 
         @Override

@@ -1,12 +1,6 @@
 package com.inspur.emmcloud.util.privates.MDM;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.Toast;
+import java.util.ArrayList;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
@@ -14,11 +8,17 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 
-import java.util.ArrayList;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.os.Bundle;
 
 public class MDM extends APIInterfaceInstance {
     private static final int STATUS_NOT_REGISTERED = 0;
@@ -91,8 +91,7 @@ public class MDM extends APIInterfaceInstance {
                 break;
             case STATUS_NOT_REGISTERED:
                 goDeviceRegister();
-                Toast.makeText(context, Res.getStringID("device_not_register"),
-                        Toast.LENGTH_SHORT).show();
+            ToastUtils.show(context, Res.getStringID("device_not_register"));
                 break;
             case STATUS_IN_BLACKLIST:
                 showWraningDlg(STATUS_IN_BLACKLIST);

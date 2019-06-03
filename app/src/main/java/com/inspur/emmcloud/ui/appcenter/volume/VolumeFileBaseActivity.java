@@ -28,10 +28,8 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -197,22 +195,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * @param volumeFile
      */
     protected void showFileDelWranibgDlg(final VolumeFile volumeFile) {
-        new MyQMUIDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
+        new CustomDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
                 .setMessage(R.string.clouddriver_sure_delete_file)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
-                        deleteVolumeFileList.add(volumeFile);
-                        deleteFile(deleteVolumeFileList);
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
+                    deleteVolumeFileList.add(volumeFile);
+                    deleteFile(deleteVolumeFileList);
+                    dialog.dismiss();
                 })
                 .show();
     }

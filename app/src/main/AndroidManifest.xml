@@ -806,6 +806,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.schedule.meeting.MeetingDetailActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.schedule.meeting.MeetingRoomListActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />

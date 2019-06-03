@@ -42,8 +42,7 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -375,12 +374,9 @@ public class MeetingAddActivity extends BaseActivity {
      * 结束时间早于起始时间提醒
      */
     private void showTimeInvalidDlg() {
-        new QMUIDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog qmuiDialog, int i) {
-                        qmuiDialog.dismiss();
-                    }
+        new CustomDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    dialog.dismiss();
                 }).show();
     }
 

@@ -27,10 +27,8 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -230,20 +228,14 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      * @param volume
      */
     protected void showVolumeDelWranibgDlg(final Volume volume) {
-        new MyQMUIDialog.MessageDialogBuilder(ShareVolumeActivity.this)
+        new CustomDialog.MessageDialogBuilder(ShareVolumeActivity.this)
                 .setMessage(R.string.clouddriver_sure_delete_volume)
-                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton(R.string.cancel, (dialog, index) -> {
+                    dialog.dismiss();
                 })
-                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        removeShareVolume(volume);
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(R.string.ok, (dialog, index) -> {
+                    removeShareVolume(volume);
+                    dialog.dismiss();
                 })
                 .show();
     }

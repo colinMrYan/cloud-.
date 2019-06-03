@@ -65,18 +65,18 @@ import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.widget.roundbutton.CustomRoundButton;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
-import com.qmuiteam.qmui.widget.QMUILoadingView;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -130,7 +130,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     @BindView(R.id.robot_photo_img)
     ImageView robotPhotoImg;
     @BindView(R.id.btn_conversation_unread)
-    QMUIRoundButton unreadQMUIRoundBtn;
+    CustomRoundButton unreadRoundBtn;
     private LinearLayoutManager linearLayoutManager;
     private String robotUid = "BOT6004";
     private List<UIMessage> uiMessageList = new ArrayList<>();
@@ -272,9 +272,9 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void setUnReadMessageCount() {
         if (getIntent().hasExtra(EXTRA_UNREAD_MESSAGE)) {
             final List<Message> unReadMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_UNREAD_MESSAGE);
-//            unreadQMUIRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
-            unreadQMUIRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
-            unreadQMUIRoundBtn.setOnClickListener(new View.OnClickListener() {
+//            unreadRoundBtn.setVisibility(unReadMessageList.size() > UNREAD_NUMBER_BORDER ? View.VISIBLE : View.GONE);
+            unreadRoundBtn.setText(getString(R.string.chat_conversation_unread_count, unReadMessageList.size()));
+            unreadRoundBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     List<UIMessage> unReadMessageUIList = UIMessage.MessageList2UIMessageList(unReadMessageList);
@@ -283,7 +283,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     adapter.setMessageList(uiMessageList);
                     adapter.notifyDataSetChanged();
                     msgListView.MoveToPosition(0);
-                    unreadQMUIRoundBtn.setVisibility(View.GONE);
+                    unreadRoundBtn.setVisibility(View.GONE);
                     msgListView.scrollToPosition(0);
                 }
             });
@@ -421,7 +421,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             }
 
             @Override
-            public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView) {
+            public void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, CustomLoadingView downloadLoadingView) {
                 showMediaVoiceReRecognizerPop(uiMessage, bubbleLayout, downloadLoadingView);
             }
 
@@ -610,7 +610,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
     }
 
-    private void showMediaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final QMUILoadingView downloadLoadingView) {
+    private void showMediaVoiceReRecognizerPop(final UIMessage uiMessage, BubbleLayout anchor, final CustomLoadingView downloadLoadingView) {
         View contentView = LayoutInflater.from(this).inflate(R.layout.pop_voice_to_text_view, null);
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         mediaVoiceReRecognizerPop = new PopupWindow(contentView,
@@ -661,7 +661,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         });
     }
 
-    private void voiceToWord(String filePath, final UIMessage uiMessage, final QMUILoadingView downloadLoadingView) {
+    private void voiceToWord(String filePath, final UIMessage uiMessage, final CustomLoadingView downloadLoadingView) {
         if (downloadLoadingView != null) {
             downloadLoadingView.setVisibility(View.VISIBLE);
         }
@@ -1545,8 +1545,8 @@ public class ConversationActivity extends ConversationBaseActivity {
             String operation = context.getResources().getString(operationsId[i]);
             operations[i] = operation;
         }
-        new QMUIDialog.MenuDialogBuilder(context)
-                .addItems(operations, new DialogInterface.OnClickListener() {
+        new CustomDialog.ListDialogBuilder(context)
+                .setItems(operations, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
@@ -1578,8 +1578,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         }
                         dialog.dismiss();
                     }
-                })
-                .create(R.style.QMUI_Dialog).show();
+                }).show();
     }
 
     /**

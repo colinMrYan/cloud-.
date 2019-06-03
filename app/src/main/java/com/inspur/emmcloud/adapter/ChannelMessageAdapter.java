@@ -31,9 +31,9 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
-import com.qmuiteam.qmui.widget.QMUILoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,7 +170,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
-                        message);
+                        message, uiMessage.getMarkDownLinkList());
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 cardContentView = DisplayRegularFileMsg.getView(context,
@@ -317,7 +317,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
         void onMessageResend(UIMessage uiMessage, View view);
 
-        void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, QMUILoadingView downloadLoadingView);
+        void onMediaVoiceReRecognize(UIMessage uiMessage, BubbleLayout bubbleLayout, CustomLoadingView downloadLoadingView);
 
         void onAdapterDataSizeChange();
     }
@@ -329,7 +329,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         public ImageView senderPhotoImgRight;
         public RelativeLayout sendStatusLayout;
         public ImageView sendFailImg;
-        public QMUILoadingView sendingLoadingView;
+        public CustomLoadingView sendingLoadingView;
         public TextView sendTimeText;
         public RelativeLayout cardParentLayout;
         private MyItemClickListener mListener;
@@ -350,7 +350,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                     .findViewById(R.id.iv_sender_photo_right);
             sendStatusLayout = (RelativeLayout) view.findViewById(R.id.rl_send_status);
             sendFailImg = (ImageView) view.findViewById(R.id.iv_send_fail);
-            sendingLoadingView = (QMUILoadingView) view.findViewById(R.id.qlv_sending);
+            sendingLoadingView = (CustomLoadingView) view.findViewById(R.id.qlv_sending);
             sendTimeText = (TextView) view
                     .findViewById(R.id.send_time_text);
             cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);

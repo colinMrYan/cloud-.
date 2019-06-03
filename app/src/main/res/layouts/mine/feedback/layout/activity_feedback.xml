@@ -39,14 +39,14 @@
         android:layout_height="140dp"
         android:layout_below="@id/rl_header"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
         android:background="@drawable/bg_feedback_content"
         android:gravity="top"
         android:hint="@string/feed_back_content_hint"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:paddingTop="14dp"
+        android:paddingRight="15dp"
         android:textSize="16sp" />
 
     <EditText
@@ -55,14 +55,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_feedback_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
         android:background="@drawable/bg_feedback_content"
-        android:maxLines="1"
         android:hint="@string/feed_back_contact_hint"
-        android:paddingBottom="10dp"
+        android:maxLines="1"
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:textSize="16sp" />
 
     <RelativeLayout
@@ -89,24 +89,24 @@
             android:layout_toRightOf="@id/tv_anonymous" />
     </RelativeLayout>
 
-    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+    <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
         android:id="@+id/bt_submit_feedback"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="45dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
+        android:layout_marginBottom="45dp"
         android:elevation="1dp"
         android:gravity="center"
         android:onClick="onClick"
         android:text="@string/feed_back_submit"
         android:textColor="@android:color/white"
         android:textSize="15sp"
-        app:qmui_backgroundColor="#36A5F6"
-        app:qmui_borderWidth="0dp"
-        app:qmui_isRadiusAdjustBounds="true" />
+        app:cus_backgroundColor="#36A5F6"
+        app:cus_borderWidth="0dp"
+        app:cus_isRadiusAdjustBounds="true" />
 
 
 </RelativeLayout>

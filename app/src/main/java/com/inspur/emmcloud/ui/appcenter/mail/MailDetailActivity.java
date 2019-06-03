@@ -42,8 +42,8 @@ import com.inspur.emmcloud.util.privates.cache.MailCacheUtils;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollWebView;
+import com.inspur.emmcloud.widget.ObservableScrollView;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.qmuiteam.qmui.widget.QMUIObservableScrollView;
 
 import android.annotation.TargetApi;
 import android.graphics.Color;
@@ -76,7 +76,7 @@ public class MailDetailActivity extends BaseActivity {
     public static final String EXTRA_MAIL = "extra_mail";
     public static final String EXTRA_MAIL_ID = "extra_mail_id";
     @BindView(R.id.sv_slide_data)
-    QMUIObservableScrollView scrollView;
+    ObservableScrollView scrollView;
     @BindView(R.id.tv_mail_sender)
     TextView senderText;
     @BindView(R.id.tv_mail_receiver_collapse)
@@ -225,9 +225,10 @@ public class MailDetailActivity extends BaseActivity {
             });
         }
 
-        scrollView.addOnScrollChangedListener(new QMUIObservableScrollView.OnScrollChangedListener() {
+
+        scrollView.addOnScrollChangedListener(new ObservableScrollView.OnScrollChangedListener() {
             @Override
-            public void onScrollChanged(QMUIObservableScrollView qmuiObservableScrollView, int i, int i1, int i2, int i3) {
+            public void onScrollChanged(ObservableScrollView observableScrollView, int i, int i1, int i2, int i3) {
                 int oldt = i3;
                 int t = i1;
                 if (oldt > t && oldt - t > 20) {
