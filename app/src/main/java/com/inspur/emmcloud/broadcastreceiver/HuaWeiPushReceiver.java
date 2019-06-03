@@ -1,16 +1,17 @@
 package com.inspur.emmcloud.broadcastreceiver;
 
-import android.app.NotificationManager;
-import android.content.Context;
-import android.os.Bundle;
-
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
+
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Bundle;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -25,8 +26,9 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public void onToken(Context context, String token, Bundle extras) {
-        PushManagerUtils.setPushFlag(context, Constant.HUAWEI_FLAG);
+        PushManagerUtils.getInstance().setPushFlag(context, Constant.HUAWEI_FLAG);
         PreferencesUtils.putString(context, Constant.HUAWEI_PUSH_TOKEN, token);
+        LogUtils.YfcDebug("华为推送获取token成功：" + token);
         PushManagerUtils.getInstance().registerPushId2Emm();
         new ClientIDUtils(context).upload();
         WebSocketPush.getInstance().startWebSocket();

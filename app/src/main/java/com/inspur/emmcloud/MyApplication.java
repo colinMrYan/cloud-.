@@ -1,5 +1,17 @@
 package com.inspur.emmcloud;
 
+import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import org.xutils.x;
+import org.xutils.http.RequestParams;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -66,18 +78,22 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
 import com.oblador.vectoricons.VectorIconsPackage;
 
-import org.xutils.http.RequestParams;
-import org.xutils.x;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
+import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.os.Build;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.support.multidex.MultiDexApplication;
+import android.support.v4.content.LocalBroadcastManager;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 
 /**
@@ -245,13 +261,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public String getUid() {
         return uid;
     }
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
 
     /*************************** http相关 **************************************/
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
+
 
     /**
      * 获取http RequestParams
@@ -357,16 +374,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         DbCacheUtils.initDb(getInstance());
     }
 
-//    /******************************Websocket********************************************/
-//
-//    /**
-//     * 开启websocket推送
-//     */
-//    public void startWebSocket(boolean isForceNew) {
-//        if (isHaveLogin()) {
-//            WebSocketPush.getInstance().startWebSocket(isForceNew);
-//        }
-//    }
 
     /**
      * 删除此用户在此实例的所有db
@@ -611,7 +618,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         }
 
         ImageLoaderConfiguration config = builder.build();
-        L.disableLogging(); // 关闭imageloader的疯狂的log
+        L.writeLogs(false); // 关闭imageloader的疯狂的log
         ImageLoader.getInstance().init(config);
 
     }

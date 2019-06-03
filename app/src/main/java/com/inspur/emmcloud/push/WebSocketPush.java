@@ -132,7 +132,7 @@ public class WebSocketPush {
             return;
         }
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            String pushId = PushManagerUtils.getPushId(MyApplication.getInstance());
+            String pushId = PushManagerUtils.getInstance().getPushId(MyApplication.getInstance());
             if (!pushId.equals("UNKNOWN")) {
                 WebSocketConnect();
             }
@@ -172,7 +172,7 @@ public class WebSocketPush {
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
                     String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
-                    String pushId = PushManagerUtils.getPushId(MyApplication.getInstance());
+                    String pushId = PushManagerUtils.getInstance().getPushId(MyApplication.getInstance());
                     query.put("device.id", uuid);
                     query.put("device.name", deviceName);
                     query.put("device.push", pushId);

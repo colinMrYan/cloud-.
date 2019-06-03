@@ -60,6 +60,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/setting_safe_center"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -93,6 +94,7 @@
                     android:layout_centerVertical="true"
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/settings_language"
                     android:textSize="16sp" />
 
@@ -150,6 +152,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/mine_theme_switch"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
 
@@ -246,6 +249,7 @@
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
                     android:text="@string/settings_clear_cache"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
 
@@ -278,6 +282,7 @@
                     android:layout_centerVertical="true"
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/web_app_auto_rotate"
                     android:textSize="16sp" />
 
@@ -311,6 +316,7 @@
                     android:layout_centerVertical="true"
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/voice_word_setting"
                     android:textSize="16sp" />
 
@@ -377,6 +383,7 @@
                     android:layout_centerVertical="true"
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/run_background"
                     android:textSize="16sp" />
 
@@ -412,6 +419,7 @@
                     android:layout_centerVertical="true"
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:textColor="#333333"
                     android:text="@string/setting_join_experience_plan"
                     android:textSize="16sp" />
 
