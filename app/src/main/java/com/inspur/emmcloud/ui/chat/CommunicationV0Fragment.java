@@ -192,7 +192,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         initView();
         sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();

@@ -127,7 +127,7 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
