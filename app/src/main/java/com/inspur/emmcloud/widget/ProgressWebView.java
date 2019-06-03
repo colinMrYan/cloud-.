@@ -7,7 +7,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 
 public class ProgressWebView extends WebView {
 

@@ -15,10 +15,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -72,8 +72,8 @@
                 android:hint="@string/schedule_task_content_hint"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:textSize="16sp"
-                android:paddingTop="14dp" />
+                android:paddingTop="14dp"
+                android:textSize="16sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -105,10 +105,10 @@
                     app:scv_FrameWidth="0.5dp"
                     app:scv_Gradient="true"
                     app:scv_SegmentPaddingVertical="5dp"
+                    app:scv_SelectedIndex="1"
                     app:scv_TextArray="@array/segment_control_items"
                     app:scv_TextNormalColor="#36A5F6"
-                    app:scv_TextSize="13sp"
-                    app:scv_SelectedIndex="1"/>
+                    app:scv_TextSize="13sp" />
             </RelativeLayout>
 
             <View
@@ -305,6 +305,7 @@
                     android:text="@string/schedule_task_participant_num_0"
                     android:textColor="#888888"
                     android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/iv_task_participant_arrow"
                     android:layout_width="15dp"
@@ -535,7 +536,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rl_attachments_pictures"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:id="@+id/rl_attachments_others"

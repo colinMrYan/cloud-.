@@ -2,20 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/index_root_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <WebView
             android:id="@+id/preload_webview"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="1px"></WebView>
+            android:layout_height="1px"
+            android:visibility="gone"></WebView>
 
         <FrameLayout
             android:id="@+id/realtabcontent"
@@ -30,11 +29,11 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/footer_bg" >
+            android:background="?attr/footer_bg">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <com.inspur.emmcloud.widget.MyFragmentTabHost
                     android:id="@android:id/tabhost"

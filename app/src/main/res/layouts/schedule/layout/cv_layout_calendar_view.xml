@@ -23,8 +23,7 @@
             android:id="@+id/vp_week"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="41dp"
-             />
+            android:layout_marginTop="41dp" />
 
         <View
             android:id="@+id/line"

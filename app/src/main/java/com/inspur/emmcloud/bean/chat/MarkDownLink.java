@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;

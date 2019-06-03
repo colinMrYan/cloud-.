@@ -9,21 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:background="?attr/header_bg">
+
         <TextView
             android:id="@+id/tv_tab_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize_big" />
+
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -110,9 +112,9 @@
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/open_title_list"
-                        android:paddingLeft="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"></android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
 
                 <View
@@ -318,10 +320,12 @@
                             android:textSize="16sp"
                             android:visibility="gone" />
                     </RelativeLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5px"
                         android:background="@color/color_list_divider" />
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -378,10 +382,12 @@
                             android:textSize="16sp"
                             android:visibility="gone" />
                     </RelativeLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5px"
                         android:background="@color/color_list_divider" />
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">

@@ -8,18 +8,19 @@
     app:bl_arrowHeight="8dp"
     app:bl_arrowPosition="16dp"
     app:bl_arrowWidth="18dp"
-    app:bl_cornersRadius="16dp"
     app:bl_bubbleColor="#252628"
+    app:bl_cornersRadius="16dp"
     app:bl_strokeColor="#AAAAAA"
     app:bl_strokeWidth="0.5px">
-<TextView
-    android:id="@+id/tv_pop_title"
-    android:text="@string/voice_to_word"
-    android:paddingRight="18dp"
-    android:paddingLeft="18dp"
-    android:paddingTop="8dp"
-    android:textColor="@color/white"
-    android:paddingBottom="8dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_pop_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:paddingTop="8dp"
+        android:text="@string/voice_to_word"
+        android:textColor="@color/white" />
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>

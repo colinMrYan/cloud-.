@@ -31,10 +31,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -48,6 +48,7 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -69,8 +70,7 @@
                 android:paddingTop="10dp"
                 android:text="@string/meeting_topic_title"
                 android:textColor="#203b4f"
-                android:textSize="17sp"
-                />
+                android:textSize="17sp" />
 
             <com.inspur.emmcloud.widget.ClearEditText
                 android:id="@+id/et_title"
@@ -90,6 +90,7 @@
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
         </RelativeLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5px"
@@ -98,8 +99,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="5dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:paddingRight="5dp">
 
             <TextView
                 android:id="@+id/tv_password_tips"
@@ -112,6 +113,7 @@
                 android:text="@string/password"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
+
             <ImageView
                 android:id="@+id/iv_password_visible"
                 android:layout_width="50dp"
@@ -120,21 +122,22 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@id/et_password"
                 android:layout_centerVertical="true"
-                android:onClick="onClick"
                 android:adjustViewBounds="true"
+                android:onClick="onClick"
                 android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="15dp"
                 android:paddingTop="4dp"
                 android:src="@drawable/icon_no_see_pw" />
+
             <com.inspur.emmcloud.widget.ClearEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@id/tv_password_tips"
                 android:layout_toLeftOf="@id/iv_password_visible"
+                android:layout_toRightOf="@id/tv_password_tips"
                 android:background="@null"
                 android:hint="@string/webex_enter_meeting_password"
                 android:maxLines="1"
@@ -145,6 +148,7 @@
                 android:textSize="17sp" />
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -212,6 +216,7 @@
                 android:text="@string/duration_time"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
+
             <TextView
                 android:id="@+id/tv_duration_min"
                 android:layout_width="wrap_content"
@@ -223,14 +228,15 @@
                 android:paddingTop="10dp"
                 android:textColor="#4a90e2"
                 android:textSize="17sp" />
+
             <TextView
                 android:id="@+id/tv_duration_hour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/tv_duration_min"
                 android:layout_toRightOf="@id/tv_duration_tips"
-                android:onClick="onClick"
                 android:gravity="center"
+                android:onClick="onClick"
                 android:paddingBottom="10dp"
                 android:paddingRight="20dp"
                 android:paddingTop="10dp"
@@ -242,9 +248,9 @@
             android:id="@+id/rl_invite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onClick"
             android:layout_marginTop="10dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:onClick="onClick">
 
             <TextView
                 android:id="@+id/tv_invite_tips"
@@ -264,8 +270,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@id/tv_invite_tips"
                 android:layout_toLeftOf="@+id/iv_arrow_invite"
+                android:layout_toRightOf="@id/tv_invite_tips"
                 android:gravity="right"
                 android:hint="@string/none"
                 android:maxLines="1"
@@ -275,6 +281,7 @@
                 android:singleLine="true"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
+
             <ImageView
                 android:id="@+id/iv_arrow_invite"
                 android:layout_width="15dp"

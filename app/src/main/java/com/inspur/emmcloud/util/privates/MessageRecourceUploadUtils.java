@@ -10,7 +10,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.oss.OssService;
 
 import java.io.File;

@@ -16,41 +16,41 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
         <!--<ImageView-->
-            <!--android:id="@+id/iv_config"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:adjustViewBounds="true"-->
-            <!--android:clickable="true"-->
-            <!--android:onClick="onClick"-->
-            <!--android:paddingBottom="13dp"-->
-            <!--android:paddingLeft="12dp"-->
-            <!--android:paddingRight="15dp"-->
-            <!--android:paddingTop="13dp"-->
-            <!--android:scaleType="fitXY"-->
-            <!--android:src="@drawable/ic_config" />-->
+        <!--android:id="@+id/iv_config"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:clickable="true"-->
+        <!--android:onClick="onClick"-->
+        <!--android:paddingBottom="13dp"-->
+        <!--android:paddingLeft="12dp"-->
+        <!--android:paddingRight="15dp"-->
+        <!--android:paddingTop="13dp"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:src="@drawable/ic_config" />-->
 
         <ImageView
             android:id="@+id/iv_config"
             android:layout_width="43dp"
             android:layout_height="match_parent"
-            android:paddingRight="16dp"
-            android:paddingLeft="5dp"
-            android:onClick="onClick"
-            android:tint="?attr/header_text_color"
             android:layout_alignParentRight="true"
             android:clickable="true"
+            android:onClick="onClick"
+            android:paddingLeft="5dp"
+            android:paddingRight="16dp"
             android:scaleType="centerInside"
-            android:src="?attr/ic_config" />
+            android:src="?attr/ic_config"
+            android:tint="?attr/header_text_color" />
 
         <TextView
             android:id="@+id/header_text"
@@ -74,8 +74,7 @@
             android:layout_height="45dp"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout

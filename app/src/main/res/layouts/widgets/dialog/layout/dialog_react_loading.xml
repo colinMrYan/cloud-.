@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="50dp"
     android:layout_height="50dp"
-    android:gravity="center"
     android:background="@drawable/shape_dialog_react_loading"
+    android:gravity="center"
     android:orientation="vertical">
 
     <ProgressBar

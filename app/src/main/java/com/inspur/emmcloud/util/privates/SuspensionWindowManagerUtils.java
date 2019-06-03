@@ -13,8 +13,8 @@ import android.widget.Chronometer;
 import android.widget.ImageButton;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
 
 /**
  * 悬浮窗管理类封装

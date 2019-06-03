@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    
- <!-- 边框颜色 -->
+
+    <!-- 边框颜色 -->
     <solid android:color="#eeeeee" />
- <!-- 填充色 -->
+    <!-- 填充色 -->
 
 </shape>

@@ -3,11 +3,11 @@ package com.inspur.imp.plugin.emm;
 import android.os.Build;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.imp.plugin.ImpPlugin;

@@ -14,10 +14,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -49,9 +49,9 @@
 
             <com.inspur.emmcloud.widget.NoScrollGridView
                 android:id="@+id/gv_member"
-                android:background="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white"
                 android:horizontalSpacing="18dp"
                 android:listSelector="@android:color/transparent"
                 android:numColumns="5"
@@ -154,18 +154,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/color_list_divider" />
+
             <LinearLayout
                 android:id="@+id/ll_write_group"
-                android:orientation="vertical"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="10dp"
-                    android:paddingTop="15dp"
                     android:paddingLeft="15dp"
+                    android:paddingTop="15dp"
                     android:text="@string/clouddriver_upload_permission"
                     android:textColor="#666666"
                     android:textSize="15sp" />
@@ -173,27 +175,27 @@
 
                 <com.inspur.emmcloud.widget.ScrollViewWithListView
                     android:id="@+id/slv_write_group"
-                    android:background="@android:color/white"
-                    android:dividerHeight="0dp"
-                    android:divider="@null"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_group_watch"
-                android:orientation="vertical"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="10dp"
-                    android:paddingTop="15dp"
                     android:paddingLeft="15dp"
+                    android:paddingTop="15dp"
                     android:text="@string/clouddriver_watch_permission"
                     android:textColor="#666666"
                     android:textSize="15sp" />
@@ -201,12 +203,11 @@
 
                 <com.inspur.emmcloud.widget.ScrollViewWithListView
                     android:id="@+id/slv_read_group"
-                    android:background="@android:color/white"
-                    android:dividerHeight="0dp"
-                    android:divider="@null"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             </LinearLayout>
         </LinearLayout>

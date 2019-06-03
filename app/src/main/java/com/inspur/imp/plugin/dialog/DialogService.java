@@ -1,18 +1,18 @@
 package com.inspur.imp.plugin.dialog;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.imp.api.Res;
-import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.util.StrUtil;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.imp.api.Res;
+import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.util.StrUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 设置消息提示框类

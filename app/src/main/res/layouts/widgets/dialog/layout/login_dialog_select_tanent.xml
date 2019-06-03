@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="#ffffff"
     android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,15 +28,15 @@
         android:scrollbarSize="4dp"
         android:scrollbarStyle="insideInset"
         android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
-        android:scrollbars="vertical">
-    </com.inspur.emmcloud.widget.MaxHeightListView>
+        android:scrollbars="vertical"></com.inspur.emmcloud.widget.MaxHeightListView>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.6dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="#D3DFEF">
-    </View>
+        android:background="#D3DFEF"></View>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,6 +45,7 @@
         android:paddingLeft="36dp"
         android:paddingRight="20dp"
         android:paddingTop="10dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,13 +54,13 @@
             android:text="@string/auto_select_enterprise"
             android:textColor="#333333"
             android:textSize="16sp" />
+
         <com.inspur.emmcloud.widget.SwitchView
             android:id="@+id/auto_select_switch"
             android:layout_width="37dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" >
-        </com.inspur.emmcloud.widget.SwitchView>
+            android:layout_centerVertical="true"></com.inspur.emmcloud.widget.SwitchView>
 
     </RelativeLayout>
 </LinearLayout>

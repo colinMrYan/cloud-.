@@ -13,12 +13,13 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -98,18 +99,18 @@
 
             <RelativeLayout
                 android:id="@+id/rl_mail_password_visible"
-                android:layout_below="@id/tv_mail_password_tips"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_mail_password_tips">
 
                 <TextView
                     android:id="@+id/tv_mail_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_toLeftOf="@+id/ibt_mail_password_visible"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:textColor="#666666"
                     android:textSize="16sp" />
 
@@ -130,6 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#C8C7CC" />
+
         <RelativeLayout
             android:id="@+id/rl_mail_cert"
             android:layout_width="match_parent"
@@ -148,16 +150,15 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_mail_cert_tips"
-                >
+                android:layout_below="@id/tv_mail_cert_tips">
 
                 <TextView
                     android:id="@+id/tv_cert"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="10dp"
                     android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:text="证书管理"
                     android:textColor="#666666"
                     android:textSize="16sp" />
@@ -166,8 +167,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
                     android:onClick="onClick"
                     android:padding="5dp"
                     android:scaleType="fitXY"
@@ -180,6 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#C8C7CC" />
+
         <RelativeLayout
             android:id="@+id/rl_mail_account_manager"
             android:layout_width="match_parent"
@@ -200,8 +202,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_mail_account_manager_tips"
                 android:layout_marginTop="10dp"
-                android:paddingBottom="10dp"
                 android:onClick="onClick"
+                android:paddingBottom="10dp"
                 android:text="删除账号"
                 android:textColor="#FF0000"
                 android:textSize="16sp" />

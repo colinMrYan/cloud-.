@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <!-- 头部-->
     <RelativeLayout
@@ -14,10 +14,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -26,8 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="写邮件"
             android:paddingLeft="5dp"
+            android:text="写邮件"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 
@@ -42,17 +42,16 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:visibility="gone"
             android:text="设置"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize"/>
+            android:textSize="@dimen/header_function_textsize"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_add_attachments"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:visibility="gone"
             android:layout_toLeftOf="@+id/tv_send_mail"
             android:clickable="true"
             android:gravity="center_vertical"
@@ -61,7 +60,8 @@
             android:paddingRight="12dp"
             android:text="附件"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize"/>
+            android:textSize="@dimen/header_function_textsize"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_send_mail"
@@ -76,14 +76,15 @@
             android:paddingRight="12dp"
             android:text="发送"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize"/>
+            android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
 
     <ScrollView
-        android:layout_below="@id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/rl_header"
         android:paddingBottom="10dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,227 +95,248 @@
                 android:id="@+id/rl_recipients_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <RelativeLayout
                     android:id="@+id/rl_recipients"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp">
+
                     <TextView
                         android:id="@+id/tv_recipients_tip"
-                        android:text="收件人："
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:textSize="15sp"/>
+                        android:text="收件人："
+                        android:textSize="15sp" />
+
                     <com.inspur.emmcloud.widget.RichEdit
                         android:id="@+id/rich_edit_recipients"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/tv_recipients_tip"
-                        android:layout_toLeftOf="@+id/iv_recipients"
-                        android:lineSpacingExtra="5dp"
-                        android:background="@null"
-                        android:textSize="15sp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"/>
-                    <TextView
-                        android:id="@+id/tv_recipients_show"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/tv_recipients_tip"
-                        android:layout_toLeftOf="@+id/iv_recipients"
-                        android:background="@null"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:onClick="onClick"
-                        android:textSize="15sp"
-                        android:textColor="#2788CF"
+                        android:layout_toLeftOf="@+id/iv_recipients"
+                        android:layout_toRightOf="@id/tv_recipients_tip"
+                        android:background="@null"
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tv_recipients_show"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/iv_recipients"
+                        android:layout_toRightOf="@id/tv_recipients_tip"
+                        android:background="@null"
                         android:ellipsize="end"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:onClick="onClick"
+                        android:textColor="#2788CF"
+                        android:textSize="15sp"
+                        android:visibility="gone" />
+
                     <ImageView
                         android:id="@+id/iv_recipients"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:onClick="onClick"
-                        android:background="@drawable/ic_mail_add_contacts"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_mail_add_contacts"
+                        android:onClick="onClick" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
-                    android:layout_marginTop="12dp"
                     android:layout_height="0.5sp"
-                    android:background="#C8C7CC"
+                    android:layout_below="@id/rl_recipients"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:layout_below="@id/rl_recipients"></View>
+                    android:layout_marginTop="12dp"
+                    android:background="#C8C7CC"></View>
             </RelativeLayout>
 
             <!-- 邮件抄送人-->
             <RelativeLayout
                 android:id="@+id/rl_cc_all"
-                android:layout_below="@id/rl_recipients_all"
-                android:paddingTop="12dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_recipients_all"
+                android:paddingTop="12dp">
+
                 <RelativeLayout
                     android:id="@+id/rl_cc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp">
+
                     <TextView
                         android:id="@+id/tv_cc_tip"
-                        android:text="抄送人："
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:textSize="15sp"/>
+                        android:text="抄送人："
+                        android:textSize="15sp" />
+
                     <com.inspur.emmcloud.widget.RichEdit
                         android:id="@+id/rich_edit_cc_recipient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        android:layout_toLeftOf="@+id/iv_cc_recipients"
-                        android:layout_toRightOf="@id/tv_cc_tip"
-                        android:lineSpacingExtra="5dp"
-                        android:background="@null"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp" />
-                    <TextView
-                        android:id="@+id/tv_cc_recipient_show"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        android:textColor="#2788CF"
-                        android:layout_toLeftOf="@+id/iv_cc_recipients"
-                        android:layout_toRightOf="@id/tv_cc_tip"
-                        android:background="@null"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/iv_cc_recipients"
+                        android:layout_toRightOf="@id/tv_cc_tip"
+                        android:background="@null"
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tv_cc_recipient_show"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@+id/iv_cc_recipients"
+                        android:layout_toRightOf="@id/tv_cc_tip"
+                        android:background="@null"
                         android:ellipsize="end"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:textColor="#2788CF"
+                        android:textSize="15sp"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/iv_cc_recipients"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:onClick="onClick"
-                        android:background="@drawable/ic_mail_add_contacts"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_mail_add_contacts"
+                        android:onClick="onClick" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5sp"
-                    android:background="#C8C7CC"
-                    android:layout_marginTop="12dp"
+                    android:layout_below="@id/rl_cc"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:layout_below="@id/rl_cc"></View>
+                    android:layout_marginTop="12dp"
+                    android:background="#C8C7CC"></View>
             </RelativeLayout>
 
             <!-- 邮件发件人-->
             <RelativeLayout
                 android:id="@+id/rl_sender_all"
-                android:layout_below="@id/rl_cc_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/rl_cc_all"
                 android:paddingTop="12dp"
                 android:visibility="gone">
+
                 <RelativeLayout
                     android:id="@+id/rl_sender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
                     android:layout_marginBottom="12dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp">
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="30dp">
+
                     <TextView
                         android:id="@+id/tv_sender_tip"
-                        android:text="发件人："
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:textSize="16sp"/>
+                        android:text="发件人："
+                        android:textSize="16sp" />
+
                     <EditText
                         android:id="@+id/et_sender"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true"
+                        android:background="@null" />
+
                     <ImageView
                         android:id="@+id/iv_senders"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:background="@drawable/ic_mail_add_contacts"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_mail_add_contacts" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="0.5sp"
-                    android:background="#C8C7CC"
-                    android:layout_marginTop="12dp"
+                    android:layout_below="@id/rl_sender"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:layout_below="@id/rl_sender"></View>
+                    android:layout_marginTop="12dp"
+                    android:background="#C8C7CC"
+                    android:visibility="gone"></View>
             </RelativeLayout>
 
             <!-- 邮件主题-->
             <RelativeLayout
                 android:id="@+id/rl_sender_theme_all"
-                android:layout_below="@id/rl_sender_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/rl_sender_all"
                 android:paddingTop="12dp">
+
                 <RelativeLayout
                     android:id="@+id/rl_theme_sender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp">
+                    android:layout_marginRight="15dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
+
                     <TextView
                         android:id="@+id/tv_theme_tip"
-                        android:text="主&#12288;题："
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:textSize="15sp"/>
+                        android:text="主&#12288;题："
+                        android:textSize="15sp" />
+
                     <EditText
                         android:id="@+id/et_theme_send"
-                        android:layout_toRightOf="@id/tv_theme_tip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/tv_theme_tip"
+                        android:background="@null"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
-                        android:textSize="15sp"
-                        android:background="@null"
-                        android:layout_centerVertical="true"/>
+                        android:textSize="15sp" />
+
                     <ImageView
                         android:id="@+id/iv_theme_senders"
-                        android:visibility="gone"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:onClick="onClick"
-                        android:background="@drawable/ic_mail_add_contacts"
                         android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_mail_add_contacts"
+                        android:onClick="onClick"
+                        android:visibility="gone" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5sp"
-                    android:background="#C8C7CC"
-                    android:layout_marginTop="12dp"
+                    android:layout_below="@id/rl_theme_sender"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:layout_below="@id/rl_theme_sender"></View>
+                    android:layout_marginTop="12dp"
+                    android:background="#C8C7CC"></View>
             </RelativeLayout>
 
             <!-- 邮件内容编写-->
@@ -323,16 +345,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_sender_theme_all"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp">
+
                 <EditText
                     android:id="@+id/et_content_send"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:background="@null"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
             </RelativeLayout>
 
             <!-- 邮件转发内容-->
@@ -341,46 +364,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rl_content_send"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp">
 
                 <ImageView
                     android:id="@+id/iv_fw_tip"
-                    android:visibility="gone"
                     android:layout_width="46dp"
                     android:layout_height="23dp"
                     android:background="@drawable/bg_corner"
                     android:onClick="onClick"
                     android:padding="2dp"
                     android:src="@drawable/ic_mail_include_tip"
-                    android:textColor="#151515" />
+                    android:textColor="#151515"
+                    android:visibility="gone" />
+
                 <RelativeLayout
                     android:id="@+id/rl_fw_body"
-                    android:visibility="gone"
-                    android:layout_marginTop="5dp"
-                    android:layout_below="@id/iv_fw_tip"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/iv_fw_tip"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone">
+
                     <View
                         android:id="@+id/v_include_topLine"
                         android:layout_width="match_parent"
                         android:layout_height="0.5sp"
                         android:background="#C8C7CC"></View>
+
                     <CheckBox
                         android:id="@+id/cb_fw_body"
-                        android:layout_below="@id/v_include_topLine"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:layout_below="@id/v_include_topLine"
                         android:checked="true"
-                        android:text="包含引用文字"/>
+                        android:text="包含引用文字"
+                        android:textSize="16sp" />
+
                     <com.inspur.emmcloud.widget.NoScrollWebView
                         android:id="@+id/wv_body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/cb_fw_body">
-                    </com.inspur.emmcloud.widget.NoScrollWebView>
+                        android:layout_below="@id/cb_fw_body"></com.inspur.emmcloud.widget.NoScrollWebView>
                 </RelativeLayout>
             </RelativeLayout>
 

@@ -7,13 +7,13 @@
     android:paddingBottom="17dp"
     android:paddingLeft="18dp"
     android:paddingRight="13dp"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp">
 
     <RelativeLayout
         android:id="@+id/find_report_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/find_report_logo"
@@ -30,7 +30,7 @@
             android:layout_marginLeft="21dp"
             android:layout_toRightOf="@id/find_report_logo"
             android:gravity="center_vertical"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/find_report_title"
@@ -45,9 +45,10 @@
                 android:id="@+id/find_time_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 android:layout_marginTop="9dp"
+                android:layout_marginTop="9dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/find_report_time_text"
                     android:layout_width="wrap_content"

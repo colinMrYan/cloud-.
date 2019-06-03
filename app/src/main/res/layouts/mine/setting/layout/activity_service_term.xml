@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true"
-     >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -14,10 +13,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -36,32 +35,32 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
-        android:background="@color/content_bg"
-         >
+        android:background="@color/content_bg">
 
         <LinearLayout
-            android:padding="15dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
-            <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:paddingBottom="10dp"
-            android:visibility="gone"
-            android:text="@string/software_service_term"
-            android:textSize="@dimen/header_textsize" />
+            android:padding="15dp">
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/license_agreement"
-            android:textSize="@dimen/content_normal_textsize" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:text="@string/software_service_term"
+                android:textSize="@dimen/header_textsize"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/license_agreement"
+                android:textSize="@dimen/content_normal_textsize" />
         </LinearLayout>
 
-        
+
     </ScrollView>
 
 </RelativeLayout>

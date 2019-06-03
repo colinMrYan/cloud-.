@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/scan_result_color" >
+        android:background="@color/scan_result_color">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -19,7 +18,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
+            android:paddingRight="12dp">
 
             <ImageView
                 android:id="@+id/back_btn"
@@ -27,18 +26,19 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:background="@null"
-                android:visibility="gone"
                 android:paddingRight="5dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_back_btn_blue" />
+                android:src="@drawable/ic_back_btn_blue"
+                android:visibility="gone" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"
-                android:textSize="@dimen/content_title_textsize"
-                android:textColor="@color/comment_file_color"
                 android:gravity="center_vertical"
-                android:text="@string/close"/>
+                android:text="@string/close"
+                android:textColor="@color/comment_file_color"
+                android:textSize="@dimen/content_title_textsize" />
         </RelativeLayout>
 
 
@@ -51,40 +51,42 @@
         android:layout_below="@id/rl_header"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="109dp"
-        android:src="@drawable/icon_default"/>
+        android:src="@drawable/icon_default" />
+
     <TextView
         android:id="@+id/scan_login_desktop_sys_type_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:layout_below="@id/scan_login_desktop_sys_img"
-        android:textSize="17sp"
-        android:textColor="@color/normal_day"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
         android:gravity="center"
         android:text="Windows云＋登录确认"
-        android:layout_centerHorizontal="true"/>
-    
+        android:textColor="@color/normal_day"
+        android:textSize="17sp" />
+
     <Button
         android:id="@+id/scan_login_desktop_button"
         android:layout_width="135dp"
         android:layout_height="32dp"
         android:layout_below="@id/rl_header"
-        android:background="@drawable/shape_stroke_blue_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="433dp"
+        android:background="@drawable/shape_stroke_blue_layout"
         android:onClick="onClick"
-        android:textColor="@color/comment_file_color"
-        android:text="登录"/>
+        android:text="登录"
+        android:textColor="@color/comment_file_color" />
+
     <Button
         android:id="@+id/scan_cancle_login_desktop_button"
         android:layout_width="135dp"
         android:layout_height="32dp"
-        android:layout_marginTop="33dp"
-        android:onClick="onClick"
-        android:background="@null"
         android:layout_below="@id/scan_login_desktop_button"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/app_dialog_title_color"
-        android:text="取消登录"/>
+        android:layout_marginTop="33dp"
+        android:background="@null"
+        android:onClick="onClick"
+        android:text="取消登录"
+        android:textColor="@color/app_dialog_title_color" />
 
 </RelativeLayout>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.inspur.emmcloud.widget.bubble.BubbleLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bl_card"
     android:layout_width="wrap_content"
@@ -9,13 +8,15 @@
     app:bl_arrowDirection="right"
     app:bl_arrowHeight="10dp"
     app:bl_arrowPosition="16dp"
-    app:bl_cornersRadius="8dp"
     app:bl_arrowWidth="4.5dp"
+    app:bl_cornersRadius="8dp"
     app:bl_strokeColor="#AAAAAA"
     app:bl_strokeWidth="0.5px">
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/tv_name_tips"
             android:layout_width="wrap_content"

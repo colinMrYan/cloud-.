@@ -3,9 +3,9 @@
 
     <!-- 网络状态 -->
     <string name="app_network_disconnected">The network is not connected！</string>
-    
-  	<!-- 应用管理 -->
-  	<string name="app_downloading">Downloading</string>
+
+    <!-- 应用管理 -->
+    <string name="app_downloading">Downloading</string>
     <string name="app_begin_download">Start download</string>
     <string name="app_download_failed">Download failed！</string>
     <string name="app_download_success">Download success！</string>

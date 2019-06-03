@@ -8,13 +8,13 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
@@ -188,7 +188,7 @@ public class JpushReceiver extends BroadcastReceiver {
 //
 //                    }
 //                } else
-                    if (extraObj.has("action")) {//用scheme打开相应的页面
+                if (extraObj.has("action")) {//用scheme打开相应的页面
                     openScheme(context, extraObj);
                 } else if (extraObj.has("channel")) {
                     String cid = JSONUtils.getString(extraObj, "channel", "");

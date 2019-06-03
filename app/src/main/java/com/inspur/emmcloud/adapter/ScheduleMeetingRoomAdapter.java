@@ -13,9 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
-import com.inspur.emmcloud.util.common.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;

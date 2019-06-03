@@ -1,33 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
-import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +9,34 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.util.privates.SuspensionWindowManagerUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.VoiceCommunicationUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

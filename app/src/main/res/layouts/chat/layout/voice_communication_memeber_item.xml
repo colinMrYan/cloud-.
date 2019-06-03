@@ -18,13 +18,13 @@
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         android:textSize="12sp" />
+
     <com.inspur.emmcloud.widget.CircleTextImageView
         android:id="@+id/img_voice_signal"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_alignBottom="@id/img_voice_communication_member_head"
-        android:layout_alignRight="@id/img_voice_communication_member_head"
-        />
+        android:layout_alignRight="@id/img_voice_communication_member_head" />
 
     <com.wang.avi.AVLoadingIndicatorView
         android:id="@+id/avi_voice_communication"
@@ -35,6 +35,5 @@
         android:layout_marginTop="20dp"
         android:visibility="gone"
         app:indicatorColor="#ffffff"
-        app:indicatorName="BallPulseIndicator"
-        />
+        app:indicatorName="BallPulseIndicator" />
 </RelativeLayout>

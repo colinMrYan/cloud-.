@@ -1,28 +1,24 @@
 package com.inspur.emmcloud.interf;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.service.PVCollectService;
-import com.inspur.emmcloud.service.SyncCommonAppService;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.SchemeHandleActivity;
-import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
-import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
-import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.AppBadgeUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
-import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
+import com.inspur.emmcloud.componentservice.setting.SettingService;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.util.privates.AppBadgeUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.luojilab.component.componentlib.router.Router;
 
 /**
  * Created by chenmch on 2017/9/13.
@@ -32,7 +28,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     private int count = 0;
     private Activity currentActivity;
-    private WebService webService = new WebService();
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -41,44 +36,22 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityStarted(Activity activity) {
-        MyApplication.getInstance().setEnterSystemUI(false);
         currentActivity = activity;
-        count++;
-        //检查是否有必要权限，如果有则继续下面逻辑，如果没有则转到MainActivity
-        // if (isLackNecessaryPermission()) {
-        // return;
-        // }
-        //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
-        if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance().isIndexActivityRunning()) {
+        if (count == 0) {
             MyApplication.getInstance().setIsActive(true);
-            //当用通知打开特定Activity或者第一个打开的是SchemeActivity时，此处不作处理，交由SchemeActivity处理
-            if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
-                showSafeVerificationPage();
+            if (MyApplication.getInstance().isHaveLogin()) {
+                long appBackgroundTime = PreferencesUtils.getLong(MyApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
+                //进入后台后重新进入应用需要间隔3分钟以上才弹出二次验证
+                if (System.currentTimeMillis() - appBackgroundTime >= 180000) {
+                    showFaceOrGestureLock();
+                }
+                uploadMDMInfo();
+                new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
             }
-            uploadMDMInfo(activity);
-            new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
         }
-        //防止应用防止时间很久，Application被销毁后isActive变量被置为默认false
-        if (activity instanceof IndexActivity) {
-            MyApplication.getInstance().setIsActive(true);
-        }
-    }
+        count++;
 
-    // private boolean isLackNecessaryPermission() {
-    // //如果没有存储权限则跳转到MainActivity进行处理
-    // String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new
-    // String[]{Permissions.READ_PHONE_STATE});
-    // if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(),
-    // necessaryPermissionArray)) {
-    // if (!(currentActivity instanceof MainActivity || currentActivity instanceof EmmPermissionActivity)) {
-    // Intent intent = new Intent(currentActivity, MainActivity.class);
-    // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-    // currentActivity.startActivity(intent);
-    // }
-    // return true;
-    // }
-    // return false;
-    // }
+    }
 
 
     @Override
@@ -92,12 +65,16 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     @Override
     public void onActivityStopped(Activity activity) {
         count--;
-        if (count == 0 && !MyApplication.getInstance().isEnterSystemUI()) { // app 进入后台
+        if (count == 0) { // app 进入后台
+            PreferencesUtils.putLong(MyApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
             MyApplication.getInstance().setIsActive(false);
-            startUploadPVCollectService(MyApplication.getInstance());
-            startSyncCommonAppService(MyApplication.getInstance());
-            new ClientIDUtils(MyApplication.getInstance()).upload();
             WebSocketPush.getInstance().closeWebsocket();
+            if (MyApplication.getInstance().isHaveLogin()) {
+                startUploadPVCollectService(MyApplication.getInstance());
+                startSyncCommonAppService();
+                new ClientIDUtils(MyApplication.getInstance()).upload();
+            }
+
         }
     }
 
@@ -112,10 +89,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         MyApplication.getInstance().removeActivity(activity);
     }
 
-    public int getCount() {
-        return count;
-    }
-
     public Activity getCurrentActivity() {
         return currentActivity;
     }
@@ -123,42 +96,30 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     /**
      * 弹出进入app安全验证界面
      */
-    private void showSafeVerificationPage() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(MyApplication.getInstance())) {
-                    Intent intent = new Intent(currentActivity, FaceVerifyActivity.class);
-                    intent.putExtra("isFaceVerifyExperience", false);
-                    currentActivity.startActivity(intent);
-                } else if (getIsNeedGestureCode(MyApplication.getInstance())) {
-                    Intent intent = new Intent(currentActivity, GestureLoginActivity.class);
-                    intent.putExtra("gesture_code_change", "login");
-                    currentActivity.startActivity(intent);
-                }
+    private void showFaceOrGestureLock() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class.getSimpleName()) != null) {
+            SettingService settingService = (SettingService) router.getService(SettingService.class.getSimpleName());
+            boolean isSetFaceOrGestureLock = settingService.isSetFaceOrGestureLock();
+            if (isSetFaceOrGestureLock) {
+                MyApplication.getInstance().setSafeLock(true);
+                new Handler().postDelayed(() -> {
+                    settingService.showFaceOrGestureLock();
+                }, 200);
             }
-        }, 200);
-    }
 
-    /**
-     * 判断收需要打开手势解锁
-     *
-     * @return
-     */
-    private boolean getIsNeedGestureCode(Context context) {
-        return CreateGestureActivity.getGestureCodeIsOpenByUser(context);
+        }
     }
 
     /**
      * 上传MDM需要的设备信息
      */
-    private void uploadMDMInfo(Context context) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            AppAPIService appAPIService = new AppAPIService(context);
-            appAPIService.setAPIInterface(webService);
-            appAPIService.uploadMDMInfo();
+    private void uploadMDMInfo() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class.getSimpleName()) != null) {
+            SettingService settingService = (SettingService) router.getService(SettingService.class.getSimpleName());
+            settingService.uploadMDMInfo();
         }
-
     }
 
     /***
@@ -177,21 +138,14 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     /***
      * 打开同步常用应用Service;
      */
-    private void startSyncCommonAppService(Context context) {
+    private void startSyncCommonAppService() {
         // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(context, SyncCommonAppService.class.getName()) && (!DbCacheUtils.isDbNull())) {
-            Intent intent = new Intent();
-            intent.setClass(context, SyncCommonAppService.class);
-            context.startService(intent);
+        Router router = Router.getInstance();
+        if (router.getService(AppcenterService.class.getSimpleName()) != null) {
+            AppcenterService service = (AppcenterService) router.getService(AppcenterService.class.getSimpleName());
+            service.startSyncCommonAppService();
         }
     }
 
 
-    private class WebService extends APIInterfaceInstance {
-
-//        @Override
-//        public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
-//            PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, uploadMDMInfoResult.getDoubleValidation());
-//        }
-    }
 }

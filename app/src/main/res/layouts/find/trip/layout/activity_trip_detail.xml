@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -13,10 +13,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -51,23 +51,23 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg"
-        android:scrollbars="none" >
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingLeft="15dp" >
+                android:paddingLeft="15dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_date_title"
@@ -86,8 +86,8 @@
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/trip_date_title"
                         android:background="@null"
-                        android:onClick="onClick"
                         android:clickable="true"
+                        android:onClick="onClick"
                         android:paddingBottom="10dp"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
@@ -95,16 +95,16 @@
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#FFCDCDCD" />
 
-                
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_from_title"
@@ -130,20 +130,21 @@
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#FFCDCDCD" />
-                
+
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_from_city"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                       android:hint="@string/trip_date"
+                        android:hint="@string/trip_date"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/start_city"
@@ -163,16 +164,16 @@
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#FFCDCDCD" />
 
-                
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_destination_title"
@@ -198,15 +199,16 @@
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
-                
+
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#FFCDCDCD" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_destination_city"
@@ -232,6 +234,7 @@
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
@@ -239,13 +242,13 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_start_time_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                       android:hint="@string/trip_date"
+                        android:hint="@string/trip_date"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/meeting_start_time"
@@ -258,12 +261,12 @@
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/trip_start_time_title"
                         android:background="@null"
+                        android:clickable="true"
+                        android:onClick="onClick"
                         android:paddingBottom="10dp"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
                         android:singleLine="true"
-                        android:onClick="onClick"
-                        android:clickable="true"
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
@@ -273,9 +276,9 @@
                     android:layout_height="0.5dp"
                     android:background="#FFCDCDCD" />
 
-                     <RelativeLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_arrive_date_title"
@@ -294,8 +297,8 @@
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/trip_arrive_date_title"
                         android:background="@null"
+                        android:clickable="true"
                         android:onClick="onClick"
-                         android:clickable="true"
                         android:paddingBottom="10dp"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
@@ -303,13 +306,15 @@
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
-                  <View
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#FFCDCDCD" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_arrive_time_title"
@@ -328,12 +333,12 @@
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/trip_arrive_time_title"
                         android:background="@null"
+                        android:clickable="true"
+                        android:onClick="onClick"
                         android:paddingBottom="10dp"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
                         android:singleLine="true"
-                        android:onClick="onClick"
-                        android:clickable="true"
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
@@ -345,7 +350,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_train_id_title"
@@ -379,7 +384,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_seat_id_title"
@@ -413,11 +418,11 @@
                 android:layout_marginTop="20dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:paddingLeft="15dp" >
+                android:paddingLeft="15dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_rider_title"
@@ -436,12 +441,12 @@
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/trip_rider_title"
                         android:background="@null"
+                        android:clickable="true"
+                        android:onClick="onClick"
                         android:paddingBottom="10dp"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
                         android:singleLine="true"
-                        android:clickable="true"
-                        android:onClick="onClick"
                         android:textColor="#FF333333"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
@@ -453,7 +458,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_order_num_title"
@@ -487,7 +492,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/trip_cost_title"
@@ -506,12 +511,12 @@
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/trip_cost_title"
                         android:background="@null"
+                        android:numeric="decimal"
                         android:paddingBottom="10dp"
                         android:paddingLeft="30dp"
                         android:paddingTop="10dp"
                         android:singleLine="true"
                         android:textColor="#FF333333"
-                        android:numeric="decimal"
                         android:textSize="@dimen/content_title_textsize" />
                 </RelativeLayout>
             </LinearLayout>

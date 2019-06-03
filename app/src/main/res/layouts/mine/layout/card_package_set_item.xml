@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/color_list_divider"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:background="@color/color_list_divider" />
+
     <TextView
         android:id="@+id/tv_card_package_set_item"
         android:layout_width="match_parent"
@@ -15,10 +16,10 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/switch_card_package_set_item"
         android:ellipsize="end"
-        android:singleLine="true"
+        android:paddingBottom="10dp"
         android:paddingLeft="12dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:singleLine="true"
         android:textSize="@dimen/header_textsize" />
 
     <com.inspur.emmcloud.widget.SwitchView

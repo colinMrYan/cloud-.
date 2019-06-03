@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    
-  	<!-- 網路狀態 -->
+
+    <!-- 網路狀態 -->
     <string name="filetransfer_network_disconnected">網路未連接！</string>
-    
+
     <!-- 應用管理 -->
     <string name="filetransfer_downloading">正在下載</string>
     <string name="filetransfer_begin_download">開始下載</string>

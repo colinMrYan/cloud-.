@@ -1,44 +1,5 @@
 package com.inspur.emmcloud.ui.contact;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
-import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
-import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.EditTextUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.FlowLayout;
-import com.inspur.emmcloud.widget.MaxHightScrollView;
-import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
@@ -62,6 +23,45 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.EditTextUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.bean.chat.Channel;
+import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
+import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.InputMethodUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
+import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.widget.CircleTextImageView;
+import com.inspur.emmcloud.widget.FlowLayout;
+import com.inspur.emmcloud.widget.MaxHightScrollView;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRefreshLayout.OnLoadListener {
     public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";

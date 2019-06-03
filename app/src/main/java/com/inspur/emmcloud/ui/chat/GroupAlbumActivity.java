@@ -1,33 +1,33 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.GroupAlbumAdapter;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.util.common.GroupUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.GroupAlbumAdapter;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.GroupUtils;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
+
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

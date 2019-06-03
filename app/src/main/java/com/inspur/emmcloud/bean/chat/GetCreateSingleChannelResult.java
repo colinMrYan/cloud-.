@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean.chat;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import org.json.JSONArray;

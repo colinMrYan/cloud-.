@@ -3,7 +3,7 @@
     android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/plugin_share_weixin_bg_transparent" >
+    android:background="@drawable/plugin_share_weixin_bg_transparent">
 
     <LinearLayout
         android:id="@+id/ll_popup"
@@ -11,7 +11,7 @@
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:background="#000000"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/weixin_share"
@@ -20,7 +20,7 @@
             android:background="@android:color/transparent"
             android:src="@drawable/plugin_share_weixin" />
 
-        
+
     </LinearLayout>
 
 </RelativeLayout>

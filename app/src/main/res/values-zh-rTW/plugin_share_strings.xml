@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  	<string name="share">分享</string>
+    <string name="share">分享</string>
     <string name="send_character">發送文字</string>
     <string name="send_photo">發送圖片</string>
     <string name="send_url_photo">發送url圖片</string>

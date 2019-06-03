@@ -1,6 +1,6 @@
 package com.inspur.imp.plugin.camera.mycamera;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 import org.json.JSONObject;
 

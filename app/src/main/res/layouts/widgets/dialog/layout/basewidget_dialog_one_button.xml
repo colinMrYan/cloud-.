@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shape_upgrade_dialog"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/show_text"
@@ -15,7 +15,6 @@
         android:padding="12dp"
         android:textColor="@color/black"
         android:textSize="17sp" />
-
 
 
     <Button

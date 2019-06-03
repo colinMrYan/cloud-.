@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 

@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 
-import com.inspur.emmcloud.util.common.MediaPlayerManagerUtils;
+import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;
 
 /**
  * Created by chenmch on 2018/8/25.

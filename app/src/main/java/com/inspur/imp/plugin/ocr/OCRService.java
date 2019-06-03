@@ -1,6 +1,6 @@
 package com.inspur.imp.plugin.ocr;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
@@ -31,10 +30,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -55,95 +54,103 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
-        android:paddingBottom="10dp"
-        android:background="@color/content_bg">
+        android:background="@color/content_bg"
+        android:paddingBottom="10dp">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <com.inspur.emmcloud.widget.ScrollViewWithListView
                 android:id="@+id/lv_attendees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@color/white">
-            </com.inspur.emmcloud.widget.ScrollViewWithListView>
+                android:divider="@color/white"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+
             <LinearLayout
                 android:id="@+id/ll_add_attendees"
-                android:background="@color/white"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
                 <RelativeLayout
                     android:id="@+id/rl_add_internal_attendees"
-                    android:layout_weight="1"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:onClick="onClick"
-                    android:layout_height="wrap_content">
+                    android:onClick="onClick">
+
                     <ImageView
                         android:id="@+id/iv_add_internal_attendees"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:layout_marginRight="10dp"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_webex_add_attendees" />
+
                     <TextView
-                        android:layout_toRightOf="@id/iv_add_internal_attendees"
-                        android:textSize="17sp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:textColor="#333333"
-                        android:text="@string/webex_internal_attendees"
                         android:id="@+id/tv_add_internal_attendees"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/iv_add_internal_attendees"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/webex_internal_attendees"
+                        android:textColor="#333333"
+                        android:textSize="17sp" />
                 </RelativeLayout>
+
                 <View
-                    android:background="#D6D6D6"
                     android:layout_width="0.5dp"
-                    android:layout_height="32dp"></View>
+                    android:layout_height="32dp"
+                    android:background="#D6D6D6"></View>
+
                 <RelativeLayout
                     android:id="@+id/rl_add_external_attendees"
-                    android:layout_weight="1"
-                    android:onClick="onClick"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_height="wrap_content">
+                    android:onClick="onClick">
+
                     <ImageView
                         android:id="@+id/iv_add_external_attendees"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:layout_marginRight="10dp"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_webex_add_attendees" />
+
                     <TextView
-                        android:layout_toRightOf="@id/iv_add_external_attendees"
-                        android:textSize="17sp"
-                        android:textColor="#333333"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:text="@string/webex_external_attendees"
                         android:id="@+id/tv_add_external_attendees"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/iv_add_external_attendees"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/webex_external_attendees"
+                        android:textColor="#333333"
+                        android:textSize="17sp" />
                 </RelativeLayout>
             </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_num"
-                android:textSize="15sp"
-                android:paddingTop="10dp"
-                android:paddingLeft="15dp"
-                android:paddingBottom="10dp"
-                android:textColor="#666666"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-         
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:textColor="#666666"
+                android:textSize="15sp" />
+
 
         </LinearLayout>
 

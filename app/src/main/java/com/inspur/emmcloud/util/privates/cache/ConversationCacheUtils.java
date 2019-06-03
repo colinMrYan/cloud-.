@@ -2,11 +2,11 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PinyinUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.PinyinUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONArray;
 import org.xutils.common.util.KeyValue;

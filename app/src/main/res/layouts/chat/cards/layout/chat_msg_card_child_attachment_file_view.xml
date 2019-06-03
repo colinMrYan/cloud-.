@@ -7,50 +7,51 @@
     app:bl_arrowDirection="right"
     app:bl_arrowHeight="10dp"
     app:bl_arrowPosition="16dp"
-    app:bl_cornersRadius="8dp"
     app:bl_arrowWidth="4.5dp"
+    app:bl_cornersRadius="8dp"
     app:bl_strokeColor="#AAAAAA"
     app:bl_strokeWidth="0.5px">
-<RelativeLayout
-    android:paddingTop="11dp"
-    android:paddingBottom="11dp"
-    android:paddingLeft="17dp"
-    android:paddingRight="17dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-
-    <ImageView
-        android:id="@+id/iv_file_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:scaleType="fitXY" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/iv_file_icon">
+        android:paddingBottom="11dp"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:paddingTop="11dp">
 
-        <TextView
-            android:id="@+id/tv_file_name"
+
+        <ImageView
+            android:id="@+id/iv_file_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_file_icon">
 
-        <TextView
-            android:id="@+id/tv_file_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_file_name"
-            android:layout_marginTop="6dp"
-            android:textColor="#666666"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/tv_file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_file_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_file_name"
+                android:layout_marginTop="6dp"
+                android:textColor="#666666"
+                android:textSize="15sp" />
+        </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
 </com.inspur.emmcloud.widget.bubble.BubbleLayout>

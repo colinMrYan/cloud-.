@@ -3,9 +3,9 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;

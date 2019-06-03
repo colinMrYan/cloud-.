@@ -6,8 +6,6 @@ import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
 
 /**
  * Created by yufuchang on 2019/1/2.

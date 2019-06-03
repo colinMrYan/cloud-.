@@ -24,21 +24,20 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/send_time_text"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_below="@id/send_time_text">
+        android:paddingRight="10dp">
 
         <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/iv_sender_photo_left"
             android:layout_width="43dp"
-            android:layout_height="43dp"
-             />
+            android:layout_height="43dp" />
+
         <com.inspur.emmcloud.widget.CircleTextImageView
             android:id="@+id/iv_sender_photo_right"
             android:layout_width="43dp"
             android:layout_height="43dp"
-            android:layout_alignParentRight="true"
-             />
+            android:layout_alignParentRight="true" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -51,9 +50,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
+                android:maxLines="1"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:maxLines="1"
                 android:textColor="#666666"
                 android:textSize="14sp" />
 
@@ -62,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/sender_name_text">
+
                 <RelativeLayout
                     android:id="@+id/rl_send_status"
                     android:layout_width="30dp"
@@ -69,6 +69,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="13dp"
                     android:padding="5dp">
+
                     <ImageView
                         android:id="@+id/iv_send_fail"
                         android:layout_width="match_parent"

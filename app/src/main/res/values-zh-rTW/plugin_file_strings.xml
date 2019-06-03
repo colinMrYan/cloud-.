@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-     <!-- 檔流覽和檔資訊 -->
-   <string name="file_name">檔案名字:</string>
+    <!-- 檔流覽和檔資訊 -->
+    <string name="file_name">檔案名字:</string>
     <string name="file_size">文件大小:</string>
     <string name="file_lastmodified">最後修改時間:</string>
     <string name="file_contents">檔包含內容:</string>
     <string name="nopermission">許可權不足，你無法查看！</string>
-     <!-- 文件管理 -->
+    <!-- 文件管理 -->
     <string name="invalidFile">文件為空,無法打開!\t</string>
     <string name="show_fileInfo">該檔或資料夾的詳細資訊如下所示:</string>
     <string name="fileBrowser">檔流覽器</string>

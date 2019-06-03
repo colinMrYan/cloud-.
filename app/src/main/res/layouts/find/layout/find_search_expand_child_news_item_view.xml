@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="82dp"
-    android:background="@color/white" >
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/news_img"
@@ -18,8 +18,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="66dp"
-       android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/news_img" >
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/news_img">
 
         <TextView
             android:id="@+id/tv_name_tips"
@@ -35,7 +35,7 @@
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" >
+            android:layout_alignParentBottom="true">
 
             <TextView
                 android:id="@+id/publisher_text"

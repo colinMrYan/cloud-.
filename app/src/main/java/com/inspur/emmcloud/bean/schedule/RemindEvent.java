@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.schedule;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 import org.json.JSONObject;
 
@@ -44,16 +44,16 @@ public class RemindEvent implements Serializable {
         return remindType;
     }
 
+    public void setRemindType(String remindType) {
+        this.remindType = remindType;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setRemindType(String remindType) {
-        this.remindType = remindType;
     }
 
     public JSONObject toJSONObject(){

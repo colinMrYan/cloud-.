@@ -48,16 +48,16 @@ public class ScheduleAllDayEventListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Event event = eventList.get(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.schedule_all_day_event_list_item_view,null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.schedule_all_day_event_list_item_view, null);
         ImageView iconImg = convertView.findViewById(R.id.iv_event);
         TextView titleText = convertView.findViewById(R.id.tv_event_title);
         TextView positionText = convertView.findViewById(R.id.tv_event_position);
         iconImg.setImageResource(event.getEventIconResId());
         titleText.setText(event.getEventTitle());
-        if (event.getEventType().equals(Schedule.TYPE_MEETING)){
+        if (event.getEventType().equals(Schedule.TYPE_MEETING)) {
             positionText.setVisibility(View.VISIBLE);
             positionText.setText(event.getEventSubTitle());
-        }else {
+        } else {
             positionText.setVisibility(View.GONE);
         }
         return convertView;

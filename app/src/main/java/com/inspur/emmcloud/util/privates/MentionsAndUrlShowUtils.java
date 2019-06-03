@@ -3,9 +3,9 @@ package com.inspur.emmcloud.util.privates;
 import android.text.SpannableString;
 import android.text.Spanned;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.schedule.MentionsAndUrl;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.spans.URLClickableSpan;
 
 import org.apache.commons.lang3.StringEscapeUtils;

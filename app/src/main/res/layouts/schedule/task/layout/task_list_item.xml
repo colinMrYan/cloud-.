@@ -2,18 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/text_layout_selector"
+    android:gravity="center_vertical"
     android:minHeight="58dp"
     android:orientation="vertical"
-    android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:gravity="center_vertical"
-    android:background="@drawable/text_layout_selector"
+    android:paddingTop="8dp"
     tools:context=".MainActivity">
+
     <RelativeLayout
         android:id="@+id/ll_category_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/iv_task_color"
             android:layout_width="8dp"
@@ -29,10 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_toRightOf="@id/iv_task_color"
             android:layout_toLeftOf="@+id/iv_task_level"
+            android:layout_toRightOf="@id/iv_task_color"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="#333333"
             android:textSize="15sp" />
 
@@ -44,7 +45,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="16dp"
-            android:src="@drawable/ic_task_level"/>
+            android:src="@drawable/ic_task_level" />
     </RelativeLayout>
 
     <TextView

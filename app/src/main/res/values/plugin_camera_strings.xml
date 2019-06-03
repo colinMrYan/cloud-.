@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    
-  	<!-- 图片浏览 -->
+
+    <!-- 图片浏览 -->
     <string name="only_choose_num">超出可选图片张数</string>
     <string name="invalidSD">sdcard无效或没有插入！</string>
-     <!-- <string name="photo">选择相册</string> -->
+    <!-- <string name="photo">选择相册</string> -->
     <!-- <string name="album">相册</string> -->
-     <!-- <string name="preview">预览</string> -->
-       <!-- <string name="finish">完成</string> -->
-    <string name="unfinished">完成</string> 
+    <!-- <string name="preview">预览</string> -->
+    <!-- <string name="finish">完成</string> -->
+    <string name="unfinished">完成</string>
     <string name="camera_cancel">取消</string>
     <string name="no_photo">相册没有图片</string>
-    
+
     <string name="image_error">压缩位图错误</string>
     <string name="bitmap_create_error">无法创建位图</string>
-	<string name="no_storage">没有内存卡</string>
+    <string name="no_storage">没有内存卡</string>
     <string name="capture_error">捕获图像错误</string>
     <string name="cancel_camera">取消拍摄</string>
     <string name="camera_error">拍摄错误</string>

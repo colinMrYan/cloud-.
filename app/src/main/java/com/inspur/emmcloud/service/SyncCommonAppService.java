@@ -7,10 +7,10 @@ import android.os.IBinder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 
 import java.util.List;

@@ -33,6 +33,10 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelOperationInfo;
@@ -53,20 +57,16 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
-import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
+import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -81,7 +81,6 @@ import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -508,7 +507,7 @@ public class CommunicationV0Fragment extends BaseFragment {
      */
     private void sortChannelList() {
         // TODO Auto-generated method stub
-        WeakThread weakThread = new WeakThread(getActivity()) {
+        Thread weakThread = new Thread() {
             @Override
             public void run() {
                 super.run();

@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean.find;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;

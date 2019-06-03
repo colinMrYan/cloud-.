@@ -3,16 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
-    android:paddingTop="3dp"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp" >
+    android:paddingRight="10dp"
+    android:paddingTop="3dp">
 
     <ImageView
         android:id="@+id/img_group_icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginTop="3dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
         android:src="@drawable/ic_app_default" />
 
     <TextView

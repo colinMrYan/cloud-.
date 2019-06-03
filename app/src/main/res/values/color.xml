@@ -104,8 +104,6 @@
     <!-- 集成九宫格排序 -->
 
 
-
-
     <color name="scan_result_color">#E8E8E8</color>
 
     <!--九宫格-->
@@ -121,14 +119,11 @@
     <color name="red_f4333c">#F4333C</color>
     <color name="color_list_divider">#dddddd</color>
     <color name="color_list_divider_tran">#99dddddd</color>
-<!--
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
--->
-
-
-
+    <!--
+        <color name="colorPrimary">#3F51B5</color>
+        <color name="colorPrimaryDark">#303F9F</color>
+        <color name="colorAccent">#FF4081</color>
+    -->
 
 
     <color name="voice_communication_function_select">#3CA6F7</color>

@@ -23,7 +23,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.privates.InputMethodUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

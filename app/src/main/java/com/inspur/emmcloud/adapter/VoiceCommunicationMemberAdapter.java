@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.wang.avi.AVLoadingIndicatorView;
 

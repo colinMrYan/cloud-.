@@ -14,10 +14,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -46,57 +46,64 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_function_textsize" />
     </RelativeLayout>
+
     <ScrollView
-        android:layout_below="@id/rl_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_header">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <EditText
                 android:id="@+id/et_tag_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:hint="@string/schedule_task_label_add_hint"
-                android:textColorHint="#999999"
                 android:background="#FFFFFF"
+                android:hint="@string/schedule_task_label_add_hint"
                 android:paddingBottom="11dp"
+                android:paddingLeft="16dp"
                 android:paddingTop="11dp"
-                android:paddingLeft="16dp"/>
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
+
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5sp"/>
+                android:layout_height="0.5sp" />
+
             <TextView
-                android:text="@string/schedule_task_label_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#999999"
-                android:textSize="13sp"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp" />
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/schedule_task_label_color"
+                android:textColor="#999999"
+                android:textSize="13sp" />
+
             <com.inspur.emmcloud.widget.ScrollViewWithListView
                 android:id="@+id/lv_tag_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:paddingLeft="16dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+
             <TextView
                 android:id="@+id/tv_delecte_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FF4242"
-                android:textSize="16sp"
-                android:paddingTop="11dp"
-                android:text="@string/schedule_task_delete_the_tag"
-                android:gravity="center"
-                android:paddingBottom="11dp"
-                android:onClick="onClick"
                 android:layout_marginTop="10dp"
                 android:background="#FFFFFF"
-                android:visibility="gone"/>
+                android:gravity="center"
+                android:onClick="onClick"
+                android:paddingBottom="11dp"
+                android:paddingTop="11dp"
+                android:text="@string/schedule_task_delete_the_tag"
+                android:textColor="#FF4242"
+                android:textSize="16sp"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

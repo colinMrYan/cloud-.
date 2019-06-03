@@ -1,32 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Enumeration;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MailApiService;
-import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.EncryptUtils;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
-
 import android.content.Intent;
 import android.text.InputType;
 import android.util.Base64;
@@ -34,6 +7,33 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MailApiService;
+import com.inspur.emmcloud.baselib.util.EncryptUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
+import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
+
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -176,8 +176,6 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         builder.setTitle("证书密码：")
                 .setView(editText)
-//                .setPlaceholder("请在此输入证书密码：")
-//                .setInputType(InputType.TYPE_CLASS_TEXT)
                 .setNegativeButton("取消", (dialog, index) -> {
                     dialog.dismiss();
                 })

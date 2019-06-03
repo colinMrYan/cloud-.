@@ -1,27 +1,27 @@
 package com.inspur.emmcloud.broadcastreceiver;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.text.TextUtils;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.text.TextUtils;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 1、PushMessageReceiver 是个抽象类，该类继承了 BroadcastReceiver。<br/>

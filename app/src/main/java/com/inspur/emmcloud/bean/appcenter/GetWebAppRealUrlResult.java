@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 /**
  * Created by chenmch on 2017/11/1.

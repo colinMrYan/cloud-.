@@ -32,21 +32,21 @@
             android:id="@+id/text_input_layout_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="35dp">
+            android:layout_marginTop="35dp"
+            app:errorEnabled="true">
 
             <com.inspur.emmcloud.widget.ClearEditText
                 android:id="@+id/et_mail"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:gravity="center_vertical"
                 android:drawableRight="@drawable/app_edittext_clear"
-                android:paddingRight="12dp"
-                android:inputType="textEmailAddress"
-                android:imeOptions="actionNext"
+                android:gravity="center_vertical"
                 android:hint="@string/mail"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:paddingRight="12dp"
                 android:singleLine="true"
                 android:textColor="#333333"
                 android:textSize="16sp"
@@ -59,20 +59,20 @@
             android:id="@+id/text_input_layout_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
-            app:passwordToggleEnabled="true"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            >
+            app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
+            app:passwordToggleEnabled="true">
+
             <EditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:gravity="center_vertical"
+                android:hint="@string/password"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
-                android:hint="@string/password"
                 android:singleLine="true"
-                android:gravity="center_vertical"
                 android:textColor="#333333"
                 android:textSize="16sp"
                 android:theme="@style/MyEditText" />
@@ -92,9 +92,9 @@
             android:enabled="false"
             android:gravity="center"
             android:onClick="onClick"
-            android:textSize="16sp"
             android:text="@string/login"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </RelativeLayout>

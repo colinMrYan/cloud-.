@@ -7,8 +7,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    >
+    android:paddingRight="10dp">
 
     <ImageView
         android:id="@+id/select_img"
@@ -25,8 +24,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="10dp"
-        android:padding="0.5dp"
-         />
+        android:padding="0.5dp" />
 
     <TextView
         android:id="@+id/title"

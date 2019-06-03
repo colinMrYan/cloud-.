@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_org_item"
@@ -20,17 +20,18 @@
         <TextView
             android:id="@+id/tv_org_item_name"
             android:layout_width="match_parent"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_centerVertical="true"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="23dp"
-            android:paddingRight="15dp"
             android:layout_toRightOf="@id/iv_org_item_flag"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingRight="15dp"
             android:textSize="16sp" />
 
 
     </RelativeLayout>
+
     <ImageView
         android:id="@+id/iv_org_item_line"
         android:layout_width="3dp"

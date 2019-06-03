@@ -13,10 +13,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -48,9 +48,9 @@
                 android:background="@color/white"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
+                android:paddingTop="10dp"
                 android:textColor="#333333"
                 android:textSize="17sp" />
 
@@ -153,9 +153,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:listSelector="@color/transparent"
                 android:divider="@color/color_list_divider"
                 android:dividerHeight="0.5dp"
+                android:listSelector="@color/transparent"
                 android:paddingLeft="20dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             <Button
@@ -166,11 +166,11 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:onClick="onClick"
-                android:paddingTop="11dp"
                 android:paddingBottom="11dp"
+                android:paddingTop="11dp"
                 android:text="@string/unbind_this_device"
-                android:textSize="16sp"
                 android:textColor="#ff0000"
+                android:textSize="16sp"
                 android:visibility="gone" />
 
         </LinearLayout>

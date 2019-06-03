@@ -1,28 +1,28 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.List;
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.EnterpriseAdapter;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import android.content.Intent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.RelativeLayout;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -108,7 +108,7 @@ public class EnterpriseSwitchActivity extends BaseActivity {
         MyApplication.getInstance().clearNotification();
         MyApplication.getInstance().removeAllCookie();
         MyApplication.getInstance().clearUserPhotoMap();
-        PreferencesUtils.putBoolean(EnterpriseSwitchActivity.this, "isMDMStatusPass", false);
+        PreferencesUtils.putBoolean(EnterpriseSwitchActivity.this, Constant.PREF_MDM_STATUS_PASS, false);
         Intent intent = new Intent(EnterpriseSwitchActivity.this,
                 MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

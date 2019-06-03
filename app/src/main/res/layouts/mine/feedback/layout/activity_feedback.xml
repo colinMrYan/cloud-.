@@ -39,14 +39,14 @@
         android:layout_height="140dp"
         android:layout_below="@id/rl_header"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/bg_feedback_content"
         android:gravity="top"
         android:hint="@string/feed_back_content_hint"
         android:paddingLeft="15dp"
-        android:paddingTop="14dp"
         android:paddingRight="15dp"
+        android:paddingTop="14dp"
         android:textSize="16sp" />
 
     <EditText
@@ -55,14 +55,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_feedback_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/bg_feedback_content"
         android:hint="@string/feed_back_contact_hint"
         android:maxLines="1"
+        android:paddingBottom="10dp"
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:textSize="16sp" />
 
     <RelativeLayout
@@ -95,9 +95,9 @@
         android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="45dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_marginBottom="45dp"
         android:elevation="1dp"
         android:gravity="center"
         android:onClick="onClick"

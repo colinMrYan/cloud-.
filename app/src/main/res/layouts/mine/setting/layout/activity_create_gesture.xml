@@ -7,16 +7,16 @@
 
     <TextView
         android:id="@+id/tv_force_gesture_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/grey_a5a5a5"
-        android:textSize="16sp"
+        android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="70dp"
-        android:gravity="center"
         android:text="@string/setting_gesture_force_set"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textColor="@color/grey_a5a5a5"
+        android:textSize="16sp" />
 
     <com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator
         android:id="@+id/lockPatterIndicator"
@@ -52,10 +52,10 @@
             android:id="@+id/gesture_reset_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:background="@null"
+            android:padding="20dp"
             android:text="@string/create_gesture_reset"
             android:textColor="@color/grey_a5a5a5"
             android:textSize="16sp" />

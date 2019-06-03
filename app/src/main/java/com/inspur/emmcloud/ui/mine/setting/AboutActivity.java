@@ -1,19 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.UpgradeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +7,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.util.privates.UpgradeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
+import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

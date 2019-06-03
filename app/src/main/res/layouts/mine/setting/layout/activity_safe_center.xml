@@ -43,9 +43,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector"
-            android:paddingRight="16dp"
+            android:onClick="onClick"
             android:paddingLeft="16dp"
-            android:onClick="onClick">
+            android:paddingRight="16dp">
 
             <TextView
                 android:id="@+id/tv_setting_safe_gesture_face"
@@ -65,20 +65,22 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/ic_arrow_right" />
+
             <View
                 android:layout_width="match_parent"
-                android:layout_below="@+id/tv_setting_safe_gesture_face"
                 android:layout_height="0.5px"
+                android:layout_below="@+id/tv_setting_safe_gesture_face"
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/rl_setting_safe_account_device"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector"
-            android:paddingRight="16dp"
+            android:onClick="onClick"
             android:paddingLeft="16dp"
-            android:onClick="onClick">
+            android:paddingRight="16dp">
 
             <TextView
                 android:id="@+id/tv_setting_safe_account_device"
@@ -98,17 +100,13 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/ic_arrow_right" />
+
             <View
                 android:layout_width="match_parent"
-                android:layout_below="@id/tv_setting_safe_account_device"
                 android:layout_height="0.5px"
+                android:layout_below="@id/tv_setting_safe_account_device"
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
-
-
-
-
-
 
 
     </LinearLayout>

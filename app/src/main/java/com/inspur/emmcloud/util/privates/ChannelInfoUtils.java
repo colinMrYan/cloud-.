@@ -8,7 +8,6 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 

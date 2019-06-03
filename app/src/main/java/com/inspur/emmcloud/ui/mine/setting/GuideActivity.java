@@ -1,31 +1,31 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
-import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.inspur.emmcloud.util.privates.ProfileUtils;
-
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.util.privates.ProfileUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -135,6 +135,6 @@ public class GuideActivity extends BaseActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
+        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 }

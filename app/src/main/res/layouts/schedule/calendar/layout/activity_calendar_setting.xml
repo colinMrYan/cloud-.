@@ -51,10 +51,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
+                android:paddingLeft="16dp"
                 android:text="@string/calendar"
                 android:textColor="#999999"
-                android:textSize="13sp"
-                android:paddingLeft="16dp"/>
+                android:textSize="13sp" />
 
 
             <com.inspur.emmcloud.widget.ScrollViewWithListView
@@ -64,15 +64,15 @@
                 android:layout_below="@id/tv_calendar_list_tip"
                 android:background="#FFFFFF"
                 android:divider="@color/color_list_divider"
-                android:paddingLeft="16dp"
-                android:dividerHeight="0.5px"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                android:dividerHeight="0.5px"
+                android:paddingLeft="16dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_marginLeft="16dp"
                 android:layout_below="@+id/listview_list_calendars"
-                android:background="@color/color_list_divider"/>
+                android:layout_marginLeft="16dp"
+                android:background="@color/color_list_divider" />
 
             <TextView
                 android:id="@+id/tv_view"
@@ -81,20 +81,20 @@
                 android:layout_below="@id/listview_list_calendars"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
+                android:paddingLeft="16dp"
                 android:text="@string/schedule_setting_view"
                 android:textColor="#999999"
-                android:textSize="13sp"
-                android:paddingLeft="16dp"/>
+                android:textSize="13sp" />
 
             <RelativeLayout
                 android:id="@+id/rl_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_view"
-                android:paddingLeft="16dp"
-                android:paddingRight="15dp"
                 android:background="#FFFFFF"
-                android:onClick="onClick">
+                android:onClick="onClick"
+                android:paddingLeft="16dp"
+                android:paddingRight="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -120,8 +120,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/rl_list_view"
-                android:background="#DDDDDD"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:background="#DDDDDD" />
 
             <RelativeLayout
                 android:id="@+id/rl_day_view"
@@ -129,9 +129,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/v_after_list_view"
                 android:background="#FFFFFF"
+                android:onClick="onClick"
                 android:paddingLeft="16dp"
-                android:paddingRight="15dp"
-                android:onClick="onClick">
+                android:paddingRight="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -158,8 +158,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:layout_below="@id/rl_day_view"
-                android:background="#DDDDDD"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:background="#DDDDDD" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

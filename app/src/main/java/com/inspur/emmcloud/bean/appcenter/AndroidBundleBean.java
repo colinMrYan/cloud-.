@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.appcenter;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 import org.json.JSONObject;
 

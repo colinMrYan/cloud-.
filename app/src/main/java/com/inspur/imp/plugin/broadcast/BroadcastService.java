@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONArray;

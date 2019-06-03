@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
@@ -13,10 +13,10 @@
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -31,13 +31,13 @@
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
-    <ListView 
+    <ListView
         android:id="@+id/app_center_more_apps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
+        android:layout_below="@id/rl_header"
         android:divider="#00000000"
         android:dividerHeight="0.5dp"
-        android:layout_below="@id/rl_header"/>
+        android:scrollbars="none" />
 
 </RelativeLayout>

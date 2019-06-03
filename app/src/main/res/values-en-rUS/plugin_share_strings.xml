@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  	<string name="share">Share</string>
+    <string name="share">Share</string>
     <string name="send_character">Send Text</string>
     <string name="send_photo">Send Pictures</string>
     <string name="send_url_photo">Send a picture of the URL type</string>

@@ -1,9 +1,8 @@
 package com.inspur.emmcloud.bean.chat;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
 
 import org.json.JSONObject;
 
@@ -82,7 +81,7 @@ public class MsgContentMediaVoice {
     public void setJsonResults(String results) {
         JSONObject jsonObj = new JSONObject();
         try {
-            switch (AppUtils.getCurrentAppLanguage(MyApplication.getInstance())) {
+            switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
                 case "zh-Hans":
                     jsonObj.put("zh-cn", results);
                     break;

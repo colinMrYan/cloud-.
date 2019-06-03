@@ -1,18 +1,16 @@
 package com.inspur.imp.plugin.photo;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Environment;
+import android.util.Base64;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.FileUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -25,10 +23,12 @@ import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Environment;
-import android.util.Base64;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PhotoService extends ImpPlugin {
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -10,26 +9,26 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="600dp"
-        android:paddingBottom="20dp"
-        >
+        android:paddingBottom="20dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:layout_centerInParent="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/shape_upgrade_dialog"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/news_instruction_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/bigger_textsize"
-                android:text="@string/prompt"
                 android:gravity="center_horizontal"
-                android:textColor="@color/black"
                 android:paddingTop="23dp"
-                />
+                android:text="@string/prompt"
+                android:textColor="@color/black"
+                android:textSize="@dimen/bigger_textsize" />
 
             <TextView
                 android:id="@+id/news_has_instrcution_text"
@@ -39,12 +38,12 @@
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="18dp"
                 android:layout_marginTop="33dp"
-                android:scrollbars="vertical"
+                android:background="@null"
+                android:hint=""
                 android:lineSpacingMultiplier="1.1"
                 android:maxHeight="500dp"
                 android:maxLines="10"
-                android:background="@null"
-                android:hint=""
+                android:scrollbars="vertical"
                 android:textColor="@color/app_dialog_title_color"
                 android:textSize="@dimen/header_textsize" />
 
@@ -53,8 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="13dp"
-                android:text="不再提醒"
-                 />
+                android:text="不再提醒" />
 
             <View
                 android:layout_width="fill_parent"

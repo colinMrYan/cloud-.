@@ -17,7 +17,7 @@ import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.MailFolder;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailFolderCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;

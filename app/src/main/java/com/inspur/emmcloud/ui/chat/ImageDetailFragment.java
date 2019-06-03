@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.util.privates.InputMethodUtils;
 import com.inspur.emmcloud.widget.SmoothImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;

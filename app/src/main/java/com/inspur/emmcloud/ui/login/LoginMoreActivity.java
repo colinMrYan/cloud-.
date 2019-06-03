@@ -1,22 +1,22 @@
 package com.inspur.emmcloud.ui.login;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.login.LoginMoreBean;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.find.ScanResultActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-
 import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.bean.login.LoginMoreBean;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.find.ScanResultActivity;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

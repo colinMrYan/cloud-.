@@ -6,10 +6,9 @@ import android.net.Uri;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.ui.find.ScanResultActivity;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 /**

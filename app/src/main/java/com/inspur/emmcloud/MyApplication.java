@@ -1,31 +1,11 @@
 package com.inspur.emmcloud;
 
-import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
-
-import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import org.xutils.x;
-import org.xutils.http.RequestParams;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -42,58 +22,43 @@ import com.hjq.toast.style.ToastBlackStyle;
 import com.horcrux.svg.SvgPackage;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.richtext.RichText;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.inspur.emmcloud.util.privates.richtext.RichText;
 import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.utils.L;
+import com.luojilab.component.componentlib.router.Router;
+import com.luojilab.component.componentlib.router.ui.UIRouter;
 import com.oblador.vectoricons.VectorIconsPackage;
 
-import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Parcelable;
-import android.support.multidex.MultiDexApplication;
-import android.support.v4.content.LocalBroadcastManager;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -137,6 +102,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     private String currentChannelCid = "";
     private boolean isEnterSystemUI = false;  //是否进入第三方系统界面，判断app前后台
+    private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
 
     /**
      * 单例获取application实例
@@ -151,11 +117,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         super.onCreate();
         init();
         LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
-        setAppLanguageAndFontScale();
+        LanguageManager.getInstance().setLanguageLocal();
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
         WebSocketPush.getInstance().startWebSocket();
+
+        UIRouter.enableDebug();
+        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
+
     }
 
 
@@ -168,9 +138,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         x.Ext.setDebug(true);
         SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
-        initImageLoader();
+        ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
-        RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
+        RichText.initCacheDir(new File(MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
         RichText.debugMode = true;
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
@@ -183,14 +153,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         PushManagerUtils.getInstance().clearPushFlag();
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
-                "isContactReady", false);
+                Constant.PREF_IS_CONTACT_READY, false);
         uid = PreferencesUtils.getString(getInstance(), "userID");
         accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
-        ToastUtils.init(this,new ToastBlackStyle());
-        ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM,0,0);
+        ToastUtils.init(this, new ToastBlackStyle());
+        ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
     }
 
     /**************************************登出逻辑相关********************************************************/
@@ -200,13 +170,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void signout() {
         // TODO Auto-generated method stub
         //清除日历提醒极光推送本地通知
-        ScheduleAlertUtils.cancelAllCalEventNotification(this);
         PushManagerUtils.getInstance().stopPush();
         clearNotification();
         removeAllCookie();
         removeAllSessionCookie();
         clearUserPhotoMap();
-        cancelToken();
+        OauthUtils.getInstance().cancelToken();
         PreferencesUtils.putString(this, "accessToken", "");
         PreferencesUtils.putString(this, "refreshToken", "");
         setAccessToken("");
@@ -219,16 +188,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getInstance(), 0);
     }
 /****************************通知相关（极光和华为推送）******************************************/
-
-    /**
-     * 退出登录时注销token
-     * 无后续需要根据返回内容
-     */
-    private void cancelToken() {
-        AppAPIService appAPIService = new AppAPIService(this);
-        appAPIService.cancelToken();
-    }
-
 
 /************************ Cookie相关 *****************************/
 
@@ -261,15 +220,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public String getUid() {
         return uid;
     }
+
     public void setUid(String uid) {
         this.uid = uid;
     }
-
-
     /*************************** http相关 **************************************/
-
-
-
     /**
      * 获取http RequestParams
      *
@@ -302,12 +257,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (currentEnterprise != null) {
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
         }
-        String languageJson = PreferencesUtils.getString(
-                getInstance(), MyApplication.getInstance().getTanent() + "appLanguageObj");
-        if (languageJson != null) {
-            Language language = new Language(languageJson);
-            params.addHeader("Accept-Language", language.getIana());
-        }
+        params.addHeader("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         return params;
     }
 
@@ -319,8 +269,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setIsContactReady(boolean isContactReady) {
         MyApplication.isContactReady = isContactReady;
-        PreferencesUtils.putBoolean(getInstance(), "isContactReady",
-                isContactReady);
+        PreferencesUtils.putBoolean(getInstance(), Constant.PREF_IS_CONTACT_READY, isContactReady);
     }
 
     public boolean getIsActive() {
@@ -414,8 +363,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
 
-
-
     public String getTanent() {
         return tanent;
     }
@@ -460,28 +407,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
 /**************************************************************************/
 
-    /***
-     * 判断当前版本是否是开发版
-     *
-     * @return
-     */
-    public boolean isVersionDev() {
-        ApplicationInfo appInfo;
-        try {
-            appInfo = this.getPackageManager().getApplicationInfo(
-                    getPackageName(), PackageManager.GET_META_DATA);
-            String msg = appInfo.metaData.getString("VERSION_TYPE");
-            if (msg.equals("dev")) {
-                return true;
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return false;
-
-    }
-
     /**
      * 判断是否已登录
      *
@@ -492,7 +417,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getInstance(),
                 "myInfo", "");
-        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getInstance(), "isMDMStatusPass", true);
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
         return (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && isMDMStatusPass);
     }
 
@@ -502,156 +427,17 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (config != null) {
             super.onConfigurationChanged(config);
         }
-        setAppLanguageAndFontScale();
+        LanguageManager.getInstance().setLanguageLocal();
     }
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
+        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 
-    /**
-     * 设置App的语言
-     */
-    public void setAppLanguageAndFontScale() {
-
-        String languageJson = PreferencesUtils
-                .getString(getInstance(), MyApplication.getInstance().getTanent()
-                        + "appLanguageObj");
-        Configuration config = getResources().getConfiguration();
-        if (languageJson != null) {
-            String language = PreferencesUtils.getString(
-                    getInstance(), MyApplication.getInstance().getTanent() + "language");
-            // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
-            if (language.equals("followSys")) {
-                String commonLanguageListJson = PreferencesUtils.getString(
-                        getInstance(), MyApplication.getInstance().getTanent()
-                                + "commonLanguageList");
-                if (commonLanguageListJson != null) {
-                    List<Language> commonLanguageList = JSONUtils
-                            .parseArray(commonLanguageListJson,
-                                    Language.class);
-                    boolean isContainDefault = false;
-                    for (int i = 0; i < commonLanguageList.size(); i++) {
-                        Language commonLanguage = commonLanguageList.get(i);
-                        if (commonLanguage.getIso().contains(
-                                Resources.getSystem().getConfiguration().locale.getCountry())) {
-                            PreferencesUtils.putString(
-                                    getInstance(),
-                                    MyApplication.getInstance().getTanent() + "appLanguageObj",
-                                    commonLanguage.toString());
-                            languageJson = commonLanguage.toString();
-                            isContainDefault = true;
-                            break;
-                        }
-                    }
-                    if (!isContainDefault) {
-                        PreferencesUtils.putString(getInstance(),
-                                MyApplication.getInstance().getTanent() + "appLanguageObj",
-                                commonLanguageList.get(0).toString());
-                        languageJson = commonLanguageList.get(0).toString();
-                    }
-                }
-
-            }
-            PreferencesUtils.putString(getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
-            // 将iso字符串分割成系统的设置语言
-            String[] array = new Language(languageJson).getIso().split("-");
-            String country = "";
-            String variant = "";
-            try {
-                country = array[0];
-                variant = array[1];
-            } catch (Exception e) {
-                // TODO: handle exception
-                e.printStackTrace();
-            }
-            Locale locale = new Locale(country, variant);
-            Locale.setDefault(locale);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                config.setLocale(locale);
-            } else {
-                config.locale = locale;
-            }
-        }
-        config.fontScale = 1.0f;
-        getResources().updateConfiguration(config,
-                getResources().getDisplayMetrics());
-
-    }
 
     public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks() {
         return myActivityLifecycleCallbacks;
-    }
-
-    /**
-     * startWebSocket ImageLoaderCommon
-     **/
-    private void initImageLoader() {
-        // TODO Auto-generated method stub
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                // 设置图片的解码类型
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
-        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
-                getInstance())
-                .memoryCacheExtraOptions(1280, 1280)
-                .defaultDisplayImageOptions(options)
-                .imageDownloader(
-                        new CustomImageDownloader(getApplicationContext()))
-                .threadPoolSize(6)
-                .threadPriority(Thread.NORM_PRIORITY - 1)
-                .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(
-                        new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
-                .diskCacheSize(100 * 1024 * 1024)
-                // You can pass your own memory cache implementation
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .diskCacheFileNameGenerator(new HashCodeFileNameGenerator());
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            File cacheDir = new File(MyAppConfig.LOCAL_CACHE_PATH);
-            if (!cacheDir.exists()) {
-                cacheDir.mkdirs();
-            }
-            builder = builder.diskCache(new UnlimitedDiskCache(cacheDir));
-        }
-
-        ImageLoaderConfiguration config = builder.build();
-        L.writeLogs(false); // 关闭imageloader的疯狂的log
-        ImageLoader.getInstance().init(config);
-
-    }
-
-    /**
-     * 添加桌面快捷方式
-     **/
-    public void addShortCut(Context context) {
-        Intent shortcutIntent = new Intent(
-                "com.android.launcher.action.INSTALL_SHORTCUT");
-        // 不允许重复创建
-        shortcutIntent.putExtra("duplicate", false);
-        // 快捷方式下的名字
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-                context.getString(R.string.app_name));
-        // 快捷方式的图标
-        Parcelable icon = null;
-        if (isVersionDev()) {
-            icon = Intent.ShortcutIconResource.fromContext(context,
-                    R.drawable.ic_launcher_dev);
-        } else {
-            icon = Intent.ShortcutIconResource.fromContext(context,
-                    R.drawable.ic_launcher);
-        }
-
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon);
-        Intent intent = new Intent(context, MainActivity.class);
-        // 卸载应用的时候删除桌面图标
-        intent.setAction("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.LAUNCHER");
-        // 绑定事件
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(shortcutIntent);
     }
 
     // 判断IndexActivity是否存在的标志
@@ -673,6 +459,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public List<Activity> getActivityList() {
         return activityList;
+    }
+
+    public boolean isSafeLock() {
+        return isSafeLock;
+    }
+
+    public void setSafeLock(boolean safeLock) {
+        isSafeLock = safeLock;
     }
 
     /**
@@ -772,14 +566,5 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setCurrentChannelCid(String currentChannelCid) {
         this.currentChannelCid = currentChannelCid;
-    }
-
-    /*****************************是否进入第三方系统界面，判断app前后台***********************************************/
-    public boolean isEnterSystemUI() {
-        return isEnterSystemUI;
-    }
-
-    public void setEnterSystemUI(boolean enterSystemUI) {
-        isEnterSystemUI = enterSystemUI;
     }
 }

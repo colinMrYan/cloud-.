@@ -11,11 +11,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
-import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import org.xutils.DbManager;
 import org.xutils.x;
@@ -52,44 +49,44 @@ public class DbCacheUtils {
                     public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
                         // TODO: ...
                         try {
-                            if (oldVersion < 5) {
-                                db.dropTable(ChannelGroup.class);
-                                db.dropTable(AppCommonlyUse.class);
-                                db.dropTable(Channel.class);
-                            }
-                            if (oldVersion < 6) {
-                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Contact")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Contact rename to Contact");
-                                    db.execNonQuery("alter table Contact add lastUpdateTime String");
-                                }
-
-                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Channel")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Channel rename to Channel");
-                                }
-
-                                if (tableIsExist(db, "com_inspur_emmcloud_bean_ChannelOperationInfo")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_ChannelOperationInfo rename to ChannelOperationInfo");
-                                }
-
-                                if (tableIsExist(db, "com_inspur_emmcloud_bean_SearchModel")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_SearchModel rename to SearchModel");
-                                }
-                                if (tableIsExist(db, "com_inspur_emmcloud_bean_MyCalendarOperation")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MyCalendarOperation rename to MyCalendarOperation");
-                                }
-
-                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Robot")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Robot rename to Robot");
-                                }
-
-                                if (tableIsExist(db, "com_inspur_emmcloud_bean_AppOrder")) {
-                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_AppOrder rename to AppOrder");
-                                }
-
-                            }
-                            if (oldVersion < 7) {
-                                db.dropTable(PVCollectModel.class);
-                            }
+//                            if (oldVersion < 5) {
+//                                db.dropTable(ChannelGroup.class);
+//                                db.dropTable(AppCommonlyUse.class);
+//                                db.dropTable(Channel.class);
+//                            }
+//                            if (oldVersion < 6) {
+//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Contact")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Contact rename to Contact");
+//                                    db.execNonQuery("alter table Contact add lastUpdateTime String");
+//                                }
+//
+//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Channel")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Channel rename to Channel");
+//                                }
+//
+//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_ChannelOperationInfo")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_ChannelOperationInfo rename to ChannelOperationInfo");
+//                                }
+//
+//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_SearchModel")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_SearchModel rename to SearchModel");
+//                                }
+//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_MyCalendarOperation")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_MyCalendarOperation rename to MyCalendarOperation");
+//                                }
+//
+//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_Robot")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_Robot rename to Robot");
+//                                }
+//
+//                                if (tableIsExist(db, "com_inspur_emmcloud_bean_AppOrder")) {
+//                                    db.execNonQuery("alter table com_inspur_emmcloud_bean_AppOrder rename to AppOrder");
+//                                }
+//
+//                            }
+//                            if (oldVersion < 7) {
+//                                db.dropTable(PVCollectModel.class);
+//                            }
                             if (oldVersion < 8) {
                                 if (tableIsExist(db, "Contact")) {
                                     db.execNonQuery("CREATE INDEX contactindex ON Contact(inspurID)");
@@ -97,14 +94,16 @@ public class DbCacheUtils {
 
                             }
                             if (oldVersion < 9) {
-                                db.dropTable(Msg.class);
+                                db.execNonQuery("DROP TABLE IF EXISTS Msg");
                                 db.execNonQuery("DROP TABLE IF EXISTS MsgReadId");
                                 db.execNonQuery("DROP TABLE IF EXISTS MsgMatheSet");
                             }
                             if (oldVersion < 14) {
                                 db.execNonQuery("DROP TABLE IF EXISTS Contact");
                                 db.execNonQuery("DROP TABLE IF EXISTS ContactUser");
-                                ContactUserCacheUtils.setLastQueryTime(0);
+//                                ContactUserCacheUtils.setLastQueryTime(0);
+                                //lastQueryTime清零
+                                PreferencesByUserAndTanentUtils.putLong(MyApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME, 0);
                                 db.execNonQuery("DROP TABLE IF EXISTS Message");
                                 db.execNonQuery("DROP TABLE IF EXISTS MessageMatheSet");
                             }
@@ -232,4 +231,6 @@ public class DbCacheUtils {
             e.printStackTrace();
         }
     }
+
+
 }

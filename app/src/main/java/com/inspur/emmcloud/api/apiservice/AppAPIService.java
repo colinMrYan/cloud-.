@@ -14,11 +14,12 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
@@ -30,8 +31,6 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
@@ -68,19 +67,13 @@ public class AppAPIService {
         String clientVersion = AppUtils.getVersion(context);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         params.addParameter("clientVersion", clientVersion);
-        if (((MyApplication) context.getApplicationContext()).isVersionDev()) {
-            params.addParameter("clientType", "dev_android");
+        if (AppUtils.isAppVersionStandard()) {
+            params.addParameter("clientType", "android");
         } else {
-            if (AppUtils.isAppVersionStandard()) {
-                params.addParameter("clientType", "android");
-            } else {
-                String appFirstLoadAlis =
-                        PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
-                params.addParameter("clientType", "android_" + appFirstLoadAlis);
-            }
-
+            String appFirstLoadAlis =
+                    PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
+            params.addParameter("clientType", "android_" + appFirstLoadAlis);
         }
-
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -311,12 +304,12 @@ public class AppAPIService {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0),lastMultipleLayoutVersion));
+                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0), lastMultipleLayoutVersion));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnNaviBarModelFail(error,responseCode);
+                apiInterface.returnNaviBarModelFail(error, responseCode);
             }
         });
     }
@@ -394,12 +387,12 @@ public class AppAPIService {
         HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUploadMDMInfoSuccess(new UploadMDMInfoResult(new String(arg0)));
+                // apiInterface.returnUploadMDMInfoSuccess(new UploadMDMInfoResult(new String(arg0)));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUploadMDMInfoFail();
+                // apiInterface.returnUploadMDMInfoFail();
             }
 
             @Override
@@ -879,26 +872,4 @@ public class AppAPIService {
 
         });
     }
-
-    /**
-     * 退出登录时取消token
-     */
-    public void cancelToken() {
-        final String url = APIUri.getCancelTokenUrl() + "?destroy=ALL";
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-            }
-        });
-    }
-
 }

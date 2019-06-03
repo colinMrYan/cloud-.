@@ -9,9 +9,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:paddingTop="2dp"
+        android:orientation="vertical"
         android:paddingBottom="3dp"
-        android:orientation="vertical">
+        android:paddingTop="2dp">
 
         <ImageView
             android:id="@+id/imageview"
@@ -19,17 +19,17 @@
             android:layout_height="36dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:src="@drawable/selector_tab_unknown_btn"
             android:focusable="false"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/selector_tab_unknown_btn" />
 
         <TextView
             android:id="@+id/textview"
-            android:layout_marginTop="-2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="-2dp"
             android:textColor="?attr/footer_tab_text_color"
-            android:textSize="10sp"/>
+            android:textSize="10sp" />
     </LinearLayout>
 
     <RelativeLayout

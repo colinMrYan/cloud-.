@@ -34,44 +34,42 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/content_bg"
-        android:layout_below="@id/rl_header">
+        android:layout_below="@id/rl_header"
+        android:background="@color/content_bg">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_header"
-            >
+            android:layout_below="@id/rl_header">
 
             <com.inspur.emmcloud.widget.ScrollViewWithListView
                 android:id="@+id/lv_enterprise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@color/transparent"
-                android:dividerHeight="0dp">
-            </com.inspur.emmcloud.widget.ScrollViewWithListView>
-
+                android:dividerHeight="0dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
 
             <RelativeLayout
                 android:id="@+id/rl_setting_close_auto_select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
-                android:visibility="gone"
-                android:onClick="onClick"
                 android:layout_below="@id/lv_enterprise"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:onClick="onClick"
                 android:paddingLeft="16dp"
-                android:background="@color/white">
+                android:visibility="gone">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
-                    android:ellipsize="end"
-                    android:paddingTop="11dp"
-                    android:paddingBottom="11dp"
                     android:layout_centerVertical="true"
+                    android:ellipsize="end"
                     android:maxLines="1"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/close_auto_select_enterprise"
                     android:textColor="#333333"
                     android:textSize="16sp" />
@@ -89,37 +87,37 @@
 
 
             <!--<RelativeLayout-->
-                <!--android:id="@+id/rl_setting_auto_select_enterprise"-->
-                <!--android:visibility="gone"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:layout_below="@id/lv_enterprise"-->
-                <!--android:paddingLeft="16dp"-->
-                <!--android:background="@drawable/text_layout_selector">-->
+            <!--android:id="@+id/rl_setting_auto_select_enterprise"-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_below="@id/lv_enterprise"-->
+            <!--android:paddingLeft="16dp"-->
+            <!--android:background="@drawable/text_layout_selector">-->
 
-                <!--<TextView-->
-                    <!--android:id="@+id/tv_setting_auto_select_enterprise"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:paddingBottom="11dp"-->
-                    <!--android:paddingTop="11dp"-->
-                    <!--android:text="@string/close_auto_select_enterprise"-->
-                    <!--android:textSize="16sp" />-->
+            <!--<TextView-->
+            <!--android:id="@+id/tv_setting_auto_select_enterprise"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:paddingBottom="11dp"-->
+            <!--android:paddingTop="11dp"-->
+            <!--android:text="@string/close_auto_select_enterprise"-->
+            <!--android:textSize="16sp" />-->
 
-                <!--<com.inspur.emmcloud.widget.SwitchView-->
-                    <!--android:id="@+id/switch_view_setting_auto_select_enterprise"-->
-                    <!--android:layout_width="37dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginRight="15dp" />-->
-                <!--<View-->
-                    <!--android:layout_below="@id/tv_setting_auto_select_enterprise"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="0.5px"-->
-                    <!--android:background="@color/color_list_divider" />-->
+            <!--<com.inspur.emmcloud.widget.SwitchView-->
+            <!--android:id="@+id/switch_view_setting_auto_select_enterprise"-->
+            <!--android:layout_width="37dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="15dp" />-->
+            <!--<View-->
+            <!--android:layout_below="@id/tv_setting_auto_select_enterprise"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0.5px"-->
+            <!--android:background="@color/color_list_divider" />-->
             <!--</RelativeLayout>-->
 
 

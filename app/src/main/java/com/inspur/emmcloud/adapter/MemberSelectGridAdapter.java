@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.bean.chat.PersonDto;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
 import java.util.List;

@@ -3,9 +3,9 @@ package com.inspur.emmcloud.api;
 import android.content.Context;
 import android.content.Intent;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.ui.mine.setting.NoPermissionDialogActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 

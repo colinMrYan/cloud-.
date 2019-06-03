@@ -2,9 +2,10 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 
 
 /**
@@ -40,9 +41,15 @@ public class PreferencesByUserAndTanentUtils {
     }
 
     private static String getPreferenceName(Context context) {
-        String userID = PreferencesUtils.getString(MyApplication.getInstance(), "userID", "");
+        String uid = PreferencesUtils.getString(MyApplication.getInstance(), "userID", null);
         String tanent = MyApplication.getInstance().getTanent();
-        return userID + tanent;
+        if (TextUtils.isEmpty(uid)){
+            uid = "unknown_user";
+        }
+        if (TextUtils.isEmpty(tanent)){
+            tanent = "unknown_tanent";
+        }
+        return uid + tanent;
     }
 
     /**

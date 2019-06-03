@@ -14,8 +14,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:text="@string/app_center"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize_big" />
@@ -28,10 +28,10 @@
             android:layout_centerVertical="true"
             android:background="@null"
             android:clickable="true"
+            android:minWidth="0dp"
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
-            android:minWidth="0dp"
             android:text="@string/finish"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_function_textsize"
@@ -41,11 +41,11 @@
             android:id="@+id/ibt_appcenter_enter"
             android:layout_width="38dp"
             android:layout_height="match_parent"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="4dp"
             android:layout_toLeftOf="@+id/ibt_appcenter_config"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:scaleType="centerInside"
             android:src="?attr/ic_appcenter_enter" />
 
@@ -53,10 +53,10 @@
             android:id="@+id/ibt_appcenter_config"
             android:layout_width="46dp"
             android:layout_height="match_parent"
-            android:paddingRight="16dp"
-            android:paddingLeft="8dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="16dp"
             android:scaleType="centerInside"
             android:src="?attr/ic_add" />
     </RelativeLayout>
@@ -79,41 +79,44 @@
             android:numColumns="4"
             android:scrollbars="none" />
     </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+
     <RelativeLayout
         android:id="@+id/my_app_recommend_app_widget_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="20dp"
-        android:visibility="gone"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:background="@drawable/shape_recommend_widget_layout"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/shape_recommend_widget_layout"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:visibility="gone">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/my_app_recommend_app_wiget_recyclerview"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            />
+            android:layout_height="48dp" />
+
         <ImageView
             android:id="@+id/my_app_recommend_app_widget_img"
             android:layout_width="39dp"
             android:layout_height="39dp"
-            android:layout_toRightOf="@id/my_app_recommend_app_wiget_recyclerview"
             android:layout_centerVertical="true"
-            android:paddingRight="14dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="12dp"
+            android:layout_toRightOf="@id/my_app_recommend_app_wiget_recyclerview"
             android:paddingBottom="12dp"
-            android:src="@drawable/ic_recommend_close"/>
+            android:paddingLeft="10dp"
+            android:paddingRight="14dp"
+            android:paddingTop="12dp"
+            android:src="@drawable/ic_recommend_close" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_no_app"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:layout_below="@id/rl_header"
+        android:layout_centerInParent="true"
         android:background="#00000000"
         android:gravity="center"
         android:visibility="gone">
@@ -127,15 +130,14 @@
             android:src="@drawable/ic_no_app" />
 
         <TextView
-            android:layout_below="@id/iv_no_app"
-            android:layout_marginTop="18dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_app"
-            android:layout_marginBottom="30dp"
-            android:textColor="#999999"
-            android:textSize="16sp"
+            android:layout_below="@id/iv_no_app"
             android:layout_centerHorizontal="true"
-            />
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/no_app"
+            android:textColor="#999999"
+            android:textSize="16sp" />
     </RelativeLayout>
 </RelativeLayout>

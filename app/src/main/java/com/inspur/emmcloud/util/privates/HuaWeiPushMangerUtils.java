@@ -7,9 +7,9 @@ import com.huawei.hms.api.HuaweiApiClient.OnConnectionFailedListener;
 import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

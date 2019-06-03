@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -23,10 +22,10 @@
             <ImageButton
                 android:id="@+id/ibt_back"
                 android:layout_width="44dp"
-                android:padding="11dp"
                 android:layout_height="44dp"
                 android:layout_centerVertical="true"
                 android:onClick="onClick"
+                android:padding="11dp"
                 android:scaleType="fitXY"
                 android:src="?attr/ic_back_btn" />
 
@@ -50,54 +49,55 @@
             android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toLeftOf="@id/function_layout"
             android:drawablePadding="5dp"
             android:ellipsize="middle"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
-            android:layout_centerVertical="true"
-            android:singleLine="true"
             android:gravity="center_vertical"
-            android:layout_toLeftOf="@id/function_layout"
+            android:singleLine="true"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_textsize_big"/>
+            android:textSize="@dimen/header_textsize_big" />
 
         <!--<TextView-->
-            <!--android:id="@+id/header_text"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:drawablePadding="5dp"-->
-            <!--android:ellipsize="middle"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:paddingLeft="5dp"-->
-            <!--android:paddingRight="5dp"-->
-            <!--android:singleLine="true"-->
-            <!--android:textColor="?attr/header_text_color"-->
-            <!--android:textSize="@dimen/header_textsize" />-->
+        <!--android:id="@+id/header_text"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:drawablePadding="5dp"-->
+        <!--android:ellipsize="middle"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingLeft="5dp"-->
+        <!--android:paddingRight="5dp"-->
+        <!--android:singleLine="true"-->
+        <!--android:textColor="?attr/header_text_color"-->
+        <!--android:textSize="@dimen/header_textsize" />-->
         <ImageView
             android:id="@+id/imp_change_font_size_btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
             android:clickable="true"
             android:onClick="onClick"
+            android:paddingBottom="17dp"
             android:paddingLeft="13dp"
             android:paddingRight="16dp"
             android:paddingTop="17dp"
-            android:paddingBottom="17dp"
-            android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:src="?attr/ic_header_option"
             android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/ll_web_function"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="?attr/header_bg"
             android:clickable="true"
             android:gravity="center_vertical"
-            android:background="?attr/header_bg"
-            android:layout_alignParentRight="true"
             android:orientation="horizontal"></LinearLayout>
 
 
@@ -121,37 +121,37 @@
         android:layout_height="match_parent"
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg"
-        android:visibility="gone"
         android:onClick="onClick"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="113dp"
             android:layout_height="133dp"
-            android:layout_marginTop="133dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="133dp"
             android:src="@drawable/imp_load_fail" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:text="@string/web_load_fail"
             android:textColor="#666666"
-            android:layout_gravity="center_horizontal"
             android:textSize="16sp" />
 
         <TextView
             android:id="@+id/refresh_text"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
             android:background="@drawable/bg_net_error_tip"
-            android:layout_gravity="center_horizontal"
             android:gravity="center"
+            android:onClick="onClick"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            android:onClick="onClick"
             android:text="@string/web_reload"
             android:textColor="#666666"
             android:textSize="15sp" />

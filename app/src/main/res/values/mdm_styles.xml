@@ -1,7 +1,6 @@
 <resources>
 
 
-    
     <style name="dialog_progressbar" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <!-- 边框 -->

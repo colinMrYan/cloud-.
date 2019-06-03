@@ -7,8 +7,8 @@ import android.net.Uri;
 import android.os.Vibrator;
 import android.provider.Settings;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 

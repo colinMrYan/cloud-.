@@ -3,21 +3,21 @@
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_header"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="?attr/header_bg" >
+        android:background="?attr/header_bg">
 
         <ImageButton
             android:id="@+id/ibt_back"
             android:layout_width="44dp"
-            android:padding="11dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
             android:onClick="onClick"
+            android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
 
@@ -31,13 +31,13 @@
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_order_by"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header"
-        android:background="#ffffff"
-        >
+        android:background="#ffffff">
 
         <TextView
             android:id="@+id/tv_order_by_name_asc"
@@ -57,10 +57,10 @@
             android:layout_centerHorizontal="true"
             android:drawableRight="@drawable/ic_volume_menu_drop_down"
             android:onClick="onClick"
-            android:paddingRight="12dp"
-            android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:paddingLeft="24dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp"
             android:text="@string/file_type"
             android:textColor="#666666"
             android:textSize="15sp" />
@@ -89,23 +89,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_order_by"
-        android:background="#FFECEFF3" >
+        android:background="#FFECEFF3">
 
         <ListView
             android:id="@+id/lv_file"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dividerHeight="0dp"
             android:divider="@null"
-            >
-        </ListView>
+            android:dividerHeight="0dp"></ListView>
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_no_channel_file"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
         android:layout_below="@id/rl_order_by"
+        android:layout_centerInParent="true"
         android:background="#00000000"
         android:gravity="center"
         android:visibility="gone">
@@ -119,15 +118,14 @@
             android:src="@drawable/ic_no_channel_file" />
 
         <TextView
-            android:layout_below="@id/iv_no_channel_file"
-            android:layout_marginTop="18dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/iv_no_channel_file"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="30dp"
+            android:layout_marginTop="18dp"
             android:text="@string/no_channel_file"
             android:textColor="#999999"
-            android:textSize="16sp"
-            android:layout_centerHorizontal="true"
-            />
+            android:textSize="16sp" />
     </RelativeLayout>
 </RelativeLayout>

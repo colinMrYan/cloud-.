@@ -11,11 +11,10 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.bean.system.VoiceResult;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -124,7 +123,7 @@ public class Voice2StringMessageUtils {
 //        //网络转写超时设置
 //        speechRecognizer.setParameter(SpeechConstant.NET_TIMEOUT, "8000");
 
-        String language = AppUtils.getCurrentAppLanguage(context);
+        String language = LanguageManager.getInstance().getCurrentAppLanguage();
         switch (language) {
             case "zh-Hans":
                 // 设置语言

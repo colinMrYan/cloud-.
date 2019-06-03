@@ -23,7 +23,7 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 
 import com.google.zxing.LuminanceSource;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 
 import java.io.ByteArrayOutputStream;
 

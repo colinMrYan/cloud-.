@@ -1,53 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
-import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.bean.system.AppConfig;
-import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.service.BackgroundService;
-import com.inspur.emmcloud.service.CoreService;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.NotificationSetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppBadgeUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -63,6 +15,55 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
+import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
+import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.bean.system.AppConfig;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.service.BackgroundService;
+import com.inspur.emmcloud.service.CoreService;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
+import com.inspur.emmcloud.util.privates.AppBadgeUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.util.privates.DataCleanManager;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
+import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -324,8 +325,7 @@ public class SettingActivity extends BaseActivity {
     private void setLanguage() {
         // TODO Auto-generated method stub
         String languageName = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "language", "");
-        String languageJson = PreferencesUtils
-                .getString(this, MyApplication.getInstance().getTanent() + "appLanguageObj");
+        String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
         if (languageJson != null && !languageName.equals("followSys")) {
             Language language = new Language(languageJson);
             languageNameText.setText(new Language(languageJson).getLabel());

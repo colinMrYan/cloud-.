@@ -4,25 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="12dp"
-    >
+    android:paddingBottom="12dp">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:paddingTop="20dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="12dp"
-            android:paddingBottom="12dp"
             android:clickable="true"
             android:focusable="true"
+            android:paddingBottom="12dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="12dp"
+            android:paddingTop="20dp"
             android:text="@string/image_cancel"
             android:textColor="@color/image_color_primary"
             android:textSize="16sp" />
@@ -32,12 +30,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
-            android:paddingTop="20dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
-            android:paddingBottom="12dp"
             android:clickable="true"
             android:focusable="true"
+            android:paddingBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="15dp"
+            android:paddingTop="20dp"
             android:text="@string/image_done"
             android:textColor="@color/image_color_accent"
             android:textSize="16sp" />
@@ -49,10 +47,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:padding="12dp"
         android:layout_weight="1"
         android:background="@null"
         android:gravity="top"
+        android:padding="12dp"
         android:textColor="@color/image_color_primary"
         android:textSize="24sp"
         tools:text="这里添加文字" />

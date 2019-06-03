@@ -31,16 +31,16 @@
         android:id="@+id/txt_app_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/app_icon_img"
         android:layout_below="@id/app_name_text"
+        android:layout_gravity="center_vertical"
+        android:layout_toRightOf="@id/app_icon_img"
         android:ellipsize="end"
         android:gravity="center"
         android:paddingRight="10dp"
         android:singleLine="true"
         android:textColor="#979797"
-        android:textSize="12sp"
-        android:layout_alignBottom="@id/app_icon_img"
-        android:layout_gravity="center_vertical"
-        android:layout_toRightOf="@id/app_icon_img"/>
+        android:textSize="12sp" />
 
 
     <TextView
@@ -50,7 +50,6 @@
         android:layout_alignBottom="@id/app_icon_img"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/app_icon_img"
-        android:visibility="gone"
         android:background="@drawable/shape_appcenter_round_arrow"
         android:ellipsize="end"
         android:gravity="center"
@@ -58,20 +57,21 @@
         android:paddingRight="10dp"
         android:singleLine="true"
         android:textColor="@color/text_black"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/app_icon_img"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
-        android:visibility="gone"
         android:layout_toRightOf="@id/app_name_text"
         android:background="@drawable/shape_appcenter_round_with_color"
-        android:layout_centerVertical="true"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
-        android:text="官方" />
+        android:text="官方"
+        android:visibility="gone" />
 
 
     <ImageView

@@ -7,8 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:elevation="5dp"
-        >
+        android:elevation="5dp">
 
         <TextView
             android:id="@+id/tv_permission_dialog_title"
@@ -48,7 +47,7 @@
             android:layout_below="@id/progress_bar_apk_download"
             android:layout_marginTop="6dp"
             android:textColor="#3E4A59"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/tv_downloading"

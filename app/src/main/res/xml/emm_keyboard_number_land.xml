@@ -42,16 +42,16 @@
         <Key
             android:codes="-9"
             android:keyLabel="@string/emm_keyboard_symbol"
-            android:keyWidth="14.7%p"/>
+            android:keyWidth="14.7%p" />
         <Key
             android:codes="-8"
             android:keyLabel="ABC"
-            android:keyWidth="14.7%p"/>
+            android:keyWidth="14.7%p" />
 
         <Key
             android:codes="48"
             android:keyLabel="0"
-            android:keyWidth="30.6%p"/>
+            android:keyWidth="30.6%p" />
         <!--<Key-->
         <!--android:codes="-3"-->
         <!--android:keyLabel="完成" />-->
@@ -59,8 +59,8 @@
         <Key
             android:codes="-5"
             android:isRepeatable="true"
-            android:keyWidth="30.6%p"
+            android:keyIcon="@drawable/icon_keyboard_delete"
             android:keyLabel="@string/delete"
-            android:keyIcon="@drawable/icon_keyboard_delete" />
+            android:keyWidth="30.6%p" />
     </Row>
 </Keyboard>

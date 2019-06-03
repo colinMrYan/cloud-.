@@ -1,30 +1,5 @@
 package com.inspur.imp.plugin.camera.mycamera;
 
-import static android.Manifest.permission.CAMERA;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.imp.api.ImpBaseActivity;
-import com.inspur.imp.plugin.camera.Bimp;
-import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -51,6 +26,32 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.imp.api.ImpBaseActivity;
+import com.inspur.imp.plugin.camera.Bimp;
+import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.Manifest.permission.CAMERA;
 
 public class MyCameraActivity extends ImpBaseActivity implements View.OnClickListener, SurfaceHolder.Callback {
 
