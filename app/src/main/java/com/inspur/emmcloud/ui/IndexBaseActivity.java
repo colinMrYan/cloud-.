@@ -1,14 +1,25 @@
 package com.inspur.emmcloud.ui;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -53,26 +64,15 @@ import com.inspur.emmcloud.widget.dialogs.ConfirmDialog;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Configuration;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -233,36 +233,36 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
 
     private ArrayList<MainTabResult> getMainTabList() {
         ArrayList<MainTabResult> mainTabResultList = null;
-        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
-        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this, Constant.APP_TAB_LAYOUT_DATA, ""));
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
         //首先根据用户设置的模式来获取naviBarSchemeList
         for (int i = 0; i < naviBarSchemeList.size(); i++) {
-            if(naviBarSchemeList.get(i).getName().equals(currentTabLayoutName)){
+            if (naviBarSchemeList.get(i).getName().equals(currentTabLayoutName)) {
                 mainTabResultList = naviBarSchemeList.get(i).getMainTabResultList();
                 break;
             }
         }
         //如果没有用户设置的模式或者是第一次安装默认的模式  使用defaultScheme
-        if((mainTabResultList == null || mainTabResultList.size() == 0) && naviBarSchemeList.size() > 0){
+        if ((mainTabResultList == null || mainTabResultList.size() == 0) && naviBarSchemeList.size() > 0) {
             String defaultTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
             for (int i = 0; i < naviBarSchemeList.size(); i++) {
-                if(naviBarSchemeList.get(i).getName().equals(defaultTabLayoutName)){
+                if (naviBarSchemeList.get(i).getName().equals(defaultTabLayoutName)) {
                     mainTabResultList = naviBarSchemeList.get(i).getMainTabResultList();
-                    PreferencesByUserAndTanentUtils.putString(this,Constant.APP_TAB_LAYOUT_NAME,defaultTabLayoutName);
+                    PreferencesByUserAndTanentUtils.putString(this, Constant.APP_TAB_LAYOUT_NAME, defaultTabLayoutName);
                     break;
                 }
             }
         }
         //如果前面两个都没有则使用mainTab
-        if(mainTabResultList == null || mainTabResultList.size() == 0){
+        if (mainTabResultList == null || mainTabResultList.size() == 0) {
             String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
                     Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
             mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
         }
         //最终得到tab的List之后发送给CommunicationFragment
-        if(mainTabResultList != null){
+        if (mainTabResultList != null) {
             GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult();
             MainTabPayLoad mainTabPayLoad = new MainTabPayLoad();
             mainTabPayLoad.setMainTabResultList(mainTabResultList);
@@ -310,41 +310,41 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && batteryDialogIsShow) {
             try {
                 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-                boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
-                if (!hasIgnored) {
-                    confirmDialog = new ConfirmDialog(context, R.string.white_list_tip_content,
-                            R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
-                    confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
-                        @Override
-                        public void doConfirm() {
-                            if (confirmDialog.getIsHide()) {
-                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                            }
-                            try {
+//                boolean hasIgnored = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+//                if (!hasIgnored) {
+                confirmDialog = new ConfirmDialog(context, R.string.white_list_tip_content,
+                        R.string.battery_tip_ishide, R.string.battery_tip_toset, R.string.battery_tip_cancel);
+                confirmDialog.setClicklistener(new ConfirmDialog.ClickListenerInterface() {
+                    @Override
+                    public void doConfirm() {
+                        if (confirmDialog.getIsHide()) {
+                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                        }
+                        try {
 //                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
 //                                intent.setData(Uri.parse("package:" + context.getPackageName()));
 //                                startActivity(intent);
-                                //自启动设置  zyj
-                                WhiteListUtil.enterWhiteListSetting(context);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                            } finally {
-                                confirmDialog.dismiss();
-                            }
-                        }
-
-                        @Override
-                        public void doCancel() {
-                            if (confirmDialog.getIsHide()) {
-                                PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
-                            }
-                            // TODO Auto-generated method stub
+                            //自启动设置  zyj
+                            WhiteListUtil.enterWhiteListSetting(context);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                        } finally {
                             confirmDialog.dismiss();
                         }
-                    });
-                    confirmDialog.show();
-                }
+                    }
+
+                    @Override
+                    public void doCancel() {
+                        if (confirmDialog.getIsHide()) {
+                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
+                        }
+                        // TODO Auto-generated method stub
+                        confirmDialog.dismiss();
+                    }
+                });
+                confirmDialog.show();
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -456,14 +456,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onReceiveScheme(final SimpleEventMessage simpleEventMessage){
-        if(simpleEventMessage.getAction().equals(Constant.APP_TAB_BAR_WORK)){
+    public void onReceiveScheme(final SimpleEventMessage simpleEventMessage) {
+        if (simpleEventMessage.getAction().equals(Constant.APP_TAB_BAR_WORK)) {
             SimpleEventMessage stickyEvent = EventBus.getDefault().getStickyEvent(SimpleEventMessage.class);
-            if(stickyEvent != null) {
+            if (stickyEvent != null) {
                 EventBus.getDefault().removeStickyEvent(stickyEvent);
             }
             int index = findTargetTabIndex();
-            if(mTabHost != null ){
+            if (mTabHost != null) {
                 mTabHost.setCurrentTab(index);
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -471,18 +471,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                         simpleEventMessage.setAction(Constant.SCHEDULE_DETAIL);
                         EventBus.getDefault().post(simpleEventMessage);
                     }
-                },100);
+                }, 100);
             }
         }
     }
 
     /**
      * 通过scheme找到跳转的页面位置
+     *
      * @return
      */
     private int findTargetTabIndex() {
         for (int i = 0; i < mainTabResultList.size(); i++) {
-            if(mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_WORK)){
+            if (mainTabResultList.get(i).getUri().equals(Constant.APP_TAB_BAR_WORK)) {
                 return i;
             }
         }
@@ -851,7 +852,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         }
     }
 
-    public void updateNaviTabbar(){
+    public void updateNaviTabbar() {
         mTabHost.clearAllTabs(); // 更新tabbar
         initTabs();
     }
