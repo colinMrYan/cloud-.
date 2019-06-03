@@ -173,7 +173,7 @@ public class CommunicationFragment extends BaseFragment {
         registerMessageFragmentReceiver();
         getConversationList();
         setHeaderFunctionOptions(null);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
     }
 
     /**

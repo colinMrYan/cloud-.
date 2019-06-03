@@ -39,11 +39,9 @@ public class DisplayTxtRichMsg {
      * 富文本卡片
      *
      * @param context
-     * @param childView
      * @param msg
      */
-    public static View displayRichTextMsg(final Context context,
-                                          Msg msg) {
+    public static View displayRichTextMsg(final Context context, Msg msg) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());

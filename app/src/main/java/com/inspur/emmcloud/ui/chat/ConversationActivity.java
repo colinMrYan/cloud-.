@@ -1382,6 +1382,9 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 //  transmitImgMsg(cid, uiMessage.getMessage());
                 break;
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                transmitTextMsg(cid, uiMessage);
+                break;
             default:
                 break;
         }
@@ -1392,10 +1395,8 @@ public class ConversationActivity extends ConversationBaseActivity {
      *
      * @param cid
      */
-    private void transmitTextMsg(String cid, Message sendMessage) {
-        String text = sendMessage.getMsgContentTextPlain().getText();
-        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(ConversationActivity.this, text, sendMessage.getMsgContentTextPlain().getMentionsMap());
-        text = spannableString.toString();
+    private void transmitTextMsg(String cid, UIMessage uiMessage) {
+        String text = uiMessage2Content(uiMessage);
         if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
             if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             } else {
@@ -1431,6 +1432,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 break;
@@ -1550,35 +1552,50 @@ public class ConversationActivity extends ConversationBaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
-                        Message message = uiMessage.getMessage();
-                        SpannableString spannableString;
+                        content = uiMessage2Content(uiMessage);
+                        if (StringUtils.isBlank(content)) {
+                            content = "";
+                        }
                         switch (operationsId[which]) {
                             case R.string.chat_long_click_copy:
-                                String text = message.getMsgContentTextPlain().getText();
-                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
-                                text = spannableString.toString();
-                                if (!StringUtils.isBlank(text))
-                                    copyToClipboard(context, text);
+                                copyToClipboard(context, content);
                                 break;
                             case R.string.chat_long_click_transmit:
                                 shareMessageToFrinds(context);
                                 break;
                             case R.string.chat_long_click_schedule:
-                                content = message.getMsgContentTextPlain().getText();
-                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, content, message.getMsgContentTextPlain().getMentionsMap());
-                                content = spannableString.toString();
-                                if (!StringUtils.isBlank(content))
-                                    addTextToSchedule(content);
+                                addTextToSchedule(content);
                                 break;
                             case R.string.chat_long_click_copy_text:
-                                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
-                                if (!StringUtils.isBlank(content))
-                                    copyToClipboard(context, content);
+                                copyToClipboard(context, content);
                                 break;
                         }
                         dialog.dismiss();
                     }
                 }).show();
+    }
+
+    private String uiMessage2Content(UIMessage uiMessage) {
+        String content = null;
+        switch (uiMessage.getMessage().getType()) {
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(
+                        MyApplication.getInstance(),
+                        uiMessage.getMessage().getMsgContentTextMarkdown().getText(),
+                        uiMessage.getMessage().getMsgContentTextMarkdown().getMentionsMap());
+                content = spannableString.toString();
+                if (!StringUtils.isBlank(content)) {
+                    content = MarkDown.fromMarkdown(content);
+                }
+                break;
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
+                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), text,
+                        uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
+                content = spannableString.toString();
+                break;
+        }
+        return content;
     }
 
     /**

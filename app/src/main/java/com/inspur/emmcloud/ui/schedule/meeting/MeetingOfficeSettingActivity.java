@@ -104,7 +104,9 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
+        if (isMeetingOfficeChanged) {
+            setResult(RESULT_OK);
+        }
         finish();
     }
 
@@ -154,6 +156,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
 
         @Override
         public void returnAddMeetingOfficeSuccess(Office office, Building building) {
+            isMeetingOfficeChanged = true;
             LoadingDialog.dimissDlg(loadingDlg);
             officeIdList.add(office.getId());
             officeList.add(office);
@@ -169,6 +172,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
 
         @Override
         public void returnDeleteOfficeSuccess(Office office) {
+            isMeetingOfficeChanged = true;
             LoadingDialog.dimissDlg(loadingDlg);
             officeList.remove(office);
             officeIdList.remove(office.getId());

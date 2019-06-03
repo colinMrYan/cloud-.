@@ -152,10 +152,8 @@ public class MeetingAddActivity extends BaseActivity {
             remindEvent = meeting.getRemindEventObj();
         } else {
             String myUid = MyApplication.getInstance().getUid();
-            SearchModel myInfoSearchModel = new SearchModel();
             ContactUser myInfo = ContactUserCacheUtils.getContactUserByUid(myUid);
-            myInfoSearchModel.setName(myInfo.getName());
-            myInfoSearchModel.setId(myUid);
+            SearchModel myInfoSearchModel = new SearchModel(myInfo);
             attendeeSearchModelList.add(myInfoSearchModel);
             startTimeCalendar = TimeUtils.getNextHalfHourTime(Calendar.getInstance());
             endTimeCalendar = (Calendar) startTimeCalendar.clone();
