@@ -28,6 +28,7 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/app_status_btn"
         android:layout_toRightOf="@id/app_icon_img"
+        android:textColor="#333333"
         android:ellipsize="end"
         android:singleLine="true"
         android:textSize="@dimen/content_normal_textsize"
