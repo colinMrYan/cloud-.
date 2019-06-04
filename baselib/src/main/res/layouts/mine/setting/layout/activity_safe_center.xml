@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToPadding="true"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -16,18 +15,18 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_centerVertical="true"
-            android:background="@null"
             android:onClick="onClick"
             android:padding="11dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_back_btn" />
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/setting_safe_gesture_face"
+            android:text="@string/setting_safe_center"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -40,73 +39,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_layout_selector"
-            android:paddingLeft="16dp">
-
-            <TextView
-                android:id="@+id/tv_setting_safe_start_guesture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:textColor="#333333"
-                android:text="@string/switch_gesture_unlock"
-                android:textSize="16sp" />
-
-            <com.inspur.emmcloud.widget.SwitchView
-                android:id="@+id/switch_view_setting_safe_start_guesture"
-                android:layout_width="37dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/tv_setting_safe_start_guesture"
-                android:background="@color/color_list_divider" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/text_layout_selector"
-            android:paddingLeft="16dp">
-
-            <TextView
-                android:id="@+id/tv_setting_safe_start_face"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="11dp"
-                android:paddingTop="11dp"
-                android:textColor="#333333"
-                android:text="@string/face_enter"
-                android:textSize="16sp" />
-
-            <com.inspur.emmcloud.widget.SwitchView
-                android:id="@+id/switch_view_setting_safe_start_face"
-                android:layout_width="37dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="16dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:layout_below="@id/tv_setting_safe_start_face"
-                android:background="@color/color_list_divider" />
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/rl_setting_safe_reset_guesture"
+            android:id="@+id/rl_setting_safe_gesture_face"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector"
@@ -115,13 +48,14 @@
             android:paddingRight="16dp">
 
             <TextView
-                android:id="@+id/tv_setting_safe_reset_guesture"
+                android:id="@+id/tv_setting_safe_gesture_face"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/switch_gesture_reset_unlock"
+                android:text="@string/setting_safe_gesture_face"
+                android:textColor="#333333"
                 android:textSize="16sp" />
 
             <ImageView
@@ -135,12 +69,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_below="@+id/tv_setting_safe_reset_guesture"
+                android:layout_below="@+id/tv_setting_safe_gesture_face"
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_setting_safe_reset_face"
+            android:id="@+id/rl_setting_safe_account_device"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/text_layout_selector"
@@ -149,13 +83,14 @@
             android:paddingRight="16dp">
 
             <TextView
-                android:id="@+id/tv_setting_safe_reset_face"
+                android:id="@+id/tv_setting_safe_account_device"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
-                android:text="@string/experience_face_verify"
+                android:text="@string/setting_safe_center"
+                android:textColor="#333333"
                 android:textSize="16sp" />
 
             <ImageView
@@ -169,12 +104,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_below="@+id/tv_setting_safe_reset_face"
+                android:layout_below="@id/tv_setting_safe_account_device"
                 android:background="@color/color_list_divider" />
         </RelativeLayout>
+
 
     </LinearLayout>
 
+
 </RelativeLayout>
-
-
