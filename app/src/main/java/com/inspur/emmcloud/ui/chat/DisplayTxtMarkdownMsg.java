@@ -84,6 +84,23 @@ public class DisplayTxtMarkdownMsg {
             showContentByMarkdown(context, title, titleText, isMyMsg, msg.getId(), markDownLinkList);
         }
         showContentByMarkdown(context, content, contentText, isMyMsg, msg.getId(), markDownLinkList);
+        contentText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //防止改动ui层级后报错
+                try {
+                    ViewParent parent = v.getParent().getParent();
+                    if (parent instanceof ViewGroup) {
+                        // 获取被点击控件的父容器，让父容器执行点击；
+                        ((ViewGroup) parent).performLongClick();
+                    }
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
         return cardContentView;
     }
 

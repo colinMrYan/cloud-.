@@ -134,6 +134,7 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
 
     @Override
     public void complete() {
+        LoadingDialog.dimissDlg(loadingDlg);
         commonLanguageList = LanguageManager.getInstance().getCommonLanguageList(null);
         initData();
     }
