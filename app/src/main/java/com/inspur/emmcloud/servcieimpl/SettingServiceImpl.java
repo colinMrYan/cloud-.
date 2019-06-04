@@ -3,13 +3,13 @@ package com.inspur.emmcloud.servcieimpl;
 import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 
 /**
  * Created by chenmch on 2019/5/31.

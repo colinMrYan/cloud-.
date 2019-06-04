@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    api project(':basemodule')
+    api project(':baselib')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

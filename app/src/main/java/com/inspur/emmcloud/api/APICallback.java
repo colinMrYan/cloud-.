@@ -11,7 +11,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
+import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 
 import org.xutils.common.Callback.CommonCallback;
 import org.xutils.ex.HttpException;

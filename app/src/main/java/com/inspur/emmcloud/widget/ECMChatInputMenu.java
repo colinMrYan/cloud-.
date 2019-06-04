@@ -28,22 +28,22 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.bean.system.VoiceResult;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.FileUtils;
 import com.inspur.emmcloud.util.privates.InputMethodUtils;
 import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
-import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
@@ -520,7 +520,12 @@ public class ECMChatInputMenu extends LinearLayout {
         if (!canMentions) {
             chatInputMenuListener.onVoiceCommucaiton();
         } else {
-            AppUtils.openChannelMemeberSelect((Activity) getContext(), cid, 6);
+            Intent intent = new Intent();
+            intent.setClass(getContext(), MembersActivity.class);
+            intent.putExtra("title", getContext().getString(com.inspur.basemodule.R.string.voice_communication_choice_members));
+            intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
+            intent.putExtra("cid", cid);
+            getContext().startActivity(intent);
         }
     }
 

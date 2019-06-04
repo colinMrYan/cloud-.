@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.richtext.ImageHolder;
 import com.inspur.emmcloud.util.privates.richtext.RichTextConfig;
 import com.inspur.emmcloud.util.privates.richtext.callback.ImageGetter;

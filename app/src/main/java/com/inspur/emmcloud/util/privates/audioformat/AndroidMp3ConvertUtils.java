@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 import java.io.File;
 

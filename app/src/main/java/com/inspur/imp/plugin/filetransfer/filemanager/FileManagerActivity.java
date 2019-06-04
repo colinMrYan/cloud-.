@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.imp.plugin.filetransfer.filemanager.adapter.FileAdapter;
 import com.inspur.imp.plugin.filetransfer.filemanager.adapter.TitleAdapter;
 import com.inspur.imp.plugin.filetransfer.filemanager.adapter.base.RecyclerViewAdapter;

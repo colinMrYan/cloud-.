@@ -17,7 +17,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
-
+    sourceSets.main {
+        jniLibs.srcDirs = ['libs']
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -82,7 +84,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
     api deps.support.compat
     api deps.support.design
     api deps.support.v7.appcompat

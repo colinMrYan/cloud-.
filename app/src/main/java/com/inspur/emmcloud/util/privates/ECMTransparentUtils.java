@@ -3,6 +3,8 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.push.WebSocketPush;
 

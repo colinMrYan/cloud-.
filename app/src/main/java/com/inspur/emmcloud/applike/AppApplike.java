@@ -2,8 +2,10 @@ package com.inspur.emmcloud.applike;
 
 import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
+import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.servcieimpl.AppcenterServiceImpl;
 import com.inspur.emmcloud.servcieimpl.SettingServiceImpl;
+import com.inspur.emmcloud.servcieimpl.WebServiceImpl;
 import com.luojilab.component.componentlib.applicationlike.IApplicationLike;
 import com.luojilab.component.componentlib.router.Router;
 import com.luojilab.component.componentlib.router.ui.UIRouter;
@@ -21,6 +23,7 @@ public class AppApplike implements IApplicationLike {
         uiRouter.registerUI("app");
         router.addService(AppcenterService.class.getSimpleName(), new AppcenterServiceImpl());
         router.addService(SettingService.class.getSimpleName(), new SettingServiceImpl());
+        router.addService(WebService.class.getSimpleName(), new WebServiceImpl());
     }
 
     @Override

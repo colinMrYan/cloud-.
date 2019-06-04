@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 
 import java.util.List;
 

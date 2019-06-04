@@ -19,11 +19,11 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.ImpFragment;
-import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 

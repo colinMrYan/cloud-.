@@ -131,7 +131,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         @Override
         public void returnConversationInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-//            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+//            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode);
             finish();
         }
 

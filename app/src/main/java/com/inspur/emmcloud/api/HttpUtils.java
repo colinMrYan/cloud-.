@@ -5,9 +5,9 @@ import android.content.Intent;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.ui.mine.setting.NoPermissionDialogActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;

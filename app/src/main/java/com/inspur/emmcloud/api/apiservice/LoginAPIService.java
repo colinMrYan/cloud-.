@@ -15,9 +15,9 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 

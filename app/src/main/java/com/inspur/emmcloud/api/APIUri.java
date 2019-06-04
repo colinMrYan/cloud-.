@@ -6,11 +6,11 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
@@ -31,7 +31,7 @@ public class APIUri {
 //     * @return
 //     */
 //    private static String getEcmTanentUrl() {
-//        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
+//        return BaseApplication.getInstance().getClusterEcm() + BaseApplication.getInstance().getTanent();
 //    }
 
     public static String getEcmUrl() {

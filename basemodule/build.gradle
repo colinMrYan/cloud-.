@@ -30,6 +30,6 @@ android {
 }
 
 dependencies {
-    api project(':baselib')
+    api project(':componentservice')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }

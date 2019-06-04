@@ -25,26 +25,25 @@ import com.iflytek.cloud.SpeechUtility;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.bean.mine.Enterprise;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.bean.Enterprise;
+import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.CustomImageDownloader;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
+import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
-import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.util.privates.OauthUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.util.privates.richtext.RichText;
-import com.inspur.emmcloud.widget.CustomImageDownloader;
-import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.luojilab.component.componentlib.router.Router;
 import com.luojilab.component.componentlib.router.ui.UIRouter;
@@ -65,7 +64,7 @@ import java.util.Map;
  * Application class
  */
 public class MyApplication extends MultiDexApplication implements ReactApplication {
-    private static final String TAG = "MyApplication";
+    private static final String TAG = "BaseApplication";
     private static boolean isContactReady = false;
     private static MyApplication instance;
     /**
@@ -107,7 +106,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /**
      * 单例获取application实例
      *
-     * @return MyApplication
+     * @return BaseApplication
      */
     public static MyApplication getInstance() {
         return instance;
@@ -138,9 +137,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         x.Ext.setDebug(true);
         SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
-        ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
+        ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), com.inspur.emmcloud.basemodule.config.MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
-        RichText.initCacheDir(new File(MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
+        RichText.initCacheDir(new File(com.inspur.emmcloud.basemodule.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
         RichText.debugMode = true;
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
@@ -152,8 +151,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         };
         PushManagerUtils.getInstance().clearPushFlag();
         isActive = false;
-        isContactReady = PreferencesUtils.getBoolean(getInstance(),
-                Constant.PREF_IS_CONTACT_READY, false);
+        isContactReady = PreferencesUtils.getBoolean(getInstance(), Constant.PREF_IS_CONTACT_READY, false);
         uid = PreferencesUtils.getString(getInstance(), "userID");
         accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
