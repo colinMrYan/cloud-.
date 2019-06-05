@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 
@@ -111,6 +113,8 @@ public class AppCenterNativeAppUtils {
                 R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
         passwordInputDlg.setCancelable(false);
         final EditText inputEdit = (EditText) passwordInputDlg.findViewById(R.id.edit);
+        inputEdit.setTypeface(Typeface.DEFAULT);
+        inputEdit.setTransformationMethod(new PasswordTransformationMethod());
         (passwordInputDlg.findViewById(R.id.ok_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

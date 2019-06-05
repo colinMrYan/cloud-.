@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -48,13 +47,8 @@ public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHand
     private Rect frameRect;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-    }
-
-    @Override
     public void onCreate() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             //全屏显示
