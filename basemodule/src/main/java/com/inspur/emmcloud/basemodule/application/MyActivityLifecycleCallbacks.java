@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.interf;
+package com.inspur.emmcloud.basemodule.application;
 
 import android.app.Activity;
 import android.app.Application;
@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -31,22 +30,22 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        MyApplication.getInstance().addActivity(activity);
+        BaseApplication.getInstance().addActivity(activity);
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
         currentActivity = activity;
         if (count == 0) {
-            MyApplication.getInstance().setIsActive(true);
-            if (MyApplication.getInstance().isHaveLogin()) {
-                long appBackgroundTime = PreferencesUtils.getLong(MyApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
+            BaseApplication.getInstance().setIsActive(true);
+            if (BaseApplication.getInstance().isHaveLogin()) {
+                long appBackgroundTime = PreferencesUtils.getLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
                 //进入后台后重新进入应用需要间隔3分钟以上才弹出二次验证
                 if (System.currentTimeMillis() - appBackgroundTime >= 180000) {
                     showFaceOrGestureLock();
                 }
                 uploadMDMInfo();
-                new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+                new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
             }
         }
         count++;
@@ -66,15 +65,15 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public void onActivityStopped(Activity activity) {
         count--;
         if (count == 0) { // app 进入后台
-            PreferencesUtils.putLong(MyApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
-            MyApplication.getInstance().setIsActive(false);
+            PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
+            BaseApplication.getInstance().setIsActive(false);
             Router router = Router.getInstance();
             if (router.getService(CommunicationService.class.getSimpleName()) != null) {
                 CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
                 service.closeWebsocket();
             }
-            if (MyApplication.getInstance().isHaveLogin()) {
-                startUploadPVCollectService(MyApplication.getInstance());
+            if (BaseApplication.getInstance().isHaveLogin()) {
+                startUploadPVCollectService(BaseApplication.getInstance());
                 startSyncCommonAppService();
                 new ClientIDUtils(MyApplication.getInstance()).upload();
             }
@@ -90,7 +89,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        MyApplication.getInstance().removeActivity(activity);
+        BaseApplication.getInstance().removeActivity(activity);
     }
 
     public Activity getCurrentActivity() {
@@ -106,7 +105,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             SettingService settingService = (SettingService) router.getService(SettingService.class.getSimpleName());
             boolean isSetFaceOrGestureLock = settingService.isSetFaceOrGestureLock();
             if (isSetFaceOrGestureLock) {
-                MyApplication.getInstance().setSafeLock(true);
+                BaseApplication.getInstance().setSafeLock(true);
                 new Handler().postDelayed(() -> {
                     settingService.showFaceOrGestureLock();
                 }, 200);

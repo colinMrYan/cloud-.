@@ -1,10 +1,9 @@
-package com.inspur.emmcloud.util.privates.cache;
+package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,7 +15,7 @@ public class PVCollectModelCacheUtils {
 
     public static void saveCollectModel(String functionID, String functionType) {
         PVCollectModel pvCollectModel = new PVCollectModel(functionID, functionType);
-        saveCollectModel(MyApplication.getInstance(), pvCollectModel);
+        saveCollectModel(BaseApplication.getInstance(), pvCollectModel);
     }
 
     private static void saveCollectModel(final Context context, final PVCollectModel collectModel) {

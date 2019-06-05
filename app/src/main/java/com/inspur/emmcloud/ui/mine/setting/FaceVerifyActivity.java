@@ -40,17 +40,16 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
-import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.camera.mycamera.CameraUtils;
 import com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView;
-import com.luojilab.router.facade.annotation.RouteNode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -65,7 +64,6 @@ import static android.Manifest.permission.CAMERA;
 /**
  * 面容解锁识别页面
  */
-@RouteNode(path = "/faceUnlock", desc = "面容解锁")
 public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Callback {
 
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";

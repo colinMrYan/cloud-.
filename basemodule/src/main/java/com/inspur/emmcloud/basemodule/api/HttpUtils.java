@@ -1,13 +1,15 @@
-package com.inspur.emmcloud.api;
+package com.inspur.emmcloud.basemodule.api;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.ui.mine.setting.NoPermissionDialogActivity;
+import com.luojilab.component.componentlib.router.ui.UIRouter;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -18,7 +20,7 @@ import org.xutils.x;
  */
 
 public class HttpUtils {
-    public static void request(Context context, CloudHttpMethod cloudHttpMethod, RequestParams params, APICallback callback) {
+    public static void request(Context context, CloudHttpMethod cloudHttpMethod, RequestParams params, BaseModuleAPICallback callback) {
         switch (cloudHttpMethod) {
             case GET:
                 distributeRequest(context, HttpMethod.GET, params, callback);
@@ -63,7 +65,7 @@ public class HttpUtils {
      * @param params
      * @param callback
      */
-    private static void distributeRequest(Context context, HttpMethod httpMethod, RequestParams params, APICallback callback) {
+    private static void distributeRequest(Context context, HttpMethod httpMethod, RequestParams params, BaseModuleAPICallback callback) {
         if (isValidUrl(params)) {
             x.http().request(httpMethod, params, callback);
         } else {
@@ -73,10 +75,11 @@ public class HttpUtils {
                     "myInfo", ""), "clusters", 0);
             callback.callbackFail("", -1);
             if (AppUtils.isAppOnForeground(context)) {
-                Intent intent = new Intent();
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setClass(context, NoPermissionDialogActivity.class);
-                context.startActivity(intent);
+
+                UIRouter.getInstance().registerUI("app");
+                Bundle bundle = new Bundle();
+                UIRouter.getInstance().openUri(context, "DDComp://app/ServiceNoPermission", bundle);
+                ARouter.getInstance().build("/setting/ServiceNoPermission").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
             }
 
         }

@@ -159,4 +159,5 @@ dependencies {
         exclude module: 'support-annotations'
     }
     api deps.Toast
+    api deps.ARouter.arouter_api
 }

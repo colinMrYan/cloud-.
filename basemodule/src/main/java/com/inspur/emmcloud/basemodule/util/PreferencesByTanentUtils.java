@@ -1,10 +1,10 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,7 +45,7 @@ public class PreferencesByTanentUtils {
     }
 
     private static String getPreferenceName(Context context) {
-        String tanent = MyApplication.getInstance().getTanent();
+        String tanent = BaseApplication.getInstance().getTanent();
         if (TextUtils.isEmpty(tanent)){
             tanent = "unknown_tanent";
         }
@@ -62,7 +62,7 @@ public class PreferencesByTanentUtils {
      */
     public static boolean putString(Context context, String key, String value) {
         SharedPreferences
-                settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+                settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(key, value);
         return editor.commit();
@@ -91,7 +91,7 @@ public class PreferencesByTanentUtils {
      * this name that is not a string
      */
     public static String getString(Context context, String key, String defaultValue) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getString(key, defaultValue);
     }
 
@@ -104,7 +104,7 @@ public class PreferencesByTanentUtils {
      * @return True if the new values were successfully written to persistent storage.
      */
     public static boolean putInt(Context context, String key, int value) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(key, value);
         return editor.commit();
@@ -133,7 +133,7 @@ public class PreferencesByTanentUtils {
      * this name that is not a int
      */
     public static int getInt(Context context, String key, int defaultValue) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getInt(key, defaultValue);
     }
 
@@ -146,7 +146,7 @@ public class PreferencesByTanentUtils {
      * @return True if the new values were successfully written to persistent storage.
      */
     public static boolean putLong(Context context, String key, long value) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putLong(key, value);
         return editor.commit();
@@ -175,7 +175,7 @@ public class PreferencesByTanentUtils {
      * this name that is not a long
      */
     public static long getLong(Context context, String key, long defaultValue) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getLong(key, defaultValue);
     }
 
@@ -188,7 +188,7 @@ public class PreferencesByTanentUtils {
      * @return True if the new values were successfully written to persistent storage.
      */
     public static boolean putFloat(Context context, String key, float value) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat(key, value);
         return editor.commit();
@@ -217,7 +217,7 @@ public class PreferencesByTanentUtils {
      * this name that is not a float
      */
     public static float getFloat(Context context, String key, float defaultValue) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getFloat(key, defaultValue);
     }
 
@@ -230,7 +230,7 @@ public class PreferencesByTanentUtils {
      * @return True if the new values were successfully written to persistent storage.
      */
     public static boolean putBoolean(Context context, String key, boolean value) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(key, value);
         return editor.commit();
@@ -259,7 +259,7 @@ public class PreferencesByTanentUtils {
      * this name that is not a boolean
      */
     public static boolean getBoolean(Context context, String key, boolean defaultValue) {
-        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getBoolean(key, defaultValue);
     }
 

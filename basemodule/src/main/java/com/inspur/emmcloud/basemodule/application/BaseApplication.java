@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.facebook.soloader.SoLoader;
 import com.github.zafarkhaja.semver.Version;
 import com.hjq.toast.ToastUtils;
@@ -116,7 +117,11 @@ public class BaseApplication extends MultiDexApplication {
 
             }
         };
-        PushManagerUtils.getInstance().clearPushFlag();
+        if (AppUtils.isApkDebugable(getInstance())) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
+            ARouter.openLog();     // 打印日志
+            ARouter.openDebug();   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
+        }
+        ARouter.init(getInstance());
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 Constant.PREF_IS_CONTACT_READY, false);
@@ -135,20 +140,19 @@ public class BaseApplication extends MultiDexApplication {
      */
     public void signout() {
         // TODO Auto-generated method stub
-        //清除日历提醒极光推送本地通知
-        PushManagerUtils.getInstance().stopPush();
         clearNotification();
         removeAllCookie();
         removeAllSessionCookie();
         clearUserPhotoMap();
         Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
+            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
+            service.stopPush();
+            service.webSocketSignout();
+        }
         if (router.getService(LoginService.class.getSimpleName()) != null) {
             LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
             service.logout(getInstance());
-        }
-        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-            service.webSocketSignout();
         }
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getInstance(), 0);
     }

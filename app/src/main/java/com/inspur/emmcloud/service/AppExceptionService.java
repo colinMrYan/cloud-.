@@ -12,7 +12,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

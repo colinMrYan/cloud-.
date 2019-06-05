@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.bean.system;
+package com.inspur.emmcloud.basemodule.bean;
 
 
 import org.json.JSONObject;

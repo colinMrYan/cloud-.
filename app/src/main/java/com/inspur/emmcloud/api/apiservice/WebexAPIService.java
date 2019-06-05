@@ -3,9 +3,9 @@ package com.inspur.emmcloud.api.apiservice;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
@@ -42,7 +42,7 @@ public class WebexAPIService {
         final String url = APIUri.getWebexMeetingListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnWebexMeetingListSuccess(new GetWebexMeetingListResult(new String(arg0)));
@@ -80,7 +80,7 @@ public class WebexAPIService {
         params.setReadTimeout(30000);
         params.setBodyContent(obj.toString());
         params.setAsJsonContent(true);
-        x.http().request(HttpMethod.POST, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnScheduleWebexMeetingSuccess(new GetScheduleWebexMeetingSuccess(new String(arg0)));
@@ -117,7 +117,7 @@ public class WebexAPIService {
         final String url = APIUri.getWebexMeetingUrl(meetingID);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnWebexMeetingSuccess(new WebexMeeting(new String(arg0)));
@@ -153,7 +153,7 @@ public class WebexAPIService {
         final String url = APIUri.getWebexTK();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnWebexTKSuccess(new GetWebexTKResult(new String(arg0)));
@@ -186,7 +186,7 @@ public class WebexAPIService {
         final String url = APIUri.getRemoveWebexMeetingUrl(meetingID);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnRemoveWebexMeetingSuccess();

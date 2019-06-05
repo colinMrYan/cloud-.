@@ -1,17 +1,17 @@
-package com.inspur.emmcloud.service;
+package com.inspur.emmcloud.basemodule.service;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
-import com.inspur.emmcloud.util.privates.NetUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,15 +47,15 @@ public class PVCollectService extends Service {
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("userContent", collectInfos);
-                    jsonObject.put("userID", MyApplication.getInstance().getUid());
+                    jsonObject.put("userID", BaseApplication.getInstance().getUid());
                     jsonObject.put("clientType", "Android");
                     jsonObject.put("appVersion", AppUtils.getVersion(this));
-                    if (MyApplication.getInstance().getCurrentEnterprise() != null) {
-                        jsonObject.put("enterpriseID", MyApplication.getInstance().getCurrentEnterprise().getId());
+                    if (BaseApplication.getInstance().getCurrentEnterprise() != null) {
+                        jsonObject.put("enterpriseID", BaseApplication.getInstance().getCurrentEnterprise().getId());
                     } else {
                         jsonObject.put("enterpriseID", "");
                     }
-                    jsonObject.put("userName", PreferencesUtils.getString(MyApplication.getInstance(), "userRealName", ""));
+                    jsonObject.put("userName", PreferencesUtils.getString(BaseApplication.getInstance(), "userRealName", ""));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

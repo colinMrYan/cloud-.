@@ -118,14 +118,6 @@ public class APIUri {
         return "https://uvc1.inspuronline.com/cpexception";
     }
 
-    /**
-     * PV收集
-     *
-     * @return
-     */
-    public static String getUploadPVCollectUrl() {
-        return "https://uvc1.inspuronline.com/clientpv";
-    }
 
     /**
      * 新版底部Tabbar接口
@@ -198,14 +190,6 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterClientRegistry() + "/client";
     }
 
-    /**
-     * 获取通用检查url
-     *
-     * @return
-     */
-    public static String getAllConfigVersionUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
-    }
 
 
     /************************************************************************登录*****************************************************************/
@@ -1445,15 +1429,6 @@ public class APIUri {
 
     public static String getTripInfoUrl() {
         return "https://ecm.inspur.com/" + MyApplication.getInstance().getTanent() + "/trip/simple/detail?trip_ticket=";
-    }
-
-    /**
-     * 获取语言的接口
-     *
-     * @return
-     */
-    public static String getLangUrl() {
-        return getEcmUrl() + "/" + MyApplication.getInstance().getTanent() + "/settings/lang";
     }
 
 

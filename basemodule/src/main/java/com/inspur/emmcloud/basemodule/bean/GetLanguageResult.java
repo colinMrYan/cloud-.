@@ -1,10 +1,10 @@
 /**
  * GetLanguageResult.java
- * classes : com.inspur.emmcloud.bean.mine.GetLanguageResult
+ * classes : com.inspur.emmcloud.basemodule.bean.GetLanguageResult
  * V 1.0.0
  * Create at 2016年10月9日 下午5:15:18
  */
-package com.inspur.emmcloud.bean.mine;
+package com.inspur.emmcloud.basemodule.bean;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * com.inspur.emmcloud.bean.mine.GetLanguageResult
+ * com.inspur.emmcloud.basemodule.bean.GetLanguageResult
  * create at 2016年10月9日 下午5:15:18
  */
 public class GetLanguageResult {

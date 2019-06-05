@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.bean.system;
+package com.inspur.emmcloud.basemodule.bean;
 
 /**
  * Created by chenmch on 2018/7/27.

@@ -18,7 +18,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.luojilab.router.facade.annotation.RouteNode;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,7 +33,6 @@ import butterknife.OnClick;
 /**
  * Created by Sym on 2015/12/24.
  */
-@RouteNode(path = "/gestureUnlock", desc = "手势解锁")
 public class GestureLoginActivity extends BaseActivity {
 
     private static final int GESTURE_CODE_TIMES = 5;

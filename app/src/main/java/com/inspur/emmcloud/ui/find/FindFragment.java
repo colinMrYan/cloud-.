@@ -22,7 +22,7 @@ import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
 import com.oblador.vectoricons.VectorIconsPackage;

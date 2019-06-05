@@ -13,7 +13,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

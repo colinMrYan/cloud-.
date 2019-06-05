@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 
 import org.json.JSONObject;
 

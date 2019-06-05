@@ -14,10 +14,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.basemodule.bean.Language;
+import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.util.privates.LanguageManager;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 

@@ -1,16 +1,16 @@
 /**
  * APICallback.java
- * classes : com.inspur.emmcloud.api.APICallback
+ * classes : com.inspur.emmcloud.basemodule.api.APICallback
  * V 1.0.0
  * Create at 2016年11月7日 下午4:12:58
  */
-package com.inspur.emmcloud.api;
+package com.inspur.emmcloud.basemodule.api;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 
 import org.xutils.common.Callback.CommonCallback;
@@ -22,16 +22,16 @@ import java.util.concurrent.TimeoutException;
 
 
 /**
- * com.inspur.emmcloud.api.APICallback
+ * com.inspur.emmcloud.basemodule.api.APICallback
  * create at 2016年11月7日 下午4:12:58
  */
-public abstract class APICallback implements CommonCallback<byte[]> {
+public abstract class BaseModuleAPICallback implements CommonCallback<byte[]> {
 
     private Context context;
     private String url;
     private long requestTime;
 
-    public APICallback(Context context, String url) {
+    public BaseModuleAPICallback(Context context, String url) {
         this.context = context;
         this.url = url;
         requestTime = System.currentTimeMillis();
@@ -81,7 +81,7 @@ public abstract class APICallback implements CommonCallback<byte[]> {
                 callbackTokenExpire(requestTime);
             } else {
                 callbackFail(error, responseCode);
-                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(), errorLevel, url, error, responseCode);
+                AppExceptionCacheUtils.saveAppException(BaseApplication.getInstance(), errorLevel, url, error, responseCode);
             }
         } catch (Exception e) {
             // TODO: handle exception

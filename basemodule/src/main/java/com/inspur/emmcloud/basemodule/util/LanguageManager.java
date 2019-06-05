@@ -4,7 +4,7 @@
  * V 1.0.0
  * Create at 2016年10月9日 下午5:04:20
  */
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.basemodule.util;
 
 
 import android.annotation.TargetApi;
@@ -14,16 +14,16 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
+import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
+import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.bean.mine.GetLanguageResult;
-import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.bean.system.ClientConfigItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.Map;
  * Constant.PREF_SERVER_SUPPORT_LANGUAGE 存储服务端支持的语音列表
  * Constant.PREF_LAST_LANGUAGE只有在没有租户信息的时候使用，记录最后一次设置的语音
  */
-public class LanguageManager {
+public class LanguageManager extends BaseModuleAPIInterfaceInstance {
     public static final String LANGUAGE_NAME_FOLLOW_SYS = "followSys";
     private static final Language defaultLanguage = new Language("中文简体", "zh-CN", "zh-Hans", "zh-CN", "zh-CN", "zh-Hans");
     private static LanguageManager mInstance;
@@ -60,10 +60,10 @@ public class LanguageManager {
 
     public void getServerSupportLanguage(GetServerLanguageListener getServerLanguageListener) {
         this.getServerLanguageListener = getServerLanguageListener;
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false) && isNeedUpdate()) {
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance(), false) && isNeedUpdate()) {
             String languageConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE);
-            MineAPIService apiService = new MineAPIService(MyApplication.getInstance());
-            apiService.setAPIInterface(new WebService());
+            BaseModuleApiService apiService = new BaseModuleApiService(BaseApplication.getInstance());
+            apiService.setAPIInterface(this);
             apiService.getLanguage(languageConfigVersion);
         } else {
             setAppLanguage(null);
@@ -94,7 +94,7 @@ public class LanguageManager {
 
     private Locale getLocaleByLanguage(Context context) {
         String languageJson = null;
-        if (MyApplication.getInstance() == null || MyApplication.getInstance().getTanent() == null) {
+        if (BaseApplication.getInstance() == null || BaseApplication.getInstance().getTanent() == null) {
             languageJson = PreferencesUtils.getString(context, Constant.PREF_LAST_LANGUAGE);
         } else {
             languageJson = getCurrentLanguageJson();
@@ -117,19 +117,19 @@ public class LanguageManager {
     }
 
     public String getCurrentLanguageJson() {
-        return PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
+        return PreferencesByTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE);
     }
 
     public void setCurrentLanguageJson(String json) {
-        PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE, json);
+        PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE, json);
     }
 
     public String getCurrentLanguageName() {
-        return PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, "");
+        return PreferencesByTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, "");
     }
 
     public void setCurrentLanguageName(String saveLanguageName) {
-        PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, saveLanguageName);
+        PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_CURRENT_LANGUAGE_NAME, saveLanguageName);
     }
 
     private boolean isNeedUpdate() {
@@ -180,7 +180,7 @@ public class LanguageManager {
      * 设置语言Local
      */
     public void setLanguageLocal() {
-        Configuration config = MyApplication.getInstance().getResources().getConfiguration();
+        Configuration config = BaseApplication.getInstance().getResources().getConfiguration();
         String languageJson = getCurrentLanguageJson();
         if (languageJson != null) {
             String languageName = getCurrentLanguageName();
@@ -204,7 +204,7 @@ public class LanguageManager {
                     languageJson = commonLanguageList.get(0).toString();
                 }
             }
-            PreferencesUtils.putString(MyApplication.getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
+            PreferencesUtils.putString(BaseApplication.getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
             // 将iso字符串分割成系统的设置语言
             String[] array = new Language(languageJson).getIso().split("-");
             String country = "";
@@ -225,8 +225,8 @@ public class LanguageManager {
             }
         }
         config.fontScale = 1.0f;
-        MyApplication.getInstance().getResources().updateConfiguration(config,
-                MyApplication.getInstance().getResources().getDisplayMetrics());
+        BaseApplication.getInstance().getResources().updateConfiguration(config,
+                BaseApplication.getInstance().getResources().getDisplayMetrics());
     }
 
 
@@ -292,7 +292,7 @@ public class LanguageManager {
      * @return
      */
     private String getServerSupportLanguageInLocal() {
-        return PreferencesByTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_SERVER_SUPPORT_LANGUAGE, null);
+        return PreferencesByTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_SERVER_SUPPORT_LANGUAGE, null);
     }
 
     /**
@@ -301,7 +301,7 @@ public class LanguageManager {
      * @return
      */
     private void setServerSupportLanguageInLocal(String json) {
-        PreferencesByTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_SERVER_SUPPORT_LANGUAGE, json);
+        PreferencesByTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_SERVER_SUPPORT_LANGUAGE, json);
     }
 
     private void callback() {
@@ -310,27 +310,23 @@ public class LanguageManager {
         }
     }
 
-    public interface GetServerLanguageListener {
-        void complete();
+    @Override
+    public void returnLanguageSuccess(GetLanguageResult getLanguageResult, String languageConfigVersion) {
+        // TODO Auto-generated method stub
+        setServerSupportLanguageInLocal(getLanguageResult.getLanguageResult());
+        ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE, languageConfigVersion);
+        setAppLanguage(getLanguageResult);
+        callback();
     }
 
-    private class WebService extends APIInterfaceInstance {
+    @Override
+    public void returnLanguageFail(String error, int errorCode) {
+        // TODO Auto-generated method stub
+        setAppLanguage(null);
+        callback();
+    }
 
-        @Override
-        public void returnLanguageSuccess(GetLanguageResult getLanguageResult, String languageConfigVersion) {
-            // TODO Auto-generated method stub
-            setServerSupportLanguageInLocal(getLanguageResult.getLanguageResult());
-            ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_LANGUAGE, languageConfigVersion);
-            setAppLanguage(getLanguageResult);
-            callback();
-        }
-
-        @Override
-        public void returnLanguageFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-            setAppLanguage(null);
-            callback();
-        }
-
+    public interface GetServerLanguageListener {
+        void complete();
     }
 }

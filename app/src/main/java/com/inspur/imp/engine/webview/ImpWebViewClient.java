@@ -24,8 +24,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
-import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 
 import java.net.URL;

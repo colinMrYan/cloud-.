@@ -934,7 +934,7 @@
 
         <!-- service -->
         <service android:name=".service.LocationService"></service>
-        <service android:name=".service.PVCollectService"></service>
+        <service android:name=".basemodule.service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>

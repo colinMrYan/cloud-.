@@ -3,11 +3,11 @@ package com.inspur.emmcloud.api.apiservice;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.CloudHttpMethod;
-import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
@@ -41,7 +41,7 @@ public class MailApiService {
     public void getMailFolder() {
         String completeUrl = APIUri.getMailFolderUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -81,7 +81,7 @@ public class MailApiService {
         params.addQueryStringParameter("folderId", folderId);
         params.addQueryStringParameter("pageSize", pageSize + "");
         params.addQueryStringParameter("offset", offset + "");
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -119,7 +119,7 @@ public class MailApiService {
         String completeUrl = APIUri.getMailDetailUrl(isEncrypted);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("mailId", mailId);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -159,7 +159,7 @@ public class MailApiService {
         params.addParameter("Email", username);
         params.addParameter("Password", password);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -205,7 +205,7 @@ public class MailApiService {
         params.addParameter("data0", certifivate);
         params.addParameter("data1", key);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, Url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, Url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnMailCertificateUploadSuccess(arg0);
@@ -249,7 +249,7 @@ public class MailApiService {
 //        FileUtils.writeFile(new File(path),new ByteArrayInputStream(mailContent));
         // params.addBodyParameter("file",new File(path));
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnSendMailSuccess();
@@ -287,7 +287,7 @@ public class MailApiService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setBodyContent(mailInfo);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnRemoveMailSuccess();

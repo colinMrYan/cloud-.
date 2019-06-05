@@ -1,0 +1,41 @@
+package com.inspur.emmcloud.basemodule.api;
+
+import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
+import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
+import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
+
+import java.util.List;
+
+/**
+ * Created by chenmch on 2019/6/5.
+ */
+
+public class BaseModuleAPIInterfaceInstance implements BaseModuleAPIInterface {
+    @Override
+    public void returnUploadCollectSuccess(List<PVCollectModel> collectModelList) {
+
+    }
+
+    @Override
+    public void returnUploadCollectFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnLanguageSuccess(GetLanguageResult getLanguageResult, String languageConfigVersion) {
+    }
+
+    @Override
+    public void returnLanguageFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult) {
+
+    }
+
+    @Override
+    public void returnAllConfigVersionFail(String error, int errorCode) {
+
+    }
+}

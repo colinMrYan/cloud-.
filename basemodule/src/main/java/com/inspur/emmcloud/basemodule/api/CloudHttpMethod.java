@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.api;
+package com.inspur.emmcloud.basemodule.api;
 
 /**
  * Created by yufuchang on 2018/5/3.

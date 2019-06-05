@@ -1,17 +1,17 @@
 /**
  * Language.java
- * classes : com.inspur.emmcloud.bean.mine.Language
+ * classes : com.inspur.emmcloud.basemodule.bean.Language
  * V 1.0.0
  * Create at 2016年10月9日 下午5:17:46
  */
-package com.inspur.emmcloud.bean.mine;
+package com.inspur.emmcloud.basemodule.bean;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
 /**
- * com.inspur.emmcloud.bean.mine.Language create at 2016年10月9日 下午5:17:46
+ * com.inspur.emmcloud.basemodule.bean.Language create at 2016年10月9日 下午5:17:46
  */
 public class Language implements Serializable {
     // {"label":"中文简体","iana":"zh-Hans","iso":"zh-CN","gsp":"zh-Hans","gsp60":"zh-Hans","gsp61":"zh-Hans"}

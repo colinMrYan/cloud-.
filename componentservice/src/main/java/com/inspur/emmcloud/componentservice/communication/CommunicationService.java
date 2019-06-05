@@ -14,4 +14,6 @@ public interface CommunicationService extends CoreService {
     void closeWebsocket();
 
     void sendAppStatus();
+
+    void stopPush();
 }
