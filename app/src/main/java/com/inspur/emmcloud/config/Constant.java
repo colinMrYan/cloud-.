@@ -190,4 +190,7 @@ public class Constant {
     public static final String SCHEDULE_QUERY = "schedule_query";
     public static final String SCHEDULE_DETAIL = "schedule_detail";
 
+
+    public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
+
 }

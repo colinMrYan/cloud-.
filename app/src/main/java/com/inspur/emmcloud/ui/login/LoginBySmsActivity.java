@@ -90,7 +90,13 @@ public class LoginBySmsActivity extends BaseActivity {
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         EditWatcher watcher = new EditWatcher();
-        myCountDownTimer = new MyCountDownTimer(60000, 1000);
+        long startCountTime = PreferencesUtils.getLong(LoginBySmsActivity.this, Constant.SMS_LOGIN_START_TIME, -1);
+        if (startCountTime > 0 && (System.currentTimeMillis() - startCountTime <= 60000)) {
+            myCountDownTimer = new MyCountDownTimer(System.currentTimeMillis() - startCountTime, 1000);
+            myCountDownTimer.start();
+        } else {
+            myCountDownTimer = new MyCountDownTimer(60000, 1000);
+        }
         phoneEdit.addTextChangedListener(watcher);
         captchaEdit.addTextChangedListener(watcher);
         mode = getIntent().getExtras().getInt(EXTRA_MODE, MODE_LOGIN);
@@ -281,6 +287,7 @@ public class LoginBySmsActivity extends BaseActivity {
             phoneEdit.setEnabled(false);
             ToastUtils.show(LoginBySmsActivity.this, R.string.login_captchas_getcode_success);
             myCountDownTimer.start();
+            PreferencesUtils.putLong(LoginBySmsActivity.this, Constant.SMS_LOGIN_START_TIME, System.currentTimeMillis());
         }
 
         @Override
