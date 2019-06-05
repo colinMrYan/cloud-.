@@ -1,12 +1,12 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import android.content.Intent;
+import android.text.InputType;
+import android.util.Base64;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -27,13 +27,13 @@ import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
-import android.content.Intent;
-import android.text.InputType;
-import android.util.Base64;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -170,8 +170,10 @@ public class MailCertificateInstallActivity extends BaseActivity {
      */
     private void showInputCreKeyWordDialog(final String path) {
         final CustomDialog.EditDialogBuilder builder = new CustomDialog.EditDialogBuilder(this);
+//        View editLayout = View.inflate(this, R.layout.cus_dialog_edit, null);
         final EditText editText = new EditText(this);
         editText.setHint("请在此输入证书密码：");
+        editText.setTextSize(16);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
 
         builder.setTitle("证书密码：")

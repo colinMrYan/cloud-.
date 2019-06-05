@@ -13,12 +13,13 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 
 import java.lang.reflect.Field;
 
 public class CustomDialog extends AlertDialog {
     public static float btnTextSize = 14;
-    public static int btnTextColor = Color.parseColor("#00A8E1");
+    public static int btnTextColor = Color.parseColor("#36A5F6");
     Context mContext;
 
     public CustomDialog(Context context) {
@@ -50,10 +51,27 @@ public class CustomDialog extends AlertDialog {
         window.setAttributes(lp);
     }
 
+    public static class BaseDialogBuilder extends AlertDialog.Builder {
+        private Context context;
+
+        public BaseDialogBuilder(Context context) {
+            super(context);
+            this.context = context;
+        }
+
+        @Override
+        public AlertDialog show() {
+            AlertDialog dialog = super.show();
+            dialog.getWindow().setLayout(ResolutionUtils.getWidth(context) / 5 * 4, ViewGroup.LayoutParams.WRAP_CONTENT);
+            return dialog;
+        }
+    }
+
+
     /**
      * 消息类型的对话框 Builder。通过它可以生成一个带标题、文本消息、按钮的对话框。
      */
-    public static class MessageDialogBuilder extends AlertDialog.Builder {
+    public static class MessageDialogBuilder extends BaseDialogBuilder {
         Context context;
 
         public MessageDialogBuilder(Context context) {
@@ -66,7 +84,6 @@ public class CustomDialog extends AlertDialog {
             AlertDialog dialog = super.show();
             setMessageTvAttr(dialog);
             setActionBtnAttr(dialog);
-
             return dialog;
         }
 
@@ -108,7 +125,7 @@ public class CustomDialog extends AlertDialog {
     /**
      * 菜单列表类型的对话框 Builder
      */
-    public static class ListDialogBuilder extends AlertDialog.Builder {
+    public static class ListDialogBuilder extends BaseDialogBuilder {
         private Context context;
 
         public ListDialogBuilder(Context context) {
@@ -127,19 +144,25 @@ public class CustomDialog extends AlertDialog {
     /**
      * 单选类型的对话框 Builder
      */
-    public static class SingleChoiceDialogBuilder extends AlertDialog.Builder {
+    public static class SingleChoiceDialogBuilder extends BaseDialogBuilder {
         private Context context;
 
         public SingleChoiceDialogBuilder(Context context) {
             super(context);
             this.context = context;
         }
+
+        @Override
+        public AlertDialog show() {
+            AlertDialog dialog = super.show();
+            return dialog;
+        }
     }
 
     /**
      * 编辑框builder
      */
-    public static class EditDialogBuilder extends AlertDialog.Builder {
+    public static class EditDialogBuilder extends BaseDialogBuilder {
         private Context context;
 
         public EditDialogBuilder(Context context) {

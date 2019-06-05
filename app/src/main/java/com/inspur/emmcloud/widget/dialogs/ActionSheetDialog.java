@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.widget.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,7 +53,7 @@ public class ActionSheetDialog extends Dialog {
         params.gravity = Gravity.BOTTOM | Gravity.CENTER;
         getWindow().setWindowAnimations(R.style.main_menu_animstyle);
         int screenWidth = ResolutionUtils.getWidth(getContext());
-        int screenHeight = ResolutionUtils.getHeight((Activity) getContext());
+        int screenHeight = ResolutionUtils.getHeight(getContext());
         params.width = screenWidth < screenHeight ? screenWidth : screenHeight;
         params.width = (int) (params.width * 0.9);
         params.dimAmount = 0.31f;
@@ -146,7 +145,9 @@ public class ActionSheetDialog extends Dialog {
         }
 
         public ActionListSheetBuilder addItem(String textAndTag, boolean isShow) {
-            mItems.add(new ActionSheetListItemData(textAndTag, textAndTag, isShow));
+            if (isShow) {
+                mItems.add(new ActionSheetListItemData(textAndTag, textAndTag, isShow));
+            }
             return this;
         }
 
@@ -293,7 +294,7 @@ public class ActionSheetDialog extends Dialog {
 
             @Override
             public long getItemId(int position) {
-                return 0;
+                return position;
             }
 
             @SuppressLint("ResourceAsColor")

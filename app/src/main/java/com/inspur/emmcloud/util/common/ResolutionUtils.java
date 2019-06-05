@@ -14,6 +14,7 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.ViewConfiguration;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -90,6 +91,28 @@ public class ResolutionUtils {
         return notchHeight;
     }
 
+    public static int getHeight(Context context) {
+        int dpi = 0;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        Class c;
+        try {
+            c = Class.forName("android.view.Display");
+            @SuppressWarnings("unchecked")
+            Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
+            method.invoke(display, dm);
+            dpi = dm.heightPixels;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (dpi == 0) {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(displayMetrics);
+            dpi = displayMetrics.heightPixels;
+        }
+        return dpi;
+    }
 
     /**
      * 支持带有虚拟按键手机屏幕高度的计算

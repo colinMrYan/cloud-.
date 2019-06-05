@@ -318,8 +318,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                     @Override
                     public void doConfirm() {
                         if (confirmDialog.getIsHide()) {
-                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                         }
+                        //点击去设置  下次进来不再提示
+                        PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                         try {
 //                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
 //                                intent.setData(Uri.parse("package:" + context.getPackageName()));
