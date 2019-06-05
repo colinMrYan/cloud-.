@@ -92,6 +92,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:gravity="center"
+                        android:minHeight="0dp"
                         android:onClick="onClick"
                         android:paddingBottom="5dp"
                         android:paddingTop="5dp"
