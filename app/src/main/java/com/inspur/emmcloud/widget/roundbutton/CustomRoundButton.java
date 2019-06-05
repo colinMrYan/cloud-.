@@ -17,7 +17,7 @@ public class CustomRoundButton extends AppCompatButton {
     }
 
     public CustomRoundButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs, R.attr.CustomButtonStyle);
         this.init(context, attrs, R.attr.CustomButtonStyle);
     }
 
@@ -31,10 +31,11 @@ public class CustomRoundButton extends AppCompatButton {
         setBackgroundKeepingPadding(this, bg);
     }
 
-    @TargetApi(16)
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setBackgroundKeepingPadding(View view, Drawable drawable) {
         int[] padding = new int[]{view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom()};
-        if (Build.VERSION.SDK_INT >= 16) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             view.setBackground(drawable);
         } else {
             view.setBackgroundDrawable(drawable);

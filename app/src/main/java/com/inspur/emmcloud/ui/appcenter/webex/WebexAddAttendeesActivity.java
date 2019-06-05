@@ -2,13 +2,11 @@ package com.inspur.emmcloud.ui.appcenter.webex;
 
 import android.content.Intent;
 import android.database.DataSetObserver;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -31,6 +29,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -43,20 +43,12 @@ public class WebexAddAttendeesActivity extends BaseActivity {
     private static final int REQUEST_ADD_EXTERNAL_ATTENDEES = 2;
     @BindView(R.id.lv_attendees)
     ScrollViewWithListView attendeesListView;
-    @BindView(R.id.rl_add_attendees)
-    RelativeLayout addAttendeesLayout;
     @BindView(R.id.sv_content)
     ScrollView contentScrollView;
     @BindView(R.id.tv_num)
     TextView numText;
     private List<WebexAttendees> webexAttendeesList = new ArrayList<>();
     private Adapter adapter;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {
@@ -78,6 +70,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
         return R.layout.activity_webex_add_attendees;
     }
 
+    @Nullable
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {

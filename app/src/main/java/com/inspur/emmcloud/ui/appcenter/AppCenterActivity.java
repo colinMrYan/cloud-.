@@ -90,7 +90,6 @@ public class AppCenterActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_app_center);
         initView();
         getAllApp();
         registerReceiver();
@@ -98,13 +97,9 @@ public class AppCenterActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return 0;
+        return R.layout.activity_app_center;
     }
 
-    @Override
-    public int getStatusType() {
-        return 0;
-    }
 
     /**
      * modified: lbc
