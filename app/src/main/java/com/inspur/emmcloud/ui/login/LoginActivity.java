@@ -62,7 +62,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);

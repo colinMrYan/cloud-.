@@ -3,6 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion versions.compileSdk
     buildToolsVersion versions.androidTools
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk

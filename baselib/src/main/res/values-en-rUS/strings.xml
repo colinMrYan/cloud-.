@@ -497,8 +497,8 @@
     <string name="app_commonly_use">Common mode</string>
     <string name="app_commonly_use_close">Common off</string>
     <string name="app_center_more_apps">More Apps</string>
-    <string name="app_input_mail_password">Enter the company email password</string>
-    <string name="app_need_input_mail_password">The first time you use or password changed need to be entered</string>
+    <string name="app_input_mail_password">Please Enter the company email password</string>
+    <string name="app_need_input_mail_password">Please enter the password when you first use it or your password has been changed</string>
     <string name="app_download">App downloading：</string>
     <string name="app_password_error">Password is wrong, please re-enter</string>
     <string name="app_password_encrypt_error">Password encryption error</string>
