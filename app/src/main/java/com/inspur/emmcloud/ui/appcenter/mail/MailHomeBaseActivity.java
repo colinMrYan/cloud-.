@@ -1,22 +1,22 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import com.inspur.emmcloud.BaseFragmentActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.sildemenu.AllInterface;
-import com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+
+import com.inspur.emmcloud.BaseFragmentActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.sildemenu.AllInterface;
+import com.inspur.emmcloud.widget.sildemenu.LeftDrawerLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

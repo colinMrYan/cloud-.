@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 public class WhiteListUtil {
     public static void enterWhiteListSetting(Context context) {

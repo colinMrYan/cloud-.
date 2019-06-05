@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="share">分享</string>
+    <string name="send_character">发送文字</string>
+    <string name="send_photo">发送图片</string>
+    <string name="send_url_photo">发送url图片</string>
+    <string name="send_take_photo">拍照上传</string>
+    <string name="send_music">发送音乐</string>
+</resources>

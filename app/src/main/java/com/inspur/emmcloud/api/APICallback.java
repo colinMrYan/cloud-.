@@ -9,8 +9,8 @@ package com.inspur.emmcloud.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.xutils.common.Callback.CommonCallback;

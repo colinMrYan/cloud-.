@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="#F2F2F2">
+
+        <RelativeLayout
+            android:id="@+id/rl_conversation_group_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="14dp"
+            android:layout_toLeftOf="@+id/tv_group_search_messages"
+            android:background="@drawable/bg_conversation_group_message_search"
+            android:padding="6dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="6dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/bg_search" />
+
+            <com.inspur.emmcloud.widget.ClearEditText
+                android:id="@+id/ev_message_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="37dp"
+                android:background="@null"
+                android:hint="@string/search"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textSize="@dimen/content_normal_textsize">
+
+                <requestFocus />
+            </com.inspur.emmcloud.widget.ClearEditText>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_group_search_messages"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="9dp"
+            android:gravity="center_vertical"
+            android:onClick="onClick"
+            android:text="@string/cancel"
+            android:textColor="#FF000000"
+            android:textSize="17sp" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_group_message_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_header" />
+
+</RelativeLayout>

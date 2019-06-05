@@ -21,6 +21,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
@@ -37,14 +42,9 @@ import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
@@ -365,6 +365,7 @@ public class MoreFragment extends BaseFragment {
         private void setUserCardMenuLayout(LinearLayout userCardMenuLayout, List<MineLayoutItem> mineLayoutItemList) {
             for (final MineLayoutItem mineLayoutItem : mineLayoutItemList) {
                 ImageButton menuImgBtn = new ImageButton(getActivity());
+                menuImgBtn.setBackground(null);
                 int height = DensityUtil.dip2px(MyApplication.getInstance(), 42);
                 int width = DensityUtil.dip2px(MyApplication.getInstance(), 48);
                 int paddingLeft = DensityUtil.dip2px(MyApplication.getInstance(), 8);

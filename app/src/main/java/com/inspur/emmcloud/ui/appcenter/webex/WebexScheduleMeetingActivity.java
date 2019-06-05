@@ -1,33 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.WebexAPIService;
-import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
-import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
-import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
-import com.inspur.emmcloud.util.common.EditTextUtils;
-import com.inspur.emmcloud.util.common.FomatUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.MyDatePickerDialog;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -41,6 +13,34 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.WebexAPIService;
+import com.inspur.emmcloud.baselib.util.EditTextUtils;
+import com.inspur.emmcloud.baselib.util.FomatUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.ClearEditText;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.MyDatePickerDialog;
+import com.inspur.emmcloud.widget.dialogs.CustomDialog;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

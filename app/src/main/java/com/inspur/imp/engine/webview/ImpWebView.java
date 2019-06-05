@@ -22,9 +22,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.ParseHtmlUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.util.common.ParseHtmlUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.JsInterface;

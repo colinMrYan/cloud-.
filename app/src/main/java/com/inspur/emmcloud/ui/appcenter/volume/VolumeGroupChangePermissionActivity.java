@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import org.greenrobot.eventbus.EventBus;
+import android.view.View;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -8,13 +9,12 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
-import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 
-import android.view.View;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 
 /**
  * Created by chenmch on 2019/5/9.

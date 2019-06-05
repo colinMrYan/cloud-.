@@ -11,17 +11,16 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.LoginSelectEnterpriseAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.MDM.MDMListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -36,7 +35,7 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class LoginUtils extends APIInterfaceInstance {
+public class LoginUtils extends APIInterfaceInstance implements LanguageManager.GetServerLanguageListener {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_LANGUAGE_SUCCESS = 3;
@@ -45,7 +44,6 @@ public class LoginUtils extends APIInterfaceInstance {
     private Handler handler;
     private boolean isSMSLogin = false;
     private Handler loginUtilsHandler;
-    private LanguageUtils languageUtils;
     private GetLoginResult getLoginResult;
     private LoadingDialog loadingDlg;
     private boolean isLogin = false;  //标记是登录界面(包括手机验证码登录界面)调用
@@ -107,7 +105,7 @@ public class LoginUtils extends APIInterfaceInstance {
             public void MDMStatusPass(int doubleValidation) {
                 // TODO Auto-generated method stub
                 PreferencesByUserAndTanentUtils.putInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, doubleValidation);
-                PreferencesUtils.putBoolean(activity, "isMDMStatusPass", true);
+                PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, true);
                 saveLoginInfo();
                 loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
                 mdm.destroyOnMDMListener();
@@ -171,13 +169,12 @@ public class LoginUtils extends APIInterfaceInstance {
      * 获取语音
      */
     public void getServerSupportLanguage() {
-        if (NetUtils.isNetworkConnected(activity, false)) {
-            languageUtils = new LanguageUtils(activity, loginUtilsHandler);
-            languageUtils.getServerSupportLanguage();
-        } else {
-            loginUtilsHandler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
-        }
+       LanguageManager.getInstance().getServerSupportLanguage(this);
+    }
 
+    @Override
+    public void complete() {
+        loginUtilsHandler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
     }
 
     /**
@@ -316,7 +313,7 @@ public class LoginUtils extends APIInterfaceInstance {
         // TODO Auto-generated method stub
         String myInfo = getMyInfoResult.getResponse();
         String name = getMyInfoResult.getName();
-        PreferencesUtils.putBoolean(activity, "isMDMStatusPass", false);
+        PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, false);
         PreferencesUtils.putString(activity, "userRealName", name);
         PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
         PreferencesUtils.putString(activity, "myInfo", myInfo);

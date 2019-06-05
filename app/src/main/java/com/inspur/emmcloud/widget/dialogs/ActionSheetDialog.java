@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +53,10 @@ public class ActionSheetDialog extends Dialog {
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         params.gravity = Gravity.BOTTOM | Gravity.CENTER;
         getWindow().setWindowAnimations(R.style.main_menu_animstyle);
-        int screenWidth = ResolutionUtils.getWidth(getContext());
-        int screenHeight = ResolutionUtils.getHeight(getContext());
+        Resources resources = getContext().getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        int screenWidth = dm.widthPixels;
+        int screenHeight = dm.heightPixels;
         params.width = screenWidth < screenHeight ? screenWidth : screenHeight;
         params.width = (int) (params.width * 0.9);
         params.dimAmount = 0.31f;

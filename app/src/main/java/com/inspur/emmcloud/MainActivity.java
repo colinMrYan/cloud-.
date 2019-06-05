@@ -1,30 +1,5 @@
 package com.inspur.emmcloud;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.inspur.emmcloud.bean.system.SplashDefaultBean;
-import com.inspur.emmcloud.bean.system.SplashPageBean;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.service.AppExceptionService;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.LoginUtils;
-import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.SplashPageUtils;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
-import com.inspur.imp.api.Res;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +12,37 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.bean.system.SplashDefaultBean;
+import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.service.AppExceptionService;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.util.privates.LoginUtils;
+import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.SplashPageUtils;
+import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+import com.inspur.imp.api.Res;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.droidsonroids.gif.GifImageView;
@@ -47,7 +53,7 @@ import pl.droidsonroids.gif.GifImageView;
  *
  * @author Administrator
  */
-public class MainActivity extends BaseActivity { // 此处不能继承BaseActivity 推送会有问题
+public class MainActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
@@ -66,6 +72,17 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     private long activitySplashShowTime = 0;
     private Timer timer;
 
+    @Override
+    public void onCreate() {
+        ButterKnife.bind(this);
+        // 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
+        initAppAlias();
+        init();
+    }
 
     @Override
     public int getLayoutResId() {
@@ -76,7 +93,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         return STATUS_WHITE;
     }
 
-    private void initAppAlias(){
+    private void initAppAlias() {
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
         if (appFirstLoadAlis == null) {
             appFirstLoadAlis = AppUtils.getManifestAppVersionFlag(this);
@@ -95,76 +112,13 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         }
     }
 
-    // private void checkNecessaryPermission() {
-    // final String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new
-    // String[]{Permissions.READ_PHONE_STATE});
-    // if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
-    // final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
-    // permissionDialog.setDimAmount(0.2f);
-    // permissionDialog.setCancelable(false);
-    // permissionDialog.setCanceledOnTouchOutside(false);
-    // permissionDialog.findViewById(R.id.ll_permission_storage).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,
-    // Permissions.STORAGE) ? View.VISIBLE : View.GONE);
-    // permissionDialog.findViewById(R.id.ll_permission_phone).setVisibility(!PermissionRequestManagerUtils.getInstance().isHasPermission(this,
-    // Permissions.READ_PHONE_STATE) ? View.VISIBLE : View.GONE);
-    // if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
-    // && !PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.READ_PHONE_STATE)) {
-    // LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
-    // LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
-    // params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
-    // layout.setLayoutParams(params);
-    // }
-    // ((TextView)
-    // permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(getString(R.string.permission_open_cloud_plus,
-    // AppUtils.getAppName(MainActivity.this)));
-    // ((TextView)
-    // permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(R.string.permission_necessary_permission,
-    // AppUtils.getAppName(MainActivity.this)));
-    // permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
-    // @Override
-    // public void onClick(View view) {
-    // permissionDialog.dismiss();
-    // PermissionRequestManagerUtils.getInstance().requestRuntimePermission(MainActivity.this, necessaryPermissionArray,
-    // new PermissionRequestCallback() {
-    // @Override
-    // public void onPermissionRequestSuccess(List<String> permissions) {
-    // init();
-    // }
-    //
-    // @Override
-    // public void onPermissionRequestFail(List<String> permissions) {
-    // ToastUtils.show(MainActivity.this,
-    // PermissionRequestManagerUtils.getInstance().getPermissionToast(MainActivity.this, permissions));
-    // MyApplication.getInstance().exit();
-    // }
-    // });
-    // }
-    // });
-    // permissionDialog.show();
-    // } else {
-    // init();
-    // }
-    // }
-
-    @Override
-    public void onCreate() {
-        ButterKnife.bind(this);
-        // 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
-        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            finish();
-            return;
-        }
-        initAppAlias();
-        init();
-    }
-
     /**
      * 初始化
      */
     private void init() {
         String appFirstLoadAlis = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_APP_LOAD_ALIAS);
-        int splashLogoResId = Res.getDrawableID("ic_splash_logo_"+appFirstLoadAlis);
-        ImageDisplayUtils.getInstance().displayImage(splashLogoImg,"drawable://"+splashLogoResId,R.drawable.ic_splash_logo);
+        int splashLogoResId = Res.getDrawableID("ic_splash_logo_" + appFirstLoadAlis);
+        ImageDisplayUtils.getInstance().displayImage(splashLogoImg, "drawable://" + splashLogoResId, R.drawable.ic_splash_logo);
         activitySplashShowTime = System.currentTimeMillis();
         //进行app异常上传
         startUploadExceptionService();
@@ -210,13 +164,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
      */
     private void initEnvironment() {
         // TODO Auto-generated method stub
-        Boolean isFirst = PreferencesUtils.getBoolean(MainActivity.this,
-                "isFirst", true);
-        // 当第一次进入应用，系统没有自动创建快捷方式时进行创建
-        if (isFirst && !AppUtils.isHasShortCut(MainActivity.this)) {
-            ((MyApplication) getApplicationContext())
-                    .addShortCut(MainActivity.this);
-        }
         handMessage();
         NotificationUpgradeUtils upgradeUtils = new NotificationUpgradeUtils(MainActivity.this,
                 handler, false);
@@ -277,15 +224,14 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getApplicationContext(),
                 "myInfo", "");
-        String languageJson = PreferencesUtils.getString(getApplicationContext(),
-                MyApplication.getInstance().getTanent() + "appLanguageObj");
-        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", true);
+        String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_MDM_STATUS_PASS, true);
         if (!StringUtils.isBlank(accessToken) && (StringUtils.isBlank(myInfo))) {
             new LoginUtils(MainActivity.this, handler).getMyInfo();
         } else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
             new LoginUtils(MainActivity.this, handler).getServerSupportLanguage();
         } else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && !StringUtils.isBlank(languageJson) && !isMDMStatusPass) {
-            MyApplication.getInstance().setAppLanguageAndFontScale();
+            LanguageManager.getInstance().setLanguageLocal();
             new LoginUtils(MainActivity.this, handler).startMDM();
         } else {
             setSplashShow();
@@ -328,22 +274,30 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
      * 开启应用
      */
     private void startApp() {
-        Boolean isFirst = PreferencesUtils.getBoolean(
-                MainActivity.this, "isFirst", true);
-        if (AppUtils.isAppHasUpgraded(getApplicationContext()) || isFirst) {
-            IntentUtils.startActivity(MainActivity.this,
-                    GuideActivity.class, true);
+        //当弹出锁屏界面时不进行跳转，需要解锁完成之后在进行页面跳转，防止出现跳转界面遮盖处锁屏界面
+        if (!MyApplication.getInstance().isSafeLock()) {
+            Boolean isFirst = PreferencesUtils.getBoolean(
+                    MainActivity.this, "isFirst", true);
+            if (AppUtils.isAppHasUpgraded(getApplicationContext()) || isFirst) {
+                IntentUtils.startActivity(MainActivity.this,
+                        GuideActivity.class, true);
+            } else {
+                String accessToken = PreferencesUtils.getString(MainActivity.this,
+                        "accessToken", "");
+                MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
+                        IndexActivity.class : LoginActivity.class, true);
+            }
         } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    String accessToken = PreferencesUtils.getString(MainActivity.this,
-                            "accessToken", "");
-                    MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                    IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
-                            IndexActivity.class : LoginActivity.class, true);
-                }
-            }, 50);
+            EventBus.getDefault().register(this);
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
+            new Handler().post(() -> startApp());
 
         }
     }
@@ -401,6 +355,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (handler != null) {
             handler = null;
         }

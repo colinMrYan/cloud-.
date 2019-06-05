@@ -1,23 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.EditTextUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.LoginUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +13,24 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.EditTextUtils;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.InputMethodUtils;
+import com.inspur.emmcloud.util.privates.LoginUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.widget.ClearEditText;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.keyboardview.EmmSecurityKeyboard;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +62,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         PreferencesUtils.putString(this, Constant.PREF_APP_PREVIOUS_VERSION, AppUtils.getVersion(this));
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);

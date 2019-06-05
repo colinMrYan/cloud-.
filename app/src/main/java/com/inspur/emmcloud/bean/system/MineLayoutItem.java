@@ -3,8 +3,8 @@ package com.inspur.emmcloud.bean.system;
 import android.content.res.Configuration;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 import org.json.JSONObject;
 

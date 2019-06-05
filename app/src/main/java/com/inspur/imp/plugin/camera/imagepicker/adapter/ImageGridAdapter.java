@@ -129,7 +129,7 @@ public class ImageGridAdapter extends BaseAdapter {
                 holder.checkImg.setVisibility(View.GONE);
             }
             ImageView ivThumb = (ImageView) convertView.findViewById(R.id.iv_thumb);
-            imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
+            imagePicker.getImageLoader().displayImage(imageItem.path, ivThumb, mImageSize, mImageSize, R.drawable.default_image); //显示图片
         }
         return convertView;
     }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="device_disabled_cannot_login">您的設備已被禁用，無法使用此設備登錄 </string>
+    <string name="device_waitting_verify">您的設備正在審核中，待審核通過後才能使用</string>
+    <string name="register_submit_waitting_verify">註冊已提交，您的設備正在審核中，需要等待審核通過後才能使用</string>
+    <string name="device_in_blacklist">您的設備已被列入黑名單中，無法使用此設備登錄</string>
+    <string name="device_not_register"> 您的設備尚未註冊，需註冊後才能使用</string>
+    <string name="go_registe">去註冊</string>
+    <string name="registe_fail">註冊失敗：</string>
+    <string name="registe_again">重新註冊</string>
+    <string name="device_review_reject">您的設備註冊審核被拒絕，如有疑問，請聯繫管理員</string>
+    <string name="device_name_cannot_null">設備名稱不能為空</string>
+    <string name="phone_num_cannot_null">手機號不能為空</string>
+    <string name="mail_cannot_null">郵箱不能為空</string>
+    <string name="remark_cannot_null">備註資訊不能為空</string>
+    <string name="no_thanks">不，謝謝</string>
+    <string name="_mobile">%1$s的手機</string>
+    <string name="_pad">%1$s的平板</string>
+    <string name="mdm_sure">確定</string>
+    <string name="mdm_cancel">取消</string>
+    <string name="mdm_tips">提示</string>
+    <string name="loading_text">正在載入</string>
+    <string name="network_exception">網路不可用，請檢查您的網路設置</string>
+    <string name="network_timeout">網絡超時，請檢查您的網絡設定</string>
+    <string name="net_request_failed">服務未能正確回應</string>
+    <string name="telephone_input_illegal">輸入的手機號格式不正確</string>
+    <string name="email_input_illegal">輸入的郵箱格式不正確</string>
+    <string name="device_registe">設備註冊</string>
+    <string name="phone_num">手機號</string>
+    <string name="mail">郵箱</string>
+    <string name="register">註冊</string>
+    <string name="remark">備註</string>
+    <string name="uuid">設備唯一標識</string>
+    <string name="device_has_been_rejected">您的設備審批被拒絕</string>
+    <string name="device_approval_details">設備審批詳情</string>
+    <string name="copyed_to_paste_board">已複製到剪切板</string>
+
+
+</resources>

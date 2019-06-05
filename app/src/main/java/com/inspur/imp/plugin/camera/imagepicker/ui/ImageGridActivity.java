@@ -1,10 +1,17 @@
 package com.inspur.imp.plugin.camera.imagepicker.ui;
 
-import java.text.DecimalFormat;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImageDataSource;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -15,15 +22,8 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.view.FolderPopUpWindow;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.TextView;
+import java.text.DecimalFormat;
+import java.util.List;
 
 
 public class ImageGridActivity extends ImageBaseActivity implements

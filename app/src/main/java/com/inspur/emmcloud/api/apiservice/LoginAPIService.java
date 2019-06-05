@@ -14,11 +14,11 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;
@@ -186,6 +186,28 @@ public class LoginAPIService {
         });
 
     }
+
+    /**
+     * 退出登录时取消token
+     */
+    public void cancelToken() {
+        final String url = APIUri.getCancelTokenUrl() + "?destroy=ALL";
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+            }
+        });
+    }
+
 
     /**
      * 短信登录-发送短信

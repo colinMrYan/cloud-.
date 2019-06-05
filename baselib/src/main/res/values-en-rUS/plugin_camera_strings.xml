@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- 图片浏览 -->
+    <string name="only_choose_num">The number of selectable images is exceeded</string>
+    <string name="invalidSD">The sdcard is invalid or not inserted！</string>
+    <!-- <string name="photo">选择相册</string> -->
+    <!-- <string name="album">相册</string> -->
+    <!-- <string name="preview">预览</string> -->
+    <!-- <string name="finish">完成</string> -->
+    <string name="unfinished">Complete</string>
+    <string name="camera_cancel">Cancel</string>
+    <string name="no_photo">The album has no picture</string>
+
+    <string name="image_error">Compressed bitmap error</string>
+    <string name="bitmap_create_error">Unable to create bitmap</string>
+    <string name="no_storage">No SD card</string>
+    <string name="capture_error">Capturing an image error</string>
+    <string name="cancel_camera">Cancel taking pictures</string>
+    <string name="camera_error">Camera error</string>
+    <string name="error">Error</string>
+    <string name="retrive_path_error">Failed to retrieve route map</string>
+    <string name="retrive_image_error">Search image is wrong</string>
+    <string name="cancel_select">Cancel selection</string>
+    <string name="select_error">Image selection error</string>
+    <string name="compress_error">Image compression error</string>
+
+    <string name="all_images">All images</string>
+    <string name="folder_image_count">Total of%1$d</string>
+    <string name="preview_image_count">%1$d/%2$d</string>
+    <string name="select_limit">Most choose %1$d</string>
+    <string name="complete">Done</string>
+    <string name="select_complete">OK(%1$d/%2$d)</string>
+    <string name="preview_count">Preview(%1$d)</string>
+    <string name="photo_crop">Cropping image</string>
+    <string name="origin">Original image</string>
+    <string name="origin_size">Original image(%1$d)</string>
+    <string name="select_images">Select images</string>
+    <string name="select">Select</string>
+    <string name="edit_img">Edit picture</string>
+    <string name="crop">Crop</string>
+    <string name="rotate">Rotate</string>
+    <string name="img_upload_fail">Picture upload failed, please try again</string>
+    <string name="img_decode_fail">Picture decoded fail</string>
+    <string name="open_camera_fail_by_perminssion">The camera failed to start. Please try to open the permissions in the application authority management of the mobile phone</string>
+</resources>

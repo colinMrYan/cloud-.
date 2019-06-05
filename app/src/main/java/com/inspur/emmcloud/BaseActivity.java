@@ -1,28 +1,27 @@
 package com.inspur.emmcloud;
 
-import java.util.List;
-
-import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.widget.dialogs.MyDialog;
+
+import java.util.List;
 
 public abstract class BaseActivity extends Activity {
     protected final int STATUS_NORMAL = 1;
@@ -30,6 +29,7 @@ public abstract class BaseActivity extends Activity {
     protected final int STATUS_WHITE_DARK_FONT = 3;
     protected final int STATUS_TRANSPARENT = 4;
     protected final int STATUS_NO_SET = 5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -45,7 +45,7 @@ public abstract class BaseActivity extends Activity {
 
     private void checkNecessaryPermission() {
         final String[] necessaryPermissionArray =
-                StringUtils.concatAll(Permissions.STORAGE, new String[] { Permissions.READ_PHONE_STATE });
+                StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
         if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, necessaryPermissionArray)) {
             final MyDialog permissionDialog = new MyDialog(this, R.layout.dialog_permisson_tip);
             permissionDialog.setDimAmount(0.2f);
@@ -61,7 +61,7 @@ public abstract class BaseActivity extends Activity {
                             : View.GONE);
             if (!PermissionRequestManagerUtils.getInstance().isHasPermission(this, Permissions.STORAGE)
                     && !PermissionRequestManagerUtils.getInstance().isHasPermission(this,
-                            Permissions.READ_PHONE_STATE)) {
+                    Permissions.READ_PHONE_STATE)) {
                 LinearLayout layout = permissionDialog.findViewById(R.id.ll_permission_storage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layout.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(this, 60.0f), 0, 0, 0);
@@ -109,16 +109,9 @@ public abstract class BaseActivity extends Activity {
         return STATUS_NORMAL;
     }
 
-    //解决调用系统应用后会弹出手势解锁的问题
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        MyApplication.getInstance().setEnterSystemUI(false);
-    }
-
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
+        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
     }
 
     public void setTheme() {

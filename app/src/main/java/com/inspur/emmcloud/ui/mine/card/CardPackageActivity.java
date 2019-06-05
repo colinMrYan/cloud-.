@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.ui.mine.card;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Intent;
+import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -10,15 +10,15 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
-import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.cardstack.RxAdapterAllMoveDownAnimator;
 import com.inspur.emmcloud.widget.cardstack.RxCardStackView;
 
-import android.content.Intent;
-import android.view.View;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

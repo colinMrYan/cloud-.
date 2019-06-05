@@ -1,6 +1,6 @@
 package com.inspur.imp.plugin.window;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 import org.json.JSONObject;
 

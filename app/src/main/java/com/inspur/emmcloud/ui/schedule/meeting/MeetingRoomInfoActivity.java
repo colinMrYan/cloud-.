@@ -21,17 +21,17 @@ import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.adapter.ScheduleMeetingRoomDurationAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingSchedule;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -287,6 +287,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             }
         });
         viewPager.setCurrentItem(0);
+        tabLayout.getTabAt(0).select();
     }
 
 
@@ -373,7 +374,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
      */
     private void initData() {
         allDaysMeetingScheduleList = new ArrayList<>();
-        if (allMeetingList.size() > 0) {
             Collections.sort(allMeetingList, new Comparator<Meeting>() {
                 @Override
                 public int compare(Meeting o1, Meeting o2) {
@@ -412,15 +412,19 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                     MeetingSchedule meetingSchedule = new MeetingSchedule(meetingDayStartTime, meetingDayEndTime, meeting);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }
-                long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
-                if (dayLastMeetingEnd < dayEndTimeLong) {
-                    MeetingSchedule meetingSchedule = new MeetingSchedule(dayLastMeetingEnd, dayEndTimeLong, null);
+                if (dayMeetingList.size() > 0) {
+                    long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
+                    if (dayLastMeetingEnd < dayEndTimeLong) {
+                        MeetingSchedule meetingSchedule = new MeetingSchedule(dayLastMeetingEnd, dayEndTimeLong, null);
+                        dayMeetingScheduleList.add(meetingSchedule);
+                    }
+                } else {
+                    MeetingSchedule meetingSchedule = new MeetingSchedule(dayStartTimeLong, dayEndTimeLong, null);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }
+
                 allDaysMeetingScheduleList.add(dayMeetingScheduleList);
             }
-        }
-
 
         initListView();
     }
@@ -465,6 +469,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         public void returnMeetingListByMeetingRoomFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MeetingRoomInfoActivity.this, error, errorCode);
+            initData();
         }
 
         @Override

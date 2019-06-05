@@ -14,6 +14,7 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
@@ -26,7 +27,6 @@ import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -199,8 +199,7 @@ public class MineAPIService {
     /**
      * 获取语言
      */
-    public void getLanguage() {
-
+    public void getLanguage(final String languageConfigVersion) {
         final String completeUrl = APIUri.getLangUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -211,7 +210,7 @@ public class MineAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getLanguage();
+                        getLanguage(languageConfigVersion);
                     }
 
                     @Override
@@ -226,7 +225,7 @@ public class MineAPIService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnLanguageSuccess(new GetLanguageResult(new String(arg0)));
+                apiInterface.returnLanguageSuccess(new GetLanguageResult(new String(arg0)),languageConfigVersion);
             }
 
             @Override

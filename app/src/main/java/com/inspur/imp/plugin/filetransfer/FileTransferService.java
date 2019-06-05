@@ -1,7 +1,36 @@
 package com.inspur.imp.plugin.filetransfer;
 
-import static android.app.Activity.RESULT_OK;
-import static com.inspur.imp.util.StrUtil.strIsNotNull;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.imp.api.ImpFragment;
+import com.inspur.imp.api.Res;
+import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
+import com.inspur.imp.util.StrUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -25,37 +54,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.imp.api.ImpFragment;
-import com.inspur.imp.api.Res;
-import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
-import com.inspur.imp.util.StrUtil;
-
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import static android.app.Activity.RESULT_OK;
+import static com.inspur.imp.util.StrUtil.strIsNotNull;
 
 public class FileTransferService extends ImpPlugin {
     public static final String SUCCESS = "1";

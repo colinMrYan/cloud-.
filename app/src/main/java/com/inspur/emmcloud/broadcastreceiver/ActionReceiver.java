@@ -22,7 +22,7 @@ public class ActionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
-        if (((MyApplication) context.getApplicationContext()).isHaveLogin()) {
+        if (MyApplication.getInstance().isHaveLogin()) {
             PushManagerUtils.getInstance().startPush();
         }
     }

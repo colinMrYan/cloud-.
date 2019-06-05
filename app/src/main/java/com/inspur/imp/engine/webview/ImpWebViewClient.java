@@ -23,9 +23,9 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 
 import java.net.URL;
@@ -246,7 +246,6 @@ public class ImpWebViewClient extends WebViewClient {
                 Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 intent.setComponent(null);
                 webView.getContext().startActivity(intent);
-                MyApplication.getInstance().setEnterSystemUI(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

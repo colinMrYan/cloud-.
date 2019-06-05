@@ -11,19 +11,19 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.richtext.CacheType;
-import com.inspur.emmcloud.util.common.richtext.LinkHolder;
-import com.inspur.emmcloud.util.common.richtext.RichText;
-import com.inspur.emmcloud.util.common.richtext.RichType;
-import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
-import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
-import com.inspur.emmcloud.util.common.richtext.callback.OnUrlLongClickListener;
 import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.util.privates.richtext.CacheType;
+import com.inspur.emmcloud.util.privates.richtext.LinkHolder;
+import com.inspur.emmcloud.util.privates.richtext.RichText;
+import com.inspur.emmcloud.util.privates.richtext.RichType;
+import com.inspur.emmcloud.util.privates.richtext.callback.LinkFixCallback;
+import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlClickListener;
+import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlLongClickListener;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
@@ -39,11 +39,9 @@ public class DisplayTxtRichMsg {
      * 富文本卡片
      *
      * @param context
-     * @param childView
      * @param msg
      */
-    public static View displayRichTextMsg(final Context context,
-                                          Msg msg) {
+    public static View displayRichTextMsg(final Context context, Msg msg) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());

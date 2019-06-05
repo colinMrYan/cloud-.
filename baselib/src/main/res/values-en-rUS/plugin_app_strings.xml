@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 网络状态 -->
+    <string name="app_network_disconnected">The network is not connected！</string>
+
+    <!-- 应用管理 -->
+    <string name="app_downloading">Downloading</string>
+    <string name="app_begin_download">Start download</string>
+    <string name="app_download_failed">Download failed！</string>
+    <string name="app_download_success">Download success！</string>
+    <string name="app_connect_timeout">Connection timed out</string>
+    <string name="app_downloaded">Downloaded</string>
+    <string name="app_sd_not_exist">The sd card does not exist！</string>
+    <string name="invalidParam">Illegal parameter</string>
+    <string name="app_beDownloading">Downloading。。。</string>
+    <string name="beginUnpacked">Download success, began to extract</string>
+    <string name="being_unpacked">Unzip...</string>
+    <string name="complete_update">update completed</string>
+    <string name="web_load_fail">Load failed,Touch the screen to reload </string>
+    <string name="web_reload">Network Diagnosis</string>
+</resources>

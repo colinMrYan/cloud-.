@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.bean.mine;
 
 import com.facebook.react.bridge.WritableNativeMap;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.bean.login.ClusterBean;
-import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.reactnative.ReactNativeWritableNativeMap;
 
 import org.json.JSONArray;

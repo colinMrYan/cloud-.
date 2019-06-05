@@ -32,20 +32,18 @@ import android.widget.TextView;
 import com.github.zafarkhaja.semver.Version;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.baselib.util.EncryptUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
-import com.inspur.emmcloud.util.common.EncryptUtils;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -119,22 +117,6 @@ public class AppUtils {
     }
 
     /**
-     * 获取当前应用语言
-     *
-     * @param context
-     * @return
-     */
-    public static String getCurrentAppLanguage(Context context) {
-        String languageJson =
-                PreferencesUtils.getString(context, MyApplication.getInstance().getTanent() + "appLanguageObj");
-        if (languageJson != null) {
-            Language language = new Language(languageJson);
-            return language.getIana();
-        }
-        return "zh-Hans";
-    }
-
-    /**
      * @param context
      * @return
      */
@@ -158,8 +140,8 @@ public class AppUtils {
             final ContentResolver cr = context.getContentResolver();
             String AUTHORITY = "com.android.launcher2.settings";
             final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/favorites?notify=true");
-            Cursor c = cr.query(CONTENT_URI, new String[]{"title", "iconResource"}, "title=?",
-                    new String[]{context.getString(R.string.app_name)}, null);
+            Cursor c = cr.query(CONTENT_URI, new String[] { "title", "iconResource" }, "title=?",
+                    new String[] { context.getString(R.string.app_name) }, null);
 
             if (c != null && c.getCount() > 0) {
                 isInstallShortcut = true;
@@ -266,25 +248,6 @@ public class AppUtils {
         return dynamicPassword;
     }
 
-    /**
-     * 获取IMEI号
-     *
-     * @param context
-     * @return
-     */
-    public static String getIMEICode(Context context) {
-        /**
-         * 唯一的设备ID：
-         * GSM手机的 IMEI 和 CDMA手机的 MEID.
-         * Return null if device ID is not available.
-         */
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = tm.getDeviceId();// String
-        if (StringUtils.isBlank(imei)) {
-            return "";
-        }
-        return imei;
-    }
 
     /**
      * 获取设备UUID
@@ -587,7 +550,6 @@ public class AppUtils {
      * 调用文件系统
      */
     public static void openFileSystem(Activity activity, int requestCode) {
-        MyApplication.getInstance().setEnterSystemUI(true);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -648,7 +610,6 @@ public class AppUtils {
     }
 
     private static void openCameraAfterCheckPermission(Activity activity, String fileName, int requestCode) {
-        MyApplication.getInstance().setEnterSystemUI(true);
         File appDir = new File(Environment.getExternalStorageDirectory(), "DCIM");
         if (!appDir.exists()) {
             appDir.mkdir();
@@ -713,7 +674,6 @@ public class AppUtils {
      * @param requestCode
      */
     public static void sendSMS(Activity activity, String phoneNum, int requestCode) {
-        MyApplication.getInstance().setEnterSystemUI(true);
         Uri smsToUri = Uri.parse("smsto:" + phoneNum);
         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
         activity.startActivityForResult(intent, requestCode);
@@ -732,9 +692,14 @@ public class AppUtils {
                 new PermissionRequestCallback() {
                     @Override
                     public void onPermissionRequestSuccess(List<String> permissions) {
-                        MyApplication.getInstance().setEnterSystemUI(true);
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNum));
-                        activity.startActivityForResult(intent, requestCode);
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNum));
+                            activity.startActivityForResult(intent, requestCode);
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                            activity.finish();
+                        }
+
                     }
 
                     @Override
@@ -754,7 +719,6 @@ public class AppUtils {
      * @param requestCode
      */
     public static void sendMail(Activity activity, String mail, int requestCode) {
-        MyApplication.getInstance().setEnterSystemUI(true);
         Uri uri = Uri.parse("mailto:" + mail);
         Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
         activity.startActivityForResult(
@@ -805,16 +769,22 @@ public class AppUtils {
      * @return
      */
     private static String getDeviceUUID(final Context context) {
-        final String[] uniqueId = new String[1];
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        uniqueId[0] = deviceUuid.toString();
-        return uniqueId[0];
+        try {
+            final String[] uniqueId = new String[1];
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String tmDevice, tmSerial, androidId;
+            tmDevice = "" + tm.getDeviceId();
+            tmSerial = "" + tm.getSimSerialNumber();
+            androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),
+                    android.provider.Settings.Secure.ANDROID_ID);
+            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            uniqueId[0] = deviceUuid.toString();
+            return uniqueId[0];
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            return "";
+        }
+
     }
 
     /**

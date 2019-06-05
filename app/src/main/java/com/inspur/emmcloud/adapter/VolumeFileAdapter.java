@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
@@ -242,41 +242,30 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        private MyItemClickListener myItemClickListener;
-        private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
-
         @BindView(R.id.file_type_img)
         ImageView fileTypeImg;
-
         @BindView(R.id.tv_file_name)
         TextView fileNameText;
-
         @BindView(R.id.file_time_text)
         TextView fileTimeText;
-
         @BindView(R.id.tv_file_size)
         TextView fileSizeText;
-
         @BindView(R.id.file_select_img)
         ImageView fileSelcetImg;
-
         @BindView(R.id.upload_cancel_text)
         TextView uploadOperationText;
-
         @BindView(R.id.upload_progress)
         ProgressBar uploadProgressBar;
-
         @BindView(R.id.upload_status_text)
         TextView uploadStatusText;
-
         @BindView(R.id.file_info_layout)
         RelativeLayout fileInfoLayout;
-
         @BindView(R.id.file_upload_status_layout)
         RelativeLayout fileUploadStatusLayout;
-
         @BindView(R.id.file_operation_drop_down_img)
         ImageView fileOperationDropDownImg;
+        private MyItemClickListener myItemClickListener;
+        private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
 
         public ViewHolder(View itemView, MyItemClickListener myItemClickListener, MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
             super(itemView);

@@ -8,28 +8,30 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.chat.MarkDownLink;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.richtext.CacheType;
-import com.inspur.emmcloud.util.common.richtext.ImageHolder;
-import com.inspur.emmcloud.util.common.richtext.LinkHolder;
-import com.inspur.emmcloud.util.common.richtext.RichText;
-import com.inspur.emmcloud.util.common.richtext.RichTextConfig;
-import com.inspur.emmcloud.util.common.richtext.RichType;
-import com.inspur.emmcloud.util.common.richtext.callback.DrawableGetter;
-import com.inspur.emmcloud.util.common.richtext.callback.ImageFixCallback;
-import com.inspur.emmcloud.util.common.richtext.callback.LinkFixCallback;
-import com.inspur.emmcloud.util.common.richtext.callback.OnUrlClickListener;
-import com.inspur.emmcloud.util.common.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.MarkDownLinkCacheUtils;
+import com.inspur.emmcloud.util.privates.richtext.CacheType;
+import com.inspur.emmcloud.util.privates.richtext.ImageHolder;
+import com.inspur.emmcloud.util.privates.richtext.LinkHolder;
+import com.inspur.emmcloud.util.privates.richtext.RichText;
+import com.inspur.emmcloud.util.privates.richtext.RichTextConfig;
+import com.inspur.emmcloud.util.privates.richtext.RichType;
+import com.inspur.emmcloud.util.privates.richtext.callback.DrawableGetter;
+import com.inspur.emmcloud.util.privates.richtext.callback.ImageFixCallback;
+import com.inspur.emmcloud.util.privates.richtext.callback.LinkFixCallback;
+import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlClickListener;
+import com.inspur.emmcloud.util.privates.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -82,6 +84,23 @@ public class DisplayTxtMarkdownMsg {
             showContentByMarkdown(context, title, titleText, isMyMsg, msg.getId(), markDownLinkList);
         }
         showContentByMarkdown(context, content, contentText, isMyMsg, msg.getId(), markDownLinkList);
+        contentText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                //防止改动ui层级后报错
+                try {
+                    ViewParent parent = v.getParent().getParent();
+                    if (parent instanceof ViewGroup) {
+                        // 获取被点击控件的父容器，让父容器执行点击；
+                        ((ViewGroup) parent).performLongClick();
+                    }
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
         return cardContentView;
     }
 

@@ -1,13 +1,5 @@
 package com.inspur.emmcloud.ui.find;
 
-import java.util.ArrayList;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.system.AnalysisModel;
-import com.inspur.emmcloud.ui.find.trip.TravelStarsActivity;
-import com.inspur.emmcloud.util.common.IntentUtils;
-
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -18,6 +10,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.bean.system.AnalysisModel;
+import com.inspur.emmcloud.ui.find.trip.TravelStarsActivity;
+
+import java.util.ArrayList;
 
 /**
  * 分析页面 com.inspur.emmcloud.ui.AnalysisActivity create at 2016年8月31日 下午2:37:52

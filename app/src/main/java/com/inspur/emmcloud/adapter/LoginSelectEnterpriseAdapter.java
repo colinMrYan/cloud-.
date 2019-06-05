@@ -9,8 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.bean.mine.Enterprise;
-import com.inspur.emmcloud.util.common.DensityUtil;
 
 import java.util.List;
 

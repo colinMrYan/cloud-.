@@ -1,13 +1,18 @@
 package com.inspur.emmcloud.ui.contact;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.TextView;
+
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
@@ -15,11 +20,6 @@ import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
-
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
-import android.widget.TextView;
 
 /**
  * classes : com.inspur.emmcloud.ui.contact.RobotActivity

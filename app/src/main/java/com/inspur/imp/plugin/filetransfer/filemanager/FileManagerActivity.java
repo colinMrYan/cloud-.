@@ -1,22 +1,5 @@
 package com.inspur.imp.plugin.filetransfer.filemanager;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.imp.plugin.filetransfer.filemanager.adapter.FileAdapter;
-import com.inspur.imp.plugin.filetransfer.filemanager.adapter.TitleAdapter;
-import com.inspur.imp.plugin.filetransfer.filemanager.adapter.base.RecyclerViewAdapter;
-import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileBean;
-import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileType;
-import com.inspur.imp.plugin.filetransfer.filemanager.bean.TitlePath;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +10,23 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.imp.plugin.filetransfer.filemanager.adapter.FileAdapter;
+import com.inspur.imp.plugin.filetransfer.filemanager.adapter.TitleAdapter;
+import com.inspur.imp.plugin.filetransfer.filemanager.adapter.base.RecyclerViewAdapter;
+import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileBean;
+import com.inspur.imp.plugin.filetransfer.filemanager.bean.FileType;
+import com.inspur.imp.plugin.filetransfer.filemanager.bean.TitlePath;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class FileManagerActivity extends BaseActivity {

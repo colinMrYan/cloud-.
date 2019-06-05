@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import java.io.File;
+import android.content.Intent;
+import android.os.Bundle;
 
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.BuildConfig;
@@ -17,6 +18,10 @@ import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.util.ZipUtils;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
@@ -24,14 +29,11 @@ import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.ZipUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.util.privates.LanguageManager;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
@@ -44,8 +46,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 import com.reactnativenavigation.bridge.NavigationReactPackage;
 
-import android.content.Intent;
-import android.os.Bundle;
+import java.io.File;
 
 /**
  * Created by yufuchang on 2017/3/15.
@@ -267,7 +268,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         //bundle.putString("profile",myInfo);
         bundle.putString("systemName", ReactNativeInitInfoUtils.SYSTEM);
         bundle.putString("systemVersion", ReactNativeInitInfoUtils.getSystemVersion(ReactNativeAppActivity.this));
-        bundle.putString("locale", ReactNativeInitInfoUtils.getLocalLanguage(ReactNativeAppActivity.this));
+        bundle.putString("locale", LanguageManager.getInstance().getCurrentAppLanguage());
         bundle.putString("reactNativeVersion", ReactNativeInitInfoUtils.getReactNativeVersion(reactAppFilePath));
         bundle.putString("accessToken", ((MyApplication) getApplicationContext()).getToken());
         bundle.putString("pushId", ReactNativeInitInfoUtils.getPushId(ReactNativeAppActivity.this));

@@ -3,8 +3,8 @@ package com.inspur.emmcloud.bean.contact;
 import android.content.Context;
 
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;

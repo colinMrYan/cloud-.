@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.appcenter.webex;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONArray;

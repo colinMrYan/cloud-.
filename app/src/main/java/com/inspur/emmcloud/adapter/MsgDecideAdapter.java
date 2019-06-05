@@ -44,7 +44,7 @@ public class MsgDecideAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate((arrangement.equals("horizontal") ?
                 R.layout.chat_msg_card_action_horizontal_item_view : R.layout.chat_msg_card_action_vertical_item_view), null);
-        TextView actionText =  convertView.findViewById(R.id.action_text);
+        TextView actionText = convertView.findViewById(R.id.action_text);
         View dividerView = convertView.findViewById(R.id.divider_view);
         actionText.setText(actionList.get(position).getTitle());
         dividerView.setVisibility((position == getCount() - 1) ? View.GONE : View.VISIBLE);

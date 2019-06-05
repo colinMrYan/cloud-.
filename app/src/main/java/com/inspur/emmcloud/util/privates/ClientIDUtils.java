@@ -5,10 +5,9 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 
 /**
  * 推送信息
@@ -32,13 +31,13 @@ public class ClientIDUtils {
         if (!MyApplication.getInstance().isHaveLogin()) {
             return;
         }
-        String pushTracer = PushManagerUtils.getPushId(context);
+        String pushTracer = PushManagerUtils.getInstance().getPushId(context);
         if (NetUtils.isNetworkConnected(context, false)) {
             ChatAPIService apiService = new ChatAPIService(context);
             apiService.setAPIInterface(new WebService());
             String deviceId = AppUtils.getMyUUID(context);
             String deviceName = AppUtils.getDeviceName(context);
-            String pushProvider = PushManagerUtils.getPushProvider(context);
+            String pushProvider = PushManagerUtils.getInstance().getPushProvider(context);
             apiService.uploadPushInfo(deviceId, deviceName, pushProvider, pushTracer);
         } else {
             callbackClientIdFail();

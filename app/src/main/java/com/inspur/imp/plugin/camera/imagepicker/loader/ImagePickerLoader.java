@@ -1,6 +1,5 @@
 package com.inspur.imp.plugin.camera.imagepicker.loader;
 
-import android.app.Activity;
 import android.widget.ImageView;
 
 import java.io.Serializable;
@@ -10,7 +9,7 @@ import java.io.Serializable;
  */
 public interface ImagePickerLoader extends Serializable {
 
-    void displayImage(Activity activity, String path, ImageView imageView, int width, int height);
+    void displayImage(String path, ImageView imageView, int width, int height, Integer defaultDrawableId);
 
     void clearMemoryCache();
 }

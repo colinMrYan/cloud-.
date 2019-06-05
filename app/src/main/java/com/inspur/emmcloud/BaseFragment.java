@@ -3,7 +3,7 @@ package com.inspur.emmcloud;
 import android.support.v4.app.Fragment;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.util.common.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
 
 import butterknife.Unbinder;
 

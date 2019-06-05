@@ -46,6 +46,8 @@ public class Constant {
     public static final String PREF_BADGE_NUM_SNS = "badge_num_sns";
     public static final String PREF_MNM_DOUBLE_VALIADATION = "mdm_double_validation";//是否强制开启手势密码
 
+    public static final String PREF_MDM_STATUS_PASS = "isMDMStatusPass";//是否设备管理通过
+
     public static final String PREF_V_CONFIG_ALL = "v_config_all";
     public static final String PREF_EXPERIENCE_UPGRATE = "experience_upgrade";
     public static final String PREF_APP_THEME = "app_theme_num_v1";
@@ -66,11 +68,15 @@ public class Constant {
     public static final String PREF_CALENDAR_EVENT_SHOW_TYPE = "calendar_event_show_type";
     public static final String PREF_MEETING_OFFICE_ID_LIST = "meeting_office_id_list";
     public static final String PREF_IS_MEETING_ADMIN = "is_meeting_admin";
+    public static final String PREF_SERVER_SUPPORT_LANGUAGE = "server_support_language";
+    public static final String PREF_CURRENT_LANGUAGE = "current_language";
+    public static final String PREF_CURRENT_LANGUAGE_NAME = "current_language_name";
+    public static final String PREF_IS_CONTACT_READY = "isContactReady";
+    public static final String PREF_APP_BACKGROUND_TIME = "app_background_time";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
     public static final String ACTION_CALENDAR = "com.inspur.calendar";
-    public static final String ACTION_SAFE_UNLOCK = "com.inspur.safe.unlock";
     public static final String ACTION_VOLUME_INFO_UPDATE = "com.inspur.volume.info.update";
 
     public static final String DEFAULT_CLUSTER_EMM = "https://emm.inspur.com/";//EMM默认
@@ -116,7 +122,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED = "tag_schedule_calendar_data_changed";
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
     public static final String EVENTBUS_TAG_SELECT_CALENDAR_CHANGED = "tag_select_calendar_changed";
-
+    public static final String EVENTBUS_TAG_SAFE_UNLOCK = "tag_safe_unlock";//二次认证（刷脸、手势认证通过）
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
@@ -160,7 +166,6 @@ public class Constant {
     public static final String PUSH_FLAG = "pushFlag";
     public static final String HUAWEI_PUSH_TOKEN = "huawei_push_token";
     public static final String PUSH_SWITCH_FLAG = "push_switch_flag";
-
     public static final String JPUSH_REGISTER_ID = "JpushRegId";
     public static final String MIPUSH_REGISTER_ID = "mi_push_register_id";
     public static final String HUAWEI_FLAG = "huawei";

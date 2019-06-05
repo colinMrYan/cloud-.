@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="5dp">
+
+        <TextView
+            android:id="@+id/tv_permission_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="@string/cloud_plus_update"
+            android:textColor="#3E4A59"
+            android:textSize="17sp" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_apk_download"
+            style="@style/StyleProgressBarMini"
+            android:layout_width="198dp"
+            android:layout_height="6dp"
+            android:layout_below="@id/tv_permission_dialog_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="42dp"
+            android:max="100" />
+
+        <TextView
+            android:id="@+id/tv_num_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_permission_dialog_title"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="35dp"
+            android:layout_toRightOf="@id/progress_bar_apk_download"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_num_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/progress_bar_apk_download"
+            android:layout_below="@id/progress_bar_apk_download"
+            android:layout_marginTop="6dp"
+            android:textColor="#3E4A59"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_downloading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_num_progress"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/downloading_package"
+            android:textColor="#3E4A59"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/tv_downloading"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/bg_half_circle"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+    </RelativeLayout>
+
+
+</LinearLayout>

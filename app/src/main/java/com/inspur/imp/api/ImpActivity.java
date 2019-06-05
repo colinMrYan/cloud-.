@@ -1,12 +1,12 @@
 package com.inspur.imp.api;
 
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-
 import android.content.pm.ActivityInfo;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
 
 public class ImpActivity extends ImpFragmentBaseActivity {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- GPS -->
+    <string name="gpsOpened">GPS已经开启</string>
+    <string name="gpsClosed">GPS已经关闭</string>
+
+
+</resources>

@@ -12,8 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 
 import java.lang.reflect.Field;
 

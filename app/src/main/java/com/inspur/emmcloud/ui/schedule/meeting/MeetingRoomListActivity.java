@@ -1,8 +1,11 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
+import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -10,14 +13,14 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleMeetingRoomAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -25,12 +28,9 @@ import com.inspur.emmcloud.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.View;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -218,7 +218,11 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
      */
     private void getOfficeList() {
         String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
-        if (officeIdListJson == null) {
+        if (officeIdListJson != null) {
+            officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
+        }
+
+        if (officeIdList.size() == 0) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                 if (!swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(true);
@@ -228,7 +232,6 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
                 swipeRefreshLayout.setRefreshing(false);
             }
         } else {
-            officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
             getMeetingRoomList();
         }
     }
@@ -268,11 +271,10 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
             officeIdList = getOfficeListResult.getOfficeIdList();
             if (officeIdList.size() > 0) {
                 PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
-                getMeetingRoomList();
             } else {
-                swipeRefreshLayout.setRefreshing(false);
                 setMeetingOffice();
             }
+            getMeetingRoomList();
         }
 
 

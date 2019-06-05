@@ -1,19 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.groupnews;
 
-import java.util.List;
-
-import com.gxz.PagerSlidingTabStrip;
-import com.inspur.emmcloud.BaseFragmentActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
-import com.inspur.emmcloud.bean.appcenter.news.NewsTitle;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +8,20 @@ import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.gxz.PagerSlidingTabStrip;
+import com.inspur.emmcloud.BaseFragmentActivity;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
+import com.inspur.emmcloud.bean.appcenter.news.NewsTitle;
+import com.inspur.emmcloud.util.privates.NetUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.util.List;
 
 /**
  * 集团新闻

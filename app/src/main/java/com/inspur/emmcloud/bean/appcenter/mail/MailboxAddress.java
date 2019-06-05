@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter.mail;
 
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 import java.util.regex.Pattern;
 
