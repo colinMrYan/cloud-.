@@ -1,10 +1,12 @@
 apply plugin: 'com.android.library'
-apply from: "../node_modules/react-native/react.gradle"
-apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
+//apply from: "../node_modules/react-native/react.gradle"
+//apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
 
 android {
     compileSdkVersion versions.compileSdk
     buildToolsVersion versions.androidTools
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
@@ -27,7 +29,7 @@ android {
     lintOptions {
         abortOnError false
         checkReleaseBuilds false
-
+        disable 'MissingTranslation', 'ExtraTranslation'
     }
 
     //资源文件目录
