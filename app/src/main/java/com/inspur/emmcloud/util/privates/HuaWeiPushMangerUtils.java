@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.util.privates;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+
 import com.huawei.hms.api.ConnectionResult;
 import com.huawei.hms.api.HuaweiApiClient;
 import com.huawei.hms.api.HuaweiApiClient.ConnectionCallbacks;
@@ -10,9 +13,6 @@ import com.huawei.hms.support.api.push.TokenResult;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.config.Constant;
-
-import android.content.Context;
-import android.support.annotation.NonNull;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -52,7 +52,6 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnected() {
-        PushManagerUtils.getInstance().setPushFlag(contextLocal, Constant.HUAWEI_FLAG);
         getToken();
         setPassByMsg(true);
     }

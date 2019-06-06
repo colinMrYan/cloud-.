@@ -150,7 +150,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
             }
         };
-        PushManagerUtils.getInstance().clearPushFlag();
         isActive = false;
         isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 Constant.PREF_IS_CONTACT_READY, false);
