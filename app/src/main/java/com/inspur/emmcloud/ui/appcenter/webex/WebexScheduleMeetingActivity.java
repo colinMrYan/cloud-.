@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -24,8 +23,10 @@ import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
@@ -34,7 +35,6 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;

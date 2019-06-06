@@ -1,15 +1,15 @@
 package com.inspur.emmcloud.ui.mine.card;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.CardPackageAdapter;
-import com.inspur.emmcloud.bean.mine.CardPackageBean;
-import com.inspur.emmcloud.interf.OnCardPackageClickListener;
-import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
-
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.CardPackageAdapter;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.bean.mine.CardPackageBean;
+import com.inspur.emmcloud.interf.OnCardPackageClickListener;
+import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

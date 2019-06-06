@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.dialogs;
+package com.inspur.emmcloud.basemodule.widget.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -18,7 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.R;
+import com.inspur.basemodule.R;
 
 import java.util.ArrayList;
 import java.util.List;

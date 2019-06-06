@@ -14,7 +14,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.widget.dialogs.MyDialog;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;

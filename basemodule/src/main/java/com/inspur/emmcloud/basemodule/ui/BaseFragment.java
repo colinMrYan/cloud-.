@@ -1,8 +1,9 @@
-package com.inspur.emmcloud;
+package com.inspur.emmcloud.basemodule.ui;
 
 import android.support.v4.app.Fragment;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.basemodule.R;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 
 import butterknife.Unbinder;

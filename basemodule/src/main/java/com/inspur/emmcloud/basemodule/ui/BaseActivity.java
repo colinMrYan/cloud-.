@@ -1,4 +1,4 @@
-package com.inspur.emmcloud;
+package com.inspur.emmcloud.basemodule.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,18 +8,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.basemodule.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.widget.dialogs.MyDialog;
 
 import java.util.List;
 
@@ -68,14 +70,14 @@ public abstract class BaseActivity extends Activity {
                 layout.setLayoutParams(params);
             }
             ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_title)).setText(
-                    getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(MyApplication.getInstance())));
+                    getString(R.string.permission_open_cloud_plus, AppUtils.getAppName(BaseApplication.getInstance())));
             ((TextView) permissionDialog.findViewById(R.id.tv_permission_dialog_summary)).setText(getString(
-                    R.string.permission_necessary_permission, AppUtils.getAppName(MyApplication.getInstance())));
+                    R.string.permission_necessary_permission, AppUtils.getAppName(BaseApplication.getInstance())));
             permissionDialog.findViewById(R.id.tv_next_step).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     permissionDialog.dismiss();
-                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(MyApplication.getInstance(),
+                    PermissionRequestManagerUtils.getInstance().requestRuntimePermission(BaseApplication.getInstance(),
                             necessaryPermissionArray, new PermissionRequestCallback() {
                                 @Override
                                 public void onPermissionRequestSuccess(List<String> permissions) {
@@ -84,10 +86,10 @@ public abstract class BaseActivity extends Activity {
 
                                 @Override
                                 public void onPermissionRequestFail(List<String> permissions) {
-                                    ToastUtils.show(MyApplication.getInstance(),
+                                    ToastUtils.show(BaseApplication.getInstance(),
                                             PermissionRequestManagerUtils.getInstance()
-                                                    .getPermissionToast(MyApplication.getInstance(), permissions));
-                                    MyApplication.getInstance().exit();
+                                                    .getPermissionToast(BaseApplication.getInstance(), permissions));
+                                    BaseApplication.getInstance().exit();
                                 }
                             });
                 }
@@ -115,7 +117,7 @@ public abstract class BaseActivity extends Activity {
     }
 
     public void setTheme() {
-        int currentThemeNo = PreferencesUtils.getInt(MyApplication.getInstance(), Constant.PREF_APP_THEME, 0);
+        int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         switch (currentThemeNo) {
             case 1:
                 setTheme(R.style.AppTheme_1);

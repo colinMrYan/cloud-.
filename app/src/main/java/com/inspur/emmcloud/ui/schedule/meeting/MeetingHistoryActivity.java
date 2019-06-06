@@ -1,10 +1,10 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import com.inspur.emmcloud.BaseFragmentActivity;
-import com.inspur.emmcloud.R;
-
 import android.content.Intent;
 import android.view.View;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 
 import butterknife.ButterKnife;
 

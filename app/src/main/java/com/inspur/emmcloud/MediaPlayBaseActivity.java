@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.os.PowerManager;
 import android.view.KeyEvent;
 
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.broadcastreceiver.HeadsetReceiver;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.privates.MediaPlayerManagerUtils;

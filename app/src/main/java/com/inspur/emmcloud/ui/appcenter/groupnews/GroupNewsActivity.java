@@ -10,11 +10,11 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.gxz.PagerSlidingTabStrip;
-import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.news.NewsTitle;

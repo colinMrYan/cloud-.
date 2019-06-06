@@ -17,6 +17,11 @@ android {
         }
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
     }
     sourceSets.main {
         jniLibs.srcDirs = ['libs']

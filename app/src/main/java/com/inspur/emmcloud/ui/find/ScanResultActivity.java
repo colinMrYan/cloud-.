@@ -1,10 +1,10 @@
 package com.inspur.emmcloud.ui.find;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-
 import android.view.View;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 
 public class ScanResultActivity extends BaseActivity {
 

@@ -24,13 +24,13 @@ import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.MDM.MDMListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MaxHeightListView;
 import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
 import java.util.List;
 

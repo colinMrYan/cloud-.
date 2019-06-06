@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.dialogs;
+package com.inspur.emmcloud.basemodule.widget.dialogs;
 
 /**
  * Created by yufuchang on 2017/4/13.
@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.WindowManager.LayoutParams;
 
-import com.inspur.emmcloud.R;
+import com.inspur.basemodule.R;
 
 
 /**

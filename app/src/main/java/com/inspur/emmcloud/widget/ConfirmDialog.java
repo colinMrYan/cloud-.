@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.dialogs;
+package com.inspur.emmcloud.widget;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,7 +12,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.R;
+import com.inspur.basemodule.R;
+
 
 /**
  * Created by libaochao on 2018/12/18.

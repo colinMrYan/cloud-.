@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.dialogs;
+package com.inspur.emmcloud.basemodule.widget.dialogs;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.R;
+import com.inspur.basemodule.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 
 import java.lang.reflect.Field;

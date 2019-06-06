@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.widget.dialogs;
+package com.inspur.emmcloud.basemodule.widget.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
