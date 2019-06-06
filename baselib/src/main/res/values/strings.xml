@@ -328,7 +328,7 @@
     <string name="chat_group_message_search">查找聊天记录</string>
     <string name="chat_long_click_copy">复制</string>
     <string name="chat_long_click_transmit">转发</string>
-    <string name="chat_long_click_schedule">日程</string>
+    <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
 
     <!-- 会议卡片 -->

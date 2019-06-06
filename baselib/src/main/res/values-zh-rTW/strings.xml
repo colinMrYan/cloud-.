@@ -326,7 +326,7 @@
     <string name="chat_conversation_unread_count">%1$d條新消息</string>
     <string name="chat_long_click_copy">複製</string>
     <string name="chat_long_click_transmit">轉發</string>
-    <string name="chat_long_click_schedule">日程</string>
+    <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">複製文字</string>
 
 
