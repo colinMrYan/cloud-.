@@ -320,7 +320,7 @@
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>
     <string name="chat_long_click_copy">Copy</string>
-    <string name="chat_long_click_transmit">Transmit</string>
+    <string name="chat_long_click_transmit">Forward</string>
     <string name="chat_long_click_schedule">Schedule</string>
     <string name="chat_long_click_copy_text">Copy text</string>
 
