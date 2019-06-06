@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.bean.mine.Enterprise;
+import com.inspur.emmcloud.basemodule.bean.Enterprise;
 
 import java.util.List;
 

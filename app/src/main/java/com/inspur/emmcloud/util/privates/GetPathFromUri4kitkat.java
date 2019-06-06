@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 
 public class GetPathFromUri4kitkat {

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.basemodule.util.Res;
 
 import java.util.List;
 

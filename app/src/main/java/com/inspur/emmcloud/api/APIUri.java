@@ -6,11 +6,11 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
@@ -31,7 +31,7 @@ public class APIUri {
 //     * @return
 //     */
 //    private static String getEcmTanentUrl() {
-//        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
+//        return BaseApplication.getInstance().getClusterEcm() + BaseApplication.getInstance().getTanent();
 //    }
 
     public static String getEcmUrl() {
@@ -118,14 +118,6 @@ public class APIUri {
         return "https://uvc1.inspuronline.com/cpexception";
     }
 
-    /**
-     * PV收集
-     *
-     * @return
-     */
-    public static String getUploadPVCollectUrl() {
-        return "https://uvc1.inspuronline.com/clientpv";
-    }
 
     /**
      * 新版底部Tabbar接口
@@ -189,23 +181,7 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/pos";
     }
 
-    /**
-     * 获取上传推送信息的url
-     *
-     * @return
-     */
-    public static String getUploadPushInfoUrl() {
-        return WebServiceRouterManager.getInstance().getClusterClientRegistry() + "/client";
-    }
 
-    /**
-     * 获取通用检查url
-     *
-     * @return
-     */
-    public static String getAllConfigVersionUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
-    }
 
 
     /************************************************************************登录*****************************************************************/
@@ -1447,15 +1423,6 @@ public class APIUri {
         return "https://ecm.inspur.com/" + MyApplication.getInstance().getTanent() + "/trip/simple/detail?trip_ticket=";
     }
 
-    /**
-     * 获取语言的接口
-     *
-     * @return
-     */
-    public static String getLangUrl() {
-        return getEcmUrl() + "/" + MyApplication.getInstance().getTanent() + "/settings/lang";
-    }
-
 
     /**
      * 获取应用未处理消息条数的URL
@@ -1674,25 +1641,6 @@ public class APIUri {
         return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
     }
 
-    /**
-     * 向emm注册推送token的url
-     * 固定地址
-     *
-     * @return
-     */
-    public static String getRegisterPushTokenUrl() {
-        return "https://emm.inspuronline.com/api/sys/v6.0/config/registerDevice";
-    }
-
-    /**
-     * 解除注册token的url
-     * 固定地址
-     *
-     * @return
-     */
-    public static String getUnRegisterPushTokenUrl() {
-        return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
-    }
 
     /**
      * 未读消息url

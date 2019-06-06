@@ -3,10 +3,10 @@ package com.inspur.emmcloud.servcieimpl;
 import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
+import com.inspur.emmcloud.login.appcenter.AppcenterService;
 import com.inspur.emmcloud.service.SyncCommonAppService;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 
 /**
  * Created by chenmch on 2019/5/31.

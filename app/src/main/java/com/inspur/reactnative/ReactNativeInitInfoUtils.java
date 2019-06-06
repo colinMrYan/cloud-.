@@ -4,11 +4,11 @@ import android.content.Context;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.privates.AppUtils;
 
-import static com.inspur.emmcloud.config.Constant.PUSH_FLAG;
+import static com.inspur.emmcloud.basemodule.config.Constant.PUSH_FLAG;
 
 /**
  * Created by yufuchang on 2017/7/11.

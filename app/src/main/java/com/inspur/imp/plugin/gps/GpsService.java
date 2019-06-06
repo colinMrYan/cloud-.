@@ -1,12 +1,10 @@
 package com.inspur.imp.plugin.gps;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.location.LocationManager;
+import android.provider.Settings;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -15,17 +13,19 @@ import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.amaplocation.ECMLoactionTransformUtils;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.location.LocationManager;
-import android.provider.Settings;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 /**

@@ -1,17 +1,5 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.schedule.MyCalendar;
-import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
-
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +9,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
+import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

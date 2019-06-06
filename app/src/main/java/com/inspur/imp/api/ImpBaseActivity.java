@@ -2,7 +2,7 @@ package com.inspur.imp.api;
 
 import android.os.Bundle;
 
-import com.inspur.emmcloud.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 
 public class ImpBaseActivity extends BaseFragmentActivity {
     @Override

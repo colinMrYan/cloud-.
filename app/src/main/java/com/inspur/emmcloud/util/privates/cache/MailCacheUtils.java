@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util.privates.cache;
 
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 
 import org.xutils.db.sqlite.WhereBuilder;

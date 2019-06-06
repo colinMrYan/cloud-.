@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.find.trip;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 
 public class TravelActivity extends BaseActivity {
 

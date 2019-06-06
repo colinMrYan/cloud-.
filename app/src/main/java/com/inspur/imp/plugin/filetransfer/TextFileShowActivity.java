@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.imp.api.ImpBaseActivity;
-import com.inspur.imp.api.Res;
 
 
 public class TextFileShowActivity extends ImpBaseActivity {

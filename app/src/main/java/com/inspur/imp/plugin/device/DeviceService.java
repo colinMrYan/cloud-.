@@ -9,7 +9,7 @@ import android.provider.Settings;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONException;

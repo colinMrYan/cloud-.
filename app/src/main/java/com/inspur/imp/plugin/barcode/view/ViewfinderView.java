@@ -31,7 +31,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.google.zxing.ResultPoint;
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 
 import java.util.ArrayList;
