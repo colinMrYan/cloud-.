@@ -27,7 +27,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;

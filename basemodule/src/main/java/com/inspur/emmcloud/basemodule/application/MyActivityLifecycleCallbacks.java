@@ -9,14 +9,14 @@ import android.os.Handler;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.service.PVCollectService;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
-import com.inspur.emmcloud.componentservice.communication.CommunicationService;
-import com.inspur.emmcloud.componentservice.setting.SettingService;
-import com.inspur.emmcloud.service.PVCollectService;
-import com.inspur.emmcloud.util.privates.AppBadgeUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.login.app.AppService;
+import com.inspur.emmcloud.login.appcenter.AppcenterService;
+import com.inspur.emmcloud.login.communication.CommunicationService;
+import com.inspur.emmcloud.login.setting.SettingService;
 import com.luojilab.component.componentlib.router.Router;
 
 /**
@@ -45,7 +45,11 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                     showFaceOrGestureLock();
                 }
                 uploadMDMInfo();
-                new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
+                Router router = Router.getInstance();
+                if (router.getService(AppService.class.getSimpleName()) != null) {
+                    AppService service = (AppService) router.getService(AppService.class.getSimpleName());
+                    service.getAppBadgeCountFromServer();
+                }
             }
         }
         count++;
@@ -75,7 +79,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             if (BaseApplication.getInstance().isHaveLogin()) {
                 startUploadPVCollectService(BaseApplication.getInstance());
                 startSyncCommonAppService();
-                new ClientIDUtils(MyApplication.getInstance()).upload();
+                new ClientIDUtils(BaseApplication.getInstance()).upload();
             }
 
         }

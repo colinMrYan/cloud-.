@@ -6,7 +6,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.basemodule.service.PVCollectService;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.componentservice.setting.SettingService;
+import com.inspur.emmcloud.login.setting.SettingService;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;

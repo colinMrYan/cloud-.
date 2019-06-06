@@ -1,22 +1,20 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
+import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 
 /**
  * 推送信息
  */
 
-public class ClientIDUtils {
+public class ClientIDUtils extends BaseModuleAPIInterfaceInstance {
     private Context context;
     private OnGetClientIdListener callBack;
 
@@ -31,13 +29,13 @@ public class ClientIDUtils {
 
 
     public void upload() {
-        if (!MyApplication.getInstance().isHaveLogin()) {
+        if (!BaseApplication.getInstance().isHaveLogin()) {
             return;
         }
         String pushTracer = PushManagerUtils.getInstance().getPushId(context);
         if (NetUtils.isNetworkConnected(context, false)) {
-            ChatAPIService apiService = new ChatAPIService(context);
-            apiService.setAPIInterface(new WebService());
+            BaseModuleApiService apiService = new BaseModuleApiService(context);
+            apiService.setAPIInterface(this);
             String deviceId = AppUtils.getMyUUID(context);
             String deviceName = AppUtils.getDeviceName(context);
             String pushProvider = PushManagerUtils.getInstance().getPushProvider(context);
@@ -74,24 +72,21 @@ public class ClientIDUtils {
         }
     }
 
+    @Override
+    public void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult) {
+        String clientId = getUploadPushInfoResult.getChatClientId();
+        PreferencesByUserAndTanentUtils.putString(context, Constant.PREF_CLIENTID, clientId);
+        callbackClientIdSuccess(clientId);
+    }
+
+    @Override
+    public void returnUploadPushInfoResultFail(String error, int errorCode) {
+        callbackClientIdFail();
+    }
 
     public interface OnGetClientIdListener {
         void getClientIdSuccess(String clientId);
 
         void getClientIdFail();
-    }
-
-    private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult) {
-            String clientId = getUploadPushInfoResult.getChatClientId();
-            PreferencesByUserAndTanentUtils.putString(context, Constant.PREF_CLIENTID, clientId);
-            callbackClientIdSuccess(clientId);
-        }
-
-        @Override
-        public void returnUploadPushInfoResultFail(String error, int errorCode) {
-            callbackClientIdFail();
-        }
     }
 }

@@ -2,8 +2,8 @@ package com.inspur.emmcloud.api;
 
 
 import com.inspur.emmcloud.basemodule.bean.AppException;
-import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
+import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
@@ -54,7 +54,6 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
@@ -1560,16 +1559,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnCardPackageListFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult) {
-
-    }
-
-    @Override
-    public void returnAllConfigVersionFail(String error, int errorCode) {
 
     }
 

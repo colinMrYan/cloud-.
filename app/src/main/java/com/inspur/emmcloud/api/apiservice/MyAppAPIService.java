@@ -34,7 +34,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;

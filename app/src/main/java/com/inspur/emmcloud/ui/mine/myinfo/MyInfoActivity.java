@@ -191,7 +191,6 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void initImagePicker() {
         ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(true); // 显示拍照按钮
         imagePicker.setCrop(true); // 允许裁剪（单选才有效）
         imagePicker.setSaveRectangle(true); // 是否按矩形区域保存

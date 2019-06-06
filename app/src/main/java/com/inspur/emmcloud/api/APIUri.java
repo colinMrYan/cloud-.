@@ -181,14 +181,6 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/pos";
     }
 
-    /**
-     * 获取上传推送信息的url
-     *
-     * @return
-     */
-    public static String getUploadPushInfoUrl() {
-        return WebServiceRouterManager.getInstance().getClusterClientRegistry() + "/client";
-    }
 
 
 
@@ -1649,25 +1641,6 @@ public class APIUri {
         return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
     }
 
-    /**
-     * 向emm注册推送token的url
-     * 固定地址
-     *
-     * @return
-     */
-    public static String getRegisterPushTokenUrl() {
-        return "https://emm.inspuronline.com/api/sys/v6.0/config/registerDevice";
-    }
-
-    /**
-     * 解除注册token的url
-     * 固定地址
-     *
-     * @return
-     */
-    public static String getUnRegisterPushTokenUrl() {
-        return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
-    }
 
     /**
      * 未读消息url

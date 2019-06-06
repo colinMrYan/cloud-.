@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -39,6 +40,7 @@ import butterknife.ButterKnife;
 /**
  * 登录页面
  */
+@Route(path = "/login/main")
 public class LoginActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;

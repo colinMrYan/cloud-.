@@ -120,12 +120,30 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void getCurrentEnterprise(Promise promise) {
         Enterprise enterprise = ((MyApplication) getReactApplicationContext().getApplicationContext()).getCurrentEnterprise();
         try {
-            promise.resolve(enterprise.enterPrise2WritableNativeMap());
+            promise.resolve(enterPrise2WritableNativeMap(enterprise));
         } catch (Exception e) {
             promise.reject(e);
         }
 
     }
+
+    /**
+     * 为RN内部自己调用准备的，不能序列化，否则报异常
+     *
+     * @return
+     */
+    public WritableNativeMap enterPrise2WritableNativeMap(Enterprise enterprise) {
+        WritableNativeMap map = new WritableNativeMap();
+        map.putString("code", enterprise.getCode());
+        map.putInt("id", Integer.valueOf(enterprise.getId()));
+        map.putString("name", enterprise.getName());
+        map.putDouble("creation_date", Double.valueOf(enterprise.getCreationDate()));
+        map.putString("ent_license_copy", enterprise.getEntLicenseCopy());
+        map.putString("ent_license_sn", enterprise.getEntLicenseSn());
+        map.putDouble("last_update", Double.valueOf(enterprise.getLastUpdate()));
+        return map;
+    }
+
 
     @ReactMethod
     public void alertDialog(String title, String content, String buttonJson, final Promise promise) {

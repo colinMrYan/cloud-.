@@ -1,8 +1,8 @@
-package com.inspur.emmcloud.componentservice.login;
+package com.inspur.emmcloud.login.login;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.componentservice.CoreService;
+import com.inspur.emmcloud.login.CoreService;
 
 /**
  * Created by chenmch on 2019/5/31.
@@ -10,4 +10,6 @@ import com.inspur.emmcloud.componentservice.CoreService;
 
 public interface LoginService extends CoreService {
     void logout(Context context);
+
+    void refreshToken(OauthCallBack callBack, long requestTime);
 }

@@ -12,7 +12,6 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpFragment;
@@ -144,7 +143,6 @@ public class PhotoService extends ImpPlugin {
     private void initImagePicker(int picTotal) {
         LogUtils.jasonDebug("picTotal=" + picTotal);
         ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(false); // 显示拍照按钮
         imagePicker.setCrop(false); // 允许裁剪（单选才有效）
         if (picTotal < 0 || picTotal > 9) {

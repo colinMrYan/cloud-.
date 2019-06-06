@@ -18,7 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.WindowManager;
 
-import com.inspur.emmcloud.R;
+import com.inspur.basemodule.R;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.util.ObjectUtils;
 

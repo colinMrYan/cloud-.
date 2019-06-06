@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.broadcastreceiver;
+package com.inspur.emmcloud.basemodule.push;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,19 +7,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.inspur.emmcloud.MyApplication;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
-import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
-import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.basemodule.util.ECMTransparentUtils;
+import com.inspur.emmcloud.login.communication.CommunicationService;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,7 +89,11 @@ public class JpushReceiver extends BroadcastReceiver {
             PreferencesUtils.putString(context, Constant.JPUSH_REGISTER_ID, regId);
             PushManagerUtils.getInstance().registerPushId2Emm();
             new ClientIDUtils(context).upload();
-            WebSocketPush.getInstance().startWebSocket();
+            Router router = Router.getInstance();
+            if (router.getService(CommunicationService.class.getSimpleName()) != null) {
+                CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
+                service.startWebSocket();
+            }
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
             ECMTransparentUtils.handleTransparentMsg(context, bundle.getString(JPushInterface.EXTRA_MESSAGE));
@@ -100,9 +104,9 @@ public class JpushReceiver extends BroadcastReceiver {
             return;
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent
                 .getAction())) {
-            int notifactionId = bundle
+            int notificationId = bundle
                     .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
-            LogUtils.debug(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
+            LogUtils.debug(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notificationId);
             String extraMessage = bundle.getString(JPushInterface.EXTRA_EXTRA);
             if (!AppUtils.GetChangShang().toLowerCase().startsWith(Constant.XIAOMI_FLAG) && JSONUtils.isJsonObjStringHasKey(extraMessage, "badge")) {
                 ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context, JSONUtils.getInt(extraMessage, "badge", 0));
@@ -112,14 +116,14 @@ public class JpushReceiver extends BroadcastReceiver {
             LogUtils.debug(TAG, "[MyReceiver] 用户点击打开了通知");
             LogUtils.debug(TAG, "extra=" + bundle.getString(JPushInterface.EXTRA_EXTRA));
             //点击打开通知进入应用时清空所有的通知
-            ((MyApplication) context.getApplicationContext()).clearNotification();
+            BaseApplication.getInstance().clearNotification();
             //点击通知进入时判断当前是否已登录
-            if (!((MyApplication) context.getApplicationContext()).isHaveLogin()) {
-                loginApp(context);
+            if (!BaseApplication.getInstance().isHaveLogin()) {
+                loginApp();
                 return;
             }
             //如果应用正在前台运行，不处理点击通知的动作
-            if (((MyApplication) context.getApplicationContext()).getIsActive()) {
+            if (BaseApplication.getInstance().getIsActive()) {
                 return;
             }
             openNotification(context, bundle);
@@ -145,13 +149,9 @@ public class JpushReceiver extends BroadcastReceiver {
 
     /**
      * 登录应用
-     *
-     * @param context
      */
-    private void loginApp(Context context) {
-        Intent loginIntent = new Intent(context, LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(loginIntent);
+    private void loginApp() {
+        ARouter.getInstance().build("/login/main").withFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
     }
 
     /**
@@ -227,7 +227,6 @@ public class JpushReceiver extends BroadcastReceiver {
                     String content = extraObj.getString("content");
                     intent.putExtra("content", content);
                 }
-                MyApplication.getInstance().setOpenNotification(true);
                 context.startActivity(intent);
             }
         } catch (Exception e) {

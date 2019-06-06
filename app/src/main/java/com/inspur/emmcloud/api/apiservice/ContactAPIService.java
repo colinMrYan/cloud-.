@@ -18,7 +18,7 @@ import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.xutils.http.RequestParams;

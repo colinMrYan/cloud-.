@@ -7,11 +7,10 @@ import android.support.v4.app.Fragment;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.componentservice.web.WebService;
+import com.inspur.emmcloud.login.web.WebService;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
@@ -97,7 +96,6 @@ public class WebServiceImpl implements WebService {
     @Override
     public void openGallery(Activity activity, int limit, int requestCode) {
         ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(false); // 显示拍照按钮
         imagePicker.setCrop(false); // 允许裁剪（单选才有效）
         imagePicker.setSelectLimit(limit);

@@ -10,7 +10,7 @@ import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;

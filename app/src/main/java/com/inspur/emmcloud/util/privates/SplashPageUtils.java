@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;

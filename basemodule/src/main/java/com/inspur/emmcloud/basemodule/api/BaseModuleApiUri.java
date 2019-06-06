@@ -35,4 +35,34 @@ public class BaseModuleApiUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
     }
 
+    /**
+     * 获取上传推送信息的url
+     *
+     * @return
+     */
+    public static String getUploadPushInfoUrl() {
+        return WebServiceRouterManager.getInstance().getClusterClientRegistry() + "/client";
+    }
+
+    /**
+     * 向emm注册推送token的url
+     * 固定地址
+     *
+     * @return
+     */
+    public static String getRegisterPushTokenUrl() {
+        return "https://emm.inspuronline.com/api/sys/v6.0/config/registerDevice";
+    }
+
+    /**
+     * 解除注册token的url
+     * 固定地址
+     *
+     * @return
+     */
+    public static String getUnRegisterPushTokenUrl() {
+        return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
+    }
+
+
 }

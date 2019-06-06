@@ -12,7 +12,7 @@ import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 

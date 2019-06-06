@@ -5,7 +5,8 @@ import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
-import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.login.login.LoginService;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
@@ -25,5 +26,10 @@ public class LoginServiceImpl implements LoginService {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(context, LoginActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void refreshToken(OauthCallBack callBack, long requestTime) {
+        OauthUtils.getInstance().refreshToken(callBack, requestTime);
     }
 }

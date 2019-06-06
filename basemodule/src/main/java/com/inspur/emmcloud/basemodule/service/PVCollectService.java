@@ -4,9 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class PVCollectService extends Service {
 
-    private AppAPIService apiService;
+    private BaseModuleApiService apiService;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -37,7 +37,7 @@ public class PVCollectService extends Service {
     private void uploadPV() {
         List<PVCollectModel> collectModelList = new ArrayList<>();
         if (apiService == null) {
-            apiService = new AppAPIService(getApplicationContext());
+            apiService = new BaseModuleApiService(getApplicationContext());
             apiService.setAPIInterface(new WebService());
         }
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
@@ -67,7 +67,7 @@ public class PVCollectService extends Service {
     }
 
 
-    private class WebService extends APIInterfaceInstance {
+    private class WebService extends BaseModuleAPIInterfaceInstance {
         @Override
         public void returnUploadCollectSuccess(List<PVCollectModel> collectModelList) {
             PVCollectModelCacheUtils.deleteCollectModel(getApplicationContext(), collectModelList);

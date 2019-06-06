@@ -42,7 +42,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.componentservice.web.WebService;
+import com.inspur.emmcloud.login.web.WebService;
 import com.luojilab.component.componentlib.router.Router;
 
 import java.lang.reflect.Method;

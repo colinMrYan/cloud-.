@@ -9,7 +9,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 

@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.bean.chat;
+package com.inspur.emmcloud.basemodule.bean;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 

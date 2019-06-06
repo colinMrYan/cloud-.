@@ -17,7 +17,7 @@ import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.xutils.http.RequestParams;

@@ -12,7 +12,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
-import com.inspur.emmcloud.baselib.util.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -29,9 +28,8 @@ import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
@@ -638,111 +636,6 @@ public class AppAPIService {
     }
 
 
-    /**
-     * 登录、切换企业和推送token发生变化时调用解除推送token
-     * 不关心服务端返回
-     */
-    public void registerPushToken() {
-        String url = APIUri.getRegisterPushTokenUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        JSONObject registerPushTokenJsonObject = new JSONObject();
-        try {
-            registerPushTokenJsonObject.put("deviceId", AppUtils.getMyUUID(context));
-            registerPushTokenJsonObject.put("appId", context.getPackageName());
-            registerPushTokenJsonObject.put("appVersion", AppUtils.getVersion(context));
-            registerPushTokenJsonObject.put("type", PushManagerUtils.getInstance().getPushProvider(context));
-            registerPushTokenJsonObject.put("token", PushManagerUtils.getInstance().getPushId(context));
-            registerPushTokenJsonObject.put("inspurId", MyApplication.getInstance().getUid());
-            registerPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getCurrentEnterprise().getId());
-            registerPushTokenJsonObject.put("deviceModel", AppUtils.GetChangShang() + "/" + AppUtils.GetModel());
-            registerPushTokenJsonObject.put("deviceOS", "Android");
-            registerPushTokenJsonObject.put("deviceOSVersion", AppUtils.getReleaseVersion());
-            registerPushTokenJsonObject.put("romInfo",
-                    RomInfoUtils.getRomNameInfo() + "/" + RomInfoUtils.getRomVersionInfo());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        params.setBodyContent(registerPushTokenJsonObject.toString());
-        params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        registerPushToken();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
-            }
-        });
-    }
-
-    /**
-     * 注销时调用解除推送token
-     * 不关心服务端返回
-     */
-    public void unregisterPushToken() {
-        String url = APIUri.getUnRegisterPushTokenUrl();
-        RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        final JSONObject unregisterPushTokenJsonObject = new JSONObject();
-        try {
-            unregisterPushTokenJsonObject.put("deviceId", AppUtils.getMyUUID(context));
-            unregisterPushTokenJsonObject.put("appId", context.getPackageName());
-            unregisterPushTokenJsonObject.put("appVersion", AppUtils.getVersion(context));
-            unregisterPushTokenJsonObject.put("type", PushManagerUtils.getInstance().getPushProvider(context));
-            unregisterPushTokenJsonObject.put("token", PushManagerUtils.getInstance().getPushId(context));
-            unregisterPushTokenJsonObject.put("inspurId", MyApplication.getInstance().getUid());
-            unregisterPushTokenJsonObject.put("tenantId", MyApplication.getInstance().getCurrentEnterprise().getId());
-            unregisterPushTokenJsonObject.put("deviceModel", AppUtils.GetChangShang() + "/" + AppUtils.GetModel());
-            unregisterPushTokenJsonObject.put("deviceOS", "Android");
-            unregisterPushTokenJsonObject.put("deviceOSVersion", AppUtils.getReleaseVersion());
-            unregisterPushTokenJsonObject.put("romInfo",
-                    RomInfoUtils.getRomNameInfo() + "/" + RomInfoUtils.getRomVersionInfo());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        params.setBodyContent(unregisterPushTokenJsonObject.toString());
-        params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        unregisterPushToken();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
-            }
-        });
-    }
 
     /**
      * 获取app badge数量

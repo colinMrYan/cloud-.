@@ -26,7 +26,7 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.xutils.http.RequestParams;

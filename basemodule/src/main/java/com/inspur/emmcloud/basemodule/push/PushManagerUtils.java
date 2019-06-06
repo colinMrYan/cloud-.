@@ -1,17 +1,20 @@
-package com.inspur.emmcloud.util.privates;
+package com.inspur.emmcloud.basemodule.push;
 
+import android.app.NotificationManager;
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by chenmch on 2019/3/22.
@@ -21,7 +24,7 @@ public class PushManagerUtils {
     private static PushManagerUtils mInstance;
     public static PushManagerUtils getInstance() {
         if (mInstance == null) {
-            synchronized (OauthUtils.class) {
+            synchronized (PushManagerUtils.class) {
                 if (mInstance == null) {
                     mInstance = new PushManagerUtils();
                 }
@@ -34,7 +37,7 @@ public class PushManagerUtils {
      * 清空pushFlag
      */
     public void clearPushFlag(){
-        setPushFlag(MyApplication.getInstance(), "");
+        setPushFlag(BaseApplication.getInstance(), "");
     }
 
     /**
@@ -127,14 +130,14 @@ public class PushManagerUtils {
     private void setJpushStatus(boolean isOpen) {
         if (isOpen){
             // 初始化 JPush
-            JPushInterface.init(MyApplication.getInstance());
-            if (JPushInterface.isPushStopped(MyApplication.getInstance())) {
-                JPushInterface.resumePush(MyApplication.getInstance());
+            JPushInterface.init(BaseApplication.getInstance());
+            if (JPushInterface.isPushStopped(BaseApplication.getInstance())) {
+                JPushInterface.resumePush(BaseApplication.getInstance());
             }
             // 设置开启日志,发布时请关闭日志
             JPushInterface.setDebugMode(true);
         }else {
-            JPushInterface.stopPush(MyApplication.getInstance());
+            JPushInterface.stopPush(BaseApplication.getInstance());
         }
     }
 
@@ -146,9 +149,9 @@ public class PushManagerUtils {
      */
     private void setHuaWeiPushStatus(boolean isOpen){
         if (isOpen){
-            HuaWeiPushMangerUtils.getInstance(MyApplication.getInstance()).connect();
+            HuaWeiPushMangerUtils.getInstance(BaseApplication.getInstance()).connect();
         }else {
-            HuaWeiPushMangerUtils.getInstance(MyApplication.getInstance()).stopPush();
+            HuaWeiPushMangerUtils.getInstance(BaseApplication.getInstance()).stopPush();
         }
     }
 
@@ -163,10 +166,10 @@ public class PushManagerUtils {
         String APP_ID = "2882303761517539689";
         String APP_KEY = "5381753921689";
         if (isOpen){
-            MiPushClient.registerPush(MyApplication.getInstance(), APP_ID, APP_KEY);
-            MiPushClient.setAcceptTime(MyApplication.getInstance(), 0, 0, 23, 59, null);
+            MiPushClient.registerPush(BaseApplication.getInstance(), APP_ID, APP_KEY);
+            MiPushClient.setAcceptTime(BaseApplication.getInstance(), 0, 0, 23, 59, null);
         }else {
-            MiPushClient.pausePush(MyApplication.getInstance(), null);
+            MiPushClient.pausePush(BaseApplication.getInstance(), null);
         }
     }
 
@@ -196,7 +199,8 @@ public class PushManagerUtils {
             setJpushStatus(false);
         }
         //清除日历提醒极光推送本地通知
-        ScheduleAlertUtils.cancelAllCalEventNotification(MyApplication.getInstance());
+        NotificationManager notificationManager = (NotificationManager) BaseApplication.getInstance().getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
 
@@ -205,13 +209,13 @@ public class PushManagerUtils {
      * 如果为空则等待Jpush或者其他推送注册成功后上传token
      */
     public void registerPushId2Emm() {
-        if (!MyApplication.getInstance().isHaveLogin()) {
+        if (!BaseApplication.getInstance().isHaveLogin()) {
             return;
         }
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            String pushId = PushManagerUtils.getInstance().getPushId(MyApplication.getInstance());
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+            String pushId = PushManagerUtils.getInstance().getPushId(BaseApplication.getInstance());
             if (!pushId.equals("UNKNOWN")) {
-                AppAPIService appAPIService = new AppAPIService(MyApplication.getInstance());
+                BaseModuleApiService appAPIService = new BaseModuleApiService(BaseApplication.getInstance());
                 appAPIService.registerPushToken();
             }
         }
@@ -221,8 +225,8 @@ public class PushManagerUtils {
      * 向Emm解除注册pushId
      */
     public void unregisterPushId2Emm() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            AppAPIService appAPIService = new AppAPIService(MyApplication.getInstance());
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance(), false)) {
+            BaseModuleApiService appAPIService = new BaseModuleApiService(BaseApplication.getInstance());
             appAPIService.unregisterPushToken();
         }
     }

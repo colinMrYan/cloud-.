@@ -5,7 +5,7 @@ import android.content.Intent;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
+import com.inspur.emmcloud.login.appcenter.AppcenterService;
 import com.inspur.emmcloud.service.SyncCommonAppService;
 
 /**

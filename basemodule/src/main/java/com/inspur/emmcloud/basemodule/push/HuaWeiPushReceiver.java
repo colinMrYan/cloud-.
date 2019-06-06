@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.broadcastreceiver;
+package com.inspur.emmcloud.basemodule.push;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -8,10 +8,10 @@ import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
-import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
+import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
+import com.inspur.emmcloud.basemodule.util.ECMTransparentUtils;
+import com.inspur.emmcloud.login.communication.CommunicationService;
+import com.luojilab.component.componentlib.router.Router;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -31,7 +31,11 @@ public class HuaWeiPushReceiver extends PushReceiver {
         LogUtils.YfcDebug("华为推送获取token成功：" + token);
         PushManagerUtils.getInstance().registerPushId2Emm();
         new ClientIDUtils(context).upload();
-        WebSocketPush.getInstance().startWebSocket();
+        Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
+            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
+            service.startWebSocket();
+        }
     }
 
     /**

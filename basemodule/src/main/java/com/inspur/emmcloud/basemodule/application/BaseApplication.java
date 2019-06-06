@@ -10,7 +10,6 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.facebook.soloader.SoLoader;
 import com.github.zafarkhaja.semver.Version;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastBlackStyle;
@@ -29,13 +28,13 @@ import com.inspur.emmcloud.basemodule.util.CustomImageDownloader;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.componentservice.communication.CommunicationService;
-import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.login.communication.CommunicationService;
+import com.inspur.emmcloud.login.login.LoginService;
 import com.luojilab.component.componentlib.router.Router;
-import com.luojilab.component.componentlib.router.ui.UIRouter;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -45,7 +44,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Application class
  */
@@ -53,6 +51,7 @@ public class BaseApplication extends MultiDexApplication {
     private static final String TAG = "BaseApplication";
     private static boolean isContactReady = false;
     private static BaseApplication instance;
+    public Map<String, String> userPhotoUrlMap = new LinkedHashMap<>();
     private List<Activity> activityList = new LinkedList<Activity>();
     private boolean isIndexActivityRunning = false;
     private boolean isActive = false;
@@ -60,13 +59,11 @@ public class BaseApplication extends MultiDexApplication {
     private String accessToken;
     private String refreshToken;
     private Enterprise currentEnterprise;
-    private Map<String, String> userPhotoUrlMap = new LinkedHashMap<>();
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
 
     private String currentChannelCid = "";
-    private boolean isEnterSystemUI = false;  //是否进入第三方系统界面，判断app前后台
     private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
 
     /**
@@ -81,20 +78,10 @@ public class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         init();
-        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         LanguageManager.getInstance().setLanguageLocal();
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
-        Router router = Router.getInstance();
-        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-            service.startWebSocket();
-        }
-
-        UIRouter.enableDebug();
-        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
-
     }
 
 
@@ -105,13 +92,13 @@ public class BaseApplication extends MultiDexApplication {
         crashHandler.init(getInstance());
         x.Ext.init(BaseApplication.this);
         x.Ext.setDebug(true);
-        SoLoader.init(this, false);//ReactNative相关初始化
+        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         Res.init(this); // 注册imp的资源文件类
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
-            protected boolean removeEldestEntry(Entry<String, String> eldest) {
+            protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
                 // TODO Auto-generated method stub
                 return size() > 40;
 

@@ -34,11 +34,10 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
@@ -1018,52 +1017,6 @@ public class ChatAPIService {
         });
     }
 
-
-    /**
-     * 上传推送相关信息
-     *
-     * @param deviceId
-     * @param deviceName
-     * @param pushProvider
-     * @param pushTracer
-     */
-    public void uploadPushInfo(final String deviceId, final String deviceName, final String pushProvider, final String pushTracer) {
-        final String url = APIUri.getUploadPushInfoUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addParameter("deviceId", deviceId);
-        params.addParameter("deviceName", deviceName);
-        params.addParameter("notificationProvider", pushProvider);
-        params.addParameter("notificationTracer", pushTracer);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUploadPushInfoResultFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        uploadPushInfo(deviceId, deviceName, pushProvider, pushTracer);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
 
     /**
      * 活动卡片点击按钮
