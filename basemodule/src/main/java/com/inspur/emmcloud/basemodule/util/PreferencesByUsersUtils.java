@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -376,7 +377,7 @@ public class PreferencesByUsersUtils {
      * @return
      */
     public static boolean isKeyExist(Context context, String key) {
-        SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences sp = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return sp.contains(key);
     }
 }

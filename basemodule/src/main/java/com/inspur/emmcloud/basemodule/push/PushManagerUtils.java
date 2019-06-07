@@ -104,7 +104,7 @@ public class PushManagerUtils {
                 JPushInterface.resumePush(BaseApplication.getInstance());
             }
             // 设置开启日志,发布时请关闭日志
-            JPushInterface.setDebugMode(AppUtils.isApkDebugable(MyApplication.getInstance()));
+            JPushInterface.setDebugMode(AppUtils.isApkDebugable(BaseApplication.getInstance()));
         }else {
             JPushInterface.stopPush(BaseApplication.getInstance());
         }

@@ -285,7 +285,7 @@ public class PreferencesByUserAndTanentUtils {
      * @return
      */
     public static boolean isKeyExist(Context context, String key) {
-        SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences sp = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return sp.contains(key);
     }
 }
