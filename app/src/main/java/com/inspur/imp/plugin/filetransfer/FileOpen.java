@@ -14,8 +14,8 @@ import android.support.v4.content.FileProvider;
 
 import com.inspur.emmcloud.BuildConfig;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.util.privates.FileUtils;
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

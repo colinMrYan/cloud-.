@@ -3,7 +3,7 @@ package com.inspur.emmcloud.bean.chat;
 import android.content.Context;
 
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.privates.FileUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;

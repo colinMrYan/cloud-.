@@ -1,10 +1,5 @@
 package com.inspur.emmcloud.ui.schedule;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.schedule.RemindEvent;
-
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.bean.schedule.RemindEvent;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

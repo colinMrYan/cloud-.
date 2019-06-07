@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.ui.contact;
 
-import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 
 /**
  * 通讯录选择界面

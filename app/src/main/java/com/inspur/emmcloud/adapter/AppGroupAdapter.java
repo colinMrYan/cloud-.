@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.ui.appcenter.AppGroupActivity;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;

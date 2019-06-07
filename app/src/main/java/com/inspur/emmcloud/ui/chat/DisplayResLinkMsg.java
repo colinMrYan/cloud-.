@@ -12,8 +12,8 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 

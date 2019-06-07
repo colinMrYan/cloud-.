@@ -11,9 +11,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.bean.system.AnalysisModel;
 import com.inspur.emmcloud.ui.find.trip.TravelStarsActivity;
 

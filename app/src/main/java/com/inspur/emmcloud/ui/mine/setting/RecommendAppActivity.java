@@ -3,11 +3,11 @@ package com.inspur.emmcloud.ui.mine.setting;
 import android.content.Intent;
 import android.view.View;
 
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.widget.ProgressWebView;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;

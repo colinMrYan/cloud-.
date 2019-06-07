@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean.system;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.basemodule.config.Constant;
 
 /**
  * Created by yufuchang on 2018/11/23.

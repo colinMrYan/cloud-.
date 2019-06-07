@@ -8,10 +8,10 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.util.privates.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import butterknife.ButterKnife;
@@ -131,7 +131,7 @@ public class ConversationBaseActivity extends MediaPlayBaseActivity {
         @Override
         public void returnConversationInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-//            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
+//            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode);
             finish();
         }
 

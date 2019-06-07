@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.basemodule.util.Res;
 
 import java.io.File;
 import java.util.ArrayList;

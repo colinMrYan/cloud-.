@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +8,13 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.widget.CircleTextImageView;
 
 public class ChannelMemActivity extends BaseActivity {
 

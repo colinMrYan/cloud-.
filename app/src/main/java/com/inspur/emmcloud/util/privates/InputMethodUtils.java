@@ -13,7 +13,8 @@ import android.widget.EditText;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 
 /**
  * 隐藏输入法弹出框

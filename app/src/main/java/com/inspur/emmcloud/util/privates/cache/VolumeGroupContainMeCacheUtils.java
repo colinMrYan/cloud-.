@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 
 /**

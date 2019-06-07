@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 
 

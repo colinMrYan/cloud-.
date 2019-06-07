@@ -9,11 +9,11 @@ package com.inspur.emmcloud.api.apiservice;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.CloudHttpMethod;
-import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
@@ -34,7 +34,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
@@ -71,7 +71,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("appID", appID);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -114,7 +114,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("appID", appID);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
@@ -155,7 +155,7 @@ public class MyAppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("keyword", keyword);
         params.addParameter("clientType", 0);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -197,7 +197,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getGroupNewsUrl("/content/news/section");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -244,7 +244,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getGroupNewsUrl("/content/news/section/" + ncid + "/post?page=" + page + "&limit=20");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -286,7 +286,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getUserApps();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -325,7 +325,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getNewAllApps();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -369,7 +369,7 @@ public class MyAppAPIService {
 //        final String completeUrl = APIUri.getAppAuthCodeUri() + "?" + urlParams;
         final String completeUrl = requestUrl + "/oauth2.0/quick_authz_code" + "?" + urlParams;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetAppAuthCodeResultSuccess(new AppRedirectResult(new String(arg0)));
@@ -408,7 +408,7 @@ public class MyAppAPIService {
     public void getAppInfo(final String appId) {
         final String completeUrl = APIUri.getAppInfo() + "?appID=" + appId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnAppInfoSuccess(new App(new String(arg0)));
@@ -447,7 +447,7 @@ public class MyAppAPIService {
      */
     public void getWebAppRealUrl(final String url) {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnWebAppRealUrlSuccess(new GetWebAppRealUrlResult(new String(arg0)));
@@ -487,7 +487,7 @@ public class MyAppAPIService {
         final String url = APIUri.saveAppConfigUrl("CommonFunctions");
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.setBodyContent(commonAppListJson);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnSaveConfigSuccess();
@@ -525,7 +525,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getMyAppWidgetsUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -564,7 +564,7 @@ public class MyAppAPIService {
     public void getVolumeList() {
         final String url = APIUri.getVolumeListUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeListSuccess(new GetVolumeListResult(new String(arg0)));
@@ -605,7 +605,7 @@ public class MyAppAPIService {
         final String url = APIUri.getVolumeFileOperationUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("path", currentDirAbsolutePath);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeFileListSuccess(new GetVolumeFileListResult(new String(arg0)));
@@ -648,7 +648,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("name", fileName);
         params.addParameter("path", volumeFilePath + fileName);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)), localFilePath, mockVolumeFile);
@@ -701,7 +701,7 @@ public class MyAppAPIService {
         }
         params.setBodyContent(array.toString());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnMoveFileSuccess(moveVolumeFileList);
@@ -754,7 +754,7 @@ public class MyAppAPIService {
         }
         params.setBodyContent(array.toString());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnCopyFileSuccess();
@@ -796,7 +796,7 @@ public class MyAppAPIService {
         final String url = APIUri.getCreateForderUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("path", currentDirAbsolutePath + forderName);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnCreateForderSuccess(new VolumeFile(new String(new String(arg0))));
@@ -850,7 +850,7 @@ public class MyAppAPIService {
         }
         params.setBodyContent(array.toString());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeFileDeleteSuccess(deleteVolumeFileList);
@@ -893,7 +893,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("path", currentDirAbsolutePath + volumeFile.getName());
         params.addQueryStringParameter("name", fileNewName);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeFileRenameSuccess(volumeFile, fileNewName);
@@ -944,7 +944,7 @@ public class MyAppAPIService {
         }
         params.setBodyContent(object.toString());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnCreateShareVolumeSuccess(new Volume(new String(arg0)));
@@ -986,7 +986,7 @@ public class MyAppAPIService {
         final String url = APIUri.getUpdateVolumeInfoUrl(volume.getId());
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("name", name);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnUpdateShareVolumeNameSuccess(volume, name);
@@ -1029,7 +1029,7 @@ public class MyAppAPIService {
         final String url = APIUri.getUpdateVolumeInfoUrl(volume.getId());
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("id", volume.getId());
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.retrunRemoveShareVolumeSuccess(volume);
@@ -1070,7 +1070,7 @@ public class MyAppAPIService {
         final String url = APIUri.getUpdateVolumeInfoUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("id", volumeId);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeDetailSuccess(new VolumeDetail(new String(arg0)));
@@ -1112,7 +1112,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("members", uidList);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeMemAddSuccess(uidList);
@@ -1155,7 +1155,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("members", uidList);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeMemDelSuccess(uidList);
@@ -1196,7 +1196,7 @@ public class MyAppAPIService {
         final String url = APIUri.getGroupBaseUrl(groupId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("name", groupName);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnUpdateGroupNameSuccess(groupName);
@@ -1239,7 +1239,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("members", uidList);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGroupMemAddSuccess(uidList);
@@ -1281,7 +1281,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("members", uidList);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGroupMemDelSuccess(uidList);
@@ -1321,7 +1321,7 @@ public class MyAppAPIService {
         final String url = APIUri.getVolumeGroupUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("isMember", true);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeGroupContainMeSuccess(new GetVolumeGroupResult(new String(arg0)));
@@ -1361,7 +1361,7 @@ public class MyAppAPIService {
     public void getVolumeFileGroup(final String volumeId, final String path) {
         final String url = APIUri.getVolumeFileGroupUrl(volumeId) + "?path=" + path;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnVolumeGroupSuccess(new GetVolumeResultWithPermissionResult(new String(arg0)));
@@ -1405,7 +1405,7 @@ public class MyAppAPIService {
     public void updateVolumeFileGroupPermission(final String volumeId, final String path, final String group, final int privilege, final boolean recurse) {
         final String url = APIUri.getVolumeFileGroupUrl(volumeId) + "?path=" + path + "&group=" + group + "&privilege=" + privilege + "&recurse=" + recurse;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 GetVolumeGroupPermissionResult getVolumeGroupPermissionResult = new GetVolumeGroupPermissionResult("");

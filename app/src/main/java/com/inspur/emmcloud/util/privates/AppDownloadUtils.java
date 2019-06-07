@@ -11,8 +11,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.widget.dialogs.MyDialog;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -50,7 +52,7 @@ public class AppDownloadUtils {
                     if (downloadingDialog != null && downloadingDialog.isShowing()) {
                         downloadingDialog.dismiss();
                     }
-//                    AppUtils.installApk(MyApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH, "webex.apk");
+//                    AppUtils.installApk(BaseApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH, "webex.apk");
                     FileUtils.openFile(MyApplication.getInstance(), MyAppConfig.LOCAL_DOWNLOAD_PATH + "webex.apk");
                     break;
                 case DOWNLOAD_FAIL:

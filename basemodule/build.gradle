@@ -12,6 +12,17 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         multiDexEnabled true
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : "com.inspur.emmcloud",
+                JPUSH_APPKEY : "62712cda36f300fb813134bc", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
     }
 
     buildTypes {
@@ -27,9 +38,15 @@ android {
 //        disable 'MissingTranslation', 'ExtraTranslation'
     }
 
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
-    api project(':baselib')
+    api project(':componentservice')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }

@@ -49,9 +49,12 @@ android {
         multiDexEnabled true
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [host: "app"]
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
             }
         }
+//        manifestPlaceholders = [
+//                PKG_NAME:applicationId
+//        ]
     }
     sourceSets.main {
         jniLibs.srcDirs = ['libs']
@@ -119,11 +122,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':componentservice')
+    implementation project(':basemodule')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    annotationProcessor deps.jimu.router_anno_compiler
+    annotationProcessor deps.ARouter.router_anno
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
 }

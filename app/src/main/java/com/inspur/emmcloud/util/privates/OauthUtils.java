@@ -7,11 +7,11 @@ import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.json.JSONObject;
 

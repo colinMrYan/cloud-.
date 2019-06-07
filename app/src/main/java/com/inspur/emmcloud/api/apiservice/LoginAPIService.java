@@ -9,16 +9,16 @@ package com.inspur.emmcloud.api.apiservice;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.CloudHttpMethod;
-import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;
@@ -127,7 +127,7 @@ public class LoginAPIService {
 
             }
         });
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -163,7 +163,7 @@ public class LoginAPIService {
                 "6b3c48dc-2e56-440c-84fb-f35be37480e8");
         params.addParameter("refresh_token", refreshToken);
         params.addParameter("grant_type", "refresh_token");
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -193,7 +193,7 @@ public class LoginAPIService {
     public void cancelToken() {
         final String url = APIUri.getCancelTokenUrl() + "?destroy=ALL";
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
             }
@@ -218,7 +218,7 @@ public class LoginAPIService {
         String completeUrl = APIUri.getLoginSMSCaptchaUrl(mobile);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -254,7 +254,7 @@ public class LoginAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("mobile", mobile);
         params.addParameter("sms", sms);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -286,7 +286,7 @@ public class LoginAPIService {
         final String completeUrl = APIUri.getMyInfoUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -332,7 +332,7 @@ public class LoginAPIService {
         params.addQueryStringParameter("new", newpsd);
         params.setAsJsonContent(true);
         params.addHeader("Content-Type", "application/json");
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -379,7 +379,7 @@ public class LoginAPIService {
         params.addQueryStringParameter("new", newPwd);
         params.setAsJsonContent(true);
         params.addHeader("Content-Type", "application/json");
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -422,7 +422,7 @@ public class LoginAPIService {
         }
         params.setBodyContent(object.toString());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnFaceLoginGSSuccess();
