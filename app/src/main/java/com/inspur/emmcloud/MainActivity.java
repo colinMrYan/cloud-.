@@ -75,13 +75,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
+        initAppAlias();
         ButterKnife.bind(this);
         // 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }
-        initAppAlias();
         init();
     }
 
