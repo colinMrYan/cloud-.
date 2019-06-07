@@ -27,7 +27,6 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
-import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
@@ -36,8 +35,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.NetUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -191,7 +188,6 @@ public class MeetingAddActivity extends BaseActivity {
         }
         showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();
-        getIsMeetingAdmin();
     }
 
 
@@ -558,29 +554,8 @@ public class MeetingAddActivity extends BaseActivity {
 
     }
 
-    /**
-     * 判断当前用户是否会议室管理员
-     */
-    private void getIsMeetingAdmin() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            apiService.getIsMeetingAdmin(MyApplication.getInstance().getUid());
-        }
-    }
 
     private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-                    getIsAdmin.isAdmin());
-        }
-
-        @Override
-        public void returnIsMeetingAdminFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-        }
-
         @Override
         public void returnAddMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
