@@ -64,6 +64,7 @@
     <string name="app_update_prepare">Ready to download</string>
     <string name="app_update_error">Update failed</string>
     <string name="app_update_loaded">Downloaded:</string>
+    <string name="unsupport_type">Unsupported Type</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>

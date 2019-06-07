@@ -1,15 +1,15 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.ui.find.ScanResultActivity;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 /**
@@ -75,21 +75,10 @@ public class AppId2AppAndOpenAppUtils {
                 UriUtils.openApp(activity, app, "application");
             }
         } else {
-            showUnKnownMsg(uri);
+            ToastUtils.show(R.string.unsupport_type);
         }
     }
 
-    /**
-     * 展示扫描到的信息
-     *
-     * @param msg
-     */
-    private void showUnKnownMsg(String msg) {
-        Intent intent = new Intent();
-        intent.putExtra("result", msg);
-        intent.setClass(activity, ScanResultActivity.class);
-        activity.startActivity(intent);
-    }
 
     /**
      * 取消dialog

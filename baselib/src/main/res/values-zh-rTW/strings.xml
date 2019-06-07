@@ -68,6 +68,7 @@
     <string name="app_update_prepare">準備下載</string>
     <string name="app_update_error">更新失敗</string>
     <string name="app_update_loaded">已下載：</string>
+    <string name="unsupport_type">不支援的類型</string>
 
 
     <!-- 公共部分 -->
