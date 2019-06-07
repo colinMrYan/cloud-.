@@ -13,15 +13,33 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="colorAccent">#36A5F6</item>
-    </style>
 
+        <!-- button  init-->
+        <item name="CustomButtonStyle">@style/CusButtonBase</item>
+        <item name="cus_round_btn_bg_color">@color/s_btn_blue_bg</item>
+        <item name="cus_round_btn_border_color">@color/s_btn_blue_border</item>
+        <item name="cus_round_btn_text_color">@color/s_btn_blue_text</item>
+        <item name="cus_content_spacing_horizontal">20dp</item>
+        <item name="cus_content_padding_horizontal">16dp</item>
+        <item name="cus_round_btn_text_size">16sp</item>
+        <item name="cus_round_btn_border_width">1dp</item>
+
+        <item name="cus_isRadiusAdjustBounds">true</item>
+        <item name="cus_backgroundColor">@color/transparent</item>
+        <item name="cus_borderWidth">1dp</item>
+        <item name="cus_borderColor">@color/s_btn_blue_border</item>
+
+        <item name="cus_loading_view_size">20dp</item>
+        <item name="android:color">#858C96</item>
+        <item name="CusLoadingStyle">@style/CusLoadingBase</item>
+    </style>
     <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">#C8C7CC</item>
         <item name="colorControlActivated">#24ABE9</item>
 
     </style>
 
-    <style name="AppTheme_0" parent="AppTheme">
+    <style name="AppTheme_0"  parent="AppTheme">
         <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_white</item>
         <item name="header_bg">@drawable/shape_header_bg_white</item>
@@ -49,43 +67,20 @@
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
-        <item name="plugin_ic_header_title_drop_down">
-            @drawable/plugin_ic_header_title_drop_down_white
-        </item>
-        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white
-        </item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
         <item name="mine_my_info_card_name_color">@android:color/black</item>
         <item name="mine_my_info_card_enterprise_color">#666666</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
         <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
-        <item name="mine_my_info_switch_enterprise">
-            @drawable/ic_mine_my_info_switch_enterprise_white
-        </item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
 
-        <!-- button  init-->
-        <item name="CustomButtonStyle">@style/CusButtonBase</item>
-        <item name="cus_round_btn_bg_color">@color/s_btn_blue_bg</item>
-        <item name="cus_round_btn_border_color">@color/s_btn_blue_border</item>
-        <item name="cus_round_btn_text_color">@color/s_btn_blue_text</item>
-        <item name="cus_content_spacing_horizontal">20dp</item>
-        <item name="cus_content_padding_horizontal">16dp</item>
-        <item name="cus_round_btn_text_size">16sp</item>
-        <item name="cus_round_btn_border_width">1dp</item>
-
-        <item name="cus_isRadiusAdjustBounds">true</item>
-        <item name="cus_backgroundColor">@color/transparent</item>
-        <item name="cus_borderWidth">1dp</item>
-        <item name="cus_borderColor">@color/s_btn_blue_border</item>
-
-        <item name="cus_loading_view_size">20dp</item>
-        <item name="android:color">#858C96</item>
-        <item name="CusLoadingStyle">@style/CusLoadingBase</item>
-
     </style>
 
-    <style name="AppTheme_1" parent="AppTheme">
+    <style name="AppTheme_1"  parent="AppTheme">
+        <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_grey</item>
         <item name="header_bg">@drawable/shape_header_bg_grey</item>
         <item name="footer_bg">@drawable/footer_bg_grey</item>
@@ -111,23 +106,19 @@
         <item name="status_bar_dark_font">true</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
-        <item name="plugin_ic_header_title_drop_down">
-            @drawable/plugin_ic_header_title_drop_down_white
-        </item>
-        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white
-        </item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
         <item name="mine_my_info_card_name_color">@android:color/black</item>
         <item name="mine_my_info_card_enterprise_color">#666666</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
         <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
-        <item name="mine_my_info_switch_enterprise">
-            @drawable/ic_mine_my_info_switch_enterprise_white
-        </item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
     </style>
 
-    <style name="AppTheme_2" parent="AppTheme">
+    <style name="AppTheme_2"  parent="AppTheme">
+        <item name="android:imageButtonStyle">@style/CusImageButton</item>
         <item name="header_bg_color">@color/header_bg_blue</item>
         <item name="header_bg">@drawable/shape_header_bg_blue</item>
         <item name="footer_bg">@drawable/footer_bg_blue</item>
@@ -153,21 +144,17 @@
         <item name="status_bar_dark_font">false</item>
         <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
         <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
-        <item name="plugin_ic_header_title_drop_down">
-            @drawable/plugin_ic_header_title_drop_down_blue
-        </item>
-        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue
-        </item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
         <item name="mine_my_info_card_name_color">@android:color/white</item>
         <item name="mine_my_info_card_enterprise_color">@android:color/white</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
         <item name="mine_my_info_menu_tint_color">@android:color/white</item>
-        <item name="mine_my_info_switch_enterprise">
-            @drawable/ic_mine_my_info_switch_enterprise_blue
-        </item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_blue</item>
         <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
         <item name="schedule_tab_text_color_select">@android:color/white</item>
     </style>
+
 
 
     <!-- Application theme. -->
@@ -210,6 +197,7 @@
     </style>
 
 
+
     <style name="userhead_dialog_bg" parent="@android:style/Theme.Dialog">
         <item name="android:windowIsFloating">true</item>
         <!-- 是否浮现在activity之上 -->
@@ -238,6 +226,9 @@
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+
+
 
 
     <!-- 增加加号部分的style -->
@@ -326,19 +317,17 @@
     </style>
 
     <declare-styleable name="RxCardStackView">
-        <attr name="stackOverlapGaps" format="dimension" />
-        <attr name="stackOverlapGapsCollapse" format="dimension" />
-        <attr name="stackHeaderHeight" format="dimension" />
-        <attr name="stackDuration" format="integer" />
-        <attr name="stackNumBottomShow" format="integer" />
+        <attr name="stackOverlapGaps" format="dimension"/>
+        <attr name="stackOverlapGapsCollapse" format="dimension"/>
+        <attr name="stackHeaderHeight" format="dimension"/>
+        <attr name="stackDuration" format="integer"/>
+        <attr name="stackNumBottomShow" format="integer"/>
         <attr name="stackAnimationType">
-            <flag name="allDown" value="0" />
-            <flag name="upDown" value="1" />
-            <flag name="upDownStack" value="2" />
+            <flag name="allDown" value="0"/>
+            <flag name="upDown" value="1"/>
+            <flag name="upDownStack" value="2"/>
         </attr>
     </declare-styleable>
-    anim
-
     <style name="AndroidTreeNodeStyleCustom">
         <item name="android:paddingLeft">20dp</item>
         <!--<item name="android:showDividers">middle</item>-->
@@ -359,7 +348,8 @@
 
     </style>
 
-    <style name="Theme.Transparent.Permission" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Transparent.Permission"
+        parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -381,7 +371,6 @@
     <style name="ScheduleTaskTabLayoutTextStyle">
         <item name="android:textSize">13sp</item>
     </style>
-
     <style name="DateTimePickerDateTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--这个绿色是选中时的背景颜色，和当前日期的颜色-->
         <item name="colorAccent">#36A5F6</item>
@@ -401,7 +390,9 @@
 
     </style>
 
-    <style name="cus_dialog_style" parent="AlertDialog.AppCompat.Light" />
+    <style name="cus_dialog_style" parent="Theme.AppCompat.Light">
+        <item name="android:textSize">15sp</item>
+    </style>
 
     <style name="CusButtonBase" parent="android:Widget.Holo.Light.Button" />
 

@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ContextThemeWrapper;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -804,7 +805,8 @@ public class CommunicationV0Fragment extends BaseFragment {
                 .isChannelSetTop(getActivity(), displayChannelList
                         .get(position).getCid());
         final String[] items = new String[]{getString(isChannelSetTop ? R.string.chanel_cancel_top : R.string.channel_set_top), getString(R.string.channel_hide_chat)};
-        new CustomDialog.ListDialogBuilder(getActivity())
+        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.cus_dialog_style);
+        new CustomDialog.ListDialogBuilder(ctw)
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

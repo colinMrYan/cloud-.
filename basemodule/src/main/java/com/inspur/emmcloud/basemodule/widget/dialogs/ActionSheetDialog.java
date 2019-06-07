@@ -148,7 +148,9 @@ public class ActionSheetDialog extends Dialog {
         }
 
         public ActionListSheetBuilder addItem(String textAndTag, boolean isShow) {
-            mItems.add(new ActionSheetListItemData(textAndTag, textAndTag, isShow));
+            if (isShow) {
+                mItems.add(new ActionSheetListItemData(textAndTag, textAndTag, isShow));
+            }
             return this;
         }
 
@@ -295,7 +297,7 @@ public class ActionSheetDialog extends Dialog {
 
             @Override
             public long getItemId(int position) {
-                return 0;
+                return position;
             }
 
             @SuppressLint("ResourceAsColor")

@@ -170,12 +170,14 @@ public class MailCertificateInstallActivity extends BaseActivity {
      */
     private void showInputCreKeyWordDialog(final String path) {
         final CustomDialog.EditDialogBuilder builder = new CustomDialog.EditDialogBuilder(this);
-        final EditText editText = new EditText(this);
+        View editLayout = View.inflate(this, R.layout.cus_dialog_edit, null);
+        final EditText editText = editLayout.findViewById(R.id.cus_dialog_edit_text);
         editText.setHint("请在此输入证书密码：");
+        editText.setTextSize(16);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
 
         builder.setTitle("证书密码：")
-                .setView(editText)
+                .setView(editLayout)
                 .setNegativeButton("取消", (dialog, index) -> {
                     dialog.dismiss();
                 })
