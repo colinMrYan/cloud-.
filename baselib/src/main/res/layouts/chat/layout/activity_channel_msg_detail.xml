@@ -34,7 +34,7 @@
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
-    <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+    <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -57,7 +57,7 @@
             android:stretchMode="columnWidth"
             android:verticalSpacing="3dp" />
 
-    </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+    </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
 
     <com.inspur.emmcloud.widget.ECMChatInputMenuV0
         android:id="@+id/chat_input_menu"

@@ -5,8 +5,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

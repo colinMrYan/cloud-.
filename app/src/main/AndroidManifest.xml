@@ -299,32 +299,32 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".login.ui.LoginActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.login.PasswordFirstSettingActivity"
+            android:name=".login.ui.PasswordFirstSettingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.login.ScanQrCodeLoginGSActivity"
+            android:name=".login.ui.ScanQrCodeLoginGSActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.login.LoginMoreActivity"
+            android:name=".login.ui.LoginMoreActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.login.ScanQrCodeLoginActivity"
+            android:name=".login.ui.ScanQrCodeLoginActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.login.PasswordModifyActivity"
+            android:name=".login.ui.PasswordModifyActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -334,7 +334,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.login.LoginBySmsActivity"
+            android:name=".login.ui.LoginBySmsActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -665,7 +665,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.login.PasswordResetActivity"
+            android:name=".login.ui.PasswordResetActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -697,7 +697,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.find.ScanResultActivity"
+            android:name="com.inspur.imp.plugin.barcode.ScanResultActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -1054,7 +1054,7 @@
 
         <!-- MDM设备管理 -->
         <activity
-            android:name=".ui.mdm.DeviceRegisterFailDetailActivity"
+            android:name=".login.ui.DeviceRegisterFailDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 

@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+    <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/content_bg"
         android:scrollbars="vertical">
 
-        <com.inspur.emmcloud.widget.NoHorScrollView
+        <com.inspur.emmcloud.baselib.widget.NoHorScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -41,17 +41,17 @@
                         android:background="#C8C7CC" />
                 </RelativeLayout>
 
-                <com.inspur.emmcloud.widget.ScrollViewWithListView
+                <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                     android:id="@+id/svwwlv_apps"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/rl_ads_app"
                     android:divider="@null"
                     android:dividerHeight="0dp"
-                    android:overScrollMode="never"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:overScrollMode="never"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
             </RelativeLayout>
-        </com.inspur.emmcloud.widget.NoHorScrollView>
+        </com.inspur.emmcloud.baselib.widget.NoHorScrollView>
 
-    </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+    </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
 
 </RelativeLayout>

@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.interf.OnCardPackageClickListener;
-import com.inspur.emmcloud.widget.SwitchView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,7 @@
     android:paddingRight="10dp"
     android:paddingTop="8dp">
 
-    <com.inspur.emmcloud.widget.NoScrollGridView
+    <com.inspur.emmcloud.baselib.widget.NoScrollGridView
         android:id="@+id/grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +15,6 @@
         android:listSelector="@android:color/transparent"
         android:numColumns="4"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp"></com.inspur.emmcloud.widget.NoScrollGridView>
+        android:verticalSpacing="10dp"></com.inspur.emmcloud.baselib.widget.NoScrollGridView>
 
 </LinearLayout>

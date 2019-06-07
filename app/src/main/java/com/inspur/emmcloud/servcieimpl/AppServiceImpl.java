@@ -13,4 +13,5 @@ public class AppServiceImpl implements AppService {
     public void getAppBadgeCountFromServer() {
         new AppBadgeUtils(BaseApplication.getInstance()).getAppBadgeCountFromServer();
     }
+
 }

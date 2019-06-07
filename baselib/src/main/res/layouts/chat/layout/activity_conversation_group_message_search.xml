@@ -31,7 +31,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/bg_search" />
 
-            <com.inspur.emmcloud.widget.ClearEditText
+            <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/ev_message_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 android:textSize="@dimen/content_normal_textsize">
 
                 <requestFocus />
-            </com.inspur.emmcloud.widget.ClearEditText>
+            </com.inspur.emmcloud.baselib.widget.ClearEditText>
         </RelativeLayout>
 
         <TextView

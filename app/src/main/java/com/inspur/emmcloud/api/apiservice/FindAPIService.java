@@ -17,8 +17,9 @@ import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
+import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.xutils.http.RequestParams;
 
@@ -36,6 +37,14 @@ public class FindAPIService {
 
     public void setAPIInterface(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
+    }
+
+    private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.refreshToken(oauthCallBack, requestTime);
+        }
     }
 
     /**
@@ -58,7 +67,7 @@ public class FindAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -102,7 +111,7 @@ public class FindAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -146,7 +155,7 @@ public class FindAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -189,7 +198,7 @@ public class FindAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -228,7 +237,7 @@ public class FindAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 

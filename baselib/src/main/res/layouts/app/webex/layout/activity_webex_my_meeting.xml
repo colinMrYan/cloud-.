@@ -60,7 +60,7 @@
             android:background="@color/content_bg"
             android:orientation="vertical">
 
-            <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+            <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
                 android:id="@+id/srl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -104,7 +104,7 @@
 
                 </RelativeLayout>
 
-            </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+            </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
 
 
         </RelativeLayout>

@@ -8,8 +8,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.util.privates.MDM.MDM;
+import com.inspur.emmcloud.login.util.MDM.MDM;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -85,12 +84,11 @@ public class EMMService extends ImpPlugin {
         try {
             if (paramsObject.has("EMMState")) {
                 String state = paramsObject.getString("EMMState");
-                GetDeviceCheckResult getDeviceCheckResult = new GetDeviceCheckResult(state);
                 String userName = PreferencesUtils.getString(getFragmentContext(), "userRealName", "");
                 String userCode = PreferencesUtils.getString(getFragmentContext(), "userID", "");
                 MDM mdm = new MDM(getActivity(), MyApplication.getInstance().getTanent(), userCode,
-                        userName, getDeviceCheckResult);
-                mdm.handCheckResult(getDeviceCheckResult);
+                        userName, state);
+                mdm.handCheckResult();
             }
         } catch (Exception e) {
             e.printStackTrace();

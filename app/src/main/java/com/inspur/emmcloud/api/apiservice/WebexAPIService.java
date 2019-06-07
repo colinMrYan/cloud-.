@@ -10,8 +10,9 @@ import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
+import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
@@ -35,6 +36,14 @@ public class WebexAPIService {
         this.apiInterface = apiInterface;
     }
 
+    private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.refreshToken(oauthCallBack, requestTime);
+        }
+    }
+
     /**
      * 获取webex会议列表
      */
@@ -55,18 +64,18 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
-                        new OauthCallBack() {
-                            @Override
-                            public void reExecute() {
-                                getWebexMeetingList();
-                            }
+                refreshToken(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getWebexMeetingList();
+                    }
 
-                            @Override
-                            public void executeFailCallback() {
-                                callbackFail("", -1);
-                            }
-                        }, requestTime);
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, requestTime);
+
             }
         });
     }
@@ -93,7 +102,7 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         new OauthCallBack() {
                             @Override
                             public void reExecute() {
@@ -130,7 +139,7 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         new OauthCallBack() {
                             @Override
                             public void reExecute() {
@@ -166,7 +175,7 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         new OauthCallBack() {
                             @Override
                             public void reExecute() {
@@ -199,7 +208,7 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         new OauthCallBack() {
                             @Override
                             public void reExecute() {

@@ -57,7 +57,7 @@
                 android:textSize="13sp" />
 
 
-            <com.inspur.emmcloud.widget.ScrollViewWithListView
+            <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                 android:id="@+id/listview_list_calendars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                 android:background="#FFFFFF"
                 android:divider="@color/color_list_divider"
                 android:dividerHeight="0.5px"
-                android:paddingLeft="16dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                android:paddingLeft="16dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
             <View
                 android:layout_width="match_parent"

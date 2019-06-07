@@ -3,7 +3,7 @@ package com.inspur.emmcloud.bean.find;
 import android.content.Context;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 
 import org.json.JSONObject;
 

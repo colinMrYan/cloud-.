@@ -62,13 +62,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.inspur.emmcloud.widget.ScrollViewWithListView
+            <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                 android:id="@+id/lv_attendees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@color/white">
 
-            </com.inspur.emmcloud.widget.ScrollViewWithListView>
+            </com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
             <RelativeLayout
                 android:id="@+id/rl_add_attendees"
@@ -85,7 +85,7 @@
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp">
 
-                    <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
+                    <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
                         android:id="@+id/bt_add_attendees"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"

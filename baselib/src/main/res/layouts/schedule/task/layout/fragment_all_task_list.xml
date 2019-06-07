@@ -95,7 +95,7 @@
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_task_search" />
 
-            <com.inspur.emmcloud.widget.ClearEditText
+            <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/ev_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                 android:textSize="13sp">
 
                 <requestFocus />
-            </com.inspur.emmcloud.widget.ClearEditText>
+            </com.inspur.emmcloud.baselib.widget.ClearEditText>
         </RelativeLayout>
     </RelativeLayout>
 

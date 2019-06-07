@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.basemodule.R;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.basemodule.widget.dialogs.MyDialog;
 
 
 /**

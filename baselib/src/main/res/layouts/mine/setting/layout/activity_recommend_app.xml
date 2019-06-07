@@ -53,7 +53,7 @@
         android:background="@color/content_bg"
         android:orientation="vertical">
 
-        <com.inspur.emmcloud.widget.ProgressWebView
+        <com.inspur.emmcloud.baselib.widget.ProgressWebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
