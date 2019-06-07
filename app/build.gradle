@@ -120,6 +120,11 @@ android {
     }
 }
 
+combuild {
+    applicationName = 'com.inspur.emmcloud.MyApplication'
+    isRegisterCompoAuto = false
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':basemodule')
