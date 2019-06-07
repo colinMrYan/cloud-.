@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.api;
 
 
+import com.inspur.emmcloud.basemodule.bean.AppException;
+import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
+import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
@@ -51,7 +54,6 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
@@ -72,8 +74,6 @@ import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
 import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
-import com.inspur.emmcloud.bean.mine.GetLanguageResult;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
@@ -95,13 +95,10 @@ import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
-import com.inspur.emmcloud.bean.system.AppException;
-import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
@@ -140,11 +137,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadExceptionSuccess(List<AppException> appExceptionList) {
-
-    }
-
-    @Override
-    public void returnUploadCollectSuccess(List<PVCollectModel> collectModelList) {
 
     }
 
@@ -1006,13 +998,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
     }
 
-    @Override
-    public void returnLanguageSuccess(GetLanguageResult getLanguageResult, String languageConfigVersion) {
-    }
-
-    @Override
-    public void returnLanguageFail(String error, int errorCode) {
-    }
 
     @Override
     public void returnMeetingRoomListSuccess(
@@ -1106,17 +1091,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnUploadCollectSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUploadCollectFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
@@ -1585,16 +1559,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnCardPackageListFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult) {
-
-    }
-
-    @Override
-    public void returnAllConfigVersionFail(String error, int errorCode) {
 
     }
 

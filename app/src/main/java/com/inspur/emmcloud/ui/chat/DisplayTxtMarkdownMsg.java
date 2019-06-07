@@ -17,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.chat.MarkDownLink;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -35,6 +36,7 @@ import com.inspur.emmcloud.util.privates.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,6 +110,7 @@ public class DisplayTxtMarkdownMsg {
                                               final boolean isMyMsg, final String mid, final List<MarkDownLink> markDownLinks) {
         final int holderWidth = ResolutionUtils.getWidth(context) - DensityUtil.dip2px(MyApplication.getInstance(), 141);
         List<MarkDownLink> markDownLinkList = markDownLinks;
+        RichText.initCacheDir(new File(MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
         RichText.from(content)
                 .type(RichType.markdown)
                 .scaleType(ImageHolder.ScaleType.center_crop)

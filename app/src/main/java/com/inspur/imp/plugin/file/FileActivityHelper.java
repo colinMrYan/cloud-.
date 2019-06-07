@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.basemodule.util.Res;
 
 import java.io.File;
 import java.util.ArrayList;

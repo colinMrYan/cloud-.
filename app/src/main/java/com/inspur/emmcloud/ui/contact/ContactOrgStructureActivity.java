@@ -1,17 +1,6 @@
 package com.inspur.emmcloud.ui.contact;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.contact.ContactOrg;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +9,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.bean.contact.ContactOrg;
+import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 系統組織功能顯示

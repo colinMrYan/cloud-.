@@ -1,15 +1,15 @@
 package com.inspur.emmcloud.ui.mdm;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.privates.MDM.MDM;
-import com.inspur.imp.api.ImpActivity;
-import com.inspur.imp.api.Res;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.util.privates.MDM.MDM;
+import com.inspur.imp.api.ImpActivity;
 
 public class DeviceRegisterFailDetailActivity extends BaseActivity {
     private Bundle bundle;

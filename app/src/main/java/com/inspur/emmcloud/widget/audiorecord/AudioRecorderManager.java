@@ -6,8 +6,8 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 
 import java.io.File;
 import java.io.FileInputStream;

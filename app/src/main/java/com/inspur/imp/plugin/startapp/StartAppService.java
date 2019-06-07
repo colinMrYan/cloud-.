@@ -23,11 +23,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.FileUtils;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.widget.dialogs.MyDialog;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONArray;

@@ -9,9 +9,9 @@ import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.util.privates.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.privates.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONException;

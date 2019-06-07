@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
 

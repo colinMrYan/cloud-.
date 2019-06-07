@@ -3,13 +3,13 @@ package com.inspur.emmcloud.api.apiservice;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.CloudHttpMethod;
-import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
@@ -27,7 +27,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
@@ -63,7 +63,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(schedule);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -105,7 +105,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(schedule);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -153,7 +153,7 @@ public class ScheduleApiService {
         params.addQueryStringParameter("calendarLastTime", calendarLastTime + "");
         params.addQueryStringParameter("meetingLastTime", meetingLastTime + "");
         params.addQueryStringParameter("taskLastTime", taskLastTime + "");
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnScheduleListSuccess(new GetScheduleListResult(new String(arg0)),
@@ -194,7 +194,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(scheduleId);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -235,7 +235,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getOfficeUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackSuccess(byte[] arg0) {
@@ -293,7 +293,7 @@ public class ScheduleApiService {
         }
         final String completeUrl = baseUrl;
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -336,7 +336,7 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
         params.addParameter("order_type", orderType);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -377,7 +377,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
         params.addParameter("order_type", orderType);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -419,7 +419,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
         params.addParameter("order_type", orderType);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -467,7 +467,7 @@ public class ScheduleApiService {
         params.addParameter("page", page);
         params.addParameter("limit", limit);
         params.addParameter("state", state);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -509,7 +509,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getCreateTaskUrl() + "/" + id;
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -554,7 +554,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(meeting.getId());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -596,7 +596,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getMeetingUrlFromId(id);
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -638,7 +638,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getCalendarUrlFromId(id);
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -684,7 +684,7 @@ public class ScheduleApiService {
         params.addQueryStringParameter("roomId", roomId);
         params.addQueryStringParameter("startTime", startTime + "");
         params.addQueryStringParameter("endTime", endTime + "");
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -726,7 +726,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getMeetingIsAdminUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("cid", uid);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -766,7 +766,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getLoctionUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -821,7 +821,7 @@ public class ScheduleApiService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -863,7 +863,7 @@ public class ScheduleApiService {
     public void deleteMeetingOffice(final Office office) {
         final String completeUrl = APIUri.addOfficeUrl() + "?id=" + office.getId();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -907,7 +907,7 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(meetingJson);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -945,7 +945,7 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setBodyContent(meetingJson);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -989,7 +989,7 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("startTime", startTime + "");
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1030,7 +1030,7 @@ public class ScheduleApiService {
     public void getMeetingHistoryListByPage(final int pageNum) {
         final String completeUrl = APIUri.getMeetingHistoryListByPage(pageNum);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1070,7 +1070,7 @@ public class ScheduleApiService {
     public void getHolidayData(final int year) {
         final String completeUrl = APIUri.getHolidayDataUrl() + year;
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1111,7 +1111,7 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addParameter("title", mession);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1157,7 +1157,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(taskJson);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1199,7 +1199,7 @@ public class ScheduleApiService {
         final String completeUrl = APIUri.getTasksList(id);
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1246,7 +1246,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(uidArray.toString());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1293,7 +1293,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(uidArray.toString());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1334,7 +1334,7 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addHeader("Accept", "application/json");
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1392,7 +1392,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(jsonObject.toString());
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1436,7 +1436,7 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
 
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1482,7 +1482,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("title", title);
         params.addParameter("color", color);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1528,7 +1528,7 @@ public class ScheduleApiService {
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("owner", newOwner);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1583,7 +1583,7 @@ public class ScheduleApiService {
             e.printStackTrace();
         }
 
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1634,7 +1634,7 @@ public class ScheduleApiService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1682,7 +1682,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("page", page);
         params.addParameter("limit", limit);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1727,7 +1727,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(tagsIdJSON);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1769,7 +1769,7 @@ public class ScheduleApiService {
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(tagsIdJSON);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {

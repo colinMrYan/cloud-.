@@ -1,9 +1,17 @@
 package com.inspur.emmcloud.applike;
 
-import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
-import com.inspur.emmcloud.componentservice.setting.SettingService;
+import com.inspur.emmcloud.login.appcenter.AppcenterService;
+import com.inspur.emmcloud.login.communication.CommunicationService;
+import com.inspur.emmcloud.login.login.LoginService;
+import com.inspur.emmcloud.login.setting.SettingService;
+import com.inspur.emmcloud.login.web.WebService;
+import com.inspur.emmcloud.servcieimpl.AppServiceImpl;
 import com.inspur.emmcloud.servcieimpl.AppcenterServiceImpl;
+import com.inspur.emmcloud.servcieimpl.CommunicationServiceImpl;
+import com.inspur.emmcloud.servcieimpl.LoginServiceImpl;
 import com.inspur.emmcloud.servcieimpl.SettingServiceImpl;
+import com.inspur.emmcloud.servcieimpl.WebServiceImpl;
+import com.inspur.imp.plugin.app.AppService;
 import com.luojilab.component.componentlib.applicationlike.IApplicationLike;
 import com.luojilab.component.componentlib.router.Router;
 import com.luojilab.component.componentlib.router.ui.UIRouter;
@@ -21,6 +29,10 @@ public class AppApplike implements IApplicationLike {
         uiRouter.registerUI("app");
         router.addService(AppcenterService.class.getSimpleName(), new AppcenterServiceImpl());
         router.addService(SettingService.class.getSimpleName(), new SettingServiceImpl());
+        router.addService(WebService.class.getSimpleName(), new WebServiceImpl());
+        router.addService(AppService.class.getSimpleName(), new AppServiceImpl());
+        router.addService(LoginService.class.getSimpleName(), new LoginServiceImpl());
+        router.addService(CommunicationService.class.getSimpleName(), new CommunicationServiceImpl());
     }
 
     @Override

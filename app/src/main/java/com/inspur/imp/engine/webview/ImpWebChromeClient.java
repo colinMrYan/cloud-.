@@ -29,8 +29,8 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.imp.api.ImpCallBackInterface;
-import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 
 
@@ -131,25 +131,10 @@ public class ImpWebChromeClient extends WebChromeClient {
         return true;
     }
 
-    /** 全屏容器界面 */
-    static class FullscreenHolder extends FrameLayout {
-
-        public FullscreenHolder(Context ctx) {
-            super(ctx);
-            setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
-        }
-
-        @Override
-        public boolean onTouchEvent(MotionEvent evt) {
-            return true;
-        }
-    }
-
     private void setStatusBarVisibility(boolean visible) {
         int flag = visible ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN;
         getActivity().getWindow().setFlags(flag, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
-
 
     /**
      * 转化为Activity
@@ -348,7 +333,6 @@ public class ImpWebChromeClient extends WebChromeClient {
         return mUploadCallbackAboveL;
     }
 
-
     /*
      * 根据网页加载速度更改进度条显示进度
      */
@@ -383,6 +367,22 @@ public class ImpWebChromeClient extends WebChromeClient {
 
     public String getRemoveHttpUrl(String url) {
         return url.replace("http://", "").replace("https://", "").trim();
+    }
+
+    /**
+     * 全屏容器界面
+     */
+    static class FullscreenHolder extends FrameLayout {
+
+        public FullscreenHolder(Context ctx) {
+            super(ctx);
+            setBackgroundColor(ctx.getResources().getColor(android.R.color.black));
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent evt) {
+            return true;
+        }
     }
 
 

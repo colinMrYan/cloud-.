@@ -2,11 +2,12 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.MainTabResult;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 
 import java.util.ArrayList;

@@ -30,43 +30,43 @@ public class MutilClusterUtils {
             switch (serviceName) {
                 //旧版ecm
                 case ECM_OLD:
-                    MyApplication.getInstance().setClusterEcm(serviceUrl);
+                    BaseApplication.getInstance().setClusterEcm(serviceUrl);
                     break;
                 //旧版emm
                 case EMM_OLD:
-                    MyApplication.getInstance().setClusterEmm(clusterBeanList.get(i).getBaseUrl() + "/");
+                    BaseApplication.getInstance().setClusterEmm(clusterBeanList.get(i).getBaseUrl() + "/");
                     break;
                 //聊天相关
                 case ECM_CHAT:
-                    MyApplication.getInstance().setClusterChat(serviceUrl);
+                    BaseApplication.getInstance().setClusterChat(serviceUrl);
                     break;
                 //会议，日历，任务相关
                 case ECM_SCHEDULE:
-                    MyApplication.getInstance().setClusterSchedule(serviceUrl);
+                    BaseApplication.getInstance().setClusterSchedule(serviceUrl);
                     break;
                 //tab，RN，闪屏分发相关
                 case ECM_DISTRIBUTION:
-                    MyApplication.getInstance().setClusterDistribution(serviceUrl);
+                    BaseApplication.getInstance().setClusterDistribution(serviceUrl);
                     break;
                 //浪潮个性化相关
                 case ECM_NEWS:
-                    MyApplication.getInstance().setClusterNews(serviceUrl);
+                    BaseApplication.getInstance().setClusterNews(serviceUrl);
                     break;
                 //云盘
                 case ECM_CLOUD_DRIVER:
-                    MyApplication.getInstance().setClusterCloudDrive(serviceUrl);
+                    BaseApplication.getInstance().setClusterCloudDrive(serviceUrl);
                     break;
                 //文件服务相关
                 case ECM_STORAGE_LEGACY:
-                    MyApplication.getInstance().setClusterStorageLegacy(serviceUrl);
+                    BaseApplication.getInstance().setClusterStorageLegacy(serviceUrl);
                     break;
                 //消息服务的client注册
                 case ECM_CLIENT_REGISTRY:
-                    MyApplication.getInstance().setClusterClientRegistry(serviceUrl);
+                    BaseApplication.getInstance().setClusterClientRegistry(serviceUrl);
                     break;
                 //机器人
                 case ECM_BOT:
-                    MyApplication.getInstance().setClusterBot(serviceUrl);
+                    BaseApplication.getInstance().setClusterBot(serviceUrl);
                     break;
             }
         }
@@ -77,20 +77,20 @@ public class MutilClusterUtils {
      *//*
     private static void initClusters() {
         //切企业时重置路由
-        MyApplication.getInstance().setClusterEmm("");
-        MyApplication.getInstance().setClusterChat("");
-        MyApplication.getInstance().setClusterSchedule("");
-        MyApplication.getInstance().setClusterDistribution("");
-        MyApplication.getInstance().setClusterNews("");
-        MyApplication.getInstance().setClusterCloudDrive("");
-        MyApplication.getInstance().setClusterStorageLegacy("");
-        MyApplication.getInstance().setClusterClientRegistry("");
-        MyApplication.getInstance().setClusterBot("");
-        MyApplication.getInstance().setClusterEcm("");
+        BaseApplication.getInstance().setClusterEmm("");
+        BaseApplication.getInstance().setClusterChat("");
+        BaseApplication.getInstance().setClusterSchedule("");
+        BaseApplication.getInstance().setClusterDistribution("");
+        BaseApplication.getInstance().setClusterNews("");
+        BaseApplication.getInstance().setClusterCloudDrive("");
+        BaseApplication.getInstance().setClusterStorageLegacy("");
+        BaseApplication.getInstance().setClusterClientRegistry("");
+        BaseApplication.getInstance().setClusterBot("");
+        BaseApplication.getInstance().setClusterEcm("");
 
         //切企业时重置Chat和Schedule版本
-        MyApplication.getInstance().setClusterChatVersion("");
-        MyApplication.getInstance().setClusterScheduleVersion("");
+        BaseApplication.getInstance().setClusterChatVersion("");
+        BaseApplication.getInstance().setClusterScheduleVersion("");
     }
 
 
@@ -115,14 +115,14 @@ public class MutilClusterUtils {
         }
         if (serviceName.equals(ECM_CHAT)) {
             Uri clusterBeanUri = Uri.parse(differentUrlByType);
-            MyApplication.getInstance().setClusterChat(differentUrlByType);
+            BaseApplication.getInstance().setClusterChat(differentUrlByType);
             String chatUrl = clusterBeanUri.getScheme() + "://" + clusterBeanUri.getAuthority();
-            MyApplication.getInstance().setSocketPath(clusterBeanUri.getPath());
-            MyApplication.getInstance().setClusterChatVersion(clusterBean.getServiceVersion());
-            MyApplication.getInstance().setClusterChatSocket(chatUrl);
+            BaseApplication.getInstance().setSocketPath(clusterBeanUri.getPath());
+            BaseApplication.getInstance().setClusterChatVersion(clusterBean.getServiceVersion());
+            BaseApplication.getInstance().setClusterChatSocket(chatUrl);
         }
         if (serviceName.equals(ECM_SCHEDULE)) {
-            MyApplication.getInstance().setClusterScheduleVersion(clusterBean.getServiceVersion());
+            BaseApplication.getInstance().setClusterScheduleVersion(clusterBean.getServiceVersion());
         }
         return differentUrlByType;
     }
@@ -133,11 +133,11 @@ public class MutilClusterUtils {
      * @return
      *//*
     private static Enterprise getOldEnterprise() {
-        String myInfo = PreferencesUtils.getString(MyApplication.getInstance().getApplicationContext(),
+        String myInfo = PreferencesUtils.getString(BaseApplication.getInstance().getApplicationContext(),
                 Constant.PREF_MY_INFO_OLD, "");
         if (!StringUtils.isBlank(myInfo)) {
             GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-            String currentEnterpriseId = PreferencesByUsersUtils.getString(MyApplication.getInstance().getApplicationContext(), "current_enterprise_id");
+            String currentEnterpriseId = PreferencesByUsersUtils.getString(BaseApplication.getInstance().getApplicationContext(), "current_enterprise_id");
             if (!StringUtils.isBlank(currentEnterpriseId)) {
                 List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
                 for (int i = 0; i < enterpriseList.size(); i++) {

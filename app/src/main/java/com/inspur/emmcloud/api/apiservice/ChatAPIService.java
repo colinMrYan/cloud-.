@@ -11,14 +11,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.CloudHttpMethod;
-import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -33,12 +34,10 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
@@ -72,7 +71,7 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getChannelListUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -125,7 +124,7 @@ public class ChatAPIService {
             params.addParameter("cid", cid);
         }
 
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -177,7 +176,7 @@ public class ChatAPIService {
                 + "/comment");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -220,7 +219,7 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getChannelInfoUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -304,7 +303,7 @@ public class ChatAPIService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -348,7 +347,7 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getECMChatChannelUrl() + ("/message/" + mid);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -398,7 +397,7 @@ public class ChatAPIService {
         params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
         params.addBodyParameter("file1", file);
         final Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -459,7 +458,7 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getAllGroupChannelListUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -512,7 +511,7 @@ public class ChatAPIService {
             params.addParameter("cids", cidArray);
         }
 
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -558,7 +557,7 @@ public class ChatAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("mate", uid);
         params.addParameter("type", "DIRECT");
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -611,7 +610,7 @@ public class ChatAPIService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -662,7 +661,7 @@ public class ChatAPIService {
         final String completeUrl = url;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -713,7 +712,7 @@ public class ChatAPIService {
         final String completeUrl = url;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -758,7 +757,7 @@ public class ChatAPIService {
                 + "&dnd=" + nointerruption;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -803,7 +802,7 @@ public class ChatAPIService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("members", uidList);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -848,7 +847,7 @@ public class ChatAPIService {
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("members", JSONUtils.toJSONArray(uidList));
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, url) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -903,7 +902,7 @@ public class ChatAPIService {
             e.printStackTrace();
         }
 
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -942,7 +941,7 @@ public class ChatAPIService {
                 + "/comment/count");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -987,7 +986,7 @@ public class ChatAPIService {
                 .getHttpRequestParams(completeUrl);
         params.setHeader("Content-Type", "url-encoded-form");
         params.addQueryStringParameter("comment", instruction);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(new String(arg0)));
@@ -1020,59 +1019,13 @@ public class ChatAPIService {
 
 
     /**
-     * 上传推送相关信息
-     *
-     * @param deviceId
-     * @param deviceName
-     * @param pushProvider
-     * @param pushTracer
-     */
-    public void uploadPushInfo(final String deviceId, final String deviceName, final String pushProvider, final String pushTracer) {
-        final String url = APIUri.getUploadPushInfoUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addParameter("deviceId", deviceId);
-        params.addParameter("deviceName", deviceName);
-        params.addParameter("notificationProvider", pushProvider);
-        params.addParameter("notificationTracer", pushTracer);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUploadPushInfoResultFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        uploadPushInfo(deviceId, deviceName, pushProvider, pushTracer);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
-
-    /**
      * 活动卡片点击按钮
      *
      * @param url
      */
     public void openActionBackgroudUrl(final String url) {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnOpenActionBackgroudUrlSuccess();
@@ -1110,7 +1063,7 @@ public class ChatAPIService {
     public void openDecideBotRequest(final String triggerId) {
         final String completeUrl = APIUri.getDecideCardBotRequestUrl()+triggerId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 LogUtils.YfcDebug("点击机器人卡片返回成功："+new String(arg0));
@@ -1153,7 +1106,7 @@ public class ChatAPIService {
         final String url = isMediaVoice ? APIUri.getUploadMediaVoiceFileTokenUrl(cid) : APIUri.getUploadFileTokenUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("name", fileName);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, url) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(new String(arg0)));
@@ -1194,7 +1147,7 @@ public class ChatAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.addParameter("Users", jsonArray);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetVoiceCommunicationResultSuccess(new GetVoiceCommunicationResult(new String(arg0)));
@@ -1233,7 +1186,7 @@ public class ChatAPIService {
         String compelteUrl = APIUri.getAgoraJoinChannelSuccessUrl() + channelId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnJoinVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
@@ -1272,7 +1225,7 @@ public class ChatAPIService {
         String compelteUrl = APIUri.getAgoraChannelInfoUrl() + channelId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetVoiceCommunicationChannelInfoSuccess(new GetVoiceCommunicationResult(new String(arg0)));
@@ -1311,7 +1264,7 @@ public class ChatAPIService {
         String compelteUrl = APIUri.getAgoraRefuseChannelUrl() + channelId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnRefuseVoiceCommunicationChannelSuccess(new GetBoolenResult(new String(arg0)));
@@ -1350,7 +1303,7 @@ public class ChatAPIService {
         String compelteUrl = APIUri.getAgoraLeaveChannelUrl() + channelId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
         params.setAsJsonContent(true);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 LogUtils.YfcDebug("离开成功：" + new String(arg0));
@@ -1390,7 +1343,7 @@ public class ChatAPIService {
     public void quitChannelGroup(final String cid) {
         String compelteUrl = APIUri.getQuitChannelGroupUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnQuitChannelGroupSuccess();
@@ -1428,7 +1381,7 @@ public class ChatAPIService {
     public void deleteConversation(final String cid) {
         String compelteUrl = APIUri.getDeleteChannelUrl(cid);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(compelteUrl);
-        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new APICallback(context, compelteUrl) {
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, compelteUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnDeleteConversationSuccess(cid);
@@ -1464,7 +1417,7 @@ public class ChatAPIService {
     public void getConversationList() {
         final String completeUrl = APIUri.getConversationListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1507,7 +1460,7 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getConversationSetStick(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("stick", isStick);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1549,7 +1502,7 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getConversationSetHide(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("hide", isHide);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1592,7 +1545,7 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getConversationSetDnd(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("dnd", isDnd);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1633,7 +1586,7 @@ public class ChatAPIService {
     public void getConversationInfo(final String id) {
         final String completeUrl = APIUri.getConversationInfoUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1677,7 +1630,7 @@ public class ChatAPIService {
         final String completeUrl = APIUri.getUpdateConversationNameUrl(id);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addQueryStringParameter("name", name);
-        HttpUtils.request(context, CloudHttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1721,7 +1674,7 @@ public class ChatAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("mate", uid);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -1775,7 +1728,7 @@ public class ChatAPIService {
             e.printStackTrace();
         }
 
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {

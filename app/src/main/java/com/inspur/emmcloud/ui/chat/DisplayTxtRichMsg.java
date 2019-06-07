@@ -13,6 +13,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
@@ -27,6 +28,8 @@ import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlLongClickListene
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
+
+import java.io.File;
 
 /**
  * DisplayTxtRichMsg
@@ -56,6 +59,7 @@ public class DisplayTxtRichMsg {
         String msgBody = msg.getBody();
         String source = JSONUtils.getString(msgBody, "source", "");
         if (msg.getUid().toLowerCase().startsWith("bot")) {
+            RichText.initCacheDir(new File(MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
             RichText.from(source)
                     .type(RichType.markdown)
                     .linkFix(new LinkFixCallback() {
