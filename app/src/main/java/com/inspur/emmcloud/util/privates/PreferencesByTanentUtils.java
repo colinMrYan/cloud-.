@@ -371,5 +371,17 @@ public class PreferencesByTanentUtils {
         return retData;
     }
 
+    /**
+     * 判断一个key在SharePreference里是否存在
+     *
+     * @param context
+     * @param key
+     * @return
+     */
+    public static boolean isKeyExist(Context context, String key) {
+        SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        return sp.contains(key);
+    }
+
 
 }
