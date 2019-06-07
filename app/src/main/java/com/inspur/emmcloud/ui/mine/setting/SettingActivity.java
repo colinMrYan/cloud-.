@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -466,9 +467,10 @@ public class SettingActivity extends BaseActivity {
      * 弹出清除缓存选项提示框
      */
     private void showClearCacheDlg() {
-        // TODO Auto-generated method stub
         final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
-        new CustomDialog.ListDialogBuilder(SettingActivity.this)
+        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
+
+        new CustomDialog.ListDialogBuilder(this)
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

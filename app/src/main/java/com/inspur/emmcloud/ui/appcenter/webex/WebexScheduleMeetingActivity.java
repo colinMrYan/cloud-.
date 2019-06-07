@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -154,7 +155,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showDurationHourChoiceDialog() {
-        new CustomDialog.SingleChoiceDialogBuilder(WebexScheduleMeetingActivity.this)
+        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
+        new CustomDialog.SingleChoiceDialogBuilder(ctw)
                 .setTitle(getString(R.string.webex_meeting_duration))
 //                .set(durationHourChoiceIndex)
                 .setSingleChoiceItems(durationHourItems, durationHourChoiceIndex, new DialogInterface.OnClickListener() {
@@ -169,7 +171,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showDurationMinChoiceDialog() {
-        new CustomDialog.SingleChoiceDialogBuilder(WebexScheduleMeetingActivity.this)
+        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
+        new CustomDialog.SingleChoiceDialogBuilder(ctw)
                 .setTitle(getString(R.string.webex_meeting_duration))
 //                .setCheckedIndex(durationMinChoiceIndex)
                 .setSingleChoiceItems(durationMinItems, durationMinChoiceIndex, new DialogInterface.OnClickListener() {

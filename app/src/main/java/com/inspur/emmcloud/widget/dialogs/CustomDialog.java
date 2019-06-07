@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 
 import java.lang.reflect.Field;
 
@@ -52,6 +53,12 @@ public class CustomDialog extends AlertDialog {
 
     public static class BaseDialogBuilder extends AlertDialog.Builder {
         private Context context;
+
+        public BaseDialogBuilder(Context context, int themeResId) {
+            super(context, themeResId);
+            this.context = context;
+
+        }
 
         public BaseDialogBuilder(Context context) {
             super(context);
@@ -130,6 +137,10 @@ public class CustomDialog extends AlertDialog {
         public ListDialogBuilder(Context context) {
             super(context);
             this.context = context;
+        }
+
+        public ListDialogBuilder(Context context, int themeResId) {
+            super(context, themeResId);
         }
 
         @Override
