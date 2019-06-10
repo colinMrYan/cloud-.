@@ -154,9 +154,9 @@ public class LoginAPIService {
      * 刷新token
      */
     public void refreshToken() {
-        String completeUrl = APIUri.getOauthSigninUrl();
-        String refreshToken = MyApplication.getInstance().getRefreshToken();
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        String completeUrl = LoginAPIUri.getOauthSigninUrl();
+        String refreshToken = BaseApplication.getInstance().getRefreshToken();
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
         params.setConnectTimeout(3000);
         params.addParameter("client_id", "com.inspur.ecm.client.android");
         params.addParameter("client_secret",
