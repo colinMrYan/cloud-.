@@ -19,9 +19,12 @@ import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
+import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
@@ -88,6 +91,7 @@ public class MeetingDetailActivity extends BaseActivity {
         scheduleApiService.setAPIInterface(new WebService());
         meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
         meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
+        getIsMeetingAdmin();
         if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据  来自通知
             getMeetingFromId(meetingId);
         } else {                                //id为空是走之前逻辑
@@ -118,7 +122,20 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingRecordHolderLayout.setVisibility(meeting.getRecorderParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingConferenceLayout.setVisibility(meeting.getRoleParticipantList().size() > 0 ? View.VISIBLE : View.GONE);
         meetingNoteLayout.setVisibility(StringUtil.isBlank(meeting.getNote()) ? View.GONE : View.VISIBLE);
-        meetingMoreImg.setVisibility((meeting.getOwner().equals(MyApplication.getInstance().getUid()) && System.currentTimeMillis() < meeting.getEndTime()) ? View.VISIBLE : View.GONE);
+        meetingMoreImg.setVisibility((PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                false) || (meeting.getOwner().equals(MyApplication.getInstance().getUid())) && System.currentTimeMillis() < meeting.getEndTime()) ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * 判断当前用户是否会议室管理员
+     */
+    private void getIsMeetingAdmin() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            if (!PreferencesByUserAndTanentUtils.isKeyExist(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN)) {
+                loadingDlg.show();
+            }
+            scheduleApiService.getIsMeetingAdmin(MyApplication.getInstance().getUid());
+        }
     }
 
     private String getMeetingCategory(Meeting meeting) {
@@ -254,30 +271,46 @@ public class MeetingDetailActivity extends BaseActivity {
     }
 
     private void showDialog() {
-        new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
-                //    .addItem(getString(R.string.meeting_detail_show_qrcode))
-                .addItem(getString(R.string.schedule_meeting_change))
-                .addItem(getString(R.string.schedule_meeting_cancel))
-                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                    @Override
-                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                        switch (position) {
-                            case 0:
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
-                                IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
-                                break;
-                            case 1:
-                                deleteMeeting(meeting);
-                                break;
-                            default:
-                                break;
+        boolean isShowChangeMeeting = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                false) && !meeting.getOwner().equals(MyApplication.getInstance().getUid());
+        ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener onSheetItemClickListener = new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+            @Override
+            public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                switch (position) {
+                    case 0:
+                        if (isShowChangeMeeting) {
+                            deleteMeeting(meeting);
+                        } else {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
+                            IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
                         }
-                        dialog.dismiss();
-                    }
-                })
-                .build()
-                .show();
+                        break;
+                    case 1:
+                        deleteMeeting(meeting);
+                        break;
+                    default:
+                        break;
+                }
+                dialog.dismiss();
+            }
+        };
+        if (isShowChangeMeeting) {
+            new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
+                    //    .addItem(getString(R.string.meeting_detail_show_qrcode))
+                    .addItem(getString(R.string.schedule_meeting_cancel))
+                    .setOnSheetItemClickListener(onSheetItemClickListener)
+                    .build()
+                    .show();
+        } else {
+            new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
+                    //    .addItem(getString(R.string.meeting_detail_show_qrcode))
+                    .addItem(getString(R.string.schedule_meeting_change))
+                    .addItem(getString(R.string.schedule_meeting_cancel))
+                    .setOnSheetItemClickListener(onSheetItemClickListener)
+                    .build()
+                    .show();
+        }
     }
 
     /**
@@ -291,6 +324,19 @@ public class MeetingDetailActivity extends BaseActivity {
     }
 
     class WebService extends APIInterfaceInstance {
+
+        @Override
+        public void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                    getIsAdmin.isAdmin());
+        }
+
+        @Override
+        public void returnIsMeetingAdminFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+        }
+
         @Override
         public void returnDelMeetingSuccess(Meeting meeting) {
             LoadingDialog.dimissDlg(loadingDlg);

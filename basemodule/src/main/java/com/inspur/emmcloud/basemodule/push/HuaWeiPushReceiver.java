@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
@@ -26,9 +25,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public void onToken(Context context, String token, Bundle extras) {
-        PushManagerUtils.getInstance().setPushFlag(context, Constant.HUAWEI_FLAG);
         PreferencesUtils.putString(context, Constant.HUAWEI_PUSH_TOKEN, token);
-        LogUtils.YfcDebug("华为推送获取token成功：" + token);
         PushManagerUtils.getInstance().registerPushId2Emm();
         new ClientIDUtils(context).upload();
         Router router = Router.getInstance();

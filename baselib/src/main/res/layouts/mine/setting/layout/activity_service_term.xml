@@ -56,6 +56,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#333333"
                 android:text="@string/license_agreement"
                 android:textSize="@dimen/content_normal_textsize" />
         </LinearLayout>
