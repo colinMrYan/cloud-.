@@ -176,7 +176,6 @@ public class SettingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         notificationSwitch.setChecked(getSwitchOpen());
-        switchPush();
     }
 
     /**
@@ -194,11 +193,11 @@ public class SettingActivity extends BaseActivity {
 
     private void setPushStatus(boolean openPush) {
         if(openPush){
-            PushManagerUtils.getInstance().stopPush();
-            PushManagerUtils.getInstance().unregisterPushId2Emm();
-        }else {
             PushManagerUtils.getInstance().startPush();
             PushManagerUtils.getInstance().registerPushId2Emm();
+        } else {
+            PushManagerUtils.getInstance().stopPush();
+            PushManagerUtils.getInstance().unregisterPushId2Emm();
         }
     }
 
