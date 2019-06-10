@@ -242,7 +242,7 @@ public class BaseApplication extends MultiDexApplication {
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class.getSimpleName()) != null) {
             CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-            service.webSocketSignout();
+            service.sendAppStatus();
         }
         clearNotification();
     }
