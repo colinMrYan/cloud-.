@@ -247,10 +247,10 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         persistenceMessageSendStatus(messageSendingList);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+        initViews();
         if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             getNewMessageOfChannel();
         }
-        initViews();
         if (uiMessage != null) {
             int position = uiMessageList.indexOf(uiMessage);
             if (position != -1) {
