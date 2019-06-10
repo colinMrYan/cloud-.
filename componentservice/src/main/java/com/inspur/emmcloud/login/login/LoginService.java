@@ -19,4 +19,6 @@ public interface LoginService extends CoreService {
     void MDMCheck(Activity context, String tanent, String userCode, String userName, String state, boolean impActivity);
 
     void autoLogin(Activity activity, Handler handler);
+
+    void setMDMStatusNoPass();
 }
