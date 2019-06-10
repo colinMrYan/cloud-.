@@ -671,6 +671,16 @@ public class APIUri {
     public static String getUpdateConversationNameUrl(String id) {
         return getECMChatConversationBaseUrl() + "/channel/" + id + "/name";
     }
+
+    /**
+     * 获取转发文件
+     */
+    public static String getTransmitFileUrl(String channelId, String fileType) {
+        return "https://api.inspuronline.com/" + "chat/rest/v1" + "/channel/" + channelId + "/" + fileType + "/share";
+    }
+
+
+
     /**************************************************应用和应用中心********************************************************************/
 
 

@@ -1453,7 +1453,7 @@ public class ChatAPIService {
     /**
      * 设置会话是否置顶
      *
-     * @param cid
+     * @param id
      * @param isStick
      */
     public void setConversationStick(final String id, final boolean isStick) {
@@ -1496,7 +1496,7 @@ public class ChatAPIService {
     /**
      * 隐藏会话
      *
-     * @param uiConversation
+     * @param
      */
     public void setConversationHide(final String id, final boolean isHide) {
         final String completeUrl = APIUri.getConversationSetHide(id);
@@ -1761,6 +1761,52 @@ public class ChatAPIService {
             }
         });
 
+    }
+
+    /**
+     * 转发文件（图片）
+     *
+     * @param filePath 文件路径
+     * @param toCid    channel ID
+     */
+    public void transmitFile(String filePath, String fromCid, String toCid, String fileType) {
+        final String completeUrl = APIUri.getTransmitFileUrl(fromCid, fileType);
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("path", filePath);
+        params.addQueryStringParameter("to", toCid);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        transmitFile(filePath, fromCid, toCid, fileType);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnTransmitPictureSuccess(toCid, object.toString());
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnTransmitPictureError(error, responseCode);
+            }
+        });
     }
 
 }

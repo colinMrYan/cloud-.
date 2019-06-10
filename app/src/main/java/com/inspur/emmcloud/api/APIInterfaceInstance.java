@@ -1985,4 +1985,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnHolidayDataFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnTransmitPictureSuccess(String cid, String description) {
+
+    }
+
+    @Override
+    public void returnTransmitPictureError(String error, int errorCode) {
+
+    }
 }

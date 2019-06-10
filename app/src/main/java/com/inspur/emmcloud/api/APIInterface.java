@@ -857,4 +857,8 @@ public interface APIInterface {
 
     void returnHolidayDataFail(String error, int errorCode);
 
+    void returnTransmitPictureSuccess(String cid, String description);
+
+    void returnTransmitPictureError(String error, int errorCode);
+
 }

@@ -31,8 +31,10 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -800,15 +802,18 @@ public class ConversationActivity extends ConversationBaseActivity {
                             if (peopleArray.length() > 0) {
                                 JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray, 0, new JSONObject());
                                 String pidUid = JSONUtils.getString(peopleObj, "pid", "");
+                                LogUtils.LbcDebug("222222222222222222222222222222222222");
                                 createDirectChannel(pidUid, backUiMessage);
                             }
                         }
                         if (jsonObject.has("channelGroup")) {
+                            LogUtils.LbcDebug("1111111111111111111111111111111111111");
                             JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject, "channelGroup", new JSONArray());
                             if (channelGroupArray.length() > 0) {
                                 JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
                                 String cid = JSONUtils.getString(cidObj, "cid", "");
-                                transmitTextMsg(cid, backUiMessage);
+                                transmitMsg(cid, backUiMessage);
+                                LogUtils.LbcDebug("333333333333333333333333333333333333");
                             }
                         }
                     }
@@ -1382,7 +1387,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 transmitTextMsg(cid, uiMessage);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                //  transmitImgMsg(cid, uiMessage.getMessage());
+                transmitImgMsg(cid, uiMessage.getMessage());
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 transmitTextMsg(cid, uiMessage);
@@ -1412,13 +1417,22 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 转发图片消息
      */
     private void transmitImgMsg(String cid, Message sendMessage) {
-        String path1 = sendMessage.getMsgContentMediaImage().getPreviewMedia();
-        String data = JSONUtils.toJSONString(sendMessage);
-        String path = sendMessage.getLocalPath();
-        if (!StringUtils.isBlank(path) && NetUtils.isNetworkConnected(getApplicationContext())) {
-//                Message localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid,path);
-//                localMessage.getMsgContentMediaImage().setPreviewMedia(path1);
-//              sendMessageWithFile(localMessage);
+        String path = null;
+        LogUtils.LbcDebug("cid:::" + cid);
+        LogUtils.LbcDebug("data::" + sendMessage.getContent());
+        JSONObject jsonObject = JSONUtils.getJSONObject(sendMessage.getContent());
+        try {
+            String data = jsonObject.getString("raw");
+            JSONObject jsonPath = JSONUtils.getJSONObject(data);
+            path = jsonPath.getString("media");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            ChatAPIService apiService = new ChatAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            LogUtils.LbcDebug("token" + BaseApplication.getInstance().getToken());
+            apiService.transmitFile(path, sendMessage.getChannel(), cid, "image");
         }
     }
 
@@ -1443,6 +1457,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                items = new int[]{R.string.chat_long_click_transmit};
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
@@ -1675,6 +1690,36 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnTransmitPictureSuccess(String cid, String description) {
+            LogUtils.LbcDebug("转发成功。。。" + description);
+            if (NetUtils.isNetworkConnected(getApplicationContext())) {
+                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                } else {
+                    JSONObject jsonObject = JSONUtils.getJSONObject(description);
+                    Message localMessage;
+                    try {
+                        LogUtils.LbcDebug("path::" + jsonObject.getString("path"));
+                        localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, jsonObject.getString("path"));
+                        MsgContentRegularFile msgContentRegularFile = new MsgContentRegularFile();
+//                        msgContentRegularFile.setName(volumeFile.getName());
+//                        msgContentRegularFile.setSize(volumeFile.getSize());
+//                        msgContentRegularFile.setMedia(volumeFile.getPath());
+//                        msgContentRegularFile.setTmpId(fakeMessage.getTmpId());
+//                        fakeMessage.setContent(msgContentRegularFile.toString());
+                        localMessage.setContent(msgContentRegularFile.toString());
+                        WSAPIService.getInstance().sendChatMediaImageMsg(localMessage);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            super.returnTransmitPictureSuccess(cid, description);
+        }
 
+        @Override
+        public void returnTransmitPictureError(String error, int errorCode) {
+            super.returnTransmitPictureError(error, errorCode);
+        }
     }
 }
