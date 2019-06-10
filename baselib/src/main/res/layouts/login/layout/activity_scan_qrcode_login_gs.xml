@@ -55,7 +55,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
+        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
             android:id="@+id/login_btn"
             android:layout_width="140dp"
             android:layout_height="wrap_content"

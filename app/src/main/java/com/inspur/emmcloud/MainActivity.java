@@ -12,29 +12,29 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
-import com.inspur.emmcloud.basemodule.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
+import com.luojilab.component.componentlib.router.Router;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
@@ -75,13 +75,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
+        initAppAlias();
         ButterKnife.bind(this);
         // 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }
-        initAppAlias();
         init();
     }
 
@@ -194,7 +194,7 @@ public class MainActivity extends BaseActivity {
                     case UPGRADE_FAIL:
                     case NO_NEED_UPGRADE:
                     case DONOT_UPGRADE:
-                        getLoginInfo();
+                        autoLogin();
                         break;
                     case LOGIN_SUCCESS:
                     case LOGIN_FAIL:
@@ -219,21 +219,12 @@ public class MainActivity extends BaseActivity {
     /**
      * 获取登录需要的一些信息
      */
-    private void getLoginInfo() {
+    private void autoLogin() {
         // TODO Auto-generated method stub
-        String accessToken = PreferencesUtils.getString(MainActivity.this,
-                "accessToken", "");
-        String myInfo = PreferencesUtils.getString(getApplicationContext(),
-                "myInfo", "");
-        String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
-        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_MDM_STATUS_PASS, true);
-        if (!StringUtils.isBlank(accessToken) && (StringUtils.isBlank(myInfo))) {
-            new LoginUtils(MainActivity.this, handler).getMyInfo();
-        } else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
-            new LoginUtils(MainActivity.this, handler).getServerSupportLanguage();
-        } else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && !StringUtils.isBlank(languageJson) && !isMDMStatusPass) {
-            LanguageManager.getInstance().setLanguageLocal();
-            new LoginUtils(MainActivity.this, handler).startMDM();
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.autoLogin(MainActivity.this, handler);
         } else {
             setSplashShow();
         }
@@ -286,8 +277,12 @@ public class MainActivity extends BaseActivity {
                 String accessToken = PreferencesUtils.getString(MainActivity.this,
                         "accessToken", "");
                 MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
-                        IndexActivity.class : LoginActivity.class, true);
+                if (StringUtils.isBlank(accessToken)) {
+                    ARouter.getInstance().build("/login/main").navigation();
+                } else {
+                    IntentUtils.startActivity(MainActivity.this, IndexActivity.class, true);
+                }
+
             }
         } else {
             EventBus.getDefault().register(this);

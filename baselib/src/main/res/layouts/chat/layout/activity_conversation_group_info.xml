@@ -63,7 +63,7 @@
                         android:layout_marginTop="10dp"
                         android:orientation="vertical">
 
-                        <com.inspur.emmcloud.widget.CircleTextImageView
+                        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                             android:id="@+id/iv_group_photo"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
@@ -201,7 +201,7 @@
                         android:layout_marginTop="5dp"
                         android:src="@drawable/ic_arrow_right" />
 
-                    <com.inspur.emmcloud.widget.NoScrollGridView
+                    <com.inspur.emmcloud.baselib.widget.NoScrollGridView
                         android:id="@+id/gv_member"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -324,7 +324,7 @@
                         android:textColor="#FF333333"
                         android:textSize="16sp" />
 
-                    <com.inspur.emmcloud.widget.SwitchView
+                    <com.inspur.emmcloud.baselib.widget.SwitchView
                         android:id="@+id/sv_stick"
                         android:layout_width="37dp"
                         android:layout_height="wrap_content"
@@ -354,13 +354,13 @@
                         android:textColor="#FF333333"
                         android:textSize="16sp" />
 
-                    <com.inspur.emmcloud.widget.SwitchView
+                    <com.inspur.emmcloud.baselib.widget.SwitchView
                         android:id="@+id/sv_dnd"
                         android:layout_width="37dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"></com.inspur.emmcloud.widget.SwitchView>
+                        android:layout_marginRight="10dp"></com.inspur.emmcloud.baselib.widget.SwitchView>
                 </RelativeLayout>
             </LinearLayout>
 

@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

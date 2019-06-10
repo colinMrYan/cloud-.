@@ -77,7 +77,7 @@
                 </RelativeLayout>
             </RelativeLayout>
 
-            <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+            <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
                 android:id="@+id/srl_refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -91,7 +91,7 @@
                     android:layout_height="match_parent"
                     android:divider="@null"
                     android:dividerHeight="0dp" />
-            </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+            </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_mail_operation"

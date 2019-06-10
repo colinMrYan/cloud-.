@@ -83,12 +83,12 @@
                 android:textColor="#999999"
                 android:textSize="13sp" />
 
-            <com.inspur.emmcloud.widget.ScrollViewWithListView
+            <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                 android:id="@+id/lv_tag_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
-                android:paddingLeft="16dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                android:paddingLeft="16dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
             <TextView
                 android:id="@+id/tv_delecte_tag"

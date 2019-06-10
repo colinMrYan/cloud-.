@@ -38,7 +38,7 @@
         android:orientation="horizontal"
         android:weightSum="100">
 
-        <com.inspur.emmcloud.widget.SquareLayout
+        <com.inspur.emmcloud.baselib.widget.SquareLayout
             android:id="@+id/square_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/ic_setting_face_verification_bg"></View>
-        </com.inspur.emmcloud.widget.SquareLayout>
+        </com.inspur.emmcloud.baselib.widget.SquareLayout>
     </LinearLayout>
 
 

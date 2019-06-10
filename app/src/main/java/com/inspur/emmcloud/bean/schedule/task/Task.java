@@ -2,8 +2,8 @@ package com.inspur.emmcloud.bean.schedule.task;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import org.json.JSONArray;

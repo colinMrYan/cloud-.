@@ -72,7 +72,7 @@
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
 
-            <com.inspur.emmcloud.widget.ClearEditText
+            <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                 android:paddingTop="4dp"
                 android:src="@drawable/icon_no_see_pw" />
 
-            <com.inspur.emmcloud.widget.ClearEditText
+            <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -85,7 +85,7 @@
                 android:textColor="#333333"
                 android:textSize="@dimen/content_normal_textsize"></TextView>
 
-            <com.inspur.emmcloud.widget.ClearEditText
+            <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/modifyinfo_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                 android:paddingTop="13dp"
                 android:singleLine="true"
                 android:textColor="#333333"
-                android:textSize="@dimen/content_normal_textsize"></com.inspur.emmcloud.widget.ClearEditText>
+                android:textSize="@dimen/content_normal_textsize"></com.inspur.emmcloud.baselib.widget.ClearEditText>
         </RelativeLayout>
     </RelativeLayout>
 

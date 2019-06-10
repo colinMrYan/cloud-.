@@ -4,7 +4,7 @@
     android:layout_height="59dp"
     android:background="@color/white">
 
-    <com.inspur.emmcloud.widget.CircleTextImageView
+    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
         android:id="@+id/img_photo"
         android:layout_width="45dp"
         android:layout_height="45dp"

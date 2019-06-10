@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.dd.comgradle'
 apply plugin: 'com.google.protobuf'
 
 import com.android.build.OutputFile
@@ -120,6 +120,11 @@ android {
     }
 }
 
+combuild {
+    applicationName = 'com.inspur.emmcloud.MyApplication'
+    isRegisterCompoAuto = false
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':basemodule')
@@ -129,5 +134,13 @@ dependencies {
     annotationProcessor deps.ARouter.router_anno
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
+
+    implementation deps.react
+    // React Naive Components
+    implementation project(':react-native-smart-swipe-refresh-layout')
+    implementation project(':react-native-picker')
+    implementation project(':react-native-svg')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-navigation')
 }
 

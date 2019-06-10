@@ -62,7 +62,7 @@
             android:textColor="#999999"
             android:textSize="15sp" />
 
-        <com.inspur.emmcloud.widget.ClearEditText
+        <com.inspur.emmcloud.baselib.widget.ClearEditText
             android:id="@+id/edit"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

@@ -20,8 +20,9 @@ import android.widget.EditText;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.widget.MyForegroundColorSpan;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.bean.chat.InsertModel;
+import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

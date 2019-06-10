@@ -7,7 +7,7 @@
     android:paddingRight="10dp"
     android:paddingTop="3dp">
 
-    <com.inspur.emmcloud.widget.ImageViewRound
+    <com.inspur.emmcloud.baselib.widget.ImageViewRound
         android:id="@+id/icon_image"
         android:layout_width="45dp"
         android:layout_height="45dp"

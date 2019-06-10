@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/text_layout_selector">
 
-    <com.inspur.emmcloud.widget.CircleTextImageView
+    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
         android:id="@+id/iv_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"

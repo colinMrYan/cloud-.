@@ -7,13 +7,13 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.CardStackAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.CardPackageCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.cardstack.RxAdapterAllMoveDownAnimator;
 import com.inspur.emmcloud.widget.cardstack.RxCardStackView;
 

@@ -62,11 +62,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.inspur.emmcloud.widget.ScrollViewWithListView
+            <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                 android:id="@+id/lv_attendees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@color/white"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                android:divider="@color/white"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
             <LinearLayout
                 android:id="@+id/ll_add_attendees"

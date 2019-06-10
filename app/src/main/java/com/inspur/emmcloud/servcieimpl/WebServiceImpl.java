@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.login.web.WebService;
+import com.inspur.imp.plugin.barcode.ScanResultActivity;
 import com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
@@ -102,5 +104,14 @@ public class WebServiceImpl implements WebService {
         imagePicker.setMultiMode(true);
         Intent intent = new Intent(activity, ImageGridActivity.class);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public void showScanResult(Context context, String result) {
+        Intent intent = new Intent();
+        intent.putExtra("result", result);
+        intent.setClass(context, ScanResultActivity.class);
+        context.startActivity(intent);
+
     }
 }

@@ -75,7 +75,7 @@
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/ic_search_members" />
 
-            <com.inspur.emmcloud.widget.CustomEditText
+            <com.inspur.emmcloud.baselib.widget.CustomEditText
                 android:id="@+id/ev_channel_member_search_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

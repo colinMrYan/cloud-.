@@ -7,7 +7,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
@@ -187,70 +186,6 @@ public class APIUri {
     /************************************************************************登录*****************************************************************/
 
     /**
-     * 请求短信验证码
-     *
-     * @param mobile
-     * @return
-     */
-    public static String getLoginSMSCaptchaUrl(String mobile) {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "api/v1/passcode?phone=" + mobile;
-    }
-
-    /**
-     * 验证短信验证码
-     *
-     * @return
-     */
-    public static String getSMSRegisterCheckUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "/api?module=register&method=verify_smscode";
-    }
-
-    /**
-     * 获取用户信息
-     *
-     * @return
-     */
-    public static String getMyInfoUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
-    }
-
-    /**
-     * 修改密码
-     **/
-    public static String getChangePsdUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "console/api/v1/account/password";
-    }
-
-
-    /**
-     * 获取oauth认证的基础
-     *
-     * @return
-     */
-    public static String getOauthSigninUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token";
-    }
-
-    /**
-     * 返回我的信息
-     *
-     * @return
-     */
-    public static String getOauthMyInfoUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token/profile";
-    }
-
-    /**
-     * 刷新token
-     *
-     * @return
-     */
-    public static String getRefreshToken() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token";
-    }
-
-
-    /**
      * 网页登录
      *
      * @return
@@ -258,7 +193,6 @@ public class APIUri {
     public static String getWebLoginUrl() {
         return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/authorize";
     }
-
 
     /**************************************************************沟通***************************************************************/
 
@@ -1518,15 +1452,6 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/device/getUserDevices";
     }
 
-    /**
-     * 获取设备注册URl
-     *
-     * @param context
-     * @return
-     */
-    public static String getDeviceRegisterUrl(Context context) {
-        return getEMMBaseUrl() + "app/mdm/v3.0/loadForRegister?udid=" + AppUtils.getMyUUID(context);
-    }
 
     /**
      * 获取绑定设备
@@ -1555,14 +1480,6 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/mdm_check";
     }
 
-    /**
-     * 设备检查
-     *
-     * @return
-     */
-    public static String getDeviceCheckUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/check_state";
-    }
 
     /**
      * 获取卡包信息
@@ -1672,9 +1589,6 @@ public class APIUri {
         return getScheduleBaseUrl() + "api/mam/v3.0/heart/success";
     }
 
-    public static String getCancelTokenUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
-    }
 
     public static String getScheduleListUrl() {
         return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/GetList?";

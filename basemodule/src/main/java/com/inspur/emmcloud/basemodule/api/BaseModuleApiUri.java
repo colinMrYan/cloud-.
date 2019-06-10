@@ -64,5 +64,13 @@ public class BaseModuleApiUri {
         return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
     }
 
+    /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    public static String getMyInfoUrl() {
+        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
+    }
 
 }

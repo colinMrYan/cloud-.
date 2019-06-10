@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -34,7 +35,6 @@ import com.inspur.emmcloud.ui.find.AnalysisActivity;
 import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
@@ -233,7 +233,8 @@ public class SchemeHandleActivity extends BaseActivity {
             }, 1);
 
         } else {
-            IntentUtils.startActivity(this, LoginActivity.class, true);
+            ARouter.getInstance().build("/login/main").navigation();
+            finish();
         }
     }
 

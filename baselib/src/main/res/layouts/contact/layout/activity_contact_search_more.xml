@@ -52,7 +52,7 @@
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg">
 
-        <com.inspur.emmcloud.widget.MaxHightScrollView
+        <com.inspur.emmcloud.baselib.widget.MaxHightScrollView
             android:id="@+id/search_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,13 +70,13 @@
                 android:paddingRight="10dp"
                 android:paddingTop="3dp">
 
-                <com.inspur.emmcloud.widget.FlowLayout
+                <com.inspur.emmcloud.baselib.widget.FlowLayout
                     android:id="@+id/flowlayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical" />
             </RelativeLayout>
-        </com.inspur.emmcloud.widget.MaxHightScrollView>
+        </com.inspur.emmcloud.baselib.widget.MaxHightScrollView>
 
         <View
             android:id="@+id/space_edit"
@@ -123,7 +123,7 @@
                     android:textColor="#030303"
                     android:textSize="@dimen/content_title_textsize" />
 
-                <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+                <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
                     android:id="@+id/refresh_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -134,7 +134,7 @@
                         android:layout_height="match_parent"
                         android:divider="#ffffff"
                         android:dividerHeight="0.5dp" />
-                </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+                </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

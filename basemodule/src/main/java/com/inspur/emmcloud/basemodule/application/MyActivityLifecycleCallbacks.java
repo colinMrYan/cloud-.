@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.service.PVCollectService;
@@ -15,7 +16,6 @@ import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.login.app.AppService;
 import com.inspur.emmcloud.login.appcenter.AppcenterService;
-import com.inspur.emmcloud.login.communication.CommunicationService;
 import com.inspur.emmcloud.login.setting.SettingService;
 import com.luojilab.component.componentlib.router.Router;
 
@@ -69,13 +69,9 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public void onActivityStopped(Activity activity) {
         count--;
         if (count == 0) { // app 进入后台
+            LogUtils.jasonDebug("进入后台====================");
             PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
             BaseApplication.getInstance().setIsActive(false);
-            Router router = Router.getInstance();
-            if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-                CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-                service.closeWebsocket();
-            }
             if (BaseApplication.getInstance().isHaveLogin()) {
                 startUploadPVCollectService(BaseApplication.getInstance());
                 startSyncCommonAppService();

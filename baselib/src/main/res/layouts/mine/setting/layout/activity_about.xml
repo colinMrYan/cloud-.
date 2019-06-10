@@ -45,7 +45,7 @@
             android:paddingBottom="19dp"
             android:paddingTop="20dp">
 
-            <com.inspur.emmcloud.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                 android:id="@+id/iv_logo"
                 android:layout_width="76dp"
                 android:layout_height="76dp"
