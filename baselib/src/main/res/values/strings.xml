@@ -68,6 +68,7 @@
     <string name="app_update_prepare">准备下载</string>
     <string name="app_update_error">更新失败</string>
     <string name="app_update_loaded">已下载：</string>
+    <string name="unsupport_type">不支持的类型</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -328,7 +329,7 @@
     <string name="chat_group_message_search">查找聊天记录</string>
     <string name="chat_long_click_copy">复制</string>
     <string name="chat_long_click_transmit">转发</string>
-    <string name="chat_long_click_schedule">日程</string>
+    <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
 
     <!-- 会议卡片 -->

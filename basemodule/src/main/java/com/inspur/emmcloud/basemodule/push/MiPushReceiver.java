@@ -126,7 +126,6 @@ public class MiPushReceiver extends PushMessageReceiver {
         if (MiPushClient.COMMAND_REGISTER.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mRegId = cmdArg1;
-                PushManagerUtils.getInstance().setPushFlag(context, Constant.XIAOMI_FLAG);
                 PreferencesUtils.putString(context, Constant.MIPUSH_REGISTER_ID, mRegId);
                 PushManagerUtils.getInstance().registerPushId2Emm();
                 new ClientIDUtils(context).upload();

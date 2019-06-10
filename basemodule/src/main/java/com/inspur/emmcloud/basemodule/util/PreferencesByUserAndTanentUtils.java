@@ -276,4 +276,16 @@ public class PreferencesByUserAndTanentUtils {
         editor.remove(key);
         return editor.commit();
     }
+
+    /**
+     * 判断一个key在SharePreference里是否存在
+     *
+     * @param context
+     * @param key
+     * @return
+     */
+    public static boolean isKeyExist(Context context, String key) {
+        SharedPreferences sp = BaseApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        return sp.contains(key);
+    }
 }
