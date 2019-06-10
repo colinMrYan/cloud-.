@@ -16,7 +16,7 @@
         android:layout_marginLeft="10dp"
         android:scaleType="fitXY" />
 
-    <com.inspur.emmcloud.widget.CircleTextImageView
+    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
         android:id="@+id/head"
         android:layout_width="38dp"
         android:layout_height="38dp"

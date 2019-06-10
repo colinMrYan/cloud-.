@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.service.PVCollectService;
@@ -68,6 +69,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public void onActivityStopped(Activity activity) {
         count--;
         if (count == 0) { // app 进入后台
+            LogUtils.jasonDebug("进入后台====================");
             PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
             BaseApplication.getInstance().setIsActive(false);
             if (BaseApplication.getInstance().isHaveLogin()) {

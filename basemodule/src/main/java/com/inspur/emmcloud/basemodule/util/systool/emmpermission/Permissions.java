@@ -3,7 +3,7 @@ package com.inspur.emmcloud.basemodule.util.systool.emmpermission;
 
 import android.content.Context;
 
-import com.inspur.basemodule.R;
+import com.inspur.emmcloud.basemodule.R;
 
 import java.util.ArrayList;
 import java.util.List;

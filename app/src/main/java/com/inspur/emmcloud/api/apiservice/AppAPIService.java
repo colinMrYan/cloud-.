@@ -20,16 +20,15 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
@@ -52,6 +51,15 @@ public class AppAPIService {
     public void setAPIInterface(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
     }
+
+    private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.refreshToken(oauthCallBack, requestTime);
+        }
+    }
+
 
     /**
      * 获取版本更新信息
@@ -115,7 +123,7 @@ public class AppAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(new OauthCallBack() {
+                refreshToken(new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getClientId(deviceId, deviceName);
@@ -153,7 +161,7 @@ public class AppAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(new OauthCallBack() {
+                refreshToken(new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getReactNativeUpdate(version, lastCreationDate, clientId);
@@ -201,7 +209,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
         });
     }
@@ -258,7 +266,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
 
             @Override
@@ -295,7 +303,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
 
             @Override
@@ -404,7 +412,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
         });
     }
@@ -443,84 +451,14 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
 
         });
     }
 
-    /**
-     * 扫一扫登录
-     *
-     * @param url
-     */
-    public void sendLoginDesktopCloudPlusInfo(final String url) {
-        // final String completeUrl = APIUri.getLoginDesktopCloudPlusUrl();
-        final String completeUrl = url;
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnLoginDesktopCloudPlusSuccess(new LoginDesktopCloudPlusBean());
-            }
 
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnLoginDesktopCloudPlusFail(error, responseCode);
-            }
 
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        sendLoginDesktopCloudPlusInfo(url);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
-            }
-        });
-    }
-
-    /**
-     * 设备检查
-     *
-     * @param tenantId
-     * @param userCode
-     */
-    public void deviceCheck(String tenantId, String userCode) {
-        // TODO Auto-generated method stub
-        String completeUrl = APIUri.getDeviceCheckUrl();
-        String uuid = AppUtils.getMyUUID(context);
-        // RequestParams params = new RequestParams(completeUrl);
-        // params.addBodyParameter("app_mdm_id", "imp"); // 和ios约定的appid
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        params.addBodyParameter("udid", uuid);
-        params.addBodyParameter("tenant_id", tenantId);
-        params.addBodyParameter("mdm_user_auth_type", "IDMUser");
-        params.addBodyParameter("user_code", userCode);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnDeviceCheckSuccess(new GetDeviceCheckResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnDeviceCheckFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                apiInterface.returnDeviceCheckFail("", -1);
-            }
-        });
-    }
 
     /**
      * 获取应用的配置信息
@@ -553,7 +491,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
         });
     }
@@ -591,7 +529,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
         });
     }
@@ -630,7 +568,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
         });
     }
@@ -667,7 +605,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+                refreshToken(oauthCallBack, requestTime);
             }
         });
     }
@@ -707,7 +645,7 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 

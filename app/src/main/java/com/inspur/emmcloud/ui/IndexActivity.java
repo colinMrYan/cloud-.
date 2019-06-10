@@ -8,6 +8,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -17,6 +18,7 @@ import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -27,6 +29,7 @@ import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
@@ -48,12 +51,10 @@ import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -66,6 +67,7 @@ import java.util.List;
  *
  * @author Administrator
  */
+@Route(path = "/app/index")
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;

@@ -16,7 +16,6 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -26,8 +25,9 @@ import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.xutils.http.RequestParams;
 
@@ -48,6 +48,14 @@ public class MineAPIService {
 
     public void setAPIInterface(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
+    }
+
+    private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.refreshToken(oauthCallBack, requestTime);
+        }
     }
 
     /**
@@ -78,7 +86,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -125,7 +133,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -226,7 +234,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -256,7 +264,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -299,7 +307,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -352,50 +360,50 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
         });
     }
 
-    /**
-     * 获取是否启动MDM
-     */
-    public void getMDMState() {
-        final String completeUrl = APIUri.getMDMStateUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnMDMStateSuccess(new GetMDMStateResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnMDMStateFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getMDMState();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
+//    /**
+//     * 获取是否启动MDM
+//     */
+//    public void getMDMState() {
+//        final String completeUrl = APIUri.getMDMStateUrl();
+//        RequestParams params = ((MyApplication) context.getApplicationContext())
+//                .getHttpRequestParams(completeUrl);
+//        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+//            @Override
+//            public void callbackSuccess(byte[] arg0) {
+//                apiInterface.returnMDMStateSuccess(new GetMDMStateResult(new String(arg0)));
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                apiInterface.returnMDMStateFail(error, responseCode);
+//            }
+//
+//            @Override
+//            public void callbackTokenExpire(long requestTime) {
+//                OauthCallBack oauthCallBack = new OauthCallBack() {
+//                    @Override
+//                    public void reExecute() {
+//                        getMDMState();
+//                    }
+//
+//                    @Override
+//                    public void executeFailCallback() {
+//                        callbackFail("", -1);
+//                    }
+//                };
+//                refreshToken(
+//                        oauthCallBack, requestTime);
+//            }
+//
+//        });
+//    }
 
     /**
      * 设置脸部图像
@@ -432,7 +440,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
         });
@@ -473,7 +481,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -502,7 +510,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -541,7 +549,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -580,7 +588,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -619,7 +627,7 @@ public class MineAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 

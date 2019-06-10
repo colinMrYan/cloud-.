@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.inspur.basemodule">
+    package="com.inspur.emmcloud.basemodule">
 
     <!-- 极光推送权限配置开始 -->
     <!-- Required -->
@@ -119,6 +119,23 @@
 
 
     <application>
+        <!-- 适配全面屏 -->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
+        <!-- 适配华为(hua wei)刘海屏 -->
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+        <!-- 适配小米(xiao mi)刘海屏 -->
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait|landscape" />
+
+        <!--custom-->
+        <meta-data
+            android:name="FLAG_APP_VERSION_TYPE"
+            android:value="Standard" />
         <!-- 极光推送开始 -->
         <!-- Rich push 核心功能 since 2.0.6-->
         <activity
@@ -323,5 +340,20 @@
             </intent-filter>
         </receiver>
         <!--小米结束-->
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${JPUSH_PKGNAME}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <activity
+            android:name=".util.systool.emmpermission.EmmPermissionActivity"
+            android:configChanges="mcc|mnc|locale|keyboard|keyboardHidden|screenLayout|fontScale|uiMode|orientation|screenSize|layoutDirection"
+            android:screenOrientation="unspecified"
+            android:theme="@style/Theme.Transparent.Permission" />
     </application>
 </manifest>

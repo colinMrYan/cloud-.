@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;

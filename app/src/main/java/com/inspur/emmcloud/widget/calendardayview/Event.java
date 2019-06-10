@@ -4,8 +4,8 @@ package com.inspur.emmcloud.widget.calendardayview;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.Calendar;
 import java.util.Iterator;

@@ -8,9 +8,12 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.imp.plugin.barcode.ScanResultActivity;
 
 /**
  * Created by yufuchang on 2017/11/22.

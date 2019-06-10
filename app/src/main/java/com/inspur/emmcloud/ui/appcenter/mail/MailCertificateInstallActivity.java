@@ -16,15 +16,15 @@ import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.SwitchView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
-import com.inspur.emmcloud.basemodule.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
 import java.io.FileInputStream;
@@ -170,12 +170,14 @@ public class MailCertificateInstallActivity extends BaseActivity {
      */
     private void showInputCreKeyWordDialog(final String path) {
         final CustomDialog.EditDialogBuilder builder = new CustomDialog.EditDialogBuilder(this);
-        final EditText editText = new EditText(this);
+        View editLayout = View.inflate(this, R.layout.cus_dialog_edit, null);
+        final EditText editText = editLayout.findViewById(R.id.cus_dialog_edit_text);
         editText.setHint("请在此输入证书密码：");
+        editText.setTextSize(16);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
 
         builder.setTitle("证书密码：")
-                .setView(editText)
+                .setView(editLayout)
                 .setNegativeButton("取消", (dialog, index) -> {
                     dialog.dismiss();
                 })

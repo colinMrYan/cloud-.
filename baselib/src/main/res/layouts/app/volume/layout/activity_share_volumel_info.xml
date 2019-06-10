@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.inspur.emmcloud.widget.NoScrollGridView
+            <com.inspur.emmcloud.baselib.widget.NoScrollGridView
                 android:id="@+id/gv_member"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:paddingRight="15dp"
                 android:paddingTop="19dp"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="10dp"></com.inspur.emmcloud.widget.NoScrollGridView>
+                android:verticalSpacing="10dp"></com.inspur.emmcloud.baselib.widget.NoScrollGridView>
 
             <View
                 android:layout_width="match_parent"
@@ -173,13 +173,13 @@
                     android:textSize="15sp" />
 
 
-                <com.inspur.emmcloud.widget.ScrollViewWithListView
+                <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                     android:id="@+id/slv_write_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
                     android:divider="@null"
-                    android:dividerHeight="0dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:dividerHeight="0dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
             </LinearLayout>
 
@@ -201,13 +201,13 @@
                     android:textSize="15sp" />
 
 
-                <com.inspur.emmcloud.widget.ScrollViewWithListView
+                <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                     android:id="@+id/slv_read_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
                     android:divider="@null"
-                    android:dividerHeight="0dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:dividerHeight="0dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
             </LinearLayout>
         </LinearLayout>

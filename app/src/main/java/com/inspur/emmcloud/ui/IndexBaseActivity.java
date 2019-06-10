@@ -27,6 +27,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.SelectorUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ConfirmDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
@@ -59,7 +60,6 @@ import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
-import com.inspur.emmcloud.widget.ConfirmDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.imp.api.ImpFragment;
@@ -318,8 +318,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                     @Override
                     public void doConfirm() {
                         if (confirmDialog.getIsHide()) {
-                            PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                         }
+                        //点击去设置  下次进来不再提示
+                        PreferencesUtils.putBoolean(context, Constant.BATTERY_WHITE_LIST_STATE, false);
                         try {
 //                                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
 //                                intent.setData(Uri.parse("package:" + context.getPackageName()));

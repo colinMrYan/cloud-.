@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.SpannableString;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,14 +33,18 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.basemodule.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
@@ -65,7 +70,6 @@ import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
-import com.inspur.emmcloud.util.privates.InputMethodUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
@@ -75,13 +79,10 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
-import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
-import com.inspur.emmcloud.widget.roundbutton.CustomRoundButton;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
@@ -1548,7 +1549,8 @@ public class ConversationActivity extends ConversationBaseActivity {
             String operation = context.getResources().getString(operationsId[i]);
             operations[i] = operation;
         }
-        new CustomDialog.ListDialogBuilder(context)
+        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
+        new CustomDialog.ListDialogBuilder(ctw)
                 .setItems(operations, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -11,7 +11,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <com.inspur.emmcloud.widget.CustomLoadingView
+    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:color="#ffffff"

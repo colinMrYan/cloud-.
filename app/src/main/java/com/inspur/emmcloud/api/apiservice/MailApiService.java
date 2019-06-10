@@ -12,8 +12,9 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
+import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.xutils.http.RequestParams;
 
@@ -38,6 +39,14 @@ public class MailApiService {
         this.apiInterface = apiInterface;
     }
 
+    private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.refreshToken(oauthCallBack, requestTime);
+        }
+    }
+
     public void getMailFolder() {
         String completeUrl = APIUri.getMailFolderUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
@@ -56,7 +65,7 @@ public class MailApiService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -96,7 +105,7 @@ public class MailApiService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -134,7 +143,7 @@ public class MailApiService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -174,7 +183,7 @@ public class MailApiService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -229,7 +238,7 @@ public class MailApiService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
         });
@@ -273,7 +282,7 @@ public class MailApiService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
         });
@@ -311,7 +320,7 @@ public class MailApiService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
         });

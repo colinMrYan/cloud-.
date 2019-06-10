@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp" />
 
-    <com.inspur.emmcloud.widget.NoScrollGridView
+    <com.inspur.emmcloud.baselib.widget.NoScrollGridView
         android:id="@+id/gv_album_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

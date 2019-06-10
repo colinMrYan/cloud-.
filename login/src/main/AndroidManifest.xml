@@ -1,11 +1,54 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.inspur.login">
+    package="com.inspur.emmcloud.login">
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme" />
+    <application>
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.PasswordFirstSettingActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.ScanQrCodeLoginGSActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.LoginMoreActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ScanQrCodeLoginActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.PasswordModifyActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.LoginBySmsActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.PasswordResetActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <!-- MDM设备管理 -->
+        <activity
+            android:name=".ui.DeviceRegisterFailDetailActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+    </application>
 </manifest>

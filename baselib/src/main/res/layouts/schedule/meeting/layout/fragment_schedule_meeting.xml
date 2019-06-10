@@ -28,7 +28,7 @@
         android:focusableInTouchMode="true"
         android:padding="6dp">
 
-        <com.inspur.emmcloud.widget.ClearEditText
+        <com.inspur.emmcloud.baselib.widget.ClearEditText
             android:id="@+id/ev_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:textSize="13sp">
 
             <requestFocus />
-        </com.inspur.emmcloud.widget.ClearEditText>
+        </com.inspur.emmcloud.baselib.widget.ClearEditText>
     </RelativeLayout>
 
     <RelativeLayout
@@ -57,7 +57,7 @@
         android:layout_below="@id/rl_meeting_search"
         android:background="@color/content_bg">
 
-        <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+        <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@null" />
-        </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+        </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
 
         <LinearLayout
             android:id="@+id/rl_meeting_list_default"

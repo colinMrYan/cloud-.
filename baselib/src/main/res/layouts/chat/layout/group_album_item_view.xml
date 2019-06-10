@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.inspur.emmcloud.widget.SquareLayout
+    <com.inspur.emmcloud.baselib.widget.SquareLayout
         android:id="@+id/square_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,6 +23,6 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:visibility="invisible" />
-    </com.inspur.emmcloud.widget.SquareLayout>
+    </com.inspur.emmcloud.baselib.widget.SquareLayout>
 
 </RelativeLayout>

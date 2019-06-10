@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.Mail;
 import com.inspur.emmcloud.bean.appcenter.mail.MailFolder;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

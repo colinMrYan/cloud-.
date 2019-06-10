@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -22,19 +23,19 @@ import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.MyDatePickerDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.MyDatePickerDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -154,7 +155,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showDurationHourChoiceDialog() {
-        new CustomDialog.SingleChoiceDialogBuilder(WebexScheduleMeetingActivity.this)
+        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
+        new CustomDialog.SingleChoiceDialogBuilder(ctw)
                 .setTitle(getString(R.string.webex_meeting_duration))
 //                .set(durationHourChoiceIndex)
                 .setSingleChoiceItems(durationHourItems, durationHourChoiceIndex, new DialogInterface.OnClickListener() {
@@ -169,7 +171,8 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
     }
 
     private void showDurationMinChoiceDialog() {
-        new CustomDialog.SingleChoiceDialogBuilder(WebexScheduleMeetingActivity.this)
+        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
+        new CustomDialog.SingleChoiceDialogBuilder(ctw)
                 .setTitle(getString(R.string.webex_meeting_duration))
 //                .setCheckedIndex(durationMinChoiceIndex)
                 .setSingleChoiceItems(durationMinItems, durationMinChoiceIndex, new DialogInterface.OnClickListener() {

@@ -61,7 +61,7 @@
 
     </RelativeLayout>
 
-    <com.inspur.emmcloud.widget.CustomScrollViewPager
+    <com.inspur.emmcloud.baselib.widget.CustomScrollViewPager
         android:id="@+id/view_pager_all_schedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

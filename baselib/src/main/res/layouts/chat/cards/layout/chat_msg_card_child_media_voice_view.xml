@@ -16,7 +16,7 @@
         android:textSize="15sp"
         android:visibility="gone" />
 
-    <com.inspur.emmcloud.widget.CustomLoadingView
+    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
         android:id="@+id/qlv_downloading_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
         android:textSize="15sp"
         android:visibility="gone" />
 
-    <com.inspur.emmcloud.widget.CustomLoadingView
+    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
         android:id="@+id/qlv_downloading_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

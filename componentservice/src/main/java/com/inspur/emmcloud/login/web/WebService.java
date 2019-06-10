@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.login.web;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.inspur.emmcloud.login.CoreService;
@@ -15,6 +16,8 @@ public interface WebService extends CoreService {
     void openScanCode(Activity activity, int requestCode);
 
     void openScanCode(Fragment fragment, int requestCode);
+
+    void showScanResult(Context context, String result);
 
     void openGallery(Activity activity, int limit, int requestCode);
 }

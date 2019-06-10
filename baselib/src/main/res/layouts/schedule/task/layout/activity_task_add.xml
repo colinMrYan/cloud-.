@@ -531,7 +531,7 @@
                     android:layout_marginLeft="15dp"
                     android:background="@color/color_list_divider" />
 
-                <com.inspur.emmcloud.widget.ScrollViewWithListView
+                <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                     android:id="@+id/lv_attachment_abstract_picture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -572,13 +572,13 @@
                     android:layout_marginLeft="15dp"
                     android:background="@color/color_list_divider" />
 
-                <com.inspur.emmcloud.widget.ScrollViewWithListView
+                <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                     android:id="@+id/lv_attachment_abstract_other"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rl_attachments_others"
                     android:background="#FFFFFF"
-                    android:dividerHeight="0.5px"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:dividerHeight="0.5px"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
             </LinearLayout>
 
         </LinearLayout>

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.inspur.emmcloud.ui.find.ScanResultActivity;
-import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.plugin.barcode.ScanResultActivity;
 
 /**
  * Created by yufuchang on 2017/7/21.

@@ -19,6 +19,8 @@ import com.inspur.basemodule.R;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.BuildConfig;
+import com.inspur.emmcloud.basemodule.R;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

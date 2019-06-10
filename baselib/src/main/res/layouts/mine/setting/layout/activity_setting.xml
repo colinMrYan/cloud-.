@@ -289,7 +289,7 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.widget.SwitchView
+                <com.inspur.emmcloud.baselib.widget.SwitchView
                     android:id="@+id/switch_view_setting_web_rotate"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
@@ -323,7 +323,7 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.widget.SwitchView
+                <com.inspur.emmcloud.baselib.widget.SwitchView
                     android:id="@+id/switch_view_setting_voice_2_word"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
@@ -391,7 +391,7 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.widget.SwitchView
+                <com.inspur.emmcloud.baselib.widget.SwitchView
                     android:id="@+id/switch_view_setting_run_background"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
@@ -427,7 +427,7 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.widget.SwitchView
+                <com.inspur.emmcloud.baselib.widget.SwitchView
                     android:id="@+id/switch_view_setting_experience_upgrade"
                     android:layout_width="37dp"
                     android:layout_height="wrap_content"
@@ -445,7 +445,7 @@
 
         </LinearLayout>
 
-        <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
+        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
             android:id="@+id/bt_setting_signout"
             android:layout_width="match_parent"
             android:layout_height="42dp"

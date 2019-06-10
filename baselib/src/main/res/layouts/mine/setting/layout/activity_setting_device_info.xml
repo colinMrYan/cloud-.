@@ -148,7 +148,7 @@
                 android:textSize="15sp"
                 android:visibility="gone" />
 
-            <com.inspur.emmcloud.widget.ScrollViewWithListView
+            <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                 android:id="@+id/device_log_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
                 android:divider="@color/color_list_divider"
                 android:dividerHeight="0.5dp"
                 android:listSelector="@color/transparent"
-                android:paddingLeft="20dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                android:paddingLeft="20dp"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
             <Button
                 android:id="@+id/bt_device_unbound"
