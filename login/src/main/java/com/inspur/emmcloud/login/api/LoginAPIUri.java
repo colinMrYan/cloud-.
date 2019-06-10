@@ -45,15 +45,6 @@ public class LoginAPIUri {
     }
 
     /**
-     * 获取用户信息
-     *
-     * @return
-     */
-    public static String getMyInfoUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
-    }
-
-    /**
      * 修改密码
      **/
     public static String getChangePsdUrl() {

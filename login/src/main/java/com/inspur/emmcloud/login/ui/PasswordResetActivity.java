@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.widget.keyboardview.EmmSecurityKeyboard;
@@ -28,11 +29,11 @@ import butterknife.ButterKnife;
 
 public class PasswordResetActivity extends BaseActivity implements View.OnTouchListener {
     public static final String EXTRA_CAPTCHA = "extra_captcha";
-    @BindView(R.id.bt_ok)
+    @BindView(R2.id.bt_ok)
     Button okBtn;
-    @BindView(R.id.et_password_new)
+    @BindView(R2.id.et_password_new)
     EditText passwordNewEdit;
-    @BindView(R.id.et_password_confirm)
+    @BindView(R2.id.et_password_confirm)
     EditText passwordConfirmEdit;
     private String passwordNew;
     private String passwordConfirm;
@@ -66,33 +67,33 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
 
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_ok:
-                if (!passwordNew.equals(passwordConfirm)) {
-                    ToastUtils.show(PasswordResetActivity.this, R.string.modify_not_same);
-                    return;
-                }
-                if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
-                    ToastUtils.show(BaseApplication.getInstance(), R.string.modify_password_invalid);
-                    return;
-                }
-                resetPassword();
-                break;
-            case R.id.ibt_back:
-                finish();
-                break;
+        int i = v.getId();
+        if (i == R.id.bt_ok) {
+            if (!passwordNew.equals(passwordConfirm)) {
+                ToastUtils.show(PasswordResetActivity.this, R.string.modify_not_same);
+                return;
+            }
+            if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                ToastUtils.show(BaseApplication.getInstance(), R.string.modify_password_invalid);
+                return;
+            }
+            resetPassword();
+
+        } else if (i == R.id.ibt_back) {
+            finish();
+
         }
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch (v.getId()) {
-            case R.id.et_password_new:
-                emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
-                break;
-            case R.id.et_password_confirm:
-                emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
-                break;
+        int i = v.getId();
+        if (i == R.id.et_password_new) {
+            emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+
+        } else if (i == R.id.et_password_confirm) {
+            emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+
         }
         return false;
     }
@@ -111,13 +112,13 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (view.getId()) {
-                case R.id.et_password_new:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
-                    break;
-                case R.id.et_password_confirm:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
-                    break;
+            int i = view.getId();
+            if (i == R.id.et_password_new) {
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+
+            } else if (i == R.id.et_password_confirm) {
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+
             }
             return false;
         }

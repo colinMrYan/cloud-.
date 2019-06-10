@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.login.api;
 
-import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.login.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
 import com.inspur.emmcloud.login.bean.GetMDMStateResult;
@@ -33,10 +32,6 @@ public interface LoginAPIInterface {
     void returnReisterSMSCheckSuccess(GetRegisterCheckResult getRegisterResult);
 
     void returnReisterSMSCheckFail(String error, int errorCode);
-
-    void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult);
-
-    void returnMyInfoFail(String error, int errorCode);
 
     void returnResetPasswordSuccess();
 

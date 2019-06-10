@@ -60,9 +60,6 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.bean.login.GetMDMStateResult;
-import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -102,18 +99,12 @@ import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
 
-    @Override
-    public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
-    }
 
     @Override
     public void returnUploadExceptionSuccess(List<AppException> appExceptionList) {
 
     }
 
-    @Override
-    public void returnDeviceCheckFail(String error, int errorCode) {
-    }
 
     @Override
     public void returnUnBindDeviceSuccess() {
@@ -1086,25 +1077,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
-
-    }
-
-    @Override
-    public void returnMDMStateFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
-
-    }
-
-    @Override
-    public void returnUploadMDMInfoFail() {
-
-    }
 
 
     @Override

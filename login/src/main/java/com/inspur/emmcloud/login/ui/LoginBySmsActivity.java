@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
@@ -30,6 +31,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.util.LoginUtils;
@@ -40,7 +42,7 @@ import butterknife.ButterKnife;
 /**
  * 短信登录
  */
-
+@Route(path = "/login/sms")
 public class LoginBySmsActivity extends BaseActivity {
 
     public static final int MODE_LOGIN = 1;
@@ -50,19 +52,19 @@ public class LoginBySmsActivity extends BaseActivity {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_SMS_CAPTCHA = 2;
-    @BindView(R.id.tv_title)
+    @BindView(R2.id.tv_title)
     TextView titleText;
-    @BindView(R.id.text_input_layout_phone)
+    @BindView(R2.id.text_input_layout_phone)
     TextInputLayout phoneTextInputLayout;
-    @BindView(R.id.et_phone)
+    @BindView(R2.id.et_phone)
     ClearEditText phoneEdit;
-    @BindView(R.id.et_captcha)
+    @BindView(R2.id.et_captcha)
     ClearEditText captchaEdit;
-    @BindView(R.id.bt_get_captcha)
+    @BindView(R2.id.bt_get_captcha)
     Button getCapthaBtn;
-    @BindView(R.id.bt_login)
+    @BindView(R2.id.bt_login)
     Button loginBtn;
-    @BindView(R.id.tv_login_by_account)
+    @BindView(R2.id.tv_login_by_account)
     TextView loginByAccountText;
     private int mode = MODE_LOGIN;
     private Handler handler;
@@ -116,37 +118,36 @@ public class LoginBySmsActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.ll_main:
-                InputMethodUtils.hide(LoginBySmsActivity.this);
-                break;
-            case R.id.bt_get_captcha:
-                phone = phoneEdit.getText().toString();
-                if (StringUtils.isBlank(phone)) {
-                    ToastUtils.show(BaseApplication.getInstance(), R.string.login_please_input_phone_num);
-                    return;
-                }
-                if (!FomatUtils.isPhoneNum(phone)) {
-                    phoneTextInputLayout.setError(getString(R.string.login_phone_num_illegal_format));
-                    return;
-                }
-                getSMSCaptcha();
-                break;
-            case R.id.bt_login:
-                phone = phoneEdit.getText().toString();
-                captcha = captchaEdit.getText().toString();
-                if (!FomatUtils.isPhoneNum(phone)) {
-                    phoneTextInputLayout.setError(getString(R.string.login_phone_num_illegal_format));
-                    return;
-                }
-                login();
-                break;
-            case R.id.tv_login_by_account:
-                finish();
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.ll_main) {
+            InputMethodUtils.hide(LoginBySmsActivity.this);
+
+        } else if (i == R.id.bt_get_captcha) {
+            phone = phoneEdit.getText().toString();
+            if (StringUtils.isBlank(phone)) {
+                ToastUtils.show(BaseApplication.getInstance(), R.string.login_please_input_phone_num);
+                return;
+            }
+            if (!FomatUtils.isPhoneNum(phone)) {
+                phoneTextInputLayout.setError(getString(R.string.login_phone_num_illegal_format));
+                return;
+            }
+            getSMSCaptcha();
+
+        } else if (i == R.id.bt_login) {
+            phone = phoneEdit.getText().toString();
+            captcha = captchaEdit.getText().toString();
+            if (!FomatUtils.isPhoneNum(phone)) {
+                phoneTextInputLayout.setError(getString(R.string.login_phone_num_illegal_format));
+                return;
+            }
+            login();
+
+        } else if (i == R.id.tv_login_by_account) {
+            finish();
 
         }
     }

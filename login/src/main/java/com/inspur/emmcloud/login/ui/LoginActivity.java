@@ -30,6 +30,7 @@ import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.util.LoginUtils;
 import com.inspur.emmcloud.login.widget.keyboardview.EmmSecurityKeyboard;
 
@@ -46,15 +47,15 @@ public class LoginActivity extends BaseActivity {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int LOGIN_MORE = 2;
-    @BindView(R.id.et_username)
+    @BindView(R2.id.et_username)
     ClearEditText usernameEdit;
-    @BindView(R.id.et_password)
+    @BindView(R2.id.et_password)
     EditText passwordEdit;
-    @BindView(R.id.bt_login)
+    @BindView(R2.id.bt_login)
     Button loginBtn;
-    @BindView(R.id.tv_current_login_enterprise)
+    @BindView(R2.id.tv_current_login_enterprise)
     TextView currentLoginEnterpriseText;
-    @BindView(R.id.tv_welcome)
+    @BindView(R2.id.tv_welcome)
     TextView welcomeText;
     private String userName;
     private String password;
@@ -126,33 +127,31 @@ public class LoginActivity extends BaseActivity {
 
     public void onClick(View v) {
         Bundle bundle = new Bundle();
-        switch (v.getId()) {
-            case R.id.bt_login:
-                userName = usernameEdit.getText().toString().trim();
-                password = passwordEdit.getText().toString();
-                loginApp();
-                break;
-            case R.id.tv_forget_password:
-                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
-                IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class, bundle);
-                break;
-            case R.id.tv_login_via_sms:
-                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_LOGIN);
-                IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class, bundle);
-                break;
-            case R.id.bt_more:
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this, LoginMoreActivity.class);
-                startActivityForResult(intent, LOGIN_MORE);
-                break;
-            case R.id.ll_main:
-                InputMethodUtils.hide(LoginActivity.this);
-                if (securityKeyboard.isShowing()) {
-                    securityKeyboard.dismiss();
-                }
-                break;
-            default:
-                break;
+        int i = v.getId();
+        if (i == R.id.bt_login) {
+            userName = usernameEdit.getText().toString().trim();
+            password = passwordEdit.getText().toString();
+            loginApp();
+
+        } else if (i == R.id.tv_forget_password) {
+            bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
+            IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class, bundle);
+
+        } else if (i == R.id.tv_login_via_sms) {
+            bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_LOGIN);
+            IntentUtils.startActivity(LoginActivity.this, LoginBySmsActivity.class, bundle);
+
+        } else if (i == R.id.bt_more) {
+            Intent intent = new Intent();
+            intent.setClass(LoginActivity.this, LoginMoreActivity.class);
+            startActivityForResult(intent, LOGIN_MORE);
+
+        } else if (i == R.id.ll_main) {
+            InputMethodUtils.hide(LoginActivity.this);
+            if (securityKeyboard.isShowing()) {
+                securityKeyboard.dismiss();
+            }
+
         }
     }
 

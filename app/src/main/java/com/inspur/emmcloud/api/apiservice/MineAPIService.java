@@ -16,7 +16,6 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.bean.login.GetMDMStateResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -368,43 +367,43 @@ public class MineAPIService {
         });
     }
 
-    /**
-     * 获取是否启动MDM
-     */
-    public void getMDMState() {
-        final String completeUrl = APIUri.getMDMStateUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnMDMStateSuccess(new GetMDMStateResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnMDMStateFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getMDMState();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
+//    /**
+//     * 获取是否启动MDM
+//     */
+//    public void getMDMState() {
+//        final String completeUrl = APIUri.getMDMStateUrl();
+//        RequestParams params = ((MyApplication) context.getApplicationContext())
+//                .getHttpRequestParams(completeUrl);
+//        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+//            @Override
+//            public void callbackSuccess(byte[] arg0) {
+//                apiInterface.returnMDMStateSuccess(new GetMDMStateResult(new String(arg0)));
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                apiInterface.returnMDMStateFail(error, responseCode);
+//            }
+//
+//            @Override
+//            public void callbackTokenExpire(long requestTime) {
+//                OauthCallBack oauthCallBack = new OauthCallBack() {
+//                    @Override
+//                    public void reExecute() {
+//                        getMDMState();
+//                    }
+//
+//                    @Override
+//                    public void executeFailCallback() {
+//                        callbackFail("", -1);
+//                    }
+//                };
+//                refreshToken(
+//                        oauthCallBack, requestTime);
+//            }
+//
+//        });
+//    }
 
     /**
      * 设置脸部图像

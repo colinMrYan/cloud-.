@@ -17,6 +17,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.widget.keyboardview.EmmSecurityKeyboard;
@@ -28,11 +29,11 @@ import butterknife.BindView;
  */
 
 public class PasswordFirstSettingActivity extends BaseActivity {
-    @BindView(R.id.bt_save)
+    @BindView(R2.id.bt_save)
     Button saveBtn;
-    @BindView(R.id.et_password_new)
+    @BindView(R2.id.et_password_new)
     EditText passwordNewEdit;
-    @BindView(R.id.et_password_confirm)
+    @BindView(R2.id.et_password_confirm)
     EditText passwordConfirmEdit;
     private String passwordNew;
     private String passwordConfirm;
@@ -61,25 +62,25 @@ public class PasswordFirstSettingActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_save:
-                if (!passwordNew.equals(passwordConfirm)) {
-                    ToastUtils.show(PasswordFirstSettingActivity.this, R.string.modify_not_same);
-                    return;
-                }
-                if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
-                    ToastUtils.show(BaseApplication.getInstance(), R.string.modify_password_invalid);
-                    return;
-                }
-                modifyPassword();
-                break;
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.bt_skip:
-                ARouter.getInstance().build("/app/index").navigation();
-                finish();
-                break;
+        int i = v.getId();
+        if (i == R.id.bt_save) {
+            if (!passwordNew.equals(passwordConfirm)) {
+                ToastUtils.show(PasswordFirstSettingActivity.this, R.string.modify_not_same);
+                return;
+            }
+            if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                ToastUtils.show(BaseApplication.getInstance(), R.string.modify_password_invalid);
+                return;
+            }
+            modifyPassword();
+
+        } else if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.bt_skip) {
+            ARouter.getInstance().build("/app/index").navigation();
+            finish();
+
         }
     }
 
@@ -115,13 +116,13 @@ public class PasswordFirstSettingActivity extends BaseActivity {
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (view.getId()) {
-                case R.id.et_password_new:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
-                    break;
-                case R.id.et_password_confirm:
-                    emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
-                    break;
+            int i = view.getId();
+            if (i == R.id.et_password_new) {
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+
+            } else if (i == R.id.et_password_confirm) {
+                emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+
             }
             return false;
         }

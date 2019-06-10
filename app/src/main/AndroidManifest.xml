@@ -3,152 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection">
-
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="22" />
-
-    <!-- 极光推送权限配置开始 -->
-    <!-- Required -->
-    <permission
-        android:name="${applicationId}.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <!-- Required -->
-    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-
-    <!-- Optional. Required for location feature -->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
-    <!--用于申请获取蓝牙信息进行室内定位-->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-    <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="android.permission.WRITE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-
-    <!-- 闪光灯 -->
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-
-    <!--指纹识别-->
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-    <uses-permission android:name="com.fingerprints.service.ACCESS_FINGERPRINT_MANAGER" />
-    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
-
-    <!-- 创建快捷键 -->
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />  
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="com.android.launcher2.permission.READ_SETTINGS" />
-    <uses-permission android:name="com.android.launcher3.permission.READ_SETTINGS" />
-
-
-    <!-- 插件：网络信息 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-    <!-- 插件：拨打电话 -->
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <!-- 插件：发送短信 -->
-    <uses-permission android:name="android.permission.SEND_SMS" />
-
-    <!-- 插件：选择图片 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- 插件：GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- 插件：二维码扫描 -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- 插件：拍照 -->
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-
-    <!-- 插件：设备震动 -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!--悬浮窗相关-->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-
-    <!--电源权限-->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-
-    <!-- 语音播放 -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.Manifest.permission.DEVICE_POWER" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
-    <!--科大讯飞语音增加权限-->
-    <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!--&lt;!&ndash;读取联系人权限，上传联系人需要用到此权限 &ndash;&gt;-->
-    <!--<uses-permission android:name="android.permission.READ_CONTACTS" />-->
-
-    <permission
-        android:name="${applicationId}.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="${applicationId}.permission.MIPUSH_RECEIVE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
-
-    <!--allowBackup = false 防止对应用程序数据进行备份和还原 -->
-
     <application
         android:name=".MyApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme_0"
         tools:replace="android:allowBackup,label">
 
-        <!-- 适配全面屏 -->
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.4" />
-        <!-- 适配华为(hua wei)刘海屏 -->
-        <meta-data
-            android:name="android.notch_support"
-            android:value="true" />
-        <!-- 适配小米(xiao mi)刘海屏 -->
-        <meta-data
-            android:name="notch.config"
-            android:value="portrait|landscape" />
 
-        <!--custom-->
-        <meta-data
-            android:name="FLAG_APP_VERSION_TYPE"
-            android:value="Standard" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -298,46 +162,13 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".login.ui.LoginActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".login.ui.PasswordFirstSettingActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".login.ui.ScanQrCodeLoginGSActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".login.ui.LoginMoreActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".login.ui.ScanQrCodeLoginActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".login.ui.PasswordModifyActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.ServiceTermActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".login.ui.LoginBySmsActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.appcenter.AppCenterActivity"
             android:resizeableActivity="true"
@@ -664,11 +495,7 @@
             android:name=".ui.mine.myinfo.ModifyUserInfoActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".login.ui.PasswordResetActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.mine.setting.LanguageSwitchActivity"
             android:resizeableActivity="true"
@@ -1003,11 +830,6 @@
         <!-- ImagePicker -->
 
 
-        <activity
-            android:name=".basemodule.util.systool.emmpermission.EmmPermissionActivity"
-            android:configChanges="mcc|mnc|locale|keyboard|keyboardHidden|screenLayout|fontScale|uiMode|orientation|screenSize|layoutDirection"
-            android:screenOrientation="unspecified"
-            android:theme="@style/Theme.Transparent.Permission" />
         <!-- imp插件 -->
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
@@ -1052,23 +874,7 @@
             android:resizeableActivity="true" />
 
 
-        <!-- MDM设备管理 -->
-        <activity
-            android:name=".login.ui.DeviceRegisterFailDetailActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
         <!-- imp插件 -->
-
-
-
-
-
-        <!-- 配置应用是否为开发版 -->
-        <meta-data
-            android:name="VERSION_TYPE"
-            android:value="normal" /> <!-- dev   normal -->
-
 
         <!-- 高德定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService"></service>
@@ -1115,15 +921,6 @@
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
 
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
 
 
 

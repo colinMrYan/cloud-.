@@ -1,24 +1,24 @@
 package com.inspur.emmcloud.login.widget.keyboardview;
 
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.login.R;
 
 public enum EmmKeyboardType {
 
     /**
      * 字母键盘
      */
-    LETTER(0, MyApplication.getInstance().getString(R.string.emm_keyboard_letter)),
+    LETTER(0, BaseApplication.getInstance().getString(R.string.emm_keyboard_letter)),
 
     /**
      * 数字键盘
      */
-    NUMBER(1, MyApplication.getInstance().getString(R.string.emm_keyboard_number)),
+    NUMBER(1, BaseApplication.getInstance().getString(R.string.emm_keyboard_number)),
 
     /**
      * 符号键盘
      */
-    SYMBOL(2, MyApplication.getInstance().getString(R.string.emm_keyboard_symbol));
+    SYMBOL(2, BaseApplication.getInstance().getString(R.string.emm_keyboard_symbol));
 
     private int code;
     private String name;

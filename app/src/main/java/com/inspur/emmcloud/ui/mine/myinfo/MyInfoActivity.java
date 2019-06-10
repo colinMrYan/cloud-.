@@ -9,17 +9,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -30,8 +31,6 @@ import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
-import com.inspur.emmcloud.ui.login.LoginBySmsActivity;
-import com.inspur.emmcloud.ui.login.PasswordModifyActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -146,13 +145,13 @@ public class MyInfoActivity extends BaseActivity {
                 finishActivity();
                 break;
             case R.id.rl_password_modify:
-                IntentUtils.startActivity(MyInfoActivity.this, PasswordModifyActivity.class);
+                ARouter.getInstance().build("/login/password_modify").navigation();
                 break;
             case R.id.rl_password_reset:
                 Bundle bundle = new Bundle();
-                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
-                bundle.putString(LoginBySmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
-                IntentUtils.startActivity(MyInfoActivity.this, LoginBySmsActivity.class, bundle);
+                bundle.putInt("extra_mode", 2);
+                bundle.putString("extra_phone", getMyInfoResult.getPhoneNumber());
+                ARouter.getInstance().build("/login/sms").with(bundle).navigation();
                 break;
             default:
                 break;
@@ -262,8 +261,8 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void getUserProfile() {
         if (NetUtils.isNetworkConnected(MyInfoActivity.this, false)) {
-            LoginAPIService apiServices = new LoginAPIService(MyInfoActivity.this);
-            apiServices.setAPIInterface(new WebService());
+            BaseModuleApiService apiServices = new BaseModuleApiService(MyInfoActivity.this);
+            apiServices.setAPIInterface(new BaseModuleWebService());
             apiServices.getMyInfo();
         }
     }
@@ -276,6 +275,29 @@ public class MyInfoActivity extends BaseActivity {
             apiService.getUserProfileConfigInfo();
         } else {
             setUserInfoConfig(null);
+        }
+    }
+
+    public class BaseModuleWebService extends BaseModuleAPIInterfaceInstance {
+
+        @Override
+        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
+            // TODO Auto-generated method stub
+            MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
+            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
+            if (enterpriseList.size() == 0 && defaultEnterprise == null) {
+                ToastUtils.show(MyApplication.getInstance(), R.string.login_user_not_bound_enterprise);
+                MyApplication.getInstance().signout();
+            } else {
+                PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
+                showMyInfo();
+            }
+        }
+
+        @Override
+        public void returnMyInfoFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
         }
     }
 
@@ -313,25 +335,6 @@ public class MyInfoActivity extends BaseActivity {
             setUserInfoConfig(null);
         }
 
-        @Override
-        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
-            // TODO Auto-generated method stub
-            MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
-            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-            if (enterpriseList.size() == 0 && defaultEnterprise == null) {
-                ToastUtils.show(MyApplication.getInstance(), R.string.login_user_not_bound_enterprise);
-                MyApplication.getInstance().signout();
-            } else {
-                PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
-                showMyInfo();
-            }
-        }
-
-        @Override
-        public void returnMyInfoFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-        }
     }
 
 }

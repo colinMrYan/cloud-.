@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.login.api;
 
-import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.login.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
 import com.inspur.emmcloud.login.bean.GetMDMStateResult;
@@ -56,16 +55,6 @@ public class LoginAPIInterfaceImpl implements LoginAPIInterface {
 
     @Override
     public void returnReisterSMSCheckFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
-
-    }
-
-    @Override
-    public void returnMyInfoFail(String error, int errorCode) {
 
     }
 

@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.bean.LoginMoreBean;
 import com.inspur.emmcloud.login.web.WebService;
 import com.luojilab.component.componentlib.router.Router;
@@ -28,9 +29,9 @@ import butterknife.ButterKnife;
 public class LoginMoreActivity extends BaseActivity {
 
     private static final int SCAN_LOGIN_ENTERPRISE_INFO = 5;
-    @BindView(R.id.tv_current_enterprise_name)
+    @BindView(R2.id.tv_current_enterprise_name)
     TextView currentEnterpriseNameText;
-    @BindView(R.id.ll_reset_enterprise)
+    @BindView(R2.id.ll_reset_enterprise)
     LinearLayout resetEnterpriseLayout;
 
     @Override
@@ -63,16 +64,16 @@ public class LoginMoreActivity extends BaseActivity {
      * @param view
      */
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.ll_scan:
-                AppUtils.openScanCode(this, SCAN_LOGIN_ENTERPRISE_INFO);
-                break;
-            case R.id.ll_reset_enterprise:
-                showConfirmClearDialog();
-                break;
+        int i = view.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.ll_scan) {
+            AppUtils.openScanCode(this, SCAN_LOGIN_ENTERPRISE_INFO);
+
+        } else if (i == R.id.ll_reset_enterprise) {
+            showConfirmClearDialog();
+
         }
     }
 

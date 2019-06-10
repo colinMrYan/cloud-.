@@ -106,18 +106,17 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
     }
 
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.back_layout:
-            case R.id.scan_cancle_login_desktop_button:
-                finish();
-                break;
-            case R.id.scan_login_desktop_button:
-                if (!isLogin) {
-                    AppUtils.openScanCode(ScanQrCodeLoginActivity.this, SCAN_LOGIN_QRCODE_RESULT);
-                    return;
-                }
-                loginDesktopCloudPlus();
-                break;
+        int i = view.getId();
+        if (i == R.id.back_layout || i == R.id.scan_cancle_login_desktop_button) {
+            finish();
+
+        } else if (i == R.id.scan_login_desktop_button) {
+            if (!isLogin) {
+                AppUtils.openScanCode(ScanQrCodeLoginActivity.this, SCAN_LOGIN_QRCODE_RESULT);
+                return;
+            }
+            loginDesktopCloudPlus();
+
         }
 
     }

@@ -34,6 +34,7 @@ public class MDM extends LoginAPIInterfaceImpl {
     private String userCode;
     private String userName;
     private ArrayList<String> requireFieldList;
+    private boolean isImpActivity = false;//判断是否是ImpActivity调用的MDM，此页面进行特殊处理
 
     public MDM() {
 
@@ -54,6 +55,10 @@ public class MDM extends LoginAPIInterfaceImpl {
         this.tanentId = tanentId;
         this.userCode = userCode;
         this.getDeviceCheckResult = new GetDeviceCheckResult(state);
+    }
+
+    public void setImpActivity(boolean impActivity) {
+        isImpActivity = impActivity;
     }
 
     public void addOnMDMListener(MDMListener mdmListener) {
@@ -79,7 +84,7 @@ public class MDM extends LoginAPIInterfaceImpl {
                 if (mdmListener != null) {
                     mdmListener.MDMStatusPass(getDeviceCheckResult.getDoubleValidation());
                 }
-                if (context instanceof ImpActivity) {
+                if (isImpActivity) {
                     context.finish();
                 }
                 break;
@@ -134,7 +139,7 @@ public class MDM extends LoginAPIInterfaceImpl {
         bundle.putStringArrayList("requireFields", requireFieldList);
         intent.putExtra("bundle", bundle);
         context.startActivity(intent);
-        if (context instanceof ImpActivity) {
+        if (isImpActivity) {
             context.finish();
         }
     }
@@ -149,7 +154,7 @@ public class MDM extends LoginAPIInterfaceImpl {
         if (status == STATUS_DISABLE) {
             title = context.getString(Res.getStringID("device_disabled_cannot_login"));
         } else if (status == STATUS_WAITING_VERIFY) {
-            if (context instanceof ImpActivity) {
+            if (isImpActivity) {
                 title = context
                         .getString(Res.getStringID("register_submit_waitting_verify"));
             } else {
@@ -170,7 +175,7 @@ public class MDM extends LoginAPIInterfaceImpl {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO Auto-generated method stub
-                        if (context instanceof ImpActivity) {
+                        if (isImpActivity) {
                             context.finish();
                         }
                         if (mdmListener != null) {

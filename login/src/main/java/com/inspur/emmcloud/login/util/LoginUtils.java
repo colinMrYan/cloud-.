@@ -16,6 +16,8 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
 import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
@@ -62,6 +64,28 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         handMessage();
     }
 
+    public void autoLogin() {
+        String accessToken = PreferencesUtils.getString(BaseApplication.getInstance(), "accessToken", "");
+        String myInfo = PreferencesUtils.getString(BaseApplication.getInstance(), "myInfo", "");
+        String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
+        if (StringUtils.isBlank(accessToken)) {
+            if (handler != null) {
+                handler.sendEmptyMessage(LOGIN_FAIL);
+            }
+        } else if (StringUtils.isBlank(myInfo)) {
+            new LoginUtils(activity, handler).getMyInfo();
+        } else if (StringUtils.isBlank(languageJson)) {
+            new LoginUtils(activity, handler).getServerSupportLanguage();
+        } else if (!isMDMStatusPass) {
+            LanguageManager.getInstance().setLanguageLocal();
+            new LoginUtils(activity, handler).startMDM();
+        } else {
+            if (handler != null) {
+                handler.sendEmptyMessage(LOGIN_SUCCESS);
+            }
+        }
+    }
     /**
      *
      */
@@ -78,16 +102,16 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                         startMDM();
                         break;
                     case LOGIN_SUCCESS:
-                        if (loadingDlg != null && loadingDlg.isShowing()) {
-                            loadingDlg.dismiss();
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        if (handler != null) {
+                            handler.sendEmptyMessage(LOGIN_SUCCESS);
                         }
-                        handler.sendEmptyMessage(LOGIN_SUCCESS);
                         break;
                     case LOGIN_FAIL:
-                        if (loadingDlg != null && loadingDlg.isShowing()) {
-                            loadingDlg.dismiss();
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        if (handler != null) {
+                            handler.sendEmptyMessage(LOGIN_FAIL);
                         }
-                        handler.sendEmptyMessage(LOGIN_FAIL);
                         break;
                     default:
                         break;
@@ -162,7 +186,9 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
      */
     public void getMyInfo() {
         if (NetUtils.isNetworkConnected(activity)) {
-            apiServices.getMyInfo();
+            BaseModuleApiService baseModuleApiService = new BaseModuleApiService(activity);
+            baseModuleApiService.setAPIInterface(new BaseModuleWebService());
+            baseModuleApiService.getMyInfo();
         } else {
             clearLoginInfo();
             loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
@@ -313,48 +339,50 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
     }
 
-    @Override
-    public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
-        // TODO Auto-generated method stub
-        String myInfo = getMyInfoResult.getResponse();
-        String name = getMyInfoResult.getName();
-        PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, false);
-        PreferencesUtils.putString(activity, "userRealName", name);
-        PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
-        PreferencesUtils.putString(activity, "myInfo", myInfo);
-        PreferencesUtils.putBoolean(activity, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,
-                getMyInfoResult.getHasPassord());
-        ((BaseApplication) activity.getApplicationContext())
-                .setUid(getMyInfoResult.getID());
-        List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-        Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-        if (enterpriseList.size() == 0 && defaultEnterprise == null) {
-            ToastUtils.show(activity, R.string.login_user_not_bound_enterprise);
-            BaseApplication.getInstance().setAccessToken("");
-            PreferencesUtils.putString(BaseApplication.getInstance(), "accessToken", "");
-            loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
-        } else {
-            if (isLogin && enterpriseList.size() > 1) {
-                String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
-                //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面
-                if (StringUtils.isBlank(selectLoginEnterpriseId) || !isEnterpriseIdValid(enterpriseList, selectLoginEnterpriseId)) {
-                    LoadingDialog.dimissDlg(loadingDlg);
-                    showSelectEnterpriseDlg(enterpriseList);
-                    return;
+    private class BaseModuleWebService extends BaseModuleAPIInterfaceInstance {
+        @Override
+        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
+            // TODO Auto-generated method stub
+            String myInfo = getMyInfoResult.getResponse();
+            String name = getMyInfoResult.getName();
+            PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, false);
+            PreferencesUtils.putString(activity, "userRealName", name);
+            PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
+            PreferencesUtils.putString(activity, "myInfo", myInfo);
+            PreferencesUtils.putBoolean(activity, Constant.PREF_LOGIN_HAVE_SET_PASSWORD,
+                    getMyInfoResult.getHasPassord());
+            ((BaseApplication) activity.getApplicationContext())
+                    .setUid(getMyInfoResult.getID());
+            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
+            if (enterpriseList.size() == 0 && defaultEnterprise == null) {
+                ToastUtils.show(activity, R.string.login_user_not_bound_enterprise);
+                BaseApplication.getInstance().setAccessToken("");
+                PreferencesUtils.putString(BaseApplication.getInstance(), "accessToken", "");
+                loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
+            } else {
+                if (isLogin && enterpriseList.size() > 1) {
+                    String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+                    //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面
+                    if (StringUtils.isBlank(selectLoginEnterpriseId) || !isEnterpriseIdValid(enterpriseList, selectLoginEnterpriseId)) {
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        showSelectEnterpriseDlg(enterpriseList);
+                        return;
+                    }
                 }
+                ((BaseApplication) activity.getApplicationContext()).initTanent();
+                getServerSupportLanguage();
             }
-            ((BaseApplication) activity.getApplicationContext()).initTanent();
-            getServerSupportLanguage();
         }
-    }
 
 
-    @Override
-    public void returnMyInfoFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-        clearLoginInfo();
-        loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
-        WebServiceMiddleUtils.hand(activity, error, errorCode);
+        @Override
+        public void returnMyInfoFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
+            clearLoginInfo();
+            loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
+            WebServiceMiddleUtils.hand(activity, error, errorCode);
+        }
     }
 
 }

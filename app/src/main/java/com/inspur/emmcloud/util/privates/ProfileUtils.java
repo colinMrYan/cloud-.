@@ -8,13 +8,13 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.ClusterBean;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
@@ -70,7 +70,7 @@ public class ProfileUtils {
         if (NetUtils.isNetworkConnected(activity, false)) {
             loadingDialog.show(isShowLoadingDlg);
             saveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_ROUTER);
-            LoginAPIService apiServices = new LoginAPIService(activity);
+            BaseModuleApiService apiServices = new BaseModuleApiService(activity);
             apiServices.setAPIInterface(new WebService());
             apiServices.getMyInfo();
         } else {
@@ -120,9 +120,8 @@ public class ProfileUtils {
         return !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(activity);
     }
 
-    class WebService extends APIInterfaceInstance {
+    class WebService extends BaseModuleAPIInterfaceInstance {
         @Override
-
         public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
             LoadingDialog.dimissDlg(loadingDialog);
             List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();

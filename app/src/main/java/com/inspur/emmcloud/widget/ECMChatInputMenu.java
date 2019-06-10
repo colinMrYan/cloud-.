@@ -522,7 +522,7 @@ public class ECMChatInputMenu extends LinearLayout {
         } else {
             Intent intent = new Intent();
             intent.setClass(getContext(), MembersActivity.class);
-            intent.putExtra("title", getContext().getString(com.inspur.basemodule.R.string.voice_communication_choice_members));
+            intent.putExtra("title", getContext().getString(R.string.voice_communication_choice_members));
             intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
             intent.putExtra("cid", cid);
             getContext().startActivity(intent);

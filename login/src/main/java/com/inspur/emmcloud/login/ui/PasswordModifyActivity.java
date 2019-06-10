@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -16,6 +17,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.widget.keyboardview.EmmSecurityKeyboard;
@@ -26,16 +28,16 @@ import butterknife.ButterKnife;
 /**
  * 修改密码
  */
-
+@Route(path = "/login/password_modify")
 public class PasswordModifyActivity extends BaseActivity implements View.OnTouchListener {
 
-    @BindView(R.id.bt_save)
+    @BindView(R2.id.bt_save)
     Button saveBtn;
-    @BindView(R.id.et_password_origin)
+    @BindView(R2.id.et_password_origin)
     EditText passwordOriginEdit;
-    @BindView(R.id.et_password_new)
+    @BindView(R2.id.et_password_new)
     EditText passwordNewEdit;
-    @BindView(R.id.et_password_confirm)
+    @BindView(R2.id.et_password_confirm)
     EditText passwordConfirmEdit;
     private String passwordOrigin;
     private String passwordNew;
@@ -71,39 +73,39 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_save:
-                if (!passwordNew.equals(passwordConfirm)) {
-                    ToastUtils.show(PasswordModifyActivity.this, R.string.modify_not_same);
-                    return;
-                }
-                if (passwordNew.equals(passwordOrigin)) {
-                    ToastUtils.show(PasswordModifyActivity.this, R.string.modify_new_old_same);
-                }
-                if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
-                    ToastUtils.show(BaseApplication.getInstance(), R.string.modify_password_invalid);
-                    return;
-                }
-                modifyPassword();
-                break;
-            case R.id.ibt_back:
-                finish();
-                break;
+        int i = v.getId();
+        if (i == R.id.bt_save) {
+            if (!passwordNew.equals(passwordConfirm)) {
+                ToastUtils.show(PasswordModifyActivity.this, R.string.modify_not_same);
+                return;
+            }
+            if (passwordNew.equals(passwordOrigin)) {
+                ToastUtils.show(PasswordModifyActivity.this, R.string.modify_new_old_same);
+            }
+            if (passwordNew.length() < 6 || passwordNew.length() > 16 || !FomatUtils.isPasswrodStrong(passwordNew)) {
+                ToastUtils.show(BaseApplication.getInstance(), R.string.modify_password_invalid);
+                return;
+            }
+            modifyPassword();
+
+        } else if (i == R.id.ibt_back) {
+            finish();
+
         }
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch (v.getId()) {
-            case R.id.et_password_origin:
-                emmSecurityKeyboard.showSecurityKeyBoard(passwordOriginEdit);
-                break;
-            case R.id.et_password_new:
-                emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
-                break;
-            case R.id.et_password_confirm:
-                emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
-                break;
+        int i = v.getId();
+        if (i == R.id.et_password_origin) {
+            emmSecurityKeyboard.showSecurityKeyBoard(passwordOriginEdit);
+
+        } else if (i == R.id.et_password_new) {
+            emmSecurityKeyboard.showSecurityKeyBoard(passwordNewEdit);
+
+        } else if (i == R.id.et_password_confirm) {
+            emmSecurityKeyboard.showSecurityKeyBoard(passwordConfirmEdit);
+
         }
         return false;
     }

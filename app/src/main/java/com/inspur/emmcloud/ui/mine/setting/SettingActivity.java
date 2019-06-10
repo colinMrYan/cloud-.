@@ -23,6 +23,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -446,6 +447,7 @@ public class SettingActivity extends BaseActivity {
                         WSAPIService.getInstance().sendAppStatus("REMOVED");
                     } else {
                         MyApplication.getInstance().signout();
+                        LogUtils.jasonDebug("1111111111111");
                     }
                     stopAppService();
                 })
@@ -548,6 +550,7 @@ public class SettingActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
+            EventBus.getDefault().unregister(this);
             LoadingDialog.dimissDlg(loadingDlg);
             MyApplication.getInstance().signout();
             stopAppService();

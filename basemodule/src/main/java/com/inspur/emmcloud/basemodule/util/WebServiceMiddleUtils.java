@@ -2,9 +2,9 @@ package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 
-import com.inspur.basemodule.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.bean.ECMErrorBean;
 import com.inspur.emmcloud.basemodule.bean.EMMErrorBean;
 
