@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 
-import com.inspur.basemodule.R;
+import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.EmmPermission;

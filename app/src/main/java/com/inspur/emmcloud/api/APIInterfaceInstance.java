@@ -2,7 +2,6 @@ package com.inspur.emmcloud.api;
 
 
 import com.inspur.emmcloud.basemodule.bean.AppException;
-import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
@@ -13,8 +12,6 @@ import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.appcenter.GetMyAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
-import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
-import com.inspur.emmcloud.bean.appcenter.GetRegisterResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
@@ -64,12 +61,6 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.bean.login.GetLoginResult;
-import com.inspur.emmcloud.bean.login.GetMDMStateResult;
-import com.inspur.emmcloud.bean.login.GetSignoutResult;
-import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -108,42 +99,13 @@ import java.util.Calendar;
 import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
-    public APIInterfaceInstance() {
-        super();
-    }
 
-    @Override
-    public void returnOauthSignInSuccess(GetLoginResult getLoginResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnOauthSignInFail(String error, int errorCode, String headerLimitRemaining, String headerRetryAfter) {
-
-    }
-
-    @Override
-    public void returnRefreshTokenSuccess(GetLoginResult getLoginResult) {
-
-    }
-
-    @Override
-    public void returnRefreshTokenFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
-    }
 
     @Override
     public void returnUploadExceptionSuccess(List<AppException> appExceptionList) {
 
     }
 
-    @Override
-    public void returnDeviceCheckFail(String error, int errorCode) {
-    }
 
     @Override
     public void returnUnBindDeviceSuccess() {
@@ -192,15 +154,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
     }
 
-    @Override
-    public void returnSignoutSuccess(GetSignoutResult getSignoutResult) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void returnSignoutFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-    }
 
     @Override
     public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
@@ -254,54 +207,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnLoginSMSCaptchaSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnLoginSMSCaptchaFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnRegisterSMSFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnReisterSMSCheckSuccess(
-            GetRegisterCheckResult getRegisterResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnReisterSMSCheckFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnMyInfoFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnUploadMyHeadSuccess(
@@ -883,17 +788,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnModifyPasswordSuccess() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnModifyPasswordFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity) {
@@ -1027,15 +921,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnRobotByIdFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnResetPasswordSuccess() {
-    }
-
-    @Override
-    public void returnResetPasswordFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
     }
 
     @Override
@@ -1193,35 +1078,7 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
 
-    }
-
-    @Override
-    public void returnMDMStateFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult) {
-
-    }
-
-    @Override
-    public void returnUploadMDMInfoFail() {
-
-    }
-
-    @Override
-    public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
-
-    }
-
-    @Override
-    public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult) {
@@ -1493,14 +1350,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadPushInfoResultFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnFaceLoginGSSuccess() {
-    }
-
-    @Override
-    public void returnFaceLoginGSFail(String error, int errorCode) {
     }
 
     @Override

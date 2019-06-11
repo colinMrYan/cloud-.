@@ -4,12 +4,13 @@ import android.content.pm.ActivityInfo;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 
-
+@Route(path = "/web/main")
 public class ImpActivity extends ImpFragmentBaseActivity {
 
     public static final int DO_NOTHING_RESULTCODE = 5;

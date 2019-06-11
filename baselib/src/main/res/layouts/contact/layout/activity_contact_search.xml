@@ -59,7 +59,7 @@
         android:layout_below="@id/rl_header"
         android:background="@color/content_bg">
 
-        <com.inspur.emmcloud.widget.MaxHightScrollView
+        <com.inspur.emmcloud.baselib.widget.MaxHightScrollView
             android:id="@+id/search_edit_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,13 +76,13 @@
                 android:paddingRight="10dp"
                 android:paddingTop="3dp">
 
-                <com.inspur.emmcloud.widget.FlowLayout
+                <com.inspur.emmcloud.baselib.widget.FlowLayout
                     android:id="@+id/flowlayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical" />
             </RelativeLayout>
-        </com.inspur.emmcloud.widget.MaxHightScrollView>
+        </com.inspur.emmcloud.baselib.widget.MaxHightScrollView>
 
         <View
             android:id="@+id/space_edit"
@@ -170,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:background="@color/white">
 
-                        <com.inspur.emmcloud.widget.CircleTextImageView
+                        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                             android:id="@+id/struct_img"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
@@ -208,7 +208,7 @@
                             android:layout_marginLeft="55dp"
                             android:background="@color/color_list_divider" />
 
-                        <com.inspur.emmcloud.widget.CircleTextImageView
+                        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                             android:id="@+id/channel_group_img"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
@@ -273,7 +273,7 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <com.inspur.emmcloud.widget.NoHorScrollView
+        <com.inspur.emmcloud.baselib.widget.NoHorScrollView
             android:id="@+id/pop_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -411,7 +411,7 @@
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
-        </com.inspur.emmcloud.widget.NoHorScrollView>
+        </com.inspur.emmcloud.baselib.widget.NoHorScrollView>
     </RelativeLayout>
 
 </RelativeLayout>

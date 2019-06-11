@@ -21,7 +21,7 @@
             android:paddingRight="20dp"
             android:paddingTop="10dp">
 
-            <com.inspur.emmcloud.widget.CircleTextImageView
+            <com.inspur.emmcloud.baselib.widget.CircleTextImageView
                 android:id="@+id/sender_photo_img"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -64,7 +64,7 @@
             android:layout_below="@id/line_view"></RelativeLayout>
     </RelativeLayout>
 
-    <com.inspur.emmcloud.widget.ScrollViewWithListView
+    <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
         android:id="@+id/comment_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

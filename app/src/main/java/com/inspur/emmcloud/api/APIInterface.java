@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.basemodule.bean.AppException;
-import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
@@ -12,8 +11,6 @@ import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.appcenter.GetMyAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
-import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
-import com.inspur.emmcloud.bean.appcenter.GetRegisterResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
@@ -63,12 +60,6 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.bean.login.GetLoginResult;
-import com.inspur.emmcloud.bean.login.GetMDMStateResult;
-import com.inspur.emmcloud.bean.login.GetSignoutResult;
-import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
@@ -108,14 +99,6 @@ import java.util.List;
 
 public interface APIInterface {
 
-    void returnOauthSignInSuccess(GetLoginResult getLoginResult);
-
-    void returnOauthSignInFail(String error, int errorCode, String headerLimitRemaining, String headerRetryAfter);
-
-    void returnRefreshTokenSuccess(GetLoginResult getLoginResult);
-
-    void returnRefreshTokenFail(String error, int errorCode);
-
     void returnAllAppsSuccess(GetAllAppResult getAllAppResult);
 
     void returnAllAppsFail(String error, int errorCode);
@@ -140,10 +123,6 @@ public interface APIInterface {
 
     void returnMyAppFail(String error, int errorCode);
 
-    void returnSignoutSuccess(GetSignoutResult getSignoutResult);
-
-    void returnSignoutFail(String error, int errorCode);
-
     void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck);
 
     void returnUpgradeFail(String error, boolean isManualCheck, int errorCode);
@@ -156,21 +135,9 @@ public interface APIInterface {
 
     void returnSearchAppMoreFail(String error, int errorCode);
 
-    void returnLoginSMSCaptchaSuccess();
 
-    void returnLoginSMSCaptchaFail(String error, int errorCode);
 
-    void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult);
 
-    void returnRegisterSMSFail(String error, int errorCode);
-
-    void returnReisterSMSCheckSuccess(GetRegisterCheckResult getRegisterResult);
-
-    void returnReisterSMSCheckFail(String error, int errorCode);
-
-    void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult);
-
-    void returnMyInfoFail(String error, int errorCode);
 
     void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult, String filePath);
 
@@ -368,9 +335,7 @@ public interface APIInterface {
 
     void returnDndFail(String error, int errorCode);
 
-    void returnModifyPasswordSuccess();
 
-    void returnModifyPasswordFail(String error, int errorCode);
 
     void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity);
 
@@ -430,9 +395,7 @@ public interface APIInterface {
 
     void returnRobotByIdFail(String error, int errorCode);
 
-    void returnResetPasswordSuccess();
 
-    void returnResetPasswordFail(String error, int errorCode);
 
     void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult);
 
@@ -486,25 +449,14 @@ public interface APIInterface {
 
     void returnUnBindDeviceFail(String error, int errorCode);
 
-    void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult);
 
-    void returnMDMStateFail(String error, int errorCode);
-
-    void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult);
-
-    void returnUploadMDMInfoFail();
 
     void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
 
     void returnSplashPageInfoFail(String error, int errorCode);
 
-    void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean);
 
-    void returnLoginDesktopCloudPlusFail(String error, int errorCode);
 
-    void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult);
-
-    void returnDeviceCheckFail(String error, int errorCode);
 
     void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult);
 
@@ -641,9 +593,7 @@ public interface APIInterface {
 
     void returnOpenDecideBotRequestFail(String error, int errorCode);
 
-    void returnFaceLoginGSSuccess();
 
-    void returnFaceLoginGSFail(String error, int errorCode);
 
     void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion);
 

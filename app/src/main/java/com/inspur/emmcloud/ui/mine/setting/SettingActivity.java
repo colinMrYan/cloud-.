@@ -24,10 +24,14 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.SwitchView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -39,9 +43,8 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.basemodule.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
@@ -54,11 +57,8 @@ import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.SwitchView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -177,7 +177,6 @@ public class SettingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         notificationSwitch.setChecked(getSwitchOpen());
-        switchPush();
     }
 
     /**
@@ -195,11 +194,11 @@ public class SettingActivity extends BaseActivity {
 
     private void setPushStatus(boolean openPush) {
         if(openPush){
-            PushManagerUtils.getInstance().stopPush();
-            PushManagerUtils.getInstance().unregisterPushId2Emm();
-        }else {
             PushManagerUtils.getInstance().startPush();
             PushManagerUtils.getInstance().registerPushId2Emm();
+        } else {
+            PushManagerUtils.getInstance().stopPush();
+            PushManagerUtils.getInstance().unregisterPushId2Emm();
         }
     }
 
@@ -448,6 +447,7 @@ public class SettingActivity extends BaseActivity {
                         WSAPIService.getInstance().sendAppStatus("REMOVED");
                     } else {
                         MyApplication.getInstance().signout();
+                        LogUtils.jasonDebug("1111111111111");
                     }
                     stopAppService();
                 })
@@ -551,6 +551,7 @@ public class SettingActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
+            EventBus.getDefault().unregister(this);
             LoadingDialog.dimissDlg(loadingDlg);
             MyApplication.getInstance().signout();
             stopAppService();
@@ -600,10 +601,6 @@ public class SettingActivity extends BaseActivity {
 
         }
 
-        @Override
-        public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
-            super.returnDeviceCheckSuccess(getDeviceCheckResult);
-        }
 
         @Override
         public void returnUpdateExperienceUpgradeFlagSuccess() {

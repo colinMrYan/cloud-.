@@ -32,7 +32,7 @@
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
-    <com.inspur.emmcloud.widget.NoHorScrollView
+    <com.inspur.emmcloud.baselib.widget.NoHorScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/rl_header"
@@ -243,6 +243,6 @@
 
 
         </LinearLayout>
-    </com.inspur.emmcloud.widget.NoHorScrollView>
+    </com.inspur.emmcloud.baselib.widget.NoHorScrollView>
 
 </RelativeLayout>

@@ -203,7 +203,7 @@
                                     android:textColor="#666666" />
                             </RelativeLayout>
 
-                            <com.inspur.emmcloud.widget.FlowLayout
+                            <com.inspur.emmcloud.baselib.widget.FlowLayout
                                 android:id="@+id/fl_mail_receiver_expand"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -268,7 +268,7 @@
                                     android:textColor="#666666" />
                             </RelativeLayout>
 
-                            <com.inspur.emmcloud.widget.FlowLayout
+                            <com.inspur.emmcloud.baselib.widget.FlowLayout
                                 android:id="@+id/fl_mail_cc_expand"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -283,14 +283,14 @@
                         android:background="#C8C7CC"></View>
                 </LinearLayout>
 
-                <com.inspur.emmcloud.widget.ScrollViewWithListView
+                <com.inspur.emmcloud.baselib.widget.ScrollViewWithListView
                     android:id="@+id/lv_attachment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_mail_header"
-                    android:divider="#00000000"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+                    android:divider="#00000000"></com.inspur.emmcloud.baselib.widget.ScrollViewWithListView>
 
-                <com.inspur.emmcloud.widget.NoScrollWebView
+                <com.inspur.emmcloud.baselib.widget.NoScrollWebView
                     android:id="@+id/wv_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -300,7 +300,7 @@
                     android:layout_marginTop="10dp"
                     android:paddingBottom="200dp">
 
-                </com.inspur.emmcloud.widget.NoScrollWebView>
+                </com.inspur.emmcloud.baselib.widget.NoScrollWebView>
 
                 <ProgressBar
                     android:id="@+id/progress_bar_load"

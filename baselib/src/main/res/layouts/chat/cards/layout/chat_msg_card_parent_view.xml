@@ -28,12 +28,12 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <com.inspur.emmcloud.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
             android:id="@+id/iv_sender_photo_left"
             android:layout_width="43dp"
             android:layout_height="43dp" />
 
-        <com.inspur.emmcloud.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
             android:id="@+id/iv_sender_photo_right"
             android:layout_width="43dp"
             android:layout_height="43dp"
@@ -78,14 +78,14 @@
                         android:src="@drawable/ic_chat_msg_send_fail"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CustomLoadingView
+                    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
                         android:id="@+id/qlv_sending"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:color="#666666"
                         android:visibility="gone"
-                        app:cus_loading_view_size="18dp" />
+                        app:cus_loading_view_size="18dp"
+                        app:loading_color="#666666" />
                 </RelativeLayout>
 
                 <RelativeLayout

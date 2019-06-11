@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-//apply from: "../node_modules/react-native/react.gradle"
-//apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
 
 android {
     compileSdkVersion versions.compileSdk
@@ -86,7 +84,11 @@ android {
         }
     }
 
-
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -106,7 +108,6 @@ dependencies {
     api deps.gson
     api deps.fastjson
     api deps.qmui
-    api deps.react
     api deps.commonsLang3
     api deps.amapLocation
 
@@ -149,12 +150,7 @@ dependencies {
         exclude group: 'com.nineoldandroids', module: 'library'
     }
     api deps.SegmentControlView
-    // React Naive Components
-    api project(':react-native-smart-swipe-refresh-layout')
-    api project(':react-native-picker')
-    api project(':react-native-svg')
-    api project(':react-native-vector-icons')
-    api project(':react-native-navigation')
+
 
     androidTestApi(deps.support.test.runner) {
         exclude module: 'support-annotations'

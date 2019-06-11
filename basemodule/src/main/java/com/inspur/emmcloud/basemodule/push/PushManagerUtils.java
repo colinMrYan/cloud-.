@@ -19,7 +19,6 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 /**
  * Created by chenmch on 2019/3/22.
  */
-
 public class PushManagerUtils {
     private static PushManagerUtils mInstance;
     public static PushManagerUtils getInstance() {
@@ -31,13 +30,6 @@ public class PushManagerUtils {
             }
         }
         return mInstance;
-    }
-
-    /**
-     * 清空pushFlag
-     */
-    public void clearPushFlag(){
-        setPushFlag(BaseApplication.getInstance(), "");
     }
 
     /**
@@ -58,12 +50,8 @@ public class PushManagerUtils {
             if (!StringUtils.isBlank(registerId)){
                 pushId = registerId + Constant.PUSH_XIAOMI_COM;
             }
-        }
-        if (StringUtils.isBlank(pushId)){
+        } else {
             pushId = PreferencesUtils.getString(context, Constant.JPUSH_REGISTER_ID, "");
-//            if (StringUtils.isBlank(pushId)){
-//                setPushFlag(context, Constant.JPUSH_FLAG);
-//            }
         }
         if (StringUtils.isBlank(pushId)) {
             pushId = "UNKNOWN";
@@ -83,7 +71,7 @@ public class PushManagerUtils {
         // 小米 com.xiaomi.xmpush
         // 魅族 com.meizu.api - push
         String pushProvider = "";
-        String pushFlag = getPushFlag(context);
+        String pushFlag = AppUtils.GetChangShang().toLowerCase();
         switch (pushFlag) {
             case Constant.HUAWEI_FLAG:
                 pushProvider = "com.hicloud.push";
@@ -101,25 +89,6 @@ public class PushManagerUtils {
         return pushProvider;
     }
 
-    /**
-     * 设置pushFlag
-     *
-     * @param context
-     * @param pushFlag
-     */
-    public void setPushFlag(Context context, String pushFlag) {
-        PreferencesUtils.putString(context, Constant.PUSH_FLAG, pushFlag);
-    }
-
-    /**
-     * 获取PUSH_FLAG
-     *
-     * @param context
-     * @return
-     */
-    public String getPushFlag(Context context) {
-        return PreferencesUtils.getString(context, Constant.PUSH_FLAG, "");
-    }
 
     /**
      * 设置极光推送状态
@@ -135,7 +104,7 @@ public class PushManagerUtils {
                 JPushInterface.resumePush(BaseApplication.getInstance());
             }
             // 设置开启日志,发布时请关闭日志
-            JPushInterface.setDebugMode(true);
+            JPushInterface.setDebugMode(AppUtils.isApkDebugable(BaseApplication.getInstance()));
         }else {
             JPushInterface.stopPush(BaseApplication.getInstance());
         }

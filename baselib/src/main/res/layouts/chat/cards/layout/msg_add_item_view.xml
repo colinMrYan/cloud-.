@@ -5,7 +5,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.inspur.emmcloud.widget.SquareLayout
+    <com.inspur.emmcloud.baselib.widget.SquareLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="2dp">
@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
 
-    </com.inspur.emmcloud.widget.SquareLayout>
+    </com.inspur.emmcloud.baselib.widget.SquareLayout>
 
 
     <TextView

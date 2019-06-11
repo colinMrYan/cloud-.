@@ -31,7 +31,7 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
 
-        <com.inspur.emmcloud.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
             android:id="@+id/img_user_head"
             android:layout_width="120dp"
             android:layout_height="120dp"
@@ -261,14 +261,14 @@
         android:layout_marginBottom="30dp"
         android:gravity="center_horizontal">
 
-        <com.inspur.emmcloud.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
             android:id="@+id/img_hung_up"
             android:layout_width="76dp"
             android:layout_height="76dp"
             android:onClick="onClick"
             android:src="@drawable/icon_hung_up" />
 
-        <com.inspur.emmcloud.widget.CircleTextImageView
+        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
             android:id="@+id/img_answer_the_phone"
             android:layout_width="76dp"
             android:layout_height="76dp"

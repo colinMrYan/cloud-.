@@ -15,11 +15,10 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
-import com.inspur.basemodule.BuildConfig;
-import com.inspur.basemodule.R;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.R;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -888,7 +887,7 @@ public class FileUtils {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //判断是否是AndroidN以及更高的版本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.setDataAndType(contentUri, mime);
         } else {
@@ -934,7 +933,7 @@ public class FileUtils {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         //判断是否是AndroidN以及更高的版本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             intent.setDataAndType(contentUri, mime);
         } else {
@@ -943,7 +942,7 @@ public class FileUtils {
         if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
             context.startActivity(intent);
         } else {
-            Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
             intent.setDataAndType(contentUri, "text/plain");
             if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
                 context.startActivity(intent);

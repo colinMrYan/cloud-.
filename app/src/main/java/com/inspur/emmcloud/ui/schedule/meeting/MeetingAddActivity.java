@@ -20,30 +20,27 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.basemodule.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
-import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.DateTimePickerDialog;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -191,7 +188,6 @@ public class MeetingAddActivity extends BaseActivity {
         }
         showSelectUser(attendeeLayout, attendeeSearchModelList);
         setMeetingTime();
-        getIsMeetingAdmin();
     }
 
 
@@ -558,29 +554,8 @@ public class MeetingAddActivity extends BaseActivity {
 
     }
 
-    /**
-     * 判断当前用户是否会议室管理员
-     */
-    private void getIsMeetingAdmin() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            apiService.getIsMeetingAdmin(MyApplication.getInstance().getUid());
-        }
-    }
 
     private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-                    getIsAdmin.isAdmin());
-        }
-
-        @Override
-        public void returnIsMeetingAdminFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-        }
-
         @Override
         public void returnAddMeetingSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);

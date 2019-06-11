@@ -64,6 +64,7 @@
     <string name="app_update_prepare">Ready to download</string>
     <string name="app_update_error">Update failed</string>
     <string name="app_update_loaded">Downloaded:</string>
+    <string name="unsupport_type">Unsupported Type</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
@@ -320,8 +321,8 @@
     <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
     <string name="chat_conversation_unread_count">%1$d new messages</string>
     <string name="chat_long_click_copy">Copy</string>
-    <string name="chat_long_click_transmit">Transmit</string>
-    <string name="chat_long_click_schedule">Schedule</string>
+    <string name="chat_long_click_transmit">Forward</string>
+    <string name="chat_long_click_schedule">Add to Schedule</string>
     <string name="chat_long_click_copy_text">Copy text</string>
 
     <!-- 会议卡片 -->

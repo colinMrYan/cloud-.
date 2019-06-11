@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/scan_result_color"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height">
+
+        <TextView
+            android:id="@+id/back_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:onClick="onClick"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/close"
+            android:textColor="@color/comment_file_color"
+            android:textSize="@dimen/content_title_textsize" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="120dp"
+        android:layout_height="99dp"
+        android:layout_below="@id/rl_header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="109dp"
+        android:src="@drawable/icon_default" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
+        android:text="GS客户端登录确认"
+        android:textColor="@color/normal_day"
+        android:textSize="17sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="120dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
+            android:id="@+id/login_btn"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:text="登录"
+            android:textColor="#0f7bca"
+            app:cus_borderColor="#0f7bca"
+            app:cus_borderWidth="0.6dp"
+            app:cus_radius="4dp" />
+
+        <TextView
+            android:id="@+id/login_cancel_text"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:padding="10dp"
+            android:text="取消登录"
+            android:textColor="@color/app_dialog_title_color" />
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -14,13 +14,13 @@
         app:riv_corner_radius="6dp"
         app:riv_oval="false" />
 
-    <com.inspur.emmcloud.widget.CustomLoadingView
+    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
         android:id="@+id/qlv_downloading_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:color="#999999"
-        app:cus_loading_view_size="22dp" />
+        app:cus_loading_view_size="22dp"
+        app:loading_color="#999999" />
 
     <TextView
         android:id="@+id/long_img_text"

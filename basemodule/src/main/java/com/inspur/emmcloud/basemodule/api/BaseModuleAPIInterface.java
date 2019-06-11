@@ -2,6 +2,7 @@ package com.inspur.emmcloud.basemodule.api;
 
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.bean.GetLanguageResult;
+import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
 
@@ -27,4 +28,9 @@ public interface BaseModuleAPIInterface {
     void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult);
 
     void returnUploadPushInfoResultFail(String error, int errorCode);
+
+    void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult);
+
+    void returnMyInfoFail(String error, int errorCode);
+
 }

@@ -25,7 +25,8 @@ import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.inspur.emmcloud.login.login.LoginService;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -373,7 +374,11 @@ public class WebSocketPush {
                 } else if (code == 401) {
                     closeWebsocket();
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
-                    OauthUtils.getInstance().refreshToken(null, System.currentTimeMillis());
+                    Router router = Router.getInstance();
+                    if (router.getService(LoginService.class.getSimpleName()) != null) {
+                        LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+                        service.refreshToken(null, System.currentTimeMillis());
+                    }
                 }
                 isWebsocketConnecting = false;
             }

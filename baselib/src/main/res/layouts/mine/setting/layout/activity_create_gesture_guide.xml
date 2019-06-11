@@ -60,7 +60,7 @@
             android:text="@string/create_gesture_guid"
             android:textSize="16sp" />
 
-        <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
+        <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
             android:id="@+id/bt_create_gesture"
             android:layout_width="match_parent"
             android:layout_height="42dp"

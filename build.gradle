@@ -120,7 +120,8 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath deps.jimu.gradle_plugin
+        classpath deps.android.gradlePlugin
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
         classpath deps.butterknife.gradle_plugin
 

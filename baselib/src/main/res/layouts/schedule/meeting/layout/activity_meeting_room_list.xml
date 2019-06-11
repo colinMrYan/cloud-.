@@ -135,7 +135,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+        <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -148,6 +148,6 @@
                 android:divider="@null"
                 android:listSelector="#00000000" />
 
-        </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+        </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
     </RelativeLayout>
 </RelativeLayout>

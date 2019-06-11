@@ -412,6 +412,7 @@
     <!--************ CustomLoading ***********-->
     <declare-styleable name="CusLoadingView">
         <attr name="cus_loading_view_size" format="dimension" />
+        <attr name="loading_color" format="color" />
     </declare-styleable>
     <attr name="CusLoadingStyle" format="reference" />
 </resources>

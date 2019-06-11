@@ -14,6 +14,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 
 import java.util.ArrayList;

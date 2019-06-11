@@ -253,7 +253,7 @@
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
-                <com.inspur.emmcloud.widget.roundbutton.CustomRoundButton
+                <com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton
                     android:id="@+id/refresh_btn"
                     android:layout_width="100dp"
                     android:layout_height="40dp"

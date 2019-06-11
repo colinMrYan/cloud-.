@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
-import com.inspur.emmcloud.widget.CircleTextImageView;
 
 import java.util.List;
 

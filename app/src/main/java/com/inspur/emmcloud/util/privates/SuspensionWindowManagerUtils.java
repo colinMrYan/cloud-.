@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.ui.chat.ChannelVoiceCommunicationActivity;
 
 /**
@@ -185,7 +186,7 @@ public class SuspensionWindowManagerUtils {
         intent.setClass(windowContext, ChannelVoiceCommunicationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.COME_BACK_FROM_SERVICE);
-        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer)));
+        intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(chronometer.getText().toString())));
         windowContext.startActivity(intent);
     }
 }

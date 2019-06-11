@@ -62,7 +62,7 @@
     </RelativeLayout>
 
 
-    <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+    <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -75,10 +75,10 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:horizontalSpacing="25dp"
-            android:listSelector="@android:color/transparent"
             android:numColumns="4"
+            android:divider="@null"
             android:scrollbars="none" />
-    </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+    </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
 
     <RelativeLayout
         android:id="@+id/my_app_recommend_app_widget_layout"

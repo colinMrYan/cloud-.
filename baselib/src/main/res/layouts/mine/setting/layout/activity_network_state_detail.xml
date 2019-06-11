@@ -102,7 +102,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true">
 
-                        <com.inspur.emmcloud.widget.CustomLoadingView
+                        <com.inspur.emmcloud.baselib.widget.CustomLoadingView
                             android:id="@+id/qv_checking_hard_loading"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
@@ -236,7 +236,7 @@
                         android:scaleType="centerCrop"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CustomLoadingView
+                    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
                         android:id="@+id/qv_checking_portal_loading"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
@@ -350,7 +350,7 @@
                         android:background="@drawable/ic_netchecking_ok"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CustomLoadingView
+                    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
                         android:id="@+id/qv_ping_inspur_loading"
                         android:layout_width="13dp"
                         android:layout_height="13dp"
@@ -384,7 +384,7 @@
                         android:background="@drawable/ic_netchecking_ok"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CustomLoadingView
+                    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
                         android:id="@+id/qv_ping_baidu_loading"
                         android:layout_width="13dp"
                         android:layout_height="13dp"
@@ -418,7 +418,7 @@
                         android:background="@drawable/ic_netchecking_ok"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CustomLoadingView
+                    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
                         android:id="@+id/qv_ping_ali_loading"
                         android:layout_width="13dp"
                         android:layout_height="13dp"
@@ -453,7 +453,7 @@
                         android:background="@drawable/ic_netchecking_ok"
                         android:visibility="gone" />
 
-                    <com.inspur.emmcloud.widget.CustomLoadingView
+                    <com.inspur.emmcloud.baselib.widget.CustomLoadingView
                         android:id="@+id/qv_ping_cloudpluse_loading"
                         android:layout_width="13dp"
                         android:layout_height="13dp"
