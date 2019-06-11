@@ -2,13 +2,21 @@ package com.inspur.emmcloud.basemodule.application;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.service.PVCollectService;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
+import com.inspur.emmcloud.login.app.AppService;
 import com.inspur.emmcloud.login.appcenter.AppcenterService;
+import com.inspur.emmcloud.login.setting.SettingService;
 import com.luojilab.component.componentlib.router.Router;
 
 /**
@@ -30,19 +38,19 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         currentActivity = activity;
         if (count == 0) {
             BaseApplication.getInstance().setIsActive(true);
-//            if (BaseApplication.getInstance().isHaveLogin()) {
-//                long appBackgroundTime = PreferencesUtils.getLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
-//                //进入后台后重新进入应用需要间隔3分钟以上才弹出二次验证
-//                if (System.currentTimeMillis() - appBackgroundTime >= 180000) {
-//                    showFaceOrGestureLock();
-//                }
-//                uploadMDMInfo();
-//                Router router = Router.getInstance();
-//                if (router.getService(AppService.class.getSimpleName()) != null) {
-//                    AppService service = (AppService) router.getService(AppService.class.getSimpleName());
-//                    service.getAppBadgeCountFromServer();
-//                }
-//            }
+            if (BaseApplication.getInstance().isHaveLogin()) {
+                long appBackgroundTime = PreferencesUtils.getLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
+                //进入后台后重新进入应用需要间隔3分钟以上才弹出二次验证
+                if (System.currentTimeMillis() - appBackgroundTime >= 180000) {
+                    showFaceOrGestureLock();
+                }
+                uploadMDMInfo();
+                Router router = Router.getInstance();
+                if (router.getService(AppService.class.getSimpleName()) != null) {
+                    AppService service = (AppService) router.getService(AppService.class.getSimpleName());
+                    service.getAppBadgeCountFromServer();
+                }
+            }
         }
         count++;
 
@@ -65,7 +73,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, System.currentTimeMillis());
             BaseApplication.getInstance().setIsActive(false);
             if (BaseApplication.getInstance().isHaveLogin()) {
-//                startUploadPVCollectService(BaseApplication.getInstance());
+                startUploadPVCollectService(BaseApplication.getInstance());
                 startSyncCommonAppService();
                 new ClientIDUtils(BaseApplication.getInstance()).upload();
             }
@@ -88,7 +96,46 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         return currentActivity;
     }
 
+    /**
+     * 弹出进入app安全验证界面
+     */
+    private void showFaceOrGestureLock() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class.getSimpleName()) != null) {
+            SettingService settingService = (SettingService) router.getService(SettingService.class.getSimpleName());
+            boolean isSetFaceOrGestureLock = settingService.isSetFaceOrGestureLock();
+            if (isSetFaceOrGestureLock) {
+                BaseApplication.getInstance().setSafeLock(true);
+                new Handler().postDelayed(() -> {
+                    settingService.showFaceOrGestureLock();
+                }, 200);
+            }
 
+        }
+    }
+
+    /**
+     * 上传MDM需要的设备信息
+     */
+    private void uploadMDMInfo() {
+        Router router = Router.getInstance();
+        if (router.getService(SettingService.class.getSimpleName()) != null) {
+            SettingService settingService = (SettingService) router.getService(SettingService.class.getSimpleName());
+            settingService.uploadMDMInfo();
+        }
+    }
+
+    /***
+     * 打开app应用行为分析上传的Service;
+     */
+    private void startUploadPVCollectService(Context context) {
+        // TODO Auto-generated method stub
+        if (!AppUtils.isServiceWork(context, PVCollectService.class.getName()) && (!DbCacheUtils.isDbNull())) {
+            Intent intent = new Intent();
+            intent.setClass(context, PVCollectService.class);
+            context.startService(intent);
+        }
+    }
 
 
     /***

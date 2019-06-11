@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -40,6 +41,8 @@ public class AboutActivity extends BaseActivity {
     ImageView logoImg;
     @BindView(R.id.rl_protocol)
     RelativeLayout protocolLayout;
+    @BindView(R.id.rl_invite_friends)
+    RelativeLayout inviteFriendsLayout;
     private Handler handler;
 
     @Override
@@ -49,6 +52,7 @@ public class AboutActivity extends BaseActivity {
         appVersionText.setText(AppUtils.getAppName(this) + "  " + version);
         ImageDisplayUtils.getInstance().displayImage(logoImg, "drawable://" + AppUtils.getAppIconRes(MyApplication.getInstance()), R.drawable.ic_launcher);
         protocolLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
+        inviteFriendsLayout.setVisibility(AppUtils.isAppVersionStandard() ? View.VISIBLE : View.GONE);
         handMessage();
     }
 
@@ -89,6 +93,12 @@ public class AboutActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
+            case R.id.rl_welcome:
+                Bundle bundle = new Bundle();
+                bundle.putString("from", "about");
+                IntentUtils.startActivity(AboutActivity.this, GuideActivity.class,
+                        bundle);
+                break;
             case R.id.rl_protocol:
                 IntentUtils.startActivity(AboutActivity.this, ServiceTermActivity.class);
                 break;
@@ -96,6 +106,9 @@ public class AboutActivity extends BaseActivity {
                 UpgradeUtils upgradeUtils = new UpgradeUtils(AboutActivity.this,
                         handler, true);
                 upgradeUtils.checkUpdate(true);
+                break;
+            case R.id.rl_invite_friends:
+                IntentUtils.startActivity(AboutActivity.this, RecommendAppActivity.class);
                 break;
             default:
                 break;

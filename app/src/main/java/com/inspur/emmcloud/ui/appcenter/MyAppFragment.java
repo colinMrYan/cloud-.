@@ -62,6 +62,7 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
+import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
@@ -182,6 +183,7 @@ public class MyAppFragment extends BaseFragment {
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
             }
         });
         apiService = new MyAppAPIService(getActivity());

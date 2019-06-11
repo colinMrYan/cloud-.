@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.push.WebSocketPush;
 
 /**
  * Created by yufuchang on 2019/1/2.
@@ -54,6 +55,7 @@ public class NetWorkStateChangeUtils {
 
                 if (isConnected){
                     getBadgeFromServer(MyApplication.getInstance());
+                    WebSocketPush.getInstance().startWebSocket();
                 }
                 checkingNetStateUtils.getNetStateResult(5);
             }
