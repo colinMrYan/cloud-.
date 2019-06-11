@@ -1799,8 +1799,6 @@ public class ChatAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
-                        oauthCallBack, requestTime);
             }
 
             @Override
