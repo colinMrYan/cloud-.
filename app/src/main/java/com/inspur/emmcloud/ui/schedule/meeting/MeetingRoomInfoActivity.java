@@ -130,16 +130,16 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     }
 
     private List<String> getTabTitleList() {
-        if(meetingRoom.getMaxAhead() > 2){
+        if (meetingRoom.getMaxAhead() > 2) {
             return createTabDay(7);
-        }else{
+        } else {
             return createTabDay(2);
         }
     }
 
     private List<String> createTabDay(int count) {
         ArrayList<String> tabTitleList = new ArrayList<>();
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             tabTitleList.add(TimeUtils.getFormatStringFromTargetTime(
                     MeetingRoomInfoActivity.this, currentCalendar, i));
         }
@@ -149,7 +149,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     /**
      * 设置layout的宽度
      */
-    private void setTabLayoutWidth(){
+    private void setTabLayoutWidth() {
         try {
             //拿到tabLayout的mTabStrip属性
             Field mTabStripField = tabLayout.getClass().getDeclaredField("mTabStrip");
@@ -171,7 +171,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 }
                 //设置tab左右间距为10dp  注意这里不能使用Padding 因为源码中线的宽度是根据 tabView的宽度来设置的
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tabView.getLayoutParams();
-                params.width = width ;
+                params.width = width;
                 params.leftMargin = getTabWith(width);
                 params.rightMargin = getTabWith(width);
                 tabView.setLayoutParams(params);
@@ -184,14 +184,15 @@ public class MeetingRoomInfoActivity extends BaseActivity {
 
     /**
      * 根据当前tab的宽度，计算tab两侧应该加的间距
+     *
      * @param width
      * @return
      */
     private int getTabWith(int width) {
-        if(meetingRoom.getMaxAhead() > 2){
-            return (ResolutionUtils.getWidth(this) - width*3)/6;
-        }else{
-            return (ResolutionUtils.getWidth(this) - width*2)/4;
+        if (meetingRoom.getMaxAhead() > 2) {
+            return (ResolutionUtils.getWidth(this) - width * 3) / 6;
+        } else {
+            return (ResolutionUtils.getWidth(this) - width * 2) / 4;
         }
     }
 
@@ -227,7 +228,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     }
 
 
-
     /**
      * 初始化listview的显示信息
      */
@@ -248,13 +248,13 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     MeetingSchedule meetingSchedule = meetingScheduleList.get(position);
                     Meeting meeting = meetingSchedule.getMeeting();
-                    if (meeting == null){
+                    if (meeting == null) {
                         Intent intent = new Intent();
-                        intent.putExtra(MeetingRoomListActivity.EXTRA_START_TIME,TimeUtils.timeLong2Calendar(meetingSchedule.getFrom()));
-                        intent.putExtra(MeetingRoomListActivity.EXTRA_END_TIME,TimeUtils.timeLong2Calendar(meetingSchedule.getTo()));
-                        setResult(RESULT_OK,intent);
+                        intent.putExtra(MeetingRoomListActivity.EXTRA_START_TIME, TimeUtils.timeLong2Calendar(meetingSchedule.getFrom()));
+                        intent.putExtra(MeetingRoomListActivity.EXTRA_END_TIME, TimeUtils.timeLong2Calendar(meetingSchedule.getTo()));
+                        setResult(RESULT_OK, intent);
                         finish();
-                    }else {
+                    } else {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
                         IntentUtils.startActivity(MeetingRoomInfoActivity.this, com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity.class, bundle);
@@ -269,7 +269,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             @Override
             public void onPageSelected(int arg0) {
                 // TODO Auto-generated method stub
-                if(tabLayout != null){
+                if (tabLayout != null) {
                     tabLayout.getTabAt(arg0).select();
                 }
             }
@@ -374,57 +374,57 @@ public class MeetingRoomInfoActivity extends BaseActivity {
      */
     private void initData() {
         allDaysMeetingScheduleList = new ArrayList<>();
-            Collections.sort(allMeetingList, new Comparator<Meeting>() {
-                @Override
-                public int compare(Meeting o1, Meeting o2) {
-                    int startDiff = (int) (o1.getStartTime() - o2.getStartTime());
-                    if (startDiff == 0) {
-                        int endDiff = (int) (o1.getEndTime() - o2.getEndTime());
-                        return endDiff;
-                    } else {
-                        return startDiff;
-                    }
-                }
-            });
-            for (int i = 0; i < meetingRoom.getMaxAhead(); i++) {
-                long dayStartTimeLong = TimeUtils.getTimeLongFromTargetTime(currentCalendar, i, dayStartTime);
-                long dayEndTimeLong = TimeUtils.getTimeLongFromTargetTime(currentCalendar, i, dayEndTime);
-                List<Meeting> dayMeetingList = new ArrayList<>();
-                Calendar calendar = (Calendar) currentCalendar.clone();
-                calendar.add(Calendar.DAY_OF_YEAR, i);
-                for (Meeting meeting : allMeetingList) {
-                    if (TimeUtils.isContainTargetCalendarDay(calendar, meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar())) {
-                        dayMeetingList.add(meeting);
-                    }
-                }
-
-                List<MeetingSchedule> dayMeetingScheduleList = new ArrayList<>();
-                for (int j = 0; j < dayMeetingList.size(); j++) {
-                    Meeting meeting = dayMeetingList.get(j);
-
-                    long meetingDayStartTime = meeting.getDayStartTime(calendar);
-                    long meetingDayEndTime = meeting.getDayEndTime(calendar);
-                    long LastMeetingEnd = (j > 0) ? dayMeetingList.get(j - 1).getDayEndTime(calendar) : dayStartTimeLong;
-                    if (meetingDayStartTime > LastMeetingEnd) {
-                        MeetingSchedule meetingSchedule = new MeetingSchedule(LastMeetingEnd, meetingDayStartTime, null);
-                        dayMeetingScheduleList.add(meetingSchedule);
-                    }
-                    MeetingSchedule meetingSchedule = new MeetingSchedule(meetingDayStartTime, meetingDayEndTime, meeting);
-                    dayMeetingScheduleList.add(meetingSchedule);
-                }
-                if (dayMeetingList.size() > 0) {
-                    long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
-                    if (dayLastMeetingEnd < dayEndTimeLong) {
-                        MeetingSchedule meetingSchedule = new MeetingSchedule(dayLastMeetingEnd, dayEndTimeLong, null);
-                        dayMeetingScheduleList.add(meetingSchedule);
-                    }
+        Collections.sort(allMeetingList, new Comparator<Meeting>() {
+            @Override
+            public int compare(Meeting o1, Meeting o2) {
+                int startDiff = (int) (o1.getStartTime() - o2.getStartTime());
+                if (startDiff == 0) {
+                    int endDiff = (int) (o1.getEndTime() - o2.getEndTime());
+                    return endDiff;
                 } else {
-                    MeetingSchedule meetingSchedule = new MeetingSchedule(dayStartTimeLong, dayEndTimeLong, null);
+                    return startDiff;
+                }
+            }
+        });
+        for (int i = 0; i < meetingRoom.getMaxAhead(); i++) {
+            long dayStartTimeLong = TimeUtils.getTimeLongFromTargetTime(currentCalendar, i, i == 0 ? TimeUtils.calendar2FormatString(this, TimeUtils.timeLong2Calendar(System.currentTimeMillis()), TimeUtils.FORMAT_HOUR_MINUTE) : dayStartTime);
+            long dayEndTimeLong = TimeUtils.getTimeLongFromTargetTime(currentCalendar, i, dayEndTime);
+            List<Meeting> dayMeetingList = new ArrayList<>();
+            Calendar calendar = (Calendar) currentCalendar.clone();
+            calendar.add(Calendar.DAY_OF_YEAR, i);
+            for (Meeting meeting : allMeetingList) {
+                if (TimeUtils.isContainTargetCalendarDay(calendar, meeting.getStartTimeCalendar(), meeting.getEndTimeCalendar())) {
+                    dayMeetingList.add(meeting);
+                }
+            }
+
+            List<MeetingSchedule> dayMeetingScheduleList = new ArrayList<>();
+            for (int j = 0; j < dayMeetingList.size(); j++) {
+                Meeting meeting = dayMeetingList.get(j);
+
+                long meetingDayStartTime = meeting.getDayStartTime(calendar);
+                long meetingDayEndTime = meeting.getDayEndTime(calendar);
+                long LastMeetingEnd = (j > 0) ? dayMeetingList.get(j - 1).getDayEndTime(calendar) : dayStartTimeLong;
+                if (meetingDayStartTime > LastMeetingEnd && (meetingDayStartTime > System.currentTimeMillis())) {
+                    MeetingSchedule meetingSchedule = new MeetingSchedule(LastMeetingEnd, meetingDayStartTime, null);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }
-
-                allDaysMeetingScheduleList.add(dayMeetingScheduleList);
+                MeetingSchedule meetingSchedule = new MeetingSchedule(meetingDayStartTime, meetingDayEndTime, meeting);
+                dayMeetingScheduleList.add(meetingSchedule);
             }
+            if (dayMeetingList.size() > 0) {
+                long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
+                if (dayLastMeetingEnd < dayEndTimeLong) {
+                    MeetingSchedule meetingSchedule = new MeetingSchedule(dayLastMeetingEnd, dayEndTimeLong, null);
+                    dayMeetingScheduleList.add(meetingSchedule);
+                }
+            } else {
+                MeetingSchedule meetingSchedule = new MeetingSchedule(dayStartTimeLong, dayEndTimeLong, null);
+                dayMeetingScheduleList.add(meetingSchedule);
+            }
+
+            allDaysMeetingScheduleList.add(dayMeetingScheduleList);
+        }
 
         initListView();
     }
@@ -438,11 +438,10 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             loadingDlg.show();
             Calendar startCalendar = TimeUtils.getDayBeginCalendar(Calendar.getInstance());
             Calendar endCalendar = TimeUtils.getDayEndCalendar(Calendar.getInstance());
-            endCalendar.add(Calendar.DAY_OF_YEAR,meetingRoom.getMaxAhead()-1);
-            apiService.getRoomMeetingListByMeetingRoom(meetingRoom.getId(),startCalendar.getTimeInMillis(),endCalendar.getTimeInMillis());
+            endCalendar.add(Calendar.DAY_OF_YEAR, meetingRoom.getMaxAhead() - 1);
+            apiService.getRoomMeetingListByMeetingRoom(meetingRoom.getId(), startCalendar.getTimeInMillis(), endCalendar.getTimeInMillis());
         }
     }
-
 
 
     /**

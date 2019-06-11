@@ -24,7 +24,6 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -447,7 +446,6 @@ public class SettingActivity extends BaseActivity {
                         WSAPIService.getInstance().sendAppStatus("REMOVED");
                     } else {
                         MyApplication.getInstance().signout();
-                        LogUtils.jasonDebug("1111111111111");
                     }
                     stopAppService();
                 })
