@@ -221,6 +221,24 @@ public class CommunicationUtils {
         return message;
     }
 
+    public static Message combineTransmitMediaImageMessage(String cid, String filePath, MsgContentMediaImage msgContentMediaImage) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_MEDIA_IMAGE);
+        MsgContentMediaImage contentMediaImage = new MsgContentMediaImage();
+        contentMediaImage.setName(msgContentMediaImage.getName());
+        contentMediaImage.setRawHeight(msgContentMediaImage.getRawHeight());
+        contentMediaImage.setRawWidth(msgContentMediaImage.getRawWidth());
+        contentMediaImage.setRawSize(msgContentMediaImage.getRawSize());
+        contentMediaImage.setRawMedia(filePath);
+        contentMediaImage.setTmpId(tracer);
+        message.setContent(contentMediaImage.toString());
+        return message;
+    }
+
 
     public static Message combinLocalExtendedLinksMessage(String cid, String poster, String title, String subTitle, String url) {
         String tracer = getTracer();

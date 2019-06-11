@@ -35,6 +35,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.login.login.OauthCallBack;
@@ -1061,18 +1062,18 @@ public class ChatAPIService {
      * @param triggerId
      */
     public void openDecideBotRequest(final String triggerId) {
-        final String completeUrl = APIUri.getDecideCardBotRequestUrl()+triggerId;
+        final String completeUrl = APIUri.getDecideCardBotRequestUrl() + triggerId;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                LogUtils.YfcDebug("点击机器人卡片返回成功："+new String(arg0));
+                LogUtils.YfcDebug("点击机器人卡片返回成功：" + new String(arg0));
                 apiInterface.returnOpenDecideBotRequestSuccess();
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("点击机器人卡片返回失败："+error+"code:"+responseCode);
+                LogUtils.YfcDebug("点击机器人卡片返回失败：" + error + "code:" + responseCode);
                 apiInterface.returnOpenDecideBotRequestFail(error, responseCode);
             }
 
@@ -1769,7 +1770,7 @@ public class ChatAPIService {
      * @param filePath 文件路径
      * @param toCid    channel ID
      */
-    public void transmitFile(String filePath, String fromCid, String toCid, String fileType) {
+    public void transmitFile(String filePath, String fromCid, String toCid, String fileType, Message message) {
         final String completeUrl = APIUri.getTransmitFileUrl(fromCid, fileType);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1782,7 +1783,7 @@ public class ChatAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        transmitFile(filePath, fromCid, toCid, fileType);
+                        transmitFile(filePath, fromCid, toCid, fileType, message);
                     }
 
                     @Override
@@ -1798,7 +1799,7 @@ public class ChatAPIService {
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
                 JSONObject object = JSONUtils.getJSONObject(new String(arg0));
-                apiInterface.returnTransmitPictureSuccess(toCid, object.toString());
+                apiInterface.returnTransmitPictureSuccess(toCid, object.toString(), message);
             }
 
             @Override
