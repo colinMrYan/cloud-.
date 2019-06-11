@@ -66,7 +66,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -249,7 +248,7 @@ public class CommunicationV0Fragment extends BaseFragment {
         netExceptionView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+//                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
             }
         });
         handMessage();

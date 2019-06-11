@@ -53,7 +53,6 @@ import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
-import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
@@ -136,13 +135,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      * 检测配置是否强制开启手势验证码
      */
     private void checkForceGuesture() {
-        int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(),
-                Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
-        if (doubleValidation == 1 && !CreateGestureActivity.getGestureCodeIsOpenByUser(MyApplication.getInstance())) {
-            Intent intent = new Intent(this, CreateGestureActivity.class);
-            intent.putExtra(CreateGestureActivity.EXTRA_FORCE_SET, true);
-            startActivityForResult(intent, REQUEST_CREATE_GUESTURE);
-        }
 
     }
 

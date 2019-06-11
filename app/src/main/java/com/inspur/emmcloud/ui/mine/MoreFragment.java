@@ -30,23 +30,14 @@ import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.system.MineLayoutItem;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
-import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
-import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
-import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.privates.UriUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,15 +76,11 @@ public class MoreFragment extends BaseFragment {
         MineLayoutItemGroup mineLayoutItemGroupSetting = new MineLayoutItemGroup();
         mineLayoutItemGroupSetting.getMineLayoutItemList().add(new MineLayoutItem("my_setting_function",
                 "personcenter_setting", "", getString(R.string.settings)));
-        MineLayoutItemGroup mineLayoutItemGroupCardbox = new MineLayoutItemGroup();
-        mineLayoutItemGroupCardbox.getMineLayoutItemList().add(
-                new MineLayoutItem("my_cardbox_function", "personcenter_cardbox", "", getString(R.string.wallet)));
         MineLayoutItemGroup mineLayoutItemGroupAboutUs = new MineLayoutItemGroup();
         mineLayoutItemGroupAboutUs.getMineLayoutItemList().add(new MineLayoutItem("my_aboutUs_function",
                 "personcenter_aboutus", "", getString(R.string.about_text)));
         mineLayoutItemGroupList.add(mineLayoutItemGroupPersonnalInfo);
         mineLayoutItemGroupList.add(mineLayoutItemGroupSetting);
-        mineLayoutItemGroupList.add(mineLayoutItemGroupCardbox);
         mineLayoutItemGroupList.add(mineLayoutItemGroupAboutUs);
     }
 
@@ -136,51 +123,15 @@ public class MoreFragment extends BaseFragment {
         String uri = layoutItem.getUri();
         if (StringUtils.isBlank(uri)) {
             switch (layoutItem.getId()) {
-                //  case "my_personalInfo_function":
-                // Intent intent = new Intent();
-                // intent.setClass(getActivity(), MyInfoActivity.class);
-                // startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
-                // recordUserClick("profile");
-                //break;
                 case "my_setting_function":
                     IntentUtils.startActivity(getActivity(), SettingActivity.class);
                     recordUserClick("setting");
-                    break;
-                case "my_cardbox_function":
-                    IntentUtils.startActivity(getActivity(), CardPackageActivity.class);
-                    recordUserClick("wallet");
                     break;
                 case "my_aboutUs_function":
                     IntentUtils.startActivity(getActivity(), AboutActivity.class);
                     recordUserClick("about");
                     break;
-                case "my_feedback_function":
-                    IntentUtils.startActivity(getActivity(), FeedBackActivity.class);
-                    recordUserClick("feedback");
-                    break;
-                case "my_customerService_function":
-                    if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(MyApplication.getInstance());
-                        if (customerChannel != null) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("cid", customerChannel.getCid());
-                            // 为区分来自云+客服添加一个from值，在ChannelActivity里使用
-                            bundle.putString("from", "customer");
-                            IntentUtils.startActivity(getActivity(), ChannelV0Activity.class, bundle);
-                        }
-                    } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-                        Conversation conversation =
-                                ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
-                        if (conversation != null) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                            bundle.putString("from", "customer");
-                            IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                        }
-                    }
 
-                    recordUserClick("customservice");
-                    break;
                 default:
                     break;
             }

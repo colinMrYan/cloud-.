@@ -51,10 +51,8 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
-import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
@@ -518,8 +516,8 @@ public class ChannelV0Activity extends BaseActivity {
                 groupNews.setUrl(linkUrl);
                 groupNews.setPoster(linkPoster);
                 bundle.putSerializable("groupNews", groupNews);
-                IntentUtils.startActivity(ChannelV0Activity.this,
-                        NewsWebDetailActivity.class, bundle);
+//                IntentUtils.startActivity(ChannelV0Activity.this,
+//                        NewsWebDetailActivity.class, bundle);
                 break;
             default:
                 break;
@@ -654,7 +652,6 @@ public class ChannelV0Activity extends BaseActivity {
                                     if (message.getType().equals("command/faceLogin")) {
                                         MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(ChannelV0Activity.this,
                                                 cid, message.getCreationDate());
-                                        intentFaceLogin(message.getContent());
                                         return;
                                     }
                                 }
@@ -704,13 +701,6 @@ public class ChannelV0Activity extends BaseActivity {
         return null;
     }
 
-    private void intentFaceLogin(String token) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("isFaceVerifyExperience", false);
-        bundle.putBoolean("isFaceLogin", true);
-        bundle.putString("token", token);
-        IntentUtils.startActivity(ChannelV0Activity.this, FaceVerifyActivity.class, bundle);
-    }
 
     /**
      * 消息发送成功处理：当推送消息是自己的消息时修改消息id

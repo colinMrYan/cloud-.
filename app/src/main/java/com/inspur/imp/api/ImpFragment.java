@@ -29,7 +29,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -43,7 +42,6 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.IPlugin;
 import com.inspur.imp.plugin.PluginMgr;
@@ -745,9 +743,6 @@ public class ImpFragment extends ImpBaseFragment {
                     break;
                 case R.id.imp_close_btn:
                     finishActivity();
-                    break;
-                case R.id.refresh_text:
-                    IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
                     break;
                 case R.id.load_error_layout:
                     showLoadingDlg(getString(Res.getStringID("@string/loading_text")));

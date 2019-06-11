@@ -247,7 +247,6 @@ public class SettingActivity extends BaseActivity {
             experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
             experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
         }
-        themeNameText.setText(ThemeSwitchActivity.getThemeName());
         NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
         switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>1?View.VISIBLE:View.GONE);
         tabName.setText(getTabLayoutName());
@@ -394,12 +393,6 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.clear_cache_layout:
                 showClearCacheDlg();
-                break;
-            case R.id.rl_setting_account_safe:
-                IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
-                break;
-            case R.id.rl_setting_switch_theme:
-                IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
                 break;
             case R.id.rl_setting_switch_tablayout:
                 IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);

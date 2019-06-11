@@ -61,7 +61,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
@@ -289,7 +288,7 @@ public class CommunicationFragment extends BaseFragment {
 
             @Override
             public void onNetExceptionWightClick() {
-                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
+//                IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);
