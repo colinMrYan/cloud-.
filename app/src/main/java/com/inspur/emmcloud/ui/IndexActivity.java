@@ -12,7 +12,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
@@ -47,6 +46,8 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
+import com.inspur.emmcloud.util.privates.ProfileUtils;
+import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -79,13 +80,13 @@ public class IndexActivity extends IndexBaseActivity {
         EventBus.getDefault().register(this);
     }
 
-    private void getNaviTabData(String naviTabSaveConfigVersion) {
-        if (NetUtils.isNetworkConnected(this, false)) {
-            AppAPIService appAPIService = new AppAPIService(this);
-            appAPIService.setAPIInterface(new WebService());
-            appAPIService.getAppNaviTabs(naviTabSaveConfigVersion);
-        }
-    }
+//    private void getNaviTabData(String naviTabSaveConfigVersion) {
+//        if (NetUtils.isNetworkConnected(this, false)) {
+//            AppAPIService appAPIService = new AppAPIService(this);
+//            appAPIService.setAPIInterface(new WebService());
+//            appAPIService.getAppNaviTabs(naviTabSaveConfigVersion);
+//        }
+//    }
 
     /**
      * 初始化app的运行环境
@@ -223,25 +224,25 @@ public class IndexActivity extends IndexBaseActivity {
 
 
 
-    private void getTabInfo() {
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-
-            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
-                @Override
-                public void getClientIdSuccess(String clientId) {
-                    AppAPIService apiService = new AppAPIService(IndexActivity.this);
-                    apiService.setAPIInterface(new WebService());
-                    String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
-                    String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
-                    apiService.getAppNewTabs(version, clientId, mainTabSaveConfigVersion);
-                }
-
-                @Override
-                public void getClientIdFail() {
-                }
-            }).getClientId();
-        }
-    }
+//    private void getTabInfo() {
+//        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+//
+//            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
+//                @Override
+//                public void getClientIdSuccess(String clientId) {
+//                    AppAPIService apiService = new AppAPIService(IndexActivity.this);
+//                    apiService.setAPIInterface(new WebService());
+//                    String mainTabSaveConfigVersion = ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB);
+//                    String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION, "");
+//                    apiService.getAppNewTabs(version, clientId, mainTabSaveConfigVersion);
+//                }
+//
+//                @Override
+//                public void getClientIdFail() {
+//                }
+//            }).getClientId();
+//        }
+//    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
