@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="16dp"
+    app:bl_arrowWidth="4.5dp"
+    app:bl_cornersRadius="8dp"
+    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeWidth="0.5px">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/img_news_card"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:id="@+id/rl_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_news_card"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp">
+
+            <TextView
+                android:id="@+id/tv_news_card_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tv_news_card_digest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_news_card_title"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="#999999"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</com.inspur.emmcloud.widget.bubble.BubbleLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.inspur.emmcloud.widget.bubble.BubbleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bl_card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:bl_arrowDirection="right"
+    app:bl_arrowHeight="10dp"
+    app:bl_arrowPosition="16dp"
+    app:bl_arrowWidth="4.5dp"
+    app:bl_cornersRadius="8dp"
+    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeWidth="0.5px">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="11dp"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:paddingTop="11dp">
+
+
+        <ImageView
+            android:id="@+id/iv_file_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_file_icon">
+
+            <TextView
+                android:id="@+id/tv_file_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_file_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_file_name"
+                android:layout_marginTop="6dp"
+                android:textColor="#666666"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</com.inspur.emmcloud.widget.bubble.BubbleLayout>

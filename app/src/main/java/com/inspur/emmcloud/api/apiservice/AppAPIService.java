@@ -19,10 +19,13 @@ import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
+import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
+import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.luojilab.component.componentlib.router.Router;
@@ -136,6 +139,82 @@ public class AppAPIService {
     }
 
     /**
+     * 获取ReactNative更新版本
+     *
+     * @param version
+     * @param lastCreationDate
+     */
+    public void getReactNativeUpdate(final String version, final long lastCreationDate, final String clientId) {
+        final String completeUrl = APIUri.getReactNativeUpdate() + "version=" + version + "&lastCreationDate="
+                + lastCreationDate + "&clientId=" + clientId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnReactNativeUpdateFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                refreshToken(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getReactNativeUpdate(version, lastCreationDate, clientId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, requestTime);
+            }
+        });
+    }
+
+    /**
+     * 回写ReactNative日志接口
+     *
+     * @param command
+     * @param version
+     * @param clientId
+     */
+    public void sendBackReactNativeUpdateLog(final String command, final String version, final String clientId) {
+        final String completeUrl =
+                APIUri.getClientLog() + "command=" + command + "&version=" + version + "&clientId=" + clientId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.PUT, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        sendBackReactNativeUpdateLog(command, version, clientId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
+    /**
      * 异常上传
      *
      * @param exception
@@ -167,77 +246,77 @@ public class AppAPIService {
         });
     }
 
-//    /**
-//     * 获取显示tab页的接口
-//     */
-//    public void getAppNewTabs(final String version, final String clientId, final String mainTabSaveConfigVersion) {
-//        final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
-//        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-//        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-//            @Override
-//            public void callbackTokenExpire(long requestTime) {
-//                OauthCallBack oauthCallBack = new OauthCallBack() {
-//                    @Override
-//                    public void reExecute() {
-//                        getAppNewTabs(version, clientId, mainTabSaveConfigVersion);
-//                    }
-//
-//                    @Override
-//                    public void executeFailCallback() {
-//                        callbackFail("", -1);
-//                    }
-//                };
-//                refreshToken(oauthCallBack, requestTime);
-//            }
-//
-//            @Override
-//            public void callbackSuccess(byte[] arg0) {
-//                apiInterface.returnAppTabAutoSuccess(new GetAppMainTabResult(new String(arg0)),
-//                        mainTabSaveConfigVersion);
-//            }
-//
-//            @Override
-//            public void callbackFail(String error, int responseCode) {
-//                apiInterface.returnAppTabAutoFail(error, responseCode);
-//            }
-//        });
-//    }
+    /**
+     * 获取显示tab页的接口
+     */
+    public void getAppNewTabs(final String version, final String clientId, final String mainTabSaveConfigVersion) {
+        final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAppNewTabs(version, clientId, mainTabSaveConfigVersion);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAppTabAutoSuccess(new GetAppMainTabResult(new String(arg0)),
+                        mainTabSaveConfigVersion);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnAppTabAutoFail(error, responseCode);
+            }
+        });
+    }
 
 
-//    /**
-//     * 获取显示tab页的接口
-//     */
-//    public void getAppNaviTabs(final String lastMultipleLayoutVersion) {
-//        final String completeUrl = APIUri.getAppNaviTabs();
-//        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-//        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-//            @Override
-//            public void callbackTokenExpire(long requestTime) {
-//                OauthCallBack oauthCallBack = new OauthCallBack() {
-//                    @Override
-//                    public void reExecute() {
-//
-//                    }
-//
-//                    @Override
-//                    public void executeFailCallback() {
-//                        callbackFail("", -1);
-//                    }
-//                };
-//                refreshToken(oauthCallBack, requestTime);
-//            }
-//
-//            @Override
-//            public void callbackSuccess(byte[] arg0) {
-//                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0), lastMultipleLayoutVersion));
-//            }
-//
-//            @Override
-//            public void callbackFail(String error, int responseCode) {
-//                apiInterface.returnNaviBarModelFail(error, responseCode);
-//            }
-//        });
-//    }
+    /**
+     * 获取显示tab页的接口
+     */
+    public void getAppNaviTabs(final String lastMultipleLayoutVersion) {
+        final String completeUrl = APIUri.getAppNaviTabs();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnNaviBarModelSuccess(new NaviBarModel(new String(arg0), lastMultipleLayoutVersion));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnNaviBarModelFail(error, responseCode);
+            }
+        });
+    }
 
 //    /**
 //     * 手机应用PV信息（web应用）

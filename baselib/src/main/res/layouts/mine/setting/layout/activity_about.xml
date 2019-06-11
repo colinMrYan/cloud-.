@@ -68,6 +68,33 @@
             android:background="@color/content_bg"
             android:orientation="vertical">
 
+            <RelativeLayout
+                android:id="@+id/rl_welcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:textColor="#333333"
+                    android:text="@string/about_welcome_text"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_arrow_right" />
+            </RelativeLayout>
 
 
             <RelativeLayout
@@ -89,8 +116,8 @@
                     android:paddingBottom="11dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
-                    android:text="@string/about_protocol_text"
                     android:textColor="#333333"
+                    android:text="@string/about_protocol_text"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -122,8 +149,42 @@
                     android:layout_centerVertical="true"
                     android:paddingBottom="11dp"
                     android:paddingTop="11dp"
-                    android:text="@string/check_update_text"
                     android:textColor="#333333"
+                    android:text="@string/check_update_text"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_arrow_right" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_invite_friends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/color_list_divider" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="11dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="11dp"
+                    android:textColor="#333333"
+                    android:text="@string/invite_friends_text"
                     android:textSize="16sp" />
 
                 <ImageView

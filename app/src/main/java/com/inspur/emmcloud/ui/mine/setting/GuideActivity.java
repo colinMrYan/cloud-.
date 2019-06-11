@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -131,4 +133,8 @@ public class GuideActivity extends BaseActivity {
         viewPager.setAdapter(new MyViewPagerAdapter(getApplicationContext(), guideViewList));
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
+    }
 }

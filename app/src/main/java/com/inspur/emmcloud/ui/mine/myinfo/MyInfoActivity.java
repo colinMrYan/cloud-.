@@ -28,8 +28,10 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
@@ -203,11 +205,11 @@ public class MyInfoActivity extends BaseActivity {
      * 保存更新头像时间
      */
     private void saveUpdateHeadTime() {
-//        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid());
-//        contactUser.setLastQueryTime(System.currentTimeMillis() + "");
-//        contactUser.setHasHead(1);
-//        ContactUserCacheUtils.saveContactUser(contactUser);
-//        MyApplication.getInstance().clearUserPhotoUrl(MyApplication.getInstance().getUid());
+        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(MyApplication.getInstance().getUid());
+        contactUser.setLastQueryTime(System.currentTimeMillis() + "");
+        contactUser.setHasHead(1);
+        ContactUserCacheUtils.saveContactUser(contactUser);
+        MyApplication.getInstance().clearUserPhotoUrl(MyApplication.getInstance().getUid());
     }
 
     /**

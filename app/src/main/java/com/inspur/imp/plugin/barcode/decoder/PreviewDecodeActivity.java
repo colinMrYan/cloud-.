@@ -1,5 +1,6 @@
 package com.inspur.imp.plugin.barcode.decoder;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.media.AudioManager;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
@@ -96,6 +98,10 @@ public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHand
 
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
+    }
 
 
     private void setRangeView() {

@@ -22,6 +22,7 @@ import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
@@ -41,9 +42,10 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class LoginUtils extends LoginAPIInterfaceImpl {
+public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager.GetServerLanguageListener {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
+    private static final int GET_LANGUAGE_SUCCESS = 3;
     private LoginAPIService apiServices;
     private Activity activity;
     private Handler handler;
@@ -65,12 +67,19 @@ public class LoginUtils extends LoginAPIInterfaceImpl {
     public void autoLogin() {
         String accessToken = PreferencesUtils.getString(BaseApplication.getInstance(), "accessToken", "");
         String myInfo = PreferencesUtils.getString(BaseApplication.getInstance(), "myInfo", "");
+        String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
         if (StringUtils.isBlank(accessToken)) {
             if (handler != null) {
                 handler.sendEmptyMessage(LOGIN_FAIL);
             }
         } else if (StringUtils.isBlank(myInfo)) {
             new LoginUtils(activity, handler).getMyInfo();
+        } else if (StringUtils.isBlank(languageJson)) {
+            new LoginUtils(activity, handler).getServerSupportLanguage();
+        } else if (!isMDMStatusPass) {
+            LanguageManager.getInstance().setLanguageLocal();
+            new LoginUtils(activity, handler).startMDM();
         } else {
             if (handler != null) {
                 handler.sendEmptyMessage(LOGIN_SUCCESS);
@@ -88,6 +97,10 @@ public class LoginUtils extends LoginAPIInterfaceImpl {
             public void handleMessage(Message msg) {
                 // TODO Auto-generated method stub
                 switch (msg.what) {
+                    case GET_LANGUAGE_SUCCESS:
+                        // handler.sendEmptyMessage(LOGIN_SUCCESS);
+                        startMDM();
+                        break;
                     case LOGIN_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);
                         if (handler != null) {
@@ -183,6 +196,17 @@ public class LoginUtils extends LoginAPIInterfaceImpl {
 
     }
 
+    /**
+     * 获取语音
+     */
+    public void getServerSupportLanguage() {
+       LanguageManager.getInstance().getServerSupportLanguage(this);
+    }
+
+    @Override
+    public void complete() {
+        loginUtilsHandler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
+    }
 
     /**
      * 清空登录信息
@@ -255,7 +279,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl {
                 myDialog.dismiss();
                 BaseApplication.getInstance().initTanent();
                 loadingDlg.show();
-                loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
+                getServerSupportLanguage();
             }
         });
         myDialog.setCancelable(false);
@@ -347,7 +371,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl {
                     }
                 }
                 ((BaseApplication) activity.getApplicationContext()).initTanent();
-                loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
+                getServerSupportLanguage();
             }
         }
 
