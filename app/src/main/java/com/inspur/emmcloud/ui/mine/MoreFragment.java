@@ -35,7 +35,6 @@ import com.inspur.emmcloud.bean.system.MineLayoutItem;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
-import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.privates.UriUtils;
 
@@ -227,7 +226,7 @@ public class MoreFragment extends BaseFragment {
                 ImageView photoImg = convertView.findViewById(R.id.iv_photo);
                 TextView nameText = convertView.findViewById(R.id.tv_name);
                 TextView enterpriseText = convertView.findViewById(R.id.tv_enterprise);
-                String photoUri = APIUri.getUserIconUrl(getActivity(), MyApplication.getInstance().getUid());
+                String photoUri = APIUri.getChannelImgUrl(getActivity(), MyApplication.getInstance().getUid());
                 ImageDisplayUtils.getInstance().displayImage(photoImg, photoUri, R.drawable.icon_photo_default);
                 String userName =
                         PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
@@ -331,9 +330,6 @@ public class MoreFragment extends BaseFragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.tv_enterprise:
-                    IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
-                    break;
                 case R.id.ll_my_info:
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), MyInfoActivity.class);

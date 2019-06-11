@@ -23,13 +23,11 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
-import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
 import com.inspur.emmcloud.util.privates.AppCenterNativeAppUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,11 +74,11 @@ public class AppDetailActivity extends BaseActivity {
         appDetailImageAdapter.setOnRecommandItemClickListener(new OnAppDetailImageItemClickListener() {
             @Override
             public void onAppDetailImageItemClick(View view, int position) {
-                Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), ImagePagerV0Activity.class);
-                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_INDEX, position);
-                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, (ArrayList<String>) app.getLegendList());
-                startActivity(intent);
+//                Intent intent = new Intent();
+//                intent.setClass(getApplicationContext(), ImagePagerV0Activity.class);
+//                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_INDEX, position);
+//                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, (ArrayList<String>) app.getLegendList());
+//                startActivity(intent);
             }
         });
         intrImgListView.setAdapter(appDetailImageAdapter);

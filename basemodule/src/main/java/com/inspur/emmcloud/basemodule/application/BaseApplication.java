@@ -3,7 +3,6 @@ package com.inspur.emmcloud.basemodule.application;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
 import android.view.Gravity;
 import android.webkit.CookieManager;
@@ -28,11 +27,9 @@ import com.inspur.emmcloud.basemodule.util.CustomImageDownloader;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.login.communication.CommunicationService;
 import com.inspur.emmcloud.login.login.LoginService;
 import com.luojilab.component.componentlib.router.Router;
 
@@ -78,7 +75,6 @@ public class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         init();
-        LanguageManager.getInstance().setLanguageLocal();
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
@@ -132,11 +128,6 @@ public class BaseApplication extends MultiDexApplication {
         removeAllSessionCookie();
         clearUserPhotoMap();
         Router router = Router.getInstance();
-        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-            service.stopPush();
-            service.webSocketSignout();
-        }
         if (router.getService(LoginService.class.getSimpleName()) != null) {
             LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
             service.logout(getInstance());
@@ -213,7 +204,6 @@ public class BaseApplication extends MultiDexApplication {
         if (currentEnterprise != null) {
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
         }
-        params.addHeader("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         return params;
     }
 
@@ -239,11 +229,6 @@ public class BaseApplication extends MultiDexApplication {
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
-        Router router = Router.getInstance();
-        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-            service.sendAppStatus();
-        }
         clearNotification();
     }
 
@@ -381,19 +366,6 @@ public class BaseApplication extends MultiDexApplication {
         return (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && isMDMStatusPass);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration config) {
-        // TODO Auto-generated method stub
-        if (config != null) {
-            super.onConfigurationChanged(config);
-        }
-        LanguageManager.getInstance().setLanguageLocal();
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
-    }
 
 
     public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks() {
@@ -427,24 +399,6 @@ public class BaseApplication extends MultiDexApplication {
 
     public void setSafeLock(boolean safeLock) {
         isSafeLock = safeLock;
-    }
-
-    /**
-     * 获取是否正在打开通知
-     *
-     * @return
-     */
-    public boolean getOPenNotification() {
-        return isOpenNotification;
-    }
-
-    /**
-     * 设置是否正在打开通知
-     *
-     * @param isOpenNotification
-     */
-    public void setOpenNotification(boolean isOpenNotification) {
-        this.isOpenNotification = isOpenNotification;
     }
 
     /**
@@ -509,12 +463,4 @@ public class BaseApplication extends MultiDexApplication {
         manager.cancelAll();
     }
 
-    /****************************标记当前正在某个频道中***************************************************/
-    public String getCurrentChannelCid() {
-        return currentChannelCid;
-    }
-
-    public void setCurrentChannelCid(String currentChannelCid) {
-        this.currentChannelCid = currentChannelCid;
-    }
 }

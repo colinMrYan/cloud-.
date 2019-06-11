@@ -4,16 +4,7 @@ package com.inspur.emmcloud.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.baselib.util.ImageUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
-
-import java.io.File;
 
 
 /**
@@ -200,66 +191,9 @@ public class APIUri {
      * 频道页面头像显示图片
      **/
     public static String getChannelImgUrl(Context context, String uid) {
-        if (StringUtils.isBlank(uid) || uid.equals("null"))
-            return null;
-        String headImgUrl = null;
-        boolean isCacheUserPhotoUrl = MyApplication.getInstance().isKeysContainUid(uid);
-        if (isCacheUserPhotoUrl) {
-            headImgUrl = MyApplication.getInstance().getUserPhotoUrl(uid);
-        } else {
-            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-            if (contactUser != null) {
-                if (contactUser.getHasHead() == 1) {
-                    headImgUrl = WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
-                    String lastQueryTime = contactUser.getLastQueryTime();
-                    if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
-                        headImgUrl = headImgUrl + "?" + lastQueryTime;
-                    }
-                    MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
-                } else {
-                    String name = contactUser.getName();
-                    if (!StringUtils.isBlank(name)) {
-                        String photoName = name.replaceAll("(\\(|（)[^（\\(\\)）]*?(\\)|）)|\\d*$", "");
-                        if (photoName.length() > 0) {
-                            name = photoName.substring(photoName.length() - 1, photoName.length());
-                        } else {
-                            name = name.substring(name.length() - 1, name.length());
-                        }
-                        String localPhotoFileName = "u" + (int) (name.charAt(0));
-                        File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
-                                localPhotoFileName);
-                        headImgUrl = "file://" + file.getAbsolutePath();
-                        if (!file.exists()) {
-                            ImageUtils.drawAndSavePhotoTextImg(context, name, file.getAbsolutePath());
-                        }
-                    }
-                }
-            }
-            if (MyApplication.getInstance().getIsContactReady() && headImgUrl == null) {
-                MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
-            }
-        }
-        return headImgUrl;
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
     }
 
-    /**
-     * Imp获取头像路径
-     *
-     * @param uid
-     * @return
-     */
-    public static String getChannelImgUrl4Imp(String uid) {
-        String headImgUrl = "";
-        ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
-        if (contactUser != null) {
-            headImgUrl = WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
-            String lastQueryTime = contactUser.getLastQueryTime();
-            if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
-                headImgUrl = headImgUrl + "?" + lastQueryTime;
-            }
-        }
-        return headImgUrl;
-    }
 
     /**
      * 统一接口
@@ -317,25 +251,6 @@ public class APIUri {
                 + iconUrl;
     }
 
-    /**
-     * 获取普通人和机器人人头像url
-     *
-     * @param context
-     * @param uid
-     * @return
-     */
-    public static String getUserIconUrl(Context context, String uid) {
-        String iconUrl = null;
-        if (uid.startsWith("BOT")) {
-            Robot robot = RobotCacheUtils.getRobotById(context, uid);
-            if (robot != null) {
-                iconUrl = APIUri.getRobotIconUrl(robot.getAvatar());
-            }
-        } else {
-            iconUrl = APIUri.getChannelImgUrl(context, uid);
-        }
-        return iconUrl;
-    }
 
     /**
      * 预览图片或视频

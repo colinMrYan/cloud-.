@@ -25,7 +25,6 @@ import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 
 import java.util.List;
@@ -146,7 +145,6 @@ public class ProfileUtils {
                 }
                 boolean isChatClusterBeanUnchanged = (chatClusterBeanOld == null && chatClusterBeanNew == null) || ((chatClusterBeanOld != null) && (chatClusterBeanNew != null) && (chatClusterBeanOld.getServiceVersion().equals(chatClusterBeanNew.getServiceVersion())));
                 if (!isChatClusterBeanUnchanged) {
-                    WebSocketPush.getInstance().closeWebsocket();
                     Intent intentLog = new Intent(activity,
                             IndexActivity.class);
                     intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

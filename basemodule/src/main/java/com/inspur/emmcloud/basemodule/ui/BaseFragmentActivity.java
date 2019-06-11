@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.basemodule.ui;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -21,7 +20,6 @@ import com.inspur.emmcloud.basemodule.R;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
@@ -92,11 +90,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
     }
 
     public abstract void onCreate();
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LanguageManager.getInstance().attachBaseContext(newBase));
-    }
 
     protected void setTheme() {
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);

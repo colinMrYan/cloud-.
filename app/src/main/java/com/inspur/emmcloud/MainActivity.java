@@ -1,7 +1,6 @@
 package com.inspur.emmcloud;
 
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -15,9 +14,7 @@ import android.widget.ImageView;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
-import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.baselib.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -29,7 +26,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.login.login.LoginService;
-import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
@@ -120,44 +116,10 @@ public class MainActivity extends BaseActivity {
         int splashLogoResId = Res.getDrawableID("ic_splash_logo_" + appFirstLoadAlis);
         ImageDisplayUtils.getInstance().displayImage(splashLogoImg, "drawable://" + splashLogoResId, R.drawable.ic_splash_logo);
         activitySplashShowTime = System.currentTimeMillis();
-        //进行app异常上传
-        startUploadExceptionService();
-        // 检测分辨率、网络环境
-        if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
-            showResolutionValiadDlg();
-        } else {
-            initEnvironment();
-        }
+        initEnvironment();
         showLastSplash();
     }
 
-    /**
-     * 启动异常上传服务
-     */
-    private void startUploadExceptionService() {
-        Intent intent = new Intent();
-        intent.setClass(this, AppExceptionService.class);
-        startService(intent);
-    }
-
-    /**
-     * 显示分辨率不符合条件的提示框
-     **/
-    private void showResolutionValiadDlg() {
-        // TODO Auto-generated method stub
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                dialog.dismiss();
-                finish();
-            }
-        };
-        EasyDialog.showDialog(this, getString(R.string.prompt),
-                getString(R.string.resolution_valiad), getString(R.string.ok),
-                listener, false);
-    }
 
     /**
      * 初始化应用环境

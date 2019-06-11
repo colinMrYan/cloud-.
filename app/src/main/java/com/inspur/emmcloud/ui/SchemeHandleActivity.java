@@ -11,22 +11,14 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
-import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
@@ -35,7 +27,6 @@ import com.inspur.imp.api.ImpActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 /**
  * scheme统一处理类
@@ -132,18 +123,6 @@ public class SchemeHandleActivity extends BaseActivity {
                         }
                         Bundle bundle = new Bundle();
                         switch (scheme) {
-                            case "ecc-contact":
-                            case "ecm-contact":
-                                bundle.putString("uid", host);
-                                if (host.startsWith("BOT")) {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this, RobotInfoActivity.class, bundle, true);
-                                } else {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
-                                }
-                                break;
-//                            case "ecc-component":
-//                                openComponentScheme(uri, host);
-//                                break;
                             case "gs-msg":
                                 if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
                                     finish();
@@ -151,17 +130,6 @@ public class SchemeHandleActivity extends BaseActivity {
                                 }
                                 String openMode = uri.getQueryParameter("openMode");
                                 openWebApp(host, openMode);
-                                break;
-                            case "ecc-channel":
-                                bundle.putString("cid", host);
-                                bundle.putBoolean(ConversationActivity.EXTRA_NEED_GET_NEW_MESSAGE, true);
-                                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this,
-                                            ChannelV0Activity.class, bundle, true);
-                                } else {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this,
-                                            ConversationActivity.class, bundle, true);
-                                }
                                 break;
                             case "ecc-app":
                                 AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
@@ -174,18 +142,6 @@ public class SchemeHandleActivity extends BaseActivity {
                                 appId2AppAndOpenAppUtils.getAppInfoById(uri);
                                 break;
 
-                            case "ecc-calendar-jpush":
-                                String content = getIntent().getStringExtra("content");
-                                if (content != null) {
-                                    JSONObject calEventObj = JSONUtils.getJSONObject(content);
-                                    CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                    Intent intent = new Intent(SchemeHandleActivity.this, CalendarAddActivity.class);
-                                    intent.putExtra("calEvent", calendarEvent);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                }
-                                finish();
-                                break;
                             case "ecc-app-change-tab":
                                 EventBus.getDefault().post(new ChangeTabBean(Constant.APP_TAB_BAR_APPLICATION));
                                 break;
