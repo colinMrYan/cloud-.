@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,20 +48,14 @@ import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
-import com.inspur.emmcloud.ui.chat.CommunicationFragment;
-import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
-import com.inspur.emmcloud.ui.schedule.ScheduleHomeFragment;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
-import com.inspur.imp.api.ImpFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -161,73 +154,71 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      * @return
      */
     private void initTabs() {
-        TabBean[] tabBeans = null;
-//        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
-//                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-        mainTabResultList = getMainTabList();
-        if (mainTabResultList.size() > 0) {
-            Configuration config = getResources().getConfiguration();
-            String environmentLanguage = config.locale.getLanguage();
-//            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
-//            // 发送到MessageFragment
-//            EventBus.getDefault().post(getAppMainTabResult);
-//            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
-            if (mainTabResultList.size() > 0) {
-                tabBeans = new TabBean[mainTabResultList.size()];
-                for (int i = 0; i < mainTabResultList.size(); i++) {
-                    TabBean tabBean = null;
-                    MainTabResult mainTabResult = mainTabResultList.get(i);
-                    switch (mainTabResult.getType()) {
-                        case Constant.APP_TAB_TYPE_NATIVE:
-                            switch (mainTabResult.getUri()) {
-                                case Constant.APP_TAB_BAR_COMMUNACATE:
-                                    if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationV0Fragment.class,
-                                                mainTabResult);
-                                    } else {
-                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationFragment.class,
-                                                mainTabResult);
-                                    }
-                                    break;
-                                case Constant.APP_TAB_BAR_WORK:
-                                    tabBean = new TabBean(getString(R.string.work), ScheduleHomeFragment.class, mainTabResult);
-                                    break;
-                                case Constant.APP_TAB_BAR_APPLICATION:
-                                    tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
-                                    break;
-                                case Constant.APP_TAB_BAR_PROFILE:
-                                    tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);
-                                    break;
-                                case Constant.APP_TAB_BAR_CONTACT:
-                                    tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
-                                            mainTabResult);
-                                    break;
-                            }
-                            break;
-                        case Constant.APP_TAB_TYPE_RN:
-                            switch (mainTabResult.getUri()) {
-                                case Constant.APP_TAB_BAR_RN_FIND:
-                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
-                                    break;
-                            }
-                            break;
-                        case Constant.APP_TAB_TYPE_WEB:
-                            tabBean = new TabBean(getString(R.string.web), ImpFragment.class, mainTabResult);
-                            break;
-                    }
-                    if (tabBean == null) {
-                        String noSupportTabName =
-                                mainTabResult.getMainTabTitleResult().getTabTileByLanguage(environmentLanguage);
-                        tabBean = new TabBean(noSupportTabName, NotSupportFragment.class, mainTabResult);
-                    }
-                    tabBean.setTabId(mainTabResultList.get(i).getUri());
-                    tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
-                }
-            }
-        }
-        if (tabBeans == null) {
-            tabBeans = addDefaultTabs();
-        }
+//        TabBean[] tabBeans = null;
+////        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
+////                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+//        mainTabResultList = getMainTabList();
+//        if (mainTabResultList.size() > 0) {
+//            Configuration config = getResources().getConfiguration();
+//            String environmentLanguage = config.locale.getLanguage();
+////            GetAppMainTabResult getAppMainTabResult = new GetAppMainTabResult(appTabs);
+////            // 发送到MessageFragment
+////            EventBus.getDefault().post(getAppMainTabResult);
+////            ArrayList<MainTabResult> mainTabResultList = getAppMainTabResult.getMainTabPayLoad().getMainTabResultList();
+//            if (mainTabResultList.size() > 0) {
+//                tabBeans = new TabBean[mainTabResultList.size()];
+//                for (int i = 0; i < mainTabResultList.size(); i++) {
+//                    TabBean tabBean = null;
+//                    MainTabResult mainTabResult = mainTabResultList.get(i);
+//                    switch (mainTabResult.getType()) {
+//                        case Constant.APP_TAB_TYPE_NATIVE:
+//                            switch (mainTabResult.getUri()) {
+//                                case Constant.APP_TAB_BAR_COMMUNACATE:
+//                                    if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+//                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationV0Fragment.class,
+//                                                mainTabResult);
+//                                    } else {
+//                                        tabBean = new TabBean(getString(R.string.communicate), CommunicationFragment.class,
+//                                                mainTabResult);
+//                                    }
+//                                    break;
+//                                case Constant.APP_TAB_BAR_WORK:
+//                                    tabBean = new TabBean(getString(R.string.work), ScheduleHomeFragment.class, mainTabResult);
+//                                    break;
+//                                case Constant.APP_TAB_BAR_APPLICATION:
+//                                    tabBean = new TabBean(getString(R.string.application), MyAppFragment.class, mainTabResult);
+//                                    break;
+//                                case Constant.APP_TAB_BAR_PROFILE:
+//                                    tabBean = new TabBean(getString(R.string.mine), MoreFragment.class, mainTabResult);
+//                                    break;
+//                                case Constant.APP_TAB_BAR_CONTACT:
+//                                    tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
+//                                            mainTabResult);
+//                                    break;
+//                            }
+//                            break;
+//                        case Constant.APP_TAB_TYPE_RN:
+//                            switch (mainTabResult.getUri()) {
+//                                case Constant.APP_TAB_BAR_RN_FIND:
+//                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
+//                                    break;
+//                            }
+//                            break;
+//                        case Constant.APP_TAB_TYPE_WEB:
+//                            tabBean = new TabBean(getString(R.string.web), ImpFragment.class, mainTabResult);
+//                            break;
+//                    }
+//                    if (tabBean == null) {
+//                        String noSupportTabName =
+//                                mainTabResult.getMainTabTitleResult().getTabTileByLanguage(environmentLanguage);
+//                        tabBean = new TabBean(noSupportTabName, NotSupportFragment.class, mainTabResult);
+//                    }
+//                    tabBean.setTabId(mainTabResultList.get(i).getUri());
+//                    tabBeans[i] = internationalMainLanguage(mainTabResultList.get(i), environmentLanguage, tabBean);
+//                }
+//            }
+//        }
+        TabBean[] tabBeans = addDefaultTabs();
         showTabs(tabBeans);
     }
 
@@ -411,8 +402,9 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         }
         mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
         mTabHost.setOnTabChangedListener(this);
-        mTabHost.setCurrentTab(
-                (communicateIndex != -1 && isCommunicationRunning == false) ? communicateIndex : getTabIndex());
+//        mTabHost.setCurrentTab(
+//                (communicateIndex != -1 && isCommunicationRunning == false) ? communicateIndex : getTabIndex());
+        mTabHost.setCurrentTab(0);
     }
 
     /**
@@ -602,25 +594,25 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         }
     }
 
-    /**
-     * IndexActiveX首先打开MessageFragment,然后打开其他tab
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void openDefaultTab(SimpleEventMessage eventMessage) {
-        try {
-            if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB)) {
-                isCommunicationRunning = true;
-                int targetTabIndex = getTabIndex();
-                boolean isOpenNotify = getIntent().hasExtra("command")
-                        && getIntent().getStringExtra("command").equals("open_notification");
-                if (mTabHost != null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify) {
-                    mTabHost.setCurrentTab(targetTabIndex);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    /**
+//     * IndexActiveX首先打开MessageFragment,然后打开其他tab
+//     */
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void openDefaultTab(SimpleEventMessage eventMessage) {
+//        try {
+//            if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_OPEN_DEFALT_TAB)) {
+//                isCommunicationRunning = true;
+//                int targetTabIndex = getTabIndex();
+//                boolean isOpenNotify = getIntent().hasExtra("command")
+//                        && getIntent().getStringExtra("command").equals("open_notification");
+//                if (mTabHost != null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify) {
+//                    mTabHost.setCurrentTab(targetTabIndex);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * 当没有数据的时候返回内容
@@ -631,14 +623,19 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
      */
     private TabBean[] addDefaultTabs() {
         // 无数据改为显示两个tab，数组变为2
-        TabBean[] tabBeans = new TabBean[2];
+        TabBean[] tabBeans = new TabBean[5];
         TabBean tabBeanApp = new TabBean(getString(R.string.application), MyAppFragment.class, getApplicationMainTab());
         tabBeanApp.setTabId(Constant.APP_TAB_BAR_APPLICATION);
         TabBean tabBeanMine = new TabBean(getString(R.string.mine), MoreFragment.class, getMineTab());
         tabBeanMine.setTabId(Constant.APP_TAB_BAR_PROFILE);
+        TabBean tabBeanWeb = new TabBean(getString(R.string.mine), MoreFragment.class, getWebTab());
+        tabBeanMine.setTabId(Constant.APP_TAB_BAR_MOMENT_NAME);
         // 无数据改为显示两个tab
-        tabBeans[0] = tabBeanApp;
-        tabBeans[1] = tabBeanMine;
+        tabBeans[0] = tabBeanWeb;
+        tabBeans[1] = tabBeanWeb;
+        tabBeans[2] = tabBeanApp;
+        tabBeans[3] = tabBeanWeb;
+        tabBeans[4] = tabBeanMine;
         return tabBeans;
     }
 
@@ -678,6 +675,26 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         mainTabTitleResult.setZhHant("我");
         mainTabTitleResult.setZhHans("我");
         mainTabTitleResult.setEnUS("Me");
+        mineTabResult.setMainTabTitleResult(mainTabTitleResult);
+        return mineTabResult;
+    }
+
+    /**
+     * 生成mainTab
+     *
+     * @return
+     */
+    private MainTabResult getWebTab() {
+        MainTabResult mineTabResult = new MainTabResult();
+        mineTabResult.setIcon("web");
+        mineTabResult.setName("web");
+        mineTabResult.setUri(Constant.APP_TAB_BAR_MOMENT_NAME);
+        mineTabResult.setType("native");
+        mineTabResult.setSelected(false);
+        MainTabTitleResult mainTabTitleResult = new MainTabTitleResult();
+        mainTabTitleResult.setZhHant("动态");
+        mainTabTitleResult.setZhHans("动态");
+        mainTabTitleResult.setEnUS("Web");
         mineTabResult.setMainTabTitleResult(mainTabTitleResult);
         return mineTabResult;
     }
@@ -741,30 +758,30 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         });
     }
 
-    /**
-     * 获取显示位置
-     *
-     * @return
-     */
-    private int getTabIndex() {
-        int tabIndex = 0;
-//        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
-//                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
-        ArrayList<MainTabResult> mainTabResultList = getMainTabList();
-        if (mainTabResultList.size() > 0) {
-//            ArrayList<MainTabResult> mainTabResultList =
-//                    new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
-            if (mainTabResultList.size() > 0) {
-                for (int i = 0; i < mainTabResultList.size(); i++) {
-                    if (mainTabResultList.get(i).isSelected()) {
-                        tabIndex = i;
-                        break;
-                    }
-                }
-            }
-        }
-        return tabIndex;
-    }
+//    /**
+//     * 获取显示位置
+//     *
+//     * @return
+//     */
+//    private int getTabIndex() {
+//        int tabIndex = 0;
+////        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this,
+////                Constant.PREF_APP_TAB_BAR_INFO_CURRENT, "");
+//        ArrayList<MainTabResult> mainTabResultList = getMainTabList();
+//        if (mainTabResultList.size() > 0) {
+////            ArrayList<MainTabResult> mainTabResultList =
+////                    new GetAppMainTabResult(appTabs).getMainTabPayLoad().getMainTabResultList();
+//            if (mainTabResultList.size() > 0) {
+//                for (int i = 0; i < mainTabResultList.size(); i++) {
+//                    if (mainTabResultList.get(i).isSelected()) {
+//                        tabIndex = i;
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        return tabIndex;
+//    }
 
     /**
      * 连点退出应用

@@ -12,8 +12,7 @@ import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.imp.plugin.barcode.ScanResultActivity;
+
 
 /**
  * Created by yufuchang on 2017/11/22.
