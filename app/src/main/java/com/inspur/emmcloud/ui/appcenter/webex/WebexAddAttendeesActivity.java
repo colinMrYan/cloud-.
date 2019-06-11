@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.appcenter.webex;
 
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,6 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

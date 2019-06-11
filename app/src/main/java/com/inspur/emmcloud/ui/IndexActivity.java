@@ -19,7 +19,6 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
-import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.service.PVCollectService;
@@ -55,8 +54,6 @@ import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -130,7 +127,6 @@ public class IndexActivity extends IndexBaseActivity {
         ClientConfigUpdateUtils.getInstance().getAllConfigUpdate();
         getAllRobotInfo();
         getAllChannelGroup();
-        updateReactNative();  //从服务端获取显示tab
         getMyAppRecommendWidgets();
     }
 
@@ -227,25 +223,6 @@ public class IndexActivity extends IndexBaseActivity {
     }
 
 
-    /**
-     * 获取RN应用显示tab
-     */
-    private void updateReactNative() {
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
-                @Override
-                public void getClientIdSuccess(String clientId) {
-                    if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-                        new ReactNativeUtils(IndexActivity.this).init(); //更新react
-                    }
-                }
-
-                @Override
-                public void getClientIdFail() {
-                }
-            }).getClientId();
-        }
-    }
 
 //    private void getTabInfo() {
 //        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
@@ -320,50 +297,6 @@ public class IndexActivity extends IndexBaseActivity {
     }
 
 
-    /**
-     * 客户端统一配置版本更新
-     *
-     * @param getAllConfigVersionResult
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onClientConfigVersionUpdate(final GetAllConfigVersionResult getAllConfigVersionResult) {
-        boolean isRouterUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_ROUTER, getAllConfigVersionResult);
-        boolean isContactUserUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER, getAllConfigVersionResult);
-        boolean isContactOrgUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_CONTACT_ORG, getAllConfigVersionResult);
-//        boolean isNaviTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, getAllConfigVersionResult);
-        if (isRouterUpdate) {
-            new ProfileUtils(IndexActivity.this, null).initProfile(false);
-        }
-        if (isContactUserUpdate) {
-            getContactUser();
-        } else if (handler != null) {
-            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
-        }
-        if (isContactOrgUpdate) {
-            getContactOrg();
-        }
-//        if (isNaviTabUpdate) {
-//            getNaviTabData(ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB));
-//        }
-//        new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
-//            @Override
-//            public void getClientIdSuccess(String clientId) {
-//                boolean isMainTabUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MAINTAB, getAllConfigVersionResult);
-//                if (isMainTabUpdate) {
-//                    getTabInfo();
-//                }
-//                boolean isSplashUpdate = ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_SPLASH, getAllConfigVersionResult);
-//                if (isSplashUpdate) {
-//                    new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-//                }
-//            }
-//
-//            @Override
-//            public void getClientIdFail() {
-//            }
-//        }).getClientId();
-
-    }
 
     /**
      * 获取所有的群组信息

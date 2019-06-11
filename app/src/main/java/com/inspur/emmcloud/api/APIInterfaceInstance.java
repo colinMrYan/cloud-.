@@ -15,9 +15,6 @@ import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
@@ -976,17 +973,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
-    @Override
-    public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
-
-    }
-
-    @Override
-    public void returnReactNativeUpdateFail(String error, int errorCode) {
-
-    }
-
     @Override
     public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
 
@@ -1004,26 +990,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnGetAppAuthCodeResultFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
-
-    }
-
-    @Override
-    public void returnGetDownloadReactNativeUrlFail(String error, int errorCode) {
-
-    }
-
-    @Override
-    public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
-
-    }
-
-    @Override
-    public void returnGetReactNativeInstallUrlFail(String error, int errorCode) {
 
     }
 

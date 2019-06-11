@@ -14,9 +14,6 @@ import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
@@ -404,10 +401,6 @@ public interface APIInterface {
 
     void returnUserAppsFail(String error, int errorCode);
 
-    void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
-
-    void returnReactNativeUpdateFail(String error, int errorCode);
-
     void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
 
     void returnGetClientIdResultFail(String error, int errorCode);
@@ -416,13 +409,6 @@ public interface APIInterface {
 
     void returnGetAppAuthCodeResultFail(String error, int errorCode);
 
-    void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
-
-    void returnGetDownloadReactNativeUrlFail(String error, int errorCode);
-
-    void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
-
-    void returnGetReactNativeInstallUrlFail(String error, int errorCode);
 
     void returnVeriryApprovalPasswordSuccess(String password);
 

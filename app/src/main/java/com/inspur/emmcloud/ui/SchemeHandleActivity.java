@@ -23,7 +23,6 @@ import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
@@ -31,10 +30,6 @@ import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.ui.find.AnalysisActivity;
-import com.inspur.emmcloud.ui.find.DocumentActivity;
-import com.inspur.emmcloud.ui.find.KnowledgeActivity;
-import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
@@ -162,13 +157,9 @@ public class SchemeHandleActivity extends BaseActivity {
                                     IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
                                 }
                                 break;
-                            case "ecc-component":
-                                openComponentScheme(uri, host);
-                                break;
-                            case "ecc-app-react-native":
-                                bundle.putString(scheme, uri.toString());
-                                IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
-                                break;
+//                            case "ecc-component":
+//                                openComponentScheme(uri, host);
+//                                break;
                             case "gs-msg":
                                 if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
                                     finish();
@@ -451,32 +442,6 @@ public class SchemeHandleActivity extends BaseActivity {
         IntentUtils.startActivity(SchemeHandleActivity.this, scheduleActivity, bundle);
     }
 
-    private void openComponentScheme(Uri uri, String host) {
-        Bundle bundle = new Bundle();
-        switch (host) {
-            case "stastistics":
-                IntentUtils.startActivity(this, AnalysisActivity.class, bundle, true);
-                break;
-            case "trips":
-                String path = uri.getPath();
-                String tripId = path.split("/")[1];
-                bundle.putString("tripId", tripId);
-                IntentUtils.startActivity(this, TripInfoActivity.class, bundle, true);
-                break;
-            case "news.ecc":
-                IntentUtils.startActivity(this, GroupNewsActivity.class, true);
-                break;
-            case "document":
-                IntentUtils.startActivity(this, DocumentActivity.class, true);
-                break;
-            case "knowledge":
-                IntentUtils.startActivity(this, KnowledgeActivity.class, true);
-                break;
-            default:
-                finish();
-                break;
-        }
-    }
 
     @Override
     protected void onDestroy() {
