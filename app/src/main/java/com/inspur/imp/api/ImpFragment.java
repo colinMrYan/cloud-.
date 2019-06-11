@@ -29,7 +29,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -37,13 +36,11 @@ import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppWebConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
 import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.IPlugin;
 import com.inspur.imp.plugin.PluginMgr;
@@ -52,7 +49,6 @@ import com.inspur.imp.plugin.camera.CameraService;
 import com.inspur.imp.plugin.file.FileService;
 import com.inspur.imp.plugin.filetransfer.FileTransferService;
 import com.inspur.imp.plugin.photo.PhotoService;
-import com.inspur.imp.plugin.staff.SelectStaffService;
 import com.inspur.imp.plugin.window.DropItemTitle;
 import com.inspur.imp.plugin.window.OnKeyDownListener;
 import com.luojilab.component.componentlib.router.Router;
@@ -483,7 +479,6 @@ public class ImpFragment extends ImpBaseFragment {
         webViewHeaders = new HashMap<>();
         addAuthorizationToken(url);
         webViewHeaders.put("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-        webViewHeaders.put("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
     }
 
     /**
@@ -686,9 +681,6 @@ public class ImpFragment extends ImpBaseFragment {
                     case PHOTO_SERVICE_GALLERY_REQUEST:
                         serviceName = PhotoService.class.getCanonicalName().trim();
                         break;
-                    case SELECT_STAFF_SERVICE_REQUEST:
-                        serviceName = SelectStaffService.class.getCanonicalName().trim();
-                        break;
                     case FILE_SERVICE_REQUEST:
                         serviceName = FileService.class.getCanonicalName().trim();
                         break;
@@ -745,9 +737,6 @@ public class ImpFragment extends ImpBaseFragment {
                     break;
                 case R.id.imp_close_btn:
                     finishActivity();
-                    break;
-                case R.id.refresh_text:
-                    IntentUtils.startActivity(getActivity(), NetWorkStateDetailActivity.class);
                     break;
                 case R.id.load_error_layout:
                     showLoadingDlg(getString(Res.getStringID("@string/loading_text")));

@@ -11,7 +11,6 @@ import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.ECMTransparentUtils;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.login.communication.CommunicationService;
 import com.luojilab.component.componentlib.router.Router;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -130,10 +129,6 @@ public class MiPushReceiver extends PushMessageReceiver {
                 PushManagerUtils.getInstance().registerPushId2Emm();
                 new ClientIDUtils(context).upload();
                 Router router = Router.getInstance();
-                if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-                    CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-                    service.startWebSocket();
-                }
             }
             // else {
             // PushManagerUtils.getInstance().setJpushStatus(true);

@@ -17,9 +17,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -30,28 +28,15 @@ import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
-import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MineLayoutItem;
 import com.inspur.emmcloud.bean.system.MineLayoutItemGroup;
-import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
-import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.ui.mine.card.CardPackageActivity;
-import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
-import com.inspur.emmcloud.ui.mine.setting.EnterpriseSwitchActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
-import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,58 +69,18 @@ public class MoreFragment extends BaseFragment {
     private void initData() {
         String myInfo = PreferencesUtils.getString(MyApplication.getInstance(), "myInfo", "");
         getMyInfoResult = new GetMyInfoResult(myInfo);
-        MainTabProperty mainTabProperty =
-                AppTabUtils.getMainTabProperty(MyApplication.getInstance(), getClass().getSimpleName());
-        if (mainTabProperty != null) {
-            mineLayoutItemGroupList = mainTabProperty.getMineLayoutItemGroupList();
-        }
-        if (mineLayoutItemGroupList.size() == 0) {
-            MineLayoutItemGroup mineLayoutItemGroupPersonnalInfo = new MineLayoutItemGroup();
-            mineLayoutItemGroupPersonnalInfo.getMineLayoutItemList()
-                    .add(new MineLayoutItem("my_personalInfo_function", "", "", ""));
-            MineLayoutItemGroup mineLayoutItemGroupSetting = new MineLayoutItemGroup();
-            mineLayoutItemGroupSetting.getMineLayoutItemList().add(new MineLayoutItem("my_setting_function",
-                    "personcenter_setting", "", getString(R.string.settings)));
-            MineLayoutItemGroup mineLayoutItemGroupCardbox = new MineLayoutItemGroup();
-            mineLayoutItemGroupCardbox.getMineLayoutItemList().add(
-                    new MineLayoutItem("my_cardbox_function", "personcenter_cardbox", "", getString(R.string.wallet)));
-            MineLayoutItemGroup mineLayoutItemGroupAboutUs = new MineLayoutItemGroup();
-            mineLayoutItemGroupAboutUs.getMineLayoutItemList().add(new MineLayoutItem("my_aboutUs_function",
-                    "personcenter_aboutus", "", getString(R.string.about_text)));
-            mineLayoutItemGroupList.add(mineLayoutItemGroupPersonnalInfo);
-            mineLayoutItemGroupList.add(mineLayoutItemGroupSetting);
-            mineLayoutItemGroupList.add(mineLayoutItemGroupCardbox);
-            mineLayoutItemGroupList.add(mineLayoutItemGroupAboutUs);
-        }
-        if (mainTabProperty == null || !mainTabProperty.isHasExtendList()) {
-            for (MineLayoutItemGroup mineLayoutItemGroup : mineLayoutItemGroupList) {
-                for (MineLayoutItem mineLayoutItem : mineLayoutItemGroup.getMineLayoutItemList()) {
-                    switch (mineLayoutItem.getId()) {
-                        case "my_setting_function":
-                            mineLayoutItem.setIco("personcenter_setting");
-                            mineLayoutItem.setTitle(getString(R.string.settings));
-                            break;
-                        case "my_cardbox_function":
-                            mineLayoutItem.setIco("personcenter_cardbox");
-                            mineLayoutItem.setTitle(getString(R.string.wallet));
-                            break;
-                        case "my_feedback_function":
-                            mineLayoutItem.setIco("personcenter_feedback");
-                            mineLayoutItem.setTitle(getString(R.string.more_feedback));
-                            break;
-                        case "my_customerService_function":
-                            mineLayoutItem.setIco("personcenter_customerService");
-                            mineLayoutItem.setTitle(getString(R.string.app_customer));
-                            break;
-                        case "my_aboutUs_function":
-                            mineLayoutItem.setIco("personcenter_aboutUs");
-                            mineLayoutItem.setTitle(getString(R.string.about_text));
-                            break;
-                    }
-                }
-            }
-        }
-        getUserCardMenu();
+        MineLayoutItemGroup mineLayoutItemGroupPersonnalInfo = new MineLayoutItemGroup();
+        mineLayoutItemGroupPersonnalInfo.getMineLayoutItemList()
+                .add(new MineLayoutItem("my_personalInfo_function", "", "", ""));
+        MineLayoutItemGroup mineLayoutItemGroupSetting = new MineLayoutItemGroup();
+        mineLayoutItemGroupSetting.getMineLayoutItemList().add(new MineLayoutItem("my_setting_function",
+                "personcenter_setting", "", getString(R.string.settings)));
+        MineLayoutItemGroup mineLayoutItemGroupAboutUs = new MineLayoutItemGroup();
+        mineLayoutItemGroupAboutUs.getMineLayoutItemList().add(new MineLayoutItem("my_aboutUs_function",
+                "personcenter_aboutus", "", getString(R.string.about_text)));
+        mineLayoutItemGroupList.add(mineLayoutItemGroupPersonnalInfo);
+        mineLayoutItemGroupList.add(mineLayoutItemGroupSetting);
+        mineLayoutItemGroupList.add(mineLayoutItemGroupAboutUs);
     }
 
     @Override
@@ -177,51 +122,15 @@ public class MoreFragment extends BaseFragment {
         String uri = layoutItem.getUri();
         if (StringUtils.isBlank(uri)) {
             switch (layoutItem.getId()) {
-                //  case "my_personalInfo_function":
-                // Intent intent = new Intent();
-                // intent.setClass(getActivity(), MyInfoActivity.class);
-                // startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
-                // recordUserClick("profile");
-                //break;
                 case "my_setting_function":
                     IntentUtils.startActivity(getActivity(), SettingActivity.class);
                     recordUserClick("setting");
-                    break;
-                case "my_cardbox_function":
-                    IntentUtils.startActivity(getActivity(), CardPackageActivity.class);
-                    recordUserClick("wallet");
                     break;
                 case "my_aboutUs_function":
                     IntentUtils.startActivity(getActivity(), AboutActivity.class);
                     recordUserClick("about");
                     break;
-                case "my_feedback_function":
-                    IntentUtils.startActivity(getActivity(), FeedBackActivity.class);
-                    recordUserClick("feedback");
-                    break;
-                case "my_customerService_function":
-                    if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(MyApplication.getInstance());
-                        if (customerChannel != null) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("cid", customerChannel.getCid());
-                            // 为区分来自云+客服添加一个from值，在ChannelActivity里使用
-                            bundle.putString("from", "customer");
-                            IntentUtils.startActivity(getActivity(), ChannelV0Activity.class, bundle);
-                        }
-                    } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-                        Conversation conversation =
-                                ConversationCacheUtils.getCustomerConversation(MyApplication.getInstance());
-                        if (conversation != null) {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
-                            bundle.putString("from", "customer");
-                            IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                        }
-                    }
 
-                    recordUserClick("customservice");
-                    break;
                 default:
                     break;
             }
@@ -257,13 +166,6 @@ public class MoreFragment extends BaseFragment {
         PVCollectModelCacheUtils.saveCollectModel(functionId, "mine");
     }
 
-    private void getUserCardMenu() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            MineAPIService apiService = new MineAPIService(getActivity());
-            apiService.setAPIInterface(new WebService());
-            apiService.getUserCardMenus();
-        }
-    }
 
     /**
      * expandableListView适配器
@@ -324,7 +226,7 @@ public class MoreFragment extends BaseFragment {
                 ImageView photoImg = convertView.findViewById(R.id.iv_photo);
                 TextView nameText = convertView.findViewById(R.id.tv_name);
                 TextView enterpriseText = convertView.findViewById(R.id.tv_enterprise);
-                String photoUri = APIUri.getUserIconUrl(getActivity(), MyApplication.getInstance().getUid());
+                String photoUri = APIUri.getChannelImgUrl(getActivity(), MyApplication.getInstance().getUid());
                 ImageDisplayUtils.getInstance().displayImage(photoImg, photoUri, R.drawable.icon_photo_default);
                 String userName =
                         PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
@@ -428,9 +330,6 @@ public class MoreFragment extends BaseFragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.tv_enterprise:
-                    IntentUtils.startActivity(getActivity(), EnterpriseSwitchActivity.class);
-                    break;
                 case R.id.ll_my_info:
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), MyInfoActivity.class);
@@ -441,16 +340,4 @@ public class MoreFragment extends BaseFragment {
         }
     }
 
-    private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnUserCardMenusSuccess(GetUserCardMenusResult getUserCardMenusResult) {
-            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MINE_USER_MENUS,
-                    getUserCardMenusResult.getResponse());
-            adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void returnUserCardMenusFail(String error, int errorCode) {
-        }
-    }
 }

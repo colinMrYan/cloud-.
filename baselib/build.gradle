@@ -107,7 +107,6 @@ dependencies {
     }
     api deps.gson
     api deps.fastjson
-    api deps.qmui
     api deps.commonsLang3
     api deps.amapLocation
 
@@ -129,17 +128,11 @@ dependencies {
     api deps.androidGifDrawable
     api deps.magicViewpager
     api deps.jsoup
-    api deps.markdown
     api deps.disklrucache
     api deps.progresspieview
     api deps.ShortcutBadger
-    api deps.RecordWave
-    api deps.mp3spi
-    api deps.Mp3Converter
 
     api deps.commonsCodec
-    api deps.oss
-    api deps.protobuf
     api deps.avi
     api deps.RoundedImageView
     api deps.semver

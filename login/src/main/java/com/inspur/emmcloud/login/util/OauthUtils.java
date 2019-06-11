@@ -9,10 +9,8 @@ import com.inspur.emmcloud.login.R;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
-import com.inspur.emmcloud.login.communication.CommunicationService;
 import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.login.ui.LoginActivity;
-import com.luojilab.component.componentlib.router.Router;
 
 import org.json.JSONObject;
 
@@ -94,11 +92,6 @@ public class OauthUtils extends LoginAPIInterfaceImpl {
             PreferencesUtils.putInt(BaseApplication.getInstance(), "expiresIn", expiresIn);
             BaseApplication.getInstance().setAccessToken(accessToken);
             BaseApplication.getInstance().setRefreshToken(refreshToken);
-            Router router = Router.getInstance();
-            if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-                CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-                service.startWebSocket();
-            }
             tokenGetTime = System.currentTimeMillis();
             isTokenRefreshing = false;
             for (OauthCallBack oauthCallBack : callBackList) {

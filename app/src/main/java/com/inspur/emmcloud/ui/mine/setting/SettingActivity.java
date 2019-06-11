@@ -2,69 +2,40 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.system.AppConfig;
-import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
-import com.inspur.emmcloud.service.BackgroundService;
-import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
-import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,26 +45,6 @@ public class SettingActivity extends BaseActivity {
     private static final int DATA_CLEAR_SUCCESS = 0;
     @BindView(R.id.switch_view_setting_web_rotate)
     SwitchView webRotateSwitch;
-    @BindView(R.id.switch_view_setting_run_background)
-    SwitchView runBackgroundSwitch;
-    @BindView(R.id.switch_view_setting_voice_2_word)
-    SwitchView voice2WordSwitch;
-    @BindView(R.id.rl_setting_voice_2_word)
-    RelativeLayout voice2WordLayout;
-    @BindView(R.id.rl_setting_experience_upgrade)
-    RelativeLayout experienceUpgradeLayout;
-    @BindView(R.id.switch_view_setting_experience_upgrade)
-    SwitchView experienceUpgradeSwitch;
-    @BindView(R.id.tv_setting_language_name)
-    TextView languageNameText;
-    @BindView(R.id.iv_setting_language_flag)
-    ImageView languageFlagImg;
-    @BindView(R.id.tv_setting_theme_name)
-    TextView themeNameText;
-    @BindView(R.id.rl_setting_switch_tablayout)
-    RelativeLayout switchTabLayout;
-    @BindView(R.id.tv_setting_tab_name)
-    TextView tabName;
     @BindView(R.id.switch_view_setting_notification)
     Switch notificationSwitch;
     private Handler handler;
@@ -105,21 +56,11 @@ public class SettingActivity extends BaseActivity {
         @Override
         public void toggleToOn(View view) {
             switch (view.getId()) {
-                case R.id.switch_view_setting_run_background:
-                    setAppRunBackground(true);
-                    break;
-                case R.id.switch_view_setting_voice_2_word:
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
-                    voice2WordSwitch.setOpened(true);
-                    break;
                 case R.id.switch_view_setting_web_rotate:
                     AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "true");
                     AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
                     setWebAutoRotateState();
                     saveWebAutoRotateConfig(true);
-                    break;
-                case R.id.switch_view_setting_experience_upgrade:
-                    updateUserExperienceUpgradeFlag();
                     break;
                 default:
                     break;
@@ -129,21 +70,11 @@ public class SettingActivity extends BaseActivity {
         @Override
         public void toggleToOff(View view) {
             switch (view.getId()) {
-                case R.id.switch_view_setting_run_background:
-                    setAppRunBackground(false);
-                    break;
-                case R.id.switch_view_setting_voice_2_word:
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
-                    voice2WordSwitch.setOpened(false);
-                    break;
                 case R.id.switch_view_setting_web_rotate:
                     AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "false");
                     AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
                     setWebAutoRotateState();
                     saveWebAutoRotateConfig(false);
-                    break;
-                case R.id.switch_view_setting_experience_upgrade:
-                    updateUserExperienceUpgradeFlag();
                     break;
                 default:
                     break;
@@ -154,17 +85,9 @@ public class SettingActivity extends BaseActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public void onCreate() {
         ButterKnife.bind(this);
         initView();
-        setLanguage();
         handMessage();
     }
 
@@ -213,17 +136,7 @@ public class SettingActivity extends BaseActivity {
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         apiService = new MineAPIService(this);
-        apiService.setAPIInterface(new WebService());
         setWebAutoRotateState();
-        webRotateSwitch.setOnStateChangedListener(onStateChangedListener);
-        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
-        runBackgroundSwitch.setOpened(isAppSetRunBackground);
-        runBackgroundSwitch.setOnStateChangedListener(onStateChangedListener);
-        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
-            voice2WordLayout.setVisibility(View.VISIBLE);
-            voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
-            voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
-        }
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -240,17 +153,6 @@ public class SettingActivity extends BaseActivity {
                 }
             }
         });
-        if (AppUtils.isAppVersionStandard()) {
-            getUserExperienceUpgradeFlag();
-            experienceUpgradeLayout.setVisibility(View.VISIBLE);
-            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
-            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
-            experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
-        }
-        themeNameText.setText(ThemeSwitchActivity.getThemeName());
-        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
-        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>1?View.VISIBLE:View.GONE);
-        tabName.setText(getTabLayoutName());
     }
 
     private void showNotificationCloseDlg() {
@@ -269,96 +171,13 @@ public class SettingActivity extends BaseActivity {
                     .show();
     }
 
-    private String getTabLayoutName() {
-        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
-        List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
-        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
-        if(StringUtils.isBlank(currentTabLayoutName)){
-            currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
-        }
-        String tabName = "";
-        for (int i = 0; i < naviBarSchemeList.size(); i++) {
-            NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
-            if(naviBarScheme.getName().equals(currentTabLayoutName)){
-                return getTabNameByLangudge(naviBarScheme);
-            }
-        }
-        if(StringUtils.isBlank(tabName)){
-            String defaultScheme = naviBarModel.getNaviBarPayload().getDefaultScheme();
-            for (int i = 0; i < naviBarSchemeList.size(); i++) {
-                NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
-                if(naviBarSchemeList.get(i).getName().equals(defaultScheme)){
-                    return getTabNameByLangudge(naviBarScheme);
-                }
-            }
-        }
-        return "";
-    }
 
-    private String getTabNameByLangudge(NaviBarScheme naviBarScheme) {
-        String tempTabName = "";
-        Configuration config = getResources().getConfiguration();
-        String environmentLanguage = config.locale.getLanguage();
-        switch (environmentLanguage.toLowerCase()) {
-            case "zh-hant":
-                tempTabName = naviBarScheme.getNaviBarTitleResult().getZhHans();
-                break;
-            case "en":
-            case "en-us":
-                tempTabName = naviBarScheme.getNaviBarTitleResult().getEnUS();
-                break;
-            default:
-                tempTabName = naviBarScheme.getNaviBarTitleResult().getZhHans();
-                break;
-        }
-        return tempTabName;
-    }
 
     private void setWebAutoRotateState() {
         boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         webRotateSwitch.setOpened(isWebAutoRotate);
     }
 
-    /**
-     * 设置显示app语言
-     */
-    private void setLanguage() {
-        // TODO Auto-generated method stub
-        String languageName = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "language", "");
-        String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
-        if (languageJson != null && !languageName.equals("followSys")) {
-            Language language = new Language(languageJson);
-            languageNameText.setText(new Language(languageJson).getLabel());
-            String iso = language.getIso();
-            iso = iso.replace("-", "_");
-            iso = iso.toLowerCase();
-            Integer id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
-            if (id == null) {
-                id = R.drawable.zh_cn;
-            }
-            //设置语言国旗标志
-            languageFlagImg.setImageResource(id);
-        } else {
-            languageNameText.setText(getString(R.string.follow_system));
-        }
-    }
-
-    /**
-     * 设置app是否运行在后台
-     *
-     * @param isAppSetRunBackground
-     */
-    private void setAppRunBackground(boolean isAppSetRunBackground) {
-        PreferencesUtils.putBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, isAppSetRunBackground);
-        runBackgroundSwitch.setOpened(isAppSetRunBackground);
-        Intent intent = new Intent();
-        intent.setClass(SettingActivity.this, BackgroundService.class);
-        if (isAppSetRunBackground) {
-            startService(intent);
-        } else {
-            stopService(intent);
-        }
-    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -369,10 +188,6 @@ public class SettingActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 ToastUtils.show(getApplicationContext(),
                         R.string.data_clear_success);
-                // 通知消息页面重新创建群组头像
-                Intent intent = new Intent("message_notify");
-                intent.putExtra("command", "creat_group_icon");
-                LocalBroadcastManager.getInstance(SettingActivity.this).sendBroadcast(intent);
 
             }
 
@@ -388,21 +203,8 @@ public class SettingActivity extends BaseActivity {
             case R.id.bt_setting_signout:
                 showSignoutDlg();
                 break;
-            case R.id.rl_setting_language:
-                IntentUtils.startActivity(SettingActivity.this,
-                        LanguageSwitchActivity.class);
-                break;
             case R.id.clear_cache_layout:
                 showClearCacheDlg();
-                break;
-            case R.id.rl_setting_account_safe:
-                IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
-                break;
-            case R.id.rl_setting_switch_theme:
-                IntentUtils.startActivity(SettingActivity.this, ThemeSwitchActivity.class);
-                break;
-            case R.id.rl_setting_switch_tablayout:
-                IntentUtils.startActivity(SettingActivity.this, TabLayoutSwitchActivity.class);
                 break;
             default:
                 break;
@@ -441,27 +243,10 @@ public class SettingActivity extends BaseActivity {
                 .setPositiveButton(R.string.ok, (dialog, index) -> {
                     PushManagerUtils.getInstance().unregisterPushId2Emm();
                     dialog.dismiss();
-                    boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
-                    if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
-                        loadingDlg.show();
-                        WSAPIService.getInstance().sendAppStatus("REMOVED");
-                    } else {
-                        MyApplication.getInstance().signout();
-                        LogUtils.jasonDebug("1111111111111");
-                    }
-                    stopAppService();
+                    MyApplication.getInstance().signout();
                 })
                 .show();
     }
-
-    /**
-     * 关闭服务
-     */
-    private void stopAppService() {
-        stopService(new Intent(getApplicationContext(), CoreService.class));
-        stopService(new Intent(getApplicationContext(), BackgroundService.class));
-    }
-
 
     /**
      * 弹出清除缓存选项提示框
@@ -547,18 +332,6 @@ public class SettingActivity extends BaseActivity {
     }
 
 
-    //接收到websocket发过来的消息
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceiveWebsocketRemoveCallback(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_WEBSOCKET_STATUS_REMOVE)) {
-            EventBus.getDefault().unregister(this);
-            LoadingDialog.dimissDlg(loadingDlg);
-            MyApplication.getInstance().signout();
-            stopAppService();
-        }
-
-    }
-
 
     private void saveWebAutoRotateConfig(boolean isWebAutoRotate) {
         if (NetUtils.isNetworkConnected(this)) {
@@ -567,55 +340,6 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    private void getUserExperienceUpgradeFlag() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            apiService.getUserExperienceUpgradeFlag();
-        }
-
-    }
-
-    private void updateUserExperienceUpgradeFlag() {
-        boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            apiService.updateUserExperienceUpgradeFlag(isExperienceUpgradeFlag ? 0 : 1);
-        } else {
-            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
-        }
-
-    }
-
-    private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult) {
-            boolean isExperienceUpgradeFlag = (getExperienceUpgradeFlagResult.getStatus() == 1);
-            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, isExperienceUpgradeFlag);
-            if (experienceUpgradeSwitch.isOpened() != isExperienceUpgradeFlag) {
-                experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
-            }
-
-        }
-
-        @Override
-        public void returnExperienceUpgradeFlagFail(String error, int errorCode) {
-
-        }
 
 
-        @Override
-        public void returnUpdateExperienceUpgradeFlagSuccess() {
-            LoadingDialog.dimissDlg(loadingDlg);
-            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
-            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, !isExperienceUpgradeFlag);
-            experienceUpgradeSwitch.setOpened(!isExperienceUpgradeFlag);
-        }
-
-        @Override
-        public void returnUpdateExperienceUpgradeFlagFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
-            boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
-            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
-        }
-    }
 }
