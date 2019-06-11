@@ -44,7 +44,7 @@ android {
 }
 
 combuild {
-    applicationName = 'com.inspur.login.runalone.application.LoginApplication'
+    applicationName = 'com.inspur.emmcloud.login.runalone.application.LoginApplication'
     isRegisterCompoAuto = false
 }
 
