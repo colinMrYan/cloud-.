@@ -48,7 +48,7 @@ public class CustomLoadingView extends View {
         };
         TypedArray array = this.getContext().obtainStyledAttributes(attrs, R.styleable.CusLoadingView, defStyleAttr, 0);
         this.mSize = array.getDimensionPixelSize(R.styleable.CusLoadingView_cus_loading_view_size, DensityUtil.dip2px(context, 32));
-        this.mPaintColor = Color.parseColor("#858C96");
+        this.mPaintColor = array.getInt(R.styleable.CusLoadingView_loading_color, Color.WHITE);
         array.recycle();
         this.initPaint();
     }

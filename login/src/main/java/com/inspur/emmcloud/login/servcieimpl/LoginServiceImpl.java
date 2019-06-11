@@ -48,4 +48,9 @@ public class LoginServiceImpl implements LoginService {
     public void autoLogin(Activity activity, Handler handler) {
         new LoginUtils(activity, handler).autoLogin();
     }
+
+    @Override
+    public void setMDMStatusNoPass() {
+        new MDM().getMDMListener().MDMStatusNoPass();
+    }
 }

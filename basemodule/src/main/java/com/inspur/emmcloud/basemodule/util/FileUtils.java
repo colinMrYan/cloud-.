@@ -15,11 +15,9 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
-import com.inspur.basemodule.R;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.BuildConfig;
 import com.inspur.emmcloud.basemodule.R;
 
 import java.io.BufferedOutputStream;

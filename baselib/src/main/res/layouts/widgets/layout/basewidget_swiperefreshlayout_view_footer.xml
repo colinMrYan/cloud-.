@@ -19,6 +19,6 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="30dp"
         android:layout_toLeftOf="@id/text"
-        android:color="@color/header_bg_blue"
-        app:cus_loading_view_size="20dp" />
+        app:cus_loading_view_size="20dp"
+        app:loading_color="@color/header_bg_blue" />
 </RelativeLayout>
