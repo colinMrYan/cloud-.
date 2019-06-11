@@ -83,9 +83,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:color="#666666"
                         android:visibility="gone"
-                        app:cus_loading_view_size="18dp" />
+                        app:cus_loading_view_size="18dp"
+                        app:loading_color="#666666" />
                 </RelativeLayout>
 
                 <RelativeLayout
