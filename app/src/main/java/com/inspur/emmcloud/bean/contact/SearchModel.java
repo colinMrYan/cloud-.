@@ -2,7 +2,6 @@ package com.inspur.emmcloud.bean.contact;
 
 import android.content.Context;
 
-import com.facebook.react.bridge.ReadableMap;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
@@ -88,22 +87,6 @@ public class SearchModel implements Serializable {
         this.name = contactOrg.getName();
     }
 
-    public SearchModel(ReadableMap nativeInfo) {
-        try {
-            if (nativeInfo.hasKey("inspur_id")) {
-                id = nativeInfo.getString("inspur_id");
-            }
-            if (nativeInfo.hasKey("real_name")) {
-                name = nativeInfo.getString("real_name");
-            }
-            if (nativeInfo.hasKey("type")) {
-                type = nativeInfo.getString("type").toUpperCase();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public SearchModel(Channel channel) {
         if (channel == null) {

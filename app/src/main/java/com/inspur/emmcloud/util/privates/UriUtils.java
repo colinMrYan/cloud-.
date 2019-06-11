@@ -12,7 +12,6 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.imp.api.ImpActivity;
 
 
@@ -61,11 +60,6 @@ public class UriUtils {
                 } else {
                     openWebApp(activity, uri, app);
                 }
-                break;
-            case 5:
-                Bundle bundle = new Bundle();
-                bundle.putString("ecc-app-react-native", uri);
-                IntentUtils.startActivity(activity, ReactNativeAppActivity.class, bundle);
                 break;
 
             default:

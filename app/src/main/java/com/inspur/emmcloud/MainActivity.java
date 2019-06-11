@@ -33,7 +33,6 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
-import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.luojilab.component.componentlib.router.Router;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -253,13 +252,7 @@ public class MainActivity extends BaseActivity {
                 });
             }
         };
-        if (new SplashPageUtils(MainActivity.this).checkIfShowSplashPage() && (leftTime > 0)) {
-            skipImageBtn.setVisibility(View.VISIBLE);
-            timer = new Timer();
-            timer.schedule(task, leftTime);
-        } else {
-            startApp();
-        }
+        startApp();
     }
 
     /**

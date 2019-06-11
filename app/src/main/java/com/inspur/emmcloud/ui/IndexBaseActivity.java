@@ -52,7 +52,6 @@ import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
@@ -201,13 +200,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                                 case Constant.APP_TAB_BAR_CONTACT:
                                     tabBean = new TabBean(getString(R.string.contact), ContactSearchFragment.class,
                                             mainTabResult);
-                                    break;
-                            }
-                            break;
-                        case Constant.APP_TAB_TYPE_RN:
-                            switch (mainTabResult.getUri()) {
-                                case Constant.APP_TAB_BAR_RN_FIND:
-                                    tabBean = new TabBean(getString(R.string.find), FindFragment.class, mainTabResult);
                                     break;
                             }
                             break;

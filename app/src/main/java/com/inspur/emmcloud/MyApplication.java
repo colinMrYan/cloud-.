@@ -1,6 +1,5 @@
 package com.inspur.emmcloud;
 
-import com.facebook.soloader.SoLoader;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.login.communication.CommunicationService;
 import com.luojilab.component.componentlib.router.Router;
@@ -22,7 +21,6 @@ public class MyApplication extends BaseApplication {
             CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
             service.startWebSocket();
         }
-        SoLoader.init(this, false);//ReactNative相关初始化
     }
 
 }
