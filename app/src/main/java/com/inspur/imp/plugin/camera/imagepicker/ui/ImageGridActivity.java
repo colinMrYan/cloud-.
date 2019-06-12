@@ -35,6 +35,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     public static final int REQUEST_PERMISSION_STORAGE = 0x01;
     public static final int REQUEST_PERMISSION_CAMERA = 0x02;
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
+    public static final String EXTRA_ORIGINAL_PICTURE = "ORIGINAL_PICTURE";
     protected static final int CUT_IMG_SUCCESS = 1;
     private int encodingType = 0;
     private ImagePicker imagePicker;
@@ -120,6 +121,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         Intent intent = new Intent();
         intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                 imagePicker.getSelectedImages());
+        intent.putExtra(EXTRA_ORIGINAL_PICTURE, orgPictureCheckBox.isChecked());
         setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 多选不允许裁剪裁剪，返回数据
         finish();
     }
