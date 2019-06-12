@@ -42,7 +42,7 @@ public class LoginMoreActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_login_more;
+        return R.layout.login_activity_login_more;
     }
 
 

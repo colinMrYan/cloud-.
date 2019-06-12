@@ -54,7 +54,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_password_first_setting;
+        return R.layout.login_activity_password_first_setting;
     }
 
     protected int getStatusType() {

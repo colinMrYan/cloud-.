@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_invaliad_account_or_pwd">用戶名或密碼錯誤</string>
+    <string name="login_captchas_login">短信登錄 </string>
+    <string name="login_by_account">帳號密碼登錄</string>
+    <string name="login_find_password">找回密碼</string>
+    <string name="login_get_captchas_code">獲取驗證碼</string>
+    <string name="login_captchas_sent"> 驗證碼已發送到手機：</string>
+    <string name="login_please_input_captchas">請輸入驗證碼</string>
+    <string name="login_please_input_phone_num">請輸入手機號碼</string>
+    <string name="login_phone_num_illegal_format">手機號碼格式不正確</string>
+    <string name="login_loading_text">登錄中...</string>
+    <string name="login_captchas_getcode_success">驗證碼發送成功</string>
+    <string name="login_code_verification_failure">驗證碼校驗失敗</string>
+    <string name="login_sms">短信登錄</string>
+    <string name="login_your_contact"> 您的聯繫方式</string>
+    <string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>
+    <string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>
+    <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
+    <string name="login_recover">重新獲取</string>
+    <string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>
+    <string name="login_current_login_enterprise">當前系統：%1$s</string>
+    <string name="login_forget_password">忘記密碼？</string>
+    <string name="login_fail_limit_remaining">帳號或密碼錯誤，請重新輸入，剩餘%1$d次機會</string>
+    <string name="login_fail_account_lock_by_min">帳號已被鎖定，請%1$d分鐘後再嘗試</string>
+    <string name="login_fail_account_lock_by_second">帳號已被鎖定，請%1$d秒後再次嘗試</string>
+</resources>

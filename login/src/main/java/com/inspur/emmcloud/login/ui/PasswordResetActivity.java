@@ -58,7 +58,7 @@ public class PasswordResetActivity extends BaseActivity implements View.OnTouchL
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_password_reset;
+        return R.layout.login_activity_password_reset;
     }
 
     protected int getStatusType() {
