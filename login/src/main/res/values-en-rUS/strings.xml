@@ -14,7 +14,7 @@
     <string name="login_code_verification_failure">Incorrect verification code</string>
     <string name="login_sms">Quick Login</string>
     <string name="login_captchas_getcode_success">Code has been sent successfully</string>
-    <string name="login_your_contact">Your contact</string>
+    <!--<string name="login_your_contact">Your contact</string>-->
     <string name="login_authorization_expired">Re-login based on security audit policy</string>
     <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
     <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>

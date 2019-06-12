@@ -13,7 +13,7 @@
     <string name="login_captchas_getcode_success">驗證碼發送成功</string>
     <string name="login_code_verification_failure">驗證碼校驗失敗</string>
     <string name="login_sms">短信登錄</string>
-    <string name="login_your_contact"> 您的聯繫方式</string>
+    <!--<string name="login_your_contact"> 您的聯繫方式</string>-->
     <string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>
     <string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>
     <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>

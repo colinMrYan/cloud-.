@@ -57,7 +57,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     annotationProcessor deps.ARouter.router_anno
-    annotationProcessor deps.jimu.router_anno_compiler
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
 }
