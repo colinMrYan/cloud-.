@@ -20,6 +20,7 @@ import com.inspur.imp.plugin.camera.imagepicker.adapter.ImageGridAdapter;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageFolder;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.view.FolderPopUpWindow;
+import com.inspur.imp.plugin.camera.imagepicker.view.SuperCheckBox;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import java.text.DecimalFormat;
@@ -44,6 +45,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private TextView OkText; // 确定按钮
     private Button mBtnDir; // 文件夹切换按钮
     private Button mBtnPre; // 预览按钮
+    private SuperCheckBox orgPictureCheckBox;
     //private Button mBtnEdit;
     private ImageFolderAdapter mImageFolderAdapter; // 图片文件夹的适配器
     private FolderPopUpWindow mFolderPopupWindow; // ImageSet的PopupWindow
@@ -63,6 +65,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         mBtnDir = (Button) findViewById(R.id.btn_dir);
         mBtnPre = (Button) findViewById(R.id.btn_preview);
         mGridView = (GridView) findViewById(R.id.gridview);
+        orgPictureCheckBox = findViewById(R.id.cb_origin);
         mFooterBar = findViewById(R.id.footer_bar);
         OkText.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
         mBtnPre.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
