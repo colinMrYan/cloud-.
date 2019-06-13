@@ -406,7 +406,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 long meetingDayEndTime = meeting.getDayEndTime(calendar);
                 long LastMeetingEnd = (j > 0) ? dayMeetingList.get(j - 1).getDayEndTime(calendar) : dayStartTimeLong;
                 if (meetingDayStartTime > LastMeetingEnd && (meetingDayStartTime > System.currentTimeMillis())) {
-                    MeetingSchedule meetingSchedule = new MeetingSchedule(LastMeetingEnd, meetingDayStartTime, null);
+                    MeetingSchedule meetingSchedule = new MeetingSchedule((i == 0 && (LastMeetingEnd < System.currentTimeMillis())) ? System.currentTimeMillis() : LastMeetingEnd, meetingDayStartTime, null);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }
                 MeetingSchedule meetingSchedule = new MeetingSchedule(meetingDayStartTime, meetingDayEndTime, meeting);
@@ -415,7 +415,8 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             if (dayMeetingList.size() > 0) {
                 long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
                 if (dayLastMeetingEnd < dayEndTimeLong) {
-                    MeetingSchedule meetingSchedule = new MeetingSchedule(dayLastMeetingEnd, dayEndTimeLong, null);
+                    MeetingSchedule meetingSchedule = new MeetingSchedule((i == 0 && dayLastMeetingEnd <
+                            System.currentTimeMillis()) ? System.currentTimeMillis() : dayLastMeetingEnd, dayEndTimeLong, null);
                     dayMeetingScheduleList.add(meetingSchedule);
                 }
             } else {
