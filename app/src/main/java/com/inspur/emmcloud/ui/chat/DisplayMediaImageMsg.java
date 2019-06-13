@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
@@ -56,11 +58,27 @@ public class DisplayMediaImageMsg {
             } else {
                 imageUri = "file://" + imageUri;
             }
-
         }
+        //判断是否有Preview 图片如果有的话用preview ，否则用原图
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
+        LogUtils.LbcDebug("RawView h:" + h);
+        LogUtils.LbcDebug("RawView w:" + w);
+        if (msgContentMediaImage.getPreviewHeight() > 0 && msgContentMediaImage.getPreviewWidth() > 0) {
+            h = msgContentMediaImage.getPreviewHeight();
+            w = msgContentMediaImage.getPreviewWidth();
+        }
+        LogUtils.LbcDebug("preView h:" + h);
+        LogUtils.LbcDebug("preView w:" + w);
+
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
+        LayoutParams layoutParams = getImgViewSize(context, w, h);
+        if (imageUri.startsWith("http")) {
+            imageUri = imageUri + "&w=" + layoutParams.width + "&h=" + layoutParams.height;
+        }
+
+        LogUtils.LbcDebug("result imageUri::" + imageUri);
+
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
@@ -98,10 +116,10 @@ public class DisplayMediaImageMsg {
         if (w == 0 || h == 0) {
             return false;
         }
-        int minW = DensityUtil.dip2px(context, 100);
-        int minH = DensityUtil.dip2px(context, 90);
-        int maxW = DensityUtil.dip2px(context, 270);
-        int maxH = DensityUtil.dip2px(context, 232);
+        int minW = DensityUtil.dip2px(context, 60);
+        int minH = DensityUtil.dip2px(context, 60);
+        int maxW = DensityUtil.dip2px(context, 260);
+        int maxH = DensityUtil.dip2px(context, 260);
         LayoutParams params = imageView.getLayoutParams();
         if (w == h) {
             params.width = minW;
@@ -126,6 +144,42 @@ public class DisplayMediaImageMsg {
         }
         imageView.setLayoutParams(params);
         return true;
+    }
+
+    /**
+     * 获取ImageView的大小
+     *
+     * @param context
+     * @param w       // 30~130
+     * @param h       // 30~130
+     * @return
+     */
+    public static LayoutParams getImgViewSize(Context context, int w, int h) {
+        LayoutParams params = new LayoutParams(0, 0);
+        if (w == 0 || h == 0) {
+            return params;
+        }
+        int minW = DensityUtil.dip2px(context, 60);
+        int minH = DensityUtil.dip2px(context, 60);
+        int maxW = DensityUtil.dip2px(context, 260);
+        int maxH = DensityUtil.dip2px(context, 260);
+        if (w == h) {
+            params.width = minW;
+            params.height = minW;
+        } else if (h > w) {
+            params.width = minW;
+            params.height = (int) (minW * 1.0 * h / w);
+            if (params.height > maxH) {
+                params.height = maxH;
+            }
+        } else {
+            params.width = maxW;
+            params.height = (int) (maxW * 1.0 * h / w);
+            if (params.height < minH) {
+                params.height = minH;
+            }
+        }
+        return params;
     }
 
 }
