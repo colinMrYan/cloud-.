@@ -17,7 +17,7 @@
     <!--<string name="login_your_contact">Your contact</string>-->
     <string name="login_authorization_expired">Re-login based on security audit policy</string>
     <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
-    <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
+    <!--<string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>-->
     <string name="login_recover">Retry</string>
     <string name="login_tv_welcome">Hello，\nwelcome to %1$s</string>
     <string name="login_current_login_enterprise">Current system：%1$s</string>

@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.servcieimpl;
 
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.login.app.AppService;
+import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 
 /**

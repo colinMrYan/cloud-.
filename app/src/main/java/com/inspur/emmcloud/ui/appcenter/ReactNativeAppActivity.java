@@ -86,25 +86,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private void init() {
         String token = ((MyApplication) getApplicationContext())
                 .getToken();
-        checkToken(token);
         loadingDialog = new ReactLoadingDlg(this);
         reactNativeAPIService = new ReactNativeAPIService(ReactNativeAppActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
     }
 
 
-    /**
-     * 检查token，如果token不存在则跳转到登录页面
-     *
-     * @param token
-     */
-    private void checkToken(String token) {
-        if (StringUtils.isBlank(token)) {
-            ToastUtils.show(ReactNativeAppActivity.this, ReactNativeAppActivity.this.getString(R.string.login_authorization_expired));
-            ((MyApplication) getApplicationContext()).signout();
-            return;
-        }
-    }
 
     /**
      * 检查应用来源，目前有两种来源

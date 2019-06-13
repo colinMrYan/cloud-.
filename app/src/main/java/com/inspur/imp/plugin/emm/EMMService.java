@@ -3,14 +3,14 @@ package com.inspur.imp.plugin.emm;
 import android.os.Build;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.login.login.LoginService;
+import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.luojilab.component.componentlib.router.Router;
 
 import org.json.JSONObject;
 
@@ -88,8 +88,8 @@ public class EMMService extends ImpPlugin {
                 String userName = PreferencesUtils.getString(getFragmentContext(), "userRealName", "");
                 String userCode = PreferencesUtils.getString(getFragmentContext(), "userID", "");
                 Router router = Router.getInstance();
-                if (router.getService(LoginService.class.getSimpleName()) != null) {
-                    LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+                if (router.getService(LoginService.class) != null) {
+                    LoginService service = router.getService(LoginService.class);
                     service.MDMCheck(getActivity(), MyApplication.getInstance().getTanent(), userCode,
                             userName, state, true);
                 }

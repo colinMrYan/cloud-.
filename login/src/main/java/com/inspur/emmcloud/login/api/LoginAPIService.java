@@ -14,11 +14,11 @@ import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.login.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
 import com.inspur.emmcloud.login.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.login.util.OauthUtils;
 
 import org.json.JSONObject;
@@ -55,7 +55,7 @@ public class LoginAPIService {
      */
     public void OauthSignIn(String userName, String password) {
         String completeUrl = LoginAPIUri.getOauthSigninUrl();
-        RequestParams params = new RequestParams(completeUrl);
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
         params.addParameter("grant_type", "password");
         params.addParameter("username", userName);
         params.addParameter("password", password);

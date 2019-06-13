@@ -7,8 +7,8 @@ import android.os.Handler;
 
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.login.login.LoginService;
-import com.inspur.emmcloud.login.login.OauthCallBack;
+import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.login.ui.LoginActivity;
 import com.inspur.emmcloud.login.util.LoginUtils;
 import com.inspur.emmcloud.login.util.MDM.MDM;

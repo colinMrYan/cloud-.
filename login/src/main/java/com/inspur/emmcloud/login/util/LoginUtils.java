@@ -68,7 +68,12 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         String accessToken = PreferencesUtils.getString(BaseApplication.getInstance(), "accessToken", "");
         String myInfo = PreferencesUtils.getString(BaseApplication.getInstance(), "myInfo", "");
         String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
-        boolean isMDMStatusPass = PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
+        boolean isMDMStatusPassOld = PreferencesUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, false);
+        if (isMDMStatusPassOld) {
+            PreferencesUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, false);
+            PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
+        }
+        boolean isMDMStatusPass = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_MDM_STATUS_PASS, false);
         if (StringUtils.isBlank(accessToken)) {
             if (handler != null) {
                 handler.sendEmptyMessage(LOGIN_FAIL);
@@ -134,7 +139,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             public void MDMStatusPass(int doubleValidation) {
                 // TODO Auto-generated method stub
                 PreferencesByUserAndTanentUtils.putInt(BaseApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, doubleValidation);
-                PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, true);
+                PreferencesByUserAndTanentUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, true);
                 saveLoginInfo();
                 loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
                 mdm.destroyOnMDMListener();
@@ -345,7 +350,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             // TODO Auto-generated method stub
             String myInfo = getMyInfoResult.getResponse();
             String name = getMyInfoResult.getName();
-            PreferencesUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, false);
+            PreferencesByUserAndTanentUtils.putBoolean(activity, Constant.PREF_MDM_STATUS_PASS, false);
             PreferencesUtils.putString(activity, "userRealName", name);
             PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
             PreferencesUtils.putString(activity, "myInfo", myInfo);

@@ -9,6 +9,7 @@ import android.util.Log;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -25,8 +26,7 @@ import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
-import com.inspur.emmcloud.login.login.LoginService;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.login.LoginService;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -375,8 +375,8 @@ public class WebSocketPush {
                     closeWebsocket();
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
                     Router router = Router.getInstance();
-                    if (router.getService(LoginService.class.getSimpleName()) != null) {
-                        LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+                    if (router.getService(LoginService.class) != null) {
+                        LoginService service = router.getService(LoginService.class);
                         service.refreshToken(null, System.currentTimeMillis());
                     }
                 }

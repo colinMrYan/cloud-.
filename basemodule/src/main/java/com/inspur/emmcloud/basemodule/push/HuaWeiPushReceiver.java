@@ -5,12 +5,12 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.ECMTransparentUtils;
-import com.inspur.emmcloud.login.communication.CommunicationService;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -29,8 +29,8 @@ public class HuaWeiPushReceiver extends PushReceiver {
         PushManagerUtils.getInstance().registerPushId2Emm();
         new ClientIDUtils(context).upload();
         Router router = Router.getInstance();
-        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
             service.startWebSocket();
         }
     }

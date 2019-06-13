@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -14,11 +15,10 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.login.R;
 import com.inspur.emmcloud.login.R2;
 import com.inspur.emmcloud.login.bean.LoginMoreBean;
-import com.inspur.emmcloud.login.web.WebService;
-import com.luojilab.component.componentlib.router.Router;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -150,8 +150,8 @@ public class LoginMoreActivity extends BaseActivity {
      */
     private void showUnKnownMsg(String msg) {
         Router router = Router.getInstance();
-        if (router.getService(WebService.class.getSimpleName()) != null) {
-            WebService service = (WebService) router.getService(WebService.class.getSimpleName());
+        if (router.getService(WebService.class) != null) {
+            WebService service = router.getService(WebService.class);
             service.showScanResult(LoginMoreActivity.this, msg);
         }
     }

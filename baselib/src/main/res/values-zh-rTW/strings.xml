@@ -212,7 +212,7 @@
     <!--<string name="login_your_contact"> 您的聯繫方式</string>-->
     <!--<string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>-->
     <!--<string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>-->
-    <!--<string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>-->
+    <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
     <!--<string name="captchas">驗證碼</string>-->
     <!--<string name="recover">重新獲取</string>-->
     <!--<string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>-->

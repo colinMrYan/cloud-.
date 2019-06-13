@@ -3,10 +3,10 @@ package com.inspur.emmcloud.servcieimpl;
 import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.basemodule.service.PVCollectService;
-import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.login.setting.SettingService;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
@@ -36,10 +36,9 @@ public class SettingServiceImpl implements SettingService {
 
     @Override
     public void uploadMDMInfo() {
-        if (!AppUtils.isServiceWork(MyApplication.getInstance(), PVCollectService.class.getName()) && (!DbCacheUtils.isDbNull())) {
-            Intent intent = new Intent();
-            intent.setClass(MyApplication.getInstance(), PVCollectService.class);
-            MyApplication.getInstance().startService(intent);
+        if (!NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+            AppAPIService appAPIService = new AppAPIService(BaseApplication.getInstance());
+            appAPIService.uploadMDMInfo();
         }
     }
 

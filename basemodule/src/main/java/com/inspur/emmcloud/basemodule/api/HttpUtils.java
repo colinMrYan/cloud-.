@@ -2,14 +2,12 @@ package com.inspur.emmcloud.basemodule.api;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.luojilab.component.componentlib.router.ui.UIRouter;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -75,10 +73,6 @@ public class HttpUtils {
                     "myInfo", ""), "clusters", 0);
             callback.callbackFail("", -1);
             if (AppUtils.isAppOnForeground(context)) {
-
-                UIRouter.getInstance().registerUI("app");
-                Bundle bundle = new Bundle();
-                UIRouter.getInstance().openUri(context, "DDComp://app/ServiceNoPermission", bundle);
                 ARouter.getInstance().build("/setting/ServiceNoPermission").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
             }
 

@@ -1,10 +1,10 @@
-package com.inspur.emmcloud.login.login;
+package com.inspur.emmcloud.componentservice.login;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 
-import com.inspur.emmcloud.login.CoreService;
+import com.inspur.emmcloud.componentservice.CoreService;
 
 
 /**

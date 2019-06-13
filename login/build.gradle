@@ -1,4 +1,14 @@
-apply plugin: 'com.dd.comgradle'
+buildscript {
+    repositories {
+        maven {
+            url uri('../release')
+        }
+    }
+    dependencies {
+        classpath 'com.inspur:comgradle:1.0'
+    }
+}
+apply plugin: 'com.inspur.comgradle'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {

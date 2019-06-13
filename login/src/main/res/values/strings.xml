@@ -15,7 +15,7 @@
     <string name="login_sms">短信登录</string>
     <string name="login_authorization_expired">基于安全审计策略，需要重新验证用户信息</string>
     <string name="login_cant_login_with_sms">您的账号不允许使用短信登录</string>
-    <string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
+    <!--<string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>-->
     <string name="login_recover">重新获取</string>
     <string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>
     <string name="login_current_login_enterprise">当前系统：%1$s</string>

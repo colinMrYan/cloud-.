@@ -1,10 +1,11 @@
-package com.inspur.emmcloud.login.web;
+package com.inspur.emmcloud.componentservice.web;
 
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 
-import com.inspur.emmcloud.login.CoreService;
+import com.inspur.emmcloud.componentservice.CoreService;
+
 
 /**
  * Created by chenmch on 2019/5/31.

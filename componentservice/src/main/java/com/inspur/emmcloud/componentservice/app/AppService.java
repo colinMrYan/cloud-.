@@ -1,6 +1,7 @@
-package com.inspur.emmcloud.login.app;
+package com.inspur.emmcloud.componentservice.app;
 
-import com.inspur.emmcloud.login.CoreService;
+
+import com.inspur.emmcloud.componentservice.CoreService;
 
 /**
  * Created by chenmch on 2019/6/6.
