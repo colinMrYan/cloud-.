@@ -452,8 +452,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
         final SwitchCompat nightModeSwitchBtn = dialog.findViewById(R.id.app_news_mode_switch);
         setSwitchColor(nightModeSwitchBtn);
-        //nightModeSwitchBtn.setPaintColorOn(0x7E000000);
-        //nightModeSwitchBtn.setPaintCircleBtnColor(0x1A666666);
         nightModeSwitchBtn.setChecked(model.endsWith(darkMode));
         nightModeSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
