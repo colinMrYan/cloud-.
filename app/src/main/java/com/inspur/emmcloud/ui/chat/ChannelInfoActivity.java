@@ -3,12 +3,14 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,8 +26,6 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
-import com.inspur.emmcloud.baselib.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
@@ -67,8 +67,8 @@ public class ChannelInfoActivity extends BaseActivity {
     private ArrayList<String> uiMemberList = new ArrayList<>();
     private String cid;
     private ChannelGroup channelGroup;
-    private SwitchView setTopSwitch;
-    private SwitchView msgInterruptionSwitch;
+    private SwitchCompat setTopSwitch;
+    private SwitchCompat msgInterruptionSwitch;
     private ChatAPIService apiService;
     private Adapter adapter;
     private TextView channelMemberNumText;
@@ -116,25 +116,23 @@ public class ChannelInfoActivity extends BaseActivity {
             }
         }
     };
-    private OnStateChangedListener onStateChangedListener = new OnStateChangedListener() {
 
+    private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
-        public void toggleToOn(View view) {
-            // TODO Auto-generated method stub
-            if (view.getId() == R.id.sv_dnd) {
-                updateIsNoInterruption(true);
-            } else {
-                setChannelTop(true);
-            }
-        }
-
-        @Override
-        public void toggleToOff(View view) {
-            // TODO Auto-generated method stub
-            if (view.getId() == R.id.sv_dnd) {
-                updateIsNoInterruption(false);
-            } else {
-                setChannelTop(false);
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            switch (compoundButton.getId()) {
+                case R.id.sv_dnd:
+                    if (isNoInterruption != b) {
+                        updateIsNoInterruption(b);
+                    }
+                    break;
+                case R.id.sv_stick:
+                    if (b != ChannelOperationCacheUtils.isChannelSetTop(getApplication(), cid)) {
+                        setChannelTop(b);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -198,15 +196,15 @@ public class ChannelInfoActivity extends BaseActivity {
         setTopSwitch = findViewById(R.id.sv_stick);
         msgInterruptionSwitch = findViewById(R.id.sv_dnd);
         boolean isChannelNotDisturb = ChannelCacheUtils.isChannelNotDisturb(ChannelInfoActivity.this, cid);
-        if (msgInterruptionSwitch.isOpened() != isChannelNotDisturb) {
-            msgInterruptionSwitch.setOpened(isChannelNotDisturb);
+        if (msgInterruptionSwitch.isChecked() != isChannelNotDisturb) {
+            msgInterruptionSwitch.setChecked(isChannelNotDisturb);
         }
-        msgInterruptionSwitch.setOnStateChangedListener(onStateChangedListener);
+        msgInterruptionSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         boolean isChannelSetTop = ChannelOperationCacheUtils.isChannelSetTop(this, cid);
-        if (setTopSwitch.isOpened() != isChannelSetTop) {
-            setTopSwitch.setOpened(isChannelSetTop);
+        if (setTopSwitch.isChecked() != isChannelSetTop) {
+            setTopSwitch.setChecked(isChannelSetTop);
         }
-        setTopSwitch.setOnStateChangedListener(onStateChangedListener);
+        setTopSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
     /**
@@ -232,7 +230,7 @@ public class ChannelInfoActivity extends BaseActivity {
      * @param isSetIop
      */
     private void setChannelTop(boolean isSetIop) {
-        setTopSwitch.toggleSwitch(isSetIop);
+        setTopSwitch.setChecked(isSetIop);
         ChannelOperationCacheUtils.setChannelTop(ChannelInfoActivity.this, cid,
                 isSetIop);
         // 通知消息页面重新创建群组头像
@@ -374,7 +372,7 @@ public class ChannelInfoActivity extends BaseActivity {
             this.isNoInterruption = isNoInterruption;
             apiService.updateDnd(cid, isNoInterruption);
         } else {
-            msgInterruptionSwitch.setOpened(this.isNoInterruption);
+            msgInterruptionSwitch.setChecked(this.isNoInterruption);
         }
     }
 
@@ -527,7 +525,7 @@ public class ChannelInfoActivity extends BaseActivity {
                     ChannelInfoActivity.this, cid);
             channel.setDnd(isNoInterruption);
             ChannelCacheUtils.saveChannel(ChannelInfoActivity.this, channel);
-            msgInterruptionSwitch.setOpened(isNoInterruption);
+            msgInterruptionSwitch.setChecked(isNoInterruption);
             sendBroadCast();
         }
 
@@ -536,7 +534,7 @@ public class ChannelInfoActivity extends BaseActivity {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
             isNoInterruption = !isNoInterruption;
-            msgInterruptionSwitch.setOpened(isNoInterruption);
+            msgInterruptionSwitch.setChecked(isNoInterruption);
             WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error, errorCode);
         }
 
