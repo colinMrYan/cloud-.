@@ -30,7 +30,6 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.bean.Language;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -75,7 +74,7 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.switch_view_setting_web_rotate)
     SwitchCompat webRotateSwitch;
     @BindView(R.id.switch_view_setting_run_background)
-    SwitchView runBackgroundSwitch;
+    SwitchCompat runBackgroundSwitch;
     @BindView(R.id.switch_view_setting_voice_2_word)
     SwitchCompat voice2WordSwitch;
     @BindView(R.id.rl_setting_voice_2_word)
@@ -118,65 +117,14 @@ public class SettingActivity extends BaseActivity {
                         updateUserExperienceUpgradeFlag();
                     }
                     break;
+                case R.id.switch_view_setting_run_background:
+                    setAppRunBackground(b);
+                    break;
                 default:
                     break;
             }
         }
     };
-    private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
-
-        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        @Override
-        public void toggleToOn(View view) {
-            switch (view.getId()) {
-                case R.id.switch_view_setting_run_background:
-                    setAppRunBackground(true);
-                    break;
-                case R.id.switch_view_setting_voice_2_word:
-                    // PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
-                    // voice2WordSwitch.setOpened(true);
-                    break;
-                case R.id.switch_view_setting_web_rotate:
-                    AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "true");
-                    AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
-                    setWebAutoRotateState();
-                    saveWebAutoRotateConfig(true);
-                    break;
-                case R.id.switch_view_setting_experience_upgrade:
-                    updateUserExperienceUpgradeFlag();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        @Override
-        public void toggleToOff(View view) {
-            switch (view.getId()) {
-                case R.id.switch_view_setting_run_background:
-                    setAppRunBackground(false);
-                    break;
-                case R.id.switch_view_setting_voice_2_word:
-                    // PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
-                    // voice2WordSwitch.setOpened(false);
-                    break;
-                case R.id.switch_view_setting_web_rotate:
-                    AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "false");
-                    AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
-                    setWebAutoRotateState();
-                    saveWebAutoRotateConfig(false);
-                    break;
-                case R.id.switch_view_setting_experience_upgrade:
-
-                    updateUserExperienceUpgradeFlag();
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,8 +190,8 @@ public class SettingActivity extends BaseActivity {
         setWebAutoRotateState();
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
-        runBackgroundSwitch.setOpened(isAppSetRunBackground);
-        runBackgroundSwitch.setOnStateChangedListener(onStateChangedListener);
+        runBackgroundSwitch.setChecked(isAppSetRunBackground);
+        runBackgroundSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
@@ -376,7 +324,6 @@ public class SettingActivity extends BaseActivity {
      */
     private void setAppRunBackground(boolean isAppSetRunBackground) {
         PreferencesUtils.putBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, isAppSetRunBackground);
-        runBackgroundSwitch.setOpened(isAppSetRunBackground);
         Intent intent = new Intent();
         intent.setClass(SettingActivity.this, BackgroundService.class);
         if (isAppSetRunBackground) {
