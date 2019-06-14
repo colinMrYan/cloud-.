@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
@@ -13,7 +14,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
-import com.inspur.imp.api.ImpActivity;
 
 
 public class UriUtils {
@@ -86,15 +86,16 @@ public class UriUtils {
      * @param app
      */
     public static void openWebApp(Activity activity, String uri, App app) {
-        Intent intent = new Intent();
-        intent.setClass(activity, ImpActivity.class);
-        intent.putExtra(Constant.APP_WEB_URI, uri);
-        intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, (app.getAppType() == 3 || (app.getAppType() == 6 && app.getUserHeader() == 1)) ? true : false);
-        intent.putExtra(Constant.WEB_FRAGMENT_APP_NAME, app.getAppName());
-        intent.putExtra("is_zoomable", app.getIsZoomable());
-        intent.putExtra("help_url", app.getHelpUrl());
-        intent.putExtra("appId", app.getAppID());
-        activity.startActivity(intent);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.APP_WEB_URI, uri);
+        bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, (app.getAppType() == 3 || (app.getAppType() == 6 && app.getUserHeader() == 1)) ? true : false);
+        bundle.putString(Constant.WEB_FRAGMENT_APP_NAME, app.getAppName());
+        bundle.putInt("is_zoomable", app.getIsZoomable());
+        bundle.putString("help_url", app.getHelpUrl());
+        bundle.putString("appId", app.getAppID());
+        ARouter.getInstance().build("/web/main").with(bundle).navigation();
+
+
     }
 
 
@@ -119,7 +120,7 @@ public class UriUtils {
         bundle.putString("uri", uri);
         bundle.putString("appName", appName);
         bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,isHaveNavBar);
-        IntentUtils.startActivity(context, ImpActivity.class, bundle);
+        ARouter.getInstance().build("/web/main").with(bundle).navigation();
     }
 
 }

@@ -66,7 +66,6 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
 
 import org.greenrobot.eventbus.EventBus;
@@ -1014,7 +1013,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                         boolean.class);
                 method.invoke(settings, true);
             } catch (Exception e) {
-                iLog.w("yfcLog", e.getMessage() + "");
+                e.printStackTrace();
             }
         }
     }
@@ -1061,7 +1060,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 settings.setAppCacheMaxSize(1024 * 1024 * 8);
 
             } catch (Exception e) {
-                iLog.w("yfcLog", e.getMessage() + "");
+                e.printStackTrace();
             }
         }
     }

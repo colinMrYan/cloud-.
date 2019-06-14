@@ -21,4 +21,6 @@ public interface LoginService extends CoreService {
     void autoLogin(Activity activity, Handler handler);
 
     void setMDMStatusNoPass();
+
+    void uploadMDMInfo();//上传MDM信息
 }

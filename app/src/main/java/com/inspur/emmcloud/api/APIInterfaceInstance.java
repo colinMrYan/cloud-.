@@ -4,7 +4,6 @@ package com.inspur.emmcloud.api;
 import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
@@ -997,15 +996,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
-
-    }
-
-    @Override
-    public void returnGetAppAuthCodeResultFail(String error, int errorCode) {
-
-    }
 
     @Override
     public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {

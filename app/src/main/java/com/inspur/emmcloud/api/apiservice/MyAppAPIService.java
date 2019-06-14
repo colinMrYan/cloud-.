@@ -16,7 +16,6 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
@@ -369,45 +368,7 @@ public class MyAppAPIService {
 
     }
 
-    /**
-     * 应用身份认证
-     *
-     * @param urlParams
-     */
-    public void getAuthCode(final String requestUrl, final String urlParams) {
-//        final String completeUrl = APIUri.getAppAuthCodeUri() + "?" + urlParams;
-        final String completeUrl = requestUrl + "/oauth2.0/quick_authz_code" + "?" + urlParams;
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnGetAppAuthCodeResultSuccess(new AppRedirectResult(new String(arg0)));
-            }
 
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetAppAuthCodeResultFail(error, responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getAuthCode(requestUrl, urlParams);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(
-                        oauthCallBack, requestTime);
-            }
-
-        });
-    }
 
     /**
      * 根据应用id获取应用的详细信息
@@ -647,10 +608,10 @@ public class MyAppAPIService {
 
     /**
      * 获取文件上传Token
-     *
-     * @param volumeId
      * @param fileName
      * @param volumeFilePath
+     * @param localFilePath
+     * @param mockVolumeFile
      */
     public void getVolumeFileUploadToken(final String fileName, final String volumeFilePath, final String localFilePath, final VolumeFile mockVolumeFile) {
         final String url = APIUri.getVolumeFileUploadSTSTokenUrl(mockVolumeFile.getVolume());
@@ -841,7 +802,7 @@ public class MyAppAPIService {
      * 删除文件
      *
      * @param volumeId
-     * @param fileName
+     * @param deleteVolumeFileList
      * @param currentDirAbsolutePath
      */
     public void volumeFileDelete(final String volumeId, final List<VolumeFile> deleteVolumeFileList, final String currentDirAbsolutePath) {
@@ -892,10 +853,10 @@ public class MyAppAPIService {
 
     /**
      * 文件重命名
-     *
      * @param volumeId
      * @param volumeFile
      * @param currentDirAbsolutePath
+     * @param fileNewName
      */
     public void volumeFileRename(final String volumeId, final VolumeFile volumeFile, final String currentDirAbsolutePath, final String fileNewName) {
         final String url = APIUri.getVolumeFileRenameUrl(volumeId);
@@ -936,7 +897,7 @@ public class MyAppAPIService {
     /**
      * 创建共享网盘
      *
-     * @param memberArray
+     * @param myUid
      * @param volumeName
      */
     public void createShareVolume(final String myUid, final String volumeName) {
@@ -1032,7 +993,6 @@ public class MyAppAPIService {
      * 修改网盘名称
      *
      * @param volume
-     * @param name
      */
     public void removeShareVolumeName(final Volume volume) {
         final String url = APIUri.getUpdateVolumeInfoUrl(volume.getId());
@@ -1240,7 +1200,7 @@ public class MyAppAPIService {
     /**
      * 增加组成员
      *
-     * @param volumeId
+     * @param groupId
      * @param uidList
      */
     public void groupMemAdd(final String groupId, final List<String> uidList) {
@@ -1282,7 +1242,7 @@ public class MyAppAPIService {
     /**
      * 删除组成员
      *
-     * @param volumeId
+     * @param groupId
      * @param uidList
      */
     public void groupMemDel(final String groupId, final List<String> uidList) {

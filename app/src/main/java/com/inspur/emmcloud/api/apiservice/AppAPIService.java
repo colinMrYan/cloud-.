@@ -379,41 +379,6 @@ public class AppAPIService {
         });
     }
 
-    /**
-     * 上传设备管理需要的一些信息
-     */
-    public void uploadMDMInfo() {
-        final String completeUrl = APIUri.getUploadMDMInfoUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        params.addParameter("udid", AppUtils.getMyUUID(context));
-        String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
-        params.addParameter("refresh_token", refreshToken);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        uploadMDMInfo();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(oauthCallBack, requestTime);
-            }
-        });
-    }
 
     /**
      * 获取闪屏页信息

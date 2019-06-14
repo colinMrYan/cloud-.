@@ -17,6 +17,7 @@ import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
+import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 
 /**
@@ -119,9 +120,9 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      */
     private void uploadMDMInfo() {
         Router router = Router.getInstance();
-        if (router.getService(SettingService.class) != null) {
-            SettingService settingService = router.getService(SettingService.class);
-            settingService.uploadMDMInfo();
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
+            service.uploadMDMInfo();
         }
     }
 

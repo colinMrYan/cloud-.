@@ -8,6 +8,7 @@ package com.inspur.emmcloud.login.api;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.login.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
 import com.inspur.emmcloud.login.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
 import com.inspur.emmcloud.login.util.OauthUtils;
 
 import org.json.JSONObject;
@@ -489,4 +491,45 @@ public class LoginAPIService {
             }
         });
     }
+
+
+    /**
+     * 上传设备管理需要的一些信息
+     */
+    public void uploadMDMInfo() {
+        final String completeUrl = LoginAPIUri.getUploadMDMInfoUrl();
+        RequestParams params = BaseApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addParameter("udid", AppUtils.getMyUUID(context));
+        String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
+        params.addParameter("refresh_token", refreshToken);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnUploadMDMInfoSuccess(new UploadMDMInfoResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUploadMDMInfoFail();
+            }
+
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        uploadMDMInfo();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
+
 }

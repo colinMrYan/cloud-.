@@ -3,9 +3,6 @@ package com.inspur.emmcloud.servcieimpl;
 import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
@@ -34,13 +31,6 @@ public class SettingServiceImpl implements SettingService {
         }
     }
 
-    @Override
-    public void uploadMDMInfo() {
-        if (!NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
-            AppAPIService appAPIService = new AppAPIService(BaseApplication.getInstance());
-            appAPIService.uploadMDMInfo();
-        }
-    }
 
 
     private boolean isSetFaceLock() {

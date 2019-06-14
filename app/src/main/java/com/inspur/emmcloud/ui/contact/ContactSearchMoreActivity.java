@@ -35,6 +35,7 @@ import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.FlowLayout;
 import com.inspur.emmcloud.baselib.widget.MaxHightScrollView;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -43,14 +44,16 @@ import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
-import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
@@ -132,11 +135,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                     if (searchArea == SEARCH_CHANNELGROUP) {
                         searchModel = searchChannelGroupList.get(position);
                     } else if (searchArea == SEARCH_CONTACT) {
-                        searchModel = new SearchModel(searchContactList
-                                .get(position));
+                        searchModel = searchContactList.get(position).contact2SearchModel();
                     } else {
-                        searchModel = new SearchModel(searchRecentList
-                                .get(position));
+                        searchModel = searchRecentList.get(position).channel2SearchModel();
                     }
                     changeMembers(searchModel);
                 } else {
@@ -436,6 +437,32 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         EventBus.getDefault().unregister(this);
     }
 
+    /**
+     * 中文名+英文名
+     *
+     * @return
+     */
+    public String getCompleteName(SearchModel searchModel) {
+        String completeName = searchModel.getName();
+        String globalName = null;
+        if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
+            if (contactUser != null) {
+                globalName = contactUser.getNameGlobal();
+            }
+        } else if (searchModel.getType().equals(SearchModel.TYPE_STRUCT)) {
+            ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(searchModel.getId());
+            if (contactOrg != null) {
+                globalName = contactOrg.getNameGlobal();
+            }
+        }
+        if (!StringUtils.isBlank(globalName)) {
+            completeName = completeName + "（" + globalName + "）";
+        }
+        return completeName;
+
+    }
+
     public static class ViewHolder {
         TextView nameText;
         CircleTextImageView photoImg;
@@ -573,16 +600,18 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             SearchModel searchModel = null;
             if (searchArea == SEARCH_RECENT) {
                 Channel channel = searchRecentList.get(position);
-                searchModel = new SearchModel(channel);
+                searchModel = channel.channel2SearchModel();
             } else if (searchArea == SEARCH_CHANNELGROUP) {
                 searchModel = searchChannelGroupList.get(position);
             } else {
                 Contact contact = searchContactList.get(position);
-                searchModel = new SearchModel(contact);
+                searchModel = contact.contact2SearchModel();
 
             }
             displayImg(searchModel, viewHolder.photoImg);
-            viewHolder.nameText.setText(searchModel.getCompleteName());
+            viewHolder.nameText.setText(getCompleteName(searchModel));
+
+
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
             } else {

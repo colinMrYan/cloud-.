@@ -30,7 +30,6 @@ import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
@@ -181,7 +180,7 @@ public class BaseApplication extends MultiDexApplication {
     public void setUid(String uid) {
         this.uid = uid;
     }
-    /*************************** http相关 **************************************/
+
     /**
      * 获取http RequestParams
      *
@@ -221,6 +220,7 @@ public class BaseApplication extends MultiDexApplication {
     public boolean getIsContactReady() {
         return isContactReady;
     }
+    /*************************** http相关 **************************************/
 
     /******************************通讯录相关***************************************/
 
@@ -284,7 +284,6 @@ public class BaseApplication extends MultiDexApplication {
         DbCacheUtils.initDb(getInstance());
     }
 
-
     /**
      * 删除此用户在此实例的所有db
      */
@@ -323,13 +322,20 @@ public class BaseApplication extends MultiDexApplication {
         }
     }
 
-
     public String getTanent() {
         return tanent;
     }
 
+    public void setTanent(String tanent) {
+        this.tanent = tanent;
+    }
+
     public Enterprise getCurrentEnterprise() {
         return currentEnterprise;
+    }
+
+    public void setCurrentEnterprise(Enterprise currentEnterprise) {
+        this.currentEnterprise = currentEnterprise;
     }
 
     /*****************************通讯录头像缓存********************************************/
@@ -378,7 +384,7 @@ public class BaseApplication extends MultiDexApplication {
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getInstance(),
                 "myInfo", "");
-        boolean isMDMStatusPass = PreferencesByUserAndTanentUtils.getBoolean(getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getInstance(), Constant.PREF_MDM_STATUS_PASS, true);
         return (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && isMDMStatusPass);
     }
 

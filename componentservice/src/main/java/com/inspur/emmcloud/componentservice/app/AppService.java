@@ -9,4 +9,6 @@ import com.inspur.emmcloud.componentservice.CoreService;
 
 public interface AppService extends CoreService {
     void getAppBadgeCountFromServer();
+
+    String getAppConfig(String configId, String defaultValue);
 }

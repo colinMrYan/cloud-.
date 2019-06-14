@@ -15,6 +15,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
@@ -25,18 +26,19 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.componentservice.contact.ContactService;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
@@ -135,14 +137,14 @@ public class MeetingAddActivity extends BaseActivity {
             for (int i = 0; i < attendeeList.size(); i++) {
                 meeting.getRoleParticipantList();
                 JSONObject jsonObject = JSONUtils.getJSONObject(attendeeList.get(i));
-                if (Participant.TYPE_COMMON.equals(JSONUtils.getString(jsonObject, "role", ""))) {
-                   SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
+                String uid = JSONUtils.getString(jsonObject, "id", "");
+                SearchModel searchModel = new SearchModel(uid);
+                String role = JSONUtils.getString(jsonObject, "role", "");
+                if (Participant.TYPE_COMMON.equals(role)) {
                     attendeeSearchModelList.add(searchModel);
-                } else if (Participant.TYPE_CONTACT.equals(JSONUtils.getString(jsonObject, "role", ""))) {
-                    SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
+                } else if (Participant.TYPE_CONTACT.equals(role)) {
                     liaisonSearchModelList.add(searchModel);
-                } else if (Participant.TYPE_RECORDER.equals(JSONUtils.getString(jsonObject, "role", ""))) {
-                    SearchModel searchModel = new SearchModel(JSONUtils.getString(jsonObject, "id", ""));
+                } else if (Participant.TYPE_RECORDER.equals(role)) {
                     recorderSearchModelList.add(searchModel);
                 }
             }
@@ -170,6 +172,21 @@ public class MeetingAddActivity extends BaseActivity {
             }
         }
     }
+
+    private SearchModel getSearchModel(String uid) {
+        SearchModel searchModel = new SearchModel();
+        Router router = Router.getInstance();
+        if (router.getService(ContactService.class) != null) {
+            ContactService service = router.getService(ContactService.class);
+            ContactUser contactUser = service.getContactUserByUid(uid);
+            searchModel.setType(SearchModel.TYPE_USER);
+            searchModel.setId(contactUser.getId());
+            searchModel.setName(contactUser.getName());
+            searchModel.setEmail(contactUser.getEmail());
+        }
+        return searchModel;
+    }
+
 
     /**
      * 初始化视图

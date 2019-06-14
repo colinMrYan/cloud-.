@@ -21,4 +21,6 @@ public interface WebService extends CoreService {
     void showScanResult(Context context, String result);
 
     void openGallery(Activity activity, int limit, int requestCode);
+
+    Class getImpFragmentClass();
 }

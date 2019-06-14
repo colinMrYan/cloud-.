@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
@@ -22,9 +23,9 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResultWithoutSerializable;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.reactnative.bean.AlertButton;
@@ -189,7 +190,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             int arraySize = array.size();
             for (int i = 0; i < arraySize; i++) {
                 try {
-                    SearchModel searchModel = new SearchModel(array.getMap(i));
+                    SearchModel searchModel = readableMap2SearchModel(array.getMap(i));
                     searchModelList.add(searchModel);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -210,6 +211,24 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         }
         getCurrentActivity().startActivityForResult(intent, CONTACT_PICKER);
 
+    }
+
+    private SearchModel readableMap2SearchModel(ReadableMap nativeInfo) {
+        SearchModel searchModel = new SearchModel();
+        try {
+            if (nativeInfo.hasKey("inspur_id")) {
+                searchModel.setId(nativeInfo.getString("inspur_id"));
+            }
+            if (nativeInfo.hasKey("real_name")) {
+                searchModel.setName(nativeInfo.getString("real_name"));
+            }
+            if (nativeInfo.hasKey("type")) {
+                searchModel.setType(nativeInfo.getString("type").toUpperCase());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return searchModel;
     }
 
     /**

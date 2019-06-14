@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.contact;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -109,5 +110,13 @@ public class ContactOrg {
 
     public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public SearchModel contactOrg2SearchModel(ContactOrg contactOrg) {
+        SearchModel searchModel = new SearchModel();
+        searchModel.setId(getId());
+        searchModel.setName(getName());
+        searchModel.setType(SearchModel.TYPE_STRUCT);
+        return searchModel;
     }
 }
