@@ -57,9 +57,9 @@ public class MailCertificateInstallActivity extends BaseActivity {
     TextView cerIssuerNameText;
     @BindView(R.id.tv_installed_cer_final_data)
     TextView cerFinalDataText;
-    @BindView(R.id.switchview_encryption_action)
+    @BindView(R.id.sv_encryption_action)
     SwitchCompat encryptionSwitchView;
-    @BindView(R.id.switchview_signature_action)
+    @BindView(R.id.sv_signature_action)
     SwitchCompat signatureSwitchView;
     @BindView(R.id.tv_new_cer_title)
     TextView newCerTitleText;
