@@ -108,7 +108,6 @@ public class NewsWebDetailActivity extends BaseActivity {
     private RelativeLayout loadingLayout;
 
     public static void setSwitchColor(SwitchCompat v) {
-
         // thumb color
         int thumbColor = 0x1A666666;
 

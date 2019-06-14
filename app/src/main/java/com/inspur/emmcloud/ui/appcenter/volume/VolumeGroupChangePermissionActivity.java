@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
+import android.content.res.ColorStateList;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -41,6 +43,36 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     private MyAppAPIService myAppAPIService;
     private LoadingDialog loadingDialog;
 
+    public static void setSwitchColor(int thumbColor, int trackColor, SwitchCompat v) {
+        // thumb color
+        // int thumbColor = 0x1A666666;
+
+        // trackColor
+        // int trackColor = 0x7E000000;
+
+        // set the thumb color
+        DrawableCompat.setTintList(v.getThumbDrawable(), new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        thumbColor,
+                        trackColor
+                }));
+
+        // set the track color
+        DrawableCompat.setTintList(v.getTrackDrawable(), new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        0x7E000000,
+                        0x1A666666
+                }));
+    }
+
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
@@ -66,8 +98,8 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         writePermissionSwitch.setChecked(group.getPrivilege() > VOLUME_READ_PERMISSION);
         readPermissionSwitch.setChecked(true);
         readPermissionSwitch.setEnabled(group.getPrivilege() <= VOLUME_READ_PERMISSION);
-        //readPermissionSwitch.setPaintColorOn(group.getPrivilege() > 4 ? 0x667fc5f6 : 0xff7fc5f6);
-        //readPermissionSwitch.setPaintCircleBtnColor(group.getPrivilege() > 4 ? 0xbb7fc5f6 : 0xff008cee);
+        setSwitchColor(group.getPrivilege() > 4 ? 0xbb7fc5f6 : 0xff008cee,
+                group.getPrivilege() > 4 ? 0x667fc5f6 : 0xff7fc5f6, readPermissionSwitch);
         final String currentVolumePath = getIntent().getStringExtra("volumeFilePath");
         writePermissionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
