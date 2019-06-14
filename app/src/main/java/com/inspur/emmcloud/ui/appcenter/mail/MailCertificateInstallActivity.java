@@ -1,9 +1,11 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
 import android.content.Intent;
+import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,7 +18,6 @@ import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -57,9 +58,9 @@ public class MailCertificateInstallActivity extends BaseActivity {
     @BindView(R.id.tv_installed_cer_final_data)
     TextView cerFinalDataText;
     @BindView(R.id.switchview_encryption_action)
-    SwitchView encryptionSwitchView;
+    SwitchCompat encryptionSwitchView;
     @BindView(R.id.switchview_signature_action)
-    SwitchView signatureSwitchView;
+    SwitchCompat signatureSwitchView;
     @BindView(R.id.tv_new_cer_title)
     TextView newCerTitleText;
     @BindView(R.id.tv_new_cer_ower_name)
@@ -96,38 +97,22 @@ public class MailCertificateInstallActivity extends BaseActivity {
             updataCertificateUI(myCertificate);
         }
 
-        encryptionSwitchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        encryptionSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOn(View view) {
-                myCertificate.setEncryptedMail(true);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                myCertificate.setEncryptedMail(b);
                 PreferencesByUsersUtils.putObject(MailCertificateInstallActivity.this, myCertificate, CERTIFICATER_KEY);
-                encryptionSwitchView.setOpened(true);
-
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                myCertificate.setEncryptedMail(false);
-                PreferencesByUsersUtils.putObject(MailCertificateInstallActivity.this, myCertificate, CERTIFICATER_KEY);
-                encryptionSwitchView.setOpened(false);
             }
         });
 
-        signatureSwitchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        signatureSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOn(View view) {
-                myCertificate.setSignedMail(true);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                myCertificate.setSignedMail(b);
                 PreferencesByUsersUtils.putObject(MailCertificateInstallActivity.this, myCertificate, CERTIFICATER_KEY);
-                signatureSwitchView.setOpened(true);
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                myCertificate.setSignedMail(false);
-                PreferencesByUsersUtils.putObject(MailCertificateInstallActivity.this, myCertificate, CERTIFICATER_KEY);
-                signatureSwitchView.setOpened(false);
             }
         });
+
     }
 
     /**
@@ -316,11 +301,11 @@ public class MailCertificateInstallActivity extends BaseActivity {
         cerOwnerNameText.setText(StringUtils.isBlank(Subject) ? "未知" : Subject.substring(3));
         cerIssuerNameText.setText(StringUtils.isBlank(IsUer) ? "未知" : IsUer.substring(3));
         cerFinalDataText.setText(StringUtils.isBlank(mailCertificateDetail.getCertificateFinalDate()) ? "未知" : mailCertificateDetail.getCertificateFinalDate());
-        if (encryptionSwitchView.isOpened() != mailCertificateDetail.isEncryptedMail()) {
-            encryptionSwitchView.setOpened(mailCertificateDetail.isEncryptedMail());
+        if (encryptionSwitchView.isChecked() != mailCertificateDetail.isEncryptedMail()) {
+            encryptionSwitchView.setChecked(mailCertificateDetail.isEncryptedMail());
         }
-        if (signatureSwitchView.isOpened() != mailCertificateDetail.isSignedMail()) {
-            signatureSwitchView.setOpened(mailCertificateDetail.isSignedMail());
+        if (signatureSwitchView.isChecked() != mailCertificateDetail.isSignedMail()) {
+            signatureSwitchView.setChecked(mailCertificateDetail.isSignedMail());
         }
         if (View.VISIBLE != installedCerLayout.getVisibility()) {
             installedCerLayout.setVisibility(View.VISIBLE);

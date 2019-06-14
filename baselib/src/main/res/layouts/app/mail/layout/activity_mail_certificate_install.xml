@@ -248,7 +248,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp" />
 
-                            <com.inspur.emmcloud.baselib.widget.SwitchView
+                            <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/switchview_encryption_action"
                                 android:layout_width="31dp"
                                 android:layout_height="51dp"
@@ -280,7 +280,7 @@
                                 android:textColor="#333333"
                                 android:textSize="14sp" />
 
-                            <com.inspur.emmcloud.baselib.widget.SwitchView
+                            <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/switchview_signature_action"
                                 android:layout_width="31dp"
                                 android:layout_height="51dp"
