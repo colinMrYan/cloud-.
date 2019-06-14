@@ -23,4 +23,11 @@ public interface WebService extends CoreService {
     void openGallery(Activity activity, int limit, int requestCode);
 
     Class getImpFragmentClass();
+
+    /**
+     * 调用imp插件的下载附件功能，此功能后续需要优化
+     *
+     * @param json
+     */
+    void fileTransferServiceDownload(Context context, String json);
 }

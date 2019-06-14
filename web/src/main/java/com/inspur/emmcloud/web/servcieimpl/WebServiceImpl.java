@@ -15,6 +15,7 @@ import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestC
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.web.R;
+import com.inspur.emmcloud.web.plugin.PluginMgr;
 import com.inspur.emmcloud.web.plugin.barcode.ScanResultActivity;
 import com.inspur.emmcloud.web.plugin.barcode.decoder.PreviewDecodeActivity;
 import com.inspur.emmcloud.web.ui.ImpFragment;
@@ -119,6 +120,12 @@ public class WebServiceImpl implements WebService {
         intent.putExtra("result", result);
         intent.setClass(context, ScanResultActivity.class);
         context.startActivity(intent);
+    }
 
+    @Override
+    public void fileTransferServiceDownload(Context context, String json) {
+        PluginMgr pluginMgr = new PluginMgr(context, null);
+        pluginMgr.execute("FileTransferService", "download", json);
+        pluginMgr.onDestroy();
     }
 }

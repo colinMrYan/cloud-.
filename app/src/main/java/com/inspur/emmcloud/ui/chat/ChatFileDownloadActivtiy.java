@@ -20,7 +20,6 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.imp.plugin.file.FileUtil;
 
 import org.xutils.common.Callback;
 
@@ -125,8 +124,8 @@ public class ChatFileDownloadActivtiy extends BaseActivity {
             public void callbackLoading(long total, long current, boolean isUploading) {
                 int progress = (int) (current * 100.0 / total);
                 progressBar.setProgress(progress);
-                String totleSize = FileUtil.formetFileSize(total);
-                String currentSize = FileUtil.formetFileSize(current);
+                String totleSize = FileUtils.formatFileSize(total);
+                String currentSize = FileUtils.formatFileSize(current);
                 progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totleSize));
 
             }

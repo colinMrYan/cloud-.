@@ -34,7 +34,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -725,38 +725,53 @@ public class FileUtils {
      * @return
      */
     public static String formatFileSize(long fileSize) {
-        float MBDATA = (float) 1048576.0;
-        long GBDATA = 1073741824L;
-        float size = fileSize;
-        DecimalFormat df = new DecimalFormat("#.0");
-        if (size < 1023) {
-            String tempSize = df.format(size);
-            if (tempSize.length() < 3) {
-                tempSize = "0" + tempSize;
-            }
-            return tempSize + "B";
-        } else if (size > 1023 && size < MBDATA) {
-            size = (long) (size / 1024.0);
-            String tempSize = df.format(size);
-            if (tempSize.length() < 3) {
-                tempSize = "0" + tempSize;
-            }
-            return tempSize + "K";
-        } else if (size >= MBDATA) {
-            size = size / MBDATA;
-            String tempSize = df.format(size);
-            if (tempSize.length() < 3) {
-                tempSize = "0" + tempSize;
-            }
-            return tempSize + "M";
+        int MBDATA = 1048576;
+        int GBDATA = 1073741824;
+//        float size = fileSize;
+//        DecimalFormat df = new DecimalFormat("#.0");
+//        if (size < 1023) {
+//            String tempSize = df.format(size);
+//            if (tempSize.length() < 3) {
+//                tempSize = "0" + tempSize;
+//            }
+//            return tempSize + "B";
+//        } else if (size > 1023 && size < MBDATA) {
+//            size = (long) (size / 1024.0);
+//            String tempSize = df.format(size);
+//            if (tempSize.length() < 3) {
+//                tempSize = "0" + tempSize;
+//            }
+//            return tempSize + "K";
+//        } else if (size >= MBDATA) {
+//            size = size / MBDATA;
+//            String tempSize = df.format(size);
+//            if (tempSize.length() < 3) {
+//                tempSize = "0" + tempSize;
+//            }
+//            return tempSize + "M";
+//        } else {
+//            size = size / GBDATA;
+//            String tempSize = df.format(size);
+//            if (tempSize.length() < 3) {
+//                tempSize = "0" + tempSize;
+//            }
+//            return tempSize + "G";
+//        }
+
+
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(1);
+        String formatFileSize = "";
+        if (fileSize < 1024) {
+            formatFileSize = fileSize + " B";
+        } else if (fileSize < 1024 * 1024) {
+            formatFileSize = nf.format((double) fileSize / 1024) + " K";
+        } else if (fileSize < 1024 * 1024 * 1024) {
+            formatFileSize = nf.format((double) fileSize / MBDATA) + " M";
         } else {
-            size = size / GBDATA;
-            String tempSize = df.format(size);
-            if (tempSize.length() < 3) {
-                tempSize = "0" + tempSize;
-            }
-            return tempSize + "G";
+            formatFileSize = nf.format((double) fileSize / GBDATA) + " G";
         }
+        return formatFileSize;
     }
 
     /**

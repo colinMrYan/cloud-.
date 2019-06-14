@@ -43,12 +43,12 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.CameraUtils;
+import com.inspur.emmcloud.basemodule.util.mycamera.FocusSurfaceView;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.imp.plugin.camera.mycamera.CameraUtils;
-import com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -138,7 +138,7 @@ public class MeetingAddActivity extends BaseActivity {
                 meeting.getRoleParticipantList();
                 JSONObject jsonObject = JSONUtils.getJSONObject(attendeeList.get(i));
                 String uid = JSONUtils.getString(jsonObject, "id", "");
-                SearchModel searchModel = new SearchModel(uid);
+                SearchModel searchModel = getSearchModel(uid);
                 String role = JSONUtils.getString(jsonObject, "role", "");
                 if (Participant.TYPE_COMMON.equals(role)) {
                     attendeeSearchModelList.add(searchModel);

@@ -141,7 +141,7 @@ public class ChannelGroupCacheUtils {
         if (searchChannelGroupList == null) {
             searchChannelGroupList = new ArrayList<ChannelGroup>();
         }
-        return SearchModel.channelGroupList2SearchModelList(searchChannelGroupList);
+        return ChannelGroup.channelGroupList2SearchModelList(searchChannelGroupList);
 
     }
 
