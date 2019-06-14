@@ -414,7 +414,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
             }
             if (dayMeetingList.size() > 0) {
                 long dayLastMeetingEnd = dayMeetingList.get(dayMeetingList.size() - 1).getDayEndTime(calendar);
-                if (dayLastMeetingEnd < dayEndTimeLong) {
+                if ((dayLastMeetingEnd < dayEndTimeLong) && (dayEndTimeLong >= System.currentTimeMillis())) {
                     MeetingSchedule meetingSchedule = new MeetingSchedule((i == 0 && dayLastMeetingEnd <
                             System.currentTimeMillis()) ? System.currentTimeMillis() : dayLastMeetingEnd, dayEndTimeLong, null);
                     dayMeetingScheduleList.add(meetingSchedule);
