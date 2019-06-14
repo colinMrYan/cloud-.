@@ -22,9 +22,9 @@
         android:singleLine="true"
         android:textSize="@dimen/header_textsize" />
 
-    <com.inspur.emmcloud.baselib.widget.SwitchView
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/switch_card_package_set_item"
-        android:layout_width="37dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
