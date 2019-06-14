@@ -3,6 +3,7 @@ package com.inspur.emmcloud.login.util;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -14,7 +15,6 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
@@ -264,15 +264,15 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
      */
     private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList) {
         final MyDialog myDialog = new MyDialog(activity, R.layout.login_dialog_select_tanent);
-        final SwitchView switchView = myDialog.findViewById(R.id.auto_select_switch);
-        switchView.setOpened(true);
+        final SwitchCompat switchView = myDialog.findViewById(R.id.auto_select_switch);
+        switchView.setChecked(true);
         MaxHeightListView enterpriseListView = myDialog.findViewById(R.id.enterprise_list);
         enterpriseListView.setMaxHeight(DensityUtil.dip2px(activity, 180));
         enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList));
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                boolean isRemember = switchView.isOpened();
+                boolean isRemember = switchView.isChecked();
                 String enterpriseId = enterpriseList.get(position).getId();
                 PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, isRemember ? enterpriseId : "");
                 PreferencesByUsersUtils.putString(activity, Constant.PREF_CURRENT_ENTERPRISE_ID, enterpriseId);
