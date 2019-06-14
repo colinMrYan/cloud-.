@@ -35,8 +35,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_header"
         android:layout_alignParentStart="true"
+        android:layout_below="@id/rl_header"
         android:layout_marginTop="0dp"
         android:background="@color/content_bg">
 
@@ -59,8 +59,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/setting_safe_center"
                     android:textColor="#333333"
                     android:textSize="16sp" />
@@ -94,8 +94,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/settings_language"
                     android:textColor="#333333"
                     android:textSize="16sp" />
@@ -116,8 +116,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/iv_setting_language_arrow"
                     android:gravity="right"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/follow_system"
                     android:textColor="#888888"
                     android:textSize="16sp" />
@@ -151,8 +151,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/mine_theme_switch"
                     android:textColor="#333333"
                     android:textSize="16sp" />
@@ -165,8 +165,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/tv_setting_switch_theme_arrow"
                     android:gravity="right"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:textColor="#888888"
                     android:textSize="16sp" />
 
@@ -199,10 +199,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
-                    android:textColor="#333333"
+                    android:paddingTop="11dp"
                     android:text="@string/mine_tab_layout"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
 
@@ -213,8 +213,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_toLeftOf="@+id/tv_setting_switch_tab_arrow"
                     android:gravity="right"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:textColor="#888888"
                     android:textSize="16sp" />
 
@@ -249,8 +249,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/settings_clear_cache"
                     android:textColor="#333333"
                     android:textSize="16sp" />
@@ -283,15 +283,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/web_app_auto_rotate"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.baselib.widget.SwitchView
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_view_setting_web_rotate"
-                    android:layout_width="37dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
@@ -317,15 +317,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/voice_word_setting"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.baselib.widget.SwitchView
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_view_setting_voice_2_word"
-                    android:layout_width="37dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
@@ -350,21 +350,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
-                    android:textColor="#333333"
+                    android:paddingTop="11dp"
                     android:text="@string/notification_switch"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <Switch
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_view_setting_notification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:thumb="@drawable/switch_custom_thumb_selector"
-                    android:track="@drawable/switch_custom_track_selector" />
+                    android:layout_marginRight="16dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -385,8 +383,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/run_background"
                     android:textColor="#333333"
                     android:textSize="16sp" />
@@ -421,15 +419,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingTop="11dp"
                     android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
                     android:text="@string/setting_join_experience_plan"
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.baselib.widget.SwitchView
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_view_setting_experience_upgrade"
-                    android:layout_width="37dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
@@ -451,9 +449,9 @@
             android:layout_height="42dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="45dp"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginBottom="45dp"
             android:elevation="1dp"
             android:gravity="center"
             android:onClick="onClick"

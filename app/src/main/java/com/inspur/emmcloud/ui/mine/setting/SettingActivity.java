@@ -10,11 +10,11 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -73,17 +73,17 @@ public class SettingActivity extends BaseActivity {
 
     private static final int DATA_CLEAR_SUCCESS = 0;
     @BindView(R.id.switch_view_setting_web_rotate)
-    SwitchView webRotateSwitch;
+    SwitchCompat webRotateSwitch;
     @BindView(R.id.switch_view_setting_run_background)
     SwitchView runBackgroundSwitch;
     @BindView(R.id.switch_view_setting_voice_2_word)
-    SwitchView voice2WordSwitch;
+    SwitchCompat voice2WordSwitch;
     @BindView(R.id.rl_setting_voice_2_word)
     RelativeLayout voice2WordLayout;
     @BindView(R.id.rl_setting_experience_upgrade)
     RelativeLayout experienceUpgradeLayout;
     @BindView(R.id.switch_view_setting_experience_upgrade)
-    SwitchView experienceUpgradeSwitch;
+    SwitchCompat experienceUpgradeSwitch;
     @BindView(R.id.tv_setting_language_name)
     TextView languageNameText;
     @BindView(R.id.iv_setting_language_flag)
@@ -95,10 +95,34 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.tv_setting_tab_name)
     TextView tabName;
     @BindView(R.id.switch_view_setting_notification)
-    Switch notificationSwitch;
+    SwitchCompat notificationSwitch;
     private Handler handler;
     private MineAPIService apiService;
     private LoadingDialog loadingDlg;
+    private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            switch (compoundButton.getId()) {
+                case R.id.switch_view_setting_web_rotate:
+                    AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, String.valueOf(b));
+                    AppConfigCacheUtils.saveAppConfig(MyApplication.getInstance(), appConfig);
+                    saveWebAutoRotateConfig(b);
+                    break;
+                case R.id.switch_view_setting_voice_2_word:
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH,
+                            b ? DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN : DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
+                    break;
+                case R.id.switch_view_setting_experience_upgrade:
+                    boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
+                    if (isExperienceUpgradeFlag != b) {
+                        updateUserExperienceUpgradeFlag();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -109,8 +133,8 @@ public class SettingActivity extends BaseActivity {
                     setAppRunBackground(true);
                     break;
                 case R.id.switch_view_setting_voice_2_word:
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
-                    voice2WordSwitch.setOpened(true);
+                    // PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
+                    // voice2WordSwitch.setOpened(true);
                     break;
                 case R.id.switch_view_setting_web_rotate:
                     AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "true");
@@ -133,8 +157,8 @@ public class SettingActivity extends BaseActivity {
                     setAppRunBackground(false);
                     break;
                 case R.id.switch_view_setting_voice_2_word:
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
-                    voice2WordSwitch.setOpened(false);
+                    // PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
+                    // voice2WordSwitch.setOpened(false);
                     break;
                 case R.id.switch_view_setting_web_rotate:
                     AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, "false");
@@ -143,6 +167,7 @@ public class SettingActivity extends BaseActivity {
                     saveWebAutoRotateConfig(false);
                     break;
                 case R.id.switch_view_setting_experience_upgrade:
+
                     updateUserExperienceUpgradeFlag();
                     break;
                 default:
@@ -184,16 +209,16 @@ public class SettingActivity extends BaseActivity {
      */
     private void switchPush() {
         boolean switchFlag = PreferencesByUserAndTanentUtils.getBoolean(this,
-                Constant.PUSH_SWITCH_FLAG,false);
+                Constant.PUSH_SWITCH_FLAG, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setPushStatus(NotificationSetUtils.isNotificationEnabled(this) && switchFlag);
-        }else{
+        } else {
             setPushStatus(switchFlag);
         }
     }
 
     private void setPushStatus(boolean openPush) {
-        if(openPush){
+        if (openPush) {
             PushManagerUtils.getInstance().startPush();
             PushManagerUtils.getInstance().registerPushId2Emm();
         } else {
@@ -203,7 +228,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     private boolean getSwitchOpen() {
-        boolean isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+        boolean isOpen = PreferencesByUserAndTanentUtils.getBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && !NotificationSetUtils.isNotificationEnabled(this)) {
             isOpen = false;
         }
@@ -215,26 +240,26 @@ public class SettingActivity extends BaseActivity {
         apiService = new MineAPIService(this);
         apiService.setAPIInterface(new WebService());
         setWebAutoRotateState();
-        webRotateSwitch.setOnStateChangedListener(onStateChangedListener);
+        webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         runBackgroundSwitch.setOpened(isAppSetRunBackground);
         runBackgroundSwitch.setOnStateChangedListener(onStateChangedListener);
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
-            voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
-            voice2WordSwitch.setOnStateChangedListener(onStateChangedListener);
+            voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
+            voice2WordSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         }
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         showNotificationDlg();
                     }
                     notificationSwitch.setChecked(true);
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this,Constant.PUSH_SWITCH_FLAG,true);
+                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, true);
                     switchPush();
-                }else{
+                } else {
                     showNotificationCloseDlg();
 
                 }
@@ -244,50 +269,51 @@ public class SettingActivity extends BaseActivity {
             getUserExperienceUpgradeFlag();
             experienceUpgradeLayout.setVisibility(View.VISIBLE);
             boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
-            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
-            experienceUpgradeSwitch.setOnStateChangedListener(onStateChangedListener);
+            PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setChecked(isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         }
         themeNameText.setText(ThemeSwitchActivity.getThemeName());
-        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
-        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size()>1?View.VISIBLE:View.GONE);
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this, Constant.APP_TAB_LAYOUT_DATA, ""));
+        switchTabLayout.setVisibility(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() > 1 ? View.VISIBLE : View.GONE);
         tabName.setText(getTabLayoutName());
     }
 
     private void showNotificationCloseDlg() {
         new CustomDialog.MessageDialogBuilder(SettingActivity.this)
-                    .setMessage(R.string.notification_switch_cant_recive)
+                .setMessage(R.string.notification_switch_cant_recive)
                 .setNegativeButton(R.string.cancel, (dialog, index) -> {
                     notificationSwitch.setChecked(true);
                     dialog.dismiss();
-                    })
+                })
                 .setPositiveButton(R.string.ok, (dialog, index) -> {
                     dialog.dismiss();
                     notificationSwitch.setChecked(false);
                     PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
                     switchPush();
-                    })
-                    .show();
+                })
+                .show();
     }
 
     private String getTabLayoutName() {
-        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this,Constant.APP_TAB_LAYOUT_DATA,""));
+        NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(this, Constant.APP_TAB_LAYOUT_DATA, ""));
         List<NaviBarScheme> naviBarSchemeList = naviBarModel.getNaviBarPayload().getNaviBarSchemeList();
-        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(),Constant.APP_TAB_LAYOUT_NAME,"");
-        if(StringUtils.isBlank(currentTabLayoutName)){
+        String currentTabLayoutName = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, "");
+        if (StringUtils.isBlank(currentTabLayoutName)) {
             currentTabLayoutName = naviBarModel.getNaviBarPayload().getDefaultScheme();
         }
         String tabName = "";
         for (int i = 0; i < naviBarSchemeList.size(); i++) {
             NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
-            if(naviBarScheme.getName().equals(currentTabLayoutName)){
+            if (naviBarScheme.getName().equals(currentTabLayoutName)) {
                 return getTabNameByLangudge(naviBarScheme);
             }
         }
-        if(StringUtils.isBlank(tabName)){
+        if (StringUtils.isBlank(tabName)) {
             String defaultScheme = naviBarModel.getNaviBarPayload().getDefaultScheme();
             for (int i = 0; i < naviBarSchemeList.size(); i++) {
                 NaviBarScheme naviBarScheme = naviBarSchemeList.get(i);
-                if(naviBarSchemeList.get(i).getName().equals(defaultScheme)){
+                if (naviBarSchemeList.get(i).getName().equals(defaultScheme)) {
                     return getTabNameByLangudge(naviBarScheme);
                 }
             }
@@ -316,7 +342,7 @@ public class SettingActivity extends BaseActivity {
 
     private void setWebAutoRotateState() {
         boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
-        webRotateSwitch.setOpened(isWebAutoRotate);
+        webRotateSwitch.setChecked(isWebAutoRotate);
     }
 
     /**
@@ -414,7 +440,7 @@ public class SettingActivity extends BaseActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void showNotificationDlg() {
-        if(!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)){
+        if (!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
             new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                     .setMessage(getString(R.string.notification_switch_open_setting))
                     .setNegativeButton(R.string.cancel, (dialog, index) -> {
@@ -580,7 +606,7 @@ public class SettingActivity extends BaseActivity {
             loadingDlg.show();
             apiService.updateUserExperienceUpgradeFlag(isExperienceUpgradeFlag ? 0 : 1);
         } else {
-            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setChecked(isExperienceUpgradeFlag);
         }
 
     }
@@ -590,8 +616,8 @@ public class SettingActivity extends BaseActivity {
         public void returnExperienceUpgradeFlagSuccess(GetExperienceUpgradeFlagResult getExperienceUpgradeFlagResult) {
             boolean isExperienceUpgradeFlag = (getExperienceUpgradeFlagResult.getStatus() == 1);
             PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, isExperienceUpgradeFlag);
-            if (experienceUpgradeSwitch.isOpened() != isExperienceUpgradeFlag) {
-                experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
+            if (experienceUpgradeSwitch.isChecked() != isExperienceUpgradeFlag) {
+                experienceUpgradeSwitch.setChecked(isExperienceUpgradeFlag);
             }
 
         }
@@ -607,7 +633,7 @@ public class SettingActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
             PreferencesByUserAndTanentUtils.putBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, !isExperienceUpgradeFlag);
-            experienceUpgradeSwitch.setOpened(!isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setChecked(!isExperienceUpgradeFlag);
         }
 
         @Override
@@ -615,7 +641,7 @@ public class SettingActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
             boolean isExperienceUpgradeFlag = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_EXPERIENCE_UPGRATE, false);
-            experienceUpgradeSwitch.setOpened(isExperienceUpgradeFlag);
+            experienceUpgradeSwitch.setChecked(isExperienceUpgradeFlag);
         }
     }
 }
