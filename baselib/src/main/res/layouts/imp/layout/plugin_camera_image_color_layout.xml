@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.inspur.imp.plugin.camera.imageedit.view.IMGColorGroup xmlns:android="http://schemas.android.com/apk/res/android"
+<com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorGroup xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cg_colors"
     android:layout_width="wrap_content"
@@ -10,41 +10,41 @@
     android:orientation="horizontal"
     android:padding="4dp">
 
-    <com.inspur.imp.plugin.camera.imageedit.view.IMGColorRadio
+    <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorRadio
         android:id="@+id/cr_white"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_margin="6dp"
         app:image_color="#FFFFFF" />
 
-    <com.inspur.imp.plugin.camera.imageedit.view.IMGColorRadio
+    <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorRadio
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_margin="6dp"
         app:image_color="#2B2B2B" />
 
-    <com.inspur.imp.plugin.camera.imageedit.view.IMGColorRadio
+    <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorRadio
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_margin="6dp"
         app:image_color="#FF5151" />
 
-    <com.inspur.imp.plugin.camera.imageedit.view.IMGColorRadio
+    <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorRadio
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_margin="6dp"
         app:image_color="#20FFCD" />
 
-    <com.inspur.imp.plugin.camera.imageedit.view.IMGColorRadio
+    <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorRadio
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_margin="6dp"
         app:image_color="#FFCC00" />
 
-    <com.inspur.imp.plugin.camera.imageedit.view.IMGColorRadio
+    <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorRadio
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_margin="6dp"
         app:image_color="#0078FF" />
 
-</com.inspur.imp.plugin.camera.imageedit.view.IMGColorGroup>
+</com.inspur.emmcloud.basemodule.util.imageedit.view.IMGColorGroup>

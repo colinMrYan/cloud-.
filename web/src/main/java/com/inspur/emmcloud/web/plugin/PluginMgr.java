@@ -194,56 +194,57 @@ public class PluginMgr {
     private String getReallyServiceName(String serviceName) {
         if (serviceName != null) {
             if (serviceName.endsWith("LoadingDialogService")) {
-                serviceName = LoadingDialogService.class.getSimpleName();
+                serviceName = LoadingDialogService.class.getCanonicalName();
             } else if (serviceName.endsWith("FileTransferService")) {
-                serviceName = FileTransferService.class.getSimpleName();
+                serviceName = FileTransferService.class.getCanonicalName();
             } else if (serviceName.endsWith("OCRService")) {
                 // serviceName = "com.inspur.imp.plugin.ocr.OCRService";
             } else if (serviceName.endsWith("StartAppService")) {
-                serviceName = StartAppService.class.getSimpleName();
+                serviceName = StartAppService.class.getCanonicalName();
             } else if (serviceName.endsWith("WindowService")) {
-                serviceName = WindowService.class.getSimpleName();
+                serviceName = WindowService.class.getCanonicalName();
             } else if (serviceName.endsWith("DeviceService")) {
-                serviceName = DeviceService.class.getSimpleName();
+                serviceName = DeviceService.class.getCanonicalName();
             } else if (serviceName.endsWith("StuffInformationService")) {
-                serviceName = StuffInformationService.class.getSimpleName();
+                serviceName = StuffInformationService.class.getCanonicalName();
             } else if (serviceName.endsWith("AmapLocateService")) {
-                serviceName = AmapLocateService.class.getSimpleName();
+                serviceName = AmapLocateService.class.getCanonicalName();
             } else if (serviceName.endsWith("AppService")) {
-                serviceName = AppService.class.getSimpleName();
+                serviceName = AppService.class.getCanonicalName();
             } else if (serviceName.endsWith("BarCodeService")) {
-                serviceName = BarCodeService.class.getSimpleName();
+                serviceName = BarCodeService.class.getCanonicalName();
             } else if (serviceName.endsWith("BroadcastService")) {
-                serviceName = BroadcastService.class.getSimpleName();
+                serviceName = BroadcastService.class.getCanonicalName();
             } else if (serviceName.endsWith("CameraService")) {
-                serviceName = CameraService.class.getSimpleName();
+                serviceName = CameraService.class.getCanonicalName();
             } else if (serviceName.endsWith("DatePickerService")) {
-                serviceName = DatePickerService.class.getSimpleName();
+                serviceName = DatePickerService.class.getCanonicalName();
             } else if (serviceName.endsWith("TimePickerService")) {
-                serviceName = TimePickerService.class.getSimpleName();
+                serviceName = TimePickerService.class.getCanonicalName();
             } else if (serviceName.endsWith("DialogService")) {
-                serviceName = DialogService.class.getSimpleName();
+                serviceName = DialogService.class.getCanonicalName();
             } else if (serviceName.endsWith("EMMService")) {
-                serviceName = EMMService.class.getSimpleName();
+                serviceName = EMMService.class.getCanonicalName();
             } else if (serviceName.endsWith("FileService")) {
-                serviceName = FileService.class.getSimpleName();
+                serviceName = FileService.class.getCanonicalName();
             } else if (serviceName.endsWith("GpsService")) {
-                serviceName = GpsService.class.getSimpleName();
+                serviceName = GpsService.class.getCanonicalName();
             } else if (serviceName.endsWith("MapService")) {
-                serviceName = MapService.class.getSimpleName();
+                serviceName = MapService.class.getCanonicalName();
             } else if (serviceName.endsWith("NetworkService")) {
-                serviceName = NetworkService.class.getSimpleName();
+                serviceName = NetworkService.class.getCanonicalName();
             } else if (serviceName.endsWith("PhotoService")) {
-                serviceName = PhotoService.class.getSimpleName();
+                serviceName = PhotoService.class.getCanonicalName();
             } else if (serviceName.endsWith("SmsService")) {
-                serviceName = SmsService.class.getSimpleName();
+                serviceName = SmsService.class.getCanonicalName();
             } else if (serviceName.endsWith("SelectStaffService")) {
-                serviceName = SelectStaffService.class.getSimpleName();
+                serviceName = SelectStaffService.class.getCanonicalName();
             } else if (serviceName.endsWith("StuffInformationService")) {
-                serviceName = StuffInformationService.class.getSimpleName();
+                serviceName = StuffInformationService.class.getCanonicalName();
             } else if (serviceName.endsWith("TelephoneService")) {
-                serviceName = TelephoneService.class.getSimpleName();
+                serviceName = TelephoneService.class.getCanonicalName();
             }
+            LogUtils.jasonDebug("serviceName==" + serviceName);
         }
         return serviceName;
     }
@@ -266,7 +267,7 @@ public class PluginMgr {
         service = service.trim();
         IPlugin plugin = null;
         Log.d("jason", "serviceName=" + service);
-        if (!entries.containsKey(service) || service.equals(FileTransferService.class.getSimpleName())) {
+        if (!entries.containsKey(service) || service.equals(FileTransferService.class.getCanonicalName())) {
             plugin = createPlugin(service);
             if (plugin != null) {
                 entries.put(service, plugin);

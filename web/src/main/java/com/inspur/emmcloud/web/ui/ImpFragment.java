@@ -26,9 +26,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.core.LogisticsCenter;
+import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -188,6 +191,7 @@ public class ImpFragment extends ImpBaseFragment {
      */
     private void initFragmentViews() {
         String url = getArguments().getString(Constant.APP_WEB_URI);
+        LogUtils.jasonDebug("url==" + url);
         optionMenuList = (ArrayList<MainTabMenu>) getArguments().getSerializable(Constant.WEB_FRAGMENT_MENU);
         setWebViewFunctionVisiable();
         initHeaderOptionMenu();
@@ -384,7 +388,15 @@ public class ImpFragment extends ImpBaseFragment {
 
             @Override
             public void onStartActivityForResult(String routerPath, Bundle bundle, int requestCode) {
-                ARouter.getInstance().build(routerPath).with(bundle).navigation(ImpFragment.this.getContext());
+                //ARouter不支持fragment.startActivityForResult().
+                Postcard postcard = ARouter.getInstance().build(routerPath).with(bundle);
+                LogisticsCenter.completion(postcard);
+                Intent intent = new Intent(getActivity(), postcard.getDestination());
+                intent.putExtras(postcard.getExtras());
+                startActivityForResult(intent, requestCode);
+
+
+//                ARouter.getInstance().build(routerPath).with(bundle).navigation(ImpFragment.this.getActivity(),requestCode);
             }
 
             @Override
@@ -492,7 +504,9 @@ public class ImpFragment extends ImpBaseFragment {
     private void setWebViewHeader(String url) {
         webViewHeaders = new HashMap<>();
         addAuthorizationToken(url);
-        webViewHeaders.put("X-ECC-Current-Enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
+        if (BaseApplication.getInstance().getCurrentEnterprise() != null) {
+            webViewHeaders.put("X-ECC-Current-Enterprise", BaseApplication.getInstance().getCurrentEnterprise().getId());
+        }
         webViewHeaders.put("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
     }
 

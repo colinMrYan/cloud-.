@@ -275,6 +275,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                 myDialog.dismiss();
                 BaseApplication.getInstance().initTanent();
                 loadingDlg.show();
+                startMDM();
                 getServerSupportLanguage();
             }
         });

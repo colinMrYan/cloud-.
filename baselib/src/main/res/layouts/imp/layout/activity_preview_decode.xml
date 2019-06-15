@@ -16,7 +16,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
-        <com.inspur.imp.plugin.barcode.decoder.RangeView
+        <com.inspur.emmcloud.web.plugin.barcode.decoder.RangeView
             android:id="@+id/rv"
             android:layout_width="fill_parent"
             android:layout_height="match_parent" />

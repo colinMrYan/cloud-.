@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.inspur.imp.plugin.barcode.view.ViewfinderView
+            <com.inspur.emmcloud.web.plugin.barcode.view.ViewfinderView
                 android:id="@+id/viewfinder_view"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent" />
