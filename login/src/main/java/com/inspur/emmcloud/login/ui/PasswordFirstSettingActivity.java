@@ -23,6 +23,7 @@ import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.widget.keyboardview.EmmSecurityKeyboard;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 用户初次使用短信验证码登录后，当没有设置密码时进入改页面
@@ -42,6 +43,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
+        ButterKnife.bind(this);
         EditWatcher editWatcher = new EditWatcher();
         passwordNewEdit.addTextChangedListener(editWatcher);
         passwordConfirmEdit.addTextChangedListener(editWatcher);
