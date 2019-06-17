@@ -17,21 +17,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.ClearEditText;
-import com.inspur.emmcloud.widget.WeakHandler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -112,8 +111,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
 
     private void handMessage() {
-        handler = new WeakHandler(this) {
-            @Override
+        handler = new Handler() {
             protected void handleMessage(Object o, Message message) {
                 switch (message.what) {
                     case REFRESH_DATA:
