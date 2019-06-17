@@ -106,7 +106,6 @@ dependencies {
     }
     api deps.gson
     api deps.fastjson
-    api deps.qmui
     api deps.commonsLang3
     api deps.amapLocation
 
