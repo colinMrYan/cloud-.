@@ -1,18 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
-import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.UIMessage;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
-import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +9,19 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.GroupMessageSearchAdapter;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.UIMessage;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

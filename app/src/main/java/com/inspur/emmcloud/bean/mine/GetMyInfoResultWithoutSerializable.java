@@ -2,8 +2,10 @@ package com.inspur.emmcloud.bean.mine;
 
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.reactnative.ReactNativeWritableArray;
+import com.inspur.reactnative.ReactNativeWritableNativeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,8 +52,8 @@ public class GetMyInfoResultWithoutSerializable {
             if (obj != null) {
                 Enterprise enterprise = new Enterprise(obj);
                 enterpriseList.add(enterprise);
-                reactNativeWritableArray.pushMap(enterprise.enterPrise2ReactNativeWritableNativeMap());
-                writableNativeArray.pushMap(enterprise.enterPrise2WritableNativeMap());
+                reactNativeWritableArray.pushMap(enterPrise2ReactNativeWritableNativeMap(enterprise));
+                writableNativeArray.pushMap(enterPrise2WritableNativeMap(enterprise));
             }
         }
         writableNativeMap.putArray("enterprises", writableNativeArray);
@@ -64,7 +66,7 @@ public class GetMyInfoResultWithoutSerializable {
      * @return
      */
     public WritableNativeMap getUserProfile2WritableNativeMap() {
-        writableNativeMap.putMap("enterprise", defaultEnterprise.enterPrise2ReactNativeWritableNativeMap());
+        writableNativeMap.putMap("enterprise", enterPrise2ReactNativeWritableNativeMap(defaultEnterprise));
         writableNativeMap.putString("avatar", avatar);
         writableNativeMap.putString("code", code);
         writableNativeMap.putDouble("creation_date", Double.valueOf(creationDate));
@@ -76,6 +78,42 @@ public class GetMyInfoResultWithoutSerializable {
         writableNativeMap.putBoolean("has_password", hasPassord);
         return writableNativeMap;
     }
+
+
+    /**
+     * 为初始化RN bundle准备的，需要序列化
+     *
+     * @return
+     */
+    public ReactNativeWritableNativeMap enterPrise2ReactNativeWritableNativeMap(Enterprise enterprise) {
+        ReactNativeWritableNativeMap map = new ReactNativeWritableNativeMap();
+        map.putString("code", enterprise.getCode());
+        map.putInt("id", Integer.valueOf(enterprise.getId()));
+        map.putString("name", enterprise.getName());
+        map.putDouble("creation_date", Double.valueOf(enterprise.getCreationDate()));
+        map.putString("ent_license_copy", enterprise.getEntLicenseCopy());
+        map.putString("ent_license_sn", enterprise.getEntLicenseSn());
+        map.putDouble("last_update", Double.valueOf(enterprise.getLastUpdate()));
+        return map;
+    }
+
+    /**
+     * 为RN内部自己调用准备的，不能序列化，否则报异常
+     *
+     * @return
+     */
+    public WritableNativeMap enterPrise2WritableNativeMap(Enterprise enterprise) {
+        WritableNativeMap map = new WritableNativeMap();
+        map.putString("code", enterprise.getCode());
+        map.putInt("id", Integer.valueOf(enterprise.getId()));
+        map.putString("name", enterprise.getName());
+        map.putDouble("creation_date", Double.valueOf(enterprise.getCreationDate()));
+        map.putString("ent_license_copy", enterprise.getEntLicenseCopy());
+        map.putString("ent_license_sn", enterprise.getEntLicenseSn());
+        map.putDouble("last_update", Double.valueOf(enterprise.getLastUpdate()));
+        return map;
+    }
+
 
     public String getAvatar() {
         return avatar;

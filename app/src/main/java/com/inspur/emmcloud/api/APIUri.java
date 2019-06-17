@@ -4,13 +4,12 @@ package com.inspur.emmcloud.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
@@ -31,7 +30,7 @@ public class APIUri {
 //     * @return
 //     */
 //    private static String getEcmTanentUrl() {
-//        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
+//        return BaseApplication.getInstance().getClusterEcm() + BaseApplication.getInstance().getTanent();
 //    }
 
     public static String getEcmUrl() {
@@ -118,14 +117,6 @@ public class APIUri {
         return "https://uvc1.inspuronline.com/cpexception";
     }
 
-    /**
-     * PV收集
-     *
-     * @return
-     */
-    public static String getUploadPVCollectUrl() {
-        return "https://uvc1.inspuronline.com/clientpv";
-    }
 
     /**
      * 新版底部Tabbar接口
@@ -189,90 +180,10 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mam/v6.0/app/pos";
     }
 
-    /**
-     * 获取上传推送信息的url
-     *
-     * @return
-     */
-    public static String getUploadPushInfoUrl() {
-        return WebServiceRouterManager.getInstance().getClusterClientRegistry() + "/client";
-    }
 
-    /**
-     * 获取通用检查url
-     *
-     * @return
-     */
-    public static String getAllConfigVersionUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v6.0/config/Check";
-    }
 
 
     /************************************************************************登录*****************************************************************/
-
-    /**
-     * 请求短信验证码
-     *
-     * @param mobile
-     * @return
-     */
-    public static String getLoginSMSCaptchaUrl(String mobile) {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "api/v1/passcode?phone=" + mobile;
-    }
-
-    /**
-     * 验证短信验证码
-     *
-     * @return
-     */
-    public static String getSMSRegisterCheckUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "/api?module=register&method=verify_smscode";
-    }
-
-    /**
-     * 获取用户信息
-     *
-     * @return
-     */
-    public static String getMyInfoUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
-    }
-
-    /**
-     * 修改密码
-     **/
-    public static String getChangePsdUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "console/api/v1/account/password";
-    }
-
-
-    /**
-     * 获取oauth认证的基础
-     *
-     * @return
-     */
-    public static String getOauthSigninUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token";
-    }
-
-    /**
-     * 返回我的信息
-     *
-     * @return
-     */
-    public static String getOauthMyInfoUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token/profile";
-    }
-
-    /**
-     * 刷新token
-     *
-     * @return
-     */
-    public static String getRefreshToken() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/token";
-    }
-
 
     /**
      * 网页登录
@@ -282,7 +193,6 @@ public class APIUri {
     public static String getWebLoginUrl() {
         return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/authorize";
     }
-
 
     /**************************************************************沟通***************************************************************/
 
@@ -520,7 +430,7 @@ public class APIUri {
      */
     public static String getChatFileResouceUrl(String cid, String path) {
         String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/file/request?path=" + path;
-        return url.replaceAll("\\+","%2B");
+        return url.replaceAll("\\+", "%2B");
     }
 
     /**
@@ -532,7 +442,7 @@ public class APIUri {
      */
     public static String getChatVoiceFileResouceUrl(String cid, String path) {
         String url = getECMChatUrl() + "/api/v1/channel/" + cid + "/voice/request?path=" + path;
-        return url.replaceAll("\\+","%2B");
+        return url.replaceAll("\\+", "%2B");
     }
 
     /**
@@ -1447,15 +1357,6 @@ public class APIUri {
         return "https://ecm.inspur.com/" + MyApplication.getInstance().getTanent() + "/trip/simple/detail?trip_ticket=";
     }
 
-    /**
-     * 获取语言的接口
-     *
-     * @return
-     */
-    public static String getLangUrl() {
-        return getEcmUrl() + "/" + MyApplication.getInstance().getTanent() + "/settings/lang";
-    }
-
 
     /**
      * 获取应用未处理消息条数的URL
@@ -1551,15 +1452,6 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/device/getUserDevices";
     }
 
-    /**
-     * 获取设备注册URl
-     *
-     * @param context
-     * @return
-     */
-    public static String getDeviceRegisterUrl(Context context) {
-        return getEMMBaseUrl() + "app/mdm/v3.0/loadForRegister?udid=" + AppUtils.getMyUUID(context);
-    }
 
     /**
      * 获取绑定设备
@@ -1588,14 +1480,6 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/mdm_check";
     }
 
-    /**
-     * 设备检查
-     *
-     * @return
-     */
-    public static String getDeviceCheckUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/check_state";
-    }
 
     /**
      * 获取卡包信息
@@ -1674,25 +1558,6 @@ public class APIUri {
         return "http://172.31.2.36:88/api/sys/v6.0/voice/leave/";
     }
 
-    /**
-     * 向emm注册推送token的url
-     * 固定地址
-     *
-     * @return
-     */
-    public static String getRegisterPushTokenUrl() {
-        return "https://emm.inspuronline.com/api/sys/v6.0/config/registerDevice";
-    }
-
-    /**
-     * 解除注册token的url
-     * 固定地址
-     *
-     * @return
-     */
-    public static String getUnRegisterPushTokenUrl() {
-        return "https://emm.inspuronline.com/api/sys/v6.0/config/unRegisterDevice";
-    }
 
     /**
      * 未读消息url
@@ -1716,44 +1581,41 @@ public class APIUri {
      * @return
      */
 
-    public static String getScheduleBaseUrl(){
-        return getECMScheduleUrl()+"/schedule-ext/";
+    public static String getScheduleBaseUrl() {
+        return getECMScheduleUrl() + "/schedule-ext/";
     }
 
     public static String getCheckCloudPluseConnectUrl() {
-        return  getScheduleBaseUrl()+"api/mam/v3.0/heart/success";
+        return getScheduleBaseUrl() + "api/mam/v3.0/heart/success";
     }
 
-    public static String getCancelTokenUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/profile";
-    }
 
     public static String getScheduleListUrl() {
-        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/GetList?";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/GetList?";
     }
 
     public static String getAddScheduleUrl() {
-        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/add";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/add";
     }
 
     public static String getUpdateScheduleUrl() {
-        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/update";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/update";
     }
 
     public static String getDeleteScheduleUrl(String scheduleId) {
-        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/remove/" + scheduleId;
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/remove/" + scheduleId;
     }
 
     public static String getAddMeetingUrl() {
-        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/add";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/add";
     }
 
     public static String getDelMeetingUrl(String meetingId) {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/"+meetingId;
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/remove/" + meetingId;
     }
 
-    public static String getMeetingListByStartTime(){
-        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetByStartTime?";
+    public static String getMeetingListByStartTime() {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/GetByStartTime?";
     }
 
     /**
@@ -1774,16 +1636,16 @@ public class APIUri {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/GetHistory/" + id;
     }
 
-    public static String getRoomMeetingListByMeetingRoom(){
-        return getScheduleBaseUrl()+"api/schedule/v6.0/meeting/GetRoomUse?";
+    public static String getRoomMeetingListByMeetingRoom() {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/GetRoomUse?";
     }
 
     public static String getMeetingUpdateUrl() {
         return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/update";
     }
 
-    public static String getHolidayDataUrl(){
-        return getScheduleBaseUrl()+"api/schedule/v6.0/calendar/HolidayData/";
+    public static String getHolidayDataUrl() {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/HolidayData/";
     }
 
     /**
@@ -1805,7 +1667,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getDecideCardBotRequestUrl(){
+    public static String getDecideCardBotRequestUrl() {
         return "https://api.inspuronline.com/bot/v1/action/trigger/";
     }
 

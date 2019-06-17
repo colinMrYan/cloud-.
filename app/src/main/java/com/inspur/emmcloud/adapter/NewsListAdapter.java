@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.itheima.roundedimageview.RoundedImageView;
 
 import java.util.List;

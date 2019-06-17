@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 

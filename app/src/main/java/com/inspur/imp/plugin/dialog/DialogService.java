@@ -5,9 +5,9 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
 
@@ -127,7 +127,7 @@ public class DialogService extends ImpPlugin {
         }
         if (StrUtil.strIsNotNull(msg))
             // 利用Toast方式显示消息内容
-            Toast.makeText(getFragmentContext(), msg, Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), msg);
     }
 
     /**

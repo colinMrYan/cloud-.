@@ -1,36 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VolumeFileAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
-import com.inspur.emmcloud.bean.appcenter.volume.Volume;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.FomatUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
-import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +16,37 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.VolumeFileAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.FomatUtils;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
+import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
+import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

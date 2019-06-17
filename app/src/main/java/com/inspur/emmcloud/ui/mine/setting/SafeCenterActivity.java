@@ -1,10 +1,10 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.common.IntentUtils;
-
 import android.view.View;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 
 /**
  * 账号、设备安全

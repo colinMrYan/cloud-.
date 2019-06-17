@@ -1,17 +1,26 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.text.SpannableString;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -19,6 +28,23 @@ import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButton;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
@@ -32,8 +58,6 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.VoiceResult;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
@@ -41,63 +65,41 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.audioformat.AudioMp3ToPcm;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
-import com.inspur.emmcloud.widget.CustomLoadingView;
+import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.widget.roundbutton.CustomRoundButton;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 import com.inspur.imp.util.compressor.Compressor;
 
-import android.content.BroadcastReceiver;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.text.SpannableString;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -806,7 +808,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                             if (channelGroupArray.length() > 0) {
                                 JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
                                 String cid = JSONUtils.getString(cidObj, "cid", "");
-                                transmitTextMsg(cid, backUiMessage.getMessage());
+                                transmitTextMsg(cid, backUiMessage);
                             }
                         }
                     }
@@ -1224,11 +1226,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                     }
                     //去除以本地时间为发送时间的代码
 //                    Long creationDate = 0L;
-//                    Message message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getId());
+//                    Message message = MessageCacheUtil.getMessageByMid(BaseApplication.getInstance(), receivedWSMessage.getId());
 //                    if (message != null) {
 //                        creationDate = message.getCreationDate();
 //                    } else {
-//                        creationDate = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), receivedWSMessage.getTmpId()).getCreationDate();
+//                        creationDate = MessageCacheUtil.getMessageByMid(BaseApplication.getInstance(), receivedWSMessage.getTmpId()).getCreationDate();
 //                    }
 //                    receivedWSMessage.setCreationDate(creationDate);
                     if (index == -1) {
@@ -1377,10 +1379,13 @@ public class ConversationActivity extends ConversationBaseActivity {
         String msgType = uiMessage.getMessage().getType();
         switch (msgType) {
             case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                transmitTextMsg(cid, uiMessage.getMessage());
+                transmitTextMsg(cid, uiMessage);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                 //  transmitImgMsg(cid, uiMessage.getMessage());
+                break;
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                transmitTextMsg(cid, uiMessage);
                 break;
             default:
                 break;
@@ -1392,10 +1397,8 @@ public class ConversationActivity extends ConversationBaseActivity {
      *
      * @param cid
      */
-    private void transmitTextMsg(String cid, Message sendMessage) {
-        String text = sendMessage.getMsgContentTextPlain().getText();
-        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(ConversationActivity.this, text, sendMessage.getMsgContentTextPlain().getMentionsMap());
-        text = spannableString.toString();
+    private void transmitTextMsg(String cid, UIMessage uiMessage) {
+        String text = uiMessage2Content(uiMessage);
         if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
             if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             } else {
@@ -1431,6 +1434,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                items = new int[]{R.string.chat_long_click_copy, R.string.chat_long_click_transmit, R.string.chat_long_click_schedule};
                 break;
             case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                 break;
@@ -1545,40 +1549,56 @@ public class ConversationActivity extends ConversationBaseActivity {
             String operation = context.getResources().getString(operationsId[i]);
             operations[i] = operation;
         }
-        new CustomDialog.ListDialogBuilder(context)
+        ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
+        new CustomDialog.ListDialogBuilder(ctw)
                 .setItems(operations, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String content;
-                        Message message = uiMessage.getMessage();
-                        SpannableString spannableString;
+                        content = uiMessage2Content(uiMessage);
+                        if (StringUtils.isBlank(content)) {
+                            content = "";
+                        }
                         switch (operationsId[which]) {
                             case R.string.chat_long_click_copy:
-                                String text = message.getMsgContentTextPlain().getText();
-                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
-                                text = spannableString.toString();
-                                if (!StringUtils.isBlank(text))
-                                    copyToClipboard(context, text);
+                                copyToClipboard(context, content);
                                 break;
                             case R.string.chat_long_click_transmit:
                                 shareMessageToFrinds(context);
                                 break;
                             case R.string.chat_long_click_schedule:
-                                content = message.getMsgContentTextPlain().getText();
-                                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, content, message.getMsgContentTextPlain().getMentionsMap());
-                                content = spannableString.toString();
-                                if (!StringUtils.isBlank(content))
-                                    addTextToSchedule(content);
+                                addTextToSchedule(content);
                                 break;
                             case R.string.chat_long_click_copy_text:
-                                content = uiMessage.getMessage().getMsgContentMediaVoice().getResult();
-                                if (!StringUtils.isBlank(content))
-                                    copyToClipboard(context, content);
+                                copyToClipboard(context, content);
                                 break;
                         }
                         dialog.dismiss();
                     }
                 }).show();
+    }
+
+    private String uiMessage2Content(UIMessage uiMessage) {
+        String content = null;
+        switch (uiMessage.getMessage().getType()) {
+            case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
+                SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(
+                        MyApplication.getInstance(),
+                        uiMessage.getMessage().getMsgContentTextMarkdown().getText(),
+                        uiMessage.getMessage().getMsgContentTextMarkdown().getMentionsMap());
+                content = spannableString.toString();
+                if (!StringUtils.isBlank(content)) {
+                    content = MarkDown.fromMarkdown(content);
+                }
+                break;
+            case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                String text = uiMessage.getMessage().getMsgContentTextPlain().getText();
+                spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), text,
+                        uiMessage.getMessage().getMsgContentTextPlain().getMentionsMap());
+                content = spannableString.toString();
+                break;
+        }
+        return content;
     }
 
     /**

@@ -20,14 +20,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONArray;

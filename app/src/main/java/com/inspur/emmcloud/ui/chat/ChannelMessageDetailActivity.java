@@ -1,47 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.bean.chat.GetMessageCommentResult;
-import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
-import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
-import com.inspur.emmcloud.widget.LinkMovementClickMethod;
-import com.inspur.emmcloud.widget.ScrollViewWithListView;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -57,6 +15,48 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.bean.chat.GetMessageCommentResult;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.inspur.emmcloud.widget.LinkMovementClickMethod;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**

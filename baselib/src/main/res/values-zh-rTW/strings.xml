@@ -1,0 +1,1544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">雲+</string>
+    <string name="app_name_zhihuichengjian">智慧城建</string>
+    <string name="app_name_huaxiayinhang">華夏管理雲</string>
+    <string name="app_name_beiqi">雲+</string>
+    <string name="app_name_chinatower">中國鐵塔報帳</string>
+    <string name="reclick_to_desktop">再按一次退出程式</string>
+    <string name="Network_Mobile">已經連接到移動網路</string>
+    <string name="Network_WIFI">已經連接到WIFI</string>
+    <string name="ok">確定</string>
+    <string name="cancel">取消</string>
+    <string name="resolution_warning">您的設備解析度小於800*480，無法運行此程式</string>
+    <string name="retry">重試</string>
+    <string name="re_login">重新登入</string>
+    <string name="software_service_term">服務協定</string>
+    <string name="update_fail">更新失敗</string>
+    <string name="downloading_package">下載中，請稍候....</string>
+    <string name="service_term">服務協定</string>
+    <string name="prompt">提示</string>
+    <string name="nothing">無 </string>
+    <string name="function_intr">功能介紹 </string>
+    <string name="enter_app">進入應用</string>
+    <string name="sweep">掃一掃</string>
+    <string name="send">發送</string>
+    <string name="picture">圖片</string>
+    <string name="album">相冊</string>
+    <string name="take_photo">拍照</string>
+    <string name="mention">提及</string>
+    <string name="file">文件</string>
+    <string name="next_step">下一步</string>
+    <string name="pull_down_load_history">下拉載入歷史消息</string>
+    <string name="if_confirm_signout">您確定要退出登錄嗎？</string>
+    <string name="if_delect_current_item">刪除當前選項</string>
+    <string name="exit">退出</string>
+    <string name="open">打開</string>
+    <string name="add">添加</string>
+    <string name="update">更新</string>
+    <string name="download">下載</string>
+    <string name="confirm_modify_language">確定修改語言</string>
+    <string name="resolution_valiad">您的設備解析度小於1280*720無法運行此程式</string>
+    <string name="file_type_not_recognize">不可識別的檔案類型</string>
+    <string name="return_app">返回應用</string>
+    <string name="modify_success">修改成功</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_fail">保存失敗</string>
+    <string name="picture_cannot_show">圖片無法顯示</string>
+    <string name="cannot_download_for_network_exception">網路有問題，無法下載</string>
+    <string name="cannot_show_for_too_big">圖片太大無法顯示</string>
+    <string name="unknown_error">未知的錯誤</string>
+    <string name="check_update_text">檢查新版本</string>
+    <string name="app_is_lastest_version">當前已是最新版本</string>
+    <string name="check_update_fail">檢查新版本失敗</string>
+    <string name="upgrade">立即更新 </string>
+    <string name="not_upgrade">下次再說</string>
+    <string name="app_update_remind">更新提醒</string>
+    <string name="app_last_version">最新版本</string>
+    <string name="more_work_place">更多辦公點 ...</string>
+    <string name="cancel_filter">取消過濾 </string>
+    <string name="only_free">僅顯示空閒 </string>
+    <string name="file_no_identifiable">不能识别的文件类型</string>
+    <string name="login_code_login_text">验证码登录</string>
+    <string name="invite_friends_text">把雲+推薦給朋友</string>
+    <string name="tab_not_support_tips">%1$s功能已改版，請<Data><![CDATA[<font color=\'#0F7BCA\'>陞級到最新版本</font>]]></Data></string>
+    <string name="choose">選擇</string>
+    <string name="file_type">檔案類型</string>
+    <string name="app_update_prepare">準備下載</string>
+    <string name="app_update_error">更新失敗</string>
+    <string name="app_update_loaded">已下載：</string>
+    <string name="unsupport_type">不支援的類型</string>
+
+
+    <!-- 公共部分 -->
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday">星期日</string>
+    <string name="today">今天</string>
+    <string name="tomorrow">明天</string>
+    <string name="after">後天</string>
+    <string name="no_more_data">無更多載入項</string>
+    <string name="tips">提示</string>
+    <string name="confirm">確定</string>
+    <string name="begin">開始</string>
+    <string name="end">結束</string>
+    <string name="yesterday">昨天</string>
+    <string name="the_day_before_yesterday">前天</string>
+    <string name="days_ago">%1$d天前</string>
+    <string name="days_after">%1$d天後</string>
+    <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
+    <string name="format_date_group_by">yyyy-MM-dd</string>
+    <string name="format_year_month_day">yyyy\'年\'MM\'月\'dd\'日\'</string>
+    <string name="format_hour_minute">HH:mm</string>
+    <string name="format_task_month_day">MM.dd</string>
+    <string name="format_utc">yyyy-MM-dd\'T\'HH:mm:ss\'.\'SSS\'Z\'</string>
+    <string name="not_support_upload">不支持沒有后綴名的文件上傳 </string>
+    <string name="format_month_day">MM\'月\'dd\'日\'</string>
+    <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
+    <string name="format_month_day_hour_minute">MM\'月\'dd\'日\' HH:mm</string>
+    <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
+    <string name="time_null">無</string>
+    <string name="cutdown_now">今</string>
+    <string name="cutdown_tomorrow">明</string>
+    <string name="cutdown_yestoday">昨</string>
+    <string name="cutdown_day">天</string>
+    <string name="cutdown_month">月</string>
+    <string name="notice">通知</string>
+    <string name="close">關閉</string>
+    <string name="commoly_use_app">常用</string>
+    <string name="app_init">正在初始化</string>
+    <string name="news_content_cant_empty">內容不能為空</string>
+    <string name="help">幫助</string>
+    <string name="load_data_failed">加載數據失敗</string>
+
+    <!-- 新添加部分 -->
+    <string name="alert">提醒</string>
+    <string name="analysis">分析</string>
+    <string name="please_input_remark">請輸入備註資訊</string>
+    <string name="alert_cycle">提醒週期</string>
+    <string name="cycle">週期</string>
+    <string name="calendar_divide_into_groups">分組</string>
+    <string name="quarter">季度</string>
+    <string name="monthly_a">月度</string>
+    <string name="repeat">重複</string>
+    <string name="add_event">添加事件</string>
+    <string name="calendar">日曆</string>
+    <string name="all_day">全天</string>
+    <string name="delete_group_member"> 刪除群成員</string>
+    <string name="tax_ticket_info"> 增值稅專用發票開票資訊</string>
+    <string name="channel_group_info">群详情</string>
+    <string name="channel_group_name">群名稱</string>
+    <string name="channel_group_image">群圖片</string>
+    <string name="channel_group_file">群文件</string>
+    <string name="channel_group_members_name">群名稱</string>
+    <string name="channel_set_top"> 置頂</string>
+    <string name="message_without_interruption">消息免打擾</string>
+    <string name="login_hint_text">用戶名/郵箱/手機號</string>
+    <string name="modify_group_name">群名片</string>
+    <string name="choose_common_office">常用辦公地點</string>
+    <string name="please_click_choosing_time">請點擊選擇時間</string>
+    <string name="meeting_room">會議室</string>
+    <string name="building">建築</string>
+    <string name="am">上午</string>
+    <string name="please_input_change">請輸入修改</string>
+    <string name="my_stroke">我的行程</string>
+    <string name="title">標題</string>
+    <string name="channel_hide_chat">隱藏聊天</string>
+    <string name="upload_at">上傳於</string>
+    <string name="confirm_checkin">確認參加</string>
+    <string name="name">名字</string>
+    <string name="size">大小</string>
+    <string name="use_map">使用地圖導航</string>
+    <string name="use_gaode_map">使用高德地圖導航</string>
+    <string name="choose_begin_end_time">選擇開始結束時間</string>
+    <string name="add_new_task">新增待辦</string>
+    <string name="picture_path_null">圖片路徑為空</string>
+    <string name="trip_detail">行程詳情</string>
+    <string name="trip_date">行程日期</string>
+    <string name="ticket_cost">票價</string>
+    <string name="triper"> 乘車人</string>
+    <string name="seat_num"> 座次</string>
+    <string name="train_num"> 車次</string>
+    <string name="arrive_time"> 到達時間</string>
+    <string name="arrive_date">到達日期</string>
+    <string name="arrive_city"> 到達城市 </string>
+    <string name="terminus">終點站 </string>
+    <string name="start_city">出發城市</string>
+    <string name="start_station">始發站</string>
+    <string name="trip">行程</string>
+    <string name="news">新聞</string>
+    <string name="back">返回</string>
+    <string name="preview">預覽</string>
+    <string name="photo">照片</string>
+    <string name="heading">名稱</string>
+    <string name="taxpayer_identification_number">納稅人識別號</string>
+    <string name="address">地址</string>
+    <string name="phone_number">電話</string>
+    <string name="bank">開戶行</string>
+    <string name="account_number">帳號</string>
+    <string name="feed_back_success">回饋成功</string>
+    <string name="begin_cannot_later_than_end">開始時間不能晚於結束時間</string>
+    <string name="no_this_knowledge">暫無這條知識</string>
+    <string name="comment">評論</string>
+    <string name="write_comment">寫評論</string>
+
+    <!-- 新用戶註冊 -->
+    <string name="newuser">新用戶</string>
+    <string name="newuser_title">新用户</string>
+    <string name="newuser_input_phonenum">請輸入手機號碼</string>
+    <string name="newuser_agree">點擊“下一步”按鈕即表示您同意浪潮的</string>
+    <string name="newuser_protocal_text">《使用者協定》</string>
+    <string name="newuser_perfect_text">完善資訊</string>
+    <string name="newuser_perfect_nickname">昵稱</string>
+    <string name="newuser_perfect_gender">男</string>
+
+    <!-- 登錄部分 -->
+    <string name="login_invaliad_account_or_pwd">用戶名或密碼錯誤</string>
+    <string name="login_captchas_input_error">驗證碼錯誤</string>
+    <string name="login_pw_modified"> 密碼已修改</string>
+    <string name="login_phonenum_has_beeb_resgistered">手機號已經註冊，您可以選擇直接登錄，或者更換註冊手機號</string>
+    <string name="login_direct">直接登錄</string>
+    <string name="login_change_phone_num">更換號碼</string>
+    <string name="login_captchas_login">短信登錄 </string>
+    <string name="login_by_account">帳號密碼登錄</string>
+    <string name="login_find_password">找回密碼</string>
+    <string name="login_get_captchas_code">獲取驗證碼</string>
+    <string name="login_get_captchas">通過短信修改密碼</string>
+    <string name="login_send_captchas">發送驗證碼 </string>
+    <string name="login_set_pwd">設置密碼 </string>
+    <string name="login_resent">當前</string>
+    <string name="login_resend">重新發送（  ） </string>
+    <string name="login_captchas_sent"> 驗證碼已發送到手機：</string>
+    <string name="login_please_input_captchas">請輸入驗證碼</string>
+    <string name="login_please_input_phone_num">請輸入手機號碼</string>
+    <string name="login_phone_num_illegal_format">手機號碼格式不正確</string>
+    <string name="login_no_phone_num">手機號不存在</string>
+    <string name="login_loading_text">登錄中...</string>
+    <string name="login_please_input_username">請輸入用戶名</string>
+    <string name="login_please_input_password"> 請輸入密碼</string>
+    <string name="login">登錄</string>
+    <string name="login_newuser_text">新用戶註冊</string>
+    <string name="login_captchas_getcode_success">驗證碼發送成功</string>
+    <string name="login_reverification">重新驗證</string>
+    <string name="login_code_verification_failure">驗證碼校驗失敗</string>
+    <string name="login_sms">短信登錄</string>
+    <string name="login_cost_report"> 費用報告</string>
+    <string name="login_your_contact"> 您的聯繫方式</string>
+    <string name="login_group_album"> 群相冊</string>
+    <string name="login_group_file">群文件</string>
+    <string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>
+    <string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>
+    <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
+    <string name="captchas">驗證碼</string>
+    <string name="fill_captchas"> 填寫驗證碼</string>
+    <string name="password">密碼</string>
+    <string name="recover">重新獲取</string>
+    <string name="more">更多</string>
+    <string name="no_search_term">沒有更多的搜索結果</string>
+    <string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>
+    <string name="login_current_login_enterprise">當前系統：%1$s</string>
+    <string name="login_forget_password">忘記密碼？</string>
+    <string name="login_fail_limit_remaining">帳號或密碼錯誤，請重新輸入，剩餘%1$d次機會</string>
+    <string name="login_fail_account_lock_by_min">帳號已被鎖定，請%1$d分鐘後再嘗試</string>
+    <string name="login_fail_account_lock_by_second">帳號已被鎖定，請%1$d秒後再次嘗試</string>
+
+
+    <!-- 消息部分 -->
+    <string name="msgcontent_cannot_null">請輸入消息內容</string>
+    <string name="comment_type">   的圖片</string>
+    <string name="comment_filetype">   的文件</string>
+    <string name="comment_news_type">   的新聞</string>
+    <string name="comment_other_type">   的消息</string>
+    <string name="published_in">發於</string>
+    <string name="all_channel_mem">全部頻道成員</string>
+    <string name="message_text">消息：</string>
+    <string name="channel">頻道</string>
+    <string name="communicate">溝通</string>
+    <string name="group_info">浪潮資訊</string>
+    <string name="send_a_picture">[圖片]</string>
+    <string name="send_a_comment">[評論]</string>
+    <string name="send_a_file">[文件]</string>
+    <string name="send_a_link">[連結]</string>
+    <string name="send_a_contact_card">[名片]</string>
+    <string name="send_a_voice">[語音]</string>
+    <string name="send_a_meeting_invitation">[會議邀請]</string>
+    <string name="cancel_a_meeting">[會議取消通知]</string>
+    <string name="send_a_meeting_request">[會議審批]</string>
+    <string name="send_a_message_of_unknown_type">[未知類型]</string>
+    <string name="send_action_message">[活動消息]</string>
+    <string name="direct_no_message">暫無新消息</string>
+    <string name="group_no_message">已經進入群組，打個招呼吧</string>
+    <string name="welcome_to_attention">歡迎關注</string>
+    <string name="not_support_open_channel"> 暫不支援此類型</string>
+    <string name="top"> 置頂</string>
+    <string name="chanel_cancel_top"> 取消置頂</string>
+    <string name="creat_group">創建群組</string>
+    <string name="creat_group_fail">群組創建失敗</string>
+    <string name="all_group_member">群成員(%1$d)</string>
+    <string name="add_group_member">添加群成員 </string>
+    <string name="channel_group">群組</string>
+    <string name="group_member">群成員列表 </string>
+    <string name="group_name_cannot_null">請輸入群組名稱 </string>
+    <string name="channel_unknown_text">您的%1$s暫不支持該消息，請【陞級】%1$s最新版本查看</string>
+    <string name="comment_hallcomment_text">評論了:</string>
+    <string name="channel_info">頻道詳情</string>
+    <string name="comment_text">評論：</string>
+    <string name="administrators_of_channel">(管理員)</string>
+    <string name="long_img">長圖</string>
+    <string name="friend_list">好友列表</string>
+    <string name="join_discuss">討論一下吧</string>
+    <string name="add_new_comment">添加新評論</string>
+    <string name="socket_connecting">連接中</string>
+    <string name="socket_close">已斷開</string>
+    <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
+    <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
+    <string name="message_create_group">發起群聊</string>
+    <string name="business_card">個人名片</string>
+    <string name="no_channel_album">無內容</string>
+    <string name="no_channel_file">無內容</string>
+    <string name="hold_to_talk">按住 說話</string>
+    <string name="release_to_send">鬆開 結束</string>
+    <string name="release_to_cancel">鬆開手指，取消發送</string>
+    <string name="slide_up_to_cancel">手指上滑，取消發送</string>
+    <string name="recording_too_short">錄音時間過短</string>
+    <string name="play_fail">播放失败</string>
+    <string name="record_count_down_text">還可以說 %1$d 秒</string>
+    <string name="voice_call">語音通話</string>
+    <string name="sure_to_resend_message">確認重新發送該消息?</string>
+    <string name="message_type_drafts">[草稿]</string>
+    <string name="quit_group">退出群組</string>
+    <string name="dismiss_group">解散群組</string>
+    <string name="quit_group_warning_text">確定要退出群组？</string>
+    <string name="dismiss_group_warning_text">解散群組後，將會删除群內所有的聊天記錄和檔案等資訊</string>
+    <string name="chat_stick_on_top">置頂</string>
+    <string name="chat_remove">移除</string>
+    <string name="chat_remove_from_top">取消置頂</string>
+    <string name="no_chat_content">暫無聊天內容</string>
+    <string name="msg_key_search_member">請輸入關鍵字</string>
+    <string name="chat_file_open_fail_tip">沒有找到對應的程式</string>
+    <string name="chat_conversation_unread_count">%1$d條新消息</string>
+    <string name="chat_long_click_copy">複製</string>
+    <string name="chat_long_click_transmit">轉發</string>
+    <string name="chat_long_click_schedule">添加到日程</string>
+    <string name="chat_long_click_copy_text">複製文字</string>
+
+
+    <!-- 會議卡片 -->
+    <string name="meeting_has_confirmed">已確認</string>
+    <string name="meeting_has_refused">已拒絕</string>
+    <string name="meeting_canceled_topic">取消了主題為</string>
+    <string name="meeting_tail">的會議</string>
+    <string name="meeting_organizer">您是會議的組織者</string>
+    <string name="meeting_state_modification">會議狀態修改</string>
+    <string name="meeting_refused">委婉拒絕</string>
+    <string name="meeting_cancel_confirm">取消確認</string>
+    <string name="meeting_cancel_reject">取消拒絕</string>
+    <string name="chat_group_message_search">查找聊天記錄</string>
+
+    <string name="chat_resend_message">重新發送</string>
+
+    <!-- 工作頁面部分 -->
+    <string name="work">工作</string>
+    <string name="work_new_year_day">距元旦</string>
+    <string name="work_spring_festival">距春節</string>
+    <string name="work_qingming_festival">距清明節</string>
+    <string name="work_international_labour_day">距勞動節</string>
+    <string name="work_dragon_boat_festival">距端午節</string>
+    <string name="work_national_day">距國慶日</string>
+    <string name="work_moon_festival">距中秋節</string>
+    <string name="work_day">天</string>
+    <string name="work_nomeeting_text">暫無會議</string>
+    <string name="work_notask_text">暫無待辦</string>
+    <string name="work_nocal_text">暫無日程</string>
+    <string name="time">時間</string>
+    <string name="work_meeting_text">會議</string>
+    <string name="work_calendar_text">企業日曆</string>
+    <string name="work_task_text">我的任務</string>
+    <string name="work_info_text">資訊欄</string>
+    <string name="work_search_hint">蒐索行事曆、任務</string>
+    <string name="work_mession">任務</string>
+    <string name="work_schedule">日期</string>
+    <string name="work_task_all">全部</string>
+    <string name="work_task_end">%1$s 截止</string>
+
+    <string name="work_task_mine">我創建的</string>
+    <string name="work_task_involved">我參與的</string>
+    <string name="work_task_focused">我關注的</string>
+    <string name="work_task_done">已完成的</string>
+
+
+    <!-- 日程 -->
+    <string name="schedule_event_alert">日程提醒</string>
+    <string name="schedule_calendar">日曆</string>
+    <string name="schedule_calendar_add">添加日程</string>
+    <string name="schedule_calendar_detail">日程詳情</string>
+    <string name="schedule_calendar_company">我的日程</string>
+    <string name="schedule_setting_list_view">列表視圖</string>
+    <string name="schedule_setting_day_view">日視圖</string>
+    <string name="schedule_setting_divide_group">分組</string>
+    <string name="schedule_setting_quarter">季度</string>
+    <string name="schedule_setting_month">月度</string>
+    <string name="schedule_setting_view">視圖</string>
+    <string name="schedule_calendar_input_content_hint">請輸入日程內容...</string>
+    <string name="schedule_calendar_time_alert">結束時間不能早於起始時間</string>
+    <string name="schedule_alert_time_occur">日程當天（上午9時）</string>
+    <string name="schedule_alert_time_before_one_day">1天前（上午9時）</string>
+    <string name="schedule_alert_time_before_two_day">2天前（上午9時）</string>
+    <string name="schedule_alert_time_before_a_week">一周前</string>
+    <string name="schedule_calendar_modify">修改日程</string>
+    <string name="schedule_calendar_delete">刪除日程</string>
+    <string name="schedule_calendar_create">新建日程</string>
+    <string name="schedule_calendar_my_schedule">我的日程</string>
+    <string name="schedule_calendar_my_meeting">我的會議</string>
+    <string name="schedule_calendar_my_task">我的任務</string>
+    <string name="schedule_calendar_all_day">全天</string>
+    <string name="schedule_calendar_am">上午</string>
+    <string name="schedule_calendar_pm">下午</string>
+    <string name="schedule_calendar_so_on"> 等</string>
+    <string name="schedule_calendar_schedules">項工程</string>
+    <string name="schedule_calendar_no_schedule_today">暫無日程安排</string>
+    <string name="schedule_meeting_no_meeting_today">暂无會議安排</string>
+    <string name="schedule_task_no_task_today">暂无任務安排</string>
+
+    <!--任务-->
+    <string name="schedule_task_add">添加任務</string>
+    <string name="schedule_task_detail">任務詳情</string>
+    <string name="schedule_task_content_hint">請輸入任務內容...</string>
+    <string name="schedule_task_priority">優先級</string>
+    <string name="schedule_task_category">類別</string>
+    <string name="schedule_task_category_no">未分類</string>
+    <string name="schedule_task_manager">負責人</string>
+    <string name="schedule_task_participant">參與人</string>
+    <string name="schedule_task_manager_num_0">0 人</string>
+    <string name="schedule_task_participant_num_0">0 人</string>
+    <string name="schedule_task_deadline">截止時間</string>
+    <string name="schedule_task_state">狀態</string>
+    <string name="schedule_task_state_active">進行中</string>
+    <string name="schedule_task_stop_alert">結束提醒</string>
+    <string name="schedule_task_more">更多</string>
+    <string name="schedule_task_attachment">附件</string>
+    <string name="schedule_task_create">新建任務</string>
+    <string name="schedule_task_project_manager">標籤管理</string>
+    <string name="schedule_task_project_manager_add">確認添加</string>
+    <string name="schedule_task_label_add_hint">請輸入標籤名稱</string>
+    <string name="schedule_task_label">標籤</string>
+    <string name="schedule_task_label_color">標籤顏色</string>
+    <string name="schedule_task_delete_the_tag">刪除標籤</string>
+    <string name="schedule_task_tag_name_null_hint">標籤名稱不能為空</string>
+    <string name="schedule_task_title_is_empty">任務標題不可為空</string>
+    <string name="schedule_task_a_person">人</string>
+    <string name="schedule_task_tag_name_length">標籤名稱最多64個字符</string>
+    <!--会议-->
+    <string name="schedule_meeting_booking">預定會議</string>
+    <string name="schedule_meeting_room_booking">新建會議</string>
+    <string name="schedule_meeting_add_attendee_title">參會人</string>
+    <string name="schedule_meeting_add_record_holder_title">會議記錄人</string>
+    <string name="schedule_meeting_add_conference_title">會議聯絡人</string>
+    <string name="schedule_meeting_select_attendee_title">選擇參會人</string>
+    <string name="schedule_meeting_select_record_holder_title">選擇會議記錄人</string>
+    <string name="schedule_meeting_select_conference_title">選擇會議聯絡人</string>
+    <string name="schedule_meeting_add_note">備註</string>
+    <string name="schedule_meeting_add_alert_time">會前提醒</string>
+    <string name="schedule_meeting_history">歷史會議</string>
+    <string name="schedule_meeting_search">蒐索會議</string>
+    <string name="schedule_meeting_booking_room">預定會議室</string>
+    <string name="schedule_meeting_room_list">會議室列表</string>
+    <string name="schedule_meeting_in_meeting">會議中</string>
+    <string name="schedule_meeting_be_free">空閒</string>
+    <string name="schedule_choose_common_office">常用辦公地點</string>
+    <string name="schedule_meeting_change">修改會議</string>
+    <string name="schedule_meeting_cancel">取消會議</string>
+    <string name="schedule_meeting_booking_detail">會議詳情</string>
+    <string name="schedule_meeting_my_create">我創建的：</string>
+    <string name="schedule_meeting_my_take_part_in">我參與的：</string>
+    <string name="schedule_meeting_room_booking_detail">會議室詳情</string>
+
+    <!-- 發現部分 -->
+    <string name="find">發現</string>
+    <string name="travel_analysis">差旅分析</string>
+    <string name="knowledge">知識</string>
+    <string name="docunment">文檔</string>
+    <string name="order_num">訂單號</string>
+    <string name="choose_rider">請選擇乘車人</string>
+    <string name="please_input_trip_date">請輸入行程日期</string>
+    <string name="please_input_trip_start_city">請輸入出發城市</string>
+    <string name="please_input_trip_from">請輸入始發站</string>
+    <string name="please_input_trip_arrive_city">請輸入到達城市</string>
+    <string name="please_input_trip_end">請輸入終點站</string>
+    <string name="please_input_trip_start_time">請輸入出發時間</string>
+    <string name="please_input_trip_arrive_date">請輸入到達日期</string>
+    <string name="please_input_trip_arrive_time">請輸入到達時間</string>
+    <string name="please_input_train_num">請輸入車次</string>
+    <string name="please_input_seat_num">請輸入座次</string>
+    <string name="please_input_rider">請輸入乘車人</string>
+    <string name="please_input_order_num">請輸入訂單號</string>
+    <string name="please_input_ticket_cost">請輸入票價</string>
+    <string name="trip_date_or_time_error">行程日期或時間填寫不正確</string>
+    <string name="station_name_not_exist">您填寫的站名不存在，請核對站名</string>
+    <string name="found_q2_q2">Q2費用報告</string>
+    <string name="find_search_contacts">連絡人</string>
+    <string name="find_search_chat_history">聊天記錄</string>
+    <string name="find_search_news">新聞</string>
+
+
+    <!-- 應用部分 -->
+    <string name="app_not_support_app_type">不支援打開此類型應用</string>
+    <string name="application">應用</string>
+    <string name="adding"> 添加中</string>
+    <string name="add_app"> 添加應用</string>
+    <string name="app_search_null"> 未搜索到任何應用</string>
+    <string name="app_input_search_key"> 請輸入搜索關鍵字</string>
+    <string name="delete">刪除</string>
+    <string name="app_must_be_app_cannot_edit">當前應用皆為必裝，不可編輯</string>
+    <string name="app_center">應用中心</string>
+    <string name="detail">詳情</string>
+    <string name="search">請輸入關鍵字</string>
+    <string name="app_commonly_use">開啟常用模式</string>
+    <string name="app_commonly_use_close">結束常用模式</string>
+    <string name="app_center_more_apps">更多應用</string>
+    <string name="app_input_mail_password">請輸入公司郵箱密碼</string>
+    <string name="app_need_input_mail_password">第一次使用或密碼修改後需要輸入</string>
+    <string name="app_download">應用下載中：</string>
+    <string name="app_password_error">密碼錯誤，請重新輸入</string>
+    <string name="app_password_encrypt_error">密碼加密出錯</string>
+    <string name="app_recommand">推薦</string>
+    <string name="app_classification">分類</string>
+    <string name="app_create_shortcut_no_more_remind">不再提醒</string>
+    <string name="app_commonly_use_app">是否將移動簽到添加到案頭快捷方式，一鍵簽到？ </string>
+    <string name="no_app">當前沒有添加應用</string>
+    <string name="app_new_function">新功能</string>
+    <string name="app_update_function">当前版本不支持此功能请立即升级到最新版本</string>
+    <string name="app_sort_order">調整順序</string>
+
+
+    <!--云盘 -->
+    <string name="clouddriver_my_file">我的文件</string>
+    <string name="clouddriver_share_volume">共用網盤</string>
+    <string name="clouddriver_input_file_name">請輸入檔案名稱</string>
+    <string name="clouddriver_input_directory_name">請輸入資料夾名稱</string>
+    <string name="clouddriver_select_all">全選</string>
+    <string name="clouddriver_select_nothing">全不選</string>
+    <string name="clouddriver_multi_select">多選</string>
+    <string name="clouddriver_has_selected">已選擇(%1$d)</string>
+    <string name="clouddriver_sure_delete_file">確定要刪除所選檔嗎？</string>
+    <string name="clouddriver_move2_current_directory">移動到目前的目錄</string>
+    <string name="clouddriver_create_volume">新建網盤</string>
+    <string name="clouddriver_upload_success">上傳成功</string>
+    <string name="clouddriver_select_copy_position">選擇複製位置</string>
+    <string name="clouddriver_select_move_position">選擇目的檔案夾</string>
+    <string name="clouddriver_file_open_fail">檔打開失敗！</string>
+    <string name="clouddriver_file_dpwnload">文件下載</string>
+    <string name="clouddriver_create_folder">新建資料夾</string>
+    <string name="clouddriver_file_filter">分類篩選</string>
+    <string name="clouddriver_sort_by_time_asc">時間昇冪</string>
+    <string name="clouddriver_sort_by_time_dasc">時間降冪</string>
+    <string name="clouddriver_sort_by_name_asc">名稱昇冪</string>
+    <string name="clouddriver_sort_by_name_dasc">名稱降冪</string>
+    <string name="clouddriver_current_directory_hint">目前的目錄：%1$s</string>
+    <string name="clouddriver_upload_waiting">等待上傳</string>
+    <string name="clouddriver_upload_fail">上傳失敗</string>
+    <string name="clouddriver_upload_again">重新上傳</string>
+    <string name="clouddriver_download_size">下載(%1$s)</string>
+    <string name="clouddriver_downloading_status">下載中(%1$s/%2$s)</string>
+    <string name="clouddriver_file_name_invaliad">檔案名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038;</string>
+    <string name="clouddriver_select_photo">選擇照片</string>
+    <string name="clouddriver_select_file">選擇檔</string>
+    <string name="clouddriver_volume_info">網盤詳情</string>
+    <string name="clouddriver_volume_name">網盤名稱</string>
+    <string name="clouddriver_all_volume_member_size">全部網盤成員(%1$d)</string>
+    <string name="clouddriver_upload_permission">擁有上傳/查看許可權</string>
+    <string name="clouddriver_watch_permission">擁有查看許可權</string>
+    <string name="people_num">%1$d人</string>
+    <string name="clouddriver_sure_delete_volume">確定要刪除所選網盤嗎？</string>
+    <string name="clouddriver_del_member">刪除網盤成員</string>
+    <string name="clouddriver_all_group_member_size">全部組成員(%1$d)</string>
+    <string name="clouddriver_add_volume_member">添加網盤成員</string>
+    <string name="clouddriver_del_volume_group_member">刪除組成員</string>
+    <string name="clouddriver_add_volume_group_member">添加組成員</string>
+    <string name="clouddriver_directory_name_invaliad">資料夾名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038; </string>
+    <string name="clouddriver_volume_name_invaliad">網盤名中不能包含特殊字元 / \ " : | * ? &lt; &gt; &#038; </string>
+    <string name="clouddriver_exists_same_name">已存在同名檔/資料夾</string>
+    <string name="file_rename">檔重命名</string>
+    <string name="folder_rename">文件夾命名</string>
+    <string name="clouddriver_volume_group_info">組詳情</string>
+    <string name="clouddriver_volume_group_member">組成員</string>
+    <string name="clouddriver_volume_member">網盤成員</string>
+    <string name="clouddriver_input_volume_name">請輸入網盤名稱</string>
+    <string name="clouddriver_input_volume_group_name">請輸入組名稱</string>
+    <string name="clouddriver_update_volume_name">更改網盤名稱</string>
+    <string name="clouddriver_update_group_name">更改組名稱</string>
+    <string name="clouddriver_file_no_exist">選擇的文件不存在！</string>
+    <string name="clouddriver_no_directory">暫無資料夾</string>
+    <string name="clouddriver_copy_to">複製到</string>
+    <string name="file_exist_current_directory">該文件已在當前資料夾</string>
+    <string name="file_cannot_copy_here">不能將檔複製到自身或其子目錄下</string>
+    <string name="file_cannot_move_here">不能將檔移動到自身或其子目錄下</string>
+    <string name="refresh">刷新</string>
+    <string name="disk">網盤</string>
+    <string name="clouddriver_volume_file_filter">分類篩選</string>
+    <string name="clouddriver_volume_group_name">組名稱</string>
+    <string name="clouddriver_volume_upload_file">上傳文件</string>
+    <string name="clouddriver_upload_file_to_volume">上傳到網盤</string>
+    <string name="clouddriver_file_permission_manager">許可權管理</string>
+    <string name="rename">重命名</string>
+    <string name="move_to">移動到</string>
+    <string name="copy">複製</string>
+    <string name="video">視頻</string>
+    <string name="audio">音訊</string>
+    <string name="other">其他</string>
+    <string name="move">移動</string>
+    <string name="upload_cancel">取消上傳</string>
+    <string name="no_file">暫無文件</string>
+    <string name="group">組</string>
+    <string name="create">新建</string>
+
+    <!--Webex 会议-->
+    <string name="webex_meeting_title">%1$s的會議</string>
+    <string name="webex_input_invitee_emails_hint">添加參會人含後綴郵箱</string>
+    <string name="webex_input_invitee_emails">請輸入參會人的電子郵箱地址</string>
+    <string name="webex_input_correct_invitee_emails">請輸入正確的的電子郵箱地址</string>
+    <string name="webex_not_add_repeated">不能重複添加</string>
+    <string name="webex_start">開始</string>
+    <string name="webex_meeting_info">會議資訊</string>
+    <string name="webex_host">主持人</string>
+    <string name="webex_when">時間</string>
+    <string name="webex_meeting_number">會議號</string>
+    <string name="webex_meeting_password">會議密碼</string>
+    <string name="webex_meeting_ended">會議已結束</string>
+    <string name="webex_start_time_error">開始時間不正確</string>
+    <string name="webex_start_time_error_info">您指定的會議開始時間在當前時間之前。請指定其他開始時間</string>
+    <string name="webex_enter_meeting_name">請輸入會議名稱</string>
+    <string name="webex_enter_meeting_password">請輸入會議密碼</string>
+    <string name="webex_set_duration_correct">請設定正確的會議持續時間</string>
+    <string name="webex_meeting_duration">會議持續時間</string>
+    <string name="webex_remove_meeting_warning_title">删除會議</string>
+    <string name="webex_remove_meeting_warning_info">您確定要删除該會議嗎？</string>
+    <string name="webex_password_length_error">密碼長度不符合規則（6-10位）</string>
+    <string name="webex_install_tips">使用此功能需要先安裝webex用戶端，現在安裝？</string>
+    <string name="webex_add_invitee_from_contact">從通訊錄添加</string>
+    <string name="webex_add_invitee_num">已邀請%1$d人/還可邀請%2$d人</string>
+    <string name="webex_internal_attendees">內部參會人</string>
+    <string name="webex_external_attendees">外部參會人</string>
+    <string name="webex_internal_share">内部分享</string>
+    <string name="webex_time">時間：</string>
+    <string name="webex_meeting_code">會議號：</string>
+    <string name="webex_meeting_password_tip">會議密碼：</string>
+    <string name="webex_add_external_attendees">添加外部參會人</string>
+    <string name="webex_no_meeting_tips">%1$s<Data><![CDATA[<font color=\'#999999\'>前無會議</font>]]></Data></string>
+    <string name="webex_participant">參會人員</string>
+    <string name="webex_password_invalid">密碼只允許包含數位和字母</string>
+    <string name="duration_time">持續時間</string>
+    <string name="schedule_meeting">安排會議</string>
+    <string name="my_meeting">我的會議</string>
+    <string name="hour">小時</string>
+    <string name="min">分鐘</string>
+    <string name="hours">小時</string>
+    <string name="mins">分鐘</string>
+    <string name="join">加入</string>
+    <string name="none">无</string>
+
+    <!-- 我的頁面部分 -->
+    <string name="moments">动态</string>
+
+    <!-- 我的頁面部分 -->
+    <string name="data_clear_success">清除成功</string>
+    <string name="not_set">未設置</string>
+    <string name="mine">我</string>
+    <string name="take_camera">相機拍攝</string>
+    <string name="gallery">手機相冊</string>
+    <string name="quit_check">退出登錄</string>
+    <string name="check_security">帳號保護</string>
+    <string name="follow_system">跟隨系統</string>
+    <string name="more_message">消息通知</string>
+    <string name="more_allApps">所有應用</string>
+    <string name="more_feedback">意見回饋</string>
+    <string name="more_pushlist_text">推送列表</string>
+    <string name="more_invitefriend_text">邀請好友使用Cloud</string>
+    <string name="account_security_head">帳號與安全</string>
+    <string name="account_security_device">當前登錄設備</string>
+    <string name="account_security_mail">當前綁定郵箱</string>
+    <string name="account_security_mobile">當前綁定手機</string>
+    <string name="account_security_sign_record">帳戶登錄記錄</string>
+    <string name="about_text">關於</string>
+    <string name="about_welcome_text">歡迎頁面</string>
+    <string name="about_newfun_text">新功能介紹</string>
+    <string name="about_protocol_text">服務協定</string>
+    <string name="cloud_version">Cloud 版本</string>
+    <string name="feed_back_no_empty">請輸入回饋意見</string>
+    <string name="feed_back_out_of_length">您輸入的字數已經超過了限制</string>
+    <string name="feed_back_advice">您的意見和建議</string>
+    <string name="feed_back_welcom">歡迎提出寶貴的建議和意見！我們會用心傾聽並持續改進產品，把更好的體驗帶給您</string>
+    <string name="feed_back_input_phone">輸入電話或郵箱</string>
+    <string name="feed_back_upload">提交</string>
+    <string name="feed_back_without_name">匿名提交</string>
+    <string name="feed_back_content_hint">請輸入建議和意見</string>
+    <string name="feed_back_contact_hint">在此輸入聯繫方式</string>
+    <string name="feed_back_submit">提交反饋</string>
+    <string name="invite_friend_invite_text">邀請好友使用</string>
+    <string name="invite_friend_code">直接掃描二維碼邀請好友安裝Cloud</string>
+    <string name="invite_friend_recommend">推薦【Cloud】給好友</string>
+    <string name="settings">設置</string>
+    <string name="settings_protect">已保護</string>
+    <string name="settings_clear_cache">清除緩存</string>
+    <string name="settings_aboutIMP">關於 雲+</string>
+    <string name="settings_clean_imgae_attachment">清理圖片及附件緩存</string>
+    <string name="settings_clean_web">清理Web應用緩存</string>
+    <string name="settings_clean_all">清理應用所有緩存資料</string>
+    <string name="settings_language">語言切換</string>
+    <string name="settings_message_alert">消息提醒</string>
+    <string name="settings_open_msg">已開啟</string>
+    <string name="settings_conbine_weibo">綁定微博</string>
+    <string name="settings_conbined">已綁定</string>
+    <string name="language_set_text">語言切換</string>
+    <string name="language_simple">简体中文</string>
+    <string name="language_traditionalTW">繁體中文</string>
+    <string name="language_traditionalHK">繁體中文（香港）</string>
+    <string name="language_english">English</string>
+    <string name="wallet">卡包</string>
+    <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
+    <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
+    <string name="app_customer">雲+客服</string>
+    <string name="settings_device_manager">設備查看與管理</string>
+    <string name="device_unbind_sucess">設備解綁成功！</string>
+    <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
+    <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
+    <string name="last_use_time">上次使用時間</string>
+    <string name="bind_device">綁定設備</string>
+    <string name="current_device">當前設備</string>
+    <string name="history_device">歷史設備</string>
+    <string name="device_history_use">歷史使用</string>
+    <string name="device_bind_time_title">綁定時間: </string>
+    <string name="device_bind_time">綁定時間</string>
+    <string name="device_info">設備詳情</string>
+    <string name="device_id">設備ID</string>
+    <string name="unbind_this_device">解綁此設備</string>
+    <string name="sure_switch_to">確定切換到%1$s</string>
+    <string name="fail_to_switch_enterprise">企業切換失敗！</string>
+    <string name="select_enterprise">選擇企業</string>
+    <string name="switch_enterprise">切換企業</string>
+    <string name="current_enterprise">當前企業</string>
+    <string name="auto_select_enterprise">下次自動幫我選擇</string>
+    <string name="close_auto_select_enterprise">下次登入默認使用該企業</string>
+    <string name="turn_off_success">關閉成功</string>
+    <string name="web_app_auto_rotate">Web應用支持旋轉</string>
+    <string name="run_background">後臺運行</string>
+    <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
+    <string name="setting_join_experience_plan">加入升級體驗計劃</string>
+    <string name="setting_gesture_force_set">根據企業安全性原則，需要您設置手勢密碼</string>
+    <string name="setting_gesture_force_open">根據企業安全性原則，您不可以關閉手勢密碼</string>
+
+
+    <string name="contact">通訊錄</string>
+    <string name="web">web</string>
+    <string name="mine_theme_switch">換膚</string>
+    <string name="mine_theme_white">清新白</string>
+    <string name="mine_theme_grey">優雅灰</string>
+    <string name="mine_theme_blue">商務藍</string>
+
+    <string name="mine_tab_layout">佈局切換</string>
+    <string name="mine_tab_layout_switch">是否切換為：%1$s</string>
+
+
+    <!-- 修改密碼部分 -->
+    <string name="modify_input_user_new_password">請輸入新密碼</string>
+    <string name="modify_input_confirm_passord">請輸入確認密碼</string>
+    <string name="modify_new_old_same">新密碼不能和原密碼相同</string>
+    <string name="modify_not_same">新密碼和確認密碼不一致</string>
+    <string name="approval_input_password_valiad">請輸入6〜64位密碼</string>
+    <string name="modify_password_invalid">密碼必須是6-16位元的數字+字母/符號的組合</string>
+    <string name="modify_password_not_correct">密碼填寫不正確，請確認</string>
+    <string name="modify_password_fail">修改密碼失敗</string>
+    <string name="modify_password">修改密碼</string>
+    <string name="modify_old_password">原密碼</string>
+    <string name="modify_input_old_password">輸入原密碼</string>
+    <string name="modify_reset_password">重置密碼 </string>
+    <string name="modify_new_password">新密碼</string>
+    <string name="modify_input_code">輸入新密碼</string>
+    <string name="modify_input_again">再次輸入</string>
+    <string name="confirm_password">確認密碼</string>
+    <string name="modify_user_password">請確認密碼不為空，且兩次輸入密碼一致</string>
+    <string name="modify_user_password_success">通行證密碼修改成功，請使用新密碼登錄</string>
+    <string name="modify_user_password_fail">設置密碼失敗，您是否繼續設置</string>
+    <string name="modify_jump">跳過</string>
+    <string name="modify_welcom_user_cloud">歡迎使用雲+</string>
+    <string name="modify_first_use">這是您第一次使用雲+，是否設置通行證密碼，以方便下次登錄</string>
+
+    <!-- 使用者資訊頁面部分 -->
+    <string name="user_info_text">個人資訊</string>
+    <string name="user_info_head">頭像</string>
+    <string name="user_info_name">姓名</string>
+    <string name="user_depart">部門</string>
+    <string name="user_depart_info_text">部門資訊</string>
+    <string name="user_telephone">座機</string>
+    <string name="user_info_sex">性別</string>
+    <string name="user_qr_code">我的二維碼</string>
+    <string name="user_function_introduction">功能簡介 </string>
+    <string name="user_service_and_support">服務與支持</string>
+    <string name="user_company_info">企業資訊</string>
+    <string name="user_sms_moidify_password">通過手機號碼驗證碼修改</string>
+    <string name="resend_code">重新發送(51)</string>
+    <string name="user_modify_user_info">修改資訊</string>
+    <string name="user_modify_modify">修改</string>
+    <string name="user_info_my_info">個人資訊</string>
+    <string name="user_info_organ">浪潮國際</string>
+    <string name="user_info_phone_number">手機</string>
+    <string name="user_info_title">職位</string>
+    <string name="user_no_storage">沒有存放裝置</string>
+    <string name="user_employee_num">員工編號</string>
+    <string name="user_worker_num">工號</string>
+    <string name="user_new_chat">發起會話</string>
+    <string name="user_send_message">發消息</string>
+
+    <!-- 集團新聞 部分 -->
+    <string name="news_group_news">集團新聞</string>
+    <string name="news_group_news_detail">新聞詳情</string>
+    <string name="news_share">分享到</string>
+    <string name="news_share_success">分享成功</string>
+    <string name="news_share_fail">分享失敗</string>
+    <string name="news_day_mode_text">標準模式 </string>
+    <string name="news_night_mode_text">夜間模式 </string>
+    <string name="news_share_text">分享</string>
+    <string name="news_font_smaller">小</string>
+    <string name="news_font_normal">標準</string>
+    <string name="news_font_big_text">大</string>
+    <string name="news_font_middle">中</string>
+    <string name="news_font_biggest_text">超大</string>
+    <string name="news_font_name_text">字體</string>
+    <string name="news_read_mode">閱讀模式</string>
+    <string name="news_instructions_text">批示</string>
+    <string name="news_instructions">批示意見</string>
+    <string name="news_instructions_success_text">發送成功</string>
+    <string name="news_no_news">暫無新聞</string>
+    <string name="news_has_instructions_news">您已批示過此新聞！</string>
+    <string name="news_has_instructions_known">瞭解了</string>
+    <string name="news_please_instruction">請您輸入批示內容 </string>
+
+    <!-- 審批頁面 -->
+    <string name="onekey_approval_text">審批</string>
+
+    <!-- 通訊錄部分 -->
+    <string name="recent">最近</string>
+    <string name="adress_list">通訊錄</string>
+    <string name="address_servicenum_text">服務號</string>
+    <string name="org_struct_text">組織/架構  </string>
+    <string name="please_select_app_of_mail">請選擇郵件類應用</string>
+    <string name="recently_used">常用連絡人</string>
+    <string name="all">全部</string>
+    <string name="seach_blank">搜索...                   </string>
+    <string name="origanization_struct">公司/團隊 組織架構</string>
+    <string name="cannot_view_info">無法查看相關資訊</string>
+    <string name="do_not_select_yourself">不能選擇自己 </string>
+    <string name="contact_exception">數據异常，無法打開 </string>
+    <string name="contact_select_limit_warning">已達到最大可選人數</string>
+
+    <!-- 會議室部分 -->
+    <string name="meeting_room_booking_detail">會議室詳情</string>
+    <string name="meeting_room_booking_topic">請輸入會議主題</string>
+    <string name="meeting_room_booking_choosing_room">請選擇會議室</string>
+    <string name="meeting_room_booking_members_edit">請添加參會人員</string>
+    <string name="meeting_room_booking_log_edit">請添加會務人員</string>
+    <string name="meeting_choosing_date">請選擇日期</string>
+    <string name="meeting_from">從</string>
+    <string name="meeting_to">到</string>
+    <string name="meeting_start_time">開始時間</string>
+    <string name="meeting_end_time">結束時間</string>
+    <string name="meeting_room_booking_notice_edit">請填寫備註資訊</string>
+    <string name="meeting_booking_detail">會議詳情</string>
+    <string name="meeting_booking_no_time">時間段為空，請先選擇時間段</string>
+    <string name="meeting_booking_success">會議室預定成功</string>
+    <string name="meeting_update_success">會議室更新成功</string>
+    <string name="meeting_file_upload_tips">請選擇一個要上傳的檔</string>
+    <string name="meeting_viewpager_indicator">%1$d/%2$d</string>
+    <string name="meeting_booking_title">預訂會議</string>
+    <string name="meeting_choose_time">時間為空，請先選時間段</string>
+    <string name="meeting_no_booking_time">沒有可預訂時間</string>
+    <string name="meeting_invating_members">邀請參會人員</string>
+    <string name="meeting_choose_log_members">選擇會務人員</string>
+    <string name="meeting_begin_or_date_time">請選擇會議時間</string>
+    <string name="meeting_end_time_no_empty">請選擇結束時間</string>
+    <string name="meeting_topic_too_long">主題不能超過100個字元！</string>
+    <string name="meeting_notice_too_long">備註不能超過500個字元</string>
+    <string name="meeting_booking_error">預訂出錯</string>
+    <string name="meeting_time_is_word">時間是字元</string>
+    <string name="meeting_room_number">S206</string>
+    <string name="meetting_members_num">16</string>
+    <string name="meeting_topic_title">主題</string>
+    <string name="meeting_members">參會人員</string>
+    <string name="meeting_log">會務</string>
+    <string name="meeting_ageda">議程</string>
+    <string name="meeting_summary">紀要</string>
+    <string name="meeting_place">地點</string>
+    <string name="meeting_list_title">會議室列表</string>
+    <string name="meeting">會議</string>
+    <string name="meeting_add">預定會議</string>
+    <string name="meeting_history">歷史會議</string>
+    <string name="meeting_history_search">歷史會議搜索</string>
+    <string name="meeting_list_cancel_success">會議取消成功</string>
+    <string name="meeting_list_cirform">您確定取消會議？</string>
+    <string name="meeting_list_no_self">非本人創建的會議不可刪除</string>
+    <string name="meeting_list_topic">ECM-Cloud 需求評審會</string>
+    <string name="meeting_add_meeting">添加會議</string>
+    <string name="meeting_booking">預訂</string>
+    <string name="meeting_memebers">參與成員</string>
+    <string name="meeting_noon">正午</string>
+    <string name="meeting_office_create_success">創建常用工作地點成功</string>
+    <string name="meeting_office_delete_position">您確定刪除常用辦公地點嗎</string>
+    <string name="meeting_office_head">我的辦公地點</string>
+    <string name="meeting_building_head">選擇建築</string>
+    <string name="meeting_click_to_book">點擊預訂</string>
+    <string name="meeting_free">空閒</string>
+    <string name="meeting_day_before">前一天</string>
+    <string name="meeting_day_after">後一天</string>
+    <string name="meeting_change">變更會議</string>
+    <string name="meeting_cancel">取消會議</string>
+    <string name="meeting_detail_save">保存修改</string>
+    <string name="meeting_detail_change">修改詳情 </string>
+    <string name="meeting_detail_has_finished">會議已結束不可修改 </string>
+    <string name="meeting_detail_has_began">會議已開始不可修改 </string>
+    <string name="meeting_detail_not_organizer">您不是會議組織者不能變更會議 </string>
+    <string name="meeting_add_work_place">添加辦公地點</string>
+    <string name="meeting_click_add_work_place">點擊添加辦公地點</string>
+    <string name="meeting_common_place">常用地點</string>
+    <string name="meeting_time">會議時間</string>
+    <string name="meeting_reset">重置</string>
+    <string name="meeting_more_than_max_day">超過最大可預訂天數  </string>
+    <string name="meeting_more_than_max_time">超過最長可預訂時間</string>
+    <string name="meeting_search_to">至</string>
+    <string name="meeting_date_default">--/--/--/--/--</string>
+    <string name="meeting_room_booked">時間已被預訂，請重新選擇</string>
+    <string name="meeting_room_ilegal_time">時間非法，請檢查 </string>
+    <string name="meeting_room_time_late">開始時間不能早於當前時間</string>
+
+    <!-- 会议预定错误提示 -->
+    <string name="meeting_user_profile_broken">部門資訊缺失</string>
+    <string name="meeting_time_earlier_than_permission">預定時間早於規定時間（現在）</string>
+    <string name="meeting_time_later_than_permission">預定時間晚於規定時間</string>
+    <string name="meeting_time_span_over_limit">預定時間跨越多天 </string>
+    <string name="meeting_duration_over_limit">預定會議室時長超過限制</string>
+    <string name="meeting_time_conflict">預定時間與已有記錄衝突</string>
+    <string name="meeting_invalid_booking_time">預定會議室時長小於限制</string>
+    <string name="meeting_room_not_exists">會議室不存在</string>
+    <string name="meeting_room_locked_by_admin">會議室被管理員鎖定，不可預定</string>
+    <string name="meeting_room_for_special_use">VIP會議室，非管理員不可預定</string>
+    <string name="meeting_book_history_not_exist">會議室預定記錄不存在 </string>
+    <string name="meeting_expired_booking_history_immutable">過期的會議室預定不可更改</string>
+    <string name="meeting_user_profile_missing">用戶資訊缺失 </string>
+    <string name="meeting_department_booking_times_over_run">用戶部門資訊缺失</string>
+
+    <string name="meeting_detail_time">時間：%1$s</string>
+    <string name="meeting_detail_remind">提醒：%1$s</string>
+    <string name="meeting_detail_create">%1$s 創建</string>
+    <string name="meeting_detail_attendee">參會人:%1$s</string>
+    <string name="meeting_detail_record_holder">會議記錄人:%1$s</string>
+    <string name="meeting_detail_conference">會議聯絡人:%1$s</string>
+    <string name="meeting_detail_note">著裝要求:%1$s</string>
+    <string name="meeting_detail_sign">會議簽到</string>
+    <string name="meeting_detail_summary">十 添加會議摘要</string>
+    <string name="meeting_detail_change_meeting">修改會議</string>
+    <string name="meeting_detail_show_qrcode">展示簽到二維碼</string>
+    <string name="meeting_detail_add_participant">添加參會人</string>
+    <string name="meeting_detail_before_beginning">開始前</string>
+    <string name="meeting_detail_ten_minutes">提前10分鐘</string>
+    <string name="meeting_detail_twenty_minutes">提前20分鐘</string>
+    <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
+    <string name="meeting_detail_one_hour">提前一個小時</string>
+    <string name="meeting_detail_location">會議地點:</string>
+
+
+    <!-- 日曆 -->
+    <string name="calendar_detail">日曆詳情</string>
+    <string name="calendar_adjust">調整</string>
+    <string name="calendar_please_input_title">請輸入標題</string>
+    <string name="calendar_start_or_end_time_illegal">結束時間不能小於開始時間</string>
+    <string name="calendar_end_time_no_before_current">結束時間不能早於當前時間</string>
+    <string name="calendar_title_cannot_exceed_num">標題不能超過100個字元</string>
+    <string name="calendar_select_calendar">請選擇日曆</string>
+    <string name="calendar_add_success">添加成功</string>
+    <string name="calendar_every_year">每年</string>
+    <string name="monthly">每月</string>
+    <string name="weekly">每週</string>
+    <string name="every_day">每日</string>
+    <string name="calendar_when_event_occurs">開始時</string>
+    <string name="calendar_five_minite_ago">5分鐘前</string>
+    <string name="calendar_ten_minite_ago">10分鐘前</string>
+    <string name="calendar_fifteen_minite_ago">15分鐘前</string>
+    <string name="calendar_twenty_minite_ago">20分鐘前</string>
+    <string name="calendar_thirty_minite_ago">30分鐘前</string>
+    <string name="calendar_one_hour_ago">1小時前</string>
+    <string name="calendar_two_hours_ago">2小時前</string>
+    <string name="calendar_one_day_ago">1天前</string>
+    <string name="calendar_two_days_ago">2天前</string>
+    <string name="calendar_a_week_ago">1周前</string>
+    <string name="calendar_add_calendar">添加行事曆</string>
+    <string name="calendar_no_alert">無提醒</string>
+    <string name="calendar_when_event_finished">結束時</string>
+
+    <!-- 通用 -->
+    <string name="save">保存</string>
+    <string name="never">永不</string>
+
+    <!-- 待辦任務部分 -->
+    <string name="mession_detial_doing">進行中</string>
+    <string name="mession_detial_finish">已完成</string>
+    <string name="mession_no_person_charge">暫無負責人</string>
+    <string name="mession_upload_attachment">您不是任務的所有人，不能上傳附件</string>
+    <string name="mession_delete_attachment">您不是任務的所有人，不能删除附件</string>
+    <string name="mession_change_charge_person">確定將修改此任務的負責人？</string>
+    <string name="mession_delete_atachment">您確定要刪除附件嗎？</string>
+    <string name="mession_not_change_charge_person">任務的所有人不是您本人，不能修改負責人</string>
+    <string name="mession_choose_charge_person">選擇任務負責人</string>
+    <string name="mession_invate_members">邀請參加任務人員</string>
+    <string name="mession_saving_success">保存成功</string>
+    <string name="mession_upload_attachment_success">上傳檔成功</string>
+    <string name="mession_upload_attachment_fail">上傳檔失敗</string>
+    <string name="mession_detail">任務詳情</string>
+    <string name="mession_name">任務名稱</string>
+    <string name="mession_priority">優先順序</string>
+    <string name="mession_type">類別</string>
+    <string name="mession_level">高|中|低</string>
+    <string name="mession_charge_person">負責人</string>
+    <string name="mession_members_person">參與人</string>
+    <string name="mession_ending_time">截止時間</string>
+    <string name="mession_state">狀態</string>
+    <string name="mession_link">連結</string>
+    <string name="mession_attachment">附件</string>
+    <string name="mession_finish_recover">您確定恢復任務嗎？</string>
+    <string name="mession_finish_history">歷史任務</string>
+    <string name="mession_list_name">請為任務輸入名稱</string>
+    <string name="mession_no_more">任務名稱不能超過64個字元</string>
+    <string name="mession_set_finish">您確定將任務置為完成狀態嗎？</string>
+    <string name="mession_list">任務列表</string>
+    <string name="mession_types">我的|我參與的|我關注的</string>
+    <string name="mession_reset">重置過濾條件</string>
+    <string name="mession_cancel">取消過濾條件</string>
+    <string name="mession_add_mession">快速添加任務</string>
+    <string name="mession_set_level">按優先順序</string>
+    <string name="mession_set_time">按時間</string>
+    <string name="mession_set_asc">正序</string>
+    <string name="mession_set_desc">倒序</string>
+    <string name="finish">完成</string>
+    <string name="mession_set_order">排序</string>
+    <string name="mession_set_filter">過濾</string>
+    <string name="mession_set_has_finished">已經完成任務管理</string>
+    <string name="mession_delete_tag">您確定要刪除標籤嗎？</string>
+    <string name="mession_delete_red">紅色</string>
+    <string name="mession_delete_orange">橙色</string>
+    <string name="mession_delete_yellow">黃色</string>
+    <string name="mession_delete_green">綠色</string>
+    <string name="mession_delete_blue">藍色</string>
+    <string name="mession_delete_purple">紫色</string>
+    <string name="mession_delete_exist">請勿重複創建標籤</string>
+    <string name="mession_delete_no_empty">標題不可為空</string>
+    <string name="mession_add_tag">標籤</string>
+    <string name="mession_full_tag">請填寫標籤名稱</string>
+    <string name="mession_color_tag">顏色</string>
+    <string name="mession_delete_the_tag">刪除標籤</string>
+    <string name="mession_manage_tag">管理標籤</string>
+    <string name="add_mession">加任務</string>
+    <string name="no_work_content">暫無工作內容</string>
+
+    <!--网络链接及网络诊断-->
+    <string name="net_connected_error">網絡不給力，請檢查網絡設置</string>
+    <string name="net_diagnosis_title">網絡診斷</string>
+    <string name="net_diagnosis_hard_link_title">檢測網絡設定</string>
+    <string name="net_diagnosis_wifi_link_title">檢測Wi-Fi路由器狀態</string>
+    <string name="net_diagnosis_dns_link_title">檢測網絡連通性</string>
+    <string name="net_diagnosis_hard_link_conent">當前檢查項目包含：硬件鏈接是否通暢，是否有鏈接Wi-Fi、4G、LTE等</string>
+    <string name="net_diagnosis_hard_to_fix">去修復</string>
+    <string name="net_diagnosis_portal_to_set">去認證</string>
+    <string name="net_diagnosis_wifi_link_conent">當前檢查項目包含：鏈接到的Wi-Fi是否有驗证需求,如果有需要先驗證此Wi-Fi才可繼續訪問</string>
+    <string name="net_network_authentication">網絡認證</string>
+    <string name="net_diagnosis_hard_detail_title">硬件鏈接診斷</string>
+    <string name="net_diagnosis_hard_detail_content">建議按照以下方法檢查網絡硬件鏈接</string>
+    <string name="net_diagnosis_hard_detail_content_frist">1、打開手機“設置”並把“Wi-Fi”開關保持開啟狀態。</string>
+    <string name="net_diagnosis_hard_detail_content_second">2、打開手機“設置”-"通用"-“蜂窩移動網絡”，並把“蜂窩移動數據”開關保持開啟狀態。</string>
+    <string name="net_diagnosis_hard_detail_setting">去設置</string>
+    <string name="net_ping_url_baidu">百度</string>
+    <string name="net_ping_url_inspur">浪潮</string>
+    <string name="net_ping_url_ali">阿里</string>
+    <string name="net_ping_url_cloud">雲＋</string>
+
+    <!--电源白名单-->
+    <string name="battery_tip_content">系統已對該應用開啟省電優化，可能導致消息延遲或丟失，請將其加入到省電優化白名單（點擊“去設置”，在彈出對話框中點擊“允許”)</string>
+    <string name="white_list_tip_content">由於系統限制，請您手動開啟本軟件自啟動許可權，從而保障軟件運行的最佳環境（點擊“去設定”）</string>
+    <string name="battery_tip_ishide">不再提醒</string>
+    <string name="battery_tip_cancel">取消</string>
+    <string name="battery_tip_toset">去設置</string>
+
+    <!-- ListView自訂控制項部分 -->
+    <string name="xlistview_header_last_time">上次更新時間:</string>
+    <string name="release_to_refresh">釋放立即刷新</string>
+    <string name="pull_down_refresh">下拉刷新</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="refresh_succeed">刷新成功</string>
+    <string name="refresh_fail">刷新失敗</string>
+    <string name="pullup_to_load">上拉載入更多</string>
+    <string name="pull_loading">正在載入...</string>
+    <string name="release_to_load">釋放立即載入</string>
+    <string name="load_succeed">載入成功</string>
+    <string name="load_fail">載入失敗</string>
+    <string name="see_more">查看更多</string>
+    <string name="pull_down_loading_history">下拉載入歷史消息</string>
+    <string name="license_agreement">1、本協議是使用者 (自然人、法人或社會團體)與浪潮通用軟體有限公司之間關於“雲+”軟體產品（以下
+
+簡稱“本軟體產品”）的法律協定。一旦安裝、複製或以其他方式使用本軟體產品，即表示同意接受協議各項條件的約束。如果用戶
+
+不同意協定的條件，請不要使用本軟體產品。\n\n
+
+2、軟體產品保護條款\n
+\t\t1）本軟體產品之著作權及其它智慧財產權等相關權利或利益（包括但不限於現已取得或未來可取得之著作權、專利權、商標權、
+
+營業秘密等）皆為浪潮通用軟體有限公司所有。本軟體產品受中華人民共和國版權法及通用軟體版權條約和其他智慧財產權法及條約的保護
+
+。使用者僅獲得本軟體產品的非排他性使用權。\n
+\t\t2）用戶不得：刪除本軟體及其他副本上一切關於版權的資訊；對本軟體進行反向工程，如反彙編、反編譯等。 \n
+\t\t3）本軟體產品以現狀方式提供，浪潮通用軟體有限公司不保證本軟體產品能夠或不能夠完全滿足用戶需求，在用戶手冊、幫助
+
+檔、使用說明書等軟體文檔中的介紹性內容僅供使用者參考，不得理解為對用戶所做的任何承諾。浪潮通用軟體有限公司保留對軟體
+
+版本進行升級，對功能、內容、結構、介面、運行方式等進行修改或自動更新的權利。\n
+\t\t4）為了更好地服務於使用者，或為了向使用者提供具有個性的資訊內容的需要，本軟體產品可能會根據需要對設備資訊、產品使用情況等資料進行收集，以持續不斷地提升產品體驗，改善產品功能設計。這些資訊絕不涉及使用者的個人隱私資料或企業業務資料，浪潮通用軟體有限公司承諾不向未經授權的協力廠商提供此類資訊，以保護使用者隱私及企業商業秘密。\n
+\t\t5）使用本軟體產品由使用者自己承擔風險，在適用法律允許的最大範圍內，浪潮通用軟體有限公司在任何情況下不就因使用或不
+
+能使用本軟體產品所發生的特殊的、意外的、非直接或間接的損失承擔賠償責任。即使已事先被告知該損害發生的可能性。\n 
+\t\t6）浪潮通用軟體有限公司定義的資訊內容包括：文字、軟體、聲音；本公司為使用者提供的商業資訊，所有這些內容受版權、商
+
+標權、和其它智慧財產權和所有權法律的保護。所以，用戶只能在本公司授權下才能使用這些內容，而不能擅自複製、修改、編撰這些
+
+內容、或創造與內容有關的衍生產品。\n
+\t\t7）如果您未遵守本協議的任何一項條款，浪潮通用軟體有限公司有權立即終止本協議，並保留通過法律手段追究責任。\n
+
+\n3、浪潮通用軟體有限公司具有對以上各項條款內容的最終解釋權和修改權。如使用者對浪潮通用軟體有限公司的解釋或修改有異議，
+
+應當立即停止使用本軟體產品。使用者繼續使用本軟體產品的行為將被視為對浪潮通用軟體有限公司的解釋或修改的接受。\n
+
+\n4、因本協定所發生的糾紛，雙方同意按照中華人民共和國法律，由浪潮通用軟體有限公司所在地的有管轄權的法院管轄。\n\n
+浪潮通用軟體有限公司</string>
+
+    <!-- IMP相關 -->
+    <string name="title_activity_begin">BeginActivity</string>
+    <string name="title_activity_image_file">圖片資料夾</string>
+    <string name="title_activity_show_all_photo">顯示某一個資料夾的所有圖片</string>
+    <string name="title_activity_gallery">圖片流覽介面</string>
+    <string name="title_activity_upload_photo">上傳圖片activity</string>
+    <string name="title_activity_look_photo">拍照後流覽一下圖片</string>
+    <string name="title_activity_playvideo">視頻播放介面</string>
+    <string name="xml_parser_exception"> 解析config.xml出現異常！</string>
+    <string name="msg_title">消息提示</string>
+    <string name="msg_makesure">消息確認</string>
+    <string name="edit">編輯</string>
+    <string name="device_api_not_support">設備api不支援：</string>
+    <string name="dialogtitle"> 溫馨提示</string>
+    <string name="assemble_json_exception">組裝Json物件出現異常！</string>
+    <string name="inputpwd">請輸入手勢密碼</string>
+    <string name="forgetpwd">忘記密碼</string>
+    <string name="download_fail">下載失敗</string>
+    <string name="download_success">下載成功</string>
+    <string name="file_downloading">文件下載中，請稍候...</string>
+    <string name="file_download_success">檔案已下載成功，是否打開？</string>
+    <string name="has_downloaded">已下載</string>
+    <string name="imp_content">內容</string>
+    <string name="file_ok">確定</string>
+    <string name="file_cancel">取消</string>
+    <string name="file_error">檔錯誤</string>
+    <string name="can_not_pause">當前狀態不能暫停</string>
+    <string name="can_not_replay">當前狀態不能重置播放</string>
+    <string name="can_not_stop">當前狀態不能停止</string>
+    <string name="turn_on_light">開燈</string>
+    <string name="turn_off_light">關燈</string>
+    <string name="imp_function_error">功能調用錯誤，請檢查應用是否已升級到最新版本</string>
+    <string name="file_select_limit_warning">超過了建議選擇檔案數限制</string>
+    <string name="select_file">選擇檔案</string>
+    <string name="internal_shared_storage">內部儲存設備</string>
+
+
+    <!-- 打點 -->
+    <string name="msg_default_format">格式</string>
+    <string name="msg_default_type">類型</string>
+    <string name="msg_default_meta">元數據</string>
+    <string name="contents_text">純文字</string>
+    <string name="msg_intent_failed">抱歉，無法打開所需軟體，條碼內容可能無效</string>
+    <string name="button_cancel">取消</string>
+    <string name="result_text">找到純文字</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dummy_button">Dummy Button</string>
+
+    <string name="react_native_app_open_failed">應用打開失敗 </string>
+    <string name="react_native_app_update_failed">更新包失敗 </string>
+
+    <!--闪屏页文字资源-->
+    <string name="splash_skip">立即進入</string>
+
+
+    <!--安全中心-->
+    <string name="setting_safe_gesture_face">面容ID、手勢密碼</string>
+    <string name="setting_safe_gesture_face_setting">面容ID、手勢密碼設定</string>
+    <string name="setting_safe_center">帳號、設備安全</string>
+    <string name="safe_center_gesture">手勢密碼</string>
+    <string name="safe_center_finger_print">指紋</string>
+    <string name="switch_gesture_unlock">手勢解鎖</string>
+    <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
+    <string name="put_face_in_frame">請把臉放入框內保持不動</string>
+    <string name="experience_face_verify">體驗刷臉</string>
+    <string name="no_face">没有检测到脸</string>
+    <string name="put_body_right">請保證姿勢</string>
+    <string name="get_closer">請靠近一點</string>
+    <string name="blink">請眨眨眼</string>
+    <string name="face_verify_success">刷脸成功</string>
+    <string name="face_verify_fail">抱歉，沒有認出你來</string>
+    <string name="face_enter">人臉識別</string>
+    <string name="face_login">刷臉登錄</string>
+    <string name="off_face_verify_relogin">關閉刷臉，重新登錄</string>
+    <string name="face_verifying">驗證中</string>
+
+    <!--九宮格-->
+    <!-- Gesture login activity -->
+    <string name="gesture_forget_gesture">忘記手勢密碼</string>
+    <string name="gesture_default">請繪製手勢密碼</string>
+    <string name="gesture_error">手勢密碼輸入錯誤</string>
+    <string name="gesture_correct">輸入正確</string>
+    <string name="gesture_code_error">密碼錯誤，還可以再試</string>
+    <string name="gesture_code_time">次</string>
+    <string name="gesture_code_tips">5次失敗後，需要重新登入</string>
+
+    <!-- Create gesture activity -->
+    <string name="create_gesture_default">繪製解鎖圖案</string>
+    <string name="create_gesture_correct">再次繪製解鎖圖案</string>
+    <string name="create_gesture_less_error">至少連接4個點，請重新輸入</string>
+    <string name="create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
+    <string name="create_gesture_confirm_correct">設置成功</string>
+    <string name="create_gesture_reset">重新設置</string>
+    <string name="create_gesture_code">創建手勢密碼</string>
+    <string name="create_gesture_guid">您可以創建一個雲+解鎖圖案，這樣他人在借用您的手機時，將無法可打開雲+</string>
+    <string name="safe_center_enable">已啟用</string>
+    <string name="safe_center_unenable">未啟用</string>
+
+
+    <string name="qr_code_analysis_fail">二維碼解析失敗</string>
+    <!--科大讯飞语音-->
+    <string name="voice_input">語音輸入</string>
+    <string name="clear">清除</string>
+    <string name="confirm_clear">確認清除？</string>
+    <string name="login_more_current_enterprise">當前登錄系統：</string>
+
+    <string name="login_more_scan_find_left">掃描到[</string>
+    <string name="login_more_scan_find_right">]確定添加嗎？</string>
+    <string name="cluster_default">默認</string>
+
+    <string name="volume_read_write_permission">擁有上傳/查看許可權</string>
+    <string name="volume_read_permission">擁有查看許可權</string>
+
+    <string name="cluster_no_permission">當前功能缺少有效的授權資訊。</string>
+
+    <string name="share_mutil_only_support_image">多檔案分享僅支持照片格式</string>
+    <string name="share_no_more_than_five">不能上傳多於5個圖片</string>
+    <string name="share_no_share_way">沒有能够分享的管道</string>
+    <string name="share_to_channel">發送到頻道</string>
+    <string name="share_upload_volume">上傳到雲盤</string>
+    <string name="share_no_suffix">不支持分享無后綴名的檔案</string>
+    <string name="share_has_not_exist_file">您分享的檔案中有不存在的檔案，請檢查</string>
+    <string name="share_not_support">暫不支持的分享類型</string>
+    <string name="share_default_title">網頁連結</string>
+
+    <string name="net_work_fail">由於新版本增强了安全認證功能，需要您重新登入</string>
+
+    <string name="card_package_manage">管理卡片</string>
+    <string name="card_package_welcome">歡迎使用卡包</string>
+    <string name="card_package_collect">將您常用資訊卡片歸集一處</string>
+    <string name="card_package_taxpayer">納稅人識別號</string>
+    <string name="card_package_address">地址</string>
+    <string name="card_package_phone_number">電話</string>
+
+    <string name="voice_communication_invite_you">邀請你進行語音通話</string>
+    <string name="voice_communication_members">通話成員</string>
+    <string name="voice_communication_excuse">禁言</string>
+    <string name="voice_communication_hands_free">免提</string>
+    <string name="voice_communication_tran_video">監視器</string>
+    <string name="voice_communication_mute">靜音</string>
+    <string name="voice_communication_choice_members">選擇成員</string>
+    <string name="voice_communication_waitting_answer">等待接聽</string>
+    <string name="voice_communicaiton_watting_talking">通話中</string>
+    <string name="voice_communication_quality">當前通話品質不佳</string>
+    <string name="voice_communication_support_nine_members">雲+現時支持九人語音</string>
+
+    <string name="error_no_sdcard">沒有SD卡，無法存儲錄音數據</string>
+    <string name="error_state_record">正在錄音中，請先停止錄音</string>
+    <string name="error_unknown">無法識別的錯誤</string>
+    <string name="corrected_speech_input">校正自動識別文字</string>
+    <string name="corrected_word_input">[校正]</string>
+    <string name="voice_word_voice">語</string>
+    <string name="voice_word_word">字</string>
+    <string name="voice_word_tran">正在語音轉文字</string>
+    <string name="voice_word_setting">語音自動識別</string>
+    <string name="voice_audio_record_unavailiable">當前錄音設備不可用，請檢查錄音許可權是否開啟</string>
+    <string name="voice_to_word">轉文字</string>
+
+    <string name="notification_switch">新消息通知</string>
+
+    <string name="resend_file_failed">無法找到資源檔，消息重發失敗</string>
+
+
+    <!--权限管理-->
+    <string name="permission_dialog_title">提示</string>
+    <string name="permission_message_always_failed">您已禁止授予%1$s %2$s許可權，可能會造成功能不可用，如需使用請到設定裏授予許可權</string>
+    <string name="permission_grant_fail">您已禁止授予%1$s %2$s許可權</string>
+
+    <string name="permission_open_cloud_plus">開啟%1$s</string>
+    <string name="permission_necessary_permission">為了您能正常使用%1$s，需要以下許可權</string>
+    <string name="permission_phone_permission">設備資訊</string>
+    <string name="permission_call_phone_permission">撥打電話</string>
+    <string name="permission_storage_permission">存儲空間</string>
+    <string name="permission_next">下一步</string>
+
+    <string name="permission_name_calendar">日曆</string>
+    <string name="permission_name_camera">相機</string>
+    <string name="permission_name_contacts">通訊錄</string>
+    <string name="permission_name_location">位置信息</string>
+    <string name="permission_name_microphone">麥克風</string>
+    <string name="permission_name_phone">電話</string>
+    <string name="permission_name_sensors">身體感測器</string>
+    <string name="permission_name_sms">簡訊</string>
+    <string name="permission_name_storage">存儲空間</string>
+
+    <!--键盘相关-->
+    <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="emm_keyboard_zero2nine">1234567890</string>
+    <string name="emm_keyboard_number">數位</string>
+    <string name="emm_keyboard_symbol">#+=</string>
+    <string name="emm_keyboard_letter">字母</string>
+    <string name="emm_secure_keyboard">安全鍵盤</string>
+    <string name="emm_keyboard_space">空格</string>
+
+    <string name="welcome_to">歡迎使用</string>
+
+    <string name="user_call">呼叫</string>
+
+    <!--日历字符串资源开始-->
+    <string-array name="lunar_first_of_month">
+        <item>春節</item>
+        <item>二月</item>
+        <item>三月</item>
+        <item>四月</item>
+        <item>五月</item>
+        <item>六月</item>
+        <item>七月</item>
+        <item>八月</item>
+        <item>九月</item>
+        <item>十月</item>
+        <item>冬月</item>
+        <item>臘月</item>
+    </string-array>
+
+    <string-array name="tradition_festival">
+        <item>除夕</item>
+        <item>0101春節</item>
+        <item>0115元宵</item>
+        <item>0505端午</item>
+        <item>0707七夕</item>
+        <item>0815中秋</item>
+        <item>0909重陽</item>
+    </string-array>
+
+    <string-array name="lunar_str">
+        <item>初一</item>
+        <item>初二</item>
+        <item>初三</item>
+        <item>初四</item>
+        <item>初五</item>
+        <item>初六</item>
+        <item>初七</item>
+        <item>初八</item>
+        <item>初九</item>
+        <item>初十</item>
+        <item>十一</item>
+        <item>十二</item>
+        <item>十三</item>
+        <item>十四</item>
+        <item>十五</item>
+        <item>十六</item>
+        <item>十七</item>
+        <item>十八</item>
+        <item>十九</item>
+        <item>二十</item>
+        <item>廿一</item>
+        <item>廿二</item>
+        <item>廿三</item>
+        <item>廿四</item>
+        <item>廿五</item>
+        <item>廿六</item>
+        <item>廿七</item>
+        <item>廿八</item>
+        <item>廿九</item>
+        <item>三十</item>
+    </string-array>
+
+    <string-array name="solar_festival">
+        <item>0101元旦</item>
+        <item>0214情人節</item>
+        <item>0308婦女節</item>
+        <item>0312植樹節</item>
+        <item>0315消權日</item>
+        <item>0401愚人節</item>
+        <item>0404兒童節</item>
+        <item>0422地球日</item>
+        <item>0501勞動節</item>
+        <item>0903軍人節</item>
+        <item>0928教師節</item>
+        <item>0501勞動節</item>
+        <item>0504青年節</item>
+        <item>0601兒童節</item>
+        <item>0701建黨節</item>
+        <item>0801建軍節</item>
+        <item>0928教師節</item>
+        <item>1001國慶節</item>
+        <item>1031萬聖節</item>
+        <item>1111光棍節</item>
+        <item>1224平安夜</item>
+        <item>1225聖誕節</item>
+    </string-array>
+
+    <string-array name="solar_term">
+        <item>春分</item>
+        <item>清明</item>
+        <item>穀雨</item>
+        <item>立夏</item>
+        <item>小滿</item>
+        <item>芒種</item>
+        <item>夏至</item>
+        <item>小暑</item>
+        <item>大暑</item>
+        <item>立秋</item>
+        <item>處暑</item>
+        <item>白露</item>
+        <item>秋分</item>
+        <item>寒露</item>
+        <item>霜降</item>
+        <item>立冬</item>
+        <item>小雪</item>
+        <item>大雪</item>
+        <item>冬至</item>
+        <item>小寒</item>
+        <item>大寒</item>
+        <item>立春</item>
+        <item>雨水</item>
+        <item>驚蟄</item>
+    </string-array>
+
+    <string-array name="special_festivals">
+        <item>母親節</item>
+        <item>父親節</item>
+        <item>感恩節</item>
+    </string-array>
+
+    <string name="sun">日</string>
+    <string name="mon">一</string>
+    <string name="tue">二</string>
+    <string name="wed">三</string>
+    <string name="thu">四</string>
+    <string name="fri">五</string>
+    <string name="sat">六</string>
+
+
+    <string-array name="week_string_array">
+        <item>日</item>
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+        <item>四</item>
+        <item>五</item>
+        <item>六</item>
+    </string-array>
+
+    <string-array name="month_string_array">
+        <item>1月</item>
+        <item>2月</item>
+        <item>3月</item>
+        <item>4月</item>
+        <item>5月</item>
+        <item>6月</item>
+        <item>7月</item>
+        <item>8月</item>
+        <item>9月</item>
+        <item>10月</item>
+        <item>11月</item>
+        <item>12月</item>
+    </string-array>
+
+    <integer-array name="trunk_integer_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+
+    </integer-array>
+
+    <string-array name="trunk_string_array">
+        <item>辛</item>
+        <item>壬</item>
+        <item>癸</item>
+        <item>甲</item>
+        <item>乙</item>
+        <item>丙</item>
+        <item>丁</item>
+        <item>戊</item>
+        <item>己</item>
+        <item>庚</item>
+    </string-array>
+
+    <integer-array name="branch_integer_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </integer-array>
+
+    <string-array name="branch_string_array">
+        <item>酉</item>
+        <item>戌</item>
+        <item>亥</item>
+        <item>子</item>
+        <item>丑</item>
+        <item>寅</item>
+        <item>卯</item>
+        <item>辰</item>
+        <item>巳</item>
+        <item>午</item>
+        <item>未</item>
+        <item>申</item>
+    </string-array>
+    <!--日历字符串资源结束-->
+
+    <string name="phone_sms">簡訊</string>
+    <string name="phone_email">郵件</string>
+    <string name="current_month">本月</string>
+    <string name="user_office_phone">固話</string>
+    <string name="group_qrcode">群二維碼</string>
+
+    <string-array name="segment_control_items">
+        <item>低</item>
+        <item>中</item>
+        <item>高</item>
+    </string-array>
+</resources>

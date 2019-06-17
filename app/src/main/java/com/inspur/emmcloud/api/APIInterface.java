@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.api;
 
+import com.inspur.emmcloud.basemodule.bean.AppException;
+import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
@@ -9,8 +11,6 @@ import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
 import com.inspur.emmcloud.bean.appcenter.GetMyAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
-import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
-import com.inspur.emmcloud.bean.appcenter.GetRegisterResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
@@ -50,7 +50,6 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
@@ -60,19 +59,11 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
-import com.inspur.emmcloud.bean.login.GetLoginResult;
-import com.inspur.emmcloud.bean.login.GetMDMStateResult;
-import com.inspur.emmcloud.bean.login.GetSignoutResult;
-import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.bean.login.UploadMDMInfoResult;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.mine.GetCardPackageResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
 import com.inspur.emmcloud.bean.mine.GetExperienceUpgradeFlagResult;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
-import com.inspur.emmcloud.bean.mine.GetLanguageResult;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.GetUserCardMenusResult;
 import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
@@ -94,13 +85,10 @@ import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
 import com.inspur.emmcloud.bean.schedule.task.Task;
-import com.inspur.emmcloud.bean.system.AppException;
-import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
@@ -109,14 +97,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public interface APIInterface {
-
-    void returnOauthSignInSuccess(GetLoginResult getLoginResult);
-
-    void returnOauthSignInFail(String error, int errorCode,String headerLimitRemaining,String headerRetryAfter);
-
-    void returnRefreshTokenSuccess(GetLoginResult getLoginResult);
-
-    void returnRefreshTokenFail(String error, int errorCode);
 
     void returnAllAppsSuccess(GetAllAppResult getAllAppResult);
 
@@ -142,10 +122,6 @@ public interface APIInterface {
 
     void returnMyAppFail(String error, int errorCode);
 
-    void returnSignoutSuccess(GetSignoutResult getSignoutResult);
-
-    void returnSignoutFail(String error, int errorCode);
-
     void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck);
 
     void returnUpgradeFail(String error, boolean isManualCheck, int errorCode);
@@ -158,21 +134,9 @@ public interface APIInterface {
 
     void returnSearchAppMoreFail(String error, int errorCode);
 
-    void returnLoginSMSCaptchaSuccess();
 
-    void returnLoginSMSCaptchaFail(String error, int errorCode);
 
-    void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult);
 
-    void returnRegisterSMSFail(String error, int errorCode);
-
-    void returnReisterSMSCheckSuccess(GetRegisterCheckResult getRegisterResult);
-
-    void returnReisterSMSCheckFail(String error, int errorCode);
-
-    void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult);
-
-    void returnMyInfoFail(String error, int errorCode);
 
     void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult, String filePath);
 
@@ -370,9 +334,7 @@ public interface APIInterface {
 
     void returnDndFail(String error, int errorCode);
 
-    void returnModifyPasswordSuccess();
 
-    void returnModifyPasswordFail(String error, int errorCode);
 
     void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity);
 
@@ -418,9 +380,7 @@ public interface APIInterface {
 
     void returnIsMeetingAdminFail(String error, int errorCode);
 
-    void returnLanguageSuccess(GetLanguageResult getLanguageResult);
 
-    void returnLanguageFail(String error, int errorCode);
 
     void returnFindSearchFail(String error, int errorCode);
 
@@ -434,9 +394,7 @@ public interface APIInterface {
 
     void returnRobotByIdFail(String error, int errorCode);
 
-    void returnResetPasswordSuccess();
 
-    void returnResetPasswordFail(String error, int errorCode);
 
     void returnGetAppTabsSuccess(GetAppMainTabResult getAppTabsResult);
 
@@ -445,12 +403,6 @@ public interface APIInterface {
     void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion);
 
     void returnUserAppsFail(String error, int errorCode);
-
-    void returnUploadCollectSuccess();
-
-    void returnUploadCollectSuccess(final List<PVCollectModel> collectModelList);
-
-    void returnUploadCollectFail(String error, int errorCode);
 
     void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
 
@@ -496,25 +448,14 @@ public interface APIInterface {
 
     void returnUnBindDeviceFail(String error, int errorCode);
 
-    void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult);
 
-    void returnMDMStateFail(String error, int errorCode);
-
-    void returnUploadMDMInfoSuccess(UploadMDMInfoResult uploadMDMInfoResult);
-
-    void returnUploadMDMInfoFail();
 
     void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
 
     void returnSplashPageInfoFail(String error, int errorCode);
 
-    void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean);
 
-    void returnLoginDesktopCloudPlusFail(String error, int errorCode);
 
-    void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult);
-
-    void returnDeviceCheckFail(String error, int errorCode);
 
     void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult);
 
@@ -651,9 +592,7 @@ public interface APIInterface {
 
     void returnOpenDecideBotRequestFail(String error, int errorCode);
 
-    void returnFaceLoginGSSuccess();
 
-    void returnFaceLoginGSFail(String error, int errorCode);
 
     void returnContactUserListSuccess(byte[] bytes, String saveConfigVersion);
 
@@ -676,10 +615,6 @@ public interface APIInterface {
     void returnCardPackageListSuccess(GetCardPackageResult getCardPackageResult);
 
     void returnCardPackageListFail(String error, int errorCode);
-
-    void returnAllConfigVersionSuccess(GetAllConfigVersionResult getAllConfigVersionResult);
-
-    void returnAllConfigVersionFail(String error, int errorCode);
 
     void returnGetVoiceCommunicationResultSuccess(GetVoiceCommunicationResult getVoiceCommunicationResult);
 
@@ -841,10 +776,12 @@ public interface APIInterface {
 
     //会议-通过id获取
     void returnMeetingDataFromIdSuccess(Meeting meeting);
+
     void returnMeetingDataFromIdFail(String error, int errorCode);
 
     //日程-通过id获取
     void returnScheduleDataFromIdSuccess(Schedule schedule);
+
     void returnScheduleDataFromIdFail(String error, int errorCode);
 
     void returnMeetingListSuccess(GetMeetingListResult getMeetingListByMeetingRoomResult);
@@ -867,6 +804,7 @@ public interface APIInterface {
     void returnUpdateMeetingFail(String error, int errorCode);
 
     void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult);
+
     void returnHolidayDataFail(String error, int errorCode);
 
 }

@@ -55,11 +55,10 @@ public class TextViewFixTouchConsume extends TextView {
     }
 
     public static class LocalLinkMovementMethod extends LinkMovementMethod {
+        private static final long CLICK_DELAY = 500l;
         static LocalLinkMovementMethod sInstance;
         private long lastClickTime;
-        private static final long CLICK_DELAY = 500l;
         private boolean isMovingDoing = false;
-
 
 
         public static LocalLinkMovementMethod getInstance() {
@@ -96,7 +95,7 @@ public class TextViewFixTouchConsume extends TextView {
                     if (action == MotionEvent.ACTION_UP) {
                         if (System.currentTimeMillis() - lastClickTime > CLICK_DELAY) {
                             return true;
-                        }else{
+                        } else {
                             link[0].onClick(widget);
                             return true;
                         }
@@ -104,8 +103,8 @@ public class TextViewFixTouchConsume extends TextView {
                         Selection.setSelection(buffer,
                                 buffer.getSpanStart(link[0]),
                                 buffer.getSpanEnd(link[0]));
-                        lastClickTime= System.currentTimeMillis();
-                        isMovingDoing=true;
+                        lastClickTime = System.currentTimeMillis();
+                        isMovingDoing = true;
                     }
 
                     if (widget instanceof TextViewFixTouchConsume) {
@@ -118,13 +117,13 @@ public class TextViewFixTouchConsume extends TextView {
                     return false;
                 }
             }
-            if(action==MotionEvent.ACTION_MOVE&&isMovingDoing){
+            if (action == MotionEvent.ACTION_MOVE && isMovingDoing) {
                 if (System.currentTimeMillis() - lastClickTime > CLICK_DELAY) {
                     ViewParent parent = widget.getParent();
                     if (parent instanceof ViewGroup) {
                         // 获取被点击控件的父容器，让父容器执行点击；
                         ((ViewGroup) parent).performLongClick();
-                        isMovingDoing=false;
+                        isMovingDoing = false;
                     }
                     return true;
                 }

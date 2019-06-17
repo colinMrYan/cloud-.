@@ -6,14 +6,14 @@ import android.text.SpannableString;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.richtext.markdown.MarkDown;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;

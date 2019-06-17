@@ -1,0 +1,163 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.androidTools
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+    sourceSets.main {
+        jniLibs.srcDirs = ['libs']
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation', 'ExtraTranslation'
+    }
+
+    //资源文件目录
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res/layouts/app/groupnews',//新闻
+                            'src/main/res/layouts/app/volume',//网盘
+                            'src/main/res/layouts/app/webex',//网盘
+                            'src/main/res/layouts/app/mail',//网盘
+                            'src/main/res/layouts/app',//应用中心，应用详情，React应用等布局
+                            'src/main/res/layouts/chat',//沟通
+                            'src/main/res/layouts/chat/cards',//沟通卡片
+                            'src/main/res/layouts/contact',//通讯录
+                            'src/main/res/layouts/find/trip',//差旅
+                            'src/main/res/layouts/find',//发现里的其他内容
+                            'src/main/res/layouts/cards',//卡片
+                            'src/main/res/layouts/login',//登录
+                            'src/main/res/layouts/mdm',//mdm设备管理
+                            'src/main/res/layouts/mine/feedback',//用户反馈
+                            'src/main/res/layouts/mine/myinfo',//我的信息
+                            'src/main/res/layouts/mine/setting',//设置
+                            'src/main/res/layouts/mine',//其他设置内容
+                            'src/main/res/layouts/work/approval',//待办任务
+                            'src/main/res/layouts/work/calendar',//日历
+                            'src/main/res/layouts/work/meeting',//会议
+                            'src/main/res/layouts/work/task',//任务
+                            'src/main/res/layouts/work',//其他工作相关布局
+                            'src/main/res/layouts/schedule',//日程
+                            'src/main/res/layouts/schedule/schedule',//日程_日程
+                            'src/main/res/layouts/schedule/calendar',//日程_日历
+                            'src/main/res/layouts/schedule/task',//日程_任务
+                            'src/main/res/layouts/schedule/meeting',//日程_任务
+                            'src/main/res/layouts/notsupport',//不支持此功能页面
+                            'src/main/res/layouts/imp',//imp插件
+                            'src/main/res/layouts/widgets/popwindow',//popwindow
+                            'src/main/res/layouts/widgets/dialog',//dialog
+                            'src/main/res/layouts/widgets',//dialog
+                            'src/main/res/layouts/others/fragments',//fragments
+                            'src/main/res/layouts/others',//fragments
+                            'src/main/res/layouts/umeng',//umeng
+                            'src/main/res/layouts/jpush',//jpush
+                            'src/main/res/layout',//默认布局文件目录
+                            'src/main/res'//根目录
+
+                    ]
+        }
+    }
+
+    //jdk1.8
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api deps.support.compat
+    api deps.support.design
+    api deps.support.v7.appcompat
+    api deps.support.v7.recyclerView
+    api deps.support.v7.cardView
+    api deps.support.annotations
+    api deps.support.multidex
+    testApi deps.junit
+    api deps.jimu.componentLib
+    api(deps.butterknife.butterknife) {
+        exclude group: 'com.android.support'
+    }
+    api deps.gson
+    api deps.fastjson
+    api deps.qmui
+    api deps.commonsLang3
+    api deps.amapLocation
+
+    api deps.baiduMapLocation
+    api(deps.socket) {
+        exclude group: 'org.json', module: 'json'
+    }
+    api deps.pinyin4j
+    api deps.universalImageLoader
+    api deps.zxing
+    api(deps.PhotoView) {
+        exclude module: 'support-compat'
+        exclude module: 'support-core-utils'
+    }
+    api deps.eventbus
+    api deps.annotationApi
+    api deps.calligraphy
+    api deps.HoverView
+    api deps.androidGifDrawable
+    api deps.magicViewpager
+    api deps.jsoup
+    api deps.markdown
+    api deps.disklrucache
+    api deps.progresspieview
+    api deps.ShortcutBadger
+    api deps.RecordWave
+    api deps.mp3spi
+    api deps.Mp3Converter
+
+    api deps.commonsCodec
+    api deps.oss
+    api deps.protobuf
+    api deps.avi
+    api deps.RoundedImageView
+    api deps.semver
+    api deps.bmelnychukAtv
+    api deps.immersionbar
+    api(deps.pagerslidingtabstrip) {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.nineoldandroids', module: 'library'
+    }
+    api deps.SegmentControlView
+
+
+    androidTestApi(deps.support.test.runner) {
+        exclude module: 'support-annotations'
+    }
+    androidTestApi('com.android.support.test:rules:0.5') {
+        exclude module: 'support-annotations'
+    }
+    api deps.Toast
+    api deps.ARouter.arouter_api
+}

@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.ui.IndexActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

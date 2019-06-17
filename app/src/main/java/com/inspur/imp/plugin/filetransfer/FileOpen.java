@@ -12,10 +12,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
 
-import com.inspur.emmcloud.BuildConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -464,7 +463,7 @@ public class FileOpen {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //判断是否是AndroidN以及更高的版本
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", file);
+                Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 intent.setDataAndType(contentUri, FileUtils.getMimeType(file));
             } else {

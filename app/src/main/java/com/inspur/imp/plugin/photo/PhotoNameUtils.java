@@ -2,7 +2,7 @@ package com.inspur.imp.plugin.photo;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 
 public class PhotoNameUtils {
     public static String getFileName(Context context, int parm_encodingType) {

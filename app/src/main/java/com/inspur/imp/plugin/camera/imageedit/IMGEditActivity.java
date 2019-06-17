@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 
-import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.imp.plugin.camera.imageedit.core.IMGMode;
 import com.inspur.imp.plugin.camera.imageedit.core.IMGText;
 import com.inspur.imp.util.compressor.Compressor;

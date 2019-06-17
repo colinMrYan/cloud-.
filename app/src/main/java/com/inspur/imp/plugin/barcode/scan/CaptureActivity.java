@@ -1,31 +1,5 @@
 package com.inspur.imp.plugin.barcode.scan;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Vector;
-
-import org.xutils.x;
-import org.xutils.common.Callback.CommonCallback;
-import org.xutils.http.RequestParams;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.Result;
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.imp.api.Res;
-import com.inspur.imp.plugin.barcode.camera.CameraManager;
-import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
-import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
-import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
-import com.inspur.imp.plugin.barcode.view.ViewfinderView;
-
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -44,6 +18,32 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.imp.plugin.barcode.camera.CameraManager;
+import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
+import com.inspur.imp.plugin.barcode.decoding.GetDecodeResultFromServer;
+import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
+import com.inspur.imp.plugin.barcode.view.ViewfinderView;
+
+import org.xutils.common.Callback.CommonCallback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Vector;
 
 
 public class CaptureActivity extends BaseActivity implements Callback {

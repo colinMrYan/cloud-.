@@ -2,8 +2,8 @@ package com.inspur.emmcloud.util.privates.ninelock;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

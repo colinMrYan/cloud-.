@@ -1,37 +1,5 @@
 package com.inspur.emmcloud.ui;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
-import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
-import com.inspur.emmcloud.ui.chat.ConversationActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -41,6 +9,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
+import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

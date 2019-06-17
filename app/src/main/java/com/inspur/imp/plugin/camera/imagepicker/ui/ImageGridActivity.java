@@ -9,9 +9,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImageDataSource;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -177,7 +177,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
             int selectLimit = imagePicker.getSelectLimit();
             boolean isCheck = imagePicker.getSelectedImages().contains(imageItem);
             if (!isCheck && imagePicker.getSelectedImages().size() >= selectLimit) {
-                Toast.makeText(getApplicationContext(), getString(R.string.select_limit, selectLimit), Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getApplicationContext(), getString(R.string.select_limit, selectLimit));
             } else {
                 imagePicker.addSelectedImageItem(position, imageItem, !isCheck);
             }

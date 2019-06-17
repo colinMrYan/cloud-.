@@ -3,18 +3,19 @@ package com.inspur.emmcloud.api.apiservice;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.CloudHttpMethod;
-import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.login.login.LoginService;
+import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -37,6 +38,14 @@ public class ReactNativeAPIService {
         this.apiInterface = apiInterface;
     }
 
+    private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.refreshToken(oauthCallBack, requestTime);
+        }
+    }
+
     /**
      * 获取ClientId
      *
@@ -49,7 +58,7 @@ public class ReactNativeAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("deviceId", deviceId);
         params.addParameter("deviceName", deviceName);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(new String(arg0)));
@@ -73,7 +82,7 @@ public class ReactNativeAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -90,7 +99,7 @@ public class ReactNativeAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("uri", uri);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetReactNativeInstallUrlSuccess(new ReactNativeInstallUriBean(new String(arg0)));
@@ -114,7 +123,7 @@ public class ReactNativeAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -135,7 +144,7 @@ public class ReactNativeAPIService {
                 "&command=" + command;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 LogUtils.YfcDebug("写回成功，不需要后续处理");
@@ -159,7 +168,7 @@ public class ReactNativeAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -180,7 +189,7 @@ public class ReactNativeAPIService {
         final String completeUrl = findDownloadUrl + "?version=" + currentVersion + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnGetDownloadReactNativeUrlSuccess(new ReactNativeDownloadUrlBean(new String(arg0)));
@@ -204,7 +213,7 @@ public class ReactNativeAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -236,7 +245,7 @@ public class ReactNativeAPIService {
                 "&command=" + command;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 LogUtils.YfcDebug("闪屏写回成功，不需要后续处理");
@@ -260,7 +269,7 @@ public class ReactNativeAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 

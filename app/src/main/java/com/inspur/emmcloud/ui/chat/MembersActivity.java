@@ -1,40 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.Serializable;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
-import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
-import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.PersonDto;
-import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.PinyinUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.slidebar.CharacterParser;
-import com.inspur.emmcloud.widget.slidebar.SideBar;
-
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -48,7 +13,41 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
+import com.inspur.emmcloud.adapter.MemberSelectGridAdapter;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.PinyinUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.PersonDto;
+import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
+import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+import com.inspur.emmcloud.widget.slidebar.CharacterParser;
+import com.inspur.emmcloud.widget.slidebar.SideBar;
+
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -159,8 +158,7 @@ public class MembersActivity extends BaseActivity implements TextWatcher {
                     if (msg.what == 0) {
                         initData();
                     } else {
-                        Toast.makeText(MembersActivity.this, getString(R.string.load_data_failed),
-                                Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(MembersActivity.this, getString(R.string.load_data_failed));
                     }
                     LoadingDialog.dimissDlg(loadingDlg);
                 }

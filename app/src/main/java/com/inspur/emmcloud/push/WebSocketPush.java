@@ -9,23 +9,24 @@ import android.util.Log;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
+import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.GetWebSocketBadgeResult;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
-import com.inspur.emmcloud.util.privates.OauthUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
+import com.inspur.emmcloud.login.login.LoginService;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -132,7 +133,7 @@ public class WebSocketPush {
             return;
         }
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            String pushId = PushManagerUtils.getPushId(MyApplication.getInstance());
+            String pushId = PushManagerUtils.getInstance().getPushId(MyApplication.getInstance());
             if (!pushId.equals("UNKNOWN")) {
                 WebSocketConnect();
             }
@@ -172,7 +173,7 @@ public class WebSocketPush {
                 if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
                     String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
                     String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
-                    String pushId = PushManagerUtils.getPushId(MyApplication.getInstance());
+                    String pushId = PushManagerUtils.getInstance().getPushId(MyApplication.getInstance());
                     query.put("device.id", uuid);
                     query.put("device.name", deviceName);
                     query.put("device.push", pushId);
@@ -373,7 +374,11 @@ public class WebSocketPush {
                 } else if (code == 401) {
                     closeWebsocket();
                     sendWebSocketStatusBroadcast(Socket.EVENT_CONNECT_ERROR);
-                    OauthUtils.getInstance().refreshToken(null, System.currentTimeMillis());
+                    Router router = Router.getInstance();
+                    if (router.getService(LoginService.class.getSimpleName()) != null) {
+                        LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+                        service.refreshToken(null, System.currentTimeMillis());
+                    }
                 }
                 isWebsocketConnecting = false;
             }

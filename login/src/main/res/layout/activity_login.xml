@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:fitsSystemWindows="true"
+    android:onClick="onClick">
+
+    <TextView
+        android:id="@+id/tv_current_login_enterprise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="31dp"
+        android:paddingRight="30dp"
+        android:paddingTop="15dp"
+        android:textColor="#999999"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:paddingLeft="27dp"
+        android:paddingRight="30dp"
+        android:textColor="#FF333333"
+        android:textSize="26sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="155dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="27dp"
+        android:paddingRight="30dp">
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="false">
+
+            <com.inspur.emmcloud.baselib.widget.ClearEditText
+                android:id="@+id/et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/app_edittext_clear"
+                android:hint="@string/login_hint_text"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="17dp"
+                android:paddingRight="13dp"
+                android:paddingTop="17dp"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:theme="@style/MyEditText" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:passwordToggleDrawable="@drawable/app_edittext_eye_selector"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:hint="@string/password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:paddingBottom="17dp"
+                android:paddingTop="17dp"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:theme="@style/MyEditText" />
+
+
+        </android.support.design.widget.TextInputLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_login_via_sms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:paddingBottom="15dp"
+                android:paddingLeft="4dp"
+                android:paddingTop="10dp"
+                android:text="@string/login_sms"
+                android:textColor="#36A5F6"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_forget_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:paddingBottom="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/login_forget_password"
+                android:textColor="#36A5F6"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bg_login_btn_unable"
+            android:enabled="false"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bt_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="27dp"
+        android:layout_marginRight="30dp"
+        android:background="@null"
+        android:onClick="onClick"
+        android:padding="10dp"
+        android:text="@string/more"
+        android:textColor="#FF36A5F6"
+        android:textSize="13sp" />
+</RelativeLayout>
+
+

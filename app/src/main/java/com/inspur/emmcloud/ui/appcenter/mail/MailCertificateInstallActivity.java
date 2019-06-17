@@ -7,24 +7,24 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MailApiService;
+import com.inspur.emmcloud.baselib.util.EncryptUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.SwitchView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.EncryptUtils;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
 import java.io.FileInputStream;
@@ -155,7 +155,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
                     LogUtils.LbcDebug("path" + pathList.get(0));
                     showInputCreKeyWordDialog(pathList.get(0));
                 } else {
-                    Toast.makeText(getBaseContext(), "选取文件失败", Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getBaseContext(), "选取文件失败");
                 }
                 break;
             default:
@@ -170,14 +170,14 @@ public class MailCertificateInstallActivity extends BaseActivity {
      */
     private void showInputCreKeyWordDialog(final String path) {
         final CustomDialog.EditDialogBuilder builder = new CustomDialog.EditDialogBuilder(this);
-        final EditText editText = new EditText(this);
+        View editLayout = View.inflate(this, R.layout.cus_dialog_edit, null);
+        final EditText editText = editLayout.findViewById(R.id.cus_dialog_edit_text);
         editText.setHint("请在此输入证书密码：");
+        editText.setTextSize(16);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
 
         builder.setTitle("证书密码：")
-                .setView(editText)
-//                .setPlaceholder("请在此输入证书密码：")
-//                .setInputType(InputType.TYPE_CLASS_TEXT)
+                .setView(editLayout)
                 .setNegativeButton("取消", (dialog, index) -> {
                     dialog.dismiss();
                 })
@@ -190,7 +190,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
                         uploadCertificateFile(mail, path, certificatePassWord);
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(getBaseContext(), "密码无效或证书有误，请重试", Toast.LENGTH_LONG).show();
+                        ToastUtils.show(getBaseContext(), "密码无效或证书有误，请重试");
                     }
                 }).show();
     }
@@ -348,7 +348,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailCertificateUploadSuccess(byte[] arg0) {
-            Toast.makeText(getBaseContext(), "证书安装成功", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getBaseContext(), "证书安装成功");
             PreferencesByUsersUtils.putObject(MailCertificateInstallActivity.this, myCertificate, CERTIFICATER_KEY);
             updataCertificateUI(myCertificate);
             super.returnMailCertificateUploadSuccess(arg0);
@@ -356,7 +356,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         @Override
         public void returnMailCertificateUploadFail(String error, int errorCode) {
-            Toast.makeText(getBaseContext(), "证书安装失败", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getBaseContext(), "证书安装失败");
             super.returnMailCertificateUploadFail(error, errorCode);
         }
     }

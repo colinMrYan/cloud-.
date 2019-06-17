@@ -1,13 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +10,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.bean.appcenter.App;
+
+import java.util.List;
 
 public class AppCenterMoreActivity extends BaseActivity {
 

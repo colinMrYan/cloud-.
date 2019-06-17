@@ -1,37 +1,5 @@
 package com.inspur.emmcloud.ui.mine.myinfo;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.LoginAPIService;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.bean.mine.Enterprise;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
-import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
-import com.inspur.emmcloud.ui.login.LoginBySmsActivity;
-import com.inspur.emmcloud.ui.login.PasswordModifyActivity;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
-import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
-import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
-import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +8,37 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
+import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
+import com.inspur.emmcloud.basemodule.bean.Enterprise;
+import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
+import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -146,13 +145,13 @@ public class MyInfoActivity extends BaseActivity {
                 finishActivity();
                 break;
             case R.id.rl_password_modify:
-                IntentUtils.startActivity(MyInfoActivity.this, PasswordModifyActivity.class);
+                ARouter.getInstance().build("/login/password_modify").navigation();
                 break;
             case R.id.rl_password_reset:
                 Bundle bundle = new Bundle();
-                bundle.putInt(LoginBySmsActivity.EXTRA_MODE, LoginBySmsActivity.MODE_FORGET_PASSWORD);
-                bundle.putString(LoginBySmsActivity.EXTRA_PHONE, getMyInfoResult.getPhoneNumber());
-                IntentUtils.startActivity(MyInfoActivity.this, LoginBySmsActivity.class, bundle);
+                bundle.putInt("extra_mode", 2);
+                bundle.putString("extra_phone", getMyInfoResult.getPhoneNumber());
+                ARouter.getInstance().build("/login/sms").with(bundle).navigation();
                 break;
             default:
                 break;
@@ -191,7 +190,6 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void initImagePicker() {
         ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(true); // 显示拍照按钮
         imagePicker.setCrop(true); // 允许裁剪（单选才有效）
         imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
@@ -263,8 +261,8 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void getUserProfile() {
         if (NetUtils.isNetworkConnected(MyInfoActivity.this, false)) {
-            LoginAPIService apiServices = new LoginAPIService(MyInfoActivity.this);
-            apiServices.setAPIInterface(new WebService());
+            BaseModuleApiService apiServices = new BaseModuleApiService(MyInfoActivity.this);
+            apiServices.setAPIInterface(new BaseModuleWebService());
             apiServices.getMyInfo();
         }
     }
@@ -277,6 +275,29 @@ public class MyInfoActivity extends BaseActivity {
             apiService.getUserProfileConfigInfo();
         } else {
             setUserInfoConfig(null);
+        }
+    }
+
+    public class BaseModuleWebService extends BaseModuleAPIInterfaceInstance {
+
+        @Override
+        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
+            // TODO Auto-generated method stub
+            MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
+            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
+            if (enterpriseList.size() == 0 && defaultEnterprise == null) {
+                ToastUtils.show(MyApplication.getInstance(), R.string.login_user_not_bound_enterprise);
+                MyApplication.getInstance().signout();
+            } else {
+                PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
+                showMyInfo();
+            }
+        }
+
+        @Override
+        public void returnMyInfoFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
         }
     }
 
@@ -314,25 +335,6 @@ public class MyInfoActivity extends BaseActivity {
             setUserInfoConfig(null);
         }
 
-        @Override
-        public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
-            // TODO Auto-generated method stub
-            MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
-            List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-            Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-            if (enterpriseList.size() == 0 && defaultEnterprise == null) {
-                ToastUtils.show(MyApplication.getInstance(), R.string.login_user_not_bound_enterprise);
-                MyApplication.getInstance().signout();
-            } else {
-                PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
-                showMyInfo();
-            }
-        }
-
-        @Override
-        public void returnMyInfoFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-        }
     }
 
 }

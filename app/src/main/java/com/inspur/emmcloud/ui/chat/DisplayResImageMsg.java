@@ -11,11 +11,11 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.itheima.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;

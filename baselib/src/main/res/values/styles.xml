@@ -1,0 +1,406 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
+
+    -->
+    <style name="AppRootTheme" parent="Theme.AppCompat.Light" />
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppRootTheme">
+        <!--no Action Bar-->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorAccent">#36A5F6</item>
+
+        <!-- button  init-->
+        <item name="CustomButtonStyle">@style/CusButtonBase</item>
+        <item name="cus_round_btn_bg_color">@color/s_btn_blue_bg</item>
+        <item name="cus_round_btn_border_color">@color/s_btn_blue_border</item>
+        <item name="cus_round_btn_text_color">@color/s_btn_blue_text</item>
+        <item name="cus_content_spacing_horizontal">20dp</item>
+        <item name="cus_content_padding_horizontal">16dp</item>
+        <item name="cus_round_btn_text_size">16sp</item>
+        <item name="cus_round_btn_border_width">1dp</item>
+
+        <item name="cus_isRadiusAdjustBounds">true</item>
+        <item name="cus_backgroundColor">@color/transparent</item>
+        <item name="cus_borderWidth">1dp</item>
+        <item name="cus_borderColor">@color/s_btn_blue_border</item>
+
+        <item name="cus_loading_view_size">20dp</item>
+        <item name="android:color">#858C96</item>
+        <item name="CusLoadingStyle">@style/CusLoadingBase</item>
+    </style>
+    <style name="MyEditText" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlNormal">#C8C7CC</item>
+        <item name="colorControlActivated">#24ABE9</item>
+
+    </style>
+
+    <style name="AppTheme_0"  parent="AppTheme">
+        <item name="android:imageButtonStyle">@style/CusImageButton</item>
+        <item name="header_bg_color">@color/header_bg_white</item>
+        <item name="header_bg">@drawable/shape_header_bg_white</item>
+        <item name="footer_bg">@drawable/footer_bg_white</item>
+        <item name="footer_bg_color">@color/footer_bg_white</item>
+        <item name="header_text_color">@color/header_text_black</item>
+
+        <item name="footer_tab_text_color">@color/seclector_footer_text_white</item>
+        <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_white</item>
+        <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_white</item>
+        <item name="bg_tab_app">@drawable/selector_tab_app_btn</item>
+        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn</item>
+        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn</item>
+        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn</item>
+        <item name="bg_tab_find">@drawable/selector_tab_find_btn</item>
+        <item name="bg_tab_mine">@drawable/selector_tab_more_btn</item>
+        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn</item>
+        <item name="bg_tab_work">@drawable/selector_tab_work_btn</item>
+        <item name="ic_message_header_contact">@drawable/ic_message_header_contact</item>
+        <item name="ic_add">@drawable/ic_add</item>
+        <item name="ic_config">@drawable/ic_config</item>
+        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter</item>
+        <item name="ic_appcenter_config">@drawable/ic_appcenter_config</item>
+        <item name="ic_header_option">@drawable/ic_header_option_white</item>
+        <item name="status_bar_dark_font">true</item>
+        <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
+        <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
+        <item name="mine_my_info_card_name_color">@android:color/black</item>
+        <item name="mine_my_info_card_enterprise_color">#666666</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
+        <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+        <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
+        <item name="schedule_tab_text_color_select">@color/header_text_black</item>
+
+    </style>
+
+    <style name="AppTheme_1"  parent="AppTheme">
+        <item name="android:imageButtonStyle">@style/CusImageButton</item>
+        <item name="header_bg_color">@color/header_bg_grey</item>
+        <item name="header_bg">@drawable/shape_header_bg_grey</item>
+        <item name="footer_bg">@drawable/footer_bg_grey</item>
+        <item name="footer_bg_color">@color/footer_bg_grey</item>
+        <item name="header_text_color">@color/header_text_grey</item>
+        <item name="footer_tab_text_color">@color/seclector_footer_text_grey</item>
+        <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_grey</item>
+        <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_grey</item>
+        <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
+        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
+        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
+        <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
+        <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
+        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
+        <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
+        <item name="ic_message_header_contact">@drawable/ic_message_header_contact_grey</item>
+        <item name="ic_add">@drawable/ic_add_grey</item>
+        <item name="ic_config">@drawable/ic_config_grey</item>
+        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_grey</item>
+        <item name="ic_appcenter_config">@drawable/ic_appcenter_config_grey</item>
+        <item name="ic_header_option">@drawable/ic_header_option_white</item>
+        <item name="status_bar_dark_font">true</item>
+        <item name="ic_back_btn">@drawable/ic_back_btn_white</item>
+        <item name="ic_appcenter_search">@drawable/ic_appcenter_search_white</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_white</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_white</item>
+        <item name="mine_my_info_card_name_color">@android:color/black</item>
+        <item name="mine_my_info_card_enterprise_color">#666666</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
+        <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+        <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
+        <item name="schedule_tab_text_color_select">@color/header_text_black</item>
+    </style>
+
+    <style name="AppTheme_2"  parent="AppTheme">
+        <item name="android:imageButtonStyle">@style/CusImageButton</item>
+        <item name="header_bg_color">@color/header_bg_blue</item>
+        <item name="header_bg">@drawable/shape_header_bg_blue</item>
+        <item name="footer_bg">@drawable/footer_bg_blue</item>
+        <item name="footer_bg_color">@color/footer_bg_blue</item>
+        <item name="header_text_color">@color/header_text</item>
+        <item name="footer_tab_text_color">@color/seclector_footer_text_blue</item>
+        <item name="footer_tab_text_color_nor">@color/footer_tab_text_nor_blue</item>
+        <item name="footer_tab_text_color_select">@color/footer_tab_text_sel_blue</item>
+        <item name="bg_tab_app">@drawable/selector_tab_app_btn_grey</item>
+        <item name="bg_tab_cloud_tweet">@drawable/selector_tab_cloud_tweet_btn_grey</item>
+        <item name="bg_tab_communicate">@drawable/selector_tab_message_btn_grey</item>
+        <item name="bg_tab_contact">@drawable/selector_tab_contact_btn_grey</item>
+        <item name="bg_tab_find">@drawable/selector_tab_find_btn_grey</item>
+        <item name="bg_tab_mine">@drawable/selector_tab_more_btn_grey</item>
+        <item name="bg_tab_unknown">@drawable/selector_tab_unknown_btn_grey</item>
+        <item name="bg_tab_work">@drawable/selector_tab_work_btn_grey</item>
+        <item name="ic_message_header_contact">@drawable/ic_message_header_contact_blue</item>
+        <item name="ic_add">@drawable/ic_add_blue</item>
+        <item name="ic_config">@drawable/ic_config_blue</item>
+        <item name="ic_appcenter_enter">@drawable/ic_appcenter_enter_blue</item>
+        <item name="ic_appcenter_config">@drawable/ic_appcenter_config_blue</item>
+        <item name="ic_header_option">@drawable/ic_header_option_blue</item>
+        <item name="status_bar_dark_font">false</item>
+        <item name="ic_back_btn">@drawable/ic_back_btn_blue</item>
+        <item name="ic_appcenter_search">@drawable/ic_appcenter_search_blue</item>
+        <item name="plugin_ic_header_title_drop_down">@drawable/plugin_ic_header_title_drop_down_blue</item>
+        <item name="plugin_ic_header_title_drop_up">@drawable/plugin_ic_header_title_drop_up_blue</item>
+        <item name="mine_my_info_card_name_color">@android:color/white</item>
+        <item name="mine_my_info_card_enterprise_color">@android:color/white</item>
+        <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
+        <item name="mine_my_info_menu_tint_color">@android:color/white</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_blue</item>
+        <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
+        <item name="schedule_tab_text_color_select">@android:color/white</item>
+    </style>
+
+
+
+    <!-- Application theme. -->
+    <style name="AppTheme_Transparent" parent="AppTheme">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+    <!-- Application theme. -->
+    <style name="AppTheme_Transparent_0" parent="AppTheme_0">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme_Transparent_1" parent="AppTheme_1">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme_Transparent_2" parent="AppTheme_2">
+        <!--不设置activity进入和退出动画样式-->
+        <item name="android:windowAnimationStyle">@null</item>
+        <!--设置窗口的背景为透明，设置透明背景必须要设置此项-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--&lt;!&ndash;设置窗口的背景是否为半透明，设置透明背景必须要设置此项&ndash;&gt;-->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+
+
+    <style name="userhead_dialog_bg" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+        <item name="android:windowBackground">@color/transparent</item>
+        <!-- 背景透明 -->
+    </style>
+
+    <style name="CameraPreview" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen"></style>
+
+    <!-- 增加加号部分的style -->
+    <style name="transparentFrameWindowStyle" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/photo_choose_bg</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- 增加加号部分的style -->
+    <style name="transparentFrameWindowStyleForIntrcution" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/photo_choose_bg</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
+
+
+
+    <!-- 增加加号部分的style -->
+    <style name="transparentDateWindowStyle" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/photo_choose_bg</item>
+    </style>
+
+    <style name="main_menu_animstyle">
+        <item name="android:windowEnterAnimation">@anim/pup_dialog_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/pup_dialog_out_anim</item>
+    </style>
+
+
+    <style name="Transparent" parent="android:Theme.Light">
+
+        <!-- 将Activity的Theme设置成透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="radiobutton_style">
+        <item name="android:background">#000000</item>
+    </style>
+
+    <!-- 箭头大小调整 -->
+    <style name="arrow_right">
+        <item name="android:layout_width">15dp</item>
+        <item name="android:layout_height">15dp</item>
+    </style>
+
+    <style name="FullBleedTheme" parent="android:Theme.Light.NoTitleBar">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
+    </style>
+    <!-- 全屏的Dialog -->
+    <style name="Dialog_Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- 电源检测弹出Dialog -->
+    <style name="PowerNoWarnDialog" parent="@android:style/Theme.Holo.Dialog">
+        <!-- 是否有边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!--是否在悬浮Activity之上  -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!--阴影  -->
+        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+        <!--背景透明-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 还可以加入一些弹出和退出的动画 (lan)-->
+    </style>
+
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_style</item>
+    </style>
+
+
+    <style name="imp_plugin_fullScreenDialog" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--<item name="android:windowAnimationStyle">@style/dialog_animation</item>-->
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:backgroundDimAmount">0.6</item><!-- 灰度 -->
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
+    <style name="dialog_activity" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+        <item name="android:windowBackground">@null</item>
+        <!-- 背景透明 -->
+    </style>
+
+    <declare-styleable name="RxCardStackView">
+        <attr name="stackOverlapGaps" format="dimension"/>
+        <attr name="stackOverlapGapsCollapse" format="dimension"/>
+        <attr name="stackHeaderHeight" format="dimension"/>
+        <attr name="stackDuration" format="integer"/>
+        <attr name="stackNumBottomShow" format="integer"/>
+        <attr name="stackAnimationType">
+            <flag name="allDown" value="0"/>
+            <flag name="upDown" value="1"/>
+            <flag name="upDownStack" value="2"/>
+        </attr>
+    </declare-styleable>
+    <style name="AndroidTreeNodeStyleCustom">
+        <item name="android:paddingLeft">20dp</item>
+        <!--<item name="android:showDividers">middle</item>-->
+        <!--<item name="android:divider">@android:drawable/divider_horizontal_bright</item>-->
+    </style>
+
+
+    <style name="PopupKeybroad" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
+    <style name="StyleProgressBarMini" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/download_progress_color</item>
+
+    </style>
+
+    <style name="Theme.Transparent.Permission"
+        parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+
+    </style>
+
+    <style name="ScheduleTabLayoutTextStyle">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="ScheduleTaskTabLayoutTextStyle">
+        <item name="android:textSize">13sp</item>
+    </style>
+    <style name="DateTimePickerDateTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--这个绿色是选中时的背景颜色，和当前日期的颜色-->
+        <item name="colorAccent">#36A5F6</item>
+        <!--设置字体颜色-->
+        <item name="android:textColorPrimary">#333333</item>
+    </style>
+
+    <style name="DateTimeAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">15sp</item>
+        <item name="colorAccent">#36A5F6</item>
+    </style>
+
+    <style name="DateTimePickerTimeTheme" parent="@android:style/Theme.Holo.Light.Panel">
+        <item name="android:textColor">#36A5F6</item>
+        <item name="android:textColorPrimary">#333333</item>
+
+    </style>
+
+    <style name="cus_dialog_style" parent="Theme.AppCompat.Light">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="CusButtonBase" parent="android:Widget.Holo.Light.Button" />
+
+    <style name="CusLoadingBase" parent="@style/AppRootTheme" />
+
+    <style name="CusImageButton" parent="android:Widget.Holo.Light.ImageButton">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+
+</resources>

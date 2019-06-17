@@ -5,12 +5,12 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.oss.OssService;
 
 import java.io.File;

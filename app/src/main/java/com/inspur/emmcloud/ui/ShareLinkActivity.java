@@ -1,28 +1,28 @@
 package com.inspur.emmcloud.ui;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.content.Intent;
+import android.os.Bundle;
 
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 
-import android.content.Intent;
-import android.os.Bundle;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Created by yufuchang on 2018/7/18.

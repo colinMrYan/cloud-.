@@ -1,31 +1,5 @@
 package com.inspur.emmcloud.ui.find.trip;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.FindAPIService;
-import com.inspur.emmcloud.bean.find.GetTripArriveCity;
-import com.inspur.emmcloud.bean.find.Trip;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.MyDatePickerDialog;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -40,6 +14,32 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.FindAPIService;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.MyDatePickerDialog;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.find.GetTripArriveCity;
+import com.inspur.emmcloud.bean.find.Trip;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class TripDetailActivity extends BaseActivity {
     private static final int SELECT_RIDER = 1;

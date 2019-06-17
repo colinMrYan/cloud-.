@@ -13,14 +13,14 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MailApiService;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.MailFolder;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MailFolderCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 

@@ -3,15 +3,16 @@ package com.inspur.emmcloud.api.apiservice;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
 import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
 import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
-import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.inspur.emmcloud.login.login.LoginService;
+import com.inspur.emmcloud.login.login.OauthCallBack;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
@@ -35,6 +36,14 @@ public class WebexAPIService {
         this.apiInterface = apiInterface;
     }
 
+    private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.refreshToken(oauthCallBack, requestTime);
+        }
+    }
+
     /**
      * 获取webex会议列表
      */
@@ -42,7 +51,7 @@ public class WebexAPIService {
         final String url = APIUri.getWebexMeetingListUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnWebexMeetingListSuccess(new GetWebexMeetingListResult(new String(arg0)));
@@ -55,18 +64,18 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
-                        new OauthCallBack() {
-                            @Override
-                            public void reExecute() {
-                                getWebexMeetingList();
-                            }
+                refreshToken(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getWebexMeetingList();
+                    }
 
-                            @Override
-                            public void executeFailCallback() {
-                                callbackFail("", -1);
-                            }
-                        }, requestTime);
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, requestTime);
+
             }
         });
     }
@@ -80,7 +89,7 @@ public class WebexAPIService {
         params.setReadTimeout(30000);
         params.setBodyContent(obj.toString());
         params.setAsJsonContent(true);
-        x.http().request(HttpMethod.POST, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.POST, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnScheduleWebexMeetingSuccess(new GetScheduleWebexMeetingSuccess(new String(arg0)));
@@ -93,7 +102,7 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         new OauthCallBack() {
                             @Override
                             public void reExecute() {
@@ -117,7 +126,7 @@ public class WebexAPIService {
         final String url = APIUri.getWebexMeetingUrl(meetingID);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnWebexMeetingSuccess(new WebexMeeting(new String(arg0)));
@@ -130,7 +139,7 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         new OauthCallBack() {
                             @Override
                             public void reExecute() {
@@ -153,7 +162,7 @@ public class WebexAPIService {
         final String url = APIUri.getWebexTK();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnWebexTKSuccess(new GetWebexTKResult(new String(arg0)));
@@ -166,7 +175,7 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         new OauthCallBack() {
                             @Override
                             public void reExecute() {
@@ -186,7 +195,7 @@ public class WebexAPIService {
         final String url = APIUri.getRemoveWebexMeetingUrl(meetingID);
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.setReadTimeout(30000);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, url) {
+        x.http().request(HttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnRemoveWebexMeetingSuccess();
@@ -199,7 +208,7 @@ public class WebexAPIService {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         new OauthCallBack() {
                             @Override
                             public void reExecute() {

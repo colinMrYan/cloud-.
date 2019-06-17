@@ -5,9 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
 
 /**
  * Created by yufuchang on 2019/1/2.
@@ -17,8 +16,8 @@ public class NetWorkStateChangeUtils {
 
 
     private static NetWorkStateChangeUtils netWorkStateChangeUtils;
-    private CheckingNetStateUtils checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls);
-    ;
+    private CheckingNetStateUtils checkingNetStateUtils = new CheckingNetStateUtils(MyApplication.getInstance(), NetUtils.pingUrls, NetUtils.httpUrls);
+
 
     private NetWorkStateChangeUtils() {
 

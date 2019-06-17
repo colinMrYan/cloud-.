@@ -1,42 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.ConversationMemberAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.NoScrollGridView;
-import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,6 +8,43 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.ConversationMemberAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
+import com.inspur.emmcloud.baselib.widget.SwitchView;
+import com.inspur.emmcloud.baselib.widget.SwitchView.OnStateChangedListener;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
+import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

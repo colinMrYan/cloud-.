@@ -1,12 +1,10 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -14,19 +12,16 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,13 +29,28 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.DragAdapter;
 import com.inspur.emmcloud.adapter.RecommendAppWidgetListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
+import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
@@ -48,36 +58,20 @@ import com.inspur.emmcloud.bean.appcenter.AppOrder;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
-import com.inspur.emmcloud.bean.system.ClientConfigItem;
-import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModuleModel;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
-import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ShortCutUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
 import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
 
@@ -133,7 +127,7 @@ public class MyAppFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
@@ -843,59 +837,6 @@ public class MyAppFragment extends BaseFragment {
         sortFinishBtn.setVisibility(isEditStatus ? View.VISIBLE : View.GONE);
         configBtn.setVisibility(isEditStatus ? View.GONE : View.VISIBLE);
         appcenterEnterBtn.setVisibility(isEditStatus ? View.GONE : View.VISIBLE);
-    }
-
-    /**
-     * 创建快捷方式的Dialog
-     *
-     * @param app
-     * @param appType
-     * @param clz
-     * @param icon
-     */
-    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon, final Bitmap bitmap) {
-        final Dialog hasIntrcutionDialog = new Dialog(getActivity(),
-                R.style.transparentFrameWindowStyle);
-        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
-        View view = getActivity().getLayoutInflater().inflate(R.layout.app_create_shortcut_dialog, null);
-        hasIntrcutionDialog.setContentView(view);
-        final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
-        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
-        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
-        textView.setText(getString(R.string.app_commonly_use_app));
-        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
-        okBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (icon == 0) {
-                    ShortCutUtils.createShortCut(getActivity(), clz,
-                            app.getAppName(), app.getUri(), appType, bitmap);
-                }
-                if (bitmap == null) {
-                    ShortCutUtils.createShortCut(getActivity(), clz,
-                            app.getAppName(), app.getUri(), appType, icon);
-                }
-                UriUtils.openApp(getActivity(), app, "application");
-                hasIntrcutionDialog.dismiss();
-            }
-        });
-        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
-        cancelBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkBox.isChecked()) {
-                    PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
-                }
-                UriUtils.openApp(getActivity(), app, "application");
-                hasIntrcutionDialog.dismiss();
-            }
-        });
-        Window window = hasIntrcutionDialog.getWindow();
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.dimAmount = 0.31f;
-        hasIntrcutionDialog.getWindow().setAttributes(wl);
-        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        hasIntrcutionDialog.show();
     }
 
     /**

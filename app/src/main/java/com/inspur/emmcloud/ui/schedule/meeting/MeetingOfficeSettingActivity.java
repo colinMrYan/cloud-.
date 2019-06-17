@@ -1,28 +1,28 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.view.View;
+import android.widget.ExpandableListView;
 
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MeetingOfficeAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingLocation;
 import com.inspur.emmcloud.bean.schedule.meeting.Office;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
-import android.view.View;
-import android.widget.ExpandableListView;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +40,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     private MeetingOfficeAdapter adapter;
     private List<Office> officeList = new ArrayList<>();
     private List<String> officeIdList = new ArrayList<>();
+    private boolean isMeetingOfficeChanged = false;
 
     @Override
     public void onCreate() {
@@ -104,7 +105,9 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
+        if (isMeetingOfficeChanged) {
+            setResult(RESULT_OK);
+        }
         finish();
     }
 
@@ -154,6 +157,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
 
         @Override
         public void returnAddMeetingOfficeSuccess(Office office, Building building) {
+            isMeetingOfficeChanged = true;
             LoadingDialog.dimissDlg(loadingDlg);
             officeIdList.add(office.getId());
             officeList.add(office);
@@ -169,6 +173,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
 
         @Override
         public void returnDeleteOfficeSuccess(Office office) {
+            isMeetingOfficeChanged = true;
             LoadingDialog.dimissDlg(loadingDlg);
             officeList.remove(office);
             officeIdList.remove(office.getId());

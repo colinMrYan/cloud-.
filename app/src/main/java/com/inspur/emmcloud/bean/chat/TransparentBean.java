@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 /**
  * Created by yufuchang on 2018/1/19.

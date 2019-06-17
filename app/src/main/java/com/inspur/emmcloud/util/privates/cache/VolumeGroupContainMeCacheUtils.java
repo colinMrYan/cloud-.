@@ -2,8 +2,9 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
-import com.inspur.emmcloud.util.common.StringUtils;
 
 /**
  * Created by chenmch on 2018/1/24.

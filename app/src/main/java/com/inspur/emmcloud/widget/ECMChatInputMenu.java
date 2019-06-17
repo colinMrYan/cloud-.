@@ -24,26 +24,26 @@ import android.widget.RelativeLayout;
 import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.basemodule.widget.richedit.InsertModel;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
-import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.bean.system.VoiceResult;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.MediaPlayerUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.audioformat.AndroidMp3ConvertUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.MediaPlayerUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
+import com.inspur.emmcloud.util.privates.audioformat.AndroidMp3ConvertUtils;
 import com.inspur.emmcloud.widget.audiorecord.AudioDialogManager;
 import com.inspur.emmcloud.widget.audiorecord.AudioRecordButton;
 import com.inspur.emmcloud.widget.waveprogress.WaterWaveProgress;
@@ -377,6 +377,7 @@ public class ECMChatInputMenu extends LinearLayout {
         if (inputs.equals("0")) {
             this.setVisibility(View.GONE);
         } else {
+            this.setVisibility(View.VISIBLE);
             //功能组的图标，名称
             int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                     R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_voice_2_word,
@@ -519,7 +520,12 @@ public class ECMChatInputMenu extends LinearLayout {
         if (!canMentions) {
             chatInputMenuListener.onVoiceCommucaiton();
         } else {
-            AppUtils.openChannelMemeberSelect((Activity) getContext(), cid, 6);
+            Intent intent = new Intent();
+            intent.setClass(getContext(), MembersActivity.class);
+            intent.putExtra("title", getContext().getString(R.string.voice_communication_choice_members));
+            intent.putExtra(MembersActivity.MEMBER_PAGE_STATE, MembersActivity.SELECT_STATE);
+            intent.putExtra("cid", cid);
+            getContext().startActivity(intent);
         }
     }
 

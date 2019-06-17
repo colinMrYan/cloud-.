@@ -8,18 +8,17 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
-import android.widget.Toast;
 
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.imp.api.ImpFragment;
-import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -212,8 +211,7 @@ public class CameraService extends ImpPlugin {
                 getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.CAMERA_SERVICE_CAMERA_REQUEST);
             }
         } else {
-            Toast.makeText(getFragmentContext(), Res.getString("invalidSD"),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), Res.getString("invalidSD"));
         }
         File savePath = new File(saveDir);
         if (!savePath.exists()) {
@@ -281,7 +279,6 @@ public class CameraService extends ImpPlugin {
      */
     private void initImagePicker() {
         ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(false); // 显示拍照按钮
         imagePicker.setCrop(false); // 允许裁剪（单选才有效）
         imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
@@ -515,11 +512,8 @@ public class CameraService extends ImpPlugin {
 
     /**
      * IMP代码修改处
-     *
-     * @param originalBitmap  原图Bitmap
-     * @param thumbnailBitmap 缩略图Bitmap
-     * @param saveUri         原图URI
-     * @param uri             缩略图URI
+     * @param originImgPath
+     * @param thumbnailImgPath
      */
     private void callbackData(String originImgPath, String thumbnailImgPath) {
         // TODO Auto-generated method stub
@@ -546,11 +540,8 @@ public class CameraService extends ImpPlugin {
 
     /**
      * IMP代码修改处
-     *
-     * @param originalBitmaps  原图Bitmap数组
-     * @param bitmaps          缩略图Bitmap数组
-     * @param selectedDataList 原图路径List
-     * @param filePaths        缩略图路径List
+     * @param originImgPaths
+     * @param thumbnailImgPaths
      */
     private void callbackDatas(String[] originImgPaths, String[] thumbnailImgPaths) {
         // TODO Auto-generated method stub
@@ -592,9 +583,8 @@ public class CameraService extends ImpPlugin {
 
     /**
      * 处理异常网络请求
-     *
+     * @param function
      * @param error
-     * @param responseCode
      */
     private void saveNetException(String function, String error) {
         AppExceptionCacheUtils.saveAppException(getFragmentContext(), 4, function, error, 0);

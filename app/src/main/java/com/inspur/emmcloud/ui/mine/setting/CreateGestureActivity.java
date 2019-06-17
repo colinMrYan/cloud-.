@@ -1,22 +1,22 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
-import com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator;
-import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
-import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
-
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -203,7 +203,7 @@ public class CreateGestureActivity extends BaseActivity {
      * 成功设置了手势密码(跳到首页)
      */
     private void setLockPatternSuccess() {
-        Toast.makeText(this, getString(R.string.create_gesture_confirm_correct), Toast.LENGTH_SHORT).show();
+        ToastUtils.show(this, getString(R.string.create_gesture_confirm_correct));
         putGestureCodeIsOpenByUser(CreateGestureActivity.this, true);
         EventBus.getDefault().post(CREATE_GESTURE_CODE_SUCCESS);
         setResult(RESULT_OK);

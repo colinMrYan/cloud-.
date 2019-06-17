@@ -15,15 +15,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.imp.api.ImpFragment;
-import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 import com.inspur.imp.util.StrUtil;
@@ -127,7 +127,7 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-                    Toast.makeText(getFragmentContext(), Res.getStringID("filetransfer_download_failed"), Toast.LENGTH_LONG).show();
+                ToastUtils.show(getFragmentContext(), Res.getStringID("filetransfer_download_failed"));
                     getActivity().runOnUiThread(new Runnable() {
 
                         @Override
@@ -248,15 +248,12 @@ public class FileTransferService extends ImpPlugin {
         // 判断是否含有sd卡
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(getFragmentContext(), Res.getString("filetransfer_sd_not_exist"),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), Res.getString("filetransfer_sd_not_exist"));
             return;
         }
         // 判断网络是否连接
         if (!NetUtils.isNetworkConnected(getFragmentContext())) {
-            Toast.makeText(getFragmentContext(),
-                    Res.getString("filetransfer_network_disconnected"), Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtils.show(getFragmentContext(), Res.getString("filetransfer_network_disconnected"));
             return;
         }
         // 文件存放路径

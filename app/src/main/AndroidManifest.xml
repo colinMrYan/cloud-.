@@ -3,145 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection">
-
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="22" />
-
-    <!-- 极光推送权限配置开始 -->
-    <!-- Required -->
-    <permission
-        android:name="${applicationId}.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <!-- Required -->
-    <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-
-    <!-- Optional. Required for location feature -->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
-    <!--用于申请获取蓝牙信息进行室内定位-->
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
-    <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="android.permission.WRITE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-
-    <!-- 闪光灯 -->
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-
-    <!--指纹识别-->
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-    <uses-permission android:name="com.fingerprints.service.ACCESS_FINGERPRINT_MANAGER" />
-    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
-
-    <!-- 创建快捷键 -->
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />  
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="com.android.launcher2.permission.READ_SETTINGS" />
-    <uses-permission android:name="com.android.launcher3.permission.READ_SETTINGS" />
-
-
-    <!-- 插件：网络信息 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-    <!-- 插件：拨打电话 -->
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-    <!-- 插件：发送短信 -->
-    <uses-permission android:name="android.permission.SEND_SMS" />
-
-    <!-- 插件：选择图片 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- 插件：GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- 插件：二维码扫描 -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- 插件：拍照 -->
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-
-    <!-- 插件：设备震动 -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!--悬浮窗相关-->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-
-    <!--电源权限-->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-
-    <!-- 语音播放 -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.Manifest.permission.DEVICE_POWER" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
-    <!--科大讯飞语音增加权限-->
-    <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <!--&lt;!&ndash;读取联系人权限，上传联系人需要用到此权限 &ndash;&gt;-->
-    <!--<uses-permission android:name="android.permission.READ_CONTACTS" />-->
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
-
-    <!--allowBackup = false 防止对应用程序数据进行备份和还原 -->
-
     <application
         android:name=".MyApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme_0"
         tools:replace="android:allowBackup,label">
 
-        <!-- 适配全面屏 -->
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.4" />
-        <!-- 适配华为(hua wei)刘海屏 -->
-        <meta-data
-            android:name="android.notch_support"
-            android:value="true" />
-        <!-- 适配小米(xiao mi)刘海屏 -->
-        <meta-data
-            android:name="notch.config"
-            android:value="portrait|landscape" />
 
-        <!--custom-->
-        <meta-data
-            android:name="FLAG_APP_VERSION_TYPE"
-            android:value="Standard" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -219,7 +90,7 @@
             android:name=".ui.IndexActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.mine.setting.GuideActivity"
             android:launchMode="singleTask"
@@ -238,47 +109,47 @@
             android:name=".ui.mine.setting.EnterpriseSwitchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.ThemeSwitchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.mine.setting.TabLayoutSwitchActivity"
+        <activity
+            android:name=".ui.mine.setting.TabLayoutSwitchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
 
 
         <activity
             android:name=".ui.mine.setting.SafeGustureFaceSettingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.CreateGestureActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.CreateGestureGuideActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.setting.GestureLoginActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.setting.FaceVerifyActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.card.CardPackageActivity"
             android:launchMode="singleTask"
@@ -291,95 +162,62 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ui.login.PasswordFirstSettingActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
 
-        <activity
-            android:name=".ui.login.ScanQrCodeLoginGSActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ui.login.LoginMoreActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ui.login.ScanQrCodeLoginActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.login.PasswordModifyActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.ServiceTermActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ui.login.LoginBySmsActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.appcenter.AppCenterActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.AppCenterMoreActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.AppSearchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.AppDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.webex.WebexScheduleMeetingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.webex.WebexMyMeetingActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.webex.WebexAttendeesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.appcenter.webex.WebexMeetingDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.webex.WebexAddAttendeesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.webex.WebexAddExternalAttendeesActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.ShareFilesActivity"
@@ -393,7 +231,7 @@
             android:name=".ui.ShareLinkActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.SchemeHandleActivity"
@@ -530,53 +368,53 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ConversationActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ConversationGroupMessageSearchActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ChannelInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.chat.ConversationGroupInfoActivity"
             android:configChanges="locale|layoutDirection"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.chat.ConversationCastInfoActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMemActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.chat.ChannelMsgDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ChannelMessageDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.chat.ChannelVoiceCommunicationActivity"
             android:launchMode="singleTask"
@@ -601,21 +439,21 @@
             android:name=".ui.chat.ChatFileDownloadActivtiy"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.myinfo.MyInfoActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.contact.ContactSearchActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.contact.ContactOrgStructureActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.setting.SettingActivity"
@@ -632,44 +470,40 @@
             android:name=".ui.mine.setting.DeviceManagerActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.DeviceInfoActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.NetWorkStateDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.NetHardConnectCheckActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
 
         <activity
             android:name=".ui.contact.UserInfoActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.contact.RobotInfoActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.myinfo.ModifyUserInfoActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ui.login.PasswordResetActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.mine.setting.LanguageSwitchActivity"
             android:resizeableActivity="true"
@@ -698,7 +532,7 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.find.ScanResultActivity"
+            android:name="com.inspur.imp.plugin.barcode.ScanResultActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -744,16 +578,16 @@
             android:name=".ui.find.AnalysisActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.trip.TripInfoActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.ReactNativeAppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
             android:resizeableActivity="true"
@@ -762,9 +596,10 @@
             android:name=".ui.chat.ConversationNameModifyActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.chat.ConversationQrCodeActivity"
+        <activity
+            android:name=".ui.chat.ConversationQrCodeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.trip.TravelActivity"
             android:launchMode="singleTask"
@@ -779,11 +614,11 @@
             android:name=".ui.find.trip.TripDetailActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.appcenter.groupnews.GroupNewsActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.schedule.meeting.MeetingRoomInfoActivity"
             android:resizeableActivity="true"
@@ -796,12 +631,12 @@
             android:name=".ui.find.DocumentActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.KnowledgeActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.schedule.meeting.MeetingAddActivity"
             android:resizeableActivity="true"
@@ -861,40 +696,40 @@
         <activity
             android:name=".ui.appcenter.volume.VolumeHomePageActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.VolumeFileActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.VolumeFileDownloadActivtiy"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.VolumeFileLocationSelectActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.VolumeFileFilterActvity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.GroupInfoActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeInfoActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeNameModifyActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.volume.VolumeFilePermissionManagerActivity"
             android:resizeableActivity="true"
@@ -934,7 +769,7 @@
 
         <!-- service -->
         <service android:name=".service.LocationService"></service>
-        <service android:name=".service.PVCollectService"></service>
+        <service android:name=".basemodule.service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
@@ -944,15 +779,6 @@
         <!--AliveJobService需要BIND_JOB_SERVICE权限-->
         <service android:name=".service.BackgroundService"></service>
 
-
-        <!-- receiver -->
-        <!--<receiver-->
-        <!--android:name=".broadcastreceiver.NetworkChangeReceiver"-->
-        <!--android:label="NetworkConnection">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
         <receiver
             android:name=".broadcastreceiver.ActionReceiver"
             android:exported="true">
@@ -990,59 +816,45 @@
             </intent-filter>
         </receiver>
 
-        <!--处理小米推送广播的Recevier-->
-        <!--<receiver-->
-        <!--android:name=".broadcastreceiver.OpenJpushReceiver"-->
-        <!--android:label="OpenJpushMessage">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="com.inspur.emmcloud.openjpush" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
-        <!-- ImagePicker -->
 
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.inspur.imp.plugin.camera.imageedit.IMGEditActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!-- ImagePicker -->
 
 
-        <activity android:name="com.inspur.emmcloud.util.common.systool.emmpermission.EmmPermissionActivity"
-            android:configChanges="mcc|mnc|locale|keyboard|keyboardHidden|screenLayout|fontScale|uiMode|orientation|screenSize|layoutDirection"
-            android:screenOrientation="unspecified"
-            android:theme="@style/Theme.Transparent.Permission"
-            />
         <!-- imp插件 -->
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
-            android:resizeableActivity="true"/>
+            android:resizeableActivity="true" />
         <activity
             android:name="com.inspur.imp.plugin.barcode.scan.CaptureActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true"/>
+            android:supportsRtl="true" />
         <activity
             android:name="com.inspur.imp.plugin.barcode.decoder.PreviewDecodeActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true"/>
+            android:supportsRtl="true" />
 
 
         <activity
@@ -1050,194 +862,27 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:supportsRtl="true"/>
+            android:supportsRtl="true" />
         <activity
             android:name="com.inspur.imp.plugin.photo.ImageGalleryActivity"
             android:label="@string/app_name"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"
-            android:resizeableActivity="true"/>
+            android:resizeableActivity="true" />
 
         <activity
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
-            android:resizeableActivity="true"/>
+            android:resizeableActivity="true" />
 
         <activity
             android:name="com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity"
-            android:resizeableActivity="true"/>
+            android:resizeableActivity="true" />
 
-
-        <!-- MDM设备管理 -->
-        <activity
-            android:name=".ui.mdm.DeviceRegisterFailDetailActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"/>
 
         <!-- imp插件 -->
-
-
-        <!-- 极光推送开始 -->
-        <!-- Rich push 核心功能 since 2.0.6-->
-        <activity
-            android:name="cn.jpush.android.ui.PopWinActivity"
-            android:exported="false"
-            android:resizeableActivity="true"/>
-        <!-- since 3.0.9 Required SDK 核心功能-->
-        <provider
-            android:name="cn.jpush.android.service.DataProvider"
-            android:authorities="${applicationId}.DataProvider"
-            android:exported="false" />
-
-        <!-- Required SDK核心功能-->
-        <activity
-            android:name="cn.jpush.android.ui.PushActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:exported="false"
-            android:resizeableActivity="true"
-            android:theme="@android:style/Theme.NoTitleBar">
-            <intent-filter>.
-                <action android:name="cn.jpush.android.ui.PushActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </activity>
-
-        <!-- Required SDK 核心功能-->
-        <!-- 可配置android:process参数将PushService放在其他进程中 -->
-        <service
-            android:name="cn.jpush.android.service.PushService"
-            android:exported="false"
-            android:process=":mult">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTER" />
-                <action android:name="cn.jpush.android.intent.REPORT" />
-                <action android:name="cn.jpush.android.intent.PushService" />
-                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
-            </intent-filter>
-        </service>
-
-        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
-        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
-        <service
-            android:name="cn.jpush.android.service.DaemonService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.DaemonService" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-
-        </service>
-
-        <!-- Required SDK核心功能-->
-        <receiver
-            android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true">
-            <intent-filter android:priority="1000">
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   <!--Required  显示通知栏 -->
-                <category android:name="${applicationId}" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-            <!-- Optional -->
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Required SDK核心功能-->
-        <receiver
-            android:name="cn.jpush.android.service.AlarmReceiver"
-            android:exported="false" />
-
-
-        <!-- User defined. 用户自定义的广播接收器 -->
-        <receiver
-            android:name=".broadcastreceiver.JpushReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!--Required  用户注册SDK的intent-->
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!--Required  用户接收SDK消息的intent-->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!--Required  用户接收SDK通知栏信息的intent-->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
-                <action android:name="cn.jpush.android.intent.CONNECTION" /><!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
-
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default" />
-        <!-- Required. AppKey copied from Portal -->
-
-
-        <!-- 正式版 -->
-
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="62712cda36f300fb813134bc" />
-
-        <!-- dev版 -->
-        <!--
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="ce5858e0369f8d806f93994a" />
-        -->
-        <!-- 极光推送结束 -->
-
-        <!--华为推送开始-->
-        <meta-data
-            android:name="com.huawei.hms.client.appid"
-            android:value="10772129"></meta-data>
-        <provider
-            android:name="com.huawei.hms.update.provider.UpdateProvider"
-            android:authorities="${applicationId}.hms.update.provider"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            android:process=":updateProvider"></provider>
-
-
-        <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播 -->
-        <receiver android:name="com.inspur.emmcloud.broadcastreceiver.HuaWeiPushReceiver">
-            <intent-filter>
-                <!-- 必须,用于接收token -->
-                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
-                <!-- 必须，用于接收消息 -->
-                <action android:name="com.huawei.android.push.intent.RECEIVE" />
-                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发onEvent回调 -->
-                <action android:name="com.huawei.android.push.intent.CLICK" />
-                <!-- 可选，查看push通道是否连接，不查看则不需要 -->
-                <action android:name="com.huawei.intent.action.PUSH_STATE" />
-            </intent-filter>
-            <meta-data
-                android:name="CS_cloud_ablitity"
-                android:value="@string/app_name" />
-        </receiver>
-        <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
-
-            <intent-filter> <!-- 接收通道发来的通知栏消息，兼容老版本Push -->
-                <action android:name="com.huawei.intent.action.PUSH" />
-            </intent-filter>
-        </receiver>
-
-        <!--华为推送结束-->
-
-
-        <!-- 配置应用是否为开发版 -->
-        <meta-data
-            android:name="VERSION_TYPE"
-            android:value="normal" /> <!-- dev   normal -->
-
 
         <!-- 高德定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService"></service>
@@ -1258,7 +903,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.tencent.tauth.AuthActivity"
@@ -1284,15 +928,11 @@
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
 
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+
+
+
+
+
     </application>
 
 

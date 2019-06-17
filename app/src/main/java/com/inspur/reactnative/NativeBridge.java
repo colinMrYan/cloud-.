@@ -16,17 +16,17 @@ import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResultWithoutSerializable;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.reactnative.bean.AlertButton;
 
 import org.json.JSONArray;
@@ -120,12 +120,30 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void getCurrentEnterprise(Promise promise) {
         Enterprise enterprise = ((MyApplication) getReactApplicationContext().getApplicationContext()).getCurrentEnterprise();
         try {
-            promise.resolve(enterprise.enterPrise2WritableNativeMap());
+            promise.resolve(enterPrise2WritableNativeMap(enterprise));
         } catch (Exception e) {
             promise.reject(e);
         }
 
     }
+
+    /**
+     * 为RN内部自己调用准备的，不能序列化，否则报异常
+     *
+     * @return
+     */
+    public WritableNativeMap enterPrise2WritableNativeMap(Enterprise enterprise) {
+        WritableNativeMap map = new WritableNativeMap();
+        map.putString("code", enterprise.getCode());
+        map.putInt("id", Integer.valueOf(enterprise.getId()));
+        map.putString("name", enterprise.getName());
+        map.putDouble("creation_date", Double.valueOf(enterprise.getCreationDate()));
+        map.putString("ent_license_copy", enterprise.getEntLicenseCopy());
+        map.putString("ent_license_sn", enterprise.getEntLicenseSn());
+        map.putDouble("last_update", Double.valueOf(enterprise.getLastUpdate()));
+        return map;
+    }
+
 
     @ReactMethod
     public void alertDialog(String title, String content, String buttonJson, final Promise promise) {

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageFolder;
 import com.inspur.imp.plugin.camera.imagepicker.util.Utils;
@@ -70,7 +71,7 @@ public class ImageFolderAdapter extends BaseAdapter {
         ImageFolder folder = getItem(position);
         holder.folderName.setText(folder.name);
         holder.imageCount.setText(mActivity.getString(R.string.folder_image_count, folder.images.size()));
-        imagePicker.getImageLoader().displayImage(mActivity, folder.cover.path, holder.cover, mImageSize, mImageSize);
+        ImageDisplayUtils.getInstance().displayImage(folder.cover.path, holder.cover, mImageSize, mImageSize, R.drawable.default_image);
 
         if (lastSelected == position) {
             holder.folderCheck.setVisibility(View.VISIBLE);

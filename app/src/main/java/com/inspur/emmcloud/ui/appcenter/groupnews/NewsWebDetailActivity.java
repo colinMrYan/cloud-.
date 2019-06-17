@@ -1,60 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.groupnews;
 
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.api.apiservice.WSAPIService;
-import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
-import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
-import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
-import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.mine.Language;
-import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppWebConfig;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.HtmlRegexpUtil;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
-import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.imp.api.iLog;
-import com.inspur.imp.plugin.PluginMgr;
-
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
@@ -82,7 +27,61 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.HtmlRegexpUtil;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.baselib.widget.SwitchView;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppWebConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
+import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
+import com.inspur.emmcloud.bean.chat.Conversation;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
+import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
+import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
+import com.inspur.imp.api.iLog;
+import com.inspur.imp.plugin.PluginMgr;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 
 public class NewsWebDetailActivity extends BaseActivity {
@@ -140,11 +139,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 e.printStackTrace();
             }
             webViewHeaders.put("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-            String languageJson = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "appLanguageObj");
-            if (languageJson != null) {
-                Language language = new Language(languageJson);
-                webViewHeaders.put("Accept-Language", language.getIana());
-            }
+            webViewHeaders.put("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
         }
         webView.loadUrl(url, webViewHeaders);
     }
@@ -346,13 +341,37 @@ public class NewsWebDetailActivity extends BaseActivity {
         groupNews = (GroupNews) getIntent().getSerializableExtra("groupNews");
         if (groupNews != null) {
             String postTime = groupNews.getCreationDate();
-            url = StringUtils.isBlank(groupNews.getUrl()) ? (TimeUtils.getNewsTimePathIn(postTime)
+            url = StringUtils.isBlank(groupNews.getUrl()) ? (getNewsTimePathIn(postTime)
                     + groupNews.getResource()) : groupNews.getUrl();
             originalEditorComment = groupNews.getOriginalEditorComment();
         } else {
             url = getIntent().getDataString();
         }
     }
+
+
+    /**
+     * 带有时区的时间路径,目前是零时区GMT
+     * 如果需要改成东八区则GMT+8
+     *
+     * @param postTime
+     * @return
+     */
+    private String getNewsTimePathIn(String postTime) {
+        SimpleDateFormat sdfGMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdfGMT.setTimeZone(TimeZone.getTimeZone("GMT"));
+        postTime = sdfGMT.format(Long.parseLong(postTime));
+        String timeYear = postTime.substring(0, 4);
+        String timeMon = postTime.substring(5, 7);
+        String timeDay = postTime.substring(8, 10);
+        int year = Integer.parseInt(timeYear);
+        int mon = Integer.parseInt(timeMon);
+        int day = Integer.parseInt(timeDay);
+        String timePath = APIUri.getGroupNewsArticleUrl() + year + "/" + mon
+                + "/" + day + "/";
+        return timePath;
+    }
+
 
     /**
      * 打开字体设置，夜间模式设置Dialog
@@ -892,8 +911,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 弹出分享失败toast
      */
     private void showShareFailToast() {
-        Toast.makeText(NewsWebDetailActivity.this,
-                getString(R.string.news_share_fail), Toast.LENGTH_SHORT).show();
+        ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_fail));
     }
 
     /**
@@ -956,9 +974,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             if (fakeMessageId != null && String.valueOf(eventMessage.getId()).equals(fakeMessageId)) {
                 if (eventMessage.getStatus() == 200) {
-                    Toast.makeText(NewsWebDetailActivity.this,
-                            getString(R.string.news_share_success), Toast.LENGTH_SHORT)
-                            .show();
+                    ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_success));
                 } else {
                     showShareFailToast();
                 }
@@ -1057,9 +1073,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            Toast.makeText(NewsWebDetailActivity.this,
-                    getString(R.string.news_share_success), Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_success));
         }
 
         @Override
@@ -1078,9 +1092,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             intrcutionDialog.dismiss();
             groupNews.setEditorCommentCreated(true);
             sendInstructionEvent();
-            Toast.makeText(NewsWebDetailActivity.this,
-                    getString(R.string.news_instructions_success_text), Toast.LENGTH_SHORT)
-                    .show();
+            ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_instructions_success_text));
         }
 
         @Override

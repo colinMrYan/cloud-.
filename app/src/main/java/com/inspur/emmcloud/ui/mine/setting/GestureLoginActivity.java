@@ -1,31 +1,29 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.List;
-
-import com.gyf.barlibrary.ImmersionBar;
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
-import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
-import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
-
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.gyf.barlibrary.ImmersionBar;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,11 +66,8 @@ public class GestureLoginActivity extends BaseActivity {
                         } else if (command.equals("login")) {
                             isLogin = true;
                             //发送解锁广播是，SchemeHandleActivity中接收处理
-                            Intent intent = new Intent();
-                            intent.setAction(Constant.ACTION_SAFE_UNLOCK);
-                            MyApplication.getInstance().setIsActive(true);
-                            LocalBroadcastManager.getInstance(GestureLoginActivity.this).sendBroadcast(intent);
-                            finish();
+                            MyApplication.getInstance().setSafeLock(false);
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
                         } else if (command.equals("close")) {
                             clearGestureInfo();
                             finish();
@@ -87,10 +82,18 @@ public class GestureLoginActivity extends BaseActivity {
         }
     };
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
+            finish();
+        }
+    }
+
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         init();
         ImmersionBar.with(this).statusBarColor(R.color.grey_f6f6f6).statusBarDarkFont(true, 0.2f).init();
     }
@@ -122,98 +125,6 @@ public class GestureLoginActivity extends BaseActivity {
         CircleTextImageView circleImageView = (CircleTextImageView) findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);
-        //由于机型，系统等问题，目前不开启指纹识别功能
-//        initFingerPrint();
-    }
-
-    /**
-     * 初始化指纹识别
-     */
-    private void initFingerPrint() {
-        FingerprintIdentify cloudFingerprintIdentify = new FingerprintIdentify(this);
-        if (!isFingerPrintAvaiable(cloudFingerprintIdentify)) {
-            LogUtils.YfcDebug("设备指纹不可用");
-            return;
-        }
-        if (!PreferencesByUserAndTanentUtils.getBoolean(GestureLoginActivity.this, "finger_print_state", false)) {
-            LogUtils.YfcDebug("用户没有开启指纹解锁");
-            return;
-        }
-        cloudFingerprintIdentify.startIdentify(10, new BaseFingerprint.FingerprintIdentifyListener() {
-            @Override
-            public void onSucceed() {
-                // 验证成功，自动结束指纹识别
-//                EventBus.getDefault().post("success");
-                finish();
-                LogUtils.YfcDebug("指纹识别成功");
-            }
-
-            @Override
-            public void onNotMatch(int availableTimes) {
-                // 指纹不匹配，并返回可用剩余次数并自动继续验证
-                LogUtils.YfcDebug("指纹识别剩余次数：" + availableTimes);
-                ToastUtils.show(GestureLoginActivity.this, "指纹认证失败，您还可以尝试" + availableTimes + "次");
-                if (availableTimes == 0) {
-                    ToastUtils.show(GestureLoginActivity.this, "您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
-                }
-            }
-
-            @Override
-            public void onFailed(boolean isDeviceLocked) {
-                // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
-                // isDeviceLocked 表示指纹硬件是否被暂时锁定
-                LogUtils.YfcDebug("isDeviceLocked:" + isDeviceLocked);
-            }
-
-            @Override
-            public void onStartFailedByDeviceLocked() {
-                // 第一次调用startIdentify失败，因为设备被暂时锁定
-                LogUtils.YfcDebug("设备被锁定");
-            }
-
-        });
-    }
-
-    /**
-     * 判断指纹是否可用
-     *
-     * @param cloudFingerprintIdentify
-     * @return
-     */
-    private boolean isFingerPrintAvaiable(FingerprintIdentify cloudFingerprintIdentify) {
-        boolean isHardwareEnable = getIsHardwareEnable(cloudFingerprintIdentify);
-        boolean isFingerprintEnable = getIsFingerprintEnable(cloudFingerprintIdentify);
-        return isHardwareEnable && isFingerprintEnable;
-    }
-
-    /**
-     * 判断是否设置了指纹
-     *
-     * @param cloudFingerprintIdentify
-     * @return
-     */
-    private boolean getIsFingerprintEnable(FingerprintIdentify cloudFingerprintIdentify) {
-        return cloudFingerprintIdentify.isFingerprintEnable();
-    }
-
-
-//    /**
-//     * 判断指纹识别成功，识别成功后关闭锁屏Activity
-//     */
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onFingerPrintSuccess(String fingerPrintSuccess){
-//        if(fingerPrintSuccess.equals("success")){
-//            finish();
-//        }
-//    }
-
-    /**
-     * 硬件是否可用
-     *
-     * @return
-     */
-    private boolean getIsHardwareEnable(FingerprintIdentify cloudFingerprintIdentify) {
-        return cloudFingerprintIdentify.isHardwareEnable();
     }
 
     /**
@@ -276,7 +187,7 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
     private enum Status {

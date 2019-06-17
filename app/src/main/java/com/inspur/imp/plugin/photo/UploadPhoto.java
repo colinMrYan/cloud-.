@@ -2,10 +2,10 @@ package com.inspur.imp.plugin.photo;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 
 import org.json.JSONObject;
 import org.xutils.common.Callback.CommonCallback;

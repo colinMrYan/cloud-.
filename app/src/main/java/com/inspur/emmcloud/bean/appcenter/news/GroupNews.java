@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter.news;
 
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 
 import org.json.JSONObject;
 

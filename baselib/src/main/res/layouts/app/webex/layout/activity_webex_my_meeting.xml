@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/header_height"
+            android:layout_alignParentTop="true"
+            android:background="?attr/header_bg">
+
+            <ImageButton
+                android:id="@+id/ibt_back"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_centerVertical="true"
+                android:onClick="onClick"
+                android:padding="11dp"
+                android:scaleType="fitXY"
+                android:src="?attr/ic_back_btn" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/my_meeting"
+                android:textColor="?attr/header_text_color"
+                android:textSize="@dimen/header_textsize" />
+
+            <ImageView
+                android:id="@+id/iv_add_meeting"
+                android:layout_width="52dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_webex_meeing_add"
+                android:tint="?attr/header_text_color" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/rl_header"
+            android:background="@color/content_bg"
+            android:orientation="vertical">
+
+            <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
+                android:id="@+id/srl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ExpandableListView
+                        android:id="@+id/elv_meeting"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        android:listSelector="#00000000" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_no_meeting"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="50dp">
+
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/ic_webex_no_meeting" />
+
+                        <TextView
+                            android:id="@+id/tv_no_meeting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:textColor="#333333"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#cc000000"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/iv_mask_schedule"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="50dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/mask_guide_webex_schedule" />
+
+        <ImageView
+            android:id="@+id/iv_schedule_ok"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/iv_mask_schedule"
+            android:layout_marginRight="59dp"
+            android:layout_marginTop="15dp"
+            android:adjustViewBounds="true"
+            android:onClick="onClick"
+            android:src="@drawable/mask_guide_webex_schedule_mask_guide_webex_schedule_ok" />
+    </RelativeLayout>
+</RelativeLayout>

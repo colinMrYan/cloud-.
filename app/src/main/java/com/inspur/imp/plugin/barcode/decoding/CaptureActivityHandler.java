@@ -25,8 +25,8 @@ import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.inspur.imp.plugin.barcode.view.ViewfinderResultPointCallback;

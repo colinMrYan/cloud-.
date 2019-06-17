@@ -1,13 +1,15 @@
 package com.inspur.imp.plugin.photo;
 
-import java.io.File;
-import java.util.List;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
-import org.xutils.common.Callback;
-
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.imp.plugin.photo.loader.UniversalImageLoader;
 import com.inspur.imp.plugin.photo.style.index.CircleIndexIndicator;
@@ -16,12 +18,10 @@ import com.inspur.imp.plugin.photo.style.progress.ProgressPieIndicator;
 import com.inspur.imp.plugin.photo.transfer.TransferConfig;
 import com.inspur.imp.plugin.photo.transfer.TransferLayout;
 
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import org.xutils.common.Callback;
+
+import java.io.File;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -150,7 +150,7 @@ public class ImageGalleryActivity extends BaseActivity {
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                Toast.makeText(getApplicationContext(), R.string.download_fail, Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getApplicationContext(), R.string.download_fail);
             }
 
             @Override
@@ -159,7 +159,7 @@ public class ImageGalleryActivity extends BaseActivity {
 
             @Override
             public void onFinished() {
-                Toast.makeText(getApplicationContext(), "图片已保存至IMP-Cloud/download/文件夹", Toast.LENGTH_SHORT).show();
+                ToastUtils.show(getApplicationContext(), "图片已保存至IMP-Cloud/download/文件夹");
             }
         });
     }

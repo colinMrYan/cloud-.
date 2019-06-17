@@ -4,12 +4,12 @@ import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 

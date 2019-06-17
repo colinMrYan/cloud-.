@@ -1,19 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
-import com.inspur.emmcloud.util.privates.UpgradeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
-import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +7,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +77,7 @@ public class AboutActivity extends BaseActivity {
                 .addItem("ecm.client-registry-->" + WebServiceRouterManager.getInstance().getClusterClientRegistry())
                 .addItem("ClientId-->" + PreferencesByUserAndTanentUtils.getString(AboutActivity.this, Constant.PREF_CLIENTID, ""))
 //						.addItem("DeviceId-->"+ AppUtils.getMyUUID(MyApplication.getInstance()))
-                .addItem("DeviceToken-->" + PushManagerUtils.getPushId(MyApplication.getInstance()))
+                .addItem("DeviceToken-->" + PushManagerUtils.getInstance().getPushId(MyApplication.getInstance()))
                 .build()
                 .show();
         return false;

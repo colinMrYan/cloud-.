@@ -19,7 +19,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -29,38 +28,41 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.inspur.emmcloud.BaseActivity;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
-import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.interf.CommonCallBack;
-import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 import com.inspur.imp.plugin.camera.mycamera.CameraUtils;
 import com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import static android.Manifest.permission.CAMERA;
 
+
 /**
  * 面容解锁识别页面
  */
-
 public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Callback {
 
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
@@ -116,6 +118,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             }
         }).initProfile(false);
         init();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -196,7 +199,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 mCamera.setParameters(mParameters);
                 mCamera.setPreviewDisplay(mHolder);
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+                ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
                 finish();
                 e.printStackTrace();
             }
@@ -224,7 +227,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         break;
                     }
                 }
-                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+            ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
                 finish();
                 break;
         }
@@ -412,6 +415,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (handler != null) {
             handler.removeCallbacks(takePhotoRunnable);
             handler.removeCallbacks(keepBodyRunnable);
@@ -431,15 +435,12 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 if (isFaceLogin) {
                     Bundle bundle = new Bundle();
                     bundle.putString("token", token);
-                    IntentUtils.startActivity(FaceVerifyActivity.this, ScanQrCodeLoginGSActivity.class, bundle);
+                    ARouter.getInstance().build("/login/qr_code_login_GS").with(bundle).navigation();
                 } else if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 } else if (!isFaceVerityTest) {
-                    //发送解锁广播是，SchemeHandleActivity中接收处理
-                    Intent intent = new Intent();
-                    MyApplication.getInstance().setIsActive(true);
-                    intent.setAction(Constant.ACTION_SAFE_UNLOCK);
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                    MyApplication.getInstance().setSafeLock(false);
+                    EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SAFE_UNLOCK));
                 }
                 finish();
                 break;
@@ -537,6 +538,13 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                     })
                     .setCancelable(false)
                     .show();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
+            finish();
         }
     }
 

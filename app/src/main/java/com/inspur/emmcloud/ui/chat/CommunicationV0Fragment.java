@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ContextThemeWrapper;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,11 +29,26 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelOperationInfo;
@@ -48,41 +64,25 @@ import com.inspur.emmcloud.bean.system.MainTabProperty;
 import com.inspur.emmcloud.bean.system.MainTabResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
-import com.inspur.emmcloud.util.common.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
+import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadCreationDateCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.WeakThread;
-import com.inspur.emmcloud.widget.dialogs.CustomDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -193,7 +193,7 @@ public class CommunicationV0Fragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls);
+        checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         initView();
         sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -508,7 +508,7 @@ public class CommunicationV0Fragment extends BaseFragment {
      */
     private void sortChannelList() {
         // TODO Auto-generated method stub
-        WeakThread weakThread = new WeakThread(getActivity()) {
+        Thread weakThread = new Thread() {
             @Override
             public void run() {
                 super.run();
@@ -805,7 +805,8 @@ public class CommunicationV0Fragment extends BaseFragment {
                 .isChannelSetTop(getActivity(), displayChannelList
                         .get(position).getCid());
         final String[] items = new String[]{getString(isChannelSetTop ? R.string.chanel_cancel_top : R.string.channel_set_top), getString(R.string.channel_hide_chat)};
-        new CustomDialog.ListDialogBuilder(getActivity())
+        ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.cus_dialog_style);
+        new CustomDialog.ListDialogBuilder(ctw)
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

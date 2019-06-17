@@ -1,21 +1,21 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.AppGroupAdapter;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.privates.UriUtils;
-import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.AppGroupAdapter;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.util.privates.UriUtils;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

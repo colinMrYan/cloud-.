@@ -1,23 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MailApiService;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.EditTextUtils;
-import com.inspur.emmcloud.util.common.EncryptUtils;
-import com.inspur.emmcloud.util.common.FomatUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
-import com.inspur.emmcloud.widget.LoadingDialog;
-
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.method.PasswordTransformationMethod;
@@ -25,6 +7,24 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MailApiService;
+import com.inspur.emmcloud.baselib.util.EditTextUtils;
+import com.inspur.emmcloud.baselib.util.EncryptUtils;
+import com.inspur.emmcloud.baselib.util.FomatUtils;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

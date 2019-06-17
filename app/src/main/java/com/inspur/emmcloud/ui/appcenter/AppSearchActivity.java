@@ -1,23 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.AppCenterAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
-import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
-import com.inspur.emmcloud.widget.LoadingDialog;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +15,24 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.AppCenterAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 应用搜索界面

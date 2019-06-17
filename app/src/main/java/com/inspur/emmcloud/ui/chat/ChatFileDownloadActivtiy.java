@@ -1,31 +1,31 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-
-import org.xutils.common.Callback;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIDownloadCallBack;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.imp.plugin.file.FileUtil;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.imp.plugin.file.FileUtil;
+
+import org.xutils.common.Callback;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

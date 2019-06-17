@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 
 import java.util.ArrayList;
@@ -115,7 +115,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            if (onItemClickLister != null && position >-1) {
+            if (onItemClickLister != null && position > -1) {
                 onItemClickLister.onItemClick(view, getAdapterPosition(), eventList.get(getAdapterPosition()));
             }
 

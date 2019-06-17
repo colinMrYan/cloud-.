@@ -14,42 +14,42 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseFragment;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
-import com.inspur.emmcloud.widget.MaxHeightListView;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
 import com.inspur.emmcloud.widget.calendarview.CalendarView;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -183,7 +183,7 @@ public class ScheduleFragment extends BaseFragment implements
                 setScheduleBackToToday();
             }
         });
-        switch (AppUtils.getCurrentAppLanguage(getActivity())) {
+        switch (LanguageManager.getInstance().getCurrentAppLanguage()) {
             case "zh-Hans":
             case "zh-hant":
                 calendarView.setIsLunarAndFestivalShow(true);

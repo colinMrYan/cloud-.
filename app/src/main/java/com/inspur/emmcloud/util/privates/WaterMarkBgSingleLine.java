@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 
 /**
  * Created by libaochao on 2018/10/31.

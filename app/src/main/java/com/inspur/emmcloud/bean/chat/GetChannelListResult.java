@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

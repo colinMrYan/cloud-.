@@ -3,11 +3,11 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationAudioVolumeInfo;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationRtcStats;
 import com.inspur.emmcloud.interf.OnVoiceCommunicationCallbacks;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;

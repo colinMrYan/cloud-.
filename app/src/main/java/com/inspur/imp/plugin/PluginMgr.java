@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.imp.api.ImpCallBackInterface;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.engine.webview.ImpWebView;

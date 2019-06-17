@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.webkit.WebView;
 
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 
 import java.io.File;
 import java.math.BigDecimal;

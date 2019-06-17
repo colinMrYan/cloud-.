@@ -1,17 +1,19 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
-
 import android.app.Dialog;
 import android.view.View;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+
+
 /**
  * Created by yufuchang on 2018/5/4.
  */
-
+@Route(path = "/setting/ServiceNoPermission")
 public class NoPermissionDialogActivity extends BaseActivity {
 
     @Override

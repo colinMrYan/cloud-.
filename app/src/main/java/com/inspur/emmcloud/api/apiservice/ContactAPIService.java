@@ -9,17 +9,18 @@ package com.inspur.emmcloud.api.apiservice;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.CloudHttpMethod;
-import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
+import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
+import com.inspur.emmcloud.basemodule.api.HttpUtils;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
-import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.inspur.emmcloud.login.login.LoginService;
+import com.inspur.emmcloud.login.login.OauthCallBack;
+import com.luojilab.component.componentlib.router.Router;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -40,6 +41,13 @@ public class ContactAPIService {
         this.apiInterface = apiInterface;
     }
 
+    private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
+        Router router = Router.getInstance();
+        if (router.getService(LoginService.class.getSimpleName()) != null) {
+            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+            service.refreshToken(oauthCallBack, requestTime);
+        }
+    }
 
     /**
      * 获取所有机器人信息
@@ -47,7 +55,7 @@ public class ContactAPIService {
     public void getAllRobotInfo() {
         final String completeUrl = APIUri.getAllBotInfo();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -62,7 +70,7 @@ public class ContactAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -86,7 +94,7 @@ public class ContactAPIService {
     public void getRobotInfoById(final String id) {
         final String completeUrl = APIUri.getBotInfoById() + id;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -101,7 +109,7 @@ public class ContactAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
 
@@ -120,7 +128,7 @@ public class ContactAPIService {
     public void getContactUserList(final String saveConfigVersion) {
         String url = APIUri.getContactUserUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        x.http().post(params, new APICallback(context, url) {
+        x.http().post(params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnContactUserListSuccess(arg0, saveConfigVersion);
@@ -144,7 +152,7 @@ public class ContactAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
         });
@@ -154,7 +162,7 @@ public class ContactAPIService {
         String url = APIUri.getContactUserUrlUpdate();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("lastQueryTime", lastQuetyTime);
-        x.http().post(params, new APICallback(context, url) {
+        x.http().post(params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnContactUserListUpdateSuccess(new GetContactUserListUpateResult(new String(arg0)), saveConfigVersion);
@@ -178,7 +186,7 @@ public class ContactAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
         });
@@ -188,7 +196,7 @@ public class ContactAPIService {
     public void getContactOrgList(final String saveConfigVersion) {
         String url = APIUri.getContactOrgUrl();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
-        x.http().post(params, new APICallback(context, url) {
+        x.http().post(params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnContactOrgListSuccess(arg0, saveConfigVersion);
@@ -212,7 +220,7 @@ public class ContactAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
         });
@@ -223,7 +231,7 @@ public class ContactAPIService {
         String url = APIUri.getContactOrgUrlUpdate();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
         params.addParameter("lastQueryTime", lastQuetyTime);
-        x.http().post(params, new APICallback(context, url) {
+        x.http().post(params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnContactOrgListUpdateSuccess(new GetContactOrgListUpateResult(new String(arg0)), saveConfigVersion);
@@ -247,7 +255,7 @@ public class ContactAPIService {
                         callbackFail("", -1);
                     }
                 };
-                OauthUtils.getInstance().refreshToken(
+                refreshToken(
                         oauthCallBack, requestTime);
             }
         });

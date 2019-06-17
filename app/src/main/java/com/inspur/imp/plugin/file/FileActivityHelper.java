@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.inspur.imp.api.Res;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class FileActivityHelper {
         File f = new File(path);
         File[] files = f.listFiles();
         if (files == null) {
-            Toast.makeText(activity, "文件为空,无法打开!\t" + path, Toast.LENGTH_SHORT).show();
+            ToastUtils.show(activity, "文件为空,无法打开!\t" + path);
             return null;
         }
 

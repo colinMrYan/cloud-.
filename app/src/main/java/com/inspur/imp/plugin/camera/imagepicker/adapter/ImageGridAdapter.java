@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.util.Utils;
@@ -129,7 +130,7 @@ public class ImageGridAdapter extends BaseAdapter {
                 holder.checkImg.setVisibility(View.GONE);
             }
             ImageView ivThumb = (ImageView) convertView.findViewById(R.id.iv_thumb);
-            imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
+            ImageDisplayUtils.getInstance().displayImage(imageItem.path, ivThumb, mImageSize, mImageSize, R.drawable.default_image); //显示图片
         }
         return convertView;
     }

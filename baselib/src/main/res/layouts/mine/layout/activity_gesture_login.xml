@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_f6f6f6"
+    android:orientation="vertical">
+
+    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+        android:id="@+id/gesture_login_user_head_img"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="70dp" />
+
+    <TextView
+        android:id="@+id/gestrue_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:textColor="#000000"
+        android:textSize="@dimen/content_title_textsize" />
+
+    <TextView
+        android:id="@+id/gesture_code_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/gesture_code_tips"
+        android:textColor="#777777"
+        android:textSize="12dp"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <com.inspur.emmcloud.util.privates.ninelock.LockPatternView
+            android:id="@+id/lockPatternView"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:id="@+id/forget_gesture_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/lockPatternView"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom"
+            android:background="#00000000"
+            android:focusable="false"
+            android:padding="20dp"
+            android:text="@string/forgetpwd"
+            android:textColor="@color/header_bg_blue"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+</LinearLayout>

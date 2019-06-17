@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.inspur.imp.plugin.barcode.view.ViewfinderView
+                android:id="@+id/viewfinder_view"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:background="#5e000000"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/close_camera_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@null"
+                    android:padding="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/plugin_cemera_btn_close_camera" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="#00000000"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <Button
+                    android:id="@+id/btn_torch"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/icon_lamp_off"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/lamp_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_torch"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/turn_on_light"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

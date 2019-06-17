@@ -1,17 +1,5 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
-import java.util.ArrayList;
-
-import org.greenrobot.eventbus.EventBus;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.schedule.task.MessionSetModel;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +7,18 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.bean.schedule.task.MessionSetModel;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

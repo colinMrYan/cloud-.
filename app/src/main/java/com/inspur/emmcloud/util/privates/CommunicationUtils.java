@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Email;
@@ -21,7 +22,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 
 import org.json.JSONObject;

@@ -35,5 +35,6 @@ public interface ImpCallBackInterface {
     void onProgressChanged(int newProgress);
 
     void onSetOptionMenu(List<MainTabMenu> optionMenuList);
+
     void setOnKeyDownListener(OnKeyDownListener onKeyDownListener);
 }

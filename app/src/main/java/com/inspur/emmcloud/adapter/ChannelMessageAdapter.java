@@ -12,6 +12,11 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
@@ -27,11 +32,6 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.widget.CustomLoadingView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 

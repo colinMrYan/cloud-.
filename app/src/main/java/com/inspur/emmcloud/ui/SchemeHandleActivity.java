@@ -1,24 +1,27 @@
 package com.inspur.emmcloud.ui;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
 
-import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MainActivity;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
@@ -32,70 +35,60 @@ import com.inspur.emmcloud.ui.find.AnalysisActivity;
 import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
-import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
-import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.schedule.task.TaskAddActivity;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.MailLoginUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.imp.api.ImpActivity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * scheme统一处理类
  */
 
 public class SchemeHandleActivity extends BaseActivity {
-    private BroadcastReceiver unlockReceiver;
+    private boolean isFirst = true;
 
     @Override
     public void onCreate() {
-        if (isLackNecessaryPermission()) {
-            return;
-        }
-        new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
-            @Override
-            public void execute() {
-                if (MyApplication.getInstance().getOPenNotification()) {
-                    MyApplication.getInstance().setOpenNotification(false);
-                    if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
-                        registerReiceiver();
-                        MyApplication.getInstance().setIsActive(true);
-                        faceVerify();
-                        return;
-                    } else if (getIsNeedGestureCode()) {
-                        registerReiceiver();
-                        MyApplication.getInstance().setIsActive(true);
-                        gestureVerify();
-                        return;
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //因为MyActivityLifecycleCallbacks需要在onActivityStarted的时候处理二次验证问题，所有openScheme
+        // 需要在onStart中执行，同时要防止onStart方法多次执行
+        if (isFirst) {
+            if (MyApplication.getInstance().isSafeLock()) {
+                if (MyApplication.getInstance().isSafeLock()) {
+                    if (!EventBus.getDefault().isRegistered(this)) {
+                        EventBus.getDefault().register(this);
                     }
+                } else {
+                    openScheme();
                 }
+            } else {
                 openScheme();
             }
-        }).initProfile();
+            isFirst = false;
+        }
+
     }
 
     @Override
@@ -108,74 +101,26 @@ public class SchemeHandleActivity extends BaseActivity {
         return STATUS_TRANSPARENT;
     }
 
-    private boolean isLackNecessaryPermission() {
-        //如果没有存储权限则跳转到MainActivity进行处理
-        String[] necessaryPermissionArray = StringUtils.concatAll(Permissions.STORAGE, new String[]{Permissions.READ_PHONE_STATE});
-        if (!PermissionRequestManagerUtils.getInstance().isHasPermission(MyApplication.getInstance(), necessaryPermissionArray)) {
-            Intent intent = new Intent(SchemeHandleActivity.this, MainActivity.class);
-            startActivity(intent);
-            MyApplication.getInstance().closeOtherActivity(MainActivity.class.getSimpleName());
-            return true;
-        }
-        return false;
-    }
-
-
     @Override
     protected void onNewIntent(Intent intent) {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        if (isLackNecessaryPermission()) {
-            return;
-        }
-        new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
-            @Override
-            public void execute() {
-                if (MyApplication.getInstance().getOPenNotification()) {
-                    MyApplication.getInstance().setOpenNotification(false);
-                    if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
-                        MyApplication.getInstance().setIsActive(true);
-                        faceVerify();
-                        return;
-                    } else if (getIsNeedGestureCode()) {
-                        MyApplication.getInstance().setIsActive(true);
-                        gestureVerify();
-                        return;
-                    }
+        openScheme();
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSafeUnLockMessage(SimpleEventMessage eventMessage) {
+        if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
+            new ProfileUtils(SchemeHandleActivity.this, new CommonCallBack() {
+                @Override
+                public void execute() {
+                    openScheme();
                 }
-                openScheme();
-            }
-        }).initProfile();
-    }
+            }).initProfile(false);
 
-    private void faceVerify() {
-        Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
-        intent.putExtra("isFaceVerifyExperience", false);
-        startActivity(intent);
-    }
-
-    private void gestureVerify() {
-        Intent intent = new Intent(this, GestureLoginActivity.class);
-        intent.putExtra("gesture_code_change", "login");
-        startActivity(intent);
-    }
-
-
-    /**
-     * 注册安全解锁监听广播
-     */
-    private void registerReiceiver() {
-        unlockReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                openScheme();
-            }
-        };
-
-        IntentFilter myIntentFilter = new IntentFilter();
-        myIntentFilter.addAction(Constant.ACTION_SAFE_UNLOCK);
-        LocalBroadcastManager.getInstance(this).registerReceiver(unlockReceiver, myIntentFilter);
+        }
     }
 
     /**
@@ -288,7 +233,8 @@ public class SchemeHandleActivity extends BaseActivity {
             }, 1);
 
         } else {
-            IntentUtils.startActivity(this, LoginActivity.class, true);
+            ARouter.getInstance().build("/login/main").navigation();
+            finish();
         }
     }
 
@@ -405,15 +351,6 @@ public class SchemeHandleActivity extends BaseActivity {
         finish();
     }
 
-    /**
-     * 是否应该显示显示手势解锁
-     *
-     * @return
-     */
-    private boolean getIsNeedGestureCode() {
-        return CreateGestureActivity.getGestureCodeIsOpenByUser(this);
-    }
-
 
     /**
      * 打开web应用
@@ -464,8 +401,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_CALENDAR);
                     EventBus.getDefault().post(simpleEventMessage);
-                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
-                    openScheduleActivity(query.getQueryParameter("id"),CalendarAddActivity.class);
+                } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
+                    openScheduleActivity(query.getQueryParameter("id"), CalendarAddActivity.class);
                 }
                 finish();
                 break;
@@ -473,8 +410,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_TASK);
                     EventBus.getDefault().post(simpleEventMessage);
-                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
-                    openScheduleActivity(query.getQueryParameter("id"),TaskAddActivity.class);
+                } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
+                    openScheduleActivity(query.getQueryParameter("id"), TaskAddActivity.class);
                 }
                 finish();
                 break;
@@ -482,8 +419,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 if (query.getQuery() == null) {
                     simpleEventMessage.setMessageObj(Constant.ACTION_MEETING);
                     EventBus.getDefault().postSticky(simpleEventMessage);
-                }else if(!StringUtils.isBlank(query.getQueryParameter("id"))){
-                    openScheduleActivity(query.getQueryParameter("id"),MeetingDetailActivity.class);
+                } else if (!StringUtils.isBlank(query.getQueryParameter("id"))) {
+                    openScheduleActivity(query.getQueryParameter("id"), MeetingDetailActivity.class);
                 }
                 finish();
                 break;
@@ -500,22 +437,6 @@ public class SchemeHandleActivity extends BaseActivity {
                 finish();
                 break;
         }
-    }
-
-    /**
-     * 判断query是否合法
-     *
-     * @param query
-     * @return
-     */
-    private boolean getQueryLegal(Uri query) {
-        if (query == null) {
-            return false;
-        }
-        if (StringUtils.isBlank(query.getQueryParameter("id"))) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -559,10 +480,7 @@ public class SchemeHandleActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (unlockReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(unlockReceiver);
-            unlockReceiver = null;
-        }
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

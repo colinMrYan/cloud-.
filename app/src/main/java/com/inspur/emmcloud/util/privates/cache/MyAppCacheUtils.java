@@ -2,10 +2,10 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import java.util.ArrayList;
 import java.util.List;

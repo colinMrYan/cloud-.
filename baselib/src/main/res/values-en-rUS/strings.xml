@@ -1,0 +1,1358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cloud+</string>
+    <string name="app_name_beiqi">Cloud+</string>
+    <string name="app_name_chinatower">ChinaTower</string>
+    <string name="reclick_to_desktop">Clicking again will exit the application</string>
+    <string name="Network_Mobile">Connected to Cellular</string>
+    <string name="Network_WIFI">Connected to WIFI</string>
+    <string name="ok">Done</string>
+    <string name="cancel">Cancel</string>
+    <string name="resolution_valiad">Your device resolution is less than 800*480, unable to run this program</string>
+    <string name="retry">Retry</string>
+    <string name="re_login">ReLogin</string>
+    <string name="software_service_term">Services Agreement</string>
+    <string name="update_fail">Update failed</string>
+    <string name="downloading_package">Please wait a minute while downloading</string>
+    <string name="service_term">Services Agreement</string>
+    <string name="prompt">Info</string>
+    <string name="nothing">Nothing </string>
+    <string name="function_intr">Function Introduction </string>
+    <string name="enter_app">Enter the application</string>
+    <string name="sweep">Scan</string>
+    <string name="send">Send</string>
+    <string name="picture">Picture</string>
+    <string name="album">Album</string>
+    <string name="take_photo">Camera</string>
+    <string name="mention">Mention</string>
+    <string name="file">Files</string>
+    <string name="next_step">Next</string>
+    <string name="pull_down_load_history">Drop load history message</string>
+    <string name="if_confirm_signout">Are you sure you want to log out?</string>
+    <string name="if_delect_current_item">Delete current option</string>
+    <string name="exit">Exit</string>
+    <string name="open">Open</string>
+    <string name="add">Add</string>
+    <string name="update">Update</string>
+    <string name="download">Download</string>
+    <string name="confirm_modify_language">Change to This Language?</string>
+    <string name="file_type_not_recognize">Unrecognizable File type</string>
+    <string name="return_app">Return Application</string>
+    <string name="modify_success">Successfully Modified</string>
+    <string name="save_success">Saved</string>
+    <string name="save_fail">Unsaved</string>
+    <string name="picture_cannot_show">Picture cannot be displayed</string>
+    <string name="cannot_download_for_network_exception">Network exception,unable to download</string>
+    <string name="cannot_show_for_too_big">The picture is too big to show</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="no_search_term">No more results</string>
+    <string name="more">More</string>
+    <string name="check_update_text">Check New Version</string>
+    <string name="app_is_lastest_version">This is the lastest version</string>
+    <string name="check_update_fail">Checking new version failed</string>
+    <string name="upgrade">Now</string>
+    <string name="not_upgrade">Later</string>
+    <string name="app_update_remind">Update Remind</string>
+    <string name="app_last_version">Last Version</string>
+    <string name="more_work_place">More work places...</string>
+    <string name="cancel_filter">Cancle filter</string>
+    <string name="only_free">Only free</string>
+    <string name="invite_friends_text">Recommend Cloud+ to Friends</string>
+    <string name="tab_not_support_tips">%1$s function has been revised , Please<Data><![CDATA[<font color=\'#0F7BCA\'>upgrade</font>]]></Data></string>
+    <string name="choose">Choose</string>
+    <string name="file_type">File type</string>
+    <string name="app_update_prepare">Ready to download</string>
+    <string name="app_update_error">Update failed</string>
+    <string name="app_update_loaded">Downloaded:</string>
+    <string name="unsupport_type">Unsupported Type</string>
+
+    <!-- 公共部分 -->
+    <string name="year">Year</string>
+    <string name="month">Month</string>
+    <string name="day">Day</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="after">After</string>
+    <string name="no_more_data">No more loaded items</string>
+    <string name="tips">Info</string>
+    <string name="confirm">Confirm</string>
+    <string name="begin">Begin</string>
+    <string name="end">End</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="the_day_before_yesterday">The day before yesterday</string>
+    <string name="days_ago">%1$d days ago</string>
+    <string name="days_after">%1$d days later</string>
+    <string name="format_default">MM/dd/yy HH:mm:ss</string>
+    <string name="format_date_group_by">yyyy-MM-dd</string>
+    <string name="format_year_month_day">MM/dd/yy</string>
+    <string name="format_hour_minute">HH:mm</string>
+    <string name="format_utc">yyyy-MM-dd\'T\'HH:mm:ss\'.\'SSS\'Z\'</string>
+    <string name="format_month_day">MMM dd</string>
+    <string name="format_task_month_day">MMM dd</string>
+    <string name="format_year_month_day_hour_minute">MM/dd/yy HH:mm</string>
+    <string name="format_month_day_hour_minute">MM/dd HH:mm</string>
+    <string name="format_year_month">yyyy-MM</string>
+    <string name="time_null">null</string>
+    <string name="cutdown_now">now</string>
+    <string name="cutdown_tomorrow">tmr</string>
+    <string name="cutdown_yestoday">ytd</string>
+    <string name="cutdown_day">d</string>
+    <string name="cutdown_month">m</string>
+    <string name="notice">Notice</string>
+    <string name="close">Close</string>
+    <string name="commoly_use_app">Commonly</string>
+    <string name="function_not_implemented">During closed beta, it will not open</string>
+    <string name="app_init">initializing</string>
+    <string name="news_content_cant_empty">Content cannot be empty</string>
+    <string name="help">Help</string>
+    <string name="load_data_failed">Failed to load data</string>
+    <string name="not_support_upload">Does not support file upload without suffix </string>
+
+    <!-- 新添加部分 -->
+    <string name="alert">Remind</string>
+    <string name="analysis">Analysis</string>
+    <string name="please_input_remark">Enter notes</string>
+    <string name="alert_cycle">Reminder Cycle</string>
+    <string name="cycle">Cycle</string>
+    <string name="quarter">Quarter</string>
+    <string name="monthly_a">Monthly</string>
+    <string name="repeat">Repeat</string>
+    <string name="add_event">Add Event</string>
+    <string name="calendar">Calendar</string>
+    <string name="all_day">All Day</string>
+    <string name="delete_group_member"> Delete Members</string>
+    <string name="tax_ticket_info"> VAT Invoice Information</string>
+    <string name="channel_group_info">Group Details</string>
+    <string name="channel_group_name">Group Name</string>
+    <string name="channel_group_image">Images</string>
+    <string name="channel_group_file">Files</string>
+    <string name="channel_group_members_name">Group Name</string>
+    <string name="channel_set_top">Sticky on Top</string>
+    <string name="message_without_interruption">Mute Notifications</string>
+    <string name="login_hint_text">Name/E-mail/Phone</string>
+    <string name="modify_group_name">Group Contact Card</string>
+    <string name="choose_common_office">common office address</string>
+    <string name="please_click_choosing_time">Please click and choose time</string>
+    <string name="meeting_room">Meeting Room</string>
+    <string name="building">Building</string>
+    <string name="am">AM</string>
+    <string name="please_input_change">Please type change</string>
+    <string name="my_stroke">My Travel</string>
+    <string name="title">Title</string>
+    <string name="channel_hide_chat">Hide Chat</string>
+    <string name="upload_at">Upload at</string>
+    <string name="confirm_checkin">Confirm</string>
+    <string name="name">Name</string>
+    <string name="size">Size</string>
+    <string name="use_map">Use the Map Navigation</string>
+    <string name="use_gaode_map">User AMap Navigation</string>
+    <string name="choose_begin_end_time">Choose begin and end time</string>
+    <string name="add_new_task">Add new task</string>
+    <string name="picture_path_null">Picture path null</string>
+    <string name="trip_detail">Travel Details</string>
+    <string name="trip_date">Travel Date</string>
+    <string name="ticket_cost">Fare</string>
+    <string name="triper">Passengers</string>
+    <string name="seat_num">Order of Seats</string>
+    <string name="train_num"> Train number</string>
+    <string name="arrive_time"> Arrival Time</string>
+    <string name="arrive_date">Arrival Date</string>
+    <string name="arrive_city"> Arrival City </string>
+    <string name="terminus">Terminal </string>
+    <string name="start_city">Departure City</string>
+    <string name="start_station">Starting Station</string>
+    <string name="trip">Trip</string>
+    <string name="news">News</string>
+    <string name="back">Back</string>
+    <string name="preview">Preview</string>
+    <string name="photo">Photo</string>
+    <string name="heading">Heading</string>
+    <string name="taxpayer_identification_number">taxpayer ID</string>
+    <string name="address">Address</string>
+    <string name="phone_number">Phone</string>
+    <string name="bank">Bank</string>
+    <string name="account_number">Account</string>
+    <string name="feed_back_success">FeedBack Success</string>
+    <string name="begin_cannot_later_than_end">Start time cannot be later than end time</string>
+    <string name="no_this_knowledge">No this knowledge</string>
+    <string name="comment">Comment</string>
+    <string name="write_comment">Comment</string>
+    <!-- 新添加部分 -->
+
+
+    <!-- 新用户注册 -->
+    <string name="newuser">new user</string>
+    <string name="newuser_title">New User</string>
+    <string name="newuser_input_phonenum">Enter Phone Number</string>
+    <string name="newuser_agree">Clicking NEXT STEP means you agree the protocol</string>
+    <string name="newuser_protocal_text">《User Protocol》</string>
+    <string name="newuser_perfect_text">Prefect Info</string>
+    <string name="newuser_perfect_nickname">Nick Name</string>
+    <string name="newuser_perfect_gender">male</string>
+
+    <!-- 登录部分 -->
+    <string name="login_invaliad_account_or_pwd">Invalid account or password</string>
+    <string name="login_captchas_input_error">Code error</string>
+    <string name="login_pw_modified"> Password has been modified</string>
+    <string name="login_phonenum_has_beeb_resgistered">The phone number has been registered, you can choose to log in directly, register or change your phone number</string>
+    <string name="login_direct">Direct Login</string>
+    <string name="login_send_captchas">Send Code</string>
+    <string name="login_set_pwd">Set password</string>
+    <string name="login_change_phone_num">Change Phone Number</string>
+    <string name="login_captchas_login">Quick Login</string>
+    <string name="login_by_account">Log in Via password</string>
+    <string name="login_find_password">Retrieve password</string>
+    <string name="login_get_captchas">Reset Password By SMS</string>
+    <string name="login_get_captchas_code">Get Code</string>
+    <string name="login_resent">Resent</string>
+    <string name="login_resend">Resend（  ） </string>
+    <string name="login_captchas_sent">Verification code has been sent to the phone：</string>
+    <string name="login_please_input_captchas">Enter code</string>
+    <string name="login_please_input_phone_num">Enter phone number</string>
+    <string name="login_phone_num_illegal_format">Incorrect phone number format</string>
+    <string name="login_no_phone_num">Phone number not found</string>
+    <string name="login_loading_text">Logging...</string>
+    <string name="login_please_input_username">Please type username</string>
+    <string name="login_please_input_password">Enter a new password</string>
+    <string name="login">Log in</string>
+    <string name="login_newuser_text">Register</string>
+    <string name="login_code_login_text">Verification code to log in</string>
+    <string name="login_reverification">Revalidation</string>
+    <string name="login_code_verification_failure">Incorrect verification code</string>
+    <string name="login_sms">Quick Login</string>
+    <string name="login_captchas_getcode_success">Code has been sent successfully</string>
+    <string name="login_cost_report">Expense Report</string>
+    <string name="login_your_contact">Your contact</string>
+    <string name="login_group_album">Images</string>
+    <string name="login_group_file">Files</string>
+    <string name="login_authorization_expired">Re-login based on security audit policy</string>
+    <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
+    <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
+    <string name="captchas">Code</string>
+    <string name="password">Password</string>
+    <string name="recover">Retry</string>
+    <string name="login_tv_welcome">Hello，\nwelcome to %1$s</string>
+    <string name="login_current_login_enterprise">Current system：%1$s</string>
+    <string name="login_forget_password">Forgot Password</string>
+    <string name="login_fail_limit_remaining">Incorrect account or password, re-enter and have %1$d chances left</string>
+    <string name="login_fail_account_lock_by_min">The account has been locked, try again after %1$d minutes</string>
+    <string name="login_fail_account_lock_by_second">The account has been locked, try again after %1$d seconds</string>
+
+    <!-- 消息部分 -->
+    <string name="msgcontent_cannot_null">Please type message content</string>
+    <string name="comment_type">   \'s image</string>
+    <string name="comment_filetype">   \'s file</string>
+    <string name="comment_news_type">   \'s link</string>
+    <string name="comment_other_type">   \'s message</string>
+    <string name="published_in">Pushlished in</string>
+    <string name="all_channel_mem">All Channel Members</string>
+    <string name="message_text">Message：</string>
+    <string name="channel">Channel</string>
+    <string name="communicate">Messages</string>
+    <string name="group_info">Inspur Infomation</string>
+    <string name="send_a_picture">[Image]</string>
+    <string name="send_a_comment">[Comment]</string>
+    <string name="send_a_file">[File]</string>
+    <string name="send_a_link">[Link]</string>
+    <string name="send_a_voice">[Voice]</string>
+    <string name="send_a_contact_card">[Buisiness Card]</string>
+    <string name="send_a_meeting_invitation">[Meeting Invitation]</string>
+    <string name="cancel_a_meeting">[Meeting Cancellation]</string>
+    <string name="send_action_message">[Activity]</string>
+    <string name="send_a_meeting_request">[Meeting Approval]</string>
+    <string name="send_a_message_of_unknown_type">[Unknown]</string>
+    <string name="direct_no_message">No new messages</string>
+    <string name="group_no_message">Saying hello</string>
+    <string name="welcome_to_attention">Welcome</string>
+    <string name="not_support_open_channel"> Not supported</string>
+    <string name="top">Sticky on Top</string>
+    <string name="chanel_cancel_top"> Unstick</string>
+    <string name="creat_group">Create Group</string>
+    <string name="creat_group_fail">Group creation failed</string>
+    <string name="all_group_member">Members(%1$d)</string>
+    <string name="add_group_member">Add Member </string>
+    <string name="channel_group">Group</string>
+    <string name="group_member">Members List</string>
+    <string name="group_name_cannot_null">Please type group name </string>
+    <string name="channel_unknown_text">Your %1$s does not support this message. Please upgrade the latest version of %1$s.</string>
+    <string name="comment_hallcomment_text">Comment:</string>
+    <string name="channel_info">Channel Details</string>
+    <string name="comment_text">Comment：</string>
+    <string name="administrators_of_channel">(administrator)</string>
+    <string name="file_no_identifiable">Unrecognized file types</string>
+    <string name="long_img">Long</string>
+    <string name="friend_list">Friends List</string>
+    <string name="join_discuss">Join discussion</string>
+    <string name="add_new_comment">Add new comments</string>
+    <string name="socket_connecting">Connecting</string>
+    <string name="socket_close">Disconnect</string>
+    <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
+    <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
+    <string name="message_create_group">New Chat</string>
+    <string name="business_card">Business Card</string>
+    <string name="no_channel_album">No content</string>
+    <string name="no_channel_file">No content</string>
+    <string name="hold_to_talk">Hold to Talk</string>
+    <string name="release_to_send">Release to Send</string>
+    <string name="release_to_cancel">Release to Cancel</string>
+    <string name="slide_up_to_cancel">Slide up to cancel</string>
+    <string name="recording_too_short">Message too short</string>
+    <string name="play_fail">Unable to play</string>
+    <string name="record_count_down_text">%1$d seconds left</string>
+    <string name="voice_call">Voice Call</string>
+    <string name="sure_to_resend_message">resend the message?</string>
+    <string name="message_type_drafts">[Drafts]</string>
+    <string name="quit_group">Quit Group</string>
+    <string name="dismiss_group">Dismiss Group</string>
+    <string name="quit_group_warning_text">Confirm to leave team?</string>
+    <string name="dismiss_group_warning_text">After Dismiss Group,all the chat history and files will be deleted</string>
+    <string name="chat_stick_on_top">Stick on Top</string>
+    <string name="chat_remove">Delete</string>
+    <string name="chat_remove_from_top">Remove from Top</string>
+    <string name="no_chat_content">No chat content</string>
+    <string name="msg_key_search_member"> Please enter key words</string>
+    <string name="chat_file_open_fail_tip">No corresponding program was found.</string>
+    <string name="chat_conversation_unread_count">%1$d new messages</string>
+    <string name="chat_long_click_copy">Copy</string>
+    <string name="chat_long_click_transmit">Forward</string>
+    <string name="chat_long_click_schedule">Add to Schedule</string>
+    <string name="chat_long_click_copy_text">Copy text</string>
+
+    <!-- 会议卡片 -->
+    <string name="meeting_has_confirmed">Confirmed</string>
+    <string name="meeting_has_refused">Rejected</string>
+    <string name="meeting_canceled_topic">Canceled the theme</string>
+    <string name="meeting_tail">of meeting</string>
+    <string name="meeting_organizer">You are the organizers of the meeting</string>
+    <string name="meeting_state_modification">Meeting status changes</string>
+    <string name="meeting_refused">Reject</string>
+    <string name="meeting_cancel_confirm">Cancel Confirmation</string>
+    <string name="meeting_cancel_reject">Cancel Rejection</string>
+    <string name="chat_resend_message">Resend</string>
+    <string name="chat_group_message_search">Search History</string>
+
+    <!-- 工作页面部分 -->
+    <string name="work">Work</string>
+    <string name="work_new_year_day">New Year\'s Day</string>
+    <string name="work_spring_festival">Spring Fesitival</string>
+    <string name="work_qingming_festival">QingMing Festival</string>
+    <string name="work_international_labour_day">International Labour Day</string>
+    <string name="work_dragon_boat_festival">Dragon Boat Festival</string>
+    <string name="work_national_day">Nation Day</string>
+    <string name="work_moon_festival">Moon Day</string>
+    <string name="work_day">Days</string>
+    <string name="work_nomeeting_text">No meetings </string>
+    <string name="work_notask_text">No todo</string>
+    <string name="work_nocal_text">No agenda</string>
+    <string name="work_meeting_text">Meeting</string>
+    <string name="work_calendar_text">Enterprise Calendar</string>
+    <string name="work_task_text">Todo</string>
+    <string name="work_info_text">Info bar</string>
+    <string name="time">Time</string>
+    <string name="work_search_hint">Search calendars, tasks</string>
+    <string name="work_mession">Task</string>
+    <string name="work_schedule">Schedule</string>
+    <string name="work_task_mine">Mine</string>
+    <string name="work_task_involved">Participant</string>
+    <string name="work_task_focused">Attention</string>
+    <string name="work_task_done">Completed</string>
+    <string name="work_task_all">Whole</string>
+    <string name="work_task_end">%1$s End</string>
+
+    <!-- 日程 （新）-->
+    <string name="schedule_event_alert">Schedule reminder</string>
+    <string name="schedule_calendar_add">Add schedule</string>
+    <string name="schedule_calendar_detail">Schedule detail</string>
+    <string name="schedule_setting_list_view">List view</string>
+    <string name="schedule_setting_day_view">Day View</string>
+    <string name="schedule_calendar_company">My Schedule</string>
+    <string name="schedule_setting_divide_group">Divide groups</string>
+    <string name="schedule_setting_quarter">Quarter</string>
+    <string name="schedule_setting_month">Month</string>
+    <string name="schedule_setting_view">View</string>
+    <string name="schedule_calendar_input_content_hint">Please enter the schedule content...</string>
+    <string name="schedule_calendar_time_alert">End time cannot be earlier than start time</string>
+    <string name="schedule_alert_time_occur">On day of event(9 AM)</string>
+    <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
+    <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
+    <string name="schedule_alert_time_before_a_week">1 Week before</string>
+    <string name="schedule_calendar_modify">Modify schedule</string>
+    <string name="schedule_calendar_delete">Delete schedule</string>
+    <string name="schedule_calendar_create">Create schedule</string>
+    <string name="schedule_calendar_my_schedule">My schedule</string>
+    <string name="schedule_calendar_my_meeting">My meeting</string>
+    <string name="schedule_calendar_my_task">My task</string>
+    <string name="schedule_calendar_all_day">All day</string>
+    <string name="schedule_calendar_am">AM</string>
+    <string name="schedule_calendar_pm">PM</string>
+    <string name="schedule_calendar_so_on">... </string>
+    <string name="schedule_calendar_schedules">schedules</string>
+
+    <string name="schedule_calendar_no_schedule_today">No schedule</string>
+    <string name="schedule_meeting_no_meeting_today">No meeting</string>
+    <string name="schedule_task_no_task_today">No task</string>
+
+
+    <!--任务（新）-->
+    <string name="schedule_task_add">Add task</string>
+    <string name="schedule_task_detail">Task detail</string>
+    <string name="schedule_task_content_hint">Please enter the content</string>
+    <string name="schedule_task_priority">Priority</string>
+    <string name="schedule_task_category">Category</string>
+    <string name="schedule_task_category_no">No</string>
+    <string name="schedule_task_manager">Manager</string>
+    <string name="schedule_task_participant">Participant</string>
+    <string name="schedule_task_manager_num_0">0 people</string>
+    <string name="schedule_task_participant_num_0">0 people</string>
+    <string name="schedule_task_deadline">Deadline</string>
+    <string name="schedule_task_state">State</string>
+    <string name="schedule_task_state_active">Ongoing</string>
+    <string name="schedule_task_stop_alert">End reminder</string>
+    <string name="schedule_task_more">More</string>
+    <string name="schedule_task_attachment">Attachment</string>
+    <string name="schedule_task_create">Create task</string>
+    <string name="schedule_task_project_manager">Tag manager</string>
+    <string name="schedule_task_project_manager_add">OK</string>
+    <string name="schedule_task_add_manager">Add manager</string>
+    <string name="schedule_task_add_participant">Add participant</string>
+    <string name="schedule_task_label">Tag</string>
+    <string name="schedule_task_label_add_hint">Please enter a tag name</string>
+    <string name="schedule_task_label_color">Tag Color</string>
+    <string name="schedule_task_delete_the_tag">Delete Tag</string>
+    <string name="schedule_task_tag_name_null_hint">Tag name cannot be empty</string>
+    <string name="schedule_task_title_is_empty">Task title cannot be empty</string>
+    <string name="schedule_task_title_is_length">Task title up to 64 characters</string>
+    <string name="schedule_task_a_person">person</string>
+    <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
+
+    <!--会议（新）-->
+    <string name="schedule_meeting_booking">Book Meeting</string>
+    <string name="schedule_meeting_room_booking">New meeting</string>
+    <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
+    <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
+    <string name="schedule_meeting_room_booking_detail">Meeting room details</string>
+    <string name="schedule_meeting_add_attendee_title">Attendee</string>
+    <string name="schedule_meeting_add_record_holder_title">Recorder</string>
+    <string name="schedule_meeting_add_conference_title">Contact</string>
+    <string name="schedule_meeting_select_attendee_title">Select attendee</string>
+    <string name="schedule_meeting_booking_detail">Meeting detail</string>
+    <string name="schedule_meeting_select_record_holder_title">Select recorder</string>
+    <string name="schedule_meeting_select_conference_title">Select conference</string>
+    <string name="schedule_meeting_add_note">Note</string>
+    <string name="schedule_meeting_add_alert_time">Reminder</string>
+    <string name="schedule_meeting_history">History meetings</string>
+    <string name="schedule_meeting_search">Search meeting</string>
+    <string name="schedule_meeting_booking_room">Booking meeting room</string>
+    <string name="schedule_meeting_room_list">Meeting room list</string>
+    <string name="schedule_meeting_in_meeting">Meeting</string>
+    <string name="schedule_meeting_be_free">Free</string>
+    <string name="schedule_choose_common_office">Common office locations</string>
+    <string name="schedule_meeting_change">Modify meeting</string>
+    <string name="schedule_meeting_cancel">Delete meeting</string>
+    <string name="schedule_meeting_my_create">I created：</string>
+    <string name="schedule_meeting_my_take_part_in"> I involved：</string>
+
+    <!-- 发现部分 -->
+    <string name="find">Discover</string>
+    <string name="travel_analysis">Travel analysis</string>
+    <string name="knowledge">Knowledge</string>
+    <string name="docunment">Document</string>
+    <string name="order_num">Order NO.</string>
+    <string name="choose_rider">Please select passengers</string>
+    <string name="please_input_trip_date">Please type a travel date</string>
+    <string name="please_input_trip_start_city">Please type the departure city</string>
+    <string name="please_input_trip_from">Please type the departure station</string>
+    <string name="please_input_trip_arrive_city">Please type a city reach</string>
+    <string name="please_input_trip_start">Please type the departure station</string>
+    <string name="please_input_trip_end">Please type terminal</string>
+    <string name="please_input_trip_arrive_date">Please type arrival date</string>
+    <string name="please_input_trip_arrive_time">Please type the arrival time</string>
+    <string name="please_input_train_num">Please type a train number</string>
+    <string name="please_input_seat_num">Please type seating</string>
+    <string name="please_input_rider">Please type the occupant</string>
+    <string name="please_input_order_num">Please type your order number</string>
+    <string name="please_input_ticket_cost">Please type the fare</string>
+    <string name="trip_date_or_time_error">Travel date or time is filled out incorrectly</string>
+    <string name="station_name_not_exist">You fill station name does not exist, please check the station name</string>
+    <string name="found_q2_q2">Expense Report of Q2</string>
+    <string name="find_search_contacts">Contacts</string>
+    <string name="find_search_chat_history">Chat history</string>
+    <string name="find_search_news">News</string>
+
+    <!-- 应用部分 -->
+    <string name="app_not_support_app_type">Does not support opening application of this type</string>
+    <string name="application">App</string>
+    <string name="adding"> Adding</string>
+    <string name="add_app"> Add App</string>
+    <string name="app_search_null"> Not get a search result</string>
+    <string name="app_input_search_key"> Please input the key words</string>
+    <string name="app_must_be_app_cannot_edit">All applications are necessary and non-editable</string>
+    <string name="app_center">APP Center</string>
+    <string name="app_commonly_use">Common mode</string>
+    <string name="app_commonly_use_close">Common off</string>
+    <string name="app_center_more_apps">More Apps</string>
+    <string name="app_input_mail_password">Please Enter the company email password</string>
+    <string name="app_need_input_mail_password">Please enter the password when you first use it or your password has been changed</string>
+    <string name="app_download">App downloading：</string>
+    <string name="app_password_error">Password is wrong, please re-enter</string>
+    <string name="app_password_encrypt_error">Password encryption error</string>
+    <string name="app_recommand">Recommend</string>
+    <string name="app_classification">Classification</string>
+    <string name="app_create_shortcut_no_more_remind">No more reminders</string>
+    <string name="app_commonly_use_app">Do you want to add mobile registration to desktop shortcuts, one click sign in? </string>
+    <string name="app_update_function">This feature is not supported by the current version, please upgrade to the latest version</string>
+    <string name="app_new_function">New</string>
+    <string name="no_app">No app currently added</string>
+    <string name="detail">Details</string>
+    <string name="search">Enter Keywords</string>
+    <string name="delete">Delete</string>
+    <string name="app_sort_order">Edit</string>
+
+    <!--云盘 Cloud Driver-->
+    <string name="clouddriver_my_file">My Files</string>
+    <string name="clouddriver_share_volume">Shared Disk</string>
+    <string name="clouddriver_input_directory_name">Input folder name</string>
+    <string name="clouddriver_input_file_name">Input file name</string>
+    <string name="clouddriver_select_all">Select All</string>
+    <string name="clouddriver_select_nothing">Deselect All</string>
+    <string name="clouddriver_multi_select">Multi-select</string>
+    <string name="clouddriver_has_selected">Selected(%1$d)</string>
+    <string name="clouddriver_sure_delete_file">Sure to delete?</string>
+    <string name="clouddriver_move2_current_directory">Move to Current Directory</string>
+    <string name="clouddriver_copy2_current_directory">Copy to Current Directory</string>
+    <string name="clouddriver_create_volume">Create Shared Disk</string>
+    <string name="clouddriver_upload_success">Successfully Uploaded</string>
+    <string name="clouddriver_select_copy_position">Select the copy position</string>
+    <string name="clouddriver_select_move_position">Select a target directory</string>
+    <string name="clouddriver_file_open_fail">failed to open file!</string>
+    <string name="clouddriver_file_dpwnload">Download</string>
+    <string name="clouddriver_create_folder">Create Folder</string>
+    <string name="clouddriver_file_filter">Filter</string>
+    <string name="clouddriver_sort_by_time_asc">Sort by Time Asc</string>
+    <string name="clouddriver_sort_by_time_dasc">Sort by Time Desc</string>
+    <string name="clouddriver_sort_by_name_asc">Sort by Name Asc</string>
+    <string name="clouddriver_sort_by_name_dasc">Sort by Name Desc</string>
+    <string name="clouddriver_current_directory_hint">Current Directory：%1$s</string>
+    <string name="clouddriver_upload_waiting">Waiting for Uploading</string>
+    <string name="clouddriver_upload_fail">Failed to Upload</string>
+    <string name="clouddriver_upload_again">Upload Again</string>>
+    <string name="clouddriver_download_size">Download(%1$s)</string>
+    <string name="clouddriver_downloading_status">Downloading(%1$s/%2$s)</string>
+    <string name="clouddriver_file_name_invaliad">No special characters can be included in the file name: / \ " : | * ? &lt; &gt;&#038; </string>
+    <string name="clouddriver_select_photo">Gallery</string>
+    <string name="clouddriver_select_file">File</string>
+    <string name="clouddriver_volume_info">Shared Disk Details</string>
+    <string name="clouddriver_volume_name">Shared Disk Name</string>
+    <string name="clouddriver_all_volume_member_size">All Members(%1$d)</string>
+    <string name="clouddriver_upload_permission">Have upload/view permissions</string>
+    <string name="clouddriver_watch_permission">Have view permissions</string>
+    <string name="clouddriver_sure_delete_volume">Sure to delete?</string>
+    <string name="clouddriver_del_member">Delete Members</string>
+    <string name="clouddriver_all_group_member_size">All Members(%1$d)</string>
+    <string name="clouddriver_add_volume_member">Add Member</string>
+    <string name="clouddriver_del_volume_group_member">Delete Member</string>
+    <string name="clouddriver_add_volume_group_member">Add Member</string>
+    <string name="clouddriver_directory_name_invaliad">No special characters can be included in the directory name: / \ " : | * ? &lt; &gt; &#038;</string>
+    <string name="clouddriver_volume_name_invaliad">No special characters can be included in the shared disk name: / \ " : | * ? &lt; &gt; &#038; </string>
+    <string name="clouddriver_exists_same_name">Already exists file / folder of the same name</string>
+    <string name="clouddriver_volume_group_info">Group Detaiks</string>
+    <string name="clouddriver_volume_group_member">Group Member</string>
+    <string name="clouddriver_volume_member">Disk Member</string>
+    <string name="clouddriver_input_volume_name">Input disk name</string>
+    <string name="clouddriver_input_volume_group_name">Input group name</string>
+    <string name="clouddriver_update_volume_name">Change Disk Name</string>
+    <string name="clouddriver_update_group_name">Change Group Name</string>
+    <string name="clouddriver_file_no_exist">The selected file does not exist！</string>
+    <string name="clouddriver_no_directory">No Folder</string>
+    <string name="clouddriver_copy_to">Copy to</string>
+    <string name="file_exist_current_directory">This file is already in the current folder</string>
+    <string name="file_cannot_copy_here">You can not copy the file to itself or its subdirectories</string>
+    <string name="file_cannot_move_here">You can not move the file to itself or its subdirectories</string>
+    <string name="clouddriver_volume_file_filter">Filter</string>
+    <string name="clouddriver_volume_group_name">Group Name</string>
+    <string name="clouddriver_volume_upload_file">Upload File</string>
+    <string name="clouddriver_upload_file_to_volume">Upload file to volume</string>
+    <string name="clouddriver_file_permission_manager">Permission manager</string>
+    <string name="create">Create</string>
+    <string name="disk">Disk</string>
+    <string name="video">Video</string>
+    <string name="audio">Audio</string>
+    <string name="other">Other</string>
+    <string name="move">Move</string>
+    <string name="rename">"Rename"</string>
+    <string name="move_to">Move</string>
+    <string name="copy">Copy</string>
+    <string name="upload_cancel">Cancel</string>
+    <string name="no_file">No Files</string>
+    <string name="group">Group</string>
+    <string name="people_num">%1$dpeople</string>
+    <string name="file_rename">File Rename</string>
+    <string name="folder_rename">Folder Rename</string>
+    <string name="refresh">Refresh</string>
+
+    <!--Webex 会议-->
+    <string name="webex_meeting_title">Meeting held by %1$s</string>
+    <string name="webex_input_invitee_emails_hint">Enter participant email(contain suffix)</string>
+    <string name="webex_input_invitee_emails">Enter participant email</string>
+    <string name="webex_input_correct_invitee_emails">Enter the correct email</string>
+    <string name="webex_not_add_repeated">Cannot be added repeatedly</string>
+    <string name="webex_start">START</string>
+    <string name="webex_meeting_info">Meeting Info</string>
+    <string name="webex_host">Host</string>
+    <string name="webex_when">When</string>
+    <string name="webex_meeting_number">Meeting number</string>
+    <string name="webex_meeting_password">Meeting password</string>
+    <string name="webex_host_password">Host key</string>
+    <string name="webex_meeting_ended">The meeting has ended</string>
+    <string name="webex_start_time_error">Invalid start time</string>
+    <string name="webex_start_time_error_info">You hava specified a start time for the meeting that is before the current time. Please specify a different starting time</string>
+    <string name="webex_enter_meeting_name">Enter the meeting name </string>
+    <string name="webex_enter_meeting_password">Enter the meeting password</string>
+    <string name="webex_set_duration_correct">Please set the correct meeting duration</string>
+    <string name="webex_meeting_duration">Duration</string>
+    <string name="webex_remove_meeting_warning_title">Delete meeting</string>
+    <string name="webex_remove_meeting_warning_info">Are you sure you want to delete this meeting?</string>
+    <string name="webex_password_length_error">Password length is not valid (6-10)</string>
+    <string name="webex_install_tips">Using this function, you need to install the WebEx client first. Now install?</string>
+    <string name="webex_add_invitee_from_contact">Add from address book</string>
+    <string name="webex_add_invitee_num">Joined: %1$d Member(s) / Up to %2$d Members</string>
+    <string name="webex_internal_attendees">Internal</string>
+    <string name="webex_external_attendees">External</string>
+    <string name="webex_internal_share">Internal</string>
+    <string name="webex_time">Time：</string>
+    <string name="webex_meeting_code">Meeting number：</string>
+    <string name="webex_meeting_password_tip">Meeting password：</string>
+    <string name="webex_add_external_attendees">Add</string>
+    <string name="webex_no_meeting_tips"><Data><![CDATA[<font color=\'#999999\'>No meetings before </font>]]></Data>%1$s</string>
+    <string name="webex_participant">Participants</string>
+    <string name="webex_password_invalid">Passwords only contain numbers and letters</string>
+    <string name="duration_time">Duration</string>
+    <string name="schedule_meeting">Schedule Meeting</string>
+    <string name="my_meeting">My Meetings</string>
+    <string name="hour">hr</string>
+    <string name="min">min</string>
+    <string name="hours">hrs</string>
+    <string name="mins">mins</string>
+    <string name="join">JOIN</string>
+    <string name="none">None</string>
+
+    <!-- 我的页面部分 -->
+    <string name="moments">Moments</string>
+
+    <!-- 我的页面部分 -->
+    <string name="data_clear_success">Clear Successfully</string>
+    <string name="not_set">Not Set</string>
+    <string name="mine">Me</string>
+    <string name="take_camera">Take a Photo</string>
+    <string name="gallery">Choose from Gallery</string>
+    <string name="quit_check">Log Out</string>
+    <string name="check_security">Check Security</string>
+    <string name="follow_system">Follow System</string>
+    <string name="more_message">Message notice</string>
+    <string name="more_allApps">All Apps</string>
+    <string name="more_feedback">Feedback</string>
+    <string name="more_pushlist_text">Push List</string>
+    <string name="more_invitefriend_text">Invite your friends to Cloud</string>
+    <string name="account_security_head">Account Security</string>
+    <string name="account_security_device">Current Device</string>
+    <string name="account_security_mail">Current binding mailbox</string>
+    <string name="account_security_mobile">Current binding phone</string>
+    <string name="account_security_sign_record">Account Records</string>
+    <string name="about_text">About</string>
+    <string name="about_welcome_text">Welcome Page</string>
+    <string name="about_newfun_text">What\'s New</string>
+    <string name="about_protocol_text">Services Agreement</string>
+    <string name="cloud_version">Cloud Version</string>
+    <string name="feed_back_no_empty">Feedback</string>
+    <string name="feed_back_out_of_length">Please limit your feedback to 200 words</string>
+    <string name="feed_back_advice">Suggestion and Advice</string>
+    <string name="feed_back_welcom">Welcome valuable suggestions and comments! We will listen carefully and continuously improve products, to bring you a better experience</string>
+    <string name="feed_back_input_phone">Enter the phone or mail</string>
+    <string name="feed_back_upload">Submit</string>
+    <string name="feed_back_without_name">Anonymous</string>
+    <string name="feed_back_content_hint">Please enter suggestions and comments</string>
+    <string name="feed_back_contact_hint">Enter your contact information here</string>
+    <string name="feed_back_submit">Submit feedback</string>
+    <string name="invite_friend_invite_text">Invite a friend</string>
+    <string name="invite_friend_code">Scan QR code to install  Cloud+ directly</string>
+    <string name="invite_friend_recommend">推荐【Cloud+】给好友</string>
+    <string name="settings">Settings</string>
+    <string name="settings_protect">Protected</string>
+    <string name="settings_clear_cache">Clear Cache</string>
+    <string name="settings_aboutIMP">About</string>
+    <string name="settings_clean_imgae_attachment">Clear images and attachments</string>
+    <string name="settings_clean_web">Clear web cache</string>
+    <string name="settings_clean_all">Clear all application cache</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_message_alert">Notice</string>
+    <string name="settings_open_msg">On</string>
+    <string name="settings_conbine_weibo">Binding microblogging</string>
+    <string name="settings_conbined">Bound</string>
+    <string name="language_set_text">Language</string>
+    <string name="language_simple">简体中文</string>
+    <string name="language_traditionalTW">繁體中文</string>
+    <string name="language_traditionalHK">繁體中文（香港）</string>
+    <string name="language_english">English</string>
+    <string name="wallet">Cards</string>
+    <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
+    <string name="get_language_error">Not available to the language package, please contact the administrator</string>
+    <string name="app_customer">Cloud+ Customer</string>
+    <string name="settings_device_manager">Device Management</string>
+    <string name="device_unbind_sucess">Device unbound successfully!</string>
+    <string name="device_other_unbind_warning">After unbinding, log on from %1$s, you need to re register the device</string>
+    <string name="device_current_unbind_warning">After unbinding, you need to log in again and register your device</string>
+    <string name="last_use_time">Last use time</string>
+    <string name="bind_device">Current Binding Devices</string>
+    <string name="current_device">Current device</string>
+    <string name="history_device">Using Devices History</string>
+    <string name="device_history_use">Historical use</string>
+    <string name="device_bind_time_title">Binding time: </string>
+    <string name="device_bind_time">Binding time</string>
+    <string name="device_info">Device details</string>
+    <string name="device_id">Device ID</string>
+    <string name="unbind_this_device">Unbound this device</string>
+    <string name="sure_switch_to">Make sure to switch to %1$s</string>
+    <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
+    <string name="select_enterprise">Select enterprise</string>
+    <string name="auto_select_enterprise">Automatically choose</string>
+    <string name="close_auto_select_enterprise">Turn off auto selection enterprise</string>
+    <string name="turn_off_success">Turn off successfully</string>
+    <string name="switch_enterprise">Switch</string>
+    <string name="current_enterprise">Current enterprise</string>
+    <string name="web_app_auto_rotate">Web App Rotation</string>
+    <string name="run_background">AppStarting</string>
+    <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
+    <string name="setting_join_experience_plan">Join Early Experience Program</string>
+    <string name="setting_gesture_force_set">According to the enterprise security policy, you need to set a gesture password</string>
+    <string name="setting_gesture_force_open">You can\'t turn off the gesture password according to the enterprise security policy</string>
+    <string name="contact">Contact</string>
+    <string name="web">web</string>
+    <string name="mine_theme_switch">Theme</string>
+    <string name="mine_theme_white">White</string>
+    <string name="mine_theme_grey">Grey</string>
+    <string name="mine_theme_blue">Blue</string>
+
+    <string name="mine_tab_layout">Layout Switching</string>
+    <string name="mine_tab_layout_switch">Switch to：%1$s</string>
+
+    <!-- 修改密码部分 -->
+    <string name="modify_input_user_new_password">Enter a new password</string>
+    <string name="modify_input_confirm_passord">Enter confirm password</string>
+    <string name="modify_new_old_same">New password can not be the same as original one</string>
+    <string name="modify_not_same">Passwords do not match, make sure</string>
+    <string name="approval_input_password_valiad">Enter a password between 6-64 characters.</string>
+    <string name="modify_password_invalid">Password must be 6-16 characters and contain both numbers and letters/special characters.</string>
+    <string name="modify_password_not_correct">The original password is incorrect</string>
+    <string name="modify_password_fail">Failed to modify password</string>
+    <string name="modify_password">Change the password</string>
+    <string name="modify_reset_password">Reset the password</string>
+    <string name="modify_old_password">Original password</string>
+    <string name="modify_input_old_password">Enter original password</string>
+    <string name="confirm_password">Confirm the password</string>
+    <string name="modify_new_password">New password</string>
+    <string name="modify_input_code">Enter a new password</string>
+    <string name="modify_input_again">Enter confirmed password</string>
+    <string name="modify_user_password">Passwords do not match, make sure</string>
+    <string name="modify_user_password_success">Password changed successfully, please login</string>
+    <string name="modify_user_password_fail">Retry</string>
+    <string name="modify_jump">Skip</string>
+    <string name="modify_welcom_user_cloud">Welcome to the inspur of cloud +</string>
+    <string name="modify_first_use">This is the first time you use the cloud + , the inspur passes is set password to login next time</string>
+
+    <!-- 用户信息页面部分 -->
+    <string name="user_info_text">Profile</string>
+    <string name="user_info_head">Avatar</string>
+    <string name="user_info_name">Name</string>
+    <string name="user_info_sex">Sex</string>
+    <string name="user_depart">Department</string>
+    <string name="user_depart_info_text">Departmental Information</string>
+    <string name="user_telephone">Office Phone</string>
+    <string name="user_function_introduction">Function Introduction</string>
+    <string name="user_service_and_support">Service And Support</string>
+    <string name="user_qr_code">My Qr Code</string>
+    <string name="user_company_info">Enterprise</string>
+    <string name="user_sms_moidify_password">Change password by phone</string>
+    <string name="resend_code">Resend(51)</string>
+    <string name="user_modify_user_info">Modify user info</string>
+    <string name="user_modify_modify">Modify</string>
+    <string name="user_info_my_info">Profile</string>
+    <string name="user_info_organ">Inspur</string>
+    <string name="user_info_phone_number">Phone</string>
+    <string name="user_info_title">Title</string>
+    <string name="user_no_storage">No Storage</string>
+    <string name="user_employee_num">NO.</string>
+    <string name="user_worker_num">NO.</string>
+    <string name="user_new_chat">Messages</string>
+    <string name="user_send_message">Messages</string>
+
+    <!-- 集团新闻 部分 -->
+    <string name="news_group_news">Group News</string>
+    <string name="news_group_news_detail">News Details</string>
+    <string name="news_share">Share to</string>
+    <string name="news_share_success">Sharing Successfully</string>
+    <string name="news_share_fail">Sharing unsuccessfully</string>
+    <string name="news_day_mode_text">Standard</string>
+    <string name="news_night_mode_text">Night</string>
+    <string name="news_share_text">Share</string>
+    <string name="news_font_smaller">Small</string>
+    <string name="news_font_normal">Normal</string>
+    <string name="news_font_middle">Middle</string>
+    <string name="news_font_big_text">Large</string>
+    <string name="news_font_biggest_text">Extra</string>
+    <string name="news_font_name_text">Font Size</string>
+    <string name="news_read_mode">Reading Mode</string>
+    <string name="news_instructions_text">instruction</string>
+    <string name="news_instructions">Directive opinion</string>
+    <string name="news_instructions_success_text">Sending Successfully</string>
+    <string name="news_has_instructions_news">You have instructed this news!</string>
+    <string name="news_has_instructions_known">Understand</string>
+    <string name="news_please_instruction">Please enter your instructions </string>
+
+    <!-- 审批页面 -->
+    <string name="onekey_approval_text">Approval</string>
+
+    <!-- 通讯录部分 -->
+    <string name="recent">Recent</string>
+    <string name="adress_list">Contacts</string>
+    <string name="address_servicenum_text">Service number</string>
+    <string name="org_struct_text">Organization/Architecture  </string>
+    <string name="please_select_app_of_mail">Please select the application of the type of mail</string>
+    <string name="recently_used">Frequent Contacts</string>
+    <string name="all">All</string>
+    <string name="seach_blank">Search...                   </string>
+    <string name="origanization_struct">Company/Organization</string>
+    <string name="cannot_view_info">Stuff not found</string>
+    <string name="do_not_select_yourself">Please do not select yourself</string>
+    <string name="contact_exception">Data exception cannot be opened</string>
+    <string name="contact_select_limit_warning">The maximum number of optional persons has been reached</string>
+
+    <!-- 会议室部分 -->
+    <string name="meeting_room_booking_detail">Details on the meeting room</string>
+    <string name="meeting_room_booking_topic">Enter topic</string>
+    <string name="meeting_room_booking_choosing_room">Select location</string>
+    <string name="meeting_room_booking_members_edit">Select participants</string>
+    <string name="meeting_room_booking_log_edit">Add conference staff</string>
+    <string name="meeting_choosing_date">Select time</string>
+    <string name="meeting_from">From</string>
+    <string name="meeting_to">To</string>
+    <string name="meeting_start_time">Start Time</string>
+    <string name="meeting_end_time">End Time</string>
+    <string name="meeting_room_booking_notice_edit">Enter notes</string>
+    <string name="meeting_booking_detail">Details of the meeting</string>
+    <string name="meeting_booking_no_time">Time is empty, please select period</string>
+    <string name="meeting_booking_success">The meeting room reservation was successful</string>
+    <string name="meeting_update_success">Conference room update successfully</string>
+    <string name="meeting_file_upload_tips">Select local file</string>
+    <string name="meeting_viewpager_indicator">%1$d/%2$d</string>
+    <string name="meeting_booking_title">Add Meetings</string>
+    <string name="meeting_choose_time">Time is empty, please choose the time period</string>
+    <string name="meeting_no_booking_time">No reservation time</string>
+    <string name="meeting_invating_members">Invited participants</string>
+    <string name="meeting_choose_log_members">Choose meeting persons</string>
+    <string name="meeting_begin_or_date_time">Select the time</string>
+    <string name="meeting_end_time_no_empty">Choose end time</string>
+    <string name="meeting_topic_too_long">Subject cannot exceed 100 characters</string>
+    <string name="meeting_notice_too_long">Notice cannot be more than 500 characters</string>
+    <string name="meeting_booking_error">Reservation error</string>
+    <string name="meeting_time_is_word">Time is a character</string>
+    <string name="meeting_room_number">S206</string>
+    <string name="meetting_members_num">16</string>
+    <string name="meeting_end">The end</string>
+    <string name="meeting_topic_title">Topic</string>
+    <string name="meeting_members">Participants</string>
+    <string name="meeting_log">Conference</string>
+    <string name="meeting_ageda">The agenda</string>
+    <string name="meeting_summary">Summary</string>
+    <string name="meeting_place">Room</string>
+    <string name="meeting_list_title">List of meeting rooms</string>
+    <string name="meeting">Meetings</string>
+    <string name="meeting_add">Add Meetings</string>
+    <string name="meeting_history">History Meeting</string>
+    <string name="meeting_history_search">Search History Meeting</string>
+    <string name="meeting_list_cancel_success">cancelled the Meeting successfully</string>
+    <string name="meeting_list_cirform">Are you sure to cancel the meeting?</string>
+    <string name="meeting_list_no_self">Meetings not created by me cannot be deleted</string>
+    <string name="meeting_list_topic">ECM-Cloud demand for judges</string>
+    <string name="meeting_add_meeting">Add the meeting</string>
+    <string name="meeting_booking">Reservation</string>
+    <string name="meeting_memebers">Members participate in</string>
+    <string name="meeting_noon">Noon</string>
+    <string name="meeting_office_create_success">Create a common workplace successfully</string>
+    <string name="meeting_office_delete_position">Are you sure to delete a common office? </string>
+    <string name="meeting_office_head">My office</string>
+    <string name="meeting_building_head">Select building </string>
+    <string name="meeting_click_to_book">Click to book </string>
+    <string name="meeting_free">Free</string>
+    <string name="meeting_day_before">Day before</string>
+    <string name="meeting_day_after">Day after</string>
+    <string name="meeting_change">Change</string>
+    <string name="meeting_cancel">Cancel</string>
+    <string name="meeting_detail_save">Save changes</string>
+    <string name="meeting_detail_change">Details of modification </string>
+    <string name="meeting_detail_has_finished">The meeting has been closed and cannot be modified </string>
+    <string name="meeting_detail_has_began">The meeting has begun to be modified </string>
+    <string name="meeting_detail_not_organizer">You are not the meeting organizer can not change the meeting </string>
+    <string name="meeting_add_work_place">Add office location</string>
+    <string name="meeting_click_add_work_place">Click to add office location</string>
+    <string name="meeting_common_place">Common location</string>
+    <string name="meeting_time">Meeting time</string>
+    <string name="meeting_reset">Reset</string>
+    <string name="meeting_more_than_max_day">More than the maximum number of days </string>
+    <string name="meeting_more_than_max_time">Over the longest available time</string>
+    <string name="meeting_search_to">To</string>
+    <string name="meeting_date_default">--/--/--/--/--</string>
+    <string name="meeting_room_booked">Time has been booked, please choose again</string>
+    <string name="meeting_room_ilegal_time">Time is illegal, please check</string>
+    <string name="meeting_room_time_late">Start time cannot be earlier than the current time</string>
+
+    <!-- 会议预定错误提示 -->
+    <string name="meeting_user_profile_broken">Departmental information loss</string>
+    <string name="meeting_time_earlier_than_permission">Time is earlier than permission</string>
+    <string name="meeting_time_later_than_permission">Time is later than permission</string>
+    <string name="meeting_time_span_over_limit">Time span is over limit</string>
+    <string name="meeting_duration_over_limit">Duration is over limit</string>
+    <string name="meeting_time_conflict">Time is conflict</string>
+    <string name="meeting_invalid_booking_time">Duration is less than limit</string>
+    <string name="meeting_room_not_exists">Room not exists</string>
+    <string name="meeting_room_locked_by_admin">Room is locked by admin</string>
+    <string name="meeting_room_for_special_use">Room is for special use</string>
+    <string name="meeting_book_history_not_exist">Booking history not exist</string>
+    <string name="meeting_expired_booking_history_immutable">Expired booking history is immutable</string>
+    <string name="meeting_user_profile_missing">User profile missing</string>
+    <string name="meeting_department_booking_times_over_run">Department booking time over run</string>
+
+    <string name="meeting_detail_time">Time：%1$s</string>
+    <string name="meeting_detail_remind">Remind：%1$s</string>
+    <string name="meeting_detail_create">%1$s Create</string>
+    <string name="meeting_detail_attendee">Attendee:%1$s</string>
+    <string name="meeting_detail_record_holder">Recorder:%1$s</string>
+    <string name="meeting_detail_conference">Contact:%1$s</string>
+    <string name="meeting_detail_note">Note:%1$s</string>
+    <string name="meeting_detail_sign">Meeting Sign</string>
+    <string name="meeting_detail_summary">十 Add Summary</string>
+    <string name="meeting_detail_change_meeting">Change Meeting</string>
+    <string name="meeting_detail_show_qrcode">Show QrCode</string>
+    <string name="meeting_detail_add_participant">Add Participant</string>
+    <string name="meeting_detail_before_beginning">Before Beginning</string>
+    <string name="meeting_detail_ten_minutes">Ten minutes before</string>
+    <string name="meeting_detail_twenty_minutes">Twenty minutes before</string>
+    <string name="meeting_detail_thirty_minutes">Thirty minutes before</string>
+    <string name="meeting_detail_one_hour">One hour before</string>
+    <string name="meeting_detail_one_day">One day before</string>
+    <string name="meeting_detail_attendee_num">%1$s et al. %2$d</string>
+    <string name="meeting_detail_location">Place:</string>
+
+
+    <!-- 日历 -->
+    <string name="calendar_detail">Calendar Details</string>
+    <string name="calendar_adjust">Adjust</string>
+    <string name="calendar_please_input_title">Please enter a title </string>
+    <string name="calendar_start_or_end_time_illegal">End time should not be less than the start time</string>
+    <string name="calendar_end_time_no_before_current">End time cannot be earlier than current time</string>
+    <string name="calendar_title_cannot_exceed_num">Title should not exceed 100 characters</string>
+    <string name="calendar_select_calendar">Select a calendar type </string>
+    <string name="calendar_add_success">Add successfully</string>
+    <string name="calendar_every_year">Every Year</string>
+    <string name="monthly">Every Month</string>
+    <string name="weekly">Every Week</string>
+    <string name="every_day">Every Day</string>
+    <string name="calendar_when_event_occurs">The event occurs</string>
+    <string name="calendar_five_minite_ago">5 minutes ago</string>
+    <string name="calendar_ten_minite_ago">10 minutes ago</string>
+    <string name="calendar_fifteen_minite_ago">15 minutes ago</string>
+    <string name="calendar_twenty_minite_ago">20 minutes ago</string>
+    <string name="calendar_thirty_minite_ago">30 minutes ago</string>
+    <string name="calendar_one_hour_ago">1 hour ago</string>
+    <string name="calendar_two_hours_ago">2 hour ago</string>
+    <string name="calendar_one_day_ago">One day before</string>
+    <string name="calendar_two_days_ago">Two day before</string>
+    <string name="calendar_a_week_ago">1 week ago</string>
+    <string name="calendar_add_calendar">Add Calendars</string>
+    <string name="calendar_divide_into_groups">Grouping</string>
+    <string name="calendar_no_alert">No reminder</string>
+    <string name="calendar_when_event_finished">Finished</string>
+
+    <!-- 通用 -->
+    <string name="save">Save</string>
+    <string name="never">Never</string>
+
+
+    <!-- 待办任务部分 -->
+    <string name="mession_detial_doing">Processing</string>
+    <string name="mession_detial_finish">Completed</string>
+    <string name="mession_no_person_charge">No Responsible Person</string>
+    <string name="mession_upload_attachment">You are not the owner of the task and can not upload attachments</string>
+    <string name="mession_delete_attachment">You are not the owner of the task and can not delete attachments</string>
+    <string name="mession_change_charge_person">Sure to change person in charge of task</string>
+    <string name="mession_delete_atachment">Are you sure you want to delete the attachment?</string>
+    <string name="mession_not_change_charge_person">The owner of the task is not yours, you can not change the person in charge</string>
+    <string name="mession_choose_charge_person">Select Task Owner</string>
+    <string name="mession_invate_members">Invitation to Staff</string>
+    <string name="mession_saving_success">Saved successfully</string>
+    <string name="mession_upload_attachment_success">Upload file successful</string>
+    <string name="mession_upload_attachment_fail">Upload file failed</string>
+    <string name="mession_detail">Task Details</string>
+    <string name="mession_name">Mission name</string>
+    <string name="mession_priority">Priority</string>
+    <string name="mession_type">Class</string>
+    <string name="mession_level">High | Medium | Low</string>
+    <string name="mession_charge_person">Person in Charge</string>
+    <string name="mession_members_person">Participant</string>
+    <string name="mession_ending_time">Deadline</string>
+    <string name="mession_state">State</string>
+    <string name="mession_link">Link</string>
+    <string name="mession_attachment">Attachment</string>
+    <string name="mession_finish_recover">Are you sure you want to restore the task?</string>
+    <string name="mession_finish_history">Historical task</string>
+    <string name="mession_list_name">Enter task title</string>
+    <string name="mession_no_more">Task name can not exceed 64 characters</string>
+    <string name="mession_set_finish">Are you sure you want to finish the task?</string>
+    <string name="mession_list">Todo List</string>
+    <string name="mession_types">Mine|Involved|Starred</string>
+    <string name="mession_reset">Reset filter</string>
+    <string name="mession_cancel">Cancel filter</string>
+    <string name="mession_add_mession">Quick add task</string>
+    <string name="mession_set_level">Priority</string>
+    <string name="mession_set_time">Time</string>
+    <string name="mession_set_asc">Positive sequence</string>
+    <string name="mession_set_desc">Reverse</string>
+    <string name="finish">Done</string>
+    <string name="mession_set_order">Sequence</string>
+    <string name="mession_set_filter">Filter</string>
+    <string name="mession_set_has_finished">Completed</string>
+    <string name="mession_delete_tag">Are you sure you want to delete the label?</string>
+    <string name="mession_delete_red">Red</string>
+    <string name="mession_delete_orange">Orange</string>
+    <string name="mession_delete_yellow">Yellow</string>
+    <string name="mession_delete_green">Green</string>
+    <string name="mession_delete_blue">Blue</string>
+    <string name="mession_delete_purple">Purple</string>
+    <string name="mession_delete_exist">Tag already existed</string>
+    <string name="mession_delete_no_empty">Please input the title</string>
+    <string name="mession_add_tag">Tag</string>
+    <string name="mession_full_tag">Enter tag title</string>
+    <string name="mession_color_tag">Color</string>
+    <string name="mession_delete_the_tag">Delete Tag</string>
+    <string name="mession_manage_tag">Tag</string>
+    <string name="add_mession">Add Tasks</string>
+    <string name="no_work_content">No job content</string>
+
+
+    <!--网络链接及网络诊断-->
+    <string name="net_connected_error">No internet available,please check</string>
+    <string name="net_diagnosis_title">Network Diagnoses</string>
+    <string name="net_diagnosis_hard_link_title">Detect network settings</string>
+    <string name="net_diagnosis_wifi_link_title">Detect router</string>
+    <string name="net_diagnosis_dns_link_title">Detect network connectivity</string>
+    <string name="net_diagnosis_hard_link_conent">Contained Items:Connection status of Wi-Fi,4G,LTE and so on.</string>
+    <string name="net_diagnosis_hard_to_fix">Repair</string>
+    <string name="net_diagnosis_portal_to_set">Authentication</string>
+    <string name="net_diagnosis_wifi_link_conent">Contained Items:Does Connected Wi-Fi have verification requirement? if yes,Please verify Wi-Fi first, then continue to visit.</string>
+    <string name="net_network_authentication">Network Certification</string>
+    <string name="net_diagnosis_hard_detail_title">Hardware Link Diagnoses</string>
+    <string name="net_diagnosis_hard_detail_content">Recommend to do as follows</string>
+    <string name="net_diagnosis_hard_detail_content_frist">1.Turn on the phone \"Settings\" and turn on the \"Wi-Fi\".</string>
+    <string name="net_diagnosis_hard_detail_content_second">2.Open the phone \"Settings\" and turn on the \"Cellular data\".</string>
+    <string name="net_diagnosis_hard_detail_setting">Go To Set</string>
+    <string name="net_ping_url_baidu">Baidu</string>
+    <string name="net_ping_url_inspur">Inspur</string>
+    <string name="net_ping_url_ali">Alibaba</string>
+    <string name="net_ping_url_cloud">Cloud+</string>
+
+    <!--电源白名单-->
+    <string name="battery_tip_content">System has applied battery optimizations to the App,which may cause messages be delayed or missed,please add this to battery optimizations whitelist.(Click Set,then in the dialog pops,click Allow)</string>
+    <string name="white_list_tip_content">Due to system restrictions, please manually open the software self-startup permission, so as to ensure the best environment for software operation (click "Set")</string>
+    <string name="battery_tip_ishide">Don\'t ask again</string>
+    <string name="battery_tip_cancel">CANCEL</string>
+    <string name="battery_tip_toset">SET</string>
+
+    <!-- ListView自定义控件部分 -->
+    <string name="xlistview_header_last_time">Last Update Time:</string>
+    <string name="release_to_refresh">Release to Refresh</string>
+    <string name="pull_down_refresh">Pull down refresh</string>
+    <string name="refreshing">Refreshing</string>
+    <string name="refresh_succeed">Refresh Success</string>
+    <string name="refresh_fail">Refresh Failed</string>
+    <string name="pullup_to_load">Pull Up Load More</string>
+    <string name="pull_loading">Loading...</string>
+    <string name="release_to_load">Release to Load</string>
+    <string name="load_succeed">Loading success</string>
+    <string name="load_fail">Loading Failed</string>
+    <string name="see_more">More</string>
+    <string name="pull_down_loading_history">Drop load history message</string>
+    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“云+”软件产品（以下
+
+简称“本软件产品”）的法律协议。一旦安装、复制或以其他方式使用本软件产品，即表示同意接受协议各项条件的约束。如果用户
+
+不同意协议的条件，请不要使用本软件产品。\n\n
+
+2、软件产品保护条款\n
+\t\t1）本软件产品之著作权及其它知识产权等相关权利或利益（包括但不限于现已取得或未来可取得之著作权、专利权、商标权、
+
+营业秘密等）皆为浪潮通用软件有限公司所有。本软件产品受中华人民共和国版权法及通用软件版权条约和其他知识产权法及条约的保护
+
+。用户仅获得本软件产品的非排他性使用权。\n
+\t\t2）用户不得：删除本软件及其他副本上一切关于版权的信息；对本软件进行反向工程，如反汇编、反编译等。 \n
+\t\t3）本软件产品以现状方式提供，浪潮通用软件有限公司不保证本软件产品能够或不能够完全满足用户需求，在用户手册、帮助
+
+文件、使用说明书等软件文档中的介绍性内容仅供用户参考，不得理解为对用户所做的任何承诺。浪潮通用软件有限公司保留对软件
+
+版本进行升级，对功能、内容、结构、界面、运行方式等进行修改或自动更新的权利。\n
+\t\t4）为了更好地服务于用户，或为了向用户提供具有个性的信息内容的需要，本软件产品可能会根据需要对设备信息、产品使用情况等数据进行收集，以持续不断地提升产品体验，改善产品功能设计。这些信息绝不涉及用户的个人隐私数据或企业业务数据，浪潮通用软件有限公司承诺不向未经授权的第三方提供此类信息，以保护用户隐私及企业商业秘密。\n
+\t\t5）使用本软件产品由用户自己承担风险，在适用法律允许的最大范围内，浪潮通用软件有限公司在任何情况下不就因使用或不
+
+能使用本软件产品所发生的特殊的、意外的、非直接或间接的损失承担赔偿责任。即使已事先被告知该损害发生的可能性。\n 
+\t\t6）浪潮通用软件有限公司定义的信息内容包括：文字、软件、声音；本公司为用户提供的商业信息，所有这些内容受版权、商
+
+标权、和其它知识产权和所有权法律的保护。所以，用户只能在本公司授权下才能使用这些内容，而不能擅自复制、修改、编撰这些
+
+内容、或创造与内容有关的衍生产品。\n
+\t\t7）如果您未遵守本协议的任何一项条款，浪潮通用软件有限公司有权立即终止本协议，并保留通过法律手段追究责任。\n
+
+\n3、浪潮通用软件有限公司具有对以上各项条款内容的最终解释权和修改权。如用户对浪潮通用软件有限公司的解释或修改有异议，
+
+应当立即停止使用本软件产品。用户继续使用本软件产品的行为将被视为对浪潮通用软件有限公司的解释或修改的接受。\n
+
+\n4、因本协议所发生的纠纷，双方同意按照中华人民共和国法律，由浪潮通用软件有限公司所在地的有管辖权的法院管辖。\n\n
+浪潮通用软件有限公司</string>
+
+    <!-- IMP相关 -->
+    <string name="title_activity_begin">BeginActivity</string>
+    <string name="title_activity_image_file">Pictures Folder</string>
+    <string name="title_activity_show_all_photo">Display all pictures of one folder</string>
+    <string name="title_activity_gallery">Picture browsing interface</string>
+    <string name="title_activity_upload_photo">Upload picture activity</string>
+    <string name="title_activity_look_photo">Take a picture and look at the picture.</string>
+    <string name="title_activity_playvideo">Video player interface</string>
+    <string name="xml_parser_exception">Analytical config.xml exception</string>
+    <string name="msg_title">Notification</string>
+    <string name="msg_makesure">Message Acknowledgement</string>
+    <string name="edit">Edit</string>
+    <string name="device_api_not_support">Device API not supported：</string>
+    <string name="dialogtitle"> Tips</string>
+    <string name="assemble_json_exception">Json objects assembled exception！</string>
+    <string name="inputpwd">Please enter a password gesture</string>
+    <string name="forgetpwd">Forget Password</string>
+    <string name="download_fail">Download Failed</string>
+    <string name="download_success">Download Success</string>
+    <string name="file_downloading">In the download, please later...</string>
+    <string name="file_download_success">the file Has been downloaded, is it open?</string>
+    <string name="has_downloaded">Downloaded</string>
+    <string name="imp_content">Content</string>
+    <string name="file_ok">Confirm</string>
+    <string name="file_cancel">Cancel</string>
+    <string name="file_error">File Error</string>
+    <string name="can_not_pause">The current state can not be suspended</string>
+    <string name="can_not_replay">The current state of play can not be reset</string>
+    <string name="can_not_stop">The current state can not be stopped</string>
+    <string name="turn_on_light">Turn on the light</string>
+    <string name="turn_off_light">Turn off the light</string>
+    <string name="imp_function_error">Function call error. Please check if Cloud + has been upgraded to the latest version.</string>
+    <string name="file_select_limit_warning">The maximum number of optional files has been reached</string>
+    <string name="select_file">Choose files</string>
+    <string name="internal_shared_storage">Internal shared storage</string>
+
+    <!-- 打点 -->
+    <string name="msg_default_format">Format</string>
+    <string name="msg_default_type">Type</string>
+    <string name="msg_default_time">Time</string>
+    <string name="msg_default_meta">Metadata</string>
+    <string name="contents_text">Plain Text</string>
+    <string name="msg_intent_failed">Sorry, can not open the software, barcode contents may be invalid</string>
+    <string name="button_ok">Confirm</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="result_text">Find Plain Text</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dummy_button">Dummy Button</string>
+
+    <string name="react_native_app_open_failed">Application opened unsuccessfully</string>
+    <string name="react_native_app_update_failed">Update packet breakage </string>
+
+    <!--闪屏页文字资源-->
+    <string name="splash_skip">Enter immediately</string>
+
+    <!--安全中心-->
+    <string name="setting_safe_gesture_face">Face ID and Gesture Password</string>
+    <string name="setting_safe_gesture_face_setting">Face ID and Gesture Password Settings</string>
+    <string name="setting_safe_center">Account,Device Security</string>
+    <string name="safe_center_gesture">Gesture Password</string>
+    <string name="safe_center_finger_print">Fingerprint</string>
+    <string name="switch_gesture_unlock">Pattern Unlock</string>
+    <string name="switch_gesture_reset_unlock">Reset gesture unlock</string>
+    <string name="put_face_in_frame">Put your face into the frame</string>
+    <string name="experience_face_verify">Have a try</string>
+    <string name="no_face">No face</string>
+    <string name="put_body_right">Face no clear</string>
+    <string name="get_closer">Face no clear</string>
+    <string name="blink">Blink</string>
+    <string name="face_verify_success">Success</string>
+    <string name="face_verify_fail">Sorry,we couldn’t identify you</string>
+    <string name="face_enter">Face Recognition</string>
+    <string name="face_login">Face Login</string>
+    <string name="off_face_verify_relogin">Turn Off it and relogin </string>
+    <string name="face_verifying">Verifying</string>
+
+    <!--九宫格-->
+    <!-- Gesture login activity -->
+    <string name="gesture_forget_gesture">Forget gesture code</string>
+    <string name="gesture_default">Please enter a gesture password</string>
+    <string name="gesture_error">Gesture password input error</string>
+    <string name="gesture_correct">Input correct</string>
+    <string name="gesture_code_error">Password error, you can try again </string>
+    <string name="gesture_code_time"> times</string>
+    <string name="gesture_code_tips">After 5 failures, you need to log in again</string>
+
+    <!-- Create gesture activity -->
+    <string name="create_gesture_default">Draw your patterns</string>
+    <string name="create_gesture_correct">Draw pattern again</string>
+    <string name="create_gesture_less_error">At least 4 points required. Please re-enter</string>
+    <string name="create_gesture_confirm_error">Not match. Please draw it again</string>
+    <string name="create_gesture_confirm_correct">Success</string>
+    <string name="create_gesture_reset">Reset</string>
+    <string name="create_gesture_code">Pattern</string>
+    <string name="create_gesture_guid">You can create a cloud +  unlock pattern so that others can\'t open the cloud + when they borrow your cell phone</string>
+    <string name="safe_center_enable">Enabled</string>
+    <string name="safe_center_unenable">Not Set</string>
+
+
+    <string name="qr_code_analysis_fail">Qr code parsing failed</string>
+
+    <!--科大讯飞语音-->
+    <string name="voice_input">Voice Input</string>
+
+    <string name="clear">Clear</string>
+    <string name="confirm_clear">Confirm clear?</string>
+    <string name="login_more_current_enterprise">Current System：</string>
+    <string name="login_more_scan_find_left">Scan to[</string>
+    <string name="login_more_scan_find_right">]Do you decide to add？</string>
+    <string name="cluster_default">default</string>
+
+    <string name="volume_read_write_permission">Have upload / view permissions</string>
+    <string name="volume_read_permission">Have view permissions</string>
+
+    <string name="cluster_no_permission">The current function lacks effective authorization information.</string>
+
+    <string name="share_mutil_only_support_image">Multi file sharing only supports Photo format</string>
+    <string name="share_no_more_than_five">No more than 5 pictures can\'t be uploaded</string>
+    <string name="share_no_share_way">There is no way to share it</string>
+    <string name="share_to_channel">Send to the channel</string>
+    <string name="share_upload_volume">Upload to the cloud volume</string>
+    <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
+    <string name="share_has_not_exist_file">There are nonexistent files in the files you shared, please check.</string>
+    <string name="share_not_support">Unsupported sharing types</string>
+    <string name="share_default_title">Web link</string>
+
+    <string name="net_work_fail">Since the new version enhances the security authentication feature, you need to log in</string>
+
+    <string name="card_package_manage">Management card</string>
+    <string name="card_package_welcome">Welcome to use the package</string>
+    <string name="card_package_collect">Put your usual information cards in one place</string>
+    <string name="card_package_taxpayer">Taxpayer identification number</string>
+    <string name="card_package_address">Address</string>
+    <string name="card_package_phone_number">Telephone</string>
+
+    <string name="voice_communication_invite_you">I invite you to make voice calls.</string>
+    <string name="voice_communication_members">Call member</string>
+    <string name="voice_communication_excuse">Excuse</string>
+    <string name="voice_communication_hands_free">Hands-free</string>
+    <string name="voice_communication_tran_video">Camera</string>
+    <string name="voice_communication_mute">Mute</string>
+    <string name="voice_communication_choice_members">Select members</string>
+    <string name="voice_communication_waitting_answer">Wait for the answer</string>
+    <string name="voice_communicaiton_watting_talking">In the call</string>
+    <string name="voice_communication_quality">The quality of current calls is poor.</string>
+    <string name="voice_communication_support_nine_members">Cloud + supports nine voice at present.</string>
+
+    <string name="error_no_sdcard">No SD card, no recording data.</string>
+    <string name="error_state_record">Please stop recording while recording</string>
+    <string name="error_unknown">Unrecognized errors</string>
+    <string name="corrected_speech_input">Automatic text recognition</string>
+    <string name="corrected_word_input">[Correcting]</string>
+    <string name="voice_word_voice">Voice</string>
+    <string name="voice_word_word">Word</string>
+    <string name="voice_word_tran">Sending text in speech</string>
+    <string name="voice_word_setting">Automatic Voice Recognition</string>
+    <string name="voice_audio_record_unavailiable">The current recording device is not available. Please check whether the recording permissions are enabled.</string>
+    <string name="voice_to_word">Voice to Text</string>
+
+    <string name="notification_switch">New Notification</string>
+    <string name="notification_switch_cant_recive">if closed,you won\'t receive any notifications Close</string>
+    <string name="notification_switch_open_setting">Cloud + Message Notification in the System Closed to Open？</string>
+
+    <string name="resend_file_failed">The message resent failed because the resource file could not be found</string>
+
+    <!--权限管理-->
+    <string name="permission_dialog_title">Tips</string>
+    <string name="permission_message_always_failed">You have forbidden granting %1$s %2$s permission, which may cause the function to be unavailable. If you need to use it, please go to the settings to grant permission.</string>
+    <string name="permission_grant_fail">You have forbidden granting %1$s %2$s permission</string>
+
+    <string name="permission_open_cloud_plus">Open %1$s</string>
+    <string name="permission_necessary_permission">In order for you to use the %1$s properly, you need the following permissions</string>
+    <string name="permission_phone_permission">Phone</string>
+    <string name="permission_call_phone_permission">Call Phone</string>
+    <string name="permission_storage_permission">Storage</string>
+    <string name="permission_next">Next</string>
+
+    <string name="permission_name_calendar">Calendar</string>
+    <string name="permission_name_camera">Camera</string>
+    <string name="permission_name_contacts">Contacts</string>
+    <string name="permission_name_location">Location</string>
+    <string name="permission_name_microphone">Microphone</string>
+    <string name="permission_name_phone">Phone</string>
+    <string name="permission_name_sensors">Body Sensors</string>
+    <string name="permission_name_sms">SMS</string>
+    <string name="permission_name_storage">Storage</string>
+
+    <!--键盘相关-->
+    <string name="emm_keyboard_a2z">abcdefghijklmnopqrstuvwxyz</string>
+    <string name="emm_keyboard_zero2nine">1234567890</string>
+    <string name="emm_keyboard_number">Number</string>
+    <string name="emm_keyboard_symbol">#+=</string>
+    <string name="emm_keyboard_letter">Letter</string>
+    <string name="emm_secure_keyboard">Safety Keyboard</string>
+    <string name="emm_keyboard_space">space</string>
+
+    <string name="welcome_to">Welcome to </string>
+
+    <string name="phone_sms">SMS</string>
+    <string name="phone_email">Email</string>
+    <string name="current_month">This month</string>
+    <string name="user_office_phone">Fixed line</string>
+    <string name="group_qrcode">QR Code</string>
+
+    <string name="user_call">Call</string>
+
+    <string-array name="segment_control_items">
+        <item>Low</item>
+        <item>Middle</item>
+        <item>Height</item>
+    </string-array>
+
+    <string-array name="week_string_array">
+        <item>SUN</item>
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THU</item>
+        <item>FRI</item>
+        <item>SAT</item>
+    </string-array>
+
+    <string-array name="year_view_week_string_array">
+        <item>SUN</item>
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THU</item>
+        <item>FRI</item>
+        <item>SAT</item>
+    </string-array>
+
+</resources>

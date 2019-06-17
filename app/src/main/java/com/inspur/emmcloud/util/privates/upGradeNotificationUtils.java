@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 
 /**
  * Created by libaochao on 2019/3/18.

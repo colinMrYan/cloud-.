@@ -2,9 +2,9 @@ package com.inspur.imp.plugin.telephone;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.widget.Toast;
 
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
 
@@ -54,7 +54,7 @@ public class TelephoneService extends ImpPlugin {
             e.printStackTrace();
         }
         if (!StrUtil.strIsNotNull(tel)) {
-            Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), "电话号码不能为空！");
             return;
         }
         Intent intent = new Intent("android.intent.action.DIAL",
@@ -76,7 +76,7 @@ public class TelephoneService extends ImpPlugin {
             e.printStackTrace();
         }
         if (!StrUtil.strIsNotNull(tel)) {
-            Toast.makeText(getFragmentContext(), "电话号码不能为空！", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(getFragmentContext(), "电话号码不能为空！");
             return;
         }
         AppUtils.call(getActivity(), tel, 1);

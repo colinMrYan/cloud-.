@@ -29,26 +29,26 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppAdsBean;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.AdsViewPager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.imp.api.ImpActivity;
 
 import java.io.Serializable;
@@ -90,7 +90,6 @@ public class AppCenterActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_app_center);
         initView();
         getAllApp();
         registerReceiver();
@@ -98,13 +97,9 @@ public class AppCenterActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return 0;
+        return R.layout.activity_app_center;
     }
 
-    @Override
-    public int getStatusType() {
-        return 0;
-    }
 
     /**
      * modified: lbc

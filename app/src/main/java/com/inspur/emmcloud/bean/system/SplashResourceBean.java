@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.system;
 
 import com.google.gson.annotations.SerializedName;
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 
 /**
  * Created by yufuchang on 2018/4/2.

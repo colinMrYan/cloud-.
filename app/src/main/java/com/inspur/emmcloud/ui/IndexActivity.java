@@ -1,17 +1,36 @@
 package com.inspur.emmcloud.ui;
 
-import java.util.List;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
+import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
+import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
+import com.inspur.emmcloud.basemodule.service.PVCollectService;
+import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
+import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
@@ -20,56 +39,39 @@ import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.ClientConfigItem;
-import com.inspur.emmcloud.bean.system.GetAllConfigVersionResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
-import com.inspur.emmcloud.service.PVCollectService;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.NotificationSetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ClientConfigUpdateUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
-import com.inspur.emmcloud.util.privates.PushManagerUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.WebServiceRouterManager;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.WeakHandler;
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 /**
  * 主页面
  *
  * @author Administrator
  */
+@Route(path = "/app/index")
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;
-    private WeakHandler handler;
+    private Handler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
 
@@ -84,7 +86,7 @@ public class IndexActivity extends IndexBaseActivity {
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
-        if(NetUtils.isNetworkConnected(this,false)){
+        if (NetUtils.isNetworkConnected(this, false)) {
             AppAPIService appAPIService = new AppAPIService(this);
             appAPIService.setAPIInterface(new WebService());
             appAPIService.getAppNaviTabs(naviTabSaveConfigVersion);
@@ -100,12 +102,12 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().restartAllDb();
         MyApplication.getInstance().clearUserPhotoMap();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if(NotificationSetUtils.isNotificationEnabled(this) &&
-                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true))){
+            if (NotificationSetUtils.isNotificationEnabled(this) &&
+                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true))) {
                 PushManagerUtils.getInstance().startPush();
             }
-        }else{
-            if(PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this,Constant.PUSH_SWITCH_FLAG,true)){
+        } else {
+            if (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true)) {
                 PushManagerUtils.getInstance().startPush();
             }
         }
@@ -269,10 +271,10 @@ public class IndexActivity extends IndexBaseActivity {
 
     private void handMessage() {
         // TODO Auto-generated method stub
-        handler = new WeakHandler(IndexActivity.this) {
+        handler = new Handler() {
 
             @Override
-            protected void handleMessage(Object o, Message msg) {
+            public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case SYNC_ALL_BASE_DATA_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);
@@ -342,7 +344,7 @@ public class IndexActivity extends IndexBaseActivity {
         if (isContactOrgUpdate) {
             getContactOrg();
         }
-        if(isNaviTabUpdate){
+        if (isNaviTabUpdate) {
             getNaviTabData(ClientConfigUpdateUtils.getInstance().getItemNewVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB));
         }
         new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
@@ -639,11 +641,11 @@ public class IndexActivity extends IndexBaseActivity {
 
         @Override
         public void returnAppTabAutoSuccess(GetAppMainTabResult getAppMainTabResult, String mainTabSaveConfigVersion) {
-            NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,""));
-            if(naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() == 0){
+            NaviBarModel naviBarModel = new NaviBarModel(PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.APP_TAB_LAYOUT_DATA, ""));
+            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() == 0) {
                 updateMainTabbarWithOrder(getAppMainTabResult);
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MAINTAB, mainTabSaveConfigVersion);
-            }else {
+            } else {
                 PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_VERSION,
                         getAppMainTabResult.getMainTabPayLoad().getVersion());
                 PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.PREF_APP_TAB_BAR_INFO_CURRENT,
@@ -659,9 +661,9 @@ public class IndexActivity extends IndexBaseActivity {
         @Override
         public void returnNaviBarModelSuccess(NaviBarModel naviBarModel) {
             super.returnNaviBarModelSuccess(naviBarModel);
-            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,Constant.APP_TAB_LAYOUT_DATA,naviBarModel.getResponse());
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this, Constant.APP_TAB_LAYOUT_DATA, naviBarModel.getResponse());
             ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_NAVI_TAB, naviBarModel.getLastNaviLocalVersion());
-            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() != 0){
+            if (naviBarModel.getNaviBarPayload().getNaviBarSchemeList().size() != 0) {
                 updateNaviTabbar();
             }
         }

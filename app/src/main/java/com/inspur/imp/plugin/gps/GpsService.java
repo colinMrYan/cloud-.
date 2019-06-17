@@ -5,18 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.provider.Settings;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.amaplocation.ECMLoactionTransformUtils;
 
@@ -90,7 +89,7 @@ public class GpsService extends ImpPlugin implements
             // 设置完成后返回到原来的界面
         } else {
             // 弹出Toast
-            Toast.makeText(getFragmentContext(), "GPS已经开启", Toast.LENGTH_LONG).show();
+            ToastUtils.show(getFragmentContext(), "GPS已经开启");
         }
     }
 
@@ -243,7 +242,7 @@ public class GpsService extends ImpPlugin implements
             // 设置完成后返回到原来的界面
         } else {
             // 弹出Toast
-            Toast.makeText(this.getFragmentContext(), "GPS已经关闭", Toast.LENGTH_LONG).show();
+            ToastUtils.show(this.getFragmentContext(), "GPS已经关闭");
         }
     }
 

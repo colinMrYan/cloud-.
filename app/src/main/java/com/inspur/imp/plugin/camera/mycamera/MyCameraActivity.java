@@ -26,20 +26,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.systool.emmpermission.Permissions;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestCallback;
-import com.inspur.emmcloud.util.common.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ImageUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.Bimp;
 import com.inspur.imp.plugin.camera.imageedit.IMGEditActivity;
@@ -224,7 +223,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             mCamera.setParameters(mParameters);
             mCamera.setPreviewDisplay(mHolder);
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+            ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
             finish();
             e.printStackTrace();
         }
@@ -249,7 +248,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                         break;
                     }
                 }
-                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
+            ToastUtils.show(getApplicationContext(), R.string.open_camera_fail_by_perminssion);
                 finish();
                 break;
         }

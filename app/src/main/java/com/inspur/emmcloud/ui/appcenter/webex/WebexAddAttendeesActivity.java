@@ -1,35 +1,35 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.bean.contact.SearchModel;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.emmcloud.widget.CircleTextImageView;
-import com.inspur.emmcloud.widget.ScrollViewWithListView;
-
 import android.content.Intent;
 import android.database.DataSetObserver;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
+import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.bean.appcenter.webex.WebexAttendees;
+import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,20 +43,12 @@ public class WebexAddAttendeesActivity extends BaseActivity {
     private static final int REQUEST_ADD_EXTERNAL_ATTENDEES = 2;
     @BindView(R.id.lv_attendees)
     ScrollViewWithListView attendeesListView;
-    @BindView(R.id.rl_add_attendees)
-    RelativeLayout addAttendeesLayout;
     @BindView(R.id.sv_content)
     ScrollView contentScrollView;
     @BindView(R.id.tv_num)
     TextView numText;
     private List<WebexAttendees> webexAttendeesList = new ArrayList<>();
     private Adapter adapter;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public void onCreate() {
@@ -78,6 +70,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
         return R.layout.activity_webex_add_attendees;
     }
 
+    @Nullable
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {

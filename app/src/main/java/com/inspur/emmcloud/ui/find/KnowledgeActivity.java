@@ -1,19 +1,6 @@
 package com.inspur.emmcloud.ui.find;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.FindAPIService;
-import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
-import com.inspur.emmcloud.bean.find.KnowledgeInfo;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +8,19 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.FindAPIService;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
+import com.inspur.emmcloud.bean.find.KnowledgeInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class KnowledgeActivity extends BaseActivity {

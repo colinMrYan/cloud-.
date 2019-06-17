@@ -1,0 +1,41 @@
+<resources>
+    <!-- Application theme. -->
+    <style name="AppRootTheme" parent="Theme.AppCompat.Light" />
+
+    <style name="AppTheme" parent="AppRootTheme">
+        <item name="android:colorPrimaryDark">#FFFFFF</item>
+        <item name="colorAccent">#36A5F6</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:textColorPrimary">#333333</item>
+        <item name="android:textColorSecondary">#333333</item>
+        <!--no Action Bar-->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <!-- button  init-->
+        <item name="CustomButtonStyle">@style/CusButtonBase</item>
+        <item name="cus_round_btn_bg_color">@color/s_btn_blue_bg</item>
+        <item name="cus_round_btn_border_color">@color/s_btn_blue_border</item>
+        <item name="cus_round_btn_text_color">@color/s_btn_blue_text</item>
+        <item name="cus_content_spacing_horizontal">20dp</item>
+        <item name="cus_content_padding_horizontal">16dp</item>
+        <item name="cus_round_btn_text_size">16sp</item>
+        <item name="cus_round_btn_border_width">1dp</item>
+
+        <item name="cus_isRadiusAdjustBounds">true</item>
+        <item name="cus_backgroundColor">@color/transparent</item>
+        <item name="cus_borderWidth">1dp</item>
+        <item name="cus_borderColor">@color/s_btn_blue_border</item>
+
+        <item name="cus_loading_view_size">20dp</item>
+        <item name="android:color">#858C96</item>
+        <item name="CusLoadingStyle">@style/CusLoadingBase</item>
+    </style>
+
+    <style name="CusButtonBase" parent="android:Widget.Material.Light.Button" />
+
+    <style name="CusImageButton" parent="android:Widget.Material.Light.ImageButton">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+</resources>

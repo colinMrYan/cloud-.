@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_header"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/white">
+
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_back_btn_white" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_header"
+        android:background="@color/content_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view_group_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="-3dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="1.5dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <com.inspur.emmcloud.baselib.widget.CircleTextImageView
+                            android:id="@+id/iv_group_photo"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_gravity="center_horizontal"
+                            android:elevation="10dp"
+                            android:onClick="onClick"
+                            android:src="@drawable/icon_photo_default" />
+
+                        <TextView
+                            android:id="@+id/tv_group_members"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginTop="10dp"
+                            android:elevation="10dp"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
+
+
+                        <LinearLayout
+                            android:id="@+id/ll_group_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginBottom="9dp"
+                            android:layout_marginTop="22dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/ll_group_image"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:onClick="onClick"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/icon_group_image" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/picture"
+                                    android:textColor="#36A5F6"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/ll_group_file"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:onClick="onClick"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/icon_group_file" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/file"
+                                    android:textColor="#36A5F6"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/ll_group_qrcode"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:onClick="onClick"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/icon_group_qrcode" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/group_qrcode"
+                                    android:textColor="#36A5F6"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_member"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/card_view_group_summary"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/text_layout_selector"
+                    android:onClick="onClick"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_member"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FF333333"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_group_member_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        android:textColor="#999999"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_group_arrow_right"
+                        style="@style/arrow_right"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:src="@drawable/ic_arrow_right" />
+
+                    <com.inspur.emmcloud.baselib.widget.NoScrollGridView
+                        android:id="@+id/gv_member"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_member"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:horizontalSpacing="10dp"
+                        android:listSelector="@android:color/transparent"
+                        android:numColumns="7"
+                        android:stretchMode="columnWidth" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_channel_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="15dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/tv_name_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/channel_group_name"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toLeftOf="@+id/tv_name_arrow"
+                    android:layout_toRightOf="@id/tv_name_tips"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:singleLine="true"
+                    android:textColor="#FF8F8E94"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/tv_name_arrow"
+                    style="@style/arrow_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_arrow_right" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:layout_marginLeft="15dp"
+                android:background="@color/color_list_divider" />
+
+            <RelativeLayout
+                android:id="@+id/rl_search_messages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="15dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/tv_search_messages"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/chat_group_message_search"
+                    android:textColor="#FF333333"
+                    android:textSize="16sp" />
+
+
+                <ImageView
+                    android:id="@+id/tv_search_messages_arrow"
+                    style="@style/arrow_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_arrow_right" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:onClick="onClick"
+                android:orientation="vertical"
+                android:paddingLeft="15dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/channel_set_top"
+                        android:textColor="#FF333333"
+                        android:textSize="16sp" />
+
+                    <com.inspur.emmcloud.baselib.widget.SwitchView
+                        android:id="@+id/sv_stick"
+                        android:layout_width="37dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5px"
+                    android:background="@color/color_list_divider" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/message_without_interruption"
+                        android:textColor="#FF333333"
+                        android:textSize="16sp" />
+
+                    <com.inspur.emmcloud.baselib.widget.SwitchView
+                        android:id="@+id/sv_dnd"
+                        android:layout_width="37dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"></com.inspur.emmcloud.baselib.widget.SwitchView>
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/bt_exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/text_layout_selector"
+                android:gravity="center_horizontal"
+                android:onClick="onClick"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/quit_group"
+                android:textColor="#FF4242"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

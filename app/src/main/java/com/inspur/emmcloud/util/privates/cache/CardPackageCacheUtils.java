@@ -2,8 +2,9 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
 

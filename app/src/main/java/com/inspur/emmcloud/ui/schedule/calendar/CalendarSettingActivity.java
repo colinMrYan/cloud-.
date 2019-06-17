@@ -1,21 +1,5 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.schedule.MyCalendar;
-import com.inspur.emmcloud.bean.system.SimpleEventMessage;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
-import com.inspur.emmcloud.widget.ScrollViewWithListView;
-
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +7,22 @@ import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.bean.schedule.MyCalendar;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

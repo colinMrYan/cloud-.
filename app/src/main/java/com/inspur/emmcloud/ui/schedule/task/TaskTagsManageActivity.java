@@ -1,21 +1,5 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
-import java.util.ArrayList;
-
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
-import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +8,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.schedule.meeting.GetTagResult;
+import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

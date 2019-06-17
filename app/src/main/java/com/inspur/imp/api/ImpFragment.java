@@ -28,22 +28,22 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ResourceUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppWebConfig;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.bean.system.MainTabMenu;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppWebConfig;
+import com.inspur.emmcloud.login.login.LoginService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
-import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ResourceUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.MDM.MDM;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
-import com.inspur.emmcloud.widget.MaxHeightListView;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.IPlugin;
 import com.inspur.imp.plugin.PluginMgr;
@@ -55,6 +55,7 @@ import com.inspur.imp.plugin.photo.PhotoService;
 import com.inspur.imp.plugin.staff.SelectStaffService;
 import com.inspur.imp.plugin.window.DropItemTitle;
 import com.inspur.imp.plugin.window.OnKeyDownListener;
+import com.luojilab.component.componentlib.router.Router;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -448,10 +449,10 @@ public class ImpFragment extends ImpBaseFragment {
      * 返回
      */
     public boolean onBackKeyDown() {
-        if (ImpFragment.this.onKeyDownListener != null){
+        if (ImpFragment.this.onKeyDownListener != null) {
             ImpFragment.this.onKeyDownListener.onBackKeyDown();
-        }else {
-            if (!webView.getWebChromeClient().hideCustomView()){
+        } else {
+            if (!webView.getWebChromeClient().hideCustomView()) {
                 if (webView.canGoBack()) {
                     webView.goBack();// 返回上一页面
                     setGoBackTitle();
@@ -466,7 +467,11 @@ public class ImpFragment extends ImpBaseFragment {
 
     public void finishActivity() {
         if (!StringUtils.isBlank(getArguments().getString("function")) && getArguments().getString("function").equals("mdm")) {
-            new MDM().getMDMListener().MDMStatusNoPass();
+            Router router = Router.getInstance();
+            if (router.getService(LoginService.class.getSimpleName()) != null) {
+                LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+                service.setMDMStatusNoPass();
+            }
         }
         getActivity().finish();// 退出程序
     }
@@ -478,12 +483,7 @@ public class ImpFragment extends ImpBaseFragment {
         webViewHeaders = new HashMap<>();
         addAuthorizationToken(url);
         webViewHeaders.put("X-ECC-Current-Enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
-        String languageJson = PreferencesUtils.getString(
-                getActivity(), MyApplication.getInstance().getTanent() + "appLanguageObj");
-        if (languageJson != null) {
-            Language language = new Language(languageJson);
-            webViewHeaders.put("Accept-Language", language.getIana());
-        }
+        webViewHeaders.put("Accept-Language", LanguageManager.getInstance().getCurrentAppLanguage());
     }
 
     /**

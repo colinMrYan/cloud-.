@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,19 +36,6 @@ public class ScheduleMeetingListAdapter extends BaseAdapter {
 
     public void setOnItemClickLister(OnItemClickLister onItemClickLister) {
         this.onItemClickLister = onItemClickLister;
-    }
-
-    public interface OnItemClickLister {
-        void onItemClick(View view, int position);
-    }
-
-    class ViewHolder {
-        public ImageView iconImg;
-        public TextView titleText;
-        public TextView displayNameText;
-        public TextView timeText;
-        public TextView buildingText;
-        public TextView dateText;
     }
 
     @Override
@@ -114,5 +101,18 @@ public class ScheduleMeetingListAdapter extends BaseAdapter {
             }
         });
         return view;
+    }
+
+    public interface OnItemClickLister {
+        void onItemClick(View view, int position);
+    }
+
+    class ViewHolder {
+        public ImageView iconImg;
+        public TextView titleText;
+        public TextView displayNameText;
+        public TextView timeText;
+        public TextView buildingText;
+        public TextView dateText;
     }
 }

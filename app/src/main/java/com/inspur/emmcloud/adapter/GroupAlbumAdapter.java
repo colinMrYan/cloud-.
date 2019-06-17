@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

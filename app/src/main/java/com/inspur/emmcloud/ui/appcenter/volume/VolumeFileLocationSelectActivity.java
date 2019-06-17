@@ -1,26 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.greenrobot.eventbus.EventBus;
-
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.VolumeFileAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.system.ClearShareDataBean;
-import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,6 +7,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.VolumeFileAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.system.ClearShareDataBean;
+import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
