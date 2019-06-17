@@ -7,7 +7,7 @@ import com.inspur.emmcloud.componentservice.CoreService;
  */
 
 public interface CommunicationService extends CoreService {
-    void startWebSocket();
+    void startWebSocket(boolean isForceReconnect);
 
     void webSocketSignout();
 

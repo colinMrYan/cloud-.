@@ -117,10 +117,16 @@ public class WebSocketPush {
         }
     }
 
+    public void startWebSocket() {
+        startWebSocket(false);
+    }
+
     /**
      * 开始WebSocket推送
+     *
+     * @param isForceReconnect 强制重连
      */
-    public void startWebSocket() {
+    public void startWebSocket(boolean isForceReconnect) {
         // TODO Auto-generated method stub
         if (!MyApplication.getInstance().isHaveLogin()) {
             return;
@@ -135,14 +141,14 @@ public class WebSocketPush {
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             String pushId = PushManagerUtils.getInstance().getPushId(MyApplication.getInstance());
             if (!pushId.equals("UNKNOWN")) {
-                WebSocketConnect();
+                WebSocketConnect(isForceReconnect);
             }
         } else if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
                 new ClientIDUtils(MyApplication.getInstance(), new ClientIDUtils.OnGetClientIdListener() {
                     @Override
                     public void getClientIdSuccess(String clientId) {
-                        WebSocketConnect();
+                        WebSocketConnect(isForceReconnect);
                     }
 
                     @Override
@@ -156,9 +162,10 @@ public class WebSocketPush {
         }
     }
 
-    private void WebSocketConnect() {
+
+    private void WebSocketConnect(boolean isForceReconnect) {
         synchronized (this) {
-            if (isSocketConnect() || isWebsocketConnecting) {
+            if (isSocketConnect() || (!isForceReconnect && isWebsocketConnecting)) {
                 return;
             }
             String url = APIUri.getWebsocketConnectUrl();
@@ -265,6 +272,9 @@ public class WebSocketPush {
             } else {
                 WSAPIService.getInstance().sendAppStatus(isActive ? "ACTIVED" : "SUSPEND");
                 LogUtils.debug(TAG, "发送App状态：" + (isActive ? "ACTIVED" : "SUSPEND"));
+                if (!isActive) {
+                    closeWebsocket();
+                }
             }
         } else if (isActive) {
             startWebSocket();

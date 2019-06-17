@@ -50,7 +50,6 @@ import com.inspur.emmcloud.web.plugin.IPlugin;
 import com.inspur.emmcloud.web.plugin.PluginMgr;
 import com.inspur.emmcloud.web.plugin.barcode.scan.BarCodeService;
 import com.inspur.emmcloud.web.plugin.camera.CameraService;
-import com.inspur.emmcloud.web.plugin.file.FileService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.photo.PhotoService;
 import com.inspur.emmcloud.web.plugin.staff.SelectStaffService;
@@ -712,9 +711,6 @@ public class ImpFragment extends ImpBaseFragment {
                         break;
                     case SELECT_STAFF_SERVICE_REQUEST:
                         serviceName = SelectStaffService.class.getCanonicalName().trim();
-                        break;
-                    case FILE_SERVICE_REQUEST:
-                        serviceName = FileService.class.getCanonicalName().trim();
                         break;
                     case BARCODE_SERVER__SCAN_REQUEST:
                         serviceName = BarCodeService.class.getCanonicalName().trim();

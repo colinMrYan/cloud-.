@@ -31,7 +31,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class) != null) {
             CommunicationService service = router.getService(CommunicationService.class);
-            service.startWebSocket();
+            service.startWebSocket(false);
         }
     }
 

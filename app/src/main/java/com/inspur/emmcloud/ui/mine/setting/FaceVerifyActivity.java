@@ -106,7 +106,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     public void onCreate() {
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            ToastUtils.show(this, R.string.filetransfer_sd_not_exist);
+            ToastUtils.show(this, R.string.baselib_sd_not_exist);
             finish();
         }
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏

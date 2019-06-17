@@ -60,7 +60,7 @@ public class WebServiceImpl implements WebService {
                         }
                     });
         } else {
-            ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
+            ToastUtils.show(activity, R.string.baselib_sd_not_exist);
         }
     }
 

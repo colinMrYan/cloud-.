@@ -50,7 +50,6 @@ import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
-import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
@@ -74,8 +73,6 @@ public class SettingActivity extends BaseActivity {
     private static final int DATA_CLEAR_SUCCESS = 0;
     @BindView(R.id.switch_view_setting_web_rotate)
     SwitchView webRotateSwitch;
-    @BindView(R.id.switch_view_setting_run_background)
-    SwitchView runBackgroundSwitch;
     @BindView(R.id.switch_view_setting_voice_2_word)
     SwitchView voice2WordSwitch;
     @BindView(R.id.rl_setting_voice_2_word)
@@ -105,9 +102,6 @@ public class SettingActivity extends BaseActivity {
         @Override
         public void toggleToOn(View view) {
             switch (view.getId()) {
-                case R.id.switch_view_setting_run_background:
-                    setAppRunBackground(true);
-                    break;
                 case R.id.switch_view_setting_voice_2_word:
                     PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_OPEN);
                     voice2WordSwitch.setOpened(true);
@@ -129,9 +123,6 @@ public class SettingActivity extends BaseActivity {
         @Override
         public void toggleToOff(View view) {
             switch (view.getId()) {
-                case R.id.switch_view_setting_run_background:
-                    setAppRunBackground(false);
-                    break;
                 case R.id.switch_view_setting_voice_2_word:
                     PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PREF_APP_OPEN_VOICE_WORD_SWITCH, DisplayMediaVoiceMsg.IS_VOICE_WORD_CLOUSE);
                     voice2WordSwitch.setOpened(false);
@@ -216,9 +207,6 @@ public class SettingActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         setWebAutoRotateState();
         webRotateSwitch.setOnStateChangedListener(onStateChangedListener);
-        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
-        runBackgroundSwitch.setOpened(isAppSetRunBackground);
-        runBackgroundSwitch.setOnStateChangedListener(onStateChangedListener);
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setOpened(AppUtils.getIsVoiceWordOpen());
@@ -343,22 +331,6 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 设置app是否运行在后台
-     *
-     * @param isAppSetRunBackground
-     */
-    private void setAppRunBackground(boolean isAppSetRunBackground) {
-        PreferencesUtils.putBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, isAppSetRunBackground);
-        runBackgroundSwitch.setOpened(isAppSetRunBackground);
-        Intent intent = new Intent();
-        intent.setClass(SettingActivity.this, BackgroundService.class);
-        if (isAppSetRunBackground) {
-            startService(intent);
-        } else {
-            stopService(intent);
-        }
-    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -459,7 +431,6 @@ public class SettingActivity extends BaseActivity {
      */
     private void stopAppService() {
         stopService(new Intent(getApplicationContext(), CoreService.class));
-        stopService(new Intent(getApplicationContext(), BackgroundService.class));
     }
 
 

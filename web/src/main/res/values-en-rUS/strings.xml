@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="web_load_fail">Load failed,Touch the screen to reload </string>
+    <string name="web_reload">Network Diagnosis</string>
+    <!-- 二维码识别 -->
+    <string name="msg_default_status">Please put the qr code scanning frame</string>
+    <string name="put_qrcode_in_frame">The viewfinder is aligned QR code/barcode，</string>
+    <string name="can_auto_scan">can automatically scan</string>
+    <string name="msg_camera_framework_bug">Sorry, the Android camera problems. You may need to restart the device</string>
+    <string name="capture_tip">Please scan the bar code is placed within the frame</string>
+    <string name="scan_result">Scan Results</string>
+    <string name="can_not_recognize">Unrecognized</string>
+
+    <!-- 网络状态 -->
+    <string name="filetransfer_network_disconnected">Network not connected！</string>
+
+    <!-- 应用管理 -->
+    <string name="filetransfer_downloading">Downloading</string>
+    <string name="filetransfer_begin_download">Start Download</string>
+    <string name="filetransfer_download_failed">Download Failed</string>
+    <string name="filetransfer_download_success">Download Success</string>
+    <string name="filetransfer_connect_timeout">Connection Timeout</string>
+    <string name="filetransfer_downloaded">Downloaded</string>
+
+
+    <!-- GPS -->
+    <string name="gpsOpened">GPS has been turned on</string>
+    <string name="gpsClosed">GPS has been turned off</string>
+</resources>

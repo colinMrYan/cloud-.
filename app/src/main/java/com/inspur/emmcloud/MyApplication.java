@@ -50,7 +50,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class) != null) {
             CommunicationService service = router.getService(CommunicationService.class);
-            service.startWebSocket();
+            service.startWebSocket(false);
         }
         SoLoader.init(this, false);//ReactNative相关初始化
     }

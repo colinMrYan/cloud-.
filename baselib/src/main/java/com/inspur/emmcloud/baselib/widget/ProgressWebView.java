@@ -21,7 +21,7 @@ public class ProgressWebView extends WebView {
                 DensityUtil.dip2px(context, 3), 0, 0));
 
         Drawable drawable = context.getResources().getDrawable(
-                R.drawable.imp_progress_bar_states);
+                R.drawable.widget_progress_bar_states);
         progressbar.setProgressDrawable(drawable);
         addView(progressbar);
         setWebChromeClient(new android.webkit.WebChromeClient() {

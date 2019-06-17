@@ -81,7 +81,7 @@
     <!-- 通讯录 -->
     <color name="yellow_light">#ffefa717</color>
     <color name="comment_file_color">#0f7bca</color>
-
+    <color name="transparent">#00000000</color>
     <!--
      <color name="black">#ff000000</color>
      <color name="white">#ffffffff</color>
@@ -119,11 +119,9 @@
     <color name="red_f4333c">#F4333C</color>
     <color name="color_list_divider">#dddddd</color>
     <color name="color_list_divider_tran">#99dddddd</color>
-    <!--
-        <color name="colorPrimary">#3F51B5</color>
-        <color name="colorPrimaryDark">#303F9F</color>
-        <color name="colorAccent">#FF4081</color>
-    -->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 
 
     <color name="voice_communication_function_select">#3CA6F7</color>

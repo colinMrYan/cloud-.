@@ -847,7 +847,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         File file = new File(filePath);
         if (!file.exists()) {
             if (messageType != Message.MESSAGE_TYPE_MEDIA_VOICE) {
-                ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
+                ToastUtils.show(MyApplication.getInstance(), R.string.baselib_file_not_exist);
             }
             return;
         }

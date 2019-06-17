@@ -16,7 +16,6 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
@@ -43,7 +42,6 @@ import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
@@ -151,7 +149,6 @@ public class IndexActivity extends IndexBaseActivity {
     private void startService() {
         startUploadPVCollectService();
         startCoreService();
-        startBackgroudService();
         startLocationService();
     }
 
@@ -179,17 +176,6 @@ public class IndexActivity extends IndexBaseActivity {
         }
     }
 
-    /**
-     * 打开后台保活服务
-     */
-    private void startBackgroudService() {
-        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
-        if (isAppSetRunBackground) {
-            Intent intent = new Intent();
-            intent.setClass(this, BackgroundService.class);
-            startService(intent);
-        }
-    }
 
     /**
      * 打开位置收集服务

@@ -115,6 +115,18 @@
     <string name="password">Password</string>
     <string name="no_search_term">No more results</string>
     <string name="more">More</string>
+    <string name="loading_text">Loading</string>
+    <string name="network_exception">Network unavailable,please check</string>
+    <string name="network_timeout">Network timeout, please check</string>
+    <string name="net_request_failed">The server failed to respond correctly</string>
+    <string name="phone_num">Mobile number</string>
+    <string name="mail">Email</string>
+    <string name="register">Register</string>
+    <string name="remark">Remarks</string>
+    <string name="copyed_to_paste_board">Copy to clipboard</string>
+    <string name="baselib_sd_not_exist">SD card does not exist</string>
+    <string name="baselib_file_not_exist">File does not exist</string>
+
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>
@@ -700,7 +712,6 @@
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App Rotation</string>
-    <string name="run_background">AppStarting</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
     <string name="setting_join_experience_plan">Join Early Experience Program</string>
     <string name="setting_gesture_force_set">According to the enterprise security policy, you need to set a gesture password</string>

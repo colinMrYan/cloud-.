@@ -763,9 +763,6 @@
         <service android:name=".service.SyncCommonAppService"></service>
         <service android:name=".service.VoiceHoldService" />
 
-        <!--AliveJobService需要BIND_JOB_SERVICE权限-->
-        <service android:name=".service.BackgroundService"></service>
-
         <receiver
             android:name=".broadcastreceiver.ActionReceiver"
             android:exported="true">

@@ -91,7 +91,7 @@ public class MyCameraActivity extends BaseFragmentActivity implements View.OnCli
     public void onCreate() {
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            ToastUtils.show(this, R.string.filetransfer_sd_not_exist);
+            ToastUtils.show(this, R.string.baselib_sd_not_exist);
             finish();
         }
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题

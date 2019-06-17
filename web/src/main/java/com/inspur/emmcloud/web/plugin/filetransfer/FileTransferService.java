@@ -247,7 +247,7 @@ public class FileTransferService extends ImpPlugin {
         // 判断是否含有sd卡
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            ToastUtils.show(getFragmentContext(), Res.getString("filetransfer_sd_not_exist"));
+            ToastUtils.show(getFragmentContext(), Res.getString("baselib_sd_not_exist"));
             return;
         }
         // 判断网络是否连接

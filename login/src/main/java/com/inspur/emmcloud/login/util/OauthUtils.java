@@ -97,7 +97,7 @@ public class OauthUtils extends LoginAPIInterfaceImpl {
             Router router = Router.getInstance();
             if (router.getService(CommunicationService.class) != null) {
                 CommunicationService service = router.getService(CommunicationService.class);
-                service.startWebSocket();
+                service.startWebSocket(true);
             }
             tokenGetTime = System.currentTimeMillis();
             isTokenRefreshing = false;

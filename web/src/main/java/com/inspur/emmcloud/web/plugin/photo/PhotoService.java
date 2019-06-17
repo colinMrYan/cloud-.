@@ -197,7 +197,7 @@ public class PhotoService extends ImpPlugin {
                 getImpCallBackInterface().onStartActivityForResult(intent, ImpFragment.PHOTO_SERVICE_CAMERA_REQUEST);
             }
         } else {
-            ToastUtils.show(getFragmentContext(), Res.getStringID("filetransfer_sd_not_exist"));
+            ToastUtils.show(getFragmentContext(), Res.getStringID("baselib_sd_not_exist"));
         }
     }
 

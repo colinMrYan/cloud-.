@@ -10,8 +10,8 @@ import com.inspur.emmcloud.push.WebSocketPush;
 
 public class CommunicationServiceImpl implements CommunicationService {
     @Override
-    public void startWebSocket() {
-        WebSocketPush.getInstance().startWebSocket();
+    public void startWebSocket(boolean isForceReconnect) {
+        WebSocketPush.getInstance().startWebSocket(isForceReconnect);
     }
 
     @Override

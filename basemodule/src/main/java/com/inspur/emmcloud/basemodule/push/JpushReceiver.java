@@ -91,7 +91,7 @@ public class JpushReceiver extends BroadcastReceiver {
             Router router = Router.getInstance();
             if (router.getService(CommunicationService.class) != null) {
                 CommunicationService service = router.getService(CommunicationService.class);
-                service.startWebSocket();
+                service.startWebSocket(false);
             }
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {

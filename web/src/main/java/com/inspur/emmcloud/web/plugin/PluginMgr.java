@@ -16,7 +16,6 @@ import com.inspur.emmcloud.web.plugin.datetime.TimePickerService;
 import com.inspur.emmcloud.web.plugin.device.DeviceService;
 import com.inspur.emmcloud.web.plugin.dialog.DialogService;
 import com.inspur.emmcloud.web.plugin.emm.EMMService;
-import com.inspur.emmcloud.web.plugin.file.FileService;
 import com.inspur.emmcloud.web.plugin.filetransfer.FileTransferService;
 import com.inspur.emmcloud.web.plugin.gps.GpsService;
 import com.inspur.emmcloud.web.plugin.loadingdialog.LoadingDialogService;
@@ -225,8 +224,6 @@ public class PluginMgr {
                 serviceName = DialogService.class.getCanonicalName();
             } else if (serviceName.endsWith("EMMService")) {
                 serviceName = EMMService.class.getCanonicalName();
-            } else if (serviceName.endsWith("FileService")) {
-                serviceName = FileService.class.getCanonicalName();
             } else if (serviceName.endsWith("GpsService")) {
                 serviceName = GpsService.class.getCanonicalName();
             } else if (serviceName.endsWith("MapService")) {

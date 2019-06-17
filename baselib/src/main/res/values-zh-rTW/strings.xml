@@ -121,6 +121,18 @@
     <string name="password">密碼</string>
     <string name="more">更多</string>
     <string name="no_search_term">沒有更多的搜索結果</string>
+    <string name="loading_text">正在載入</string>
+    <string name="network_exception">網路不可用，請檢查您的網路設置</string>
+    <string name="network_timeout">網絡超時，請檢查您的網絡設定</string>
+    <string name="net_request_failed">服務未能正確回應</string>
+    <string name="phone_num">手機號</string>
+    <string name="mail">郵箱</string>
+    <string name="register">註冊</string>
+    <string name="remark">備註</string>
+    <string name="copyed_to_paste_board">已複製到剪切板</string>
+    <string name="baselib_sd_not_exist">sd卡不存在！</string>
+    <string name="baselib_file_not_exist">檔案不存在！</string>
+
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
@@ -703,7 +715,6 @@
     <string name="close_auto_select_enterprise">下次登入默認使用該企業</string>
     <string name="turn_off_success">關閉成功</string>
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
-    <string name="run_background">後臺運行</string>
     <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
     <string name="setting_join_experience_plan">加入升級體驗計劃</string>
     <string name="setting_gesture_force_set">根據企業安全性原則，需要您設置手勢密碼</string>

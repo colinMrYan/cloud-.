@@ -121,6 +121,18 @@
     <string name="load_data_failed">加载数据失败</string>
     <string name="password">密码</string>
     <string name="more">更多</string>
+    <string name="loading_text">正在加载</string>
+    <string name="network_exception">网络不可用，请检查您的网络设置</string>
+    <string name="network_timeout">网络超时，请检查您的网络设置</string>
+    <string name="net_request_failed">服务未能正确响应</string>
+    <string name="phone_num">手机号</string>
+    <string name="mail">邮箱</string>
+    <string name="register">注册</string>
+    <string name="remark">备注</string>
+    <string name="copyed_to_paste_board">已复制到剪切板</string>
+    <string name="baselib_sd_not_exist">sd卡不存在！</string>
+    <string name="baselib_file_not_exist">文件不存在！</string>
+
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
@@ -711,7 +723,6 @@
     <string name="close_auto_select_enterprise">下次登录默认使用该企业</string>
     <string name="web_app_auto_rotate">Web应用支持旋转</string>
     <string name="turn_off_success">关闭成功</string>
-    <string name="run_background">后台运行</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
     <string name="setting_join_experience_plan">加入升级体验计划</string>
     <string name="setting_gesture_force_set">根据企业安全性原则，需要您设置手势密码</string>
