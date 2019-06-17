@@ -39,7 +39,7 @@
                 android:layout_marginLeft="8dp"
                 android:background="@drawable/ic_search_members" />
 
-            <com.inspur.emmcloud.widget.ClearEditText
+            <com.inspur.emmcloud.baselib.widget.ClearEditText
                 android:id="@+id/ev_search_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -112,7 +112,6 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="2dp"
                             android:layout_marginStart="16dp"
-                            android:src="@drawable/search"
                             android:tint="#36A5F6"/>
                         <TextView
                             android:layout_width="match_parent"
