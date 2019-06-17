@@ -107,7 +107,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private Map<String, String> webViewHeaders;
     private RelativeLayout loadingLayout;
 
-    public static void setSwitchColor(SwitchCompat v) {
+    public void setSwitchColor(SwitchCompat v) {
         // thumb color
         int thumbColor = 0x1A666666;
 
