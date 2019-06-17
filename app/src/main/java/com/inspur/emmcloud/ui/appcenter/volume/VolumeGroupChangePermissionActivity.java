@@ -43,7 +43,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     private MyAppAPIService myAppAPIService;
     private LoadingDialog loadingDialog;
 
-    public static void setSwitchColor(int thumbColor, int trackColor, SwitchCompat v) {
+    public void setSwitchColor(int thumbColor, int trackColor, SwitchCompat v) {
         // thumb color
         // int thumbColor = 0x1A666666;
 
