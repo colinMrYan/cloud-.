@@ -329,6 +329,7 @@
     <string name="chat_long_click_transmit">轉發</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">複製文字</string>
+    <string name="communication_search">搜索</string>
 
 
     <!-- 會議卡片 -->
