@@ -105,8 +105,9 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
     private void handMessage() {
         handler = new Handler() {
-            protected void handleMessage(Object o, Message message) {
-                switch (message.what) {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
                     case REFRESH_DATA:
                         /**刷新Ui*/
                         groupAdapter.notifyDataSetChanged();
@@ -115,7 +116,6 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
                         break;
                 }
             }
-
         };
     }
 

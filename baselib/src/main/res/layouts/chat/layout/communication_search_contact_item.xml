@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
-    <com.inspur.emmcloud.widget.CircleTextImageView
+
+    <com.inspur.emmcloud.baselib.widget.CircleTextImageView
         android:id="@+id/iv_contact_head"
         android:layout_width="46dp"
         android:layout_height="46dp"
