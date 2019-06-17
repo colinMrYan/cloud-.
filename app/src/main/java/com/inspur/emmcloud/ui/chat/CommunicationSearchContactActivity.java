@@ -79,8 +79,11 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        super.onCreate(savedInstanceState);
+        searchEdit = findViewById(R.id.ev_search_input);
+        cancelTextView = findViewById(R.id.tv_cancel);
+        searchGroupListView = findViewById(R.id.lv_search_group_show);
         int navigationBarColor = R.color.search_contact_header_bg;
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
         int statusBarColor = ResourceUtils.getResValueOfAttr(CommunicationSearchContactActivity.this, R.attr.header_bg_color);
