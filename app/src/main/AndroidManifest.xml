@@ -757,7 +757,6 @@
 
         <!-- service -->
         <service android:name=".service.LocationService"></service>
-        <service android:name=".basemodule.service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
@@ -803,48 +802,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-
-        <activity
-            android:name=".basemodule.util.imagepicker.ui.ImageGridActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".basemodule.util.imagepicker.ui.ImagePreviewActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".basemodule.util.imagepicker.ui.ImageCropActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".basemodule.util.imageedit.IMGEditActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait" />
-
-        <!-- ImagePicker -->
-
-
-        <!-- imp插件 -->
-
-
-        <activity
-            android:name=".basemodule.util.mycamera.MyCameraActivity"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:stateNotNeeded="true"
-            android:supportsRtl="true" />
-
-
-        <!-- imp插件 -->
-
-        <!-- 高德定位需要的服务 -->
-        <service android:name="com.amap.api.location.APSService"></service>
-
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="6fec0bde62bb59a08712ac15d02f8774" />
 
 
         <!--社交分享-->

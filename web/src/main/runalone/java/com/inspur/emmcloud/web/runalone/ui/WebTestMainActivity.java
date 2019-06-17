@@ -15,7 +15,7 @@ public class WebTestMainActivity extends BaseActivity {
     @Override
     public void onCreate() {
         Intent intent = new Intent(this, ImpActivity.class);
-        intent.putExtra("uri", "http://www.baidu.com");
+        intent.putExtra("uri", "http://emm.inspuronline.com:83/JSApi/index.html");
         intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
         startActivity(intent);
         finish();
