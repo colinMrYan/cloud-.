@@ -631,6 +631,7 @@ public class AppAPIService {
                     apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
                 }
             }
+
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {

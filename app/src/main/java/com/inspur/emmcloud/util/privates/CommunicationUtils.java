@@ -9,7 +9,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
@@ -210,20 +209,17 @@ public class CommunicationUtils {
         int previewImgHight = 0;
         int previewImgWidth = 0;
         long previewFileSize = 0;
-        LogUtils.LbcDebug("获得压缩后的图片" + "RawImgHight::" + imgHeight + "Rawwidth::" + imgWidth + "size:" + fileSize);
         if (!StringUtils.isBlank(previewImgPath)) {
             Bitmap previewPictureBitmap = BitmapFactory.decodeFile(previewImgPath);
             previewImgHight = previewPictureBitmap.getHeight();
             previewImgWidth = previewPictureBitmap.getWidth();
             previewFileSize = FileUtils.getFileSize(previewImgPath);
             previewPictureBitmap.recycle();
-            LogUtils.LbcDebug("获得压缩后的图片" + "previewImgHight::" + previewImgHight + "width::" + previewImgWidth + "size" + previewFileSize);
         } else {
             previewImgHight = imgHeight;
             previewImgWidth = imgWidth;
             previewFileSize = fileSize;
             previewImgPath = localFilePath;
-            LogUtils.LbcDebug("未压缩后的图片" + "previewImgHight::" + previewImgHight + "width::" + previewImgWidth);
         }
         //还要转回dp/2
         int thumbnailHeight = 0;
@@ -233,7 +229,6 @@ public class CommunicationUtils {
             thumbnailHeight = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.height) / 2);
             thumbnailWidth = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.width) / 2);
         }
-        LogUtils.LbcDebug("缩略图显示：" + "thumbnailHeight" + thumbnailHeight + "thumbnailWidth" + thumbnailWidth);
 
         MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
         msgContentMediaImage.setName(file.getName());

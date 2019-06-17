@@ -31,7 +31,6 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -836,8 +835,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                         if (!originalPicture) {
                             imgPath = previewImgPath;
                         }
-                        LogUtils.LbcDebug("impPath::" + imgPath);
-                        LogUtils.LbcDebug("previewImgPath::" + previewImgPath);
                         //  DisplayMediaImageMsg.getImgViewSize(this,)
                         combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, previewImgPath);
                     }

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
@@ -58,27 +57,20 @@ public class DisplayMediaImageMsg {
             } else {
                 imageUri = "file://" + imageUri;
             }
+
         }
         //判断是否有Preview 图片如果有的话用preview ，否则用原图
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
-        LogUtils.LbcDebug("RawView h:" + h);
-        LogUtils.LbcDebug("RawView w:" + w);
         if (msgContentMediaImage.getPreviewHeight() > 0 && msgContentMediaImage.getPreviewWidth() > 0) {
             h = msgContentMediaImage.getPreviewHeight();
             w = msgContentMediaImage.getPreviewWidth();
         }
-        LogUtils.LbcDebug("preView h:" + h);
-        LogUtils.LbcDebug("preView w:" + w);
-
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
         LayoutParams layoutParams = getImgViewSize(context, w, h);
         if (imageUri.startsWith("http")) {
             imageUri = imageUri + "&w=" + layoutParams.width + "&h=" + layoutParams.height;
         }
-
-        LogUtils.LbcDebug("result imageUri::" + imageUri);
-
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
