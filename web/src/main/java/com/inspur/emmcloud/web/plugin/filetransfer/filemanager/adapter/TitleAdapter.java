@@ -28,7 +28,7 @@ public class TitleAdapter extends RecyclerViewAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.plugin_filemanager_title_holder, parent, false);
+        View view = mLayoutInflater.inflate(R.layout.web_filemanager_title_holder, parent, false);
         return new TitleHolder(view);
     }
 

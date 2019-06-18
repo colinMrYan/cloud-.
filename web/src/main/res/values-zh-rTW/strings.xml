@@ -3,31 +3,13 @@
     <string name="web_load_fail">加載出錯，輕觸屏幕重新加載</string>
     <string name="web_reload">網絡診斷</string>
 
-
-    <!-- 二维码识别 -->
-    <string name="msg_default_status">請將二維碼放置於取景框內掃描</string>
-    <string name="msg_camera_framework_bug">抱歉，Android相機出現問題。您可能需要重啟設備。</string>
-    <string name="capture_tip">請將條碼置於取景框內掃描</string>
-    <string name="put_qrcode_in_frame">將取景框對準二維碼/條碼，</string>
-    <string name="can_auto_scan">即可自動掃描</string>
-    <string name="scan_result">掃描結果</string>
-    <string name="can_not_recognize">無法識別</string>
-
-
-    <!-- 網路狀態 -->
-    <string name="filetransfer_network_disconnected">網路未連接！</string>
-
-    <!-- 應用管理 -->
-    <string name="filetransfer_downloading">正在下載</string>
-    <string name="filetransfer_begin_download">開始下載</string>
-    <string name="filetransfer_download_failed">下載失敗！</string>
-    <string name="filetransfer_download_success">下載成功！</string>
-    <string name="filetransfer_connect_timeout">連接逾時</string>
-    <string name="filetransfer_downloaded">已下載</string>
-
+    <string name="web_put_qrcode_in_frame">將取景框對準二維碼/條碼，</string>
+    <string name="web_can_auto_scan">即可自動掃描</string>
+    <string name="web_scan_result">掃描結果</string>
+    <string name="web_can_not_recognize">無法識別</string>
 
     <!-- GPS -->
-    <string name="gpsOpened">GPS已經開啟</string>
-    <string name="gpsClosed">GPS已經關閉</string>
+    <string name="web_gps_opened">GPS已經開啟</string>
+    <string name="web_gps_closed">GPS已經關閉</string>
 
 </resources>

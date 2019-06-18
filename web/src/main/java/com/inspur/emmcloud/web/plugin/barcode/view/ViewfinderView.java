@@ -71,14 +71,14 @@ public final class ViewfinderView extends View {
         this.context = context;
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         Resources resources = getResources();
-        maskColor = resources.getColor(Res.getColorID("viewfinder_mask"));
-        resultColor = resources.getColor(Res.getColorID("result_view"));
+        maskColor = Color.parseColor("#b0000000");
+        resultColor = Color.parseColor("#60000000");
 
         mRect = new Rect();
         int left = getResources().getColor(Res.getColorID("lightgreen"));
         int center = getResources().getColor(Res.getColorID("green"));
         int right = getResources().getColor(Res.getColorID("lightgreen"));
-        lineDrawable = getResources().getDrawable(Res.getDrawableID("icon_zx_code_line"));
+        lineDrawable = getResources().getDrawable(Res.getDrawableID("web_qrcode_zx_code_line"));
         mDrawable = new GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT, new int[]{left,
                 left, center, right, right});
@@ -148,14 +148,14 @@ public final class ViewfinderView extends View {
             paint.setTextSize(15 * density);
             paint.setTypeface(Typeface.create("System", Typeface.NORMAL));
             FontMetrics fm = paint.getFontMetrics();
-            float textWidth = paint.measureText(getResources().getString(Res.getStringID("put_qrcode_in_frame")));
+            float textWidth = paint.measureText(getResources().getString(Res.getStringID("web_put_qrcode_in_frame")));
             double textheight = Math.ceil(fm.descent - fm.ascent);
             textCenterX = (width - textWidth) / 2;
-            canvas.drawText(getResources().getString(Res.getStringID("put_qrcode_in_frame")), textCenterX,
+            canvas.drawText(getResources().getString(Res.getStringID("web_put_qrcode_in_frame")), textCenterX,
                     frame.bottom + (float) 30 * density, paint);
-            textWidth = paint.measureText(getResources().getString(Res.getStringID("can_auto_scan")));
+            textWidth = paint.measureText(getResources().getString(Res.getStringID("web_can_auto_scan")));
             textCenterX = (width - textWidth) / 2;
-            canvas.drawText(getResources().getString(Res.getStringID("can_auto_scan")), textCenterX,
+            canvas.drawText(getResources().getString(Res.getStringID("web_can_auto_scan")), textCenterX,
                     (float) (frame.bottom + (float) 30 * density + textheight), paint);
 
 

@@ -63,7 +63,7 @@ public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHand
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(this, Permissions.CAMERA, new PermissionRequestCallback() {
             @Override
             public void onPermissionRequestSuccess(List<String> permissions) {
-                setContentView(R.layout.activity_preview_decode);
+                setContentView(R.layout.web_activity_preview_decode);
                 initView();
             }
 
@@ -139,7 +139,7 @@ public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHand
         toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP);
         Intent intent = new Intent();
         if (StringUtils.isBlank(result)) {
-            result = getString(Res.getStringID("can_not_recognize"));
+            result = getString(Res.getStringID("web_can_not_recognize"));
             intent.putExtra("isDecodeSuccess", false);
         } else {
             intent.putExtra("isDecodeSuccess", true);
@@ -187,12 +187,12 @@ public class PreviewDecodeActivity extends BaseActivity implements FunDecodeHand
             if (isTorchOn) {
                 isTorchOn = false;
                 lampText.setText(Res.getStringID("turn_on_light"));
-                torchBtn.setBackgroundResource(Res.getDrawableID("imp_lamp_off"));
+                torchBtn.setBackgroundResource(Res.getDrawableID("web_qrcode_lamp_off"));
                 mDecode.setFlash("off");
             } else {
                 isTorchOn = true;
                 lampText.setText(Res.getStringID("turn_off_light"));
-                torchBtn.setBackgroundResource(Res.getDrawableID("imp_lamp_on"));
+                torchBtn.setBackgroundResource(Res.getDrawableID("web_qrcode_lamp_on"));
                 mDecode.setFlash("torch");
             }
 

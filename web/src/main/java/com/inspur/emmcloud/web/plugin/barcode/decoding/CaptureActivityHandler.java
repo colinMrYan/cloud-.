@@ -64,14 +64,14 @@ public final class CaptureActivityHandler extends Handler {
     @Override
     public void handleMessage(Message message) {
         try {
-            if (Res.getWidgetID("auto_focus") == message.what) {
+            if (Res.getWidgetID("web_auto_focus") == message.what) {
                 if (state == State.PREVIEW) {
-                    CameraManager.get().requestAutoFocus(this, Res.getWidgetID("auto_focus"));
+                    CameraManager.get().requestAutoFocus(this, Res.getWidgetID("web_auto_focus"));
                 }
-            } else if (Res.getWidgetID("restart_preview") == message.what) {
+            } else if (Res.getWidgetID("web_restart_preview") == message.what) {
                 Log.d(TAG, "Got restart preview message");
                 restartPreviewAndDecode();
-            } else if (Res.getWidgetID("decode_succeeded") == message.what) {
+            } else if (Res.getWidgetID("web_decode_succeeded") == message.what) {
                 Log.d(TAG, "Got decode succeeded message");
                 String str_result = ((Result) message.obj).getText();
                 // 返回结果的回调函数
@@ -79,20 +79,20 @@ public final class CaptureActivityHandler extends Handler {
                 str_result = str_result.replaceAll("[\\t\\n\\r]", "");
                 if (str_result == null || str_result.equals("")) {
                     state = State.PREVIEW;
-                    CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
+                    CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("web_decode"));
                 } else {
                     state = State.SUCCESS;
                     activity.handDecodeResult(str_result);
                 }
-            } else if (Res.getWidgetID("decode_failed") == message.what) {
+            } else if (Res.getWidgetID("web_decode_failed") == message.what) {
                 // We're decoding as fast as possible, so when one decode fails, startWebSocket another.
                 if (message.obj != null && NetUtils.isNetworkConnected(activity, false)) {
                     Bitmap cropBitmap = (Bitmap) message.obj;
                     activity.uploadImgToDecodeByServer(cropBitmap);
                 }
                 state = State.PREVIEW;
-                CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
-            } else if (Res.getWidgetID("return_scan_result") == message.what) {
+                CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("web_decode"));
+            } else if (Res.getWidgetID("web_return_scan_result") == message.what) {
                 Log.d(TAG, "Got return scan result message");
                 activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
                 activity.finish();
@@ -105,7 +105,7 @@ public final class CaptureActivityHandler extends Handler {
     public void quitSynchronously() {
         state = State.DONE;
         CameraManager.get().stopPreview();
-        Message quit = Message.obtain(decodeThread.getHandler(), Res.getWidgetID("quit"));
+        Message quit = Message.obtain(decodeThread.getHandler(), Res.getWidgetID("web_quit"));
         quit.sendToTarget();
         try {
             decodeThread.join();
@@ -114,16 +114,16 @@ public final class CaptureActivityHandler extends Handler {
         }
 
         // Be absolutely sure we don't send any queued up messages
-        removeMessages(Res.getWidgetID("decode_succeeded"));
-        //removeMessages(R.id.return_scan_result);
-        removeMessages(Res.getWidgetID("decode_failed"));
+        removeMessages(Res.getWidgetID("web_decode_succeeded"));
+        //removeMessages(R.id.web_return_scan_result);
+        removeMessages(Res.getWidgetID("web_decode_failed"));
     }
 
     private void restartPreviewAndDecode() {
         if (state == State.SUCCESS) {
             state = State.PREVIEW;
-            CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
-            CameraManager.get().requestAutoFocus(this, Res.getWidgetID("auto_focus"));
+            CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("web_decode"));
+            CameraManager.get().requestAutoFocus(this, Res.getWidgetID("web_auto_focus"));
             activity.drawViewfinder();
         }
     }

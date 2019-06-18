@@ -165,7 +165,7 @@ public class FileManagerActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.plugin_filemanager_actvitity;
+        return R.layout.web_activity_file_manager;
     }
 
     private void getIntentParam() {

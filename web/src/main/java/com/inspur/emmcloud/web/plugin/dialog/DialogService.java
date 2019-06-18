@@ -87,7 +87,7 @@ public class DialogService extends ImpPlugin {
         }
         LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
         View viewText = layoutInflater.inflate(
-                Res.getLayoutID("imp_activity_edittext"), null);
+                Res.getLayoutID("web_activity_edittext"), null);
         // 获得Edit框
         editText = (EditText) viewText.findViewById(Res.getWidgetID("txt"));
         if (StrUtil.strIsNotNull(msg)) {
@@ -248,7 +248,7 @@ public class DialogService extends ImpPlugin {
         fbutton = buttonLabel.split(",");
         LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
         View viewText = layoutInflater.inflate(
-                Res.getLayoutID("imp_activity_edittext"), null);
+                Res.getLayoutID("web_activity_edittext"), null);
         // 获得EditText框,在EditText中设置默认文本。
         editText = (EditText) viewText.findViewById(Res.getWidgetID("txt"));
         if (StrUtil.strIsNotNull(defaultText)) {

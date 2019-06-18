@@ -16,6 +16,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
+import com.inspur.emmcloud.web.R;
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 import com.inspur.emmcloud.web.plugin.amaplocation.ECMLoactionTransformUtils;
 
@@ -89,7 +90,7 @@ public class GpsService extends ImpPlugin implements
             // 设置完成后返回到原来的界面
         } else {
             // 弹出Toast
-            ToastUtils.show(getFragmentContext(), "GPS已经开启");
+            ToastUtils.show(getFragmentContext(), R.string.web_gps_opened);
         }
     }
 
@@ -242,7 +243,7 @@ public class GpsService extends ImpPlugin implements
             // 设置完成后返回到原来的界面
         } else {
             // 弹出Toast
-            ToastUtils.show(this.getFragmentContext(), "GPS已经关闭");
+            ToastUtils.show(this.getFragmentContext(), R.string.web_gps_closed);
         }
     }
 

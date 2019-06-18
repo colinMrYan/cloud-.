@@ -109,12 +109,12 @@ public class CaptureActivity extends BaseActivity implements Callback {
                 if (isTorchOn) {
                     isTorchOn = false;
                     lampText.setText(Res.getStringID("turn_on_light"));
-                    btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_off"));
+                    btn_torch.setBackgroundResource(Res.getDrawableID("web_qrcode_lamp_off"));
                     CameraManager.get().setTorch(false);
                 } else {
                     isTorchOn = true;
                     lampText.setText(Res.getStringID("turn_off_light"));
-                    btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_on"));
+                    btn_torch.setBackgroundResource(Res.getDrawableID("web_qrcode_lamp_on"));
                     CameraManager.get().setTorch(true);
                 }
             }
@@ -123,7 +123,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.plugin_barcode_capture;
+        return R.layout.web_activity_barcode_capture;
     }
 
     protected int getStatusType() {
@@ -178,7 +178,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
         isDecodeFinish = true;
         Intent intent = new Intent();
         if (result == null || "".equals(result)) {
-            result = getString(Res.getStringID("can_not_recognize"));
+            result = getString(Res.getStringID("web_can_not_recognize"));
             intent.putExtra("isDecodeSuccess", false);
         } else {
             intent.putExtra("isDecodeSuccess", true);

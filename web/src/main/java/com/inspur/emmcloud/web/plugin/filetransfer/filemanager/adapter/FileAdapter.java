@@ -41,7 +41,7 @@ public class FileAdapter extends RecyclerViewAdapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        view = mLayoutInflater.inflate(R.layout.plugin_filemanager_list_item_file, parent, false);
+        view = mLayoutInflater.inflate(R.layout.web_filemanager_list_item, parent, false);
         return new FileHolder(view);
     }
 

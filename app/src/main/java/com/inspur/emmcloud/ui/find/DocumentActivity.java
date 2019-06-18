@@ -173,13 +173,13 @@ public class DocumentActivity extends BaseActivity {
                         @Override
                         public void callbackSuccess(File file) {
                             progressBar.setVisibility(View.GONE);
-                            ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_success);
+                            ToastUtils.show(getApplicationContext(), R.string.download_success);
                         }
 
                         @Override
                         public void callbackError(Throwable arg0, boolean arg1) {
                             progressBar.setVisibility(View.GONE);
-                            ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_failed);
+                            ToastUtils.show(getApplicationContext(), R.string.download_fail);
                         }
 
                         @Override

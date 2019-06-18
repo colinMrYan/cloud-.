@@ -16,7 +16,7 @@ public class TextFileShowActivity extends ImpBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(Res.getLayoutID("plugin_activity_show_txt"));
+        setContentView(Res.getLayoutID("web_activity_show_txt"));
         Intent intent = getIntent();
         String content = intent.getExtras().getString("text");
         TextView contentText = (TextView) findViewById(Res.getWidgetID("content_text"));

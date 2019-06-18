@@ -126,7 +126,7 @@ public class FileTransferService extends ImpPlugin {
                     if (fileDownloadDlg != null && fileDownloadDlg.isShowing()) {
                         fileDownloadDlg.dismiss();
                     }
-                    ToastUtils.show(getFragmentContext(), Res.getStringID("filetransfer_download_failed"));
+                    ToastUtils.show(getFragmentContext(), Res.getStringID("download_fail"));
                     getActivity().runOnUiThread(new Runnable() {
 
                         @Override
@@ -252,7 +252,7 @@ public class FileTransferService extends ImpPlugin {
         }
         // 判断网络是否连接
         if (!NetUtils.isNetworkConnected(getFragmentContext())) {
-            ToastUtils.show(getFragmentContext(), Res.getString("filetransfer_network_disconnected"));
+            ToastUtils.show(getFragmentContext(), Res.getString("network_exception"));
             return;
         }
         // 文件存放路径
@@ -385,7 +385,7 @@ public class FileTransferService extends ImpPlugin {
         stopConn = false;
         LayoutInflater layoutInflater = LayoutInflater.from(getFragmentContext());
         View view = layoutInflater
-                .inflate(Res.getLayoutID("plugin_filetransfer_dialog_file_download_progress")
+                .inflate(Res.getLayoutID("web_filetransfer_dialog_file_download_progress")
                         ,
                         null);
         ratioText = (TextView) view.findViewById(Res.getWidgetID("ratio_text"));

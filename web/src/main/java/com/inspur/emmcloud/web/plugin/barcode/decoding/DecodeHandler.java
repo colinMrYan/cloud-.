@@ -98,9 +98,9 @@ final class DecodeHandler extends Handler {
 
     @Override
     public void handleMessage(Message message) {
-        if (Res.getWidgetID("decode") == message.what) {
+        if (Res.getWidgetID("web_decode") == message.what) {
             decode((byte[]) message.obj, message.arg1, message.arg2);
-        } else if (Res.getWidgetID("quit") == message.what) {
+        } else if (Res.getWidgetID("web_quit") == message.what) {
             Looper.myLooper().quit();
         }
     }
@@ -178,14 +178,14 @@ final class DecodeHandler extends Handler {
 
     private void sendDecodeSuccessHandlerMessage(Result rawResult) {
         if (activity.getHandler() != null) {
-            Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_succeeded"), rawResult);
+            Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("web_decode_succeeded"), rawResult);
             message.sendToTarget();
         }
     }
 
     private void sendDecodeFailHandlerMessage(Bitmap bitmap) {
         if (activity.getHandler() != null) {
-            Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("decode_failed"));
+            Message message = Message.obtain(activity.getHandler(), Res.getWidgetID("web_decode_failed"));
             if (bitmap != null) {
                 message.obj = bitmap;
             }

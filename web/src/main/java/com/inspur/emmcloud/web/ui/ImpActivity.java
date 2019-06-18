@@ -29,7 +29,7 @@ public class ImpActivity extends ImpFragmentBaseActivity {
         // 设置是否开启webview自动旋转
         setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                 : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(Res.getLayoutID("activity_imp_hold"));
+        setContentView(Res.getLayoutID("web_activity_imp"));
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         fragment = new ImpFragment();

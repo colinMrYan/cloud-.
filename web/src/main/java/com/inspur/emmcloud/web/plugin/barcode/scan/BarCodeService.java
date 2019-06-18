@@ -150,9 +150,9 @@ public class BarCodeService extends ImpPlugin {
      */
     private void showResultDlg(Bitmap bitmap) {
         // TODO Auto-generated method stub
-        qrCodeDlg = new Dialog(getActivity(), Res.getStyleID("imp_plugin_fullScreenDialog"));
+        qrCodeDlg = new Dialog(getActivity(), Res.getStyleID("web_plugin_fullScreenDialog"));
         qrCodeDlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        qrCodeDlg.setContentView(Res.getLayoutID("plugin_barcode_show_qrcode"));
+        qrCodeDlg.setContentView(Res.getLayoutID("web_barcode_show_qrcode"));
         qrCodeDlg.setCanceledOnTouchOutside(false);
 //		qrCodeDlg.setCancelable(false);
         qrCodeDlg.findViewById(Res.getWidgetID("ibt_back")).setOnClickListener(new OnClickListener() {

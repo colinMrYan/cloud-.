@@ -110,7 +110,7 @@ public class ImpFragment extends ImpBaseFragment {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(Res.getLayoutID("activity_imp"), null);
+        rootView = inflater.inflate(Res.getLayoutID("web_fragment_imp"), null);
         initViews();
         version = getArguments().getString(Constant.WEB_FRAGMENT_VERSION, "");
     }
@@ -124,7 +124,7 @@ public class ImpFragment extends ImpBaseFragment {
             setFragmentStatusBarWhite();
         }
         if (rootView == null) {
-            rootView = inflater.inflate(Res.getLayoutID("activity_imp"), container,
+            rootView = inflater.inflate(Res.getLayoutID("web_fragment_imp"), container,
                     false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
@@ -281,7 +281,7 @@ public class ImpFragment extends ImpBaseFragment {
         // 一个自定义的布局，作为显示的内容
         if (dropTitlePopupWindow == null) {
             View contentView = LayoutInflater.from(ImpFragment.this.getContext())
-                    .inflate(R.layout.plugin_pop_drop_title, null);
+                    .inflate(R.layout.web_pop_drop_title, null);
             // 设置按钮的点击事件
             dropTitlePopupWindow = new PopupWindow(contentView,
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -809,7 +809,7 @@ public class ImpFragment extends ImpBaseFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.plugin_pop_drop_list_item_view, null);
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.web_pop_drop_list_item_view, null);
             DropItemTitle dropItemTitle = dropItemTitleList.get(position);
             ImageView iconImg = (ImageView) convertView.findViewById(R.id.iv_icon);
             TextView titleText = (TextView) convertView.findViewById(R.id.tv_name_tips);

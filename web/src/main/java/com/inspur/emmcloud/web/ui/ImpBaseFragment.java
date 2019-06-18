@@ -135,7 +135,7 @@ public class ImpBaseFragment extends BaseFragment {
 
 
     private void showOptionMenu(View view) {
-        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu, null);
+        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.web_pop_header_option_menu, null);
         int width = StringUtils.isBlank(optionMenuList.get(0).getIco()) ? DensityUtil.dip2px(BaseApplication.getInstance(), 130) : DensityUtil.dip2px(BaseApplication.getInstance(), 160);
         final PopupWindow optionMenuPop = new PopupWindow(contentView, width, RelativeLayout.LayoutParams.WRAP_CONTENT, true);
         ListView menuListView = (ListView) contentView.findViewById(R.id.lv_menu);
@@ -195,7 +195,7 @@ public class ImpBaseFragment extends BaseFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             MainTabMenu optionMenu = optionMenuList.get(position);
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.pop_imp_header_option_menu_item_view, null);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.web_pop_header_option_menu_item_view, null);
             ImageView iconImg = (ImageView) convertView.findViewById(R.id.iv_icon);
             TextView textView = (TextView) convertView.findViewById(R.id.tv_text);
             if (StringUtils.isBlank(optionMenu.getIco())) {

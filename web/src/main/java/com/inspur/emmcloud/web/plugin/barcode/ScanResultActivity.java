@@ -16,7 +16,7 @@ public class ScanResultActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_scan_result;
+        return R.layout.web_activity_scan_result;
     }
 
     public void onClick(View v) {
