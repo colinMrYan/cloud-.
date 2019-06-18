@@ -2,6 +2,7 @@ package com.inspur.emmcloud.basemodule.util.imagepicker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,7 +21,6 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.adapter.ImageGridAdapter;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageFolder;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.view.FolderPopUpWindow;
-import com.inspur.emmcloud.basemodule.util.imagepicker.view.SuperCheckBox;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 
 import java.text.DecimalFormat;
@@ -46,7 +46,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private TextView OkText; // 确定按钮
     private Button mBtnDir; // 文件夹切换按钮
     private Button mBtnPre; // 预览按钮
-    private SuperCheckBox orgPictureCheckBox;
+    private AppCompatCheckBox orgPictureCheckBox;
     //private Button mBtnEdit;
     private ImageFolderAdapter mImageFolderAdapter; // 图片文件夹的适配器
     private FolderPopUpWindow mFolderPopupWindow; // ImageSet的PopupWindow

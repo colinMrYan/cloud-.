@@ -55,7 +55,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
-            <com.inspur.imp.plugin.camera.imagepicker.view.SuperCheckBox
+            <android.support.v7.widget.AppCompatCheckBox
                 android:id="@+id/cb_origin"
                 style="@style/SuperCheckboxTheme"
                 android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
                 android:drawablePadding="4dp"
                 android:includeFontPadding="true"
                 android:paddingLeft="8dp"
-                android:text="@string/all_images"
+                android:text="@string/origin"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:visibility="gone" />
