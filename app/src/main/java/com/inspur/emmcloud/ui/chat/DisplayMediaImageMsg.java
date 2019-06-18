@@ -66,7 +66,7 @@ public class DisplayMediaImageMsg {
 //            h = msgContentMediaImage.getPreviewHeight();
 //            w = msgContentMediaImage.getPreviewWidth();
 //        }
-        final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
+        final boolean isHasSetImageViewSize = setImgViewSizeNew(context, imageView, longImgText, w, h);
 //        LayoutParams layoutParams = getImgViewSize(context, w, h);
 //        if (imageUri.startsWith("http")) {
 //            imageUri = imageUri + "&w=" + layoutParams.width + "&h=" + layoutParams.height;
@@ -85,7 +85,7 @@ public class DisplayMediaImageMsg {
                 int w = loadedImage.getWidth();
                 int h = loadedImage.getHeight();
                 if (!isHasSetImageViewSize) {
-                    setImgViewSize(context, imageView, longImgText, w, h);
+                    setImgViewSizeNew(context, imageView, longImgText, w, h);
                 }
                 loadingView.setVisibility(View.GONE);
             }
@@ -152,30 +152,22 @@ public class DisplayMediaImageMsg {
         if (w == 0 || h == 0) {
             return false;
         }
-        int minW = DensityUtil.dip2px(context, 100);
-        int minH = DensityUtil.dip2px(context, 100);
-        int maxW = DensityUtil.dip2px(context, 232);
-        int maxH = DensityUtil.dip2px(context, 232);
+        int minW = DensityUtil.dip2px(context, 60);
+        int minH = DensityUtil.dip2px(context, 60);
+        int maxW = DensityUtil.dip2px(context, 130);
+        int maxH = DensityUtil.dip2px(context, 130);
         LayoutParams params = imageView.getLayoutParams();
         if (w == h) {
-            params.width = minW;
-            params.height = minW;
+            params.width = maxW;
+            params.height = maxH;
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         } else if (h > w) {
-            params.width = minW;
-            params.height = (int) (minW * 1.0 * h / w);
-            if (params.height > maxH) {
-                longImgText.setVisibility(View.VISIBLE);
-                params.height = maxH;
-            }
+            params.height = maxH;
+            params.width = (int) (maxH * 1.0 * w / h);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
-            params.height = minH;
-            params.width = (int) (minH * 1.0 * w / h);
-            if (params.width > maxW) {
-                longImgText.setVisibility(View.VISIBLE);
-                params.width = maxW;
-            }
+            params.width = maxW;
+            params.height = (int) (maxW * 1.0 * h / w);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         imageView.setLayoutParams(params);
