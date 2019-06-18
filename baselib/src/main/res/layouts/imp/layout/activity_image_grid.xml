@@ -65,7 +65,7 @@
                 android:drawablePadding="4dp"
                 android:includeFontPadding="true"
                 android:paddingLeft="8dp"
-                android:text="原图"
+                android:text="@string/all_images"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
                 android:visibility="gone" />
