@@ -537,7 +537,6 @@ public class AppAPIService {
     }
 
 
-
     /**
      * 获取app badge数量
      */
@@ -579,12 +578,9 @@ public class AppAPIService {
      * @param url
      */
     public void getCloudConnectStateUrl(final String url) {
-        final String completeUrl = APIUri.getReactNativeInstallUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        params.addParameter("uri", url);
-        params.setConnectTimeout(5000);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+                .getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, url);
@@ -592,7 +588,11 @@ public class AppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
+                if (responseCode == 302 || responseCode == 301) {
+                    apiInterface.returnCheckCloudPluseConnectionSuccess(null, url);
+                } else {
+                    apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
+                }
             }
 
             @Override

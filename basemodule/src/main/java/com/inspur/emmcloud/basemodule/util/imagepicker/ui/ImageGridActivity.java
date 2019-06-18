@@ -2,6 +2,7 @@ package com.inspur.emmcloud.basemodule.util.imagepicker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -34,6 +35,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     public static final int REQUEST_PERMISSION_STORAGE = 0x01;
     public static final int REQUEST_PERMISSION_CAMERA = 0x02;
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
+    public static final String EXTRA_ORIGINAL_PICTURE = "ORIGINAL_PICTURE";
     protected static final int CUT_IMG_SUCCESS = 1;
     private int encodingType = 0;
     private ImagePicker imagePicker;
@@ -44,6 +46,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private TextView OkText; // 确定按钮
     private Button mBtnDir; // 文件夹切换按钮
     private Button mBtnPre; // 预览按钮
+    private AppCompatCheckBox orgPictureCheckBox;
     //private Button mBtnEdit;
     private ImageFolderAdapter mImageFolderAdapter; // 图片文件夹的适配器
     private FolderPopUpWindow mFolderPopupWindow; // ImageSet的PopupWindow
@@ -63,6 +66,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         mBtnDir = (Button) findViewById(R.id.btn_dir);
         mBtnPre = (Button) findViewById(R.id.btn_preview);
         mGridView = (GridView) findViewById(R.id.gridview);
+        orgPictureCheckBox = findViewById(R.id.cb_origin);
         mFooterBar = findViewById(R.id.footer_bar);
         OkText.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
         mBtnPre.setVisibility(imagePicker.isMultiMode() ? View.VISIBLE : View.GONE);
@@ -117,6 +121,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         Intent intent = new Intent();
         intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                 imagePicker.getSelectedImages());
+        intent.putExtra(EXTRA_ORIGINAL_PICTURE, orgPictureCheckBox.isChecked());
         setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 多选不允许裁剪裁剪，返回数据
         finish();
     }
