@@ -50,7 +50,7 @@
         android:id="@+id/rl_search_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_header"
+        android:layout_marginTop="55dp"
         android:background="#FDFDFD">
 
         <TextView

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -303,7 +304,11 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             cid = currentMsg.getChannel();
             imgTypeMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_IMAGE_MSG_LIST);
             for (Message message : imgTypeMessageList) {
-                String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
+                /**改成preview*/
+                //message.getMsgContentMediaImage().getPreviewMedia();  理论上路径用这个
+                String path = StringUtils.isBlank(message.getMsgContentMediaImage().getPreviewMedia())
+                        ? message.getMsgContentMediaImage().getRawMedia() : message.getMsgContentMediaImage().getPreviewMedia();
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(), path);
                 urlList.add(url);
             }
             pageStartPosition = imgTypeMessageList.indexOf(currentMsg);

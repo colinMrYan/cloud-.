@@ -36,6 +36,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.componentservice.login.LoginService;
@@ -1769,6 +1770,52 @@ public class ChatAPIService {
             }
         });
 
+    }
+
+    /**
+     * 转发文件（图片）
+     *
+     * @param filePath 文件路径
+     * @param toCid    channel ID
+     */
+    public void transmitFile(String filePath, String fromCid, String toCid, String fileType, Message message) {
+        final String completeUrl = APIUri.getTransmitFileUrl(fromCid, fileType);
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("path", filePath);
+        params.addQueryStringParameter("to", toCid);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        transmitFile(filePath, fromCid, toCid, fileType, message);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnTransmitPictureSuccess(toCid, object.toString(), message);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnTransmitPictureError(error, responseCode);
+            }
+        });
     }
 
 }
