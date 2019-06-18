@@ -3,7 +3,6 @@ package com.inspur.emmcloud.api;
 import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
@@ -411,10 +410,6 @@ public interface APIInterface {
     void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
 
     void returnGetClientIdResultFail(String error, int errorCode);
-
-    void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult);
-
-    void returnGetAppAuthCodeResultFail(String error, int errorCode);
 
     void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
 

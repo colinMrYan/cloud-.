@@ -82,7 +82,7 @@ public class LoginBySmsActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_login_by_sms;
+        return R.layout.login_activity_login_by_sms;
     }
 
     protected int getStatusType() {
@@ -269,14 +269,14 @@ public class LoginBySmsActivity extends BaseActivity {
 
         @Override
         public void onFinish() {// 计时完毕时触发
-            getCapthaBtn.setText(getString(R.string.recover));
+            getCapthaBtn.setText(getString(R.string.login_recover));
             getCapthaBtn.setClickable(true);
         }
 
         @Override
         public void onTick(long millisUntilFinished) {// 计时过程显示
             getCapthaBtn.setClickable(false);
-            getCapthaBtn.setText(getString(R.string.recover) + "("
+            getCapthaBtn.setText(getString(R.string.login_recover) + "("
                     + millisUntilFinished / 1000 + ")");
         }
     }

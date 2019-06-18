@@ -3,10 +3,10 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.imp.api.ImpActivity;
-import com.inspur.imp.plugin.barcode.ScanResultActivity;
 
 /**
  * Created by yufuchang on 2017/7/21.
@@ -46,11 +46,10 @@ public class ScanQrCodeUtils {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
         } else if (msg.startsWith("http")) {
-            Intent intent = new Intent();
-            intent.setClass(context, ImpActivity.class);
-            intent.putExtra("uri", msg);
-            intent.putExtra("appName", "    ");
-            context.startActivity(intent);
+            Bundle bundle = new Bundle();
+            bundle.putString("uri", msg);
+            bundle.putString("appName", "    ");
+            ARouter.getInstance().build("/web/main").with(bundle).navigation();
         } else {
             showUnKnownMsg(msg);
         }
@@ -74,9 +73,5 @@ public class ScanQrCodeUtils {
      * @param msg
      */
     private void showUnKnownMsg(String msg) {
-        Intent intent = new Intent();
-        intent.putExtra("result", msg);
-        intent.setClass(context, ScanResultActivity.class);
-        context.startActivity(intent);
     }
 }

@@ -10,14 +10,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
 import java.io.File;
@@ -173,13 +173,13 @@ public class DocumentActivity extends BaseActivity {
                         @Override
                         public void callbackSuccess(File file) {
                             progressBar.setVisibility(View.GONE);
-                            ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_success);
+                            ToastUtils.show(getApplicationContext(), R.string.download_success);
                         }
 
                         @Override
                         public void callbackError(Throwable arg0, boolean arg1) {
                             progressBar.setVisibility(View.GONE);
-                            ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_failed);
+                            ToastUtils.show(getApplicationContext(), R.string.download_fail);
                         }
 
                         @Override

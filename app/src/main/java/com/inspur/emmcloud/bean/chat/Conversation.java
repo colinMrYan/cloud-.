@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean.chat;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -10,6 +11,7 @@ import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chenmch on 2018/9/20.
@@ -83,6 +85,16 @@ public class Conversation implements Serializable {
         this.hide = false;
         this.action = JSONUtils.getString(obj, "action", "");
         this.pyFull = PinyinUtils.getPingYin(name);
+    }
+
+    public static List<SearchModel> conversationList2SearchModelList(List<Conversation> conversationList) {
+        List<SearchModel> searchModelList = new ArrayList<>();
+        if (conversationList != null) {
+            for (Conversation conversation : conversationList) {
+                searchModelList.add(conversation.conversation2SearchModel());
+            }
+        }
+        return searchModelList;
     }
 
     public String getId() {
@@ -226,6 +238,14 @@ public class Conversation implements Serializable {
         this.pyFull = pyFull;
     }
 
+    public SearchModel conversation2SearchModel() {
+        SearchModel searchModel = new SearchModel();
+        searchModel.setId(getId());
+        searchModel.setName(getName());
+        searchModel.setType(searchModel.TYPE_GROUP);
+        searchModel.setIcon(getAvatar());
+        return searchModel;
+    }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 

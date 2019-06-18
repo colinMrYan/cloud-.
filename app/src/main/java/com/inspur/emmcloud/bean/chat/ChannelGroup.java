@@ -2,6 +2,7 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +11,7 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "ChannelGroup")
 public class ChannelGroup {
@@ -149,6 +151,16 @@ public class ChannelGroup {
         }
     }
 
+    public static List<SearchModel> channelGroupList2SearchModelList(List<ChannelGroup> channelGroupList) {
+        List<SearchModel> searchModelList = new ArrayList<>();
+        if (channelGroupList != null) {
+            for (ChannelGroup channelGroup : channelGroupList) {
+                searchModelList.add(channelGroup.channelGroup2SearchModel());
+            }
+        }
+        return searchModelList;
+    }
+
     public String getCid() {
         return cid;
     }
@@ -229,7 +241,6 @@ public class ChannelGroup {
         this.owner = owner;
     }
 
-
     public String getInputs() {
         return inputs;
     }
@@ -269,6 +280,15 @@ public class ChannelGroup {
         return memberList;
     }
 
+    public SearchModel channelGroup2SearchModel() {
+        SearchModel searchModel = new SearchModel();
+        searchModel.setId(getCid());
+        searchModel.setName(getChannelName());
+        searchModel.setType(searchModel.TYPE_GROUP);
+        searchModel.setIcon(getIcon());
+        return searchModel;
+    }
+
     /*
      * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
      */
@@ -284,4 +304,6 @@ public class ChannelGroup {
         final ChannelGroup otherChannelGroup = (ChannelGroup) other;
         return getCid().equals(otherChannelGroup.getCid());
     }
+
+
 }

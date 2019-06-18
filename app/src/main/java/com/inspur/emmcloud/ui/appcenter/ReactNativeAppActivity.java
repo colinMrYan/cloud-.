@@ -13,7 +13,6 @@ import com.facebook.react.shell.MainReactPackage;
 import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
@@ -22,6 +21,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.util.ZipUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ReactLoadingDlg;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -86,25 +86,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private void init() {
         String token = ((MyApplication) getApplicationContext())
                 .getToken();
-        checkToken(token);
         loadingDialog = new ReactLoadingDlg(this);
         reactNativeAPIService = new ReactNativeAPIService(ReactNativeAppActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
     }
 
 
-    /**
-     * 检查token，如果token不存在则跳转到登录页面
-     *
-     * @param token
-     */
-    private void checkToken(String token) {
-        if (StringUtils.isBlank(token)) {
-            ToastUtils.show(ReactNativeAppActivity.this, ReactNativeAppActivity.this.getString(R.string.login_authorization_expired));
-            ((MyApplication) getApplicationContext()).signout();
-            return;
-        }
-    }
 
     /**
      * 检查应用来源，目前有两种来源

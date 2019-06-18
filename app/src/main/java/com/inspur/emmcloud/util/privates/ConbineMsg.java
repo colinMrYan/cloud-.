@@ -13,14 +13,14 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.Phone;
-import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
-import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONException;
 import org.json.JSONObject;

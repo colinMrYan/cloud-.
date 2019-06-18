@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.SelectorUtils;
@@ -48,6 +49,7 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
+import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationV0Fragment;
@@ -62,7 +64,6 @@ import com.inspur.emmcloud.util.privates.WhiteListUtil;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
-import com.inspur.imp.api.ImpFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -212,7 +213,12 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                             }
                             break;
                         case Constant.APP_TAB_TYPE_WEB:
-                            tabBean = new TabBean(getString(R.string.web), ImpFragment.class, mainTabResult);
+                            Router router = Router.getInstance();
+                            if (router.getService(WebService.class) != null) {
+                                WebService service = router.getService(WebService.class);
+                                tabBean = new TabBean(getString(R.string.web), service.getImpFragmentClass(), mainTabResult);
+                            }
+
                             break;
                     }
                     if (tabBean == null) {
@@ -402,6 +408,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 } else {
                     bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, false);
                 }
+                bundle.putBoolean("web_from_index", true);
             }
             bundle.putString(Constant.APP_WEB_URI, tabBean.getMainTabResult().getUri());
             bundle.putString(Constant.WEB_FRAGMENT_APP_NAME, tabBean.getTabName());

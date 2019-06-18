@@ -43,7 +43,6 @@ import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.MailLoginUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
-import com.inspur.imp.api.ImpActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -367,7 +366,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", webAppUrl);
                 bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isUriHasTitle);
-                IntentUtils.startActivity(SchemeHandleActivity.this, ImpActivity.class, bundle, true);
+                ARouter.getInstance().build("/web/main").with(bundle).navigation();
+                SchemeHandleActivity.this.finish();
             }
 
             @Override

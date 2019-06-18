@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
@@ -20,7 +20,6 @@ import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
-import com.inspur.imp.plugin.file.FileUtil;
 
 import org.xutils.common.Callback;
 import org.xutils.http.HttpMethod;
@@ -133,8 +132,8 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
             public void callbackLoading(long total, long current, boolean isUploading) {
                 int progress = (int) (current * 100.0 / total);
                 progressBar.setProgress(progress);
-                String totleSize = FileUtil.formetFileSize(total);
-                String currentSize = FileUtil.formetFileSize(current);
+                String totleSize = FileUtils.formatFileSize(total);
+                String currentSize = FileUtils.formatFileSize(current);
                 progressText.setText(getString(R.string.clouddriver_downloading_status, currentSize, totleSize));
 
             }

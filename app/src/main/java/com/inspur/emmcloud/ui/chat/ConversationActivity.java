@@ -45,6 +45,10 @@ import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
+import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
+import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
+import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetChannelMessagesResult;
@@ -54,10 +58,10 @@ import com.inspur.emmcloud.bean.chat.MsgContentMediaVoice;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
-import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.VoiceResult;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
@@ -83,10 +87,6 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
-import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
-import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
-import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
-import com.inspur.imp.util.compressor.Compressor;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -247,10 +247,10 @@ public class ConversationActivity extends ConversationBaseActivity {
         }
         persistenceMessageSendStatus(messageSendingList);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+        initViews();
         if (getIntent().hasExtra(EXTRA_NEED_GET_NEW_MESSAGE) && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             getNewMessageOfChannel();
         }
-        initViews();
         if (uiMessage != null) {
             int position = uiMessageList.indexOf(uiMessage);
             if (position != -1) {
@@ -847,7 +847,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         File file = new File(filePath);
         if (!file.exists()) {
             if (messageType != Message.MESSAGE_TYPE_MEDIA_VOICE) {
-                ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
+                ToastUtils.show(MyApplication.getInstance(), R.string.baselib_file_not_exist);
             }
             return;
         }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- Messages IDs -->
+    <item name="web_auto_focus" type="id" />
+    <item name="web_decode" type="id" />
+    <item name="web_decode_failed" type="id" />
+    <item name="web_decode_succeeded" type="id" />
+    <item name="web_quit" type="id" />
+    <item name="web_restart_preview" type="id" />
+    <item name="web_return_scan_result" type="id" />
+</resources>

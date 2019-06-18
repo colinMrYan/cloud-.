@@ -55,7 +55,7 @@
             android:src="@drawable/plugin_cemera_btn_camera_facing_switch" />
     </RelativeLayout>
 
-    <com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView
+    <com.inspur.emmcloud.basemodule.util.mycamera.FocusSurfaceView
         android:id="@+id/preview_sv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

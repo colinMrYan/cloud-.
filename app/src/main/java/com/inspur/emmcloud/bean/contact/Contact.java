@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.bean.contact;
 
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,5 +143,14 @@ public class Contact implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public SearchModel contact2SearchModel() {
+        SearchModel searchModel = new SearchModel();
+        searchModel.setId(getId());
+        searchModel.setName(getName());
+        searchModel.setType(getType());
+        searchModel.setEmail(getEmail());
+        return searchModel;
     }
 }

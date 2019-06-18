@@ -5,9 +5,9 @@ import android.content.Context;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
-import com.inspur.emmcloud.bean.contact.SearchModel;
 
 import org.json.JSONArray;
 import org.xutils.common.util.KeyValue;
@@ -332,7 +332,7 @@ public class ConversationCacheUtils {
         if (conversationList == null) {
             conversationList = new ArrayList<>();
         }
-        return SearchModel.conversationList2SearchModelList(conversationList);
+        return Conversation.conversationList2SearchModelList(conversationList);
 
     }
 
