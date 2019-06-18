@@ -38,12 +38,4 @@ public class ImageItem implements Serializable {
     public void setHttpPath(String httpPath) {
         this.path = httpPath;
     }
-
-//    public boolean isOriginalPicture() {
-//        return originalPicture;
-//    }
-//
-//    public void setOriginalPicture(boolean originalPicture) {
-//        this.originalPicture = originalPicture;
-//    }
 }
