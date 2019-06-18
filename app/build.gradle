@@ -9,7 +9,7 @@ buildscript {
     }
 }
 apply plugin: 'com.inspur.comgradle'
-apply plugin: 'com.google.protobuf'
+//apply plugin: 'com.google.protobuf'
 
 import com.android.build.OutputFile
 

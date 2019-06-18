@@ -65,6 +65,8 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    implementation deps.baiduMapLocation
+    implementation deps.zxing
     annotationProcessor deps.ARouter.router_anno
     implementation deps.butterknife.butterknife
     annotationProcessor deps.butterknife.butterknife_compiler
