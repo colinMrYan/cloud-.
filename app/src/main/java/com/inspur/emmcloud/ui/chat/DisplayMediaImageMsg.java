@@ -66,7 +66,7 @@ public class DisplayMediaImageMsg {
 //            h = msgContentMediaImage.getPreviewHeight();
 //            w = msgContentMediaImage.getPreviewWidth();
 //        }
-        final boolean isHasSetImageViewSize = setImgViewSizeNew(context, imageView, longImgText, w, h);
+        final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
 //        LayoutParams layoutParams = getImgViewSize(context, w, h);
 //        if (imageUri.startsWith("http")) {
 //            imageUri = imageUri + "&w=" + layoutParams.width + "&h=" + layoutParams.height;
@@ -85,7 +85,7 @@ public class DisplayMediaImageMsg {
                 int w = loadedImage.getWidth();
                 int h = loadedImage.getHeight();
                 if (!isHasSetImageViewSize) {
-                    setImgViewSizeNew(context, imageView, longImgText, w, h);
+                    setImgViewSize(context, imageView, longImgText, w, h);
                 }
                 loadingView.setVisibility(View.GONE);
             }
@@ -105,50 +105,6 @@ public class DisplayMediaImageMsg {
      * @return
      */
     private static boolean setImgViewSize(Activity context, ImageView imageView, TextView longImgText, int w, int h) {
-        if (w == 0 || h == 0) {
-            return false;
-        }
-        int minW = DensityUtil.dip2px(context, 100);
-        int minH = DensityUtil.dip2px(context, 90);
-        int maxW = DensityUtil.dip2px(context, 270);
-        int maxH = DensityUtil.dip2px(context, 232);
-        LayoutParams params = imageView.getLayoutParams();
-        if (w == h) {
-            params.width = minW;
-            params.height = minW;
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        } else if (h > w) {
-            params.width = minW;
-            params.height = (int) (minW * 1.0 * h / w);
-            if (params.height > maxH) {
-                longImgText.setVisibility(View.VISIBLE);
-                params.height = maxH;
-            }
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        } else {
-            params.width = maxW;
-            params.height = (int) (maxW * 1.0 * h / w);
-            if (params.height < minH) {
-                params.height = minH;
-                longImgText.setVisibility(View.VISIBLE);
-            }
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        }
-        imageView.setLayoutParams(params);
-        return true;
-    }
-
-    /**
-     * 设置imageView的尺寸
-     *
-     * @param context
-     * @param imageView
-     * @param longImgText
-     * @param w
-     * @param h
-     * @return
-     */
-    private static boolean setImgViewSizeNew(Activity context, ImageView imageView, TextView longImgText, int w, int h) {
         if (w == 0 || h == 0) {
             return false;
         }
