@@ -3,6 +3,11 @@
 
 package com.inspur.emmcloud.bean.contact;
 
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public final class ContactProtoBuf {
     private static final com.google.protobuf.Descriptors.Descriptor
             internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
@@ -98,6 +103,20 @@ public final class ContactProtoBuf {
     public static com.google.protobuf.Descriptors.FileDescriptor
     getDescriptor() {
         return descriptor;
+    }
+
+    public static List<ContactUser> protoBufUserList2ContactUserList(List<user> userList, long lastQueryTime) {
+        List<ContactUser> contactUserList = new ArrayList<>();
+        if (userList != null && userList.size() > 0) {
+            int size = userList.size();
+            for (int i = 0; i < size; i++) {
+                ContactProtoBuf.user user = userList.get(i);
+                ContactUser contactUser = new ContactUser(user.getId(), user.getRealName(), user.getNameGlobal(), user.getPinyin(), user.getParentId(), user.getMobile(), user.getEmail(), user.getHasHead(), user.getSortOrder(), lastQueryTime + "", user.getTel(), user.getOffice());
+                contactUserList.add(contactUser);
+            }
+        }
+        return contactUserList;
+
     }
 
     public interface orgOrBuilder extends
@@ -4202,6 +4221,8 @@ public final class ContactProtoBuf {
 
     }
 
+    // @@protoc_insertion_point(outer_class_scope)
+
     /**
      * Protobuf type {@code com.inspur.emmcloud.bean.contact.users}
      */
@@ -5047,6 +5068,4 @@ public final class ContactProtoBuf {
         }
 
     }
-
-    // @@protoc_insertion_point(outer_class_scope)
 }

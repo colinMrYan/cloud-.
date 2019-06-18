@@ -21,13 +21,13 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeHomePageDirectory;
 import com.inspur.emmcloud.bean.system.ClearShareDataBean;
-import com.inspur.imp.plugin.file.FileUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -212,8 +212,8 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
             shareVolumeList = getVolumeListResult.getShareVolumeList();
             myVolume = getVolumeListResult.getMyVolume();
             if (myVolume != null) {
-                String volumeUsedSize = FileUtil.formetFileSizeMinM(myVolume.getQuotaUsed());
-                String volumeMaxSize = FileUtil.formetFileSizeMinM(myVolume.getQuotaTotal());
+                String volumeUsedSize = FileUtils.formatFileSize(myVolume.getQuotaUsed());
+                String volumeMaxSize = FileUtils.formatFileSize(myVolume.getQuotaTotal());
                 volumeHomePageDirectoryList.get(0).setText(volumeUsedSize + " / " + volumeMaxSize);
                 adapter.notifyDataSetChanged();
             }

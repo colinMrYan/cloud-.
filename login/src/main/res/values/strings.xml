@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_invaliad_account_or_pwd">用户名或密码错误</string>
+    <string name="login_captchas_login">短信登录 </string>
+    <string name="login_by_account">账号密码登录</string>
+    <string name="login_find_password">找回密码</string>
+    <string name="login_get_captchas_code">获取验证码</string>
+    <string name="login_captchas_sent"> 验证码已发送到手机：</string>
+    <string name="login_please_input_captchas">请输入验证码</string>
+    <string name="login_please_input_phone_num">请输入手机号码</string>
+    <string name="login_phone_num_illegal_format">手机号码格式不正确</string>
+    <string name="login_loading_text">登录中...</string>
+    <string name="login_captchas_getcode_success">验证码发送成功</string>
+    <string name="login_code_verification_failure">验证码校验失败</string>
+    <string name="login_sms">短信登录</string>
+    <string name="login_authorization_expired">基于安全审计策略，需要重新验证用户信息</string>
+    <string name="login_cant_login_with_sms">您的账号不允许使用短信登录</string>
+    <!--<string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>-->
+    <string name="login_recover">重新获取</string>
+    <string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>
+    <string name="login_current_login_enterprise">当前系统：%1$s</string>
+    <string name="login_forget_password">忘记密码？</string>
+    <string name="login_fail_limit_remaining">账号或密码错误，请重新输入，还剩余%1$d次机会</string>
+    <string name="login_fail_account_lock_by_min">账号已被锁定，请%1$d分钟后再试</string>
+    <string name="login_fail_account_lock_by_second">账号已被锁定，请%1$d秒后再试</string>
+    <string name="device_disabled_cannot_login">您的设备已被禁用，无法使用此设备登录 </string>
+    <string name="device_waitting_verify">您的设备正在审核中，待审核通过后才能使用</string>
+    <string name="register_submit_waitting_verify">注册已提交，您的设备正在审核中，需要等待审核通过后才能使用</string>
+    <string name="device_in_blacklist">您的设备已被列入黑名单中，无法使用此设备登录</string>
+    <string name="device_not_register"> 您的设备尚未注册，需注册后才能使用</string>
+    <string name="go_registe">去注册</string>
+    <string name="registe_fail">注册失败：</string>
+    <string name="registe_again">重新注册</string>
+    <string name="device_review_reject">您的设备注册审核被拒绝，如有疑问，请联系管理员</string>
+    <string name="device_name_cannot_null">设备名称不能为空</string>
+    <string name="phone_num_cannot_null">手机号不能为空</string>
+    <string name="mail_cannot_null">邮箱不能为空</string>
+    <string name="remark_cannot_null">备注信息不能为空</string>
+    <string name="no_thanks">不，谢谢</string>
+    <string name="_mobile">%1$s的手机</string>
+    <string name="_pad">%1$s的平板</string>
+    <string name="mdm_sure">确定</string>
+    <string name="mdm_cancel">取消</string>
+    <string name="mdm_tips">提示</string>
+    <string name="device_registe">设备注册</string>
+    <string name="uuid">设备唯一标识</string>
+    <string name="device_has_been_rejected">您的设备审批被拒绝</string>
+    <string name="device_approval_details">设备审批详情</string>
+</resources>
+

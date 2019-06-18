@@ -35,20 +35,22 @@ import com.inspur.emmcloud.baselib.widget.FlowLayout;
 import com.inspur.emmcloud.baselib.widget.MaxHightScrollView;
 import com.inspur.emmcloud.baselib.widget.NoHorScrollView;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
+import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.ContactClickMessage;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
-import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
@@ -234,7 +236,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
             case Constant.EVENTBUS_TAG_QUIT_CHANNEL_GROUP:
             case Constant.EVENTBUS_TAG_UPDATE_CHANNEL_NAME:
                 if (openGroupChannelList.size() > 0) {
-                    openGroupChannelList = SearchModel.conversationList2SearchModelList(ConversationCacheUtils
+                    openGroupChannelList = Conversation.conversationList2SearchModelList(ConversationCacheUtils
                             .getConversationList(MyApplication.getInstance(), Conversation.TYPE_GROUP));
                     if (openGroupAdapter != null) {
                         openGroupAdapter.notifyDataSetChanged();
@@ -445,7 +447,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                     if (orginCurrentArea == SEARCH_CONTACT) {
                         Contact contact = openGroupContactList.get(position);
                         if (contact.getType().toLowerCase().equals("user")) {
-                            changeMembers(new SearchModel(contact));
+                            changeMembers(contact.contact2SearchModel());
                         } else {
                             openContact(contact);
                         }
@@ -530,7 +532,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private void showAllChannelGroup() {
         // TODO Auto-generated method stub
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            openGroupChannelList = SearchModel.channelGroupList2SearchModelList(ChannelGroupCacheUtils
+            openGroupChannelList = ChannelGroup.channelGroupList2SearchModelList(ChannelGroupCacheUtils
                     .getAllChannelGroupList(MyApplication.getInstance()));
         } else {
             List<Conversation> conversationList = ConversationCacheUtils
@@ -545,7 +547,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 }
             }
             conversationList.addAll(0, stickConversationList);
-            openGroupChannelList = SearchModel.conversationList2SearchModelList(conversationList);
+            openGroupChannelList = Conversation.conversationList2SearchModelList(conversationList);
         }
 
         openGroupTextList.add(new FirstGroupTextModel(getString(R.string.all),
@@ -830,7 +832,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                                     int position, long id) {
                 // TODO Auto-generated method stub
                 Contact contact = searchContactList.get(position);
-                changeMembers(new SearchModel(contact));
+                changeMembers(contact.contact2SearchModel());
 
             }
         });
@@ -1146,6 +1148,32 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
         ListViewUtils.setListViewHeightBasedOnChildren(listView);
     }
 
+    /**
+     * 中文名+英文名
+     *
+     * @return
+     */
+    public String getCompleteName(SearchModel searchModel) {
+        String completeName = searchModel.getName();
+        String globalName = null;
+        if (searchModel.getType().equals(SearchModel.TYPE_USER)) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(searchModel.getId());
+            if (contactUser != null) {
+                globalName = contactUser.getNameGlobal();
+            }
+        } else if (searchModel.getType().equals(SearchModel.TYPE_STRUCT)) {
+            ContactOrg contactOrg = ContactOrgCacheUtils.getContactOrg(searchModel.getId());
+            if (contactOrg != null) {
+                globalName = contactOrg.getNameGlobal();
+            }
+        }
+        if (!StringUtils.isBlank(globalName)) {
+            completeName = completeName + "（" + globalName + "）";
+        }
+        return completeName;
+
+    }
+
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
     }
@@ -1345,13 +1373,13 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
 
             {
                 Contact contact = openGroupContactList.get(position);
-                searchModel = new SearchModel(contact);
+                searchModel = contact.contact2SearchModel();
                 if (contact.getType().equals(Contact.TYPE_USER)) { // 如果通讯录是人的话就显示头像
                     viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
                 } else {
                     viewHolder.rightArrowImg.setVisibility(View.VISIBLE);
                 }
-                viewHolder.nameText.setText(searchModel.getCompleteName());
+                viewHolder.nameText.setText(getCompleteName(searchModel));
 
             } else {
                 viewHolder.rightArrowImg.setVisibility(View.INVISIBLE);
@@ -1418,7 +1446,7 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             SearchModel searchModel = commonContactList.get(position);
-            viewHolder.nameText.setText(searchModel.getCompleteName());
+            viewHolder.nameText.setText(getCompleteName(searchModel));
             displayImg(searchModel, viewHolder.photoImg);
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
@@ -1491,11 +1519,11 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
                 searchModel = searchChannelGroupList.get(position);
             } else {
                 Contact contact = searchContactList.get(position);
-                searchModel = new SearchModel(contact);
+                searchModel = contact.contact2SearchModel();
 
             }
             displayImg(searchModel, viewHolder.photoImg);
-            viewHolder.nameText.setText(searchModel.getCompleteName());
+            viewHolder.nameText.setText(getCompleteName(searchModel));
             if (selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);
             } else {

@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.contact.SearchModel;
 
 import org.xutils.common.util.KeyValue;
 import org.xutils.db.sqlite.WhereBuilder;
@@ -141,7 +141,7 @@ public class ChannelGroupCacheUtils {
         if (searchChannelGroupList == null) {
             searchChannelGroupList = new ArrayList<ChannelGroup>();
         }
-        return SearchModel.channelGroupList2SearchModelList(searchChannelGroupList);
+        return ChannelGroup.channelGroupList2SearchModelList(searchChannelGroupList);
 
     }
 

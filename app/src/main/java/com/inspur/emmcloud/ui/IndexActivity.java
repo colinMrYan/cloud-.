@@ -16,7 +16,6 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
@@ -35,15 +34,14 @@ import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
 import com.inspur.emmcloud.bean.contact.ContactProtoBuf;
-import com.inspur.emmcloud.bean.contact.ContactUser;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetAppMainTabResult;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
@@ -151,7 +149,6 @@ public class IndexActivity extends IndexBaseActivity {
     private void startService() {
         startUploadPVCollectService();
         startCoreService();
-        startBackgroudService();
         startLocationService();
     }
 
@@ -179,17 +176,6 @@ public class IndexActivity extends IndexBaseActivity {
         }
     }
 
-    /**
-     * 打开后台保活服务
-     */
-    private void startBackgroudService() {
-        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
-        if (isAppSetRunBackground) {
-            Intent intent = new Intent();
-            intent.setClass(this, BackgroundService.class);
-            startService(intent);
-        }
-    }
 
     /**
      * 打开位置收集服务
@@ -443,7 +429,7 @@ public class IndexActivity extends IndexBaseActivity {
             try {
                 ContactProtoBuf.users users = ContactProtoBuf.users.parseFrom(result);
                 List<ContactProtoBuf.user> userList = users.getUsersList();
-                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList, users.getLastQueryTime());
+                List<ContactUser> contactUserList = ContactProtoBuf.protoBufUserList2ContactUserList(userList, users.getLastQueryTime());
                 ContactUserCacheUtils.saveContactUserList(contactUserList);
                 ContactUserCacheUtils.setLastQueryTime(users.getLastQueryTime());
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_CONTACT_USER, saveConfigVersion);

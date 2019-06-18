@@ -37,7 +37,7 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_scan_qrcode_login_result;
+        return R.layout.login_activity_scan_qrcode_login_result;
     }
 
     protected int getStatusType() {

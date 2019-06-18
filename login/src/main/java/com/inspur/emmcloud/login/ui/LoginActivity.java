@@ -75,7 +75,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_login;
+        return R.layout.login_activity_main;
     }
 
     protected int getStatusType() {

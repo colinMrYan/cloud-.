@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -38,9 +39,8 @@ import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.login.login.LoginService;
-import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -68,8 +68,8 @@ public class ChatAPIService {
 
     private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
         Router router = Router.getInstance();
-        if (router.getService(LoginService.class.getSimpleName()) != null) {
-            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
             service.refreshToken(oauthCallBack, requestTime);
         }
     }
@@ -1506,6 +1506,8 @@ public class ChatAPIService {
      * 隐藏会话
      *
      * @param
+     * @param id
+     * @param isHide
      */
     public void setConversationHide(final String id, final boolean isHide) {
         final String completeUrl = APIUri.getConversationSetHide(id);

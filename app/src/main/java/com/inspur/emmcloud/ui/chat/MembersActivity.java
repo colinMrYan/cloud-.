@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
@@ -28,7 +29,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
-import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
@@ -52,6 +53,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@Route(path = "/communication/member")
 public class MembersActivity extends BaseActivity implements TextWatcher {
     public static final String MEMBER_PAGE_STATE = "member_page_state";
     public static final int SELECT_STATE = 1;//选择人员

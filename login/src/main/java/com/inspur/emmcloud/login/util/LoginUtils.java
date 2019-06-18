@@ -75,11 +75,12 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             }
         } else if (StringUtils.isBlank(myInfo)) {
             new LoginUtils(activity, handler).getMyInfo();
-        } else if (StringUtils.isBlank(languageJson)) {
-            new LoginUtils(activity, handler).getServerSupportLanguage();
         } else if (!isMDMStatusPass) {
             LanguageManager.getInstance().setLanguageLocal();
             new LoginUtils(activity, handler).startMDM();
+            if (StringUtils.isBlank(languageJson)) {
+                new LoginUtils(activity, handler).getServerSupportLanguage();
+            }
         } else {
             if (handler != null) {
                 handler.sendEmptyMessage(LOGIN_SUCCESS);
@@ -97,10 +98,6 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             public void handleMessage(Message msg) {
                 // TODO Auto-generated method stub
                 switch (msg.what) {
-                    case GET_LANGUAGE_SUCCESS:
-                        // handler.sendEmptyMessage(LOGIN_SUCCESS);
-                        startMDM();
-                        break;
                     case LOGIN_SUCCESS:
                         LoadingDialog.dimissDlg(loadingDlg);
                         if (handler != null) {
@@ -205,7 +202,6 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
 
     @Override
     public void complete() {
-        loginUtilsHandler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
     }
 
     /**
@@ -279,6 +275,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                 myDialog.dismiss();
                 BaseApplication.getInstance().initTanent();
                 loadingDlg.show();
+                startMDM();
                 getServerSupportLanguage();
             }
         });
@@ -371,6 +368,7 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                     }
                 }
                 ((BaseApplication) activity.getApplicationContext()).initTanent();
+                startMDM();
                 getServerSupportLanguage();
             }
         }

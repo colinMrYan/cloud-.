@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -26,7 +27,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
-import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
@@ -44,6 +45,8 @@ import butterknife.ButterKnife;
  * 从群聊，单聊，通讯录等位置进入的个人信息页面
  * 规范化改造代码
  */
+
+@Route(path = "/contact/userInfo")
 public class UserInfoActivity extends BaseActivity {
 
     private static final String USER_UID = "uid";

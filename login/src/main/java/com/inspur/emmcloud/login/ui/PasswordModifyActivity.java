@@ -59,7 +59,7 @@ public class PasswordModifyActivity extends BaseActivity implements View.OnTouch
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_password_modify;
+        return R.layout.login_activity_password_modify;
     }
 
     protected int getStatusType() {

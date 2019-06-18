@@ -9,6 +9,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
@@ -488,6 +489,16 @@ public class Channel implements Serializable {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    public SearchModel channel2SearchModel() {
+        SearchModel searchModel = new SearchModel();
+        searchModel.setId(getCid());
+        searchModel.setName(getType());
+        searchModel.setType(getType());
+        return searchModel;
+    }
+
+
 
     /*
                  * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.

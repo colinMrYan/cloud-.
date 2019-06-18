@@ -30,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.github.zafarkhaja.semver.Version;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -42,8 +43,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.login.web.WebService;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.web.WebService;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -556,8 +556,8 @@ public class AppUtils {
      */
     public static void openGallery(Activity activity, int limit, int requestCode) {
         Router router = Router.getInstance();
-        if (router.getService(WebService.class.getSimpleName()) != null) {
-            WebService service = (WebService) router.getService(WebService.class.getSimpleName());
+        if (router.getService(WebService.class) != null) {
+            WebService service = router.getService(WebService.class);
             service.openGallery(activity, limit, requestCode);
         }
     }
@@ -572,8 +572,8 @@ public class AppUtils {
     public static void openCamera(final Activity activity, final String picPath, final int requestCode) {
 
         Router router = Router.getInstance();
-        if (router.getService(WebService.class.getSimpleName()) != null) {
-            WebService service = (WebService) router.getService(WebService.class.getSimpleName());
+        if (router.getService(WebService.class) != null) {
+            WebService service = router.getService(WebService.class);
             service.openCamera(activity, picPath, requestCode);
         }
 
@@ -582,8 +582,8 @@ public class AppUtils {
 
     public static void openScanCode(final Activity activity, final int requestCode) {
         Router router = Router.getInstance();
-        if (router.getService(WebService.class.getSimpleName()) != null) {
-            WebService service = (WebService) router.getService(WebService.class.getSimpleName());
+        if (router.getService(WebService.class) != null) {
+            WebService service = router.getService(WebService.class);
             service.openScanCode(activity, requestCode);
         }
     }
@@ -591,8 +591,8 @@ public class AppUtils {
 
     public static void openScanCode(final Fragment fragment, final int requestCode) {
         Router router = Router.getInstance();
-        if (router.getService(WebService.class.getSimpleName()) != null) {
-            WebService service = (WebService) router.getService(WebService.class.getSimpleName());
+        if (router.getService(WebService.class) != null) {
+            WebService service = router.getService(WebService.class);
             service.openScanCode(fragment, requestCode);
         }
     }

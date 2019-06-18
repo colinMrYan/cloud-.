@@ -1,18 +1,18 @@
 package com.inspur.emmcloud.login.util;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 import com.inspur.emmcloud.login.R;
 import com.inspur.emmcloud.login.api.LoginAPIInterfaceImpl;
 import com.inspur.emmcloud.login.api.LoginAPIService;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
-import com.inspur.emmcloud.login.communication.CommunicationService;
-import com.inspur.emmcloud.login.login.OauthCallBack;
 import com.inspur.emmcloud.login.ui.LoginActivity;
-import com.luojilab.component.componentlib.router.Router;
 
 import org.json.JSONObject;
 
@@ -95,9 +95,9 @@ public class OauthUtils extends LoginAPIInterfaceImpl {
             BaseApplication.getInstance().setAccessToken(accessToken);
             BaseApplication.getInstance().setRefreshToken(refreshToken);
             Router router = Router.getInstance();
-            if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-                CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-                service.startWebSocket();
+            if (router.getService(CommunicationService.class) != null) {
+                CommunicationService service = router.getService(CommunicationService.class);
+                service.startWebSocket(true);
             }
             tokenGetTime = System.currentTimeMillis();
             isTokenRefreshing = false;

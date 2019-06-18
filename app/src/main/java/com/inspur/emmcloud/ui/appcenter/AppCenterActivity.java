@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -49,7 +50,6 @@ import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.widget.AdsViewPager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.inspur.imp.api.ImpActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -308,11 +308,10 @@ public class AppCenterActivity extends BaseActivity {
      */
     private void openDetailByUri(String uri) {
         if (!StringUtils.isBlank(uri)) {
-            Intent intent = new Intent();
             if (uri.startsWith("http")) {
-                intent.setClass(AppCenterActivity.this, ImpActivity.class);
-                intent.putExtra("uri", uri);
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", uri);
+                ARouter.getInstance().build("/web/main").with(bundle).navigation();
             } else if (uri.startsWith(APP_CENTER_APP_NAME_PROTOCOL)) {
                 Uri appUri = Uri.parse(uri);
                 String appId = appUri.getPathSegments().get(1);

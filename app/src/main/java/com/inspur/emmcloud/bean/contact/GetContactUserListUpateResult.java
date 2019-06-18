@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.contact;
 
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

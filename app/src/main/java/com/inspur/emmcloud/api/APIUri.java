@@ -9,7 +9,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
@@ -183,16 +183,6 @@ public class APIUri {
 
 
 
-    /************************************************************************登录*****************************************************************/
-
-    /**
-     * 网页登录
-     *
-     * @return
-     */
-    public static String getWebLoginUrl() {
-        return WebServiceRouterManager.getInstance().getIDMUrl() + "oauth2.0/authorize";
-    }
 
     /**************************************************************沟通***************************************************************/
 
@@ -243,16 +233,15 @@ public class APIUri {
     }
 
     /**
-     * Imp获取头像路径
+     * 获取头像路径(只在imp插件中使用)
      *
      * @param uid
      * @return
      */
-    public static String getChannelImgUrl4Imp(String uid) {
-        String headImgUrl = "";
+    public static String getUserPhotoUrlOutOfApp(String uid) {
+        String headImgUrl = WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
         ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
         if (contactUser != null) {
-            headImgUrl = WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/img/userhead/" + uid;
             String lastQueryTime = contactUser.getLastQueryTime();
             if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
                 headImgUrl = headImgUrl + "?" + lastQueryTime;
@@ -1481,14 +1470,6 @@ public class APIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/sys/v3.0/userprofile/mdm_state";
     }
 
-    /**
-     * 上传设备管理所需token和设备ID
-     *
-     * @return
-     */
-    public static String getUploadMDMInfoUrl() {
-        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/mdm_check";
-    }
 
 
     /**

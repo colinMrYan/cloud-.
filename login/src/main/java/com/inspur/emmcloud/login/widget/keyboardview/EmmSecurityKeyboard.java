@@ -150,7 +150,7 @@ public class EmmSecurityKeyboard extends PopupWindow {
         this.contextLocal = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mainView = inflater.inflate(R.layout.emm_keyboard, null);
+        mainView = inflater.inflate(R.layout.login_widget_emm_keyboard, null);
         mainView.findViewById(R.id.iv_keyboard_view_down).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

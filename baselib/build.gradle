@@ -101,23 +101,19 @@ dependencies {
     api deps.support.annotations
     api deps.support.multidex
     testApi deps.junit
-    api deps.jimu.componentLib
     api(deps.butterknife.butterknife) {
         exclude group: 'com.android.support'
     }
     api deps.gson
     api deps.fastjson
-    api deps.qmui
     api deps.commonsLang3
     api deps.amapLocation
 
-    api deps.baiduMapLocation
     api(deps.socket) {
         exclude group: 'org.json', module: 'json'
     }
     api deps.pinyin4j
     api deps.universalImageLoader
-    api deps.zxing
     api(deps.PhotoView) {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'

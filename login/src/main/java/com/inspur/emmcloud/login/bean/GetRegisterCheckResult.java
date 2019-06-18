@@ -1,5 +1,4 @@
 package com.inspur.emmcloud.login.bean;
-
 import org.json.JSONObject;
 
 public class GetRegisterCheckResult {
