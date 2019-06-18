@@ -1504,8 +1504,6 @@ public class ChatAPIService {
 
     /**
      * 隐藏会话
-     *
-     * @param
      * @param id
      * @param isHide
      */

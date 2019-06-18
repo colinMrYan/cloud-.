@@ -20,6 +20,7 @@ import com.inspur.emmcloud.basemodule.util.imagepicker.adapter.ImageGridAdapter;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageFolder;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.imagepicker.view.FolderPopUpWindow;
+import com.inspur.emmcloud.basemodule.util.imagepicker.view.SuperCheckBox;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 
 import java.text.DecimalFormat;
