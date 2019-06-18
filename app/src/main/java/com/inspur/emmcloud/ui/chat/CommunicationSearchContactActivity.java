@@ -23,12 +23,12 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
 import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 
 import java.io.File;
