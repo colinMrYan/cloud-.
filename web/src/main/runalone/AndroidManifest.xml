@@ -42,9 +42,6 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".plugin.file.FileBrowerAppActivity"
-            android:resizeableActivity="true" />
 
         <activity
             android:name=".plugin.filetransfer.TextFileShowActivity"
