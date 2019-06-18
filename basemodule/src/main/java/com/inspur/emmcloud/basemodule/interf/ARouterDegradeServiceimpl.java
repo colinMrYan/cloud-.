@@ -5,6 +5,7 @@ import android.content.Context;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.service.DegradeService;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 
 /**
@@ -14,6 +15,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 public class ARouterDegradeServiceimpl implements DegradeService {
     @Override
     public void onLost(Context context, Postcard postcard) {
+        LogUtils.jasonDebug("onLost====================");
         ToastUtils.show("跳转失败");
     }
 

@@ -254,7 +254,6 @@ public class BaseApplication extends MultiDexApplication {
         if (StringUtils.isBlank(accessToken)) {
             return null;
         }
-        LogUtils.jasonDebug("token==" + "Bearer" + " " + accessToken);
         return "Bearer" + " " + accessToken;
     }
 
