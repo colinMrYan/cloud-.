@@ -118,6 +118,7 @@ public class CommunicationFragment extends BaseFragment {
     private LoadingDialog loadingDlg;
     private ImageView headerFunctionOptionImg;
     private ImageView contactImg;
+    private TextView contactSearchTextView;
     private CheckingNetStateUtils checkingNetStateUtils;
     private OnClickListener onViewClickListener = new OnClickListener() {
 
@@ -156,6 +157,9 @@ public class CommunicationFragment extends BaseFragment {
 //                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     popupWindow.dismiss();
+                    break;
+                case R.id.tv_search_contact:
+                    IntentUtils.startActivity(getActivity(),CommunicationSearchContactActivity.class);
                     break;
                 default:
                     break;
@@ -197,6 +201,8 @@ public class CommunicationFragment extends BaseFragment {
         contactImg.setOnClickListener(onViewClickListener);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         noDataLayout = (RelativeLayout) rootView.findViewById(R.id.rl_no_chat);
+        contactSearchTextView =  rootView.findViewById(R.id.tv_search_contact);
+        contactSearchTextView.setOnClickListener(onViewClickListener);
         initPullRefreshLayout();
         initRecycleView();
         loadingDlg = new LoadingDialog(getActivity());
