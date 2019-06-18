@@ -120,10 +120,16 @@ public class DisplayMediaImageMsg {
         } else if (h > w) {
             params.height = maxH;
             params.width = (int) (maxH * 1.0 * w / h);
+            if (params.width < minW) {
+                params.width = minW;
+            }
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
             params.width = maxW;
             params.height = (int) (maxW * 1.0 * h / w);
+            if (params.height < minH) {
+                params.height = minH;
+            }
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         imageView.setLayoutParams(params);
