@@ -52,6 +52,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
@@ -1822,6 +1823,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnHolidayDataFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnTransmitPictureSuccess(String cid, String description, Message message) {
+
+    }
+
+    @Override
+    public void returnTransmitPictureError(String error, int errorCode) {
 
     }
 }

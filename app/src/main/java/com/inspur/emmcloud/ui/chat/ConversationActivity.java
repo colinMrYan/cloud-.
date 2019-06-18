@@ -48,6 +48,7 @@ import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
+import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -347,7 +348,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (duration == 0) {
                     duration = 1;
                 }
-                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration, results);
+                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration, results, "");
             }
 
             @Override
@@ -452,7 +453,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             @Override
             public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
                 Message message = uiMessage.getMessage();
-                switch (message.getType()){
+                switch (message.getType()) {
                     case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                         Bundle bundle = new Bundle();
@@ -732,7 +733,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        combinAndSendMessageWithFile(url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE);
+                        combinAndSendMessageWithFile(url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, "");
                     }
                     break;
                 case "link":
@@ -765,7 +766,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         ToastUtils.show(MyApplication.getInstance(),
                                 getString(R.string.not_support_upload));
                     } else {
-                        combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE);
+                        combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, "");
                     }
                     break;
                 case REQUEST_CAMERA:
@@ -777,7 +778,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
+                    combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, "");
                     break;
                 case REQUEST_MENTIONS:
                     // @返回
@@ -820,30 +821,36 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (data != null && requestCode == REQUEST_GELLARY) {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
                     for (int i = 0; i < imageItemList.size(); i++) {
                         String imgPath = imageItemList.get(i).path;
+                        String previewImgPath = imgPath;
                         try {
                             File file = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .compressToFile(new File(imgPath));
-                            imgPath = file.getAbsolutePath();
+                            previewImgPath = file.getAbsolutePath();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE);
+                        if (!originalPicture) {
+                            imgPath = previewImgPath;
+                        }
+                        //  DisplayMediaImageMsg.getImgViewSize(this,)
+                        combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, previewImgPath);
                     }
                 }
         }
     }
 
-    private void combinAndSendMessageWithFile(String filePath, String messageType) {
-        combinAndSendMessageWithFile(filePath, messageType, 0);
+    private void combinAndSendMessageWithFile(String filePath, String messageType, String compressImgPath) {
+        combinAndSendMessageWithFile(filePath, messageType, 0, compressImgPath);
     }
 
-    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration) {
-        combinAndSendMessageWithFile(filePath, messageType, duration, "");
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, String compressImgPath) {
+        combinAndSendMessageWithFile(filePath, messageType, duration, "", compressImgPath);
     }
 
-    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, String results) {
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, String results, String compressImgPath) {
         File file = new File(filePath);
         if (!file.exists()) {
             if (messageType != Message.MESSAGE_TYPE_MEDIA_VOICE) {
@@ -857,7 +864,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 fakeMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+                fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath, compressImgPath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration, results);
@@ -917,6 +924,13 @@ public class ConversationActivity extends ConversationBaseActivity {
                         msgContentMediaImage.setRawHeight(fakeMessage.getMsgContentMediaImage().getRawHeight());
                         msgContentMediaImage.setRawSize(volumeFile.getSize());
                         msgContentMediaImage.setRawMedia(volumeFile.getPath());
+                        msgContentMediaImage.setPreviewHeight(fakeMessage.getMsgContentMediaImage().getPreviewHeight());
+                        msgContentMediaImage.setPreviewWidth(fakeMessage.getMsgContentMediaImage().getPreviewWidth());
+                        msgContentMediaImage.setPreviewSize(fakeMessage.getMsgContentMediaImage().getPreviewSize());
+                        msgContentMediaImage.setPreviewMedia(volumeFile.getPath());
+                        msgContentMediaImage.setThumbnailHeight(fakeMessage.getMsgContentMediaImage().getThumbnailHeight());
+                        msgContentMediaImage.setThumbnailWidth(fakeMessage.getMsgContentMediaImage().getThumbnailWidth());
+                        msgContentMediaImage.setThumbnailMedia(volumeFile.getPath());
                         msgContentMediaImage.setName(volumeFile.getName());
                         msgContentMediaImage.setTmpId(fakeMessage.getTmpId());
                         fakeMessage.setContent(msgContentMediaImage.toString());
@@ -1382,7 +1396,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 transmitTextMsg(cid, uiMessage);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                //  transmitImgMsg(cid, uiMessage.getMessage());
+                transmitImgMsg(cid, uiMessage.getMessage());
                 break;
             case Message.MESSAGE_TYPE_TEXT_MARKDOWN:
                 transmitTextMsg(cid, uiMessage);
@@ -1412,13 +1426,19 @@ public class ConversationActivity extends ConversationBaseActivity {
      * 转发图片消息
      */
     private void transmitImgMsg(String cid, Message sendMessage) {
-        String path1 = sendMessage.getMsgContentMediaImage().getPreviewMedia();
-        String data = JSONUtils.toJSONString(sendMessage);
-        String path = sendMessage.getLocalPath();
-        if (!StringUtils.isBlank(path) && NetUtils.isNetworkConnected(getApplicationContext())) {
-//                Message localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid,path);
-//                localMessage.getMsgContentMediaImage().setPreviewMedia(path1);
-//              sendMessageWithFile(localMessage);
+        String path = null;
+        JSONObject jsonObject = JSONUtils.getJSONObject(sendMessage.getContent());
+        try {
+            String data = jsonObject.getString("raw");
+            JSONObject jsonPath = JSONUtils.getJSONObject(data);
+            path = jsonPath.getString("media");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            ChatAPIService apiService = new ChatAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.transmitFile(path, sendMessage.getChannel(), cid, "image", sendMessage);
         }
     }
 
@@ -1443,6 +1463,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                items = new int[]{R.string.chat_long_click_transmit};
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
@@ -1675,6 +1696,24 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnTransmitPictureSuccess(String cid, String description, Message message) {
+            if (NetUtils.isNetworkConnected(getApplicationContext())) {
+                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+                } else {
+                    String path = JSONUtils.getString(description, "path", "");
+                    if (!StringUtils.isBlank(path)) {
+                        Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
+                        WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
+                    }
+                }
+            }
+            super.returnTransmitPictureSuccess(cid, description, message);
+        }
 
+        @Override
+        public void returnTransmitPictureError(String error, int errorCode) {
+            super.returnTransmitPictureError(error, errorCode);
+        }
     }
 }
