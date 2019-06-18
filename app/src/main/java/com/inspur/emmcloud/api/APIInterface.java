@@ -51,6 +51,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
@@ -801,5 +802,9 @@ public interface APIInterface {
     void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult);
 
     void returnHolidayDataFail(String error, int errorCode);
+
+    void returnTransmitPictureSuccess(String cid, String description, Message message);
+
+    void returnTransmitPictureError(String error, int errorCode);
 
 }
