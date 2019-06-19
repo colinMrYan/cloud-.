@@ -188,26 +188,18 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 .addItem(getString(R.string.delete), isOwner)
                 .addItem(getString(R.string.clouddriver_volume_info))
                 .addItem(getString(R.string.rename), isOwner)
-                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                    @Override
-                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                        switch (position) {
-                            case 0:
-                                showVolumeDelWranibgDlg(volume);
-                                break;
-                            case 1:
-                                Intent intent = new Intent(ShareVolumeActivity.this, ShareVolumeInfoActivity.class);
-                                intent.putExtra("volume", volume);
-                                startActivityForResult(intent, UPDATE_VOLUME_NAME);
-                                break;
-                            case 2:
-                                showUpdateShareVolumeNameDlg(volume);
-                                break;
-                            default:
-                                break;
-                        }
-                        dialog.dismiss();
+                .setOnSheetItemClickListener((dialog, itemView, position) -> {
+                    String action = (String) itemView.getTag();
+                    if (action.equals(getString(R.string.delete))) {
+                        showVolumeDelWranibgDlg(volume);
+                    } else if (action.equals(getString(R.string.clouddriver_volume_info))) {
+                        Intent intent = new Intent(ShareVolumeActivity.this, ShareVolumeInfoActivity.class);
+                        intent.putExtra("volume", volume);
+                        startActivityForResult(intent, UPDATE_VOLUME_NAME);
+                    } else if (action.equals(getString(R.string.rename))) {
+                        showUpdateShareVolumeNameDlg(volume);
                     }
+                    dialog.dismiss();
                 }).build()
                 .show();
     }

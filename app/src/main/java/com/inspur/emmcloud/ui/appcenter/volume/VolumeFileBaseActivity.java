@@ -87,6 +87,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
+    String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction; //弹框点击状态
 
 
     @Override
@@ -133,49 +134,49 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected void showFileOperationDlg(final VolumeFile volumeFile) {
         boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), volumeFile);
         boolean isVolumeFileDirectory = volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
+        deleteAction = getString(R.string.delete);
+        downloadAction = getString(R.string.download);
+        renameAction = getString(R.string.rename);
+        moveToAction = getString(R.string.move_to);
+        copyAction = getString(R.string.copy);
+        permissionAction = getString(R.string.clouddriver_file_permission_manager);
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileBaseActivity.this)
                 .setTitle(volumeFile.getName())
-                .addItem(getString(R.string.delete), isVolumeFileWriteable)
-                .addItem(getString(R.string.download), !isVolumeFileDirectory)
-                .addItem(getString(R.string.rename), isVolumeFileWriteable)
-                .addItem(getString(R.string.move_to), isVolumeFileWriteable)
-                .addItem(getString(R.string.copy))
-                .addItem(getString(R.string.clouddriver_file_permission_manager), isVolumeFileDirectory)
+                .addItem(deleteAction, isVolumeFileWriteable)
+                .addItem(downloadAction, !isVolumeFileDirectory)
+                .addItem(renameAction, isVolumeFileWriteable)
+                .addItem(moveToAction, isVolumeFileWriteable)
+                .addItem(copyAction)
+                .addItem(permissionAction, isVolumeFileDirectory)
                 // .addItem("分享", !isVolumeFileDirectory)
-                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                    @Override
-                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                        switch (position) {
-                            case 0:
-                                showFileDelWranibgDlg(volumeFile);
-                                break;
-                            case 1:
-                                downloadFile(volumeFile);
-                                break;
-                            case 2:
-                                showFileRenameDlg(volumeFile);
-                                break;
-                            case 3:
-                                moveVolumeFileList.clear();
-                                moveVolumeFileList.add(volumeFile);
-                                moveFile(moveVolumeFileList);
-                                break;
-                            case 4:
-                                List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
-                                copyVolumeFileList.add(volumeFile);
-                                copyFile(copyVolumeFileList);
-                                break;
-                            case 5:
-                                startVolumeFilePermissionManager(volumeFile);
-                                break;
-                            default:
-                                break;
-                        }
-                        dialog.dismiss();
-                    }
+                .setOnSheetItemClickListener((dialog, itemView, position) -> {
+                    String action = (String) itemView.getTag();
+                    handleItemClick(action, volumeFile);
+                    dialog.dismiss();
                 })
                 .build()
                 .show();
+    }
+
+    //处理弹框点击事件
+    private void handleItemClick(String action, VolumeFile volumeFile) {
+        if (action.equals(deleteAction)) {
+            showFileDelWranibgDlg(volumeFile);
+        } else if (action.equals(downloadAction)) {
+            downloadFile(volumeFile);
+        } else if (action.equals(renameAction)) {
+            showFileRenameDlg(volumeFile);
+        } else if (action.equals(moveToAction)) {
+            moveVolumeFileList.clear();
+            moveVolumeFileList.add(volumeFile);
+            moveFile(moveVolumeFileList);
+        } else if (action.equals(copyAction)) {
+            List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
+            copyVolumeFileList.add(volumeFile);
+            copyFile(copyVolumeFileList);
+        } else if (action.equals(permissionAction)) {
+            startVolumeFilePermissionManager(volumeFile);
+        }
     }
 
     /**

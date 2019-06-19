@@ -309,6 +309,7 @@ public class ActionSheetDialog extends Dialog {
                 textView.setTextColor(itemColor);
                 textView.setText(data.text);
                 convertView.findViewById(R.id.layout).setVisibility(data.isShow ? View.VISIBLE : View.GONE);
+                convertView.setTag(data.text);
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
