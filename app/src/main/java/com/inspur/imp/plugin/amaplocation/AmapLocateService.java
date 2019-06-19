@@ -138,11 +138,6 @@ public class AmapLocateService extends ImpPlugin implements
         locationCount++;
         if (amapLocation != null && (amapLocation.getErrorCode() == 0)) {
             aMapLocationList.add(amapLocation);
-            double longitudeD = amapLocation.getLongitude();
-            double latitudeD = amapLocation.getLatitude();
-            LogUtils.jasonDebug("amapLocation.getAccuracy()=" + amapLocation.getAccuracy());
-            LogUtils.jasonDebug("longitudeD=" + longitudeD);
-            LogUtils.jasonDebug("latitudeD=" + latitudeD);
         }
         if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy() < 60)) {
             mlocationClient.stopLocation();
