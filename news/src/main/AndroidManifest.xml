@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.inspur.emmcloud.news">
+
+    <application>
+        <activity
+            android:name=".ui.NewsWebDetailActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.GroupNewsActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+    </application>
+</manifest>
