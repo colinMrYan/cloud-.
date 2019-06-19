@@ -9,6 +9,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
@@ -24,8 +25,8 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
-import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 
 import org.json.JSONObject;
@@ -205,6 +206,7 @@ public class CommunicationUtils {
         int imgHeight = bitmap.getHeight();
         int imgWidth = bitmap.getWidth();
         long fileSize = FileUtils.getFileSize(localFilePath);
+        LogUtils.LbcDebug("Original Size::" + fileSize);
         bitmap.recycle();
         int previewImgHight = 0;
         int previewImgWidth = 0;
@@ -215,11 +217,13 @@ public class CommunicationUtils {
             previewImgWidth = previewPictureBitmap.getWidth();
             previewFileSize = FileUtils.getFileSize(previewImgPath);
             previewPictureBitmap.recycle();
+            LogUtils.LbcDebug(" if preview Size::" + previewFileSize);
         } else {
             previewImgHight = imgHeight;
             previewImgWidth = imgWidth;
             previewFileSize = fileSize;
             previewImgPath = localFilePath;
+            LogUtils.LbcDebug("else preview Size::" + previewFileSize);
         }
         //还要转回dp/2
         int thumbnailHeight = 0;

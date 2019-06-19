@@ -62,15 +62,15 @@ public class DisplayMediaImageMsg {
         //判断是否有Preview 图片如果有的话用preview ，否则用原图
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
-//        if (msgContentMediaImage.getPreviewHeight() > 0 && msgContentMediaImage.getPreviewWidth() > 0) {
-//            h = msgContentMediaImage.getPreviewHeight();
-//            w = msgContentMediaImage.getPreviewWidth();
-//        }
+        if (msgContentMediaImage.getPreviewHeight() > 0 && msgContentMediaImage.getPreviewWidth() > 0) {
+            h = msgContentMediaImage.getPreviewHeight();
+            w = msgContentMediaImage.getPreviewWidth();
+        }
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
-//        LayoutParams layoutParams = getImgViewSize(context, w, h);
-//        if (imageUri.startsWith("http")) {
-//            imageUri = imageUri + "&w=" + layoutParams.width + "&h=" + layoutParams.height;
-//        }
+        LayoutParams layoutParams = getImgViewSize(context, w, h);
+        if (imageUri.startsWith("http")) {
+            imageUri = imageUri + "&w=" + layoutParams.width + "&h=" + layoutParams.height;
+        }
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
