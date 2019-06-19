@@ -439,7 +439,7 @@ public class SettingActivity extends BaseActivity {
         final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
 
-        new CustomDialog.ListDialogBuilder(this)
+        new CustomDialog.ListDialogBuilder(ctw)
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
