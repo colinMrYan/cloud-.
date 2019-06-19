@@ -27,7 +27,7 @@ public class URLClickableSpan extends ClickableSpan {
     public void onClick(View view) {
         //Do something with URL here.
         Context context = view.getContext();
-        if (openUri.startsWith("http")) {
+        if (openUri.toLowerCase().startsWith("http")) {
             UriUtils.openUrl((Activity) context, openUri);
         } else {
             try {
