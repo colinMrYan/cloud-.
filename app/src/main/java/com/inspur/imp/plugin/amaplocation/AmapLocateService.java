@@ -108,9 +108,11 @@ public class AmapLocateService extends ImpPlugin implements
         // 初始化定位参数 默认连续定位
         AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         mLocationOption.setInterval(1000);
+        mLocationOption.setLocationCacheEnable(false);
+        mLocationOption.setWifiScan(true);
         // 设置定位参数
         mlocationClient.setLocationOption(mLocationOption);
-        mLocationOption.setWifiScan(true);
+
         // 设置定位回调监听
         mlocationClient.setLocationListener(this);
         mlocationClient.startLocation();
