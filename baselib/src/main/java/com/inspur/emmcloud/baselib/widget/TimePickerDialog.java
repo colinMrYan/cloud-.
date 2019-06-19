@@ -45,17 +45,25 @@ public class TimePickerDialog {
         alertDialog.show();
     }
 
+    /**
+     * 反射的方式获取NumberPicker
+     */
     private void getNumSpinnerPicker() {
-        Resources systemResources = Resources.getSystem();
-        int hourNumberPickerId = systemResources.getIdentifier("hour", "id", "android");
-        int minuteNumberPickerId = systemResources.getIdentifier("minute", "id", "android");
-        NumberPicker hourNumberPicker = timePicker.findViewById(hourNumberPickerId);
-        NumberPicker minuteNumberPicker = timePicker.findViewById(minuteNumberPickerId);
-        setNumberPickerDivider(hourNumberPicker);
-        setNumberPickerDivider(minuteNumberPicker);
-
+        try {
+            Resources systemResources = Resources.getSystem();
+            int hourNumberPickerId = systemResources.getIdentifier("hour", "id", "android");
+            int minuteNumberPickerId = systemResources.getIdentifier("minute", "id", "android");
+            NumberPicker hourNumberPicker = timePicker.findViewById(hourNumberPickerId);
+            NumberPicker minuteNumberPicker = timePicker.findViewById(minuteNumberPickerId);
+            setNumberPickerDivider(hourNumberPicker);
+            setNumberPickerDivider(minuteNumberPicker);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * 设置Divider 的颜色*/
     private void setNumberPickerDivider(NumberPicker numberPicker) {
         NumberPicker picker = numberPicker;
         Field[] pickerFields = NumberPicker.class.getDeclaredFields();
