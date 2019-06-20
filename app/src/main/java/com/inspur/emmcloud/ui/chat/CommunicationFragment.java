@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -364,7 +365,9 @@ public class CommunicationFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            conversationAdapter.setNetExceptionView((boolean) netState.getMessageObj());
+            conversationAdapter.setNetExceptionView(((boolean) netState.getMessageObj() ||
+                    NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(getActivity())
+                    || NetUtils.isVpnConnected()));
             if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }
