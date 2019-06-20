@@ -29,7 +29,7 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
         if (v.getId() == Res.getWidgetID("ibt_back")) {
             onBackPressed();
         } else if (v.getId() == Res.getWidgetID("register_btn")) {
-            ARouter.getInstance().build("/web/main").with(bundle);
+            ARouter.getInstance().build("/web/main").with(bundle).navigation();
             finish();
         }
     }
