@@ -810,7 +810,19 @@ public class ConversationActivity extends ConversationBaseActivity {
                             if (channelGroupArray.length() > 0) {
                                 JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
                                 String cid = JSONUtils.getString(cidObj, "cid", "");
-                                transmitTextMsg(cid, backUiMessage);
+                                switch (backUiMessage.getMessage().getType()) {
+                                    case Message.MESSAGE_TYPE_TEXT_PLAIN:
+                                        transmitTextMsg(cid, backUiMessage);
+                                        LogUtils.LbcDebug("666666666666666666666666666");
+                                        break;
+                                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                                        transmitImgMsg(cid, backUiMessage.getMessage());
+                                        LogUtils.LbcDebug("777777777777777777777777777777");
+                                        break;
+                                    default:
+                                        LogUtils.LbcDebug("1222233445567888888888");
+                                        break;
+                                }
                             }
                         }
                     }

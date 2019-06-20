@@ -207,6 +207,8 @@ public class CommunicationUtils {
         int imgWidth = bitmap.getWidth();
         long fileSize = FileUtils.getFileSize(localFilePath);
         LogUtils.LbcDebug("Original Size::" + fileSize);
+        LogUtils.LbcDebug("Original imgHeight::" + imgHeight);
+        LogUtils.LbcDebug("Original imgWidth::" + imgWidth);
         bitmap.recycle();
         int previewImgHight = 0;
         int previewImgWidth = 0;
@@ -225,6 +227,10 @@ public class CommunicationUtils {
             previewImgPath = localFilePath;
             LogUtils.LbcDebug("else preview Size::" + previewFileSize);
         }
+        LogUtils.LbcDebug(" preview previewImgHight::" + previewImgHight);
+        LogUtils.LbcDebug(" preview previewImgWidth::" + previewImgWidth);
+
+
         //还要转回dp/2
         int thumbnailHeight = 0;
         int thumbnailWidth = 0;

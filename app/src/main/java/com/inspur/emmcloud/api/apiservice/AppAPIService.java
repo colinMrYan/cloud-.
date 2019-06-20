@@ -421,8 +421,6 @@ public class AppAPIService {
     }
 
 
-
-
     /**
      * 获取应用的配置信息
      */
@@ -588,6 +586,8 @@ public class AppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
+                //  LogUtils.LbcDebug("responseCode::"+responseCode);
+                // 因检测地址为小助手地址，小助手会返回跳转地址，在需要验证网络的情况下返回1111，在连接网络返回301（19/06/20）
                 if (responseCode == 302 || responseCode == 301) {
                     apiInterface.returnCheckCloudPluseConnectionSuccess(null, url);
                 } else {

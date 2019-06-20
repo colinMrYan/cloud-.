@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
@@ -41,6 +43,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +74,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private ImagePagerAdapter mAdapter;
     private RelativeLayout functionLayout;
     private TextView commentCountText;
+    private TextView originalPictureDownLoadTextView;
     private Map<String, Integer> commentCountMap = new ArrayMap<>();
     private Boolean isNeedTransformIn;
     private boolean isHasTransformIn = false;
@@ -133,6 +137,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG) && pagerPosition == 0) {
             setCommentCount();
         }
+        originalPictureDownLoadTextView = findViewById(R.id.tv_original_picture_download_progress);
     }
 
 
@@ -299,6 +304,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private void initIntentData() {
 
         if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
+            LogUtils.LbcDebug("Image Message 列表 List");
             Message currentMsg = (Message) getIntent().getSerializableExtra(EXTRA_CURRENT_IMAGE_MSG);
             urlList = new ArrayList<>();
             cid = currentMsg.getChannel();
@@ -313,6 +319,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             }
             pageStartPosition = imgTypeMessageList.indexOf(currentMsg);
         } else {
+            LogUtils.LbcDebug("直接输出Urls");
             urlList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
             pageStartPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
         }
@@ -407,6 +414,24 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
     }
 
+    private boolean isHaveImageCatch(String uri) {
+        try {
+            File file = com.nostra13.universalimageloader.core.ImageLoader.getInstance().getDiskCache().get(uri);
+            Bitmap bitmap = com.nostra13.universalimageloader.core.ImageLoader.getInstance().getMemoryCache().get(uri);
+            LogUtils.LbcDebug("22222222222222222222222222222222");
+            if (file == null && bitmap == null) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            LogUtils.LbcDebug("11111111111111111111111");
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
     private class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
         public List<String> urlList;
@@ -425,6 +450,14 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         @Override
         public Fragment getItem(int position) {
             String url = urlList.get(position);
+            LogUtils.LbcDebug("url ::" + url);
+            /**判断当前有没有原图
+             * 如果有原图原图展示，
+             * 如果没有原图 判断消息中原图和预览图大小是否相等
+             * 如果相等则加载原图（因为未发原图）
+             * 如果不相等则显示*/
+            boolean isHaveImageCatch = isHaveImageCatch(url);
+            originalPictureDownLoadTextView.setVisibility(isHaveImageCatch ? View.GONE : View.VISIBLE);
             boolean isNeedTransformOut = (position == pageStartPosition);
             if (isNeedTransformOut && isHasTransformIn == false) {
                 isNeedTransformIn = true;
