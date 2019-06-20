@@ -107,7 +107,8 @@
                             android:id="@+id/qv_checking_hard_loading"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:layout_marginTop="11dp" />
+                            android:layout_marginTop="11dp"
+                            app:loading_color="@color/grey_a5a5a5" />
 
                         <ImageView
                             android:id="@+id/iv_hard_state_log"
@@ -243,7 +244,8 @@
                         android:layout_height="20dp"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginTop="11dp" />
+                        android:layout_marginTop="11dp"
+                        app:loading_color="@color/grey_a5a5a5" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -464,7 +466,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
                         android:layout_toRightOf="@id/tv_cloudpluse_content"
-                        android:background="@color/black" />
+                        app:loading_color="@color/grey_a5a5a5" />
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
