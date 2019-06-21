@@ -25,13 +25,13 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetMessageCommentCountResult;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -175,6 +175,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 showCommentInputDlg();
 
                 break;
+            case R.id.tv_original_picture_download_progress:
+
+                break;
             default:
                 break;
         }
@@ -211,6 +214,14 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         // 设置点击外围解散
         commentInputDlg.setCanceledOnTouchOutside(true);
         commentInputDlg.show();
+    }
+
+    /**
+     * 下载原图
+     */
+    private void downLoadOriginalPicture() {
+        int position = mAdapter.getItemPosition(mAdapter.getCurrentFragment());
+        Message message = imgTypeMessageList.get(position);
     }
 
     /**
@@ -312,8 +323,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             for (Message message : imgTypeMessageList) {
                 /**改成preview*/
                 //message.getMsgContentMediaImage().getPreviewMedia();  理论上路径用这个
-                String path = StringUtils.isBlank(message.getMsgContentMediaImage().getPreviewMedia())
-                        ? message.getMsgContentMediaImage().getRawMedia() : message.getMsgContentMediaImage().getPreviewMedia();
+                String path = message.getMsgContentMediaImage().getRawMedia();
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), path);
                 urlList.add(url);
             }
@@ -449,7 +459,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
-            String url = urlList.get(position);
+            String url = urlList.get(position); //raw 路径
             LogUtils.LbcDebug("url ::" + url);
             /**判断当前有没有原图
              * 如果有原图原图展示，
@@ -457,13 +467,16 @@ public class ImagePagerActivity extends BaseFragmentActivity {
              * 如果相等则加载原图（因为未发原图）
              * 如果不相等则显示*/
             if (imgTypeMessageList.size() > 0) {
-
-
+                MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
+                boolean isHaveOriginalImageCatch = isHaveImageCatch(url);//这个是判断有无原图（是否有）
+                if ((msgContentMediaImage.getRawSize() != msgContentMediaImage.getPreviewSize()) && !isHaveOriginalImageCatch) {
+                    originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
+                    url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
+                }
             } else {
-
+                originalPictureDownLoadTextView.setVisibility(View.GONE);
             }
-            boolean isHaveImageCatch = isHaveImageCatch(url);//这个是判断有无原图
-            originalPictureDownLoadTextView.setVisibility(isHaveImageCatch ? View.GONE : View.VISIBLE);
+
             boolean isNeedTransformOut = (position == pageStartPosition);
             if (isNeedTransformOut && isHasTransformIn == false) {
                 isNeedTransformIn = true;
