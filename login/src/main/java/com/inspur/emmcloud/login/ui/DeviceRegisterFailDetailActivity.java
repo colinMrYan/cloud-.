@@ -22,7 +22,7 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return Res.getLayoutID("mdm_activity_device_register_fail_detail");
+        return Res.getLayoutID("login_activity_device_register_fail_detail");
     }
 
     public void onClick(View v) {
