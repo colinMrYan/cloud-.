@@ -137,6 +137,7 @@ public class MDM extends LoginAPIInterfaceImpl {
         bundle.putString("userName", userName);
         bundle.putString("message", getDeviceCheckResult.getMessage());
         bundle.putStringArrayList("requireFields", requireFieldList);
+        bundle.putString("uri", LoginAPIUri.getDeviceRegisterUrl(context));
         intent.putExtra("bundle", bundle);
         context.startActivity(intent);
         if (isImpActivity) {
