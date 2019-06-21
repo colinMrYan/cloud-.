@@ -456,7 +456,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
              * 如果没有原图 判断消息中原图和预览图大小是否相等
              * 如果相等则加载原图（因为未发原图）
              * 如果不相等则显示*/
-            boolean isHaveImageCatch = isHaveImageCatch(url);
+            if (imgTypeMessageList.size() > 0) {
+
+
+            } else {
+
+            }
+            boolean isHaveImageCatch = isHaveImageCatch(url);//这个是判断有无原图
             originalPictureDownLoadTextView.setVisibility(isHaveImageCatch ? View.GONE : View.VISIBLE);
             boolean isNeedTransformOut = (position == pageStartPosition);
             if (isNeedTransformOut && isHasTransformIn == false) {

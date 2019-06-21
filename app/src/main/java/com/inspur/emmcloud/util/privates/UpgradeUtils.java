@@ -16,6 +16,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -169,6 +170,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
         upgradeUrl = getUpgradeResult.getUpgradeUrl();
         switch (upgradeCode) {
             case 0: // 无须升级
+                LogUtils.LbcDebug("无需升级");
                 if (handler != null) {
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }

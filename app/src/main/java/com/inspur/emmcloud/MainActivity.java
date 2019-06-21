@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -194,6 +195,7 @@ public class MainActivity extends BaseActivity {
                     case UPGRADE_FAIL:
                     case NO_NEED_UPGRADE:
                     case DONOT_UPGRADE:
+                        LogUtils.LbcDebug("走不升级逻辑：" + msg.what);
                         autoLogin();
                         break;
                     case LOGIN_SUCCESS:
@@ -223,9 +225,11 @@ public class MainActivity extends BaseActivity {
         // TODO Auto-generated method stub
         Router router = Router.getInstance();
         if (router.getService(LoginService.class) != null) {
+            LogUtils.LbcDebug("走自动登录");
             LoginService service = router.getService(LoginService.class);
             service.autoLogin(MainActivity.this, handler);
         } else {
+            LogUtils.LbcDebug("走展示闪屏");
             setSplashShow();
         }
     }
