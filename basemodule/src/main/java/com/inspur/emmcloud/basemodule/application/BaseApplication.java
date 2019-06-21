@@ -92,7 +92,7 @@ public class BaseApplication extends MultiDexApplication {
         crashHandler.init(getInstance());
         x.Ext.init(BaseApplication.this);
         x.Ext.setDebug(true);
-        LogUtils.isDebug = true;
+        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         Res.init(this); // 注册imp的资源文件类
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
