@@ -38,6 +38,11 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
 import com.inspur.emmcloud.widget.HackyViewPager;
 import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -79,6 +84,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private Boolean isNeedTransformIn;
     private boolean isHasTransformIn = false;
     private Dialog commentInputDlg;
+    private ImageLoadingProgressListener imageLoadingProgressListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,6 +144,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             setCommentCount();
         }
         originalPictureDownLoadTextView = findViewById(R.id.tv_original_picture_download_progress);
+        imageLoadingProgressListener = new ImageLoadingProgressListener() {
+            @Override
+            public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                LogUtils.LbcDebug("更新大小:::" + current);
+                originalPictureDownLoadTextView.setText("%" + (current * 100) / total);
+            }
+        };
     }
 
 
@@ -176,7 +189,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
                 break;
             case R.id.tv_original_picture_download_progress:
-
+                LogUtils.LbcDebug("下载图片");
+                downLoadOriginalPicture();
                 break;
             default:
                 break;
@@ -220,8 +234,49 @@ public class ImagePagerActivity extends BaseFragmentActivity {
      * 下载原图
      */
     private void downLoadOriginalPicture() {
-        int position = mAdapter.getItemPosition(mAdapter.getCurrentFragment());
-        Message message = imgTypeMessageList.get(position);
+
+        Message message = imgTypeMessageList.get(pagerPosition);
+        LogUtils.LbcDebug("url::::" + urlList.get(pagerPosition));
+        String path = message.getMsgContentMediaImage().getRawMedia();
+        String url = APIUri.getChatFileResouceUrl(message.getChannel(), path);
+        LogUtils.LbcDebug("获取到的Url:::" + url);
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.drawable.default_image)
+
+                .showImageOnFail(R.drawable.default_image)
+                .showImageOnLoading(R.drawable.default_image)
+                // 设置图片的解码类型
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageSize imageSize = new ImageSize(message.getMsgContentMediaImage().getRawWidth(),
+                message.getMsgContentMediaImage().getRawHeight());
+        com.nostra13.universalimageloader.core.ImageLoader.getInstance().loadImage(url, imageSize,
+                options, new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        LogUtils.LbcDebug("下载完成图片更新");
+                        mAdapter.notifyDataSetChanged();
+                        originalPictureDownLoadTextView.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+
+                    }
+                }, imageLoadingProgressListener);
+
     }
 
     /**
@@ -428,14 +483,15 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         try {
             File file = com.nostra13.universalimageloader.core.ImageLoader.getInstance().getDiskCache().get(uri);
             Bitmap bitmap = com.nostra13.universalimageloader.core.ImageLoader.getInstance().getMemoryCache().get(uri);
-            LogUtils.LbcDebug("22222222222222222222222222222222");
-            if (file == null && bitmap == null) {
+            if (file == null || bitmap == null || bitmap.getHeight() == 0) {
+                LogUtils.LbcDebug("isHaveImageCatch:::" + false);
                 return false;
             } else {
+                LogUtils.LbcDebug("isHaveImageCatch:::" + true);
                 return true;
             }
         } catch (Exception e) {
-            LogUtils.LbcDebug("11111111111111111111111");
+            LogUtils.LbcDebug("isHaveImageCatch::" + "Error");
             e.printStackTrace();
             return false;
         }
@@ -467,11 +523,17 @@ public class ImagePagerActivity extends BaseFragmentActivity {
              * 如果相等则加载原图（因为未发原图）
              * 如果不相等则显示*/
             if (imgTypeMessageList.size() > 0) {
+                LogUtils.LbcDebug("imagList Size >0;  size=" + imgTypeMessageList.size());
                 MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
                 boolean isHaveOriginalImageCatch = isHaveImageCatch(url);//这个是判断有无原图（是否有）
                 if ((msgContentMediaImage.getRawSize() != msgContentMediaImage.getPreviewSize()) && !isHaveOriginalImageCatch) {
                     originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
                     url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
+                    LogUtils.LbcDebug("url+resize:::" + url);
+                } else {
+                    LogUtils.LbcDebug("msgContentMediaImage.getRawSize()::" + msgContentMediaImage.getRawSize() + "::" +
+                            "msgContentMediaImage.getPreviewSize():::" + msgContentMediaImage.getPreviewSize());
+                    originalPictureDownLoadTextView.setVisibility(View.GONE);
                 }
             } else {
                 originalPictureDownLoadTextView.setVisibility(View.GONE);
