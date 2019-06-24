@@ -41,7 +41,6 @@ import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
-import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
@@ -55,7 +54,6 @@ import com.inspur.emmcloud.bean.chat.VoiceCommunicationJoinChannelInfoBean;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
-import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
@@ -507,19 +505,19 @@ public class ChannelV0Activity extends BaseActivity {
                         ChannelMsgDetailActivity.class, bundle);
                 break;
             case "res_link":
-                String msgBody = msg.getBody();
-                String linkTitle = JSONUtils.getString(msgBody, "title", "");
-                String linkDigest = JSONUtils.getString(msgBody, "digest", "");
-                String linkUrl = JSONUtils.getString(msgBody, "url", "");
-                String linkPoster = JSONUtils.getString(msgBody, "poster", "");
-                GroupNews groupNews = new GroupNews();
-                groupNews.setTitle(StringUtils.isBlank(linkTitle) ? getString(R.string.share_default_title) : linkTitle);
-                groupNews.setDigest(linkDigest);
-                groupNews.setUrl(linkUrl);
-                groupNews.setPoster(linkPoster);
-                bundle.putSerializable("groupNews", groupNews);
-                IntentUtils.startActivity(ChannelV0Activity.this,
-                        NewsWebDetailActivity.class, bundle);
+//                String msgBody = msg.getBody();
+//                String linkTitle = JSONUtils.getString(msgBody, "title", "");
+//                String linkDigest = JSONUtils.getString(msgBody, "digest", "");
+//                String linkUrl = JSONUtils.getString(msgBody, "url", "");
+//                String linkPoster = JSONUtils.getString(msgBody, "poster", "");
+//                GroupNews groupNews = new GroupNews();
+//                groupNews.setTitle(StringUtils.isBlank(linkTitle) ? getString(R.string.share_default_title) : linkTitle);
+//                groupNews.setDigest(linkDigest);
+//                groupNews.setUrl(linkUrl);
+//                groupNews.setPoster(linkPoster);
+//                bundle.putSerializable("groupNews", groupNews);
+//                IntentUtils.startActivity(ChannelV0Activity.this,
+//                        NewsWebDetailActivity.class, bundle);
                 break;
             default:
                 break;

@@ -70,11 +70,10 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.fragment_news, null);
         loadingDlg = new LoadingDialog(getActivity());
-        swipeRefreshLayout = (MySwipeRefreshLayout) rootView
-                .findViewById(R.id.refresh_layout);
+        swipeRefreshLayout = rootView.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setOnLoadListener(this);
-        newsListView = (ListView) rootView.findViewById(R.id.news_listView);
+        newsListView = rootView.findViewById(R.id.news_listView);
         newsListView.setVerticalScrollBarEnabled(false);
         newsListView.setOnItemClickListener(new ListItemOnClickListener());
         newsAdapter = new NewsListAdapter(getActivity(), groupnNewsList);

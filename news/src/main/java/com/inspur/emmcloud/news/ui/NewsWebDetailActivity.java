@@ -32,6 +32,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.HtmlRegexpUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -97,6 +98,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
+        LogUtils.YfcDebug("进入NewsWebDetailActivity");
         initData();
         initViews();
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
@@ -133,7 +135,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        loadingLayout = (RelativeLayout) findViewById(R.id.rl_loading);
+        loadingLayout = findViewById(R.id.rl_loading);
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
         ((TextView) findViewById(R.id.header_text)).setText(((GroupNews) getIntent().getSerializableExtra("groupNews")).getTitle());
         setWebView();
@@ -530,61 +532,56 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                if (webView.canGoBack()) {
-                    webView.goBack();// 返回上一页面
-                } else {
-                    finishActivity();
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            if (webView.canGoBack()) {
+                webView.goBack();// 返回上一页面
+            } else {
+                finishActivity();
+            }
+
+        } else if (i == R.id.news_close_btn) {
+            finish();
+
+        } else if (i == R.id.news_share_img) {
+            showDialog();
+
+        } else if (i == R.id.app_news_mode_day_btn) {
+            setWebViewModel(lightMode);
+            setDialogModel(lightMode);
+
+        } else if (i == R.id.app_news_mode_night_btn) {
+            setWebViewModel(darkMode);
+            setDialogModel(darkMode);
+
+        } else if (i == R.id.app_news_share_btn) {//                shareNewsToFrinds();
+
+        } else if (i == R.id.app_news_instructions_btn) {//批示逻辑
+            dialog.dismiss();
+            if (!StringUtils.isBlank(groupNews.getApprovedDate())) {
+                String content = groupNews.getEditorComment();
+                if (!StringUtils.isBlank(content)) {
+                    instruction = content;
                 }
-                break;
-            case R.id.news_close_btn:
-                finish();
-                break;
-            case R.id.news_share_img:
-                showDialog();
-                break;
-            case R.id.app_news_mode_day_btn:
-                setWebViewModel(lightMode);
-                setDialogModel(lightMode);
-                break;
-            case R.id.app_news_mode_night_btn:
-                setWebViewModel(darkMode);
-                setDialogModel(darkMode);
-                break;
-            case R.id.app_news_share_btn:
-//                shareNewsToFrinds();
-                break;
-            case R.id.app_news_instructions_btn:
-                //批示逻辑
-                dialog.dismiss();
-                if (!StringUtils.isBlank(groupNews.getApprovedDate())) {
-                    String content = groupNews.getEditorComment();
-                    if (!StringUtils.isBlank(content)) {
-                        instruction = content;
-                    }
-                    showHasInstruceionDialog();
-                } else if (groupNews.isEditorCommentCreated() == true) {
-                    instruction = groupNews.getOriginalEditorComment();
-                    showHasInstruceionDialog();
-                } else {
-                    showInstruceionDialog();
-                }
-                break;
-            case R.id.app_news_font_normal_btn:
-                setNewsFontSize(MyAppWebConfig.SMALLER);
-                break;
-            case R.id.app_news_font_middle_btn:
-                setNewsFontSize(MyAppWebConfig.NORMAL);
-                break;
-            case R.id.app_news_font_big_btn:
-                setNewsFontSize(MyAppWebConfig.LARGER);
-                break;
-            case R.id.app_news_font_biggest_btn:
-                setNewsFontSize(MyAppWebConfig.LARGEST);
-                break;
-            default:
-                break;
+                showHasInstruceionDialog();
+            } else if (groupNews.isEditorCommentCreated() == true) {
+                instruction = groupNews.getOriginalEditorComment();
+                showHasInstruceionDialog();
+            } else {
+                showInstruceionDialog();
+            }
+
+        } else if (i == R.id.app_news_font_normal_btn) {
+            setNewsFontSize(MyAppWebConfig.SMALLER);
+
+        } else if (i == R.id.app_news_font_middle_btn) {
+            setNewsFontSize(MyAppWebConfig.NORMAL);
+
+        } else if (i == R.id.app_news_font_big_btn) {
+            setNewsFontSize(MyAppWebConfig.LARGER);
+
+        } else if (i == R.id.app_news_font_biggest_btn) {
+            setNewsFontSize(MyAppWebConfig.LARGEST);
         }
     }
 
