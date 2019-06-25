@@ -10,7 +10,6 @@ import android.os.Message;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PingNetEntity;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -39,7 +38,6 @@ public class CheckingNetStateUtils {
         @Override
         public void handleMessage(Message msg) {
             PingUrlStateAction pingIdAndData = (PingUrlStateAction) msg.obj;
-            LogUtils.LbcDebug("action:" + pingIdAndData.getAction() + "data" + pingIdAndData.isPingState());
             EventBus.getDefault().post(new SimpleEventMessage(pingIdAndData.getAction(), pingIdAndData));
             super.handleMessage(msg);
         }
@@ -139,7 +137,6 @@ public class CheckingNetStateUtils {
                         Message message = new Message();
                         message.obj = pingUrlStateAction;
                         handler.sendMessage(message);
-                        LogUtils.LbcDebug("Pinf发送网络EventBus事件:" + " Action" + eventBusAction + "URL" + StrUrl[finalI] + "状态" + pingNetEntity.isResult());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -164,7 +161,6 @@ public class CheckingNetStateUtils {
                         Message message = new Message();
                         message.obj = pingUrlStateAction;
                         handlerHint.sendMessage(message);
-                        LogUtils.LbcDebug("Pinf发送网络EventBus事件:" + " Action" + eventBusAction + "URL" + StrUrl[finalI] + "状态" + pingNetEntity.isResult());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -189,7 +185,6 @@ public class CheckingNetStateUtils {
                         Message message = new Message();
                         message.obj = pingUrlStateAction;
                         handlerHint.sendMessage(message);
-                        LogUtils.LbcDebug("Pinf发送网络EventBus事件:" + " Action" + eventBusAction + "URL" + StrUrl[finalI] + "状态" + pingNetEntity.isResult());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -280,7 +275,6 @@ public class CheckingNetStateUtils {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    LogUtils.LbcDebug("http 返回成功" + url);
                     CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction("", url, true);
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingUrlStateAction));
                 }
@@ -296,7 +290,6 @@ public class CheckingNetStateUtils {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    LogUtils.LbcDebug("http 返回失败");
                     CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction("", url, false);
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingUrlStateAction));
                 }

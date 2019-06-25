@@ -12,6 +12,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
@@ -583,12 +584,14 @@ public class AppAPIService {
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
+                LogUtils.LbcDebug("222222222222222222222222222222222222222");
                 apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, url);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 if (responseCode == 302 || responseCode == 301) {
+                    LogUtils.LbcDebug("3021111111111111111111111111111111111");
                     apiInterface.returnCheckCloudPluseConnectionSuccess(null, url);
                 } else {
                     apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
