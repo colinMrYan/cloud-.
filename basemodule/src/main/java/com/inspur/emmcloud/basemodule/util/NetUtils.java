@@ -5,14 +5,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PingNetEntity;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 
-import java.io.IOException;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -143,11 +141,8 @@ public class NetUtils {
                 pingNetEntity.setPingTime(null);
                 pingNetEntity.setResult(false);
             }
-        } catch (IOException e) {
-            Log.e(TAG, String.valueOf(e));
-        } catch (InterruptedException e) {
-            Log.e(TAG, String.valueOf(e));
-        } finally {
+        } catch (Exception e) {
+            e.printStackTrace();
             if (process != null) {
                 process.destroy();
             }
