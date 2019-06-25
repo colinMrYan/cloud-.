@@ -32,7 +32,6 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.HtmlRegexpUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -98,7 +97,6 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     @Override
     public void onCreate() {
-        LogUtils.YfcDebug("进入NewsWebDetailActivity");
         initData();
         initViews();
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);

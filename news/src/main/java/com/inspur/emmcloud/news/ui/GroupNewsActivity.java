@@ -11,7 +11,6 @@ import android.view.WindowManager;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gxz.PagerSlidingTabStrip;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
@@ -44,7 +43,6 @@ public class GroupNewsActivity extends BaseFragmentActivity {
         getNewTitles();
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         setStatus();
-        LogUtils.YfcDebug("进入" + GroupNewsActivity.class.getCanonicalName());
     }
 
     /**
