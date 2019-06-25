@@ -934,6 +934,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         break;
                     case Message.MESSAGE_TYPE_MEDIA_IMAGE:
                         MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
+                        LogUtils.LbcDebug("fakeMessage::" + JSONUtils.toJSONString(fakeMessage.getMsgContentMediaImage()));
                         msgContentMediaImage.setRawWidth(fakeMessage.getMsgContentMediaImage().getRawWidth());
                         msgContentMediaImage.setRawHeight(fakeMessage.getMsgContentMediaImage().getRawHeight());
                         msgContentMediaImage.setRawSize(volumeFile.getSize());
@@ -1477,7 +1478,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                items = new int[]{R.string.chat_long_click_transmit};
+                items = new int[]{R.string.chat_long_click_transmit, R.string.chat_long_click_reply};
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
@@ -1606,6 +1607,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 break;
                             case R.string.chat_long_click_copy_text:
                                 copyToClipboard(context, content);
+                                break;
+                            case R.string.chat_long_click_reply:
                                 break;
                         }
                         dialog.dismiss();

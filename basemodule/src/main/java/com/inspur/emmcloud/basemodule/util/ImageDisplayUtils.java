@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -26,6 +27,7 @@ import com.nostra13.universalimageloader.utils.L;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 
 import java.io.File;
+import java.util.List;
 
 
 public class ImageDisplayUtils {
@@ -267,4 +269,17 @@ public class ImageDisplayUtils {
         DiskCacheUtils.removeFromCache(url, ImageLoader.getInstance().getDiskCache());
         MemoryCacheUtils.removeFromCache(url, ImageLoader.getInstance().getMemoryCache());
     }
+
+    public boolean isHaveImage(String url) {
+        File imageFileCatch = DiskCacheUtils.findInCache(url, ImageLoader.getInstance().getDiskCache());
+        List<String> imageCatchs = MemoryCacheUtils.findCacheKeysForImageUri(url, ImageLoader.getInstance().getMemoryCache());
+        if (imageFileCatch == null) {
+            LogUtils.LbcDebug("1111");
+            return false;
+        } else {
+            LogUtils.LbcDebug("11112222222222222222222222");
+            return true;
+        }
+    }
+
 }

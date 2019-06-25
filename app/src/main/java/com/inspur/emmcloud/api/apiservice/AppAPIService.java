@@ -12,7 +12,9 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.router.Router;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
 import com.inspur.emmcloud.basemodule.api.HttpUtils;
@@ -576,22 +578,24 @@ public class AppAPIService {
      * @param url
      */
     public void getCloudConnectStateUrl(final String url) {
+        String urlEncode = StringUtils.utf8Encode(url);
         RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(url);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
+                .getHttpRequestParams(urlEncode);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, urlEncode) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, url);
+                apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, urlEncode);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
+                LogUtils.LbcDebug("responsCode 302 responde 301" + responseCode);
                 //  LogUtils.LbcDebug("responseCode::"+responseCode);
                 // 因检测地址为小助手地址，小助手会返回跳转地址，在需要验证网络的情况下返回1111，在连接网络返回301（19/06/20）
                 if (responseCode == 302 || responseCode == 301) {
-                    apiInterface.returnCheckCloudPluseConnectionSuccess(null, url);
+                    apiInterface.returnCheckCloudPluseConnectionSuccess(null, urlEncode);
                 } else {
-                    apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
+                    apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, urlEncode);
                 }
             }
 
@@ -600,7 +604,7 @@ public class AppAPIService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getCloudConnectStateUrl(url);
+                        getCloudConnectStateUrl(urlEncode);
                     }
 
                     @Override

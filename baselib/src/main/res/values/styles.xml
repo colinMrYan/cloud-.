@@ -379,6 +379,7 @@
 
     <style name="cus_dialog_style" parent="Theme.AppCompat.Light">
         <item name="android:textSize">15sp</item>
+        <item name="android:backgroundDimAmount">0.2</item>
     </style>
 
     <style name="CusButtonBase" parent="android:Widget.Holo.Light.Button" />

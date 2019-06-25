@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -211,6 +212,12 @@ public class ImageDetailFragment extends Fragment {
             e.printStackTrace();
         }
         return savedImagePath;
+    }
+
+    public void resetImage(String url) {
+        LogUtils.LbcDebug("图片已经存在");
+        mImageUrl = url;
+        onStart();
     }
 
     @Override

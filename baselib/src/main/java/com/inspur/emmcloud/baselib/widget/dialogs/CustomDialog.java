@@ -53,11 +53,18 @@ public class CustomDialog extends AlertDialog {
 
     public static class BaseDialogBuilder extends AlertDialog.Builder {
         private Context context;
+        private int widthMolecular = 4;
+        private int widthDenominator = 5;
 
         public BaseDialogBuilder(Context context, int themeResId) {
             super(context, themeResId);
             this.context = context;
+        }
 
+        public BaseDialogBuilder(Context context, int widthMolecular, int widthDenominator) {
+            super(context);
+            this.widthMolecular = widthMolecular;
+            this.widthDenominator = widthDenominator;
         }
 
         public BaseDialogBuilder(Context context) {
@@ -68,7 +75,7 @@ public class CustomDialog extends AlertDialog {
         @Override
         public AlertDialog show() {
             AlertDialog dialog = super.show();
-            dialog.getWindow().setLayout(ResolutionUtils.getWidth(context) / 5 * 4, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setLayout((int) (ResolutionUtils.getWidth(context) * widthMolecular / widthDenominator), ViewGroup.LayoutParams.WRAP_CONTENT);
             return dialog;
         }
     }
@@ -142,6 +149,11 @@ public class CustomDialog extends AlertDialog {
         public ListDialogBuilder(Context context, int themeResId) {
             super(context, themeResId);
         }
+
+        public ListDialogBuilder(Context context, int widthMolecular, int widthDenominator) {
+            super(context, widthMolecular, widthDenominator);
+        }
+
 
         @Override
         public AlertDialog show() {

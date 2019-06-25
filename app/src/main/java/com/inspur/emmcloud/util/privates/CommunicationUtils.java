@@ -9,6 +9,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
@@ -242,6 +243,8 @@ public class CommunicationUtils {
 
         MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
         msgContentMediaImage.setName(file.getName());
+        LogUtils.LbcDebug(" preview previewImgHight111111::" + previewImgHight);
+        LogUtils.LbcDebug(" preview previewImgWidth1111111::" + previewImgWidth);
 
         msgContentMediaImage.setPreviewHeight(previewImgHight);
         msgContentMediaImage.setPreviewWidth(previewImgWidth);
@@ -258,7 +261,9 @@ public class CommunicationUtils {
         msgContentMediaImage.setRawSize(fileSize);
         msgContentMediaImage.setRawMedia(localFilePath);
         msgContentMediaImage.setTmpId(tracer);
+        LogUtils.LbcDebug("组装后：" + msgContentMediaImage.toString());
         message.setContent(msgContentMediaImage.toString());
+        LogUtils.LbcDebug("组装后：" + JSONUtils.toJSONString(message.getMsgContentMediaImage()));
         return message;
     }
 

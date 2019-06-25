@@ -27,6 +27,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetMessageCommentCountResult;
@@ -48,7 +49,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +124,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
     private void init() {
         initIntentData();
+        originalPictureDownLoadTextView = findViewById(R.id.tv_original_picture_download_progress);
         functionLayout = (RelativeLayout) findViewById(R.id.function_layout);
         if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
             (findViewById(R.id.comment_count_text)).setVisibility(View.VISIBLE);
@@ -143,12 +144,18 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG) && pagerPosition == 0) {
             setCommentCount();
         }
-        originalPictureDownLoadTextView = findViewById(R.id.tv_original_picture_download_progress);
         imageLoadingProgressListener = new ImageLoadingProgressListener() {
             @Override
             public void onProgressUpdate(String imageUri, View view, int current, int total) {
                 LogUtils.LbcDebug("更新大小:::" + current);
-                originalPictureDownLoadTextView.setText("%" + (current * 100) / total);
+                if (imageUri.equals(urlList.get(pagerPosition))) {
+                    originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
+                    originalPictureDownLoadTextView.setText("%" + (current * 100) / total);
+                    if (current == total) {
+                        ImageDetailFragment imageDetailFragment = mAdapter.getCurrentFragment();
+                        imageDetailFragment.resetImage(imageUri);
+                    }
+                }
             }
         };
     }
@@ -242,7 +249,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         LogUtils.LbcDebug("获取到的Url:::" + url);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.default_image)
-
                 .showImageOnFail(R.drawable.default_image)
                 .showImageOnLoading(R.drawable.default_image)
                 // 设置图片的解码类型
@@ -267,7 +273,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         LogUtils.LbcDebug("下载完成图片更新");
-                        mAdapter.notifyDataSetChanged();
+                        if (imageUri.equals(urlList.get(pagerPosition))) {
+
+                        }
+                        mAdapter.getItem(pagerPosition);
                         originalPictureDownLoadTextView.setVisibility(View.GONE);
                     }
 
@@ -337,6 +346,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 CharSequence text = getString(R.string.meeting_viewpager_indicator, position + 1, mPager.getAdapter().getCount());
                 indicator.setText(text);
                 pagerPosition = position;
+                setOriginalImageButtonShow(position);
                 if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
                     setCommentCount();
                 }
@@ -463,7 +473,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 }
             }
         }
-
     }
 
     //当包含的fragment发来OnPhotoTap信号
@@ -479,23 +488,24 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
     }
 
-    private boolean isHaveImageCatch(String uri) {
-        try {
-            File file = com.nostra13.universalimageloader.core.ImageLoader.getInstance().getDiskCache().get(uri);
-            Bitmap bitmap = com.nostra13.universalimageloader.core.ImageLoader.getInstance().getMemoryCache().get(uri);
-            if (file == null || bitmap == null || bitmap.getHeight() == 0) {
-                LogUtils.LbcDebug("isHaveImageCatch:::" + false);
-                return false;
-            } else {
-                LogUtils.LbcDebug("isHaveImageCatch:::" + true);
+
+    private boolean isShowOriginalImageButton(int position) {
+        String url = urlList.get(position); //raw 路径
+        if (imgTypeMessageList.size() > 0) {
+            MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
+            boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
+            if ((msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
                 return true;
+            } else {
+                return false;
             }
-        } catch (Exception e) {
-            LogUtils.LbcDebug("isHaveImageCatch::" + "Error");
-            e.printStackTrace();
+        } else {
             return false;
         }
+    }
 
+    private void setOriginalImageButtonShow(int position) {
+        originalPictureDownLoadTextView.setVisibility(isShowOriginalImageButton(position) ? View.VISIBLE : View.GONE);
     }
 
     private class ImagePagerAdapter extends FragmentStatePagerAdapter {
@@ -525,20 +535,17 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             if (imgTypeMessageList.size() > 0) {
                 LogUtils.LbcDebug("imagList Size >0;  size=" + imgTypeMessageList.size());
                 MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
-                boolean isHaveOriginalImageCatch = isHaveImageCatch(url);//这个是判断有无原图（是否有）
-                if ((msgContentMediaImage.getRawSize() != msgContentMediaImage.getPreviewSize()) && !isHaveOriginalImageCatch) {
-                    originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
+                boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
+                if (msgContentMediaImage.getPreviewHeight() != 0
+                        && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())
+                        && !isHaveOriginalImageCatch) {
                     url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
                     LogUtils.LbcDebug("url+resize:::" + url);
                 } else {
                     LogUtils.LbcDebug("msgContentMediaImage.getRawSize()::" + msgContentMediaImage.getRawSize() + "::" +
                             "msgContentMediaImage.getPreviewSize():::" + msgContentMediaImage.getPreviewSize());
-                    originalPictureDownLoadTextView.setVisibility(View.GONE);
                 }
-            } else {
-                originalPictureDownLoadTextView.setVisibility(View.GONE);
             }
-
             boolean isNeedTransformOut = (position == pageStartPosition);
             if (isNeedTransformOut && isHasTransformIn == false) {
                 isNeedTransformIn = true;
