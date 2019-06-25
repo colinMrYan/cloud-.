@@ -148,30 +148,6 @@ public class CheckingNetStateUtils {
     /**
      * Ping  网络通断状态检测（用于显示网络状态异常框）
      */
-    public void CheckNetPingThreadStartForHint(final String[] StrUrl, final int WaiteTime, final String eventBusAction, final Handler handlerHint) {
-        for (int i = 0; i < StrUrl.length; i++) {
-            final int finalI = i;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        PingNetEntity pingNetEntity = new PingNetEntity(StrUrl[finalI], 1, WaiteTime, new StringBuffer());
-                        pingNetEntity = NetUtils.ping(pingNetEntity, (long) WaiteTime);
-                        PingUrlStateAction pingUrlStateAction = new PingUrlStateAction(eventBusAction, StrUrl[finalI], pingNetEntity.isResult());
-                        Message message = new Message();
-                        message.obj = pingUrlStateAction;
-                        handlerHint.sendMessage(message);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-    }
-
-    /**
-     * Ping  网络通断状态检测（用于显示网络状态异常框）
-     */
     public void CheckNetPingAndHttpThreadStartForHint(final String[] StrUrl, final String[] httpUrls, final int WaiteTime, final String eventBusAction, final Handler handlerHint) {
         for (int i = 0; i < StrUrl.length; i++) {
             final int finalI = i;
@@ -204,20 +180,6 @@ public class CheckingNetStateUtils {
             apiService.getCloudConnectStateUrl(StrUrl[i]);
         }
     }
-
-    /**
-     * 网络连接状态 如果GPRS连接或者Wifi&&VPN时返回true 否则返回false
-     */
-    public boolean isConnectedNet() {
-        if (NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(context)
-                || NetworkInfo.State.CONNECTING == NetUtils.getNetworkMobileState(context)
-                || (NetworkInfo.State.CONNECTED == NetUtils.getNetworkWifiState(context) && NetUtils.isVpnConnected())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    /***/
 
 
     /**
