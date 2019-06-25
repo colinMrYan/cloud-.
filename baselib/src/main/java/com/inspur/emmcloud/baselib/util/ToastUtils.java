@@ -1,7 +1,14 @@
 package com.inspur.emmcloud.baselib.util;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
+import android.util.TypedValue;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.inspur.baselib.R;
 
 /**
  * ToastUtils
@@ -53,5 +60,37 @@ public class ToastUtils {
 
     public static void show(Context context, String format, int duration, Object... args) {
         show(context, String.format(format, args), duration);
+    }
+
+    /**
+     * 设置统一的提示TextView
+     */
+    public static TextView createTextView(Context context) {
+        GradientDrawable drawable = new GradientDrawable();
+        // 设置背景色
+        drawable.setColor(0x88000000);
+        // 设置圆角大小
+        drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DensityUtil.dip2px(2), context.getResources().getDisplayMetrics()));
+        TextView textView = new TextView(context);
+        textView.setId(android.R.id.message);
+        textView.setTextColor(context.getResources().getColor(R.color.white));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, context.getResources().getDisplayMetrics()));
+        textView.setPadding((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DensityUtil.dip2px(5), context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DensityUtil.dip2px(2), context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DensityUtil.dip2px(5), context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DensityUtil.dip2px(2), context.getResources().getDisplayMetrics()));
+        textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        // setBackground API 版本兼容
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            textView.setBackground(drawable);
+        } else {
+            textView.setBackgroundDrawable(drawable);
+        }
+        // 设置 Z 轴阴影
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            textView.setZ(DensityUtil.dip2px(10));
+        }
+        textView.setMaxLines(3);
+        return textView;
     }
 }

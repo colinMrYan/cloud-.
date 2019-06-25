@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -396,7 +397,9 @@ public class MyAppFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            if ((boolean) netState.getMessageObj()) {
+            if ((boolean) netState.getMessageObj()
+                    || NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(getActivity())
+                    || NetUtils.isVpnConnected()) {
                 DeleteHeaderView();
             } else {
                 AddHeaderView();

@@ -30,8 +30,13 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.basemodule.util.systool.emmpermission.Permissions;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
+import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
 import com.inspur.emmcloud.web.ui.ImpCallBackInterface;
 import com.inspur.emmcloud.web.ui.iLog;
+
+import java.util.List;
 
 
 /**
@@ -58,10 +63,19 @@ public class ImpWebChromeClient extends WebChromeClient {
         this.mWebView = webView;
     }
 
-    public void onGeolocationPermissionsShowPrompt(String origin,
-                                                   GeolocationPermissions.Callback callback) {
-        callback.invoke(origin, true, false);
-        super.onGeolocationPermissionsShowPrompt(origin, callback);
+    @Override
+    public void onGeolocationPermissionsShowPrompt(final String origin, final GeolocationPermissions.Callback callback) {
+        PermissionRequestManagerUtils.getInstance().requestRuntimePermission(context, Permissions.LOCATION, new PermissionRequestCallback() {
+            @Override
+            public void onPermissionRequestSuccess(List<String> permissions) {
+                callback.invoke(origin, true, false);
+            }
+
+            @Override
+            public void onPermissionRequestFail(List<String> permissions) {
+                callback.invoke(origin, false, false);
+            }
+        });
     }
 
 

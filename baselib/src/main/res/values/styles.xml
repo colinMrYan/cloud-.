@@ -378,7 +378,8 @@
     </style>
 
     <style name="cus_dialog_style" parent="Theme.AppCompat.Light">
-        <item name="android:textSize">15sp</item>
+        <item name="colorAccent">#36A5F6</item>
+        <item name="android:textSize">16dp</item>
     </style>
 
     <style name="CusButtonBase" parent="android:Widget.Holo.Light.Button" />
