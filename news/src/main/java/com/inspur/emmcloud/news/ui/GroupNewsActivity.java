@@ -38,7 +38,7 @@ public class GroupNewsActivity extends BaseFragmentActivity {
 
     @Override
     public void onCreate() {
-        setContentView(R.layout.activity_group_news);
+        setContentView(R.layout.news_activity_group_news);
         loadingDlg = new LoadingDialog(GroupNewsActivity.this);
         getNewTitles();
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);

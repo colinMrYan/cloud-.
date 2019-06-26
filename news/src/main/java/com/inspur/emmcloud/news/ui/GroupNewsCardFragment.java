@@ -68,7 +68,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(R.layout.fragment_news, null);
+        rootView = inflater.inflate(R.layout.news_fragment, null);
         loadingDlg = new LoadingDialog(getActivity());
         swipeRefreshLayout = rootView.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -89,7 +89,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_news, container, false);
+            rootView = inflater.inflate(R.layout.news_fragment, container, false);
         }
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {

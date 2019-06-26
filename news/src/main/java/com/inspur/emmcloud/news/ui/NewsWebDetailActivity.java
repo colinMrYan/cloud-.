@@ -104,7 +104,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_newsweb_detail;
+        return R.layout.news_activity_newsweb_detail;
     }
 
     /**
@@ -362,7 +362,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 打开字体设置，夜间模式设置Dialog
      */
     private void showDialog() {
-        View view = getLayoutInflater().inflate(R.layout.app_news_choose_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.news_choose_dialog, null);
         dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -593,7 +593,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         window.getDecorView().setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this, 20), 0, DensityUtil.dip2px(NewsWebDetailActivity.this, 20), 0);
         hasIntrcutionDialog.setCanceledOnTouchOutside(true);
-        View view = getLayoutInflater().inflate(R.layout.app_news_has_instruction_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.news_has_instruction_dialog, null);
         hasIntrcutionDialog.setContentView(view);
         final TextView instrcutionText = (TextView) view.findViewById(R.id.news_has_instrcution_text);
         instrcutionText.setFocusable(false);
@@ -638,7 +638,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         window.getDecorView().setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this, 20), 0, DensityUtil.dip2px(NewsWebDetailActivity.this, 20), 0);
         intrcutionDialog.setCanceledOnTouchOutside(true);
-        View view = getLayoutInflater().inflate(R.layout.app_news_instruction_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.news_instruction_dialog, null);
         intrcutionDialog.setContentView(view);
         Button cancleBtn = (Button) view.findViewById(R.id.cancel_btn);
         cancleBtn.setOnClickListener(new View.OnClickListener() {
