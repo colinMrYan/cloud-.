@@ -19,10 +19,14 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.widget.SmoothImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -199,8 +203,10 @@ public class ImageDetailFragment extends Fragment {
 
     /**
      * 保存图片
+     * 从保存ImageView缓存改为从网络下载 无网络给出提示  190626
      */
     public void downloadImg() {
+//        mImageView.setDrawingCacheEnabled(false);
         if (ImageDisplayUtils.getInstance().isHaveImage(mImageUrl)) {
             File imageFileCatch = DiskCacheUtils.findInCache(mImageUrl, ImageLoader.getInstance().getDiskCache());
             Bitmap bitmap = BitmapFactory.decodeFile(imageFileCatch.getPath());
@@ -209,7 +215,6 @@ public class ImageDetailFragment extends Fragment {
             downLoadOriginalPicture(true);
         }
     }
-
 
     /**
      * 保存并显示把图片展示出来
