@@ -55,7 +55,7 @@ public class DateTimePickerDialog {
     private View initDatePicker(Boolean isAllDay) {
         View inflate = LayoutInflater.from(context).inflate(R.layout.basewidget_dialog_date_time_picker, null);
         datePicker = inflate.findViewById(R.id.datePicker_no_head);
-        resizePikcer(datePicker);
+        resizePicker(datePicker);
         hideDatePickerHeader(datePicker);
         int year = resultCalendar.get(Calendar.YEAR);
         int monthOfYear = resultCalendar.get(Calendar.MONTH);
@@ -68,10 +68,9 @@ public class DateTimePickerDialog {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(context, AlertDialog.THEME_HOLO_LIGHT, new TimePickerDialog.OnTimeSetListener() {
-
+                new com.inspur.emmcloud.baselib.widget.TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
                         resultCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         resultCalendar.set(Calendar.MINUTE, minute);
                         String sHour = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
@@ -79,7 +78,7 @@ public class DateTimePickerDialog {
                         String time = sHour + ":" + sMinute;
                         timeTextView.setText(time);
                     }
-                }, resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE), true).show();
+                }, resultCalendar.get(Calendar.HOUR_OF_DAY), resultCalendar.get(Calendar.MINUTE), true).showTimePickerDialog();
             }
         });
         if (isAllDay) {
@@ -130,6 +129,10 @@ public class DateTimePickerDialog {
         dialog.show();
     }
 
+    private void showTimePickerDialog() {
+
+    }
+
     /**
      * 调整numberpicker大小
      */
@@ -144,7 +147,7 @@ public class DateTimePickerDialog {
      *
      * @param tp
      */
-    private void resizePikcer(FrameLayout tp) {
+    private void resizePicker(FrameLayout tp) {
         List<NumberPicker> npList = findNumberPicker(tp);
         for (NumberPicker np : npList) {
             resizeNumberPicker(np);

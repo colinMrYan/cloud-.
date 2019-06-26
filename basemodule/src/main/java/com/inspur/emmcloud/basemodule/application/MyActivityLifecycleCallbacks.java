@@ -37,6 +37,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     @Override
     public void onActivityStarted(Activity activity) {
         currentActivity = activity;
+        BaseApplication.getInstance().clearNotification();
         if (count == 0) {
             BaseApplication.getInstance().setIsActive(true);
             if (BaseApplication.getInstance().isHaveLogin()) {
