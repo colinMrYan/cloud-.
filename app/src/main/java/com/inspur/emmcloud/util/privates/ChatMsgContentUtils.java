@@ -43,11 +43,11 @@ public class ChatMsgContentUtils {
         }
 
         content = contentStringBuilder.toString();
-        Pattern urlPattern = Pattern.compile(Constant.PATTERN_URL);
+        Pattern urlPattern = Pattern.compile(Constant.PATTERN_URL, Pattern.CASE_INSENSITIVE);
         Matcher urlMatcher = urlPattern.matcher(content);
         while (urlMatcher.find()) {
             String patternString = urlMatcher.group();
-            if (!patternString.startsWith("http")) {
+            if (!patternString.toLowerCase().startsWith("http")) {
                 patternString = "http://" + patternString;
             }
             MentionProtocolList.add(new MentionsAndUrl(urlMatcher.start(), urlMatcher.end(), patternString));

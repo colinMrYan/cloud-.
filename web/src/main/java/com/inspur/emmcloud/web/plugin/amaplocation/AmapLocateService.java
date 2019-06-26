@@ -96,6 +96,7 @@ public class AmapLocateService extends ImpPlugin implements
      * 初始化定位
      */
     private void startLocation() {
+
         if (aMapLocationList == null) {
             aMapLocationList = new ArrayList<>();
         }

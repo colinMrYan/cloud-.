@@ -129,6 +129,7 @@ public class GpsService extends ImpPlugin implements
      * 初始化定位
      */
     private void startLocation() {
+
         if (aMapLocationList == null) {
             aMapLocationList = new ArrayList<>();
         }
@@ -147,7 +148,6 @@ public class GpsService extends ImpPlugin implements
         // 设置定位回调监听
         mlocationClient.setLocationListener(this);
         mlocationClient.startLocation();
-
     }
 
     @Override

@@ -121,7 +121,7 @@ public class MDM extends LoginAPIInterfaceImpl {
         bundle.putString("appName", context.getString(Res.getStringID("device_registe")));
         bundle.putString("function", "mdm");
         bundle.putString("uri", LoginAPIUri.getDeviceRegisterUrl(context));
-        ARouter.getInstance().build("/web/main").with(bundle);
+        ARouter.getInstance().build("/web/main").with(bundle).navigation();
     }
 
     private void goDeviceRegisterFailDetail() {
@@ -137,6 +137,7 @@ public class MDM extends LoginAPIInterfaceImpl {
         bundle.putString("userName", userName);
         bundle.putString("message", getDeviceCheckResult.getMessage());
         bundle.putStringArrayList("requireFields", requireFieldList);
+        bundle.putString("uri", LoginAPIUri.getDeviceRegisterUrl(context));
         intent.putExtra("bundle", bundle);
         context.startActivity(intent);
         if (isImpActivity) {

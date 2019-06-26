@@ -22,14 +22,14 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return Res.getLayoutID("mdm_activity_device_register_fail_detail");
+        return Res.getLayoutID("login_activity_device_register_fail_detail");
     }
 
     public void onClick(View v) {
         if (v.getId() == Res.getWidgetID("ibt_back")) {
             onBackPressed();
         } else if (v.getId() == Res.getWidgetID("register_btn")) {
-            ARouter.getInstance().build("/web/main").with(bundle);
+            ARouter.getInstance().build("/web/main").with(bundle).navigation();
             finish();
         }
     }

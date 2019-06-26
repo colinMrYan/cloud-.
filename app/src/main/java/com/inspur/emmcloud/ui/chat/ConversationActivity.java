@@ -810,19 +810,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                             if (channelGroupArray.length() > 0) {
                                 JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray, 0, new JSONObject());
                                 String cid = JSONUtils.getString(cidObj, "cid", "");
-                                switch (backUiMessage.getMessage().getType()) {
-                                    case Message.MESSAGE_TYPE_TEXT_PLAIN:
-                                        transmitTextMsg(cid, backUiMessage);
-                                        LogUtils.LbcDebug("666666666666666666666666666");
-                                        break;
-                                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                                        transmitImgMsg(cid, backUiMessage.getMessage());
-                                        LogUtils.LbcDebug("777777777777777777777777777777");
-                                        break;
-                                    default:
-                                        LogUtils.LbcDebug("1222233445567888888888");
-                                        break;
-                                }
+                                transmitMsg(cid, backUiMessage);
                             }
                         }
                     }
@@ -1478,7 +1466,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                items = new int[]{R.string.chat_long_click_transmit, R.string.chat_long_click_reply};
+                items = new int[]{R.string.chat_long_click_transmit};
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
@@ -1607,8 +1595,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 break;
                             case R.string.chat_long_click_copy_text:
                                 copyToClipboard(context, content);
-                                break;
-                            case R.string.chat_long_click_reply:
                                 break;
                         }
                         dialog.dismiss();

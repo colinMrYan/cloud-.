@@ -365,9 +365,9 @@ public class CommunicationFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            conversationAdapter.setNetExceptionView(((boolean) netState.getMessageObj() ||
-                    NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(getActivity())
-                    || NetUtils.isVpnConnected()));
+            conversationAdapter.setNetExceptionView((boolean) netState.getMessageObj()
+                    || NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(getActivity())
+                    || NetUtils.isVpnConnected());
             if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }

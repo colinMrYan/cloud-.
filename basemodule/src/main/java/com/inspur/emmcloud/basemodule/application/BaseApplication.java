@@ -92,7 +92,7 @@ public class BaseApplication extends MultiDexApplication {
         crashHandler.init(getInstance());
         x.Ext.init(BaseApplication.this);
         x.Ext.setDebug(true);
-        LogUtils.isDebug = true;
+        LogUtils.isDebug = AppUtils.isApkDebugable(getInstance());
         Res.init(this); // 注册imp的资源文件类
         ImageDisplayUtils.getInstance().initImageLoader(getInstance(), new CustomImageDownloader(getInstance()), MyAppConfig.LOCAL_CACHE_PATH);
         initTanent();
@@ -119,6 +119,7 @@ public class BaseApplication extends MultiDexApplication {
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
         ToastUtils.init(this, new ToastBlackStyle());
         ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+        ToastUtils.setView(com.inspur.emmcloud.baselib.util.ToastUtils.createTextView(this));
     }
 
     /**************************************登出逻辑相关********************************************************/
@@ -254,7 +255,6 @@ public class BaseApplication extends MultiDexApplication {
         if (StringUtils.isBlank(accessToken)) {
             return null;
         }
-        LogUtils.jasonDebug("token==" + "Bearer" + " " + accessToken);
         return "Bearer" + " " + accessToken;
     }
 

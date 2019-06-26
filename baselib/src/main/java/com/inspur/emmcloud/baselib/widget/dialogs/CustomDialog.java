@@ -51,32 +51,17 @@ public class CustomDialog extends AlertDialog {
         window.setAttributes(lp);
     }
 
-    public static class BaseDialogBuilder extends AlertDialog.Builder {
-        private Context context;
-        private int widthMolecular = 4;
-        private int widthDenominator = 5;
-
-        public BaseDialogBuilder(Context context, int themeResId) {
-            super(context, themeResId);
-            this.context = context;
-        }
-
-        public BaseDialogBuilder(Context context, int widthMolecular, int widthDenominator) {
-            super(context);
-            this.widthMolecular = widthMolecular;
-            this.widthDenominator = widthDenominator;
-        }
-
-        public BaseDialogBuilder(Context context) {
-            super(context);
-            this.context = context;
-        }
-
-        @Override
-        public AlertDialog show() {
-            AlertDialog dialog = super.show();
-            dialog.getWindow().setLayout((int) (ResolutionUtils.getWidth(context) * widthMolecular / widthDenominator), ViewGroup.LayoutParams.WRAP_CONTENT);
-            return dialog;
+    private static void setTitleTvAttr(AlertDialog dialog) {
+        try {
+            Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
+            mAlert.setAccessible(true);
+            Object mAlertController = mAlert.get(dialog);
+            Field mTitle = mAlertController.getClass().getDeclaredField("mTitleView");
+            mTitle.setAccessible(true);
+            TextView mTitleView = (TextView) mTitle.get(mAlertController);
+            mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -95,43 +80,8 @@ public class CustomDialog extends AlertDialog {
         @Override
         public AlertDialog show() {
             AlertDialog dialog = super.show();
-            setMessageTvAttr(dialog);
             setActionBtnAttr(dialog);
             return dialog;
-        }
-
-        private void setMessageTvAttr(AlertDialog dialog) {
-            try {
-                Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
-                mAlert.setAccessible(true);
-                Object mAlertController = mAlert.get(dialog);
-                Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
-                mMessage.setAccessible(true);
-                TextView mMessageTv = (TextView) mMessage.get(mAlertController);
-                int left = DensityUtil.dip2px(24);
-                int top = DensityUtil.dip2px(10);
-                int right = DensityUtil.dip2px(24);
-                int bottom = DensityUtil.dip2px(20);
-                mMessageTv.setPadding(left, top, right, bottom);
-                mMessageTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void setActionBtnAttr(AlertDialog dialog) {
-            Button positiveBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            Button negativeBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            int btnPadding = DensityUtil.dip2px(12);
-            positiveBtn.setPadding(btnPadding, 0, btnPadding, btnPadding);
-            positiveBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
-            positiveBtn.setTextColor(btnTextColor);
-            negativeBtn.setPadding(btnPadding, btnPadding, btnPadding, btnPadding);
-            negativeBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
-            negativeBtn.setTextColor(btnTextColor);
         }
     }
 
@@ -150,15 +100,9 @@ public class CustomDialog extends AlertDialog {
             super(context, themeResId);
         }
 
-        public ListDialogBuilder(Context context, int widthMolecular, int widthDenominator) {
-            super(context, widthMolecular, widthDenominator);
-        }
-
-
         @Override
         public AlertDialog show() {
             AlertDialog dialog = super.show();
-
             return dialog;
         }
     }
@@ -190,6 +134,64 @@ public class CustomDialog extends AlertDialog {
         public EditDialogBuilder(Context context) {
             super(context);
             this.context = context;
+        }
+    }
+
+    private static void setMessageTvAttr(AlertDialog dialog) {
+        try {
+            Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
+            mAlert.setAccessible(true);
+            Object mAlertController = mAlert.get(dialog);
+            Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
+            mMessage.setAccessible(true);
+            TextView mMessageTv = (TextView) mMessage.get(mAlertController);
+            int left = DensityUtil.dip2px(24);
+            int top = DensityUtil.dip2px(10);
+            int right = DensityUtil.dip2px(24);
+            int bottom = DensityUtil.dip2px(20);
+            mMessageTv.setPadding(left, top, right, bottom);
+            mMessageTv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void setActionBtnAttr(AlertDialog dialog) {
+        Button positiveBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button negativeBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        int btnPadding = DensityUtil.dip2px(12);
+        positiveBtn.setPadding(btnPadding, 0, btnPadding, btnPadding);
+        positiveBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
+        positiveBtn.setTextColor(btnTextColor);
+        negativeBtn.setPadding(btnPadding, btnPadding, btnPadding, btnPadding);
+        negativeBtn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, btnTextSize);
+        negativeBtn.setTextColor(btnTextColor);
+    }
+
+    public static class BaseDialogBuilder extends AlertDialog.Builder {
+        private Context context;
+
+        public BaseDialogBuilder(Context context, int themeResId) {
+            super(context, themeResId);
+            this.context = context;
+
+        }
+
+        public BaseDialogBuilder(Context context) {
+            super(context);
+            this.context = context;
+        }
+
+        @Override
+        public AlertDialog show() {
+            AlertDialog dialog = super.show();
+            dialog.getWindow().setLayout(ResolutionUtils.getWidth(context) / 5 * 4, ViewGroup.LayoutParams.WRAP_CONTENT);
+            setTitleTvAttr(dialog);
+            setMessageTvAttr(dialog);
+            return dialog;
         }
     }
 }
