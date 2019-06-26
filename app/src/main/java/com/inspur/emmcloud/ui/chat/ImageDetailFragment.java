@@ -17,9 +17,13 @@ import android.widget.ProgressBar;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.config.MyAppConfig;
+import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.widget.SmoothImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -153,14 +157,35 @@ public class ImageDetailFragment extends Fragment {
 
     /**
      * 保存图片
+     * 从保存ImageView缓存改为从网络下载 无网络给出提示  190626
      */
     public void downloadImg() {
-        mImageView.buildDrawingCache(true);
-        mImageView.buildDrawingCache();
-        Bitmap bitmap = mImageView.getDrawingCache();
-        String savedImagePath = saveBitmapFile(bitmap);
-        mImageView.setDrawingCacheEnabled(false);
-        refreshGallery(getActivity(), savedImagePath);
+//        mImageView.buildDrawingCache(true);
+//        mImageView.buildDrawingCache();
+//        Bitmap bitmap = mImageView.getDrawingCache();
+//        String savedImagePath = saveBitmapFile(bitmap);
+        if (NetUtils.isNetworkConnected(getActivity())) {
+            String fileSavePath = MyAppConfig.LOCAL_CACHE_CHAT_PATH
+                    + FileUtils.getFileName(mImageUrl);
+            new DownLoaderUtils().startDownLoad(mImageUrl, fileSavePath, new APIDownloadCallBack(mImageUrl) {
+
+                @Override
+                public void callbackSuccess(File file) {
+                    ToastUtils.show(getActivity(), getString(R.string.save_success));
+                    refreshGallery(getActivity(), fileSavePath);
+                }
+
+                @Override
+                public void callbackError(Throwable arg0, boolean arg1) {
+                    ToastUtils.show(getActivity(), getString(R.string.save_fail));
+                }
+
+                @Override
+                public void onCancelled(CancelledException e) {
+                }
+            });
+        }
+//        mImageView.setDrawingCacheEnabled(false);
     }
 
     /**
