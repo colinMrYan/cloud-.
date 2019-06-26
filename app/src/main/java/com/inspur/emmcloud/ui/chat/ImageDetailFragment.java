@@ -21,6 +21,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.widget.SmoothImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -50,6 +51,8 @@ public class ImageDetailFragment extends Fragment {
     private ProgressBar progressBar;
     private PhotoViewAttacher mAttacher;
 
+    private Message message = null;
+
     private int locationW, locationH, locationX, locationY;
     private boolean isNeedTransformOut;
     private boolean isNeedTransformIn;
@@ -65,6 +68,22 @@ public class ImageDetailFragment extends Fragment {
         args.putInt("y", y);
         args.putBoolean("isNeedTransformOut", isNeedTransformOut);
         args.putBoolean("isNeedTransformIn", isNeedTransformIn);
+        f.setArguments(args);
+        return f;
+    }
+
+    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, com.inspur.emmcloud.bean.chat.Message message) {
+        final ImageDetailFragment f = new ImageDetailFragment();
+
+        final Bundle args = new Bundle();
+        args.putString("url", imageUrl);
+        args.putInt("w", w);
+        args.putInt("h", h);
+        args.putInt("x", x);
+        args.putInt("y", y);
+        args.putBoolean("isNeedTransformOut", isNeedTransformOut);
+        args.putBoolean("isNeedTransformIn", isNeedTransformIn);
+        args.putSerializable("message", message);
         f.setArguments(args);
         return f;
     }
@@ -85,6 +104,10 @@ public class ImageDetailFragment extends Fragment {
                 : null;
         isNeedTransformOut = getArguments() != null && getArguments().getBoolean("isNeedTransformOut");
         isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
+        if (getArguments() != null && getArguments().getSerializable("message") != null) {
+            this.message = (Message) getArguments().getSerializable("message");
+        }
+
 
     }
 
