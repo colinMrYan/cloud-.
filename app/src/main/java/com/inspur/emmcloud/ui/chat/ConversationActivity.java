@@ -66,6 +66,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
+import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -143,6 +144,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     private BroadcastReceiver refreshNameReceiver;
     private PopupWindow mediaVoiceReRecognizerPop;
     private PopupWindow resendMessagePop;
+    private PopupWindowList mPopupWindowList; //仿微信长按处理
 
     private UIMessage backUiMessage = null;
 
@@ -440,7 +442,8 @@ public class ConversationActivity extends ConversationBaseActivity {
                 backUiMessage = uiMessage;
                 int[] operationsId = getCardLongClickOperations(uiMessage);
                 if (operationsId.length > 0) {
-                    showLongClickOperationsDialog(operationsId, ConversationActivity.this, uiMessage);
+//                    showLongClickOperationsDialog(operationsId, ConversationActivity.this, uiMessage);
+                    showLongClickDialog(operationsId, uiMessage, view);
                 }
                 return true;
             }
@@ -1559,6 +1562,53 @@ public class ConversationActivity extends ConversationBaseActivity {
                 upgradeUtils.checkUpdate(true);
                 break;
         }
+    }
+
+    /**
+     * 仿微信长按处理
+     */
+    private void showLongClickDialog(final int[] operationsId, final UIMessage uiMessage, View view) {
+        final String[] operations = new String[operationsId.length];
+        for (int i = 0; i < operationsId.length; i++) {
+            String operation = getResources().getString(operationsId[i]);
+            operations[i] = operation;
+        }
+
+        List<String> dataList = new ArrayList<>();
+        for (int i = 0; i < operationsId.length; i++) {
+            String operation = getResources().getString(operationsId[i]);
+            dataList.add(operation);
+        }
+        if (mPopupWindowList == null) {
+            mPopupWindowList = new PopupWindowList(view.getContext());
+        }
+        mPopupWindowList.setAnchorView(view);
+        mPopupWindowList.setItemData(dataList);
+        mPopupWindowList.setModal(true);
+        mPopupWindowList.show();
+        mPopupWindowList.setOnItemClickListener((parent, view1, position, id) -> {
+            String content;
+            content = uiMessage2Content(uiMessage);
+            if (StringUtils.isBlank(content)) {
+                content = "";
+            }
+            switch (operationsId[position]) {
+                case R.string.chat_long_click_copy:
+                    copyToClipboard(ConversationActivity.this, content);
+                    break;
+                case R.string.chat_long_click_transmit:
+                    shareMessageToFrinds(ConversationActivity.this);
+                    break;
+                case R.string.chat_long_click_schedule:
+                    addTextToSchedule(content);
+                    break;
+                case R.string.chat_long_click_copy_text:
+                    copyToClipboard(ConversationActivity.this, content);
+                    break;
+            }
+            mPopupWindowList.hide();
+        });
+
     }
 
     /**

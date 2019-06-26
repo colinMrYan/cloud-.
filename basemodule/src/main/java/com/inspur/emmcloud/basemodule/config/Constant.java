@@ -192,4 +192,8 @@ public class Constant {
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
 
+
+    public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
+    public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
+    public static final String AROUTER_CLASS_WEB_FILEMANAGER = "/web/FileManagerActivity";
 }

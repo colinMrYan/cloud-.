@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 /**
  * 登录页面
  */
-@Route(path = "/login/main")
+@Route(path = Constant.AROUTER_CLASS_LOGIN_MAIN)
 public class LoginActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;

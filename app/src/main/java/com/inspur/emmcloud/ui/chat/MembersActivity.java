@@ -24,6 +24,7 @@ import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -53,7 +54,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-@Route(path = "/communication/member")
+@Route(path = Constant.AROUTER_CLASS_COMMUNICATION_MEMBER)
 public class MembersActivity extends BaseActivity implements TextWatcher {
     public static final String MEMBER_PAGE_STATE = "member_page_state";
     public static final int SELECT_STATE = 1;//选择人员
