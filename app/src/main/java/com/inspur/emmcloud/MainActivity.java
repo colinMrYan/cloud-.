@@ -278,7 +278,7 @@ public class MainActivity extends BaseActivity {
                         "accessToken", "");
                 MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 if (StringUtils.isBlank(accessToken)) {
-                    ARouter.getInstance().build("/login/main").navigation();
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).navigation();
                 } else {
                     IntentUtils.startActivity(MainActivity.this, IndexActivity.class, true);
                 }

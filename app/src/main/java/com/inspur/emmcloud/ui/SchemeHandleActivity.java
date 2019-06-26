@@ -232,7 +232,7 @@ public class SchemeHandleActivity extends BaseActivity {
             }, 1);
 
         } else {
-            ARouter.getInstance().build("/login/main").navigation();
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).navigation();
             finish();
         }
     }
