@@ -148,7 +148,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             @Override
             public void onProgressUpdate(String imageUri, View view, int current, int total) {
                 LogUtils.LbcDebug("更新大小:::" + current);
+                LogUtils.LbcDebug("imageUri" + imageUri + "  " + urlList.get(pagerPosition));
                 if (imageUri.equals(urlList.get(pagerPosition))) {
+                    LogUtils.LbcDebug("pagerPosition:" + pagerPosition);
                     originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
                     originalPictureDownLoadTextView.setText("%" + (current * 100) / total);
                     if (current == total) {
@@ -197,7 +199,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 break;
             case R.id.tv_original_picture_download_progress:
                 LogUtils.LbcDebug("下载图片");
-                downLoadOriginalPicture();
+                if (imgTypeMessageList.size() > 0) {
+                    LogUtils.LbcDebug("大于00000000000");
+                    downLoadOriginalPicture();
+                }
                 break;
             default:
                 break;
@@ -241,7 +246,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
      * 下载原图
      */
     private void downLoadOriginalPicture() {
-
         Message message = imgTypeMessageList.get(pagerPosition);
         LogUtils.LbcDebug("url::::" + urlList.get(pagerPosition));
         String path = message.getMsgContentMediaImage().getRawMedia();
@@ -272,12 +276,11 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        LogUtils.LbcDebug("下载完成图片更新");
+                        LogUtils.LbcDebug("下载完成图片更新" + imageUri);
                         if (imageUri.equals(urlList.get(pagerPosition))) {
-
+                            mAdapter.getItem(pagerPosition);
+                            originalPictureDownLoadTextView.setVisibility(View.GONE);
                         }
-                        mAdapter.getItem(pagerPosition);
-                        originalPictureDownLoadTextView.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -387,7 +390,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             imgTypeMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_IMAGE_MSG_LIST);
             for (Message message : imgTypeMessageList) {
                 /**改成preview*/
-                //message.getMsgContentMediaImage().getPreviewMedia();  理论上路径用这个
                 String path = message.getMsgContentMediaImage().getRawMedia();
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), path);
                 urlList.add(url);
@@ -505,7 +507,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     }
 
     private void setOriginalImageButtonShow(int position) {
-        originalPictureDownLoadTextView.setVisibility(isShowOriginalImageButton(position) ? View.VISIBLE : View.GONE);
+        if (imgTypeMessageList.size() > 0) {
+            originalPictureDownLoadTextView.setVisibility(isShowOriginalImageButton(position) ? View.VISIBLE : View.GONE);
+            originalPictureDownLoadTextView.setText("查看原图");
+        }
     }
 
     private class ImagePagerAdapter extends FragmentStatePagerAdapter {
@@ -540,12 +545,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                         && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())
                         && !isHaveOriginalImageCatch) {
                     url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
-                    LogUtils.LbcDebug("url+resize:::" + url);
+                    LogUtils.LbcDebug("有原图 且无被本地原图先加载预览图： url+resize:::" + url);
                 } else {
                     LogUtils.LbcDebug("msgContentMediaImage.getRawSize()::" + msgContentMediaImage.getRawSize() + "::" +
                             "msgContentMediaImage.getPreviewSize():::" + msgContentMediaImage.getPreviewSize());
                 }
             }
+
             boolean isNeedTransformOut = (position == pageStartPosition);
             if (isNeedTransformOut && isHasTransformIn == false) {
                 isNeedTransformIn = true;
