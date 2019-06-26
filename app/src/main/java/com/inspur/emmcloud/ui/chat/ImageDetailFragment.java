@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,14 +21,18 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
-import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.widget.SmoothImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -51,11 +56,15 @@ public class ImageDetailFragment extends Fragment {
     private ProgressBar progressBar;
     private PhotoViewAttacher mAttacher;
 
-    private Message message = null;
+    private int rawImageHigh = 0;
+    private int rawImageWide = 0;
+    private String rawUrl;
 
     private int locationW, locationH, locationX, locationY;
     private boolean isNeedTransformOut;
     private boolean isNeedTransformIn;
+    private DownLoadProgressRefreshListener downLoadProgressRefreshListener;
+    private ImageLoadingProgressListener imageLoadingProgressListener;
 
     public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut) {
         final ImageDetailFragment f = new ImageDetailFragment();
@@ -72,18 +81,20 @@ public class ImageDetailFragment extends Fragment {
         return f;
     }
 
-    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, com.inspur.emmcloud.bean.chat.Message message) {
+    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int rawH, int rawW, String rawUrl) {
         final ImageDetailFragment f = new ImageDetailFragment();
 
         final Bundle args = new Bundle();
         args.putString("url", imageUrl);
+        args.putString("rawUrl", rawUrl);
         args.putInt("w", w);
         args.putInt("h", h);
         args.putInt("x", x);
         args.putInt("y", y);
+        args.putInt("rawH", rawH);
+        args.putInt("rawW", rawW);
         args.putBoolean("isNeedTransformOut", isNeedTransformOut);
         args.putBoolean("isNeedTransformIn", isNeedTransformIn);
-        args.putSerializable("message", message);
         f.setArguments(args);
         return f;
     }
@@ -94,6 +105,8 @@ public class ImageDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mImageUrl = getArguments() != null ? getArguments().getString("url")
                 : null;
+        rawUrl = getArguments() != null ? getArguments().getString("rawUrl")
+                : null;
         locationH = getArguments() != null ? getArguments().getInt("h")
                 : null;
         locationW = getArguments() != null ? getArguments().getInt("w")
@@ -102,11 +115,20 @@ public class ImageDetailFragment extends Fragment {
                 : null;
         locationY = getArguments() != null ? getArguments().getInt("y")
                 : null;
+        rawImageHigh = getArguments() != null ? getArguments().getInt("rawH")
+                : 0;
+        rawImageWide = getArguments() != null ? getArguments().getInt("rawW")
+                : 0;
         isNeedTransformOut = getArguments() != null && getArguments().getBoolean("isNeedTransformOut");
         isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
-        if (getArguments() != null && getArguments().getSerializable("message") != null) {
-            this.message = (Message) getArguments().getSerializable("message");
-        }
+
+        imageLoadingProgressListener = new ImageLoadingProgressListener() {
+            @Override
+            public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                LogUtils.LbcDebug("更新大小:::" + current);
+                downLoadProgressRefreshListener.refreshProgress(imageUri, (current * 100) / total);
+            }
+        };
 
 
     }
@@ -118,7 +140,7 @@ public class ImageDetailFragment extends Fragment {
         final View v = inflater.inflate(R.layout.fragment_image_pager_detail,
                 container, false);
 
-        mImageView = (SmoothImageView) v.findViewById(R.id.image);
+        mImageView = v.findViewById(R.id.image);
         mImageView.setOriginalInfo(locationW, locationH, locationX, locationY);
         if (isNeedTransformIn) {
             mImageView.transformIn();
@@ -155,7 +177,7 @@ public class ImageDetailFragment extends Fragment {
             }
         });
         mAttacher.setMaximumScale(5);
-        progressBar = (ProgressBar) v.findViewById(R.id.loading);
+        progressBar = v.findViewById(R.id.loading);
         return v;
     }
 
@@ -179,13 +201,15 @@ public class ImageDetailFragment extends Fragment {
      * 保存图片
      */
     public void downloadImg() {
-        mImageView.buildDrawingCache(true);
-        mImageView.buildDrawingCache();
-        Bitmap bitmap = mImageView.getDrawingCache();
-        String savedImagePath = saveBitmapFile(bitmap);
-        mImageView.setDrawingCacheEnabled(false);
-        refreshGallery(getActivity(), savedImagePath);
+        if (ImageDisplayUtils.getInstance().isHaveImage(mImageUrl)) {
+            File imageFileCatch = DiskCacheUtils.findInCache(mImageUrl, ImageLoader.getInstance().getDiskCache());
+            Bitmap bitmap = BitmapFactory.decodeFile(imageFileCatch.getPath());
+            saveBitmapFile(bitmap);
+        } else {
+            downLoadOriginalPicture(true);
+        }
     }
+
 
     /**
      * 保存并显示把图片展示出来
@@ -306,4 +330,75 @@ public class ImageDetailFragment extends Fragment {
                     }
                 });
     }
+
+    /**
+     * 加载图片
+     */
+    public void loadingImage(DownLoadProgressRefreshListener downLoadProgressRefreshListener) {
+        this.downLoadProgressRefreshListener = downLoadProgressRefreshListener;
+        downLoadOriginalPicture(false);
+    }
+
+
+    /**
+     * ImageView 加载图片
+     */
+    private void downLoadOriginalPicture(boolean isSaveImage2Local) {
+        String url = rawUrl == null ? mImageUrl : rawUrl;
+        LogUtils.LbcDebug("获取到的Url:::" + url);
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.drawable.default_image)
+                .showImageOnFail(R.drawable.default_image)
+                .showImageOnLoading(R.drawable.default_image)
+                // 设置图片的解码类型
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageSize imageSize = new ImageSize(rawImageWide,
+                rawImageHigh);
+        ImageLoader.getInstance().loadImage(url, imageSize,
+                options, new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        downLoadProgressRefreshListener.loadingComplete(imageUri);
+                        LogUtils.LbcDebug("下载完成图片更新" + imageUri);
+                        if (isSaveImage2Local) {
+                            saveBitmapToLocalFromImageLoader(loadedImage);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+
+                    }
+                }, imageLoadingProgressListener);
+
+    }
+
+
+    /**
+     * 保存
+     */
+    private void saveBitmapToLocalFromImageLoader(Bitmap bitmap) {
+        String savedImagePath = saveBitmapFile(bitmap);
+        refreshGallery(getActivity(), savedImagePath);
+    }
+
+    public interface DownLoadProgressRefreshListener {
+        public void refreshProgress(String url, int progress);
+
+        public void loadingComplete(String url);
+    }
+
 }

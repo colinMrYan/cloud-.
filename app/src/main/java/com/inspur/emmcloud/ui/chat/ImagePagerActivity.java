@@ -68,6 +68,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
     private static final int RESULT_MENTIONS = 5;
     private static final int CHECK_IMG_COMMENT = 1;
+    ImageDetailFragment.DownLoadProgressRefreshListener downLoadProgressRefreshListener;
     private ECMChatInputMenuImgComment ecmChatInputMenu;
     private HackyViewPager mPager;
     private int pagerPosition;
@@ -160,6 +161,26 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 }
             }
         };
+
+        downLoadProgressRefreshListener = new ImageDetailFragment.DownLoadProgressRefreshListener() {
+            @Override
+            public void refreshProgress(String url, int progress) {
+                if (imgTypeMessageList.size() > 0 && urlList.get(pagerPosition).equals(url)) {
+                    originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
+                    originalPictureDownLoadTextView.setText("%" + progress);
+                }
+
+            }
+
+            @Override
+            public void loadingComplete(String url) {
+                if (imgTypeMessageList.size() > 0 && urlList.get(pagerPosition).equals(url)) {
+                    originalPictureDownLoadTextView.setText("下载完成");
+                    originalPictureDownLoadTextView.setVisibility(View.GONE);
+                }
+            }
+        };
+
     }
 
 
@@ -200,8 +221,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             case R.id.tv_original_picture_download_progress:
                 LogUtils.LbcDebug("下载图片");
                 if (imgTypeMessageList.size() > 0) {
-                    LogUtils.LbcDebug("大于00000000000");
-                    downLoadOriginalPicture();
+                    originalPictureDownLoadTextView.setText("%0");
+                    ImageDetailFragment imageDetailFragment = mAdapter.getCurrentFragment();
+                    imageDetailFragment.loadingImage(downLoadProgressRefreshListener);
                 }
                 break;
             default:
@@ -532,11 +554,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         public Fragment getItem(int position) {
             String url = urlList.get(position); //raw 路径
             LogUtils.LbcDebug("url ::" + url);
-            /**判断当前有没有原图
-             * 如果有原图原图展示，
-             * 如果没有原图 判断消息中原图和预览图大小是否相等
-             * 如果相等则加载原图（因为未发原图）
-             * 如果不相等则显示*/
+            boolean isNeedTransformOut = (position == pageStartPosition);
+            if (isNeedTransformOut && isHasTransformIn == false) {
+                isNeedTransformIn = true;
+                isHasTransformIn = true;
+            } else {
+                isNeedTransformIn = false;
+            }
             if (imgTypeMessageList.size() > 0) {
                 LogUtils.LbcDebug("imagList Size >0;  size=" + imgTypeMessageList.size());
                 MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
@@ -545,21 +569,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                         && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())
                         && !isHaveOriginalImageCatch) {
                     url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
-                    LogUtils.LbcDebug("有原图 且无被本地原图先加载预览图： url+resize:::" + url);
-                } else {
-                    LogUtils.LbcDebug("msgContentMediaImage.getRawSize()::" + msgContentMediaImage.getRawSize() + "::" +
-                            "msgContentMediaImage.getPreviewSize():::" + msgContentMediaImage.getPreviewSize());
+                    LogUtils.LbcDebug("有原图且无本地原图加载预览图:" + url);
                 }
-            }
-
-            boolean isNeedTransformOut = (position == pageStartPosition);
-            if (isNeedTransformOut && isHasTransformIn == false) {
-                isNeedTransformIn = true;
-                isHasTransformIn = true;
+                return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
+                        isNeedTransformOut, msgContentMediaImage.getRawHeight(), msgContentMediaImage.getRawWidth(), urlList.get(position));
             } else {
-                isNeedTransformIn = false;
+                return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
             }
-            return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
         }
 
         @Override
@@ -573,4 +589,5 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         }
 
     }
+
 }
