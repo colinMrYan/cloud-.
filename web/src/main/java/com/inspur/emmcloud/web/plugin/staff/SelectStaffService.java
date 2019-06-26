@@ -8,6 +8,7 @@ import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.web.R;
@@ -67,7 +68,7 @@ public class SelectStaffService extends ImpPlugin {
         bundle.putString("title", getActivity().getString(R.string.meeting_memebers));
         bundle.putInt("member_page_state", 3);
         bundle.putStringArrayList("uidList", contactIdList);
-        ARouter.getInstance().build("/communication/member").with(bundle).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_COMMUNICATION_MEMBER).with(bundle).navigation();
     }
 
     /**

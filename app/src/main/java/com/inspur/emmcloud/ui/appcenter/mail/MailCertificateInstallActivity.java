@@ -142,7 +142,7 @@ public class MailCertificateInstallActivity extends BaseActivity {
             case R.id.tv_install_certificate:
                 Bundle bundle = new Bundle();
                 bundle.putInt("extra_maximum", 1);
-                ARouter.getInstance().build("/web/fileManager").with(bundle).navigation(MailCertificateInstallActivity.this, SELECT_CREDIFICATE_FILE);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(MailCertificateInstallActivity.this, SELECT_CREDIFICATE_FILE);
                 break;
         }
     }
