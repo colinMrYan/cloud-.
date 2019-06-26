@@ -9,8 +9,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
@@ -207,9 +205,6 @@ public class CommunicationUtils {
         int imgHeight = bitmap.getHeight();
         int imgWidth = bitmap.getWidth();
         long fileSize = FileUtils.getFileSize(localFilePath);
-        LogUtils.LbcDebug("Original Size::" + fileSize);
-        LogUtils.LbcDebug("Original imgHeight::" + imgHeight);
-        LogUtils.LbcDebug("Original imgWidth::" + imgWidth);
         bitmap.recycle();
         int previewImgHight = 0;
         int previewImgWidth = 0;
@@ -220,18 +215,12 @@ public class CommunicationUtils {
             previewImgWidth = previewPictureBitmap.getWidth();
             previewFileSize = FileUtils.getFileSize(previewImgPath);
             previewPictureBitmap.recycle();
-            LogUtils.LbcDebug(" if preview Size::" + previewFileSize);
         } else {
             previewImgHight = imgHeight;
             previewImgWidth = imgWidth;
             previewFileSize = fileSize;
             previewImgPath = localFilePath;
-            LogUtils.LbcDebug("else preview Size::" + previewFileSize);
         }
-        LogUtils.LbcDebug(" preview previewImgHight::" + previewImgHight);
-        LogUtils.LbcDebug(" preview previewImgWidth::" + previewImgWidth);
-
-
         //还要转回dp/2
         int thumbnailHeight = 0;
         int thumbnailWidth = 0;
@@ -243,8 +232,6 @@ public class CommunicationUtils {
 
         MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
         msgContentMediaImage.setName(file.getName());
-        LogUtils.LbcDebug(" preview previewImgHight111111::" + previewImgHight);
-        LogUtils.LbcDebug(" preview previewImgWidth1111111::" + previewImgWidth);
 
         msgContentMediaImage.setPreviewHeight(previewImgHight);
         msgContentMediaImage.setPreviewWidth(previewImgWidth);
@@ -261,9 +248,7 @@ public class CommunicationUtils {
         msgContentMediaImage.setRawSize(fileSize);
         msgContentMediaImage.setRawMedia(localFilePath);
         msgContentMediaImage.setTmpId(tracer);
-        LogUtils.LbcDebug("组装后：" + msgContentMediaImage.toString());
         message.setContent(msgContentMediaImage.toString());
-        LogUtils.LbcDebug("组装后：" + JSONUtils.toJSONString(message.getMsgContentMediaImage()));
         return message;
     }
 

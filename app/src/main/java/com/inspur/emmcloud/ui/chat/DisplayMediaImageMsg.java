@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -69,13 +68,11 @@ public class DisplayMediaImageMsg {
             w = msgContentMediaImage.getPreviewWidth();
         }
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
-        LogUtils.LbcDebug("获取缩略图过程》》》》" + imageUri);
         if (!ImageDisplayUtils.getInstance().isHaveImage(imageUri) && imageUri.startsWith("http") &&
                 msgContentMediaImage.getPreviewHeight() != 0
                 && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())) {
             imageUri = imageUri + "&resize=true&w=" + message.getMsgContentMediaImage().getPreviewWidth() +
                     "&h=" + message.getMsgContentMediaImage().getPreviewHeight();
-            LogUtils.LbcDebug("需要进行获取压缩图片 preview::::" + imageUri);
         }
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
             @Override
