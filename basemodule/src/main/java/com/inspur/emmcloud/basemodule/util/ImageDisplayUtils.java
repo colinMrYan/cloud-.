@@ -51,15 +51,16 @@ public class ImageDisplayUtils {
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
-                .memoryCacheExtraOptions(1280, 1280)
+                .memoryCacheExtraOptions(2600, 2600)
                 .defaultDisplayImageOptions(options)
                 .imageDownloader(imageDownloader)
                 .threadPoolSize(6)
                 .threadPriority(Thread.NORM_PRIORITY - 1)
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCache(
-                        new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
-                .diskCacheSize(100 * 1024 * 1024)
+                        new UsingFreqLimitedMemoryCache(5 * 1024 * 1024))
+                .memoryCacheSizePercentage(13)
+                .diskCacheSize(200 * 1024 * 1024)
                 // You can pass your own memory cache implementation
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .diskCacheFileNameGenerator(new HashCodeFileNameGenerator());
