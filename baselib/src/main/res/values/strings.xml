@@ -316,7 +316,9 @@
     <string name="chat_long_click_transmit">转发</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
+    <string name="chat_long_click_reply">回复</string>
     <string name="communication_search">搜索</string>
+    <string name="chat_original_picture_download_progress">&#037;%1d</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>

@@ -19,9 +19,15 @@ public class Compressor {
     private Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
     private int quality = 80;
     private String destinationDirectoryPath;
+    private int maxArea = -1;
 
     public Compressor(Context context) {
         destinationDirectoryPath = context.getCacheDir().getPath() + File.separator + "images";
+    }
+
+    public Compressor setMaxArea(int maxArea){
+        this.maxArea = maxArea;
+        return this;
     }
 
     public Compressor setMaxWidth(int maxWidth) {
@@ -54,12 +60,23 @@ public class Compressor {
     }
 
     public File compressToFile(File imageFile, String compressedFileName) throws IOException {
-        return ImageUtil.compressImage(imageFile, maxWidth, maxHeight, compressFormat, quality,
-                destinationDirectoryPath + File.separator + compressedFileName);
+        if (maxArea >0){
+            return ImageUtil.compressImage(imageFile, maxArea, compressFormat, quality,
+                    destinationDirectoryPath + File.separator + compressedFileName);
+        }else {
+            return ImageUtil.compressImage(imageFile, maxWidth, maxHeight, compressFormat, quality,
+                    destinationDirectoryPath + File.separator + compressedFileName);
+        }
+
     }
 
     public Bitmap compressToBitmap(File imageFile) throws IOException {
-        return ImageUtil.decodeSampledBitmapFromFile(imageFile, maxWidth, maxHeight);
+        if (maxArea >0){
+            return ImageUtil.decodeSampledBitmapFromFile(imageFile, maxArea);
+        }else {
+            return ImageUtil.decodeSampledBitmapFromFile(imageFile, maxWidth, maxHeight);
+        }
+
     }
 
 }

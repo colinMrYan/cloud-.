@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.web.R;
@@ -29,7 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-@Route(path = "/web/fileManager")
+@Route(path = Constant.AROUTER_CLASS_WEB_FILEMANAGER)
 public class FileManagerActivity extends BaseActivity {
     public static final String EXTRA_MAXIMUM = "extra_maximum";
     public static final String EXTRA_FILTER_FILE_TYPE = "extra_filter_file_type";

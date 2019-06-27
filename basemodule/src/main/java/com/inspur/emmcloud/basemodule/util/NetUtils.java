@@ -28,8 +28,11 @@ public class NetUtils {
     public static final String NETWORK_TYPE_4G = "4g";
     public static final String NETWORK_TYPE_MOBILE = "mobile";
     public static final String[] pingUrls = {"www.baidu.com", "www.aliyun.com"};
-    public static final String[] httpUrls = {"http://www.inspuronline.com/#/auth/0" + ((int) (Math.random() * 100000 - 1) + 1)};
-    /** 没有连接网络
+
+    public static final String[] httpUrls = {"http://www.inspuronline.com/#/auth/0" + (int) (1 + Math.random() * 100000)};
+
+    /**
+     * 没有连接网络
      */
     public static final int NETWORK_NONE = -1;
     /**

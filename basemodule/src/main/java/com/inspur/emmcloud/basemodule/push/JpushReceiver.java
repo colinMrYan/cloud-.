@@ -147,7 +147,7 @@ public class JpushReceiver extends BroadcastReceiver {
      * 登录应用
      */
     private void loginApp() {
-        ARouter.getInstance().build("/login/main").withFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
     }
 
     /**

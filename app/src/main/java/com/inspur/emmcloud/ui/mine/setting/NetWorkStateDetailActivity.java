@@ -213,7 +213,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      *
      * @param StrUrl
      */
-    private void sendRequest(final String StrUrl) {
+    private void sendRequest(String strUrl) {
+        final String urlDetail = StringUtils.utf8Encode(strUrl);
         final NetworkInfo.State wifiConnection = NetUtils.getNetworkWifiState(getBaseContext());
         new Thread() {
             public void run() {
@@ -226,7 +227,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                         isConnected = true;
                     } else {
                         if (wifiConnection == NetworkInfo.State.CONNECTED && !NetUtils.isVpnConnected()) {
-                            URL url = new URL(StrUrl);
+                            URL url = new URL(urlDetail);
                             httpURLConnection = (HttpURLConnection) url.openConnection();
                             httpURLConnection.setInstanceFollowRedirects(false);
                             httpURLConnection.setRequestMethod("POST");
