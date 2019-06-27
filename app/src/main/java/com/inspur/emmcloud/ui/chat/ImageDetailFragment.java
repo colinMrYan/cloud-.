@@ -31,6 +31,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.assist.ViewScaleType;
+import com.nostra13.universalimageloader.core.imageaware.NonViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -140,12 +142,9 @@ public class ImageDetailFragment extends Fragment {
         imageLoadingProgressListener = new ImageLoadingProgressListener() {
             @Override
             public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                LogUtils.LbcDebug("更新大小:::" + current);
                 downLoadProgressRefreshListener.refreshProgress(imageUri, (current * 100) / total);
             }
         };
-
-
     }
 
 
@@ -343,6 +342,17 @@ public class ImageDetailFragment extends Fragment {
                 });
     }
 
+    @Override
+    public void onDestroy() {
+        if (!StringUtils.isBlank(rawUrl)) {
+            ImageSize imageSize = new ImageSize(rawImageWide,
+                    rawImageHigh);
+            NonViewAware imageAware = new NonViewAware(rawUrl, imageSize, ViewScaleType.CROP);
+            ImageLoader.getInstance().cancelDisplayTask(imageAware);
+        }
+        super.onDestroy();
+    }
+
     /**
      * 加载图片
      */
@@ -373,12 +383,12 @@ public class ImageDetailFragment extends Fragment {
                 options, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
-
+                        LogUtils.LbcDebug("开始加载图片11111111111111111111111111111");
                     }
 
                     @Override
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
+                        LogUtils.LbcDebug("加载图片失败2222222222222222222222222222222222");
                     }
 
                     @Override
@@ -403,7 +413,7 @@ public class ImageDetailFragment extends Fragment {
 
                     @Override
                     public void onLoadingCancelled(String imageUri, View view) {
-
+                        LogUtils.LbcDebug("加载图片取消3333333333333333333333333333333333");
                     }
                 }, imageLoadingProgressListener);
 
