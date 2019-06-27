@@ -196,7 +196,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 mAdapter.getCurrentFragment().closeImg();
                 break;
             case R.id.download_img:
-                mAdapter.getCurrentFragment().downloadImg();
+                mAdapter.getCurrentFragment().downloadImg(downLoadProgressRefreshListener);
                 break;
             case R.id.enter_channel_imgs_img:
                 bundle = new Bundle();

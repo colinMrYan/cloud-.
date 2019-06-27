@@ -419,7 +419,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
     private class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
         public List<String> urlList;
-        private ImageDetailFragment currentFragment;
+        private ImageDetailV0Fragment currentFragment;
 
         public ImagePagerAdapter(FragmentManager fm, List<String> urlList) {
             super(fm);
@@ -441,16 +441,16 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
             } else {
                 isNeedTransformIn = false;
             }
-            return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
+            return ImageDetailV0Fragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
         }
 
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
-            currentFragment = (ImageDetailFragment) object;
+            currentFragment = (ImageDetailV0Fragment) object;
             super.setPrimaryItem(container, position, object);
         }
 
-        public ImageDetailFragment getCurrentFragment() {
+        public ImageDetailV0Fragment getCurrentFragment() {
             return currentFragment;
         }
 
