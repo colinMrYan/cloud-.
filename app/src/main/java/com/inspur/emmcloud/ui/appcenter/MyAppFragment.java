@@ -322,6 +322,10 @@ public class MyAppFragment extends BaseFragment {
      */
     private void refreshAppListView() {
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
+        List<AppGroupBean> appGroupFromNetList = MyAppCacheUtils.getMyAppListFromNet(getContext());
+        if ((appGroupList.size() != appGroupFromNetList.size()) && !getNeedCommonlyUseApp()) {
+            appGroupList.remove(0);
+        }
         if (appListAdapter != null) {
             appListAdapter.setAppAdapterList(appGroupList);
         } else {
@@ -1143,7 +1147,7 @@ public class MyAppFragment extends BaseFragment {
             try {
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
-                MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
+                MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP, clientConfigMyAppVersion);
                 return appGroupList;
             } catch (Exception e) {
