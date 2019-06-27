@@ -421,8 +421,6 @@ public class AppAPIService {
     }
 
 
-
-
     /**
      * 获取应用的配置信息
      */

@@ -13,6 +13,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.UIMessage;
@@ -62,15 +63,17 @@ public class DisplayMediaImageMsg {
         //判断是否有Preview 图片如果有的话用preview ，否则用原图
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
-//        if (msgContentMediaImage.getPreviewHeight() > 0 && msgContentMediaImage.getPreviewWidth() > 0) {
-//            h = msgContentMediaImage.getPreviewHeight();
-//            w = msgContentMediaImage.getPreviewWidth();
-//        }
+        if (msgContentMediaImage.getPreviewHeight() > 0 && msgContentMediaImage.getPreviewWidth() > 0) {
+            h = msgContentMediaImage.getPreviewHeight();
+            w = msgContentMediaImage.getPreviewWidth();
+        }
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
-//        LayoutParams layoutParams = getImgViewSize(context, w, h);
-//        if (imageUri.startsWith("http")) {
-//            imageUri = imageUri + "&w=" + layoutParams.width + "&h=" + layoutParams.height;
-//        }
+        if (!ImageDisplayUtils.getInstance().isHaveImage(imageUri) && imageUri.startsWith("http") &&
+                msgContentMediaImage.getPreviewHeight() != 0
+                && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())) {
+            imageUri = imageUri + "&resize=true&w=" + message.getMsgContentMediaImage().getPreviewWidth() +
+                    "&h=" + message.getMsgContentMediaImage().getPreviewHeight();
+        }
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {

@@ -389,7 +389,7 @@ public class TaskAddActivity extends BaseActivity {
             case R.id.rl_attachments_others:
                 Bundle bundle = new Bundle();
                 bundle.putInt("extra_maximum", 1);
-                ARouter.getInstance().build("/web/fileManager").with(bundle).navigation(TaskAddActivity.this, REQUEST_ATTACHMENT);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(TaskAddActivity.this, REQUEST_ATTACHMENT);
                 break;
         }
     }
