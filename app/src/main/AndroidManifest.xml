@@ -368,6 +368,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="application/vnd.ms-excel" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                 <data android:mimeType="text/calendar" />
             </intent-filter>
 
