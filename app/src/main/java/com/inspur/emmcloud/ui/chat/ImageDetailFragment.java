@@ -20,6 +20,7 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -59,7 +60,9 @@ public class ImageDetailFragment extends Fragment {
 
     private int rawImageHigh = 0;
     private int rawImageWide = 0;
-    private String rawUrl;
+    private int previewHigh = 0;
+    private int previewWide = 0;
+    private String rawUrl = null;
 
     private int locationW, locationH, locationX, locationY;
     private boolean isNeedTransformOut;
@@ -82,18 +85,19 @@ public class ImageDetailFragment extends Fragment {
         return f;
     }
 
-    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int rawH, int rawW, String rawUrl) {
+    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int preViewH, int preViewW, int rawH, int rawW) {
         final ImageDetailFragment f = new ImageDetailFragment();
 
         final Bundle args = new Bundle();
         args.putString("url", imageUrl);
-        args.putString("rawUrl", rawUrl);
         args.putInt("w", w);
         args.putInt("h", h);
         args.putInt("x", x);
         args.putInt("y", y);
         args.putInt("rawH", rawH);
         args.putInt("rawW", rawW);
+        args.putInt("preH", preViewH);
+        args.putInt("preW", preViewW);
         args.putBoolean("isNeedTransformOut", isNeedTransformOut);
         args.putBoolean("isNeedTransformIn", isNeedTransformIn);
         f.setArguments(args);
@@ -105,8 +109,6 @@ public class ImageDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageUrl = getArguments() != null ? getArguments().getString("url")
-                : null;
-        rawUrl = getArguments() != null ? getArguments().getString("rawUrl")
                 : null;
         locationH = getArguments() != null ? getArguments().getInt("h")
                 : null;
@@ -120,8 +122,20 @@ public class ImageDetailFragment extends Fragment {
                 : 0;
         rawImageWide = getArguments() != null ? getArguments().getInt("rawW")
                 : 0;
+        previewHigh = getArguments() != null ? getArguments().getInt("preH")
+                : 0;
+        previewWide = getArguments() != null ? getArguments().getInt("preW")
+                : 0;
         isNeedTransformOut = getArguments() != null && getArguments().getBoolean("isNeedTransformOut");
         isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
+
+        boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(mImageUrl);//这个是判断有无原图（是否有）
+        if (previewHigh != 0
+                && (rawImageHigh != previewHigh)
+                && !isHaveOriginalImageCatch) {
+            rawUrl = mImageUrl;
+            mImageUrl = mImageUrl + "&resize=true&w=" + previewWide + "&h=" + previewHigh;
+        }
 
         imageLoadingProgressListener = new ImageLoadingProgressListener() {
             @Override
@@ -256,9 +270,9 @@ public class ImageDetailFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
-            ToastUtils.show(getActivity(), getString(R.string.save_success));
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.save_success));
         } catch (IOException e) {
-            ToastUtils.show(getActivity(), getString(R.string.save_fail));
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.save_fail));
             e.printStackTrace();
         }
         return savedImagePath;
@@ -401,7 +415,7 @@ public class ImageDetailFragment extends Fragment {
      */
     private void saveBitmapToLocalFromImageLoader(Bitmap bitmap) {
         String savedImagePath = saveBitmapFile(bitmap);
-        refreshGallery(getActivity(), savedImagePath);
+        refreshGallery(BaseApplication.getInstance(), savedImagePath);
     }
 
     public interface DownLoadProgressRefreshListener {

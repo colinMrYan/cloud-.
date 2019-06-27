@@ -173,6 +173,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 mAdapter.getCurrentFragment().closeImg();
                 break;
             case R.id.download_img:
+                originalPictureDownLoadTextView.setText("%0");
                 mAdapter.getCurrentFragment().downloadImg(downLoadProgressRefreshListener);
                 break;
             case R.id.enter_channel_imgs_img:
@@ -490,17 +491,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 isNeedTransformIn = false;
             }
             if (imgTypeMessageList.size() > 0) {
-                LogUtils.LbcDebug("imagList Size >0;  size=" + imgTypeMessageList.size());
                 MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
-                boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
-                if (msgContentMediaImage.getPreviewHeight() != 0
-                        && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())
-                        && !isHaveOriginalImageCatch) {
-                    url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
-                    LogUtils.LbcDebug("有原图且无本地原图加载预览图:" + url);
-                }
+                int rawHigh = msgContentMediaImage.getRawHeight();
+                int rawWidth = msgContentMediaImage.getRawWidth();
+                int preViewH = msgContentMediaImage.getPreviewHeight();
+                int preViewW = msgContentMediaImage.getPreviewWidth();
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
-                        isNeedTransformOut, msgContentMediaImage.getRawHeight(), msgContentMediaImage.getRawWidth(), urlList.get(position));
+                        isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth);
             } else {
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
             }
