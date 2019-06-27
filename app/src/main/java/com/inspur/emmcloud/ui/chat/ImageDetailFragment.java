@@ -210,7 +210,7 @@ public class ImageDetailFragment extends Fragment {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFileCatch.getPath());
             saveBitmapToLocalFromImageLoader(bitmap);
         } else {
-            downLoadOriginalPicture(true);
+            loadingOriginalPicture(true);
         }
     }
 
@@ -264,11 +264,6 @@ public class ImageDetailFragment extends Fragment {
         return savedImagePath;
     }
 
-    public void resetImage(String url) {
-        LogUtils.LbcDebug("图片已经存在");
-        mImageUrl = url;
-        onStart();
-    }
 
     @Override
     public void onStart() {
@@ -339,14 +334,14 @@ public class ImageDetailFragment extends Fragment {
      */
     public void loadingImage(DownLoadProgressRefreshListener downLoadProgressRefreshListener) {
         this.downLoadProgressRefreshListener = downLoadProgressRefreshListener;
-        downLoadOriginalPicture(false);
+        loadingOriginalPicture(false);
     }
 
 
     /**
      * ImageView 加载图片
      */
-    private void downLoadOriginalPicture(boolean isSaveImage2Local) {
+    private void loadingOriginalPicture(boolean isSaveImage2Local) {
         String url = rawUrl == null ? mImageUrl : rawUrl;
         LogUtils.LbcDebug("获取到的Url:::" + url);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
