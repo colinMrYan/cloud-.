@@ -26,6 +26,7 @@ import com.nostra13.universalimageloader.utils.L;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 
 import java.io.File;
+import java.util.List;
 
 
 public class ImageDisplayUtils {
@@ -268,4 +269,15 @@ public class ImageDisplayUtils {
         DiskCacheUtils.removeFromCache(url, ImageLoader.getInstance().getDiskCache());
         MemoryCacheUtils.removeFromCache(url, ImageLoader.getInstance().getMemoryCache());
     }
+
+    public boolean isHaveImage(String url) {
+        File imageFileCatch = DiskCacheUtils.findInCache(url, ImageLoader.getInstance().getDiskCache());
+        List<String> imageCatchs = MemoryCacheUtils.findCacheKeysForImageUri(url, ImageLoader.getInstance().getMemoryCache());
+        if (imageFileCatch == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

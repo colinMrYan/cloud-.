@@ -67,8 +67,7 @@
                 android:paddingLeft="8dp"
                 android:text="@string/origin"
                 android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:visibility="gone" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btn_preview"
