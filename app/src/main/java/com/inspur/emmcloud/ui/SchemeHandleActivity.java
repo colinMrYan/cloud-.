@@ -17,6 +17,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.IcsFileUtil;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
@@ -222,6 +223,19 @@ public class SchemeHandleActivity extends BaseActivity {
                                 break;
                             case "inspur-ecc-native":
                                 openNativeSchemeByHost(host, uri, getIntent());
+                                break;
+                            case "content":
+                                if (getIntent().getType() != null) {
+                                    switch (getIntent().getType()) {
+                                        case "text/calendar":
+                                            IcsFileUtil.parseIcsFile(SchemeHandleActivity.this, uri);
+                                            break;
+                                        case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                                        case "application/vnd.ms-excel":
+                                            ToastUtils.show(getIntent().getDataString());
+                                            break;
+                                    }
+                                }
                                 break;
                             default:
                                 finish();
