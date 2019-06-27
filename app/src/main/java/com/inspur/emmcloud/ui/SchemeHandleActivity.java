@@ -225,7 +225,17 @@ public class SchemeHandleActivity extends BaseActivity {
                                 openNativeSchemeByHost(host, uri, getIntent());
                                 break;
                             case "content":
-                                IcsFileUtil.parseIcsFile(SchemeHandleActivity.this, uri);
+                                if (getIntent().getType() != null) {
+                                    switch (getIntent().getType()) {
+                                        case "text/calendar":
+                                            IcsFileUtil.parseIcsFile(SchemeHandleActivity.this, uri);
+                                            break;
+                                        case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                                        case "application/vnd.ms-excel":
+                                            ToastUtils.show(getIntent().getDataString());
+                                            break;
+                                    }
+                                }
                                 break;
                             default:
                                 finish();
