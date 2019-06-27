@@ -371,6 +371,17 @@ public class ImageDetailFragment extends Fragment {
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         downLoadProgressRefreshListener.loadingComplete(imageUri);
                         LogUtils.LbcDebug("下载完成图片更新" + imageUri);
+                        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                                .showImageForEmptyUri(R.drawable.default_image)
+
+                                .showImageOnFail(R.drawable.default_image)
+                                .showImageOnLoading(R.drawable.default_image)
+                                // 设置图片的解码类型
+                                .bitmapConfig(Bitmap.Config.RGB_565)
+                                .cacheInMemory(true)
+                                .cacheOnDisk(true)
+                                .build();
+                        ImageLoader.getInstance().displayImage(imageUri, mImageView, options);
                         if (isSaveImage2Local) {
                             saveBitmapToLocalFromImageLoader(loadedImage);
                         }
