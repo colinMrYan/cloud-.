@@ -383,12 +383,10 @@ public class ImageDetailFragment extends Fragment {
                 options, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
-                        LogUtils.LbcDebug("开始加载图片11111111111111111111111111111");
                     }
 
                     @Override
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                        LogUtils.LbcDebug("加载图片失败2222222222222222222222222222222222");
                     }
 
                     @Override
@@ -413,7 +411,6 @@ public class ImageDetailFragment extends Fragment {
 
                     @Override
                     public void onLoadingCancelled(String imageUri, View view) {
-                        LogUtils.LbcDebug("加载图片取消3333333333333333333333333333333333");
                     }
                 }, imageLoadingProgressListener);
 
