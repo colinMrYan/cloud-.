@@ -5,16 +5,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PingNetEntity;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.R;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -131,49 +127,27 @@ public class NetUtils {
     public static PingNetEntity ping(PingNetEntity pingNetEntity, Long WhileTime) {
         String line = null;
         Process process = null;
-        BufferedReader successReader = null;
         String command = "ping -c " + pingNetEntity.getPingCount() + " -w " + pingNetEntity.getPingWtime() + " " + pingNetEntity.getIp();
         LogUtils.LbcDebug(command);
         long taegrtTime = System.currentTimeMillis() + WhileTime;
         try {
             process = Runtime.getRuntime().exec(command);
             if (process == null) {
-                append(pingNetEntity.getResultBuffer(), "ping fail:process is null.");
                 pingNetEntity.setPingTime(null);
                 pingNetEntity.setResult(false);
                 return pingNetEntity;
             }
-            successReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            while ((line = successReader.readLine()) != null) {
-                append(pingNetEntity.getResultBuffer(), line);
-                String time;
-                if ((time = getTime(line)) != null) {
-                    pingNetEntity.setPingTime(time);
-                }
-            }
             int status = process.waitFor();
             if (status == 0) {
-                append(pingNetEntity.getResultBuffer(), "exec cmd success:" + command);
                 pingNetEntity.setResult(true);
             } else {
-                append(pingNetEntity.getResultBuffer(), "exec cmd fail.");
                 pingNetEntity.setPingTime(null);
                 pingNetEntity.setResult(false);
             }
-        } catch (IOException e) {
-            Log.e(TAG, String.valueOf(e));
-        } catch (InterruptedException e) {
-            Log.e(TAG, String.valueOf(e));
-        } finally {
+        } catch (Exception e) {
+            e.printStackTrace();
             if (process != null) {
                 process.destroy();
-            }
-            if (successReader != null) {
-                try {
-                    successReader.close();
-                } catch (IOException e) {
-                    Log.e(TAG, String.valueOf(e));
-                }
             }
         }
         if (pingNetEntity.isResult()) {
@@ -183,24 +157,6 @@ public class NetUtils {
         return pingNetEntity;
     }
 
-    private static void append(StringBuffer stringBuffer, String text) {
-        if (stringBuffer != null) {
-            stringBuffer.append(text + "\n");
-        }
-    }
-
-    private static String getTime(String line) {
-        String[] lines = line.split("\n");
-        String time = null;
-        for (String l : lines) {
-            if (!l.contains("time="))
-                continue;
-            int index = l.indexOf("time=");
-            time = l.substring(index + "time=".length());
-            Log.i(TAG, time);
-        }
-        return time;
-    }
 
     /**
      * 得到网络类型
