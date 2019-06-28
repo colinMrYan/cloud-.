@@ -569,7 +569,6 @@ public class AppUtils {
         Router router = Router.getInstance();
         if (router.getService(WebService.class) != null) {
             WebService service = router.getService(WebService.class);
-            LogUtils.LbcDebug("22222222222222222222222222222222");
             service.openGallery(activity, limit, requestCode, originalImageCheckBoxState);
         }
     }
