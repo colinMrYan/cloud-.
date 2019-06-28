@@ -1,14 +1,15 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
@@ -22,9 +23,9 @@ import butterknife.ButterKnife;
 
 public class SafeGustureFaceSettingActivity extends BaseActivity {
     @BindView(R.id.switch_view_setting_safe_start_guesture)
-    SwitchView guestureSwitchView;
+    SwitchCompat guestureSwitchView;
     @BindView(R.id.switch_view_setting_safe_start_face)
-    SwitchView faceSwitchView;
+    SwitchCompat faceSwitchView;
     @BindView(R.id.rl_setting_safe_reset_guesture)
     RelativeLayout resetGuestureLayout;
     @BindView(R.id.rl_setting_safe_reset_face)
@@ -42,37 +43,34 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     }
 
     private void initView() {
-        guestureSwitchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        guestureSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOn(View view) {
-                guestureSwitchView.setOpened(true);
-                IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, CreateGestureGuideActivity.class);
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
-                if (doubleValidation != 1) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("gesture_code_change", "close");
-                    IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, GestureLoginActivity.class, bundle);
-                } else {
-                    guestureSwitchView.setOpened(true);
-                    ToastUtils.show(SafeGustureFaceSettingActivity.this, R.string.setting_gesture_force_open);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b == isGestureOpen()) {
+                    return;
                 }
-
-
+                if (b) {
+                    IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, CreateGestureGuideActivity.class);
+                } else {
+                    int doubleValidation = PreferencesByUserAndTanentUtils.getInt(MyApplication.getInstance(), Constant.PREF_MNM_DOUBLE_VALIADATION, -1);
+                    if (doubleValidation != 1) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("gesture_code_change", "close");
+                        IntentUtils.startActivity(SafeGustureFaceSettingActivity.this, GestureLoginActivity.class, bundle);
+                    } else {
+                        guestureSwitchView.setChecked(true);
+                        ToastUtils.show(SafeGustureFaceSettingActivity.this, R.string.setting_gesture_force_open);
+                    }
+                }
             }
         });
-        faceSwitchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
-            @Override
-            public void toggleToOn(View view) {
-                intentFaceVerifyActivity(true);
-            }
 
+        faceSwitchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOff(View view) {
-                intentFaceVerifyActivity(false);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(getApplication()) != b) {
+                    intentFaceVerifyActivity(b);
+                }
             }
         });
     }
@@ -81,12 +79,12 @@ public class SafeGustureFaceSettingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         boolean isGestureOpen = isGestureOpen();
-        if (guestureSwitchView.isOpened() != isGestureOpen) {
-            guestureSwitchView.setOpened(isGestureOpen);
+        if (guestureSwitchView.isChecked() != isGestureOpen) {
+            guestureSwitchView.setChecked(isGestureOpen);
         }
         resetGuestureLayout.setVisibility(isGestureOpen() ? View.VISIBLE : View.GONE);
 
-        faceSwitchView.setOpened(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this));
+        faceSwitchView.setChecked(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this));
         resetFaceLayout.setVisibility(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this) ? View.VISIBLE : View.GONE);
     }
 

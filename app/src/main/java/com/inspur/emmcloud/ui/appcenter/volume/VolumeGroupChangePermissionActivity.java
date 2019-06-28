@@ -1,13 +1,16 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
+import android.content.res.ColorStateList;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -34,11 +37,41 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     @BindView(R.id.tv_volume_read_permission)
     TextView readPermissionText;
     @BindView(R.id.swv_volume_write_permission)
-    SwitchView writePermissionSwitch;
+    SwitchCompat writePermissionSwitch;
     @BindView(R.id.swv_volume_read_permission)
-    SwitchView readPermissionSwitch;
+    SwitchCompat readPermissionSwitch;
     private MyAppAPIService myAppAPIService;
     private LoadingDialog loadingDialog;
+
+    public void setSwitchColor(int thumbColor, int trackColor, SwitchCompat v) {
+        // thumb color
+        // int thumbColor = 0x1A666666;
+
+        // trackColor
+        // int trackColor = 0x7E000000;
+
+        // set the thumb color
+        DrawableCompat.setTintList(v.getThumbDrawable(), new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        thumbColor,
+                        trackColor
+                }));
+
+        // set the track color
+        DrawableCompat.setTintList(v.getTrackDrawable(), new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        0x7E000000,
+                        0x1A666666
+                }));
+    }
 
     @Override
     public void onCreate() {
@@ -62,34 +95,25 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         headerText.setText(group.getName());
         writePermissionText.setText(getString(R.string.volume_read_write_permission));
         readPermissionText.setText(getString(R.string.volume_read_permission));
-        writePermissionSwitch.setOpened(group.getPrivilege() > VOLUME_READ_PERMISSION);
-        readPermissionSwitch.setOpened(true);
-        readPermissionSwitch.setEnable(group.getPrivilege() <= VOLUME_READ_PERMISSION);
-        readPermissionSwitch.setPaintColorOn(group.getPrivilege() > 4 ? 0x667fc5f6 : 0xff7fc5f6);
-        readPermissionSwitch.setPaintCircleBtnColor(group.getPrivilege() > 4 ? 0xbb7fc5f6 : 0xff008cee);
+        writePermissionSwitch.setChecked(group.getPrivilege() > VOLUME_READ_PERMISSION);
+        readPermissionSwitch.setChecked(true);
+        readPermissionSwitch.setEnabled(group.getPrivilege() <= VOLUME_READ_PERMISSION);
+        setSwitchColor(group.getPrivilege() > 4 ? 0xbb7fc5f6 : 0xff008cee,
+                group.getPrivilege() > 4 ? 0x667fc5f6 : 0xff7fc5f6, readPermissionSwitch);
         final String currentVolumePath = getIntent().getStringExtra("volumeFilePath");
-        writePermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        writePermissionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOn(View view) {
-                updateVolumeGroupPermission(group, currentVolumePath, VOLUME_WRITE_PERMISSION, true);
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                updateVolumeGroupPermission(group, currentVolumePath, VOLUME_READ_PERMISSION, true);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updateVolumeGroupPermission(group, currentVolumePath, b ? VOLUME_WRITE_PERMISSION : VOLUME_READ_PERMISSION, true);
             }
         });
-        readPermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        readPermissionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOn(View view) {
-                updateVolumeGroupPermission(group, currentVolumePath, VOLUME_READ_PERMISSION, true);
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                updateVolumeGroupPermission(group, currentVolumePath, VOLUME_NO_PERMISSION, true);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updateVolumeGroupPermission(group, currentVolumePath, b ? VOLUME_READ_PERMISSION : VOLUME_NO_PERMISSION, true);
             }
         });
+
     }
 
     /**
@@ -120,23 +144,22 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         public void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
             LoadingDialog.dimissDlg(loadingDialog);
             if (getVolumeGroupPermissionResult.getPrivilege() >= VOLUME_WRITE_PERMISSION) {
-                writePermissionSwitch.toggleSwitch(true);
-                readPermissionSwitch.setIsCodeManual(true, true);
-                readPermissionSwitch.setOpened(true);
-                readPermissionSwitch.setEnable(false);
-                readPermissionSwitch.setPaintColorOn(0x667fc5f6);
-                readPermissionSwitch.setPaintCircleBtnColor(0xbb7fc5f6);
+                writePermissionSwitch.setChecked(true);
+                // readPermissionSwitch.setIsCodeManual(true, true);
+                readPermissionSwitch.setEnabled(false);
+                //readPermissionSwitch.setPaintColorOn(0x667fc5f6);
+                //readPermissionSwitch.setPaintCircleBtnColor(0xbb7fc5f6);
             } else {
-                writePermissionSwitch.toggleSwitch(false);
-                readPermissionSwitch.setEnable(true);
+                writePermissionSwitch.setChecked(false);
+                readPermissionSwitch.setEnabled(true);
                 if (getVolumeGroupPermissionResult.getPrivilege() == VOLUME_NO_PERMISSION) {
-                    readPermissionSwitch.toggleSwitch(false);
+                    readPermissionSwitch.setChecked(false);
                 } else if (getVolumeGroupPermissionResult.getPrivilege() == VOLUME_READ_PERMISSION) {
-                    readPermissionSwitch.toggleSwitch(true);
-                    readPermissionSwitch.setIsCodeManual(true, true);
+                    readPermissionSwitch.setChecked(true);
+                    //readPermissionSwitch.setIsCodeManual(true, true);
                 }
-                readPermissionSwitch.setPaintColorOn(0xff7fc5f6);
-                readPermissionSwitch.setPaintCircleBtnColor(0xff008cee);
+                // readPermissionSwitch.setPaintColorOn(0xff7fc5f6);
+                // readPermissionSwitch.setPaintCircleBtnColor(0xff008cee);
             }
             //发送到VolumeFilePermissionManagerActivity
             EventBus.getDefault().post(getVolumeGroupPermissionResult);

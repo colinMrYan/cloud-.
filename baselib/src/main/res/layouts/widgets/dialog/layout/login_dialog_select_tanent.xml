@@ -55,12 +55,12 @@
             android:textColor="#333333"
             android:textSize="16sp" />
 
-        <com.inspur.emmcloud.baselib.widget.SwitchView
+        <android.support.v7.widget.SwitchCompat
             android:id="@+id/auto_select_switch"
-            android:layout_width="37dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"></com.inspur.emmcloud.baselib.widget.SwitchView>
+            android:layout_centerVertical="true"></android.support.v7.widget.SwitchCompat>
 
     </RelativeLayout>
 </LinearLayout>

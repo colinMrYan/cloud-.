@@ -563,6 +563,17 @@ public class AppUtils {
     }
 
     /**
+     * 沟通调用图库
+     */
+    public static void openGallery(Activity activity, int limit, int requestCode, int originalImageCheckBoxState) {
+        Router router = Router.getInstance();
+        if (router.getService(WebService.class) != null) {
+            WebService service = router.getService(WebService.class);
+            service.openGallery(activity, limit, requestCode, originalImageCheckBoxState);
+        }
+    }
+
+    /**
      * 调用系统相机
      *
      * @param activity

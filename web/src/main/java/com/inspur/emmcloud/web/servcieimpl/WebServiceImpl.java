@@ -115,6 +115,18 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
+    public void openGallery(Activity activity, int limit, int requestCode, int originalImageCheckBoxState) {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setShowCamera(false); // 显示拍照按钮
+        imagePicker.setCrop(false); // 允许裁剪（单选才有效）
+        imagePicker.setSelectLimit(limit);
+        imagePicker.setMultiMode(true);
+        Intent intent = new Intent(activity, ImageGridActivity.class);
+        intent.putExtra(ImageGridActivity.EXTRA_ORIGINAL_IMAGE_STATE_FROM_COMMUNICATION, originalImageCheckBoxState);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
     public void showScanResult(Context context, String result) {
         Intent intent = new Intent();
         intent.putExtra("result", result);

@@ -2,7 +2,9 @@ package com.inspur.emmcloud.ui.contact;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
@@ -11,8 +13,6 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
-import com.inspur.emmcloud.baselib.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -25,14 +25,14 @@ import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
  * classes : com.inspur.emmcloud.ui.contact.RobotActivity
  * Create at 2016年12月1日 下午5:32:01
  */
-public class RobotInfoActivity extends BaseActivity implements OnStateChangedListener {
+public class RobotInfoActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
     private String id = "";
     private ContactAPIService apiService;
     private LoadingDialog loadingDialog;
     private CircleTextImageView robotHeadImg;
     private TextView robotNameText, functionIntroductionText, supportText;
-    private SwitchView setTopSwitch;
+    private SwitchCompat setTopSwitch;
     private String cid;
 
     @Override
@@ -60,11 +60,11 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
         functionIntroductionText = (TextView) findViewById(R.id.function_introduction_text);
         id = getIntent().getStringExtra("uid");
         cid = getIntent().getStringExtra("cid");
-        setTopSwitch = (SwitchView) findViewById(R.id.sv_stick);
+        setTopSwitch = findViewById(R.id.sv_stick);
         boolean isSetTop = ChannelOperationCacheUtils.isChannelSetTop(
                 this, cid);
-        setTopSwitch.setOpened(isSetTop);
-        setTopSwitch.setOnStateChangedListener(this);
+        setTopSwitch.setChecked(isSetTop);
+        setTopSwitch.setOnCheckedChangeListener(this);
         if (!getIntent().hasExtra("type")) {
             findViewById(R.id.support_top_layout).setVisibility(View.GONE);
         } else {
@@ -114,7 +114,6 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
      * @param isSetIop
      */
     private void setChannelTop(boolean isSetIop) {
-        setTopSwitch.toggleSwitch(isSetIop);
         ChannelOperationCacheUtils.setChannelTop(RobotInfoActivity.this, cid,
                 isSetIop);
         // 通知消息页面重新创建群组头像
@@ -123,16 +122,10 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    @Override
-    public void toggleToOn(View view) {
-        // TODO Auto-generated method stub
-        setChannelTop(true);
-    }
 
     @Override
-    public void toggleToOff(View view) {
-        // TODO Auto-generated method stub
-        setChannelTop(false);
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        setChannelTop(b);
     }
 
     public void onClick(View v) {
