@@ -34,6 +34,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.basemodule.util.imagepicker.ImagePicker;
 import com.inspur.emmcloud.basemodule.util.imagepicker.bean.ImageItem;
+import com.inspur.emmcloud.basemodule.util.imagepicker.ui.ImageGridActivity;
 import com.inspur.emmcloud.basemodule.util.mycamera.MyCameraActivity;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
@@ -259,7 +260,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                                 AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
                                 break;
                             case 1:
-                                AppUtils.openGallery(VolumeFileActivity.this, 1, REQUEST_OPEN_GALLERY);
+                                AppUtils.openGallery(VolumeFileActivity.this, 1, REQUEST_OPEN_GALLERY, true);
                                 break;
                             case 2:
                                 AppUtils.openFileSystem(VolumeFileActivity.this, REQUEST_OPEN_FILE_BROWSER);
@@ -459,15 +460,18 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
+                Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
                 ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                         .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 String imgPath = imageItemList.get(0).path;
-                try {
-                    File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                            .compressToFile(new File(imgPath));
-                    imgPath = file.getAbsolutePath();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!originalPicture) {
+                    try {
+                        File file = new Compressor(VolumeFileActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                .compressToFile(new File(imgPath));
+                        imgPath = file.getAbsolutePath();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 uploadFile(imgPath);
             }

@@ -22,7 +22,7 @@ public interface WebService extends CoreService {
 
     void openGallery(Activity activity, int limit, int requestCode);
 
-    void openGallery(Activity activity, int limit, int requestCode, int originalImageCheckBoxState);
+    void openGallery(Activity activity, int limit, int requestCode, boolean isSupportOrigin);
 
     Class getImpFragmentClass();
 

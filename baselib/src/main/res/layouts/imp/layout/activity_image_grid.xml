@@ -35,7 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:background="#DC22292C">
+            android:background="#DC22292C"
+            android:clickable="true">
 
             <Button
                 android:id="@+id/btn_dir"
