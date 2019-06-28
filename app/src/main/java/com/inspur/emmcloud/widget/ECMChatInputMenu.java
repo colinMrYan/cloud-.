@@ -25,6 +25,7 @@ import com.czt.mp3recorder.MP3Recorder;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -462,7 +463,8 @@ public class ECMChatInputMenu extends LinearLayout {
                     InputTypeBean inputTypeBean = inputTypeBeanList.get(position);
                     switch (inputTypeBean.getAction()) {
                         case "gallery":
-                            AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT);
+                            LogUtils.LbcDebug("11111111111111111111111111111111");
+                            AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT, 1);
                             break;
                         case "camera":
                             String fileName = System.currentTimeMillis() + ".jpg";

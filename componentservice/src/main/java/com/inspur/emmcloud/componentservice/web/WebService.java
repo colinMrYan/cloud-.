@@ -22,6 +22,8 @@ public interface WebService extends CoreService {
 
     void openGallery(Activity activity, int limit, int requestCode);
 
+    void openGallery(Activity activity, int limit, int requestCode, int originalImageCheckBoxState);
+
     Class getImpFragmentClass();
 
     /**

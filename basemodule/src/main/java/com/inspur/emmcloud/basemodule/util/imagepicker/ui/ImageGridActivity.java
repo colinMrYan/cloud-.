@@ -37,6 +37,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     public static final int REQUEST_PERMISSION_CAMERA = 0x02;
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String EXTRA_ORIGINAL_PICTURE = "ORIGINAL_PICTURE";
+    public static final String EXTRA_ORIGINAL_IMAGE_STATE_FROM_COMMUNICATION = "ORIGINAL_IMAGE_STATE_FROM_COMMUNICATION";
     protected static final int CUT_IMG_SUCCESS = 1;
     private int encodingType = 0;
     private ImagePicker imagePicker;
@@ -54,6 +55,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private List<ImageFolder> mImageFolders; // 所有的图片文件夹
     private ImageGridAdapter mImageGridAdapter; // 图片九宫格展示的适配器
     private ImageDataSource imageDataSource;
+    private int intentFromCommunicationState = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,8 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 mBtnPre.setVisibility(b ? View.GONE : View.VISIBLE);
             }
         });
+        intentFromCommunicationState = getIntent().getIntExtra(EXTRA_ORIGINAL_IMAGE_STATE_FROM_COMMUNICATION, 0);
+        orgPictureCheckBox.setVisibility(intentFromCommunicationState > 0 ? View.VISIBLE : View.GONE);
         setStatus();
     }
 
