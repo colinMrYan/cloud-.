@@ -3,10 +3,12 @@ package com.inspur.emmcloud.ui.chat;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -19,8 +21,6 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.NoScrollGridView;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
-import com.inspur.emmcloud.baselib.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -62,9 +62,9 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     @BindView(R.id.tv_member)
     TextView memberText;
     @BindView(R.id.sv_stick)
-    SwitchView stickSwitch;
+    SwitchCompat stickSwitch;
     @BindView(R.id.sv_dnd)
-    SwitchView dndSwitch;
+    SwitchCompat dndSwitch;
     @BindView(R.id.tv_name)
     TextView nameText;
     @BindView(R.id.bt_exit)
@@ -114,25 +114,23 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             }
         }
     };
-    private OnStateChangedListener onStateChangedListener = new OnStateChangedListener() {
 
+    private CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
-        public void toggleToOn(View view) {
-            // TODO Auto-generated method stub
-            if (view.getId() == R.id.sv_dnd) {
-                updateConversationDnd();
-            } else {
-                setConversationStick();
-            }
-        }
-
-        @Override
-        public void toggleToOff(View view) {
-            // TODO Auto-generated method stub
-            if (view.getId() == R.id.sv_dnd) {
-                updateConversationDnd();
-            } else {
-                setConversationStick();
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            switch (compoundButton.getId()) {
+                case R.id.sv_stick:
+                    if (!b == conversation.isStick()) {
+                        setConversationStick();
+                    }
+                    break;
+                case R.id.sv_dnd:
+                    if (!b == conversation.isDnd()) {
+                        updateConversationDnd();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -183,10 +181,10 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         adapter = new ConversationMemberAdapter(this, uiMemberUidList, isOwner);
         memberGrid.setAdapter(adapter);
         memberGrid.setOnItemClickListener(onItemClickListener);
-        dndSwitch.setOpened(conversation.isDnd());
-        dndSwitch.setOnStateChangedListener(onStateChangedListener);
-        stickSwitch.setOpened(conversation.isStick());
-        stickSwitch.setOnStateChangedListener(onStateChangedListener);
+        dndSwitch.setChecked(conversation.isDnd());
+        dndSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
+        stickSwitch.setChecked(conversation.isStick());
+        stickSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         exitBtn.setVisibility(View.VISIBLE);
         exitBtn.setText(conversation.getOwner().equals(MyApplication.getInstance().getUid()) ? getString(R.string.dismiss_group) : getString(R.string.quit_group));
         memberSizeText.setText(getString(R.string.people_num, memberSize));
@@ -347,7 +345,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             loadingDlg.show();
             apiService.updateConversationDnd(conversation.getId(), !conversation.isDnd());
         } else {
-            dndSwitch.setOpened(conversation.isDnd());
+            dndSwitch.setChecked(conversation.isDnd());
         }
     }
 
@@ -359,7 +357,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             loadingDlg.show();
             apiService.setConversationStick(conversation.getId(), !conversation.isStick());
         } else {
-            stickSwitch.setOpened(conversation.isStick());
+            stickSwitch.setChecked(conversation.isStick());
         }
     }
 
@@ -416,7 +414,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
             conversation.setDnd(!conversation.isDnd());
-            dndSwitch.setOpened(conversation.isDnd());
+            dndSwitch.setChecked(conversation.isDnd());
             ConversationCacheUtils.updateConversationDnd(MyApplication.getInstance(), conversation.getId(), conversation.isDnd());
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_DND, conversation));
 
@@ -426,7 +424,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         public void returnDndFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             LoadingDialog.dimissDlg(loadingDlg);
-            dndSwitch.setOpened(conversation.isDnd());
+            dndSwitch.setChecked(conversation.isDnd());
             WebServiceMiddleUtils.hand(ConversationGroupInfoActivity.this, error, errorCode);
         }
 
@@ -434,7 +432,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         public void returnSetConversationStickSuccess(String id, boolean isStick) {
             LoadingDialog.dimissDlg(loadingDlg);
             conversation.setStick(isStick);
-            stickSwitch.setOpened(isStick);
+            stickSwitch.setChecked(isStick);
             ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), id, isStick);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS, conversation));
         }
@@ -443,7 +441,7 @@ public class ConversationGroupInfoActivity extends BaseActivity {
         public void returnSetConversationStickFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
-            stickSwitch.setOpened(conversation.isStick());
+            stickSwitch.setChecked(conversation.isStick());
         }
 
         @Override

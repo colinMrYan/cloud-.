@@ -289,9 +289,9 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.baselib.widget.SwitchView
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_view_setting_web_rotate"
-                    android:layout_width="37dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
@@ -323,9 +323,9 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.baselib.widget.SwitchView
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_view_setting_voice_2_word"
-                    android:layout_width="37dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
@@ -356,15 +356,13 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <Switch
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_view_setting_notification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:thumb="@drawable/switch_custom_thumb_selector"
-                    android:track="@drawable/switch_custom_track_selector" />
+                    android:layout_marginRight="16dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -393,9 +391,9 @@
                     android:textColor="#333333"
                     android:textSize="16sp" />
 
-                <com.inspur.emmcloud.baselib.widget.SwitchView
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_view_setting_experience_upgrade"
-                    android:layout_width="37dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
