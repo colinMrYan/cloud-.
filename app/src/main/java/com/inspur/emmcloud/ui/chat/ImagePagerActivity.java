@@ -493,17 +493,15 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             } else {
                 isNeedTransformIn = false;
             }
-            if (imgTypeMessageList.size() > 0) {
-                MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
-                int rawHigh = msgContentMediaImage.getRawHeight();
-                int rawWidth = msgContentMediaImage.getRawWidth();
-                int preViewH = msgContentMediaImage.getPreviewHeight();
-                int preViewW = msgContentMediaImage.getPreviewWidth();
+
+            MsgContentMediaImage msgContentMediaImage = (imgTypeMessageList.size() > 0) ?
+                    imgTypeMessageList.get(position).getMsgContentMediaImage() : null;
+            int rawHigh = msgContentMediaImage != null ? msgContentMediaImage.getRawHeight() : 0;
+            int rawWidth = msgContentMediaImage != null ? msgContentMediaImage.getRawWidth() : 0;
+            int preViewH = msgContentMediaImage != null ? msgContentMediaImage.getPreviewHeight() : 0;
+            int preViewW = msgContentMediaImage != null ? msgContentMediaImage.getPreviewWidth() : 0;
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
                         isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth);
-            } else {
-                return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
-            }
         }
 
         @Override
