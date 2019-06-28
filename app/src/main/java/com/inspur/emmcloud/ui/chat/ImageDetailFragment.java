@@ -72,20 +72,6 @@ public class ImageDetailFragment extends Fragment {
     private DownLoadProgressRefreshListener downLoadProgressRefreshListener;
     private ImageLoadingProgressListener imageLoadingProgressListener;
 
-    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut) {
-        final ImageDetailFragment f = new ImageDetailFragment();
-
-        final Bundle args = new Bundle();
-        args.putString("url", imageUrl);
-        args.putInt("w", w);
-        args.putInt("h", h);
-        args.putInt("x", x);
-        args.putInt("y", y);
-        args.putBoolean("isNeedTransformOut", isNeedTransformOut);
-        args.putBoolean("isNeedTransformIn", isNeedTransformIn);
-        f.setArguments(args);
-        return f;
-    }
 
     public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int preViewH, int preViewW, int rawH, int rawW) {
         final ImageDetailFragment f = new ImageDetailFragment();
@@ -132,6 +118,9 @@ public class ImageDetailFragment extends Fragment {
         isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
 
         boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(mImageUrl);//这个是判断有无原图（是否有）
+
+        rawUrl = mImageUrl;
+
         if (previewHigh != 0
                 && (rawImageHigh != previewHigh)
                 && !isHaveOriginalImageCatch) {

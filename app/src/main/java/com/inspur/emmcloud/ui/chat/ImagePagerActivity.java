@@ -499,7 +499,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
                         isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth);
             } else {
-                return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
+                return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut, 0, 0, 0, 0);
             }
         }
 
