@@ -462,7 +462,7 @@ public class ECMChatInputMenu extends LinearLayout {
                     InputTypeBean inputTypeBean = inputTypeBeanList.get(position);
                     switch (inputTypeBean.getAction()) {
                         case "gallery":
-                            AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT, 1);
+                            AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT, true);
                             break;
                         case "camera":
                             String fileName = System.currentTimeMillis() + ".jpg";
