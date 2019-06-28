@@ -39,6 +39,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.HtmlRegexpUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
@@ -69,8 +70,6 @@ import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
-import com.inspur.imp.api.iLog;
-import com.inspur.imp.plugin.PluginMgr;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -1018,7 +1017,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                         boolean.class);
                 method.invoke(settings, true);
             } catch (Exception e) {
-                iLog.w("yfcLog", "设备api不支持：" + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -1035,7 +1034,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                         boolean.class);
                 method.invoke(settings, true);
             } catch (Exception e) {
-                iLog.w("yfcLog", e.getMessage() + "");
+                e.printStackTrace();
             }
         }
     }
@@ -1050,9 +1049,11 @@ public class NewsWebDetailActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                PluginMgr pluginMgr = new PluginMgr(NewsWebDetailActivity.this, null);
-                pluginMgr.execute("FileTransferService", "download", object.toString());
-                pluginMgr.onDestroy();
+                Router router = Router.getInstance();
+                if (router.getService(com.inspur.emmcloud.componentservice.web.WebService.class) != null) {
+                    com.inspur.emmcloud.componentservice.web.WebService service = router.getService(com.inspur.emmcloud.componentservice.web.WebService.class);
+                    service.fileTransferServiceDownload(NewsWebDetailActivity.this, object.toString());
+                }
             }
         }
     }
@@ -1082,7 +1083,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 settings.setAppCacheMaxSize(1024 * 1024 * 8);
 
             } catch (Exception e) {
-                iLog.w("yfcLog", e.getMessage() + "");
+                e.printStackTrace();
             }
         }
     }

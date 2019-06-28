@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -321,6 +322,10 @@ public class MyAppFragment extends BaseFragment {
      */
     private void refreshAppListView() {
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
+        List<AppGroupBean> appGroupFromNetList = MyAppCacheUtils.getMyAppListFromNet(getContext());
+        if ((appGroupList.size() != appGroupFromNetList.size()) && !getNeedCommonlyUseApp()) {
+            appGroupList.remove(0);
+        }
         if (appListAdapter != null) {
             appListAdapter.setAppAdapterList(appGroupList);
         } else {
@@ -396,7 +401,9 @@ public class MyAppFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateHint(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            if ((boolean) netState.getMessageObj()) {
+            if ((boolean) netState.getMessageObj()
+                    || NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(getActivity())
+                    || NetUtils.isVpnConnected()) {
                 DeleteHeaderView();
             } else {
                 AddHeaderView();
@@ -1140,7 +1147,7 @@ public class MyAppFragment extends BaseFragment {
             try {
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
-                MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
+                MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP, clientConfigMyAppVersion);
                 return appGroupList;
             } catch (Exception e) {

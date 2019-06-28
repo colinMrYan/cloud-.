@@ -4,7 +4,6 @@ import com.inspur.emmcloud.login.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.login.bean.GetLoginResult;
 import com.inspur.emmcloud.login.bean.GetMDMStateResult;
 import com.inspur.emmcloud.login.bean.GetRegisterCheckResult;
-import com.inspur.emmcloud.login.bean.GetRegisterResult;
 import com.inspur.emmcloud.login.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.login.bean.UploadMDMInfoResult;
 
@@ -25,9 +24,6 @@ public interface LoginAPIInterface {
 
     void returnLoginSMSCaptchaFail(String error, int errorCode);
 
-    void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult);
-
-    void returnRegisterSMSFail(String error, int errorCode);
 
     void returnReisterSMSCheckSuccess(GetRegisterCheckResult getRegisterResult);
 

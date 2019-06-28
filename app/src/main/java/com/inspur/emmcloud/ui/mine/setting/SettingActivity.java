@@ -24,7 +24,6 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -49,7 +48,6 @@ import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
-import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
@@ -420,7 +418,6 @@ public class SettingActivity extends BaseActivity {
                         WSAPIService.getInstance().sendAppStatus("REMOVED");
                     } else {
                         MyApplication.getInstance().signout();
-                        LogUtils.jasonDebug("1111111111111");
                     }
                     stopAppService();
                 })
@@ -432,7 +429,6 @@ public class SettingActivity extends BaseActivity {
      */
     private void stopAppService() {
         stopService(new Intent(getApplicationContext(), CoreService.class));
-        stopService(new Intent(getApplicationContext(), BackgroundService.class));
     }
 
 
@@ -443,7 +439,7 @@ public class SettingActivity extends BaseActivity {
         final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
         ContextThemeWrapper ctw = new ContextThemeWrapper(this, R.style.cus_dialog_style);
 
-        new CustomDialog.ListDialogBuilder(this)
+        new CustomDialog.ListDialogBuilder(ctw)
                 .setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

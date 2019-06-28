@@ -82,7 +82,7 @@ public class LoginBySmsActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_login_by_sms;
+        return R.layout.login_activity_login_by_sms;
     }
 
     protected int getStatusType() {
@@ -93,8 +93,9 @@ public class LoginBySmsActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         EditWatcher watcher = new EditWatcher();
         long startCountTime = PreferencesUtils.getLong(LoginBySmsActivity.this, Constant.SMS_LOGIN_START_TIME, -1);
-        if (startCountTime > 0 && (System.currentTimeMillis() - startCountTime <= 60000)) {
-            myCountDownTimer = new MyCountDownTimer(System.currentTimeMillis() - startCountTime, 1000);
+        long differTime = System.currentTimeMillis() - startCountTime;
+        if (startCountTime > 0 && (differTime <= 60000)) {
+            myCountDownTimer = new MyCountDownTimer(60000 - differTime, 1000);
             myCountDownTimer.start();
         } else {
             myCountDownTimer = new MyCountDownTimer(60000, 1000);
@@ -175,6 +176,7 @@ public class LoginBySmsActivity extends BaseActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case LOGIN_SUCCESS:
+                        PreferencesUtils.putLong(LoginBySmsActivity.this, Constant.SMS_LOGIN_START_TIME, -1);
                         if (mode == MODE_LOGIN) {
                             myCountDownTimer.cancel();
                             //存储手机号作为登录用户名
@@ -269,14 +271,15 @@ public class LoginBySmsActivity extends BaseActivity {
 
         @Override
         public void onFinish() {// 计时完毕时触发
-            getCapthaBtn.setText(getString(R.string.recover));
+            getCapthaBtn.setText(getString(R.string.login_recover));
             getCapthaBtn.setClickable(true);
+            PreferencesUtils.putLong(LoginBySmsActivity.this, Constant.SMS_LOGIN_START_TIME, -1);
         }
 
         @Override
         public void onTick(long millisUntilFinished) {// 计时过程显示
             getCapthaBtn.setClickable(false);
-            getCapthaBtn.setText(getString(R.string.recover) + "("
+            getCapthaBtn.setText(getString(R.string.login_recover) + "("
                     + millisUntilFinished / 1000 + ")");
         }
     }

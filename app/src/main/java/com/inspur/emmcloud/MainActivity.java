@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
@@ -28,13 +29,12 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
-import com.inspur.emmcloud.login.login.LoginService;
+import com.inspur.emmcloud.componentservice.login.LoginService;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.privates.NotificationUpgradeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
-import com.luojilab.component.componentlib.router.Router;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
@@ -222,8 +222,8 @@ public class MainActivity extends BaseActivity {
     private void autoLogin() {
         // TODO Auto-generated method stub
         Router router = Router.getInstance();
-        if (router.getService(LoginService.class.getSimpleName()) != null) {
-            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
             service.autoLogin(MainActivity.this, handler);
         } else {
             setSplashShow();
@@ -278,7 +278,7 @@ public class MainActivity extends BaseActivity {
                         "accessToken", "");
                 MainActivity.this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 if (StringUtils.isBlank(accessToken)) {
-                    ARouter.getInstance().build("/login/main").navigation();
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).navigation();
                 } else {
                     IntentUtils.startActivity(MainActivity.this, IndexActivity.class, true);
                 }

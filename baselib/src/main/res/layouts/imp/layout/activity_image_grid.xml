@@ -55,6 +55,20 @@
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cb_origin"
+                style="@style/SuperCheckboxTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:drawablePadding="4dp"
+                android:includeFontPadding="true"
+                android:paddingLeft="8dp"
+                android:text="@string/origin"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+
             <Button
                 android:id="@+id/btn_preview"
                 android:layout_width="wrap_content"

@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -35,11 +36,11 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.login.login.LoginService;
-import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -67,8 +68,8 @@ public class ChatAPIService {
 
     private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
         Router router = Router.getInstance();
-        if (router.getService(LoginService.class.getSimpleName()) != null) {
-            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
             service.refreshToken(oauthCallBack, requestTime);
         }
     }
@@ -1461,7 +1462,7 @@ public class ChatAPIService {
     /**
      * 设置会话是否置顶
      *
-     * @param cid
+     * @param id
      * @param isStick
      */
     public void setConversationStick(final String id, final boolean isStick) {
@@ -1503,8 +1504,8 @@ public class ChatAPIService {
 
     /**
      * 隐藏会话
-     *
-     * @param uiConversation
+     * @param id
+     * @param isHide
      */
     public void setConversationHide(final String id, final boolean isHide) {
         final String completeUrl = APIUri.getConversationSetHide(id);
@@ -1769,6 +1770,52 @@ public class ChatAPIService {
             }
         });
 
+    }
+
+    /**
+     * 转发文件（图片）
+     *
+     * @param filePath 文件路径
+     * @param toCid    channel ID
+     */
+    public void transmitFile(String filePath, String fromCid, String toCid, String fileType, Message message) {
+        final String completeUrl = APIUri.getTransmitFileUrl(fromCid, fileType);
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addQueryStringParameter("path", filePath);
+        params.addQueryStringParameter("to", toCid);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        transmitFile(filePath, fromCid, toCid, fileType, message);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                JSONObject object = JSONUtils.getJSONObject(new String(arg0));
+                apiInterface.returnTransmitPictureSuccess(toCid, object.toString(), message);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnTransmitPictureError(error, responseCode);
+            }
+        });
     }
 
 }

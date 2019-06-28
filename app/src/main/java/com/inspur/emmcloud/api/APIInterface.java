@@ -3,7 +3,6 @@ package com.inspur.emmcloud.api;
 import com.inspur.emmcloud.basemodule.bean.AppException;
 import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.appcenter.App;
-import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
@@ -52,6 +51,7 @@ import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetVoiceCommunicationResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetContactOrgListUpateResult;
 import com.inspur.emmcloud.bean.contact.GetContactUserListUpateResult;
@@ -411,10 +411,6 @@ public interface APIInterface {
     void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
 
     void returnGetClientIdResultFail(String error, int errorCode);
-
-    void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult);
-
-    void returnGetAppAuthCodeResultFail(String error, int errorCode);
 
     void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
 
@@ -806,5 +802,9 @@ public interface APIInterface {
     void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult);
 
     void returnHolidayDataFail(String error, int errorCode);
+
+    void returnTransmitPictureSuccess(String cid, String description, Message message);
+
+    void returnTransmitPictureError(String error, int errorCode);
 
 }

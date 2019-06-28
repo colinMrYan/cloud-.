@@ -1,0 +1,18 @@
+[
+  {
+    "outputType": {
+      "type": "APK"
+    },
+    "apkInfo": {
+      "type": "MAIN",
+      "splits": [],
+      "versionCode": 1
+    },
+    "path": "login-release.apk",
+    "properties": {
+      "packageId": "com.inspur.emmcloud.login",
+      "split": "",
+      "minSdkVersion": "16"
+    }
+  }
+]

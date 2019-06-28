@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -39,6 +40,7 @@ import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
@@ -66,7 +68,6 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -118,6 +119,7 @@ public class CommunicationFragment extends BaseFragment {
     private LoadingDialog loadingDlg;
     private ImageView headerFunctionOptionImg;
     private ImageView contactImg;
+    private TextView contactSearchTextView;
     private CheckingNetStateUtils checkingNetStateUtils;
     private OnClickListener onViewClickListener = new OnClickListener() {
 
@@ -156,6 +158,9 @@ public class CommunicationFragment extends BaseFragment {
 //                    AppUtils.openScanCode(getActivity(),REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     AppUtils.openScanCode(CommunicationFragment.this, REQUEST_SCAN_LOGIN_QRCODE_RESULT);
                     popupWindow.dismiss();
+                    break;
+                case R.id.tv_search_contact:
+                    IntentUtils.startActivity(getActivity(),CommunicationSearchContactActivity.class);
                     break;
                 default:
                     break;
@@ -197,6 +202,8 @@ public class CommunicationFragment extends BaseFragment {
         contactImg.setOnClickListener(onViewClickListener);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         noDataLayout = (RelativeLayout) rootView.findViewById(R.id.rl_no_chat);
+        contactSearchTextView =  rootView.findViewById(R.id.tv_search_contact);
+        contactSearchTextView.setOnClickListener(onViewClickListener);
         initPullRefreshLayout();
         initRecycleView();
         loadingDlg = new LoadingDialog(getActivity());
@@ -358,7 +365,9 @@ public class CommunicationFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void netWorkStateTip(SimpleEventMessage netState) {
         if (netState.getAction().equals(Constant.EVENTBUS_TAG_NET_EXCEPTION_HINT)) {   //网络异常提示
-            conversationAdapter.setNetExceptionView((boolean) netState.getMessageObj());
+            conversationAdapter.setNetExceptionView((boolean) netState.getMessageObj()
+                    || NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(getActivity())
+                    || NetUtils.isVpnConnected());
             if ((Boolean) netState.getMessageObj()) {
                 WebSocketPush.getInstance().startWebSocket();
             }

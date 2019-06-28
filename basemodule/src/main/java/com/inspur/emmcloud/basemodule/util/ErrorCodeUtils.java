@@ -68,7 +68,7 @@ public class ErrorCodeUtils {
         }
         //stringID：string.xml内配置的ID
         //errorKey: string.xml内配置的名字
-        int stringID = context.getResources().getIdentifier(errorKey, "string", "com.inspur.emmcloud");
+        int stringID = context.getResources().getIdentifier(errorKey, "string",context.getPackageName());
         //string.xml内配置的具体内容
         //errorMessage:根据errorCode取到的文字
         String errorMessage = context.getResources().getString(stringID);

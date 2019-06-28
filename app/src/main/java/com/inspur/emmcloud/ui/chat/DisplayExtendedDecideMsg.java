@@ -3,12 +3,14 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgDecideAdapter;
@@ -26,7 +28,6 @@ import com.inspur.emmcloud.bean.chat.Option;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
-import com.inspur.imp.api.ImpActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -151,11 +152,11 @@ public class DisplayExtendedDecideMsg {
         optionContent = optionContent.trim();
         try {
             if (optionContent.startsWith(DECIDE_HTTP)) {
-                Intent intent = new Intent();
-                intent.setClass(context, ImpActivity.class);
-                intent.putExtra(DECIDE_URI, optionContent);
-                intent.putExtra(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
-                context.startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString(DECIDE_URI, optionContent);
+                bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
+                ARouter.getInstance().build("/web/main").with(bundle).navigation();
+
             } else {
                 Uri uri = Uri.parse(optionContent);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);

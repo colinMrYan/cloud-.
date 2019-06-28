@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -14,10 +15,10 @@ import com.inspur.emmcloud.basemodule.service.PVCollectService;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
-import com.inspur.emmcloud.login.app.AppService;
-import com.inspur.emmcloud.login.appcenter.AppcenterService;
-import com.inspur.emmcloud.login.setting.SettingService;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.app.AppService;
+import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
+import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.componentservice.setting.SettingService;
 
 /**
  * Created by chenmch on 2017/9/13.
@@ -36,6 +37,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     @Override
     public void onActivityStarted(Activity activity) {
         currentActivity = activity;
+        BaseApplication.getInstance().clearNotification();
         if (count == 0) {
             BaseApplication.getInstance().setIsActive(true);
             if (BaseApplication.getInstance().isHaveLogin()) {
@@ -46,8 +48,8 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 }
                 uploadMDMInfo();
                 Router router = Router.getInstance();
-                if (router.getService(AppService.class.getSimpleName()) != null) {
-                    AppService service = (AppService) router.getService(AppService.class.getSimpleName());
+                if (router.getService(AppService.class) != null) {
+                    AppService service = router.getService(AppService.class);
                     service.getAppBadgeCountFromServer();
                 }
             }
@@ -101,8 +103,8 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      */
     private void showFaceOrGestureLock() {
         Router router = Router.getInstance();
-        if (router.getService(SettingService.class.getSimpleName()) != null) {
-            SettingService settingService = (SettingService) router.getService(SettingService.class.getSimpleName());
+        if (router.getService(SettingService.class) != null) {
+            SettingService settingService = router.getService(SettingService.class);
             boolean isSetFaceOrGestureLock = settingService.isSetFaceOrGestureLock();
             if (isSetFaceOrGestureLock) {
                 BaseApplication.getInstance().setSafeLock(true);
@@ -119,9 +121,9 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      */
     private void uploadMDMInfo() {
         Router router = Router.getInstance();
-        if (router.getService(SettingService.class.getSimpleName()) != null) {
-            SettingService settingService = (SettingService) router.getService(SettingService.class.getSimpleName());
-            settingService.uploadMDMInfo();
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
+            service.uploadMDMInfo();
         }
     }
 
@@ -144,8 +146,8 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     private void startSyncCommonAppService() {
         // TODO Auto-generated method stub
         Router router = Router.getInstance();
-        if (router.getService(AppcenterService.class.getSimpleName()) != null) {
-            AppcenterService service = (AppcenterService) router.getService(AppcenterService.class.getSimpleName());
+        if (router.getService(AppcenterService.class) != null) {
+            AppcenterService service = router.getService(AppcenterService.class);
             service.startSyncCommonAppService();
         }
     }

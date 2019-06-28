@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -11,8 +12,7 @@ import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.ECMTransparentUtils;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestCallback;
 import com.inspur.emmcloud.basemodule.util.systool.permission.PermissionRequestManagerUtils;
-import com.inspur.emmcloud.login.communication.CommunicationService;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
@@ -130,9 +130,9 @@ public class MiPushReceiver extends PushMessageReceiver {
                 PushManagerUtils.getInstance().registerPushId2Emm();
                 new ClientIDUtils(context).upload();
                 Router router = Router.getInstance();
-                if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-                    CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-                    service.startWebSocket();
+                if (router.getService(CommunicationService.class) != null) {
+                    CommunicationService service = router.getService(CommunicationService.class);
+                    service.startWebSocket(false);
                 }
             }
             // else {

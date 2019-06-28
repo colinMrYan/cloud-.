@@ -372,40 +372,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:paddingLeft="16dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv_setting_run_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="11dp"
-                    android:paddingTop="11dp"
-                    android:text="@string/run_background"
-                    android:textColor="#333333"
-                    android:textSize="16sp" />
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/switch_view_setting_run_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5px"
-                    android:layout_below="@id/tv_setting_run_background"
-                    android:background="@color/color_list_divider" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
                 android:id="@+id/rl_setting_experience_upgrade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

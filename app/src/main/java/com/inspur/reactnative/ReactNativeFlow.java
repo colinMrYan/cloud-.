@@ -4,16 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ZipUtils;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.ui.find.FindFragment;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.FileSafeCode;
 
 import java.io.File;

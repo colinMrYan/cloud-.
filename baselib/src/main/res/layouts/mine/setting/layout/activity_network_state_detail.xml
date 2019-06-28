@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
@@ -106,7 +107,8 @@
                             android:id="@+id/qv_checking_hard_loading"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:layout_marginTop="11dp" />
+                            android:layout_marginTop="11dp"
+                            app:loading_color="@color/grey_a5a5a5" />
 
                         <ImageView
                             android:id="@+id/iv_hard_state_log"
@@ -242,7 +244,8 @@
                         android:layout_height="20dp"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginTop="11dp" />
+                        android:layout_marginTop="11dp"
+                        app:loading_color="@color/grey_a5a5a5" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -356,7 +359,8 @@
                         android:layout_height="13dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@id/tv_inspur_content" />
+                        android:layout_toRightOf="@id/tv_inspur_content"
+                        app:loading_color="@color/grey_a5a5a5" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -390,7 +394,8 @@
                         android:layout_height="13dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@id/tv_baidu_content" />
+                        android:layout_toRightOf="@id/tv_baidu_content"
+                        app:loading_color="@color/grey_a5a5a5" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -424,7 +429,8 @@
                         android:layout_height="13dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@id/tv_ali_content" />
+                        android:layout_toRightOf="@id/tv_ali_content"
+                        app:loading_color="@color/grey_a5a5a5" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -459,7 +465,8 @@
                         android:layout_height="13dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:layout_toRightOf="@id/tv_cloudpluse_content" />
+                        android:layout_toRightOf="@id/tv_cloudpluse_content"
+                        app:loading_color="@color/grey_a5a5a5" />
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>

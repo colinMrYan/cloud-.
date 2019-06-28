@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
@@ -18,8 +19,7 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ClientIDUtils;
 import com.inspur.emmcloud.basemodule.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.basemodule.util.ECMTransparentUtils;
-import com.inspur.emmcloud.login.communication.CommunicationService;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,9 +89,9 @@ public class JpushReceiver extends BroadcastReceiver {
             PushManagerUtils.getInstance().registerPushId2Emm();
             new ClientIDUtils(context).upload();
             Router router = Router.getInstance();
-            if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-                CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
-                service.startWebSocket();
+            if (router.getService(CommunicationService.class) != null) {
+                CommunicationService service = router.getService(CommunicationService.class);
+                service.startWebSocket(false);
             }
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
@@ -147,7 +147,7 @@ public class JpushReceiver extends BroadcastReceiver {
      * 登录应用
      */
     private void loginApp() {
-        ARouter.getInstance().build("/login/main").withFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).withFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
     }
 
     /**

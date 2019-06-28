@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.contact;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 
@@ -8,6 +9,8 @@ import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
  *
  * @author Administrator
  */
+
+@Route(path = "/contact/contactSearch")
 public class ContactSearchActivity extends BaseFragmentActivity {
 
     private ContactSearchFragment fragment;

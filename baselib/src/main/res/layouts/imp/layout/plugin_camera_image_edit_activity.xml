@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <com.inspur.imp.plugin.camera.imageedit.view.IMGView
+    <com.inspur.emmcloud.basemodule.util.imageedit.view.IMGView
         android:id="@+id/image_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

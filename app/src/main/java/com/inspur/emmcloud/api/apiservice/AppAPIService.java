@@ -11,6 +11,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
 import com.inspur.emmcloud.basemodule.api.CloudHttpMethod;
@@ -26,9 +27,8 @@ import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
-import com.inspur.emmcloud.login.login.LoginService;
-import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
@@ -54,8 +54,8 @@ public class AppAPIService {
 
     private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
         Router router = Router.getInstance();
-        if (router.getService(LoginService.class.getSimpleName()) != null) {
-            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
             service.refreshToken(oauthCallBack, requestTime);
         }
     }
@@ -379,43 +379,6 @@ public class AppAPIService {
         });
     }
 
-    /**
-     * 上传设备管理需要的一些信息
-     */
-    public void uploadMDMInfo() {
-        final String completeUrl = APIUri.getUploadMDMInfoUrl();
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        params.addParameter("udid", AppUtils.getMyUUID(context));
-        String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
-        params.addParameter("refresh_token", refreshToken);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(byte[] arg0) {
-                // apiInterface.returnUploadMDMInfoSuccess(new UploadMDMInfoResult(new String(arg0)));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // apiInterface.returnUploadMDMInfoFail();
-            }
-
-            @Override
-            public void callbackTokenExpire(long requestTime) {
-                OauthCallBack oauthCallBack = new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        uploadMDMInfo();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                };
-                refreshToken(oauthCallBack, requestTime);
-            }
-        });
-    }
 
     /**
      * 获取闪屏页信息
@@ -456,8 +419,6 @@ public class AppAPIService {
 
         });
     }
-
-
 
 
     /**
@@ -574,7 +535,6 @@ public class AppAPIService {
     }
 
 
-
     /**
      * 获取app badge数量
      */
@@ -616,12 +576,9 @@ public class AppAPIService {
      * @param url
      */
     public void getCloudConnectStateUrl(final String url) {
-        final String completeUrl = APIUri.getReactNativeInstallUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        params.addParameter("uri", url);
-        params.setConnectTimeout(5000);
-        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+                .getHttpRequestParams(url);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, url) {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 apiInterface.returnCheckCloudPluseConnectionSuccess(arg0, url);
@@ -629,7 +586,11 @@ public class AppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
+                if (responseCode == 302 || responseCode == 301) {
+                    apiInterface.returnCheckCloudPluseConnectionSuccess(null, url);
+                } else {
+                    apiInterface.returnCheckCloudPluseConnectionError(error, responseCode, url);
+                }
             }
 
             @Override

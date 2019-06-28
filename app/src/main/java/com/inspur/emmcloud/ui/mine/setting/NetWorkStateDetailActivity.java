@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PingNetEntity;
@@ -32,12 +33,12 @@ import java.net.URL;
  * Created by libaochao on 2018/11/8.
  * try to show the netWork state and details such as net delay/connect State  and so on by PING
  */
-
+@Route(path = "/app/networkDetail")
 public class NetWorkStateDetailActivity extends BaseActivity {
     public static String[] subUrls = {"www.baidu.com", "www.aliyun.com"};
     CheckingNetStateUtils checkingNetStateUtils;
-    private String PortalCheckingUrls = "http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)";
-    private String[] CheckHttpUrls = {"http://www.inspuronline.com/#/auth/0\\(arc4random() % 100000)"};
+    private String PortalCheckingUrls = NetUtils.httpUrls[0];
+    private String[] CheckHttpUrls = NetUtils.httpUrls;
     private ImageView hardImageView;
     private ImageView portalImageView;
     private ImageView ping1UrlImageView;
@@ -212,7 +213,8 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      *
      * @param StrUrl
      */
-    private void sendRequest(final String StrUrl) {
+    private void sendRequest(String strUrl) {
+        final String urlDetail = StringUtils.utf8Encode(strUrl);
         final NetworkInfo.State wifiConnection = NetUtils.getNetworkWifiState(getBaseContext());
         new Thread() {
             public void run() {
@@ -225,7 +227,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
                         isConnected = true;
                     } else {
                         if (wifiConnection == NetworkInfo.State.CONNECTED && !NetUtils.isVpnConnected()) {
-                            URL url = new URL(StrUrl);
+                            URL url = new URL(urlDetail);
                             httpURLConnection = (HttpURLConnection) url.openConnection();
                             httpURLConnection.setInstanceFollowRedirects(false);
                             httpURLConnection.setRequestMethod("POST");

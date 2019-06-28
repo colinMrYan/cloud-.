@@ -118,6 +118,21 @@
     <string name="news_content_cant_empty">內容不能為空</string>
     <string name="help">幫助</string>
     <string name="load_data_failed">加載數據失敗</string>
+    <string name="password">密碼</string>
+    <string name="more">更多</string>
+    <string name="no_search_term">沒有更多的搜索結果</string>
+    <string name="loading_text">正在載入</string>
+    <string name="network_exception">網路不可用，請檢查您的網路設置</string>
+    <string name="network_timeout">網絡超時，請檢查您的網絡設定</string>
+    <string name="net_request_failed">服務未能正確回應</string>
+    <string name="phone_num">手機號</string>
+    <string name="mail">郵箱</string>
+    <string name="register">註冊</string>
+    <string name="remark">備註</string>
+    <string name="copyed_to_paste_board">已複製到剪切板</string>
+    <string name="baselib_sd_not_exist">sd卡不存在！</string>
+    <string name="baselib_file_not_exist">檔案不存在！</string>
+
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
@@ -190,68 +205,39 @@
     <string name="comment">評論</string>
     <string name="write_comment">寫評論</string>
 
-    <!-- 新用戶註冊 -->
-    <string name="newuser">新用戶</string>
-    <string name="newuser_title">新用户</string>
-    <string name="newuser_input_phonenum">請輸入手機號碼</string>
-    <string name="newuser_agree">點擊“下一步”按鈕即表示您同意浪潮的</string>
-    <string name="newuser_protocal_text">《使用者協定》</string>
-    <string name="newuser_perfect_text">完善資訊</string>
-    <string name="newuser_perfect_nickname">昵稱</string>
-    <string name="newuser_perfect_gender">男</string>
-
-    <!-- 登錄部分 -->
-    <string name="login_invaliad_account_or_pwd">用戶名或密碼錯誤</string>
-    <string name="login_captchas_input_error">驗證碼錯誤</string>
-    <string name="login_pw_modified"> 密碼已修改</string>
-    <string name="login_phonenum_has_beeb_resgistered">手機號已經註冊，您可以選擇直接登錄，或者更換註冊手機號</string>
-    <string name="login_direct">直接登錄</string>
-    <string name="login_change_phone_num">更換號碼</string>
-    <string name="login_captchas_login">短信登錄 </string>
-    <string name="login_by_account">帳號密碼登錄</string>
-    <string name="login_find_password">找回密碼</string>
-    <string name="login_get_captchas_code">獲取驗證碼</string>
-    <string name="login_get_captchas">通過短信修改密碼</string>
-    <string name="login_send_captchas">發送驗證碼 </string>
-    <string name="login_set_pwd">設置密碼 </string>
-    <string name="login_resent">當前</string>
-    <string name="login_resend">重新發送（  ） </string>
-    <string name="login_captchas_sent"> 驗證碼已發送到手機：</string>
-    <string name="login_please_input_captchas">請輸入驗證碼</string>
-    <string name="login_please_input_phone_num">請輸入手機號碼</string>
-    <string name="login_phone_num_illegal_format">手機號碼格式不正確</string>
-    <string name="login_no_phone_num">手機號不存在</string>
-    <string name="login_loading_text">登錄中...</string>
-    <string name="login_please_input_username">請輸入用戶名</string>
+    <!--&lt;!&ndash; 登錄部分 &ndash;&gt;-->
+    <!--<string name="login_invaliad_account_or_pwd">用戶名或密碼錯誤</string>-->
+    <!--<string name="login_captchas_login">短信登錄 </string>-->
+    <!--<string name="login_by_account">帳號密碼登錄</string>-->
+    <!--<string name="login_find_password">找回密碼</string>-->
+    <!--<string name="login_get_captchas_code">獲取驗證碼</string>-->
+    <!--<string name="login_captchas_sent"> 驗證碼已發送到手機：</string>-->
+    <!--<string name="login_please_input_captchas">請輸入驗證碼</string>-->
+    <!--<string name="login_please_input_phone_num">請輸入手機號碼</string>-->
+    <!--<string name="login_phone_num_illegal_format">手機號碼格式不正確</string>-->
+    <!--<string name="login_loading_text">登錄中...</string>-->
     <string name="login_please_input_password"> 請輸入密碼</string>
     <string name="login">登錄</string>
-    <string name="login_newuser_text">新用戶註冊</string>
-    <string name="login_captchas_getcode_success">驗證碼發送成功</string>
-    <string name="login_reverification">重新驗證</string>
-    <string name="login_code_verification_failure">驗證碼校驗失敗</string>
-    <string name="login_sms">短信登錄</string>
-    <string name="login_cost_report"> 費用報告</string>
-    <string name="login_your_contact"> 您的聯繫方式</string>
-    <string name="login_group_album"> 群相冊</string>
-    <string name="login_group_file">群文件</string>
-    <string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>
-    <string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>
+    <!--<string name="login_captchas_getcode_success">驗證碼發送成功</string>-->
+    <!--<string name="login_code_verification_failure">驗證碼校驗失敗</string>-->
+    <!--<string name="login_sms">短信登錄</string>-->
+    <!--<string name="login_your_contact"> 您的聯繫方式</string>-->
+    <!--<string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>-->
+    <!--<string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>-->
     <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
-    <string name="captchas">驗證碼</string>
-    <string name="fill_captchas"> 填寫驗證碼</string>
-    <string name="password">密碼</string>
-    <string name="recover">重新獲取</string>
-    <string name="more">更多</string>
-    <string name="no_search_term">沒有更多的搜索結果</string>
-    <string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>
-    <string name="login_current_login_enterprise">當前系統：%1$s</string>
-    <string name="login_forget_password">忘記密碼？</string>
-    <string name="login_fail_limit_remaining">帳號或密碼錯誤，請重新輸入，剩餘%1$d次機會</string>
-    <string name="login_fail_account_lock_by_min">帳號已被鎖定，請%1$d分鐘後再嘗試</string>
-    <string name="login_fail_account_lock_by_second">帳號已被鎖定，請%1$d秒後再次嘗試</string>
+    <!--<string name="captchas">驗證碼</string>-->
+    <!--<string name="recover">重新獲取</string>-->
+    <!--<string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>-->
+    <!--<string name="login_current_login_enterprise">當前系統：%1$s</string>-->
+    <!--<string name="login_forget_password">忘記密碼？</string>-->
+    <!--<string name="login_fail_limit_remaining">帳號或密碼錯誤，請重新輸入，剩餘%1$d次機會</string>-->
+    <!--<string name="login_fail_account_lock_by_min">帳號已被鎖定，請%1$d分鐘後再嘗試</string>-->
+    <!--<string name="login_fail_account_lock_by_second">帳號已被鎖定，請%1$d秒後再次嘗試</string>-->
 
 
     <!-- 消息部分 -->
+    <string name="login_group_album"> 群相冊</string>
+    <string name="login_group_file">群文件</string>
     <string name="msgcontent_cannot_null">請輸入消息內容</string>
     <string name="comment_type">   的圖片</string>
     <string name="comment_filetype">   的文件</string>
@@ -329,6 +315,7 @@
     <string name="chat_long_click_transmit">轉發</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">複製文字</string>
+    <string name="communication_search">搜索</string>
 
 
     <!-- 會議卡片 -->
@@ -729,7 +716,6 @@
     <string name="close_auto_select_enterprise">下次登入默認使用該企業</string>
     <string name="turn_off_success">關閉成功</string>
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
-    <string name="run_background">後臺運行</string>
     <string name="signout_fail">註銷登錄失敗，請確保網絡連接正常</string>
     <string name="setting_join_experience_plan">加入升級體驗計劃</string>
     <string name="setting_gesture_force_set">根據企業安全性原則，需要您設置手勢密碼</string>

@@ -17,7 +17,6 @@ public class Constant {
 
     public static final String PATTERN_URL = "(((https?)://[a-zA-Z0-9\\_\\-]+(\\.[a-zA-Z0-9\\_\\-]+)*(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?)" +
             "|([a-zA-Z0-9\\-\\_]+\\.)+([a-zA-Z\\-\\_]+)(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?|\\d+(\\.\\d+){3}(\\:\\d{2,4})?)";
-    public static final String PREF_APP_RUN_BACKGROUND = "app_set_run_background";
     public static final String PREF_CLIENTID = "chat_clientid";
     public static final String PREF_WORK_INFO_BAR_OPEN = "work_open_info";
     public static final String PREF_WORK_PORTLET_CONFIG_UPLOAD = "is_work_portlet_config_upload";
@@ -192,5 +191,13 @@ public class Constant {
 
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
+
+
+    public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
+    public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
+    public static final String AROUTER_CLASS_WEB_FILEMANAGER = "/web/FileManagerActivity";
+
+    public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
+    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
 
 }

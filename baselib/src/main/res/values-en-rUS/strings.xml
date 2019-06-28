@@ -45,8 +45,6 @@
     <string name="cannot_download_for_network_exception">Network exception,unable to download</string>
     <string name="cannot_show_for_too_big">The picture is too big to show</string>
     <string name="unknown_error">Unknown Error</string>
-    <string name="no_search_term">No more results</string>
-    <string name="more">More</string>
     <string name="check_update_text">Check New Version</string>
     <string name="app_is_lastest_version">This is the lastest version</string>
     <string name="check_update_fail">Checking new version failed</string>
@@ -114,6 +112,21 @@
     <string name="help">Help</string>
     <string name="load_data_failed">Failed to load data</string>
     <string name="not_support_upload">Does not support file upload without suffix </string>
+    <string name="password">Password</string>
+    <string name="no_search_term">No more results</string>
+    <string name="more">More</string>
+    <string name="loading_text">Loading</string>
+    <string name="network_exception">Network unavailable,please check</string>
+    <string name="network_timeout">Network timeout, please check</string>
+    <string name="net_request_failed">The server failed to respond correctly</string>
+    <string name="phone_num">Mobile number</string>
+    <string name="mail">Email</string>
+    <string name="register">Register</string>
+    <string name="remark">Remarks</string>
+    <string name="copyed_to_paste_board">Copy to clipboard</string>
+    <string name="baselib_sd_not_exist">SD card does not exist</string>
+    <string name="baselib_file_not_exist">File does not exist</string>
+
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>
@@ -186,66 +199,38 @@
     <string name="write_comment">Comment</string>
     <!-- 新添加部分 -->
 
-
-    <!-- 新用户注册 -->
-    <string name="newuser">new user</string>
-    <string name="newuser_title">New User</string>
-    <string name="newuser_input_phonenum">Enter Phone Number</string>
-    <string name="newuser_agree">Clicking NEXT STEP means you agree the protocol</string>
-    <string name="newuser_protocal_text">《User Protocol》</string>
-    <string name="newuser_perfect_text">Prefect Info</string>
-    <string name="newuser_perfect_nickname">Nick Name</string>
-    <string name="newuser_perfect_gender">male</string>
-
-    <!-- 登录部分 -->
-    <string name="login_invaliad_account_or_pwd">Invalid account or password</string>
-    <string name="login_captchas_input_error">Code error</string>
-    <string name="login_pw_modified"> Password has been modified</string>
-    <string name="login_phonenum_has_beeb_resgistered">The phone number has been registered, you can choose to log in directly, register or change your phone number</string>
-    <string name="login_direct">Direct Login</string>
-    <string name="login_send_captchas">Send Code</string>
-    <string name="login_set_pwd">Set password</string>
-    <string name="login_change_phone_num">Change Phone Number</string>
-    <string name="login_captchas_login">Quick Login</string>
-    <string name="login_by_account">Log in Via password</string>
-    <string name="login_find_password">Retrieve password</string>
-    <string name="login_get_captchas">Reset Password By SMS</string>
-    <string name="login_get_captchas_code">Get Code</string>
-    <string name="login_resent">Resent</string>
-    <string name="login_resend">Resend（  ） </string>
-    <string name="login_captchas_sent">Verification code has been sent to the phone：</string>
-    <string name="login_please_input_captchas">Enter code</string>
-    <string name="login_please_input_phone_num">Enter phone number</string>
-    <string name="login_phone_num_illegal_format">Incorrect phone number format</string>
-    <string name="login_no_phone_num">Phone number not found</string>
-    <string name="login_loading_text">Logging...</string>
-    <string name="login_please_input_username">Please type username</string>
+    <!--&lt;!&ndash; 登录部分 &ndash;&gt;-->
+    <!--<string name="login_invaliad_account_or_pwd">Invalid account or password</string>-->
+    <!--<string name="login_captchas_login">Quick Login</string>-->
+    <!--<string name="login_by_account">Log in Via password</string>-->
+    <!--<string name="login_find_password">Retrieve password</string>-->
+    <!--<string name="login_get_captchas_code">Get Code</string>-->
+    <!--<string name="login_captchas_sent">Verification code has been sent to the phone：</string>-->
+    <!--<string name="login_please_input_captchas">Enter code</string>-->
+    <!--<string name="login_please_input_phone_num">Enter phone number</string>-->
+    <!--<string name="login_phone_num_illegal_format">Incorrect phone number format</string>-->
+    <!--<string name="login_loading_text">Logging...</string>-->
     <string name="login_please_input_password">Enter a new password</string>
     <string name="login">Log in</string>
-    <string name="login_newuser_text">Register</string>
-    <string name="login_code_login_text">Verification code to log in</string>
-    <string name="login_reverification">Revalidation</string>
-    <string name="login_code_verification_failure">Incorrect verification code</string>
-    <string name="login_sms">Quick Login</string>
-    <string name="login_captchas_getcode_success">Code has been sent successfully</string>
-    <string name="login_cost_report">Expense Report</string>
-    <string name="login_your_contact">Your contact</string>
-    <string name="login_group_album">Images</string>
-    <string name="login_group_file">Files</string>
-    <string name="login_authorization_expired">Re-login based on security audit policy</string>
-    <string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>
+    <!--<string name="login_code_login_text">Verification code to log in</string>-->
+    <!--<string name="login_code_verification_failure">Incorrect verification code</string>-->
+    <!--<string name="login_sms">Quick Login</string>-->
+    <!--<string name="login_captchas_getcode_success">Code has been sent successfully</string>-->
+    <!--<string name="login_your_contact">Your contact</string>-->
+    <!--<string name="login_authorization_expired">Re-login based on security audit policy</string>-->
+    <!--<string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>-->
     <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
-    <string name="captchas">Code</string>
-    <string name="password">Password</string>
-    <string name="recover">Retry</string>
-    <string name="login_tv_welcome">Hello，\nwelcome to %1$s</string>
-    <string name="login_current_login_enterprise">Current system：%1$s</string>
-    <string name="login_forget_password">Forgot Password</string>
-    <string name="login_fail_limit_remaining">Incorrect account or password, re-enter and have %1$d chances left</string>
-    <string name="login_fail_account_lock_by_min">The account has been locked, try again after %1$d minutes</string>
-    <string name="login_fail_account_lock_by_second">The account has been locked, try again after %1$d seconds</string>
+    <!--<string name="recover">Retry</string>-->
+    <!--<string name="login_tv_welcome">Hello，\nwelcome to %1$s</string>-->
+    <!--<string name="login_current_login_enterprise">Current system：%1$s</string>-->
+    <!--<string name="login_forget_password">Forgot Password</string>-->
+    <!--<string name="login_fail_limit_remaining">Incorrect account or password, re-enter and have %1$d chances left</string>-->
+    <!--<string name="login_fail_account_lock_by_min">The account has been locked, try again after %1$d minutes</string>-->
+    <!--<string name="login_fail_account_lock_by_second">The account has been locked, try again after %1$d seconds</string>-->
 
     <!-- 消息部分 -->
+    <string name="login_group_album">Images</string>
+    <string name="login_group_file">Files</string>
     <string name="msgcontent_cannot_null">Please type message content</string>
     <string name="comment_type">   \'s image</string>
     <string name="comment_filetype">   \'s file</string>
@@ -324,6 +309,7 @@
     <string name="chat_long_click_transmit">Forward</string>
     <string name="chat_long_click_schedule">Add to Schedule</string>
     <string name="chat_long_click_copy_text">Copy text</string>
+    <string name="communication_search">Search</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -727,7 +713,6 @@
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App Rotation</string>
-    <string name="run_background">AppStarting</string>
     <string name="signout_fail">Signout failure,please make sure the network connection is normal</string>
     <string name="setting_join_experience_plan">Join Early Experience Program</string>
     <string name="setting_gesture_force_set">According to the enterprise security policy, you need to set a gesture password</string>

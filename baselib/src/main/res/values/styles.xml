@@ -288,19 +288,6 @@
     </style>
 
 
-    <style name="imp_plugin_fullScreenDialog" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <!--<item name="android:windowAnimationStyle">@style/dialog_animation</item>-->
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:backgroundDimAmount">0.6</item><!-- 灰度 -->
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-
     <style name="dialog_activity" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <!-- 边框 -->
@@ -391,7 +378,8 @@
     </style>
 
     <style name="cus_dialog_style" parent="Theme.AppCompat.Light">
-        <item name="android:textSize">15sp</item>
+        <item name="colorAccent">#36A5F6</item>
+        <item name="android:textSize">16dp</item>
     </style>
 
     <style name="CusButtonBase" parent="android:Widget.Holo.Light.Button" />
@@ -402,5 +390,20 @@
         <item name="android:background">@color/transparent</item>
     </style>
 
+
+    <style name="dialog_progressbar" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 模糊 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+    </style>
 
 </resources>

@@ -15,6 +15,7 @@ import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastBlackStyle;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -32,9 +33,8 @@ import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
-import com.inspur.emmcloud.login.communication.CommunicationService;
-import com.inspur.emmcloud.login.login.LoginService;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.login.LoginService;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -119,6 +119,7 @@ public class BaseApplication extends MultiDexApplication {
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
         ToastUtils.init(this, new ToastBlackStyle());
         ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+        ToastUtils.setView(com.inspur.emmcloud.baselib.util.ToastUtils.createTextView(this));
     }
 
     /**************************************登出逻辑相关********************************************************/
@@ -132,13 +133,13 @@ public class BaseApplication extends MultiDexApplication {
         removeAllSessionCookie();
         clearUserPhotoMap();
         Router router = Router.getInstance();
-        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
             service.stopPush();
             service.webSocketSignout();
         }
-        if (router.getService(LoginService.class.getSimpleName()) != null) {
-            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
             service.logout(getInstance());
         }
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getInstance(), 0);
@@ -180,7 +181,7 @@ public class BaseApplication extends MultiDexApplication {
     public void setUid(String uid) {
         this.uid = uid;
     }
-    /*************************** http相关 **************************************/
+
     /**
      * 获取http RequestParams
      *
@@ -220,6 +221,7 @@ public class BaseApplication extends MultiDexApplication {
     public boolean getIsContactReady() {
         return isContactReady;
     }
+    /*************************** http相关 **************************************/
 
     /******************************通讯录相关***************************************/
 
@@ -240,8 +242,8 @@ public class BaseApplication extends MultiDexApplication {
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
         Router router = Router.getInstance();
-        if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-            CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
             service.sendAppStatus();
         }
         clearNotification();
@@ -283,7 +285,6 @@ public class BaseApplication extends MultiDexApplication {
         DbCacheUtils.initDb(getInstance());
     }
 
-
     /**
      * 删除此用户在此实例的所有db
      */
@@ -322,13 +323,20 @@ public class BaseApplication extends MultiDexApplication {
         }
     }
 
-
     public String getTanent() {
         return tanent;
     }
 
+    public void setTanent(String tanent) {
+        this.tanent = tanent;
+    }
+
     public Enterprise getCurrentEnterprise() {
         return currentEnterprise;
+    }
+
+    public void setCurrentEnterprise(Enterprise currentEnterprise) {
+        this.currentEnterprise = currentEnterprise;
     }
 
     /*****************************通讯录头像缓存********************************************/

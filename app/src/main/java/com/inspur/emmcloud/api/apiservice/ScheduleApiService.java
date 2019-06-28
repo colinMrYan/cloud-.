@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPICallback;
@@ -27,9 +28,8 @@ import com.inspur.emmcloud.bean.schedule.meeting.Office;
 import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskListResult;
-import com.inspur.emmcloud.login.login.LoginService;
-import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,8 +57,8 @@ public class ScheduleApiService {
 
     private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
         Router router = Router.getInstance();
-        if (router.getService(LoginService.class.getSimpleName()) != null) {
-            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
             service.refreshToken(oauthCallBack, requestTime);
         }
     }

@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.appcenter.mail;
 
 import android.content.Intent;
 import android.support.v7.widget.SwitchCompat;
+import android.os.Bundle;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -26,7 +28,6 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.appcenter.mail.MailCertificateDetail;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
 import java.io.FileInputStream;
 import java.security.KeyStore;
@@ -124,9 +125,9 @@ public class MailCertificateInstallActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.tv_install_certificate:
-                Intent intent = new Intent(this, FileManagerActivity.class);
-                intent.putExtra(FileManagerActivity.EXTRA_MAXIMUM, 1);
-                startActivityForResult(intent, SELECT_CREDIFICATE_FILE);
+                Bundle bundle = new Bundle();
+                bundle.putInt("extra_maximum", 1);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(MailCertificateInstallActivity.this, SELECT_CREDIFICATE_FILE);
                 break;
         }
     }

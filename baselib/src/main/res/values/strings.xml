@@ -69,6 +69,7 @@
     <string name="app_update_error">更新失败</string>
     <string name="app_update_loaded">已下载：</string>
     <string name="unsupport_type">不支持的类型</string>
+    <string name="no_search_term">没有更多的搜索结果</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -118,6 +119,20 @@
     <string name="news_content_cant_empty">内容不能为空</string>
     <string name="help">帮助</string>
     <string name="load_data_failed">加载数据失败</string>
+    <string name="password">密码</string>
+    <string name="more">更多</string>
+    <string name="loading_text">正在加载</string>
+    <string name="network_exception">网络不可用，请检查您的网络设置</string>
+    <string name="network_timeout">网络超时，请检查您的网络设置</string>
+    <string name="net_request_failed">服务未能正确响应</string>
+    <string name="phone_num">手机号</string>
+    <string name="mail">邮箱</string>
+    <string name="register">注册</string>
+    <string name="remark">备注</string>
+    <string name="copyed_to_paste_board">已复制到剪切板</string>
+    <string name="baselib_sd_not_exist">sd卡不存在！</string>
+    <string name="baselib_file_not_exist">文件不存在！</string>
+
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
@@ -191,67 +206,37 @@
     <string name="comment">评论</string>
     <string name="write_comment">写评论</string>
 
-    <!-- 新用户注册 -->
-    <string name="newuser">新用户</string>
-    <string name="newuser_input_phonenum">请输入手机号码</string>
-    <string name="newuser_title">新用户</string>
-    <string name="newuser_agree">点击“下一步”按钮即表示您同意浪潮的</string>
-    <string name="newuser_protocal_text">《用户协议》</string>
-    <string name="newuser_perfect_text">完善信息</string>
-    <string name="newuser_perfect_nickname">昵称</string>
-    <string name="newuser_perfect_gender">男</string>
 
-    <!-- 登录部分 -->
-    <string name="login_invaliad_account_or_pwd">用户名或密码错误</string>
-    <string name="login_captchas_input_error">验证码错误</string>
-    <string name="login_pw_modified"> 密码已修改</string>
-    <string name="login_phonenum_has_beeb_resgistered">手机号已经注册，您可以选择直接登录，或者更换注册手机号</string>
-    <string name="login_direct">直接登录</string>
-    <string name="login_change_phone_num">更换号码</string>
-    <string name="login_captchas_login">短信登录 </string>
-    <string name="login_by_account">账号密码登录</string>
-    <string name="login_find_password">找回密码</string>
-    <string name="login_get_captchas">通过短信修改密码</string>
-    <string name="login_get_captchas_code">获取验证码</string>
-    <string name="login_send_captchas">发送验证码 </string>
-    <string name="login_set_pwd">设置密码 </string>
-    <string name="login_resend">重新发送（  ） </string>
-    <string name="login_resent">当前</string>
-    <string name="login_captchas_sent"> 验证码已发送到手机：</string>
-    <string name="login_please_input_captchas">请输入验证码</string>
-    <string name="login_please_input_phone_num">请输入手机号码</string>
-    <string name="login_phone_num_illegal_format">手机号码格式不正确</string>
-    <string name="login_no_phone_num">手机号不存在</string>
-    <string name="login_loading_text">登录中...</string>
-    <string name="login_please_input_username">请输入用户名</string>
+    <!--&lt;!&ndash; 登录部分 &ndash;&gt;-->
+    <!--<string name="login_invaliad_account_or_pwd">用户名或密码错误</string>-->
+    <!--<string name="login_captchas_login">短信登录 </string>-->
+    <!--<string name="login_by_account">账号密码登录</string>-->
+    <!--<string name="login_find_password">找回密码</string>-->
+    <!--<string name="login_get_captchas_code">获取验证码</string>-->
+    <!--<string name="login_captchas_sent"> 验证码已发送到手机：</string>-->
+    <!--<string name="login_please_input_captchas">请输入验证码</string>-->
+    <!--<string name="login_please_input_phone_num">请输入手机号码</string>-->
+    <!--<string name="login_phone_num_illegal_format">手机号码格式不正确</string>-->
+    <!--<string name="login_loading_text">登录中...</string>-->
     <string name="login_please_input_password"> 请输入密码</string>
     <string name="login">登录</string>
-    <string name="login_newuser_text">新用户注册</string>
-    <string name="login_captchas_getcode_success">验证码发送成功</string>
-    <string name="login_reverification">重新验证</string>
-    <string name="login_code_verification_failure">验证码校验失败</string>
-    <string name="login_sms">短信登录</string>
-    <string name="login_cost_report"> 费用报告</string>
-    <string name="login_your_contact"> 您的联系方式</string>
-    <string name="login_group_album"> 群相册</string>
-    <string name="login_group_file">群文件</string>
-    <string name="login_authorization_expired">基于安全审计策略，需要重新验证用户信息</string>
-    <string name="login_cant_login_with_sms">您的账号不允许使用短信登录</string>
+    <!--<string name="login_captchas_getcode_success">验证码发送成功</string>-->
+    <!--<string name="login_code_verification_failure">验证码校验失败</string>-->
+    <!--<string name="login_sms">短信登录</string>-->
+    <!--<string name="login_authorization_expired">基于安全审计策略，需要重新验证用户信息</string>-->
+    <!--<string name="login_cant_login_with_sms">您的账号不允许使用短信登录</string>-->
     <string name="login_user_not_bound_enterprise">当前用户未绑定企业，请联系管理员！</string>
-    <string name="captchas">验证码</string>
-    <string name="fill_captchas"> 填写验证码</string>
-    <string name="password">密码</string>
-    <string name="recover">重新获取</string>
-    <string name="more">更多</string>
-    <string name="no_search_term">没有更多的搜索结果</string>
-    <string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>
-    <string name="login_current_login_enterprise">当前系统：%1$s</string>
-    <string name="login_forget_password">忘记密码？</string>
-    <string name="login_fail_limit_remaining">账号或密码错误，请重新输入，还剩余%1$d次机会</string>
-    <string name="login_fail_account_lock_by_min">账号已被锁定，请%1$d分钟后再试</string>
-    <string name="login_fail_account_lock_by_second">账号已被锁定，请%1$d秒后再试</string>
+    <!--<string name="recover">重新获取</string>-->
+    <!--<string name="login_tv_welcome">你好，\n欢迎使用%1$s</string>-->
+    <!--<string name="login_current_login_enterprise">当前系统：%1$s</string>-->
+    <!--<string name="login_forget_password">忘记密码？</string>-->
+    <!--<string name="login_fail_limit_remaining">账号或密码错误，请重新输入，还剩余%1$d次机会</string>-->
+    <!--<string name="login_fail_account_lock_by_min">账号已被锁定，请%1$d分钟后再试</string>-->
+    <!--<string name="login_fail_account_lock_by_second">账号已被锁定，请%1$d秒后再试</string>-->
 
     <!-- 消息部分 -->
+    <string name="login_group_album"> 群相册</string>
+    <string name="login_group_file">群文件</string>
     <string name="msgcontent_cannot_null">请输入消息内容</string>
     <string name="comment_type">   的图片</string>
     <string name="comment_filetype">   的文件</string>
@@ -331,6 +316,9 @@
     <string name="chat_long_click_transmit">转发</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
+    <string name="chat_long_click_reply">回复</string>
+    <string name="communication_search">搜索</string>
+    <string name="chat_original_picture_download_progress">&#037;%1d</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
@@ -738,7 +726,6 @@
     <string name="close_auto_select_enterprise">下次登录默认使用该企业</string>
     <string name="web_app_auto_rotate">Web应用支持旋转</string>
     <string name="turn_off_success">关闭成功</string>
-    <string name="run_background">后台运行</string>
     <string name="signout_fail">注销失败，请确保网络连接正常</string>
     <string name="setting_join_experience_plan">加入升级体验计划</string>
     <string name="setting_gesture_force_set">根据企业安全性原则，需要您设置手势密码</string>

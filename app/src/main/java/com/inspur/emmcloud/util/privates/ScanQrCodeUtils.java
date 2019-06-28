@@ -3,10 +3,10 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.imp.api.ImpActivity;
-import com.inspur.imp.plugin.barcode.ScanResultActivity;
 
 /**
  * Created by yufuchang on 2017/7/21.
@@ -37,46 +37,44 @@ public class ScanQrCodeUtils {
     /**
      * 处理扫描到的信息
      *
-     * @param msg
+     * @param result
      */
-    public void handleActionWithMsg(String msg) {
-        msg = msg.trim();
-        if (isMatchCloudPlusProtrol(msg)) {
-            Uri uri = Uri.parse(msg);
+    public void handleActionWithMsg(String result) {
+        result = result.trim();
+        if (isMatchCloudPlusProtocol(result)) {
+            Uri uri = Uri.parse(result);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
-        } else if (msg.startsWith("http")) {
-            Intent intent = new Intent();
-            intent.setClass(context, ImpActivity.class);
-            intent.putExtra("uri", msg);
-            intent.putExtra("appName", "    ");
-            context.startActivity(intent);
+        } else if (result.startsWith("http")) {
+            Bundle bundle = new Bundle();
+            bundle.putString("uri", result);
+            bundle.putString("appName", "    ");
+            ARouter.getInstance().build("/web/main").with(bundle).navigation();
         } else {
-            showUnKnownMsg(msg);
+            showUnKnownMsg(result);
         }
     }
 
     /**
      * 判断是否符合云+的协议栈
      *
-     * @param msg
+     * @param result
      * @return
      */
-    private boolean isMatchCloudPlusProtrol(String msg) {
-        return msg.startsWith("ecm-contact") || msg.startsWith("ecc-component") ||
-                msg.startsWith("ecc-app-react-native") || msg.startsWith("gs-msg")
-                || msg.startsWith("ecc-channel") || msg.startsWith("ecc-app");
+    private boolean isMatchCloudPlusProtocol(String result) {
+        return result.startsWith("ecm-contact") || result.startsWith("ecc-component") ||
+                result.startsWith("ecc-app-react-native") || result.startsWith("gs-msg")
+                || result.startsWith("ecc-channel") || result.startsWith("ecc-app");
     }
 
     /**
      * 展示扫描到的信息
      *
-     * @param msg
+     * @param result
      */
-    private void showUnKnownMsg(String msg) {
-        Intent intent = new Intent();
-        intent.putExtra("result", msg);
-        intent.setClass(context, ScanResultActivity.class);
-        context.startActivity(intent);
+    private void showUnKnownMsg(String result) {
+        Bundle bundle = new Bundle();
+        bundle.putString("result", result);
+        ARouter.getInstance().build("/web/scanResult").with(bundle).navigation();
     }
 }

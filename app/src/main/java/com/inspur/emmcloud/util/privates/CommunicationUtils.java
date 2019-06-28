@@ -3,10 +3,13 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.ViewGroup;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -21,7 +24,8 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
-import com.inspur.emmcloud.bean.contact.ContactUser;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 
 import org.json.JSONObject;
@@ -188,7 +192,7 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combinLocalMediaImageMessage(String cid, String localFilePath) {
+    public static Message combinLocalMediaImageMessage(String cid, String localFilePath, String previewImgPath) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
@@ -202,22 +206,75 @@ public class CommunicationUtils {
         int imgWidth = bitmap.getWidth();
         long fileSize = FileUtils.getFileSize(localFilePath);
         bitmap.recycle();
+        int previewImgHight = 0;
+        int previewImgWidth = 0;
+        long previewFileSize = 0;
+        if (!StringUtils.isBlank(previewImgPath)) {
+            Bitmap previewPictureBitmap = BitmapFactory.decodeFile(previewImgPath);
+            previewImgHight = previewPictureBitmap.getHeight();
+            previewImgWidth = previewPictureBitmap.getWidth();
+            previewFileSize = FileUtils.getFileSize(previewImgPath);
+            previewPictureBitmap.recycle();
+        } else {
+            previewImgHight = imgHeight;
+            previewImgWidth = imgWidth;
+            previewFileSize = fileSize;
+            previewImgPath = localFilePath;
+        }
+        //还要转回dp/2
+        int thumbnailHeight = 0;
+        int thumbnailWidth = 0;
+        ViewGroup.LayoutParams layoutParams = DisplayMediaImageMsg.getImgViewSize(MyApplication.getInstance(), previewImgWidth, previewImgHight);
+        if (layoutParams.height != 0 && layoutParams.width != 0) {
+            thumbnailHeight = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.height) / 2);
+            thumbnailWidth = (DensityUtil.px2dip(MyApplication.getInstance(), layoutParams.width) / 2);
+        }
+
         MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
         msgContentMediaImage.setName(file.getName());
-//        msgContentMediaImage.setPreviewHeight(imgHeight);
-//        msgContentMediaImage.setPreviewWidth(imgWidth);
-//        msgContentMediaImage.setPreviewSize(fileSize);
-//        msgContentMediaImage.setPreviewMedia(localFilePath);
-//        msgContentMediaImage.setThumbnailHeight(imgHeight);
-//        msgContentMediaImage.setThumbnailWidth(imgWidth);
-//        msgContentMediaImage.setThumbnailSize(fileSize);
-//        msgContentMediaImage.setThumbnailMedia(localFilePath);
+
+        msgContentMediaImage.setPreviewHeight(previewImgHight);
+        msgContentMediaImage.setPreviewWidth(previewImgWidth);
+        msgContentMediaImage.setPreviewSize(previewFileSize);
+        msgContentMediaImage.setPreviewMedia(previewImgPath);
+
+        msgContentMediaImage.setThumbnailHeight(thumbnailHeight);
+        msgContentMediaImage.setThumbnailWidth(thumbnailWidth);
+        msgContentMediaImage.setThumbnailSize(0);
+        msgContentMediaImage.setThumbnailMedia(previewImgPath);
+
         msgContentMediaImage.setRawHeight(imgHeight);
         msgContentMediaImage.setRawWidth(imgWidth);
         msgContentMediaImage.setRawSize(fileSize);
         msgContentMediaImage.setRawMedia(localFilePath);
         msgContentMediaImage.setTmpId(tracer);
         message.setContent(msgContentMediaImage.toString());
+        return message;
+    }
+
+    public static Message combineTransmitMediaImageMessage(String cid, String filePath, MsgContentMediaImage msgContentMediaImage) {
+        String tracer = getTracer();
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(tracer);
+        message.setTmpId(tracer);
+        message.setType(Message.MESSAGE_TYPE_MEDIA_IMAGE);
+        MsgContentMediaImage contentMediaImage = new MsgContentMediaImage();
+        contentMediaImage.setName(msgContentMediaImage.getName());
+        contentMediaImage.setRawHeight(msgContentMediaImage.getRawHeight());
+        contentMediaImage.setRawWidth(msgContentMediaImage.getRawWidth());
+        contentMediaImage.setRawSize(msgContentMediaImage.getRawSize());
+        contentMediaImage.setRawMedia(filePath);
+        contentMediaImage.setPreviewHeight(msgContentMediaImage.getPreviewHeight());
+        contentMediaImage.setPreviewWidth(msgContentMediaImage.getPreviewWidth());
+        contentMediaImage.setPreviewSize(msgContentMediaImage.getPreviewSize());
+        contentMediaImage.setPreviewMedia(filePath);
+        contentMediaImage.setThumbnailHeight(msgContentMediaImage.getThumbnailHeight());
+        contentMediaImage.setThumbnailWidth(msgContentMediaImage.getThumbnailWidth());
+        contentMediaImage.setThumbnailSize(msgContentMediaImage.getThumbnailSize());
+        contentMediaImage.setThumbnailMedia(filePath);
+        contentMediaImage.setTmpId(tracer);
+        message.setContent(contentMediaImage.toString());
         return message;
     }
 

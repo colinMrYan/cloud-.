@@ -15,6 +15,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
 
 import java.text.SimpleDateFormat;
@@ -102,6 +103,10 @@ public class GroupAlbumAdapter extends RecyclerView.Adapter<GroupAlbumAdapter.Al
         if (messageGroupByDayMap.size() > 0) {
             for (Message message : messageGroupByDayMap.get(itemName)) {
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
+                MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
+                if (message.getMsgContentMediaImage().getPreviewHeight() != 0) {
+                    url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
+                }
                 imgUrlList.add(url);
             }
         } else if (msgGroupByDayMap.size() > 0) {

@@ -69,6 +69,9 @@
     <!-- 插件：GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
 
     <!-- 插件：二维码扫描 -->
     <uses-permission android:name="android.permission.CAMERA" />
@@ -355,5 +358,32 @@
             android:configChanges="mcc|mnc|locale|keyboard|keyboardHidden|screenLayout|fontScale|uiMode|orientation|screenSize|layoutDirection"
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.Transparent.Permission" />
+
+        <service android:name=".service.PVCollectService"></service>
+
+        <activity
+            android:name=".util.imagepicker.ui.ImageGridActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".util.imagepicker.ui.ImagePreviewActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".util.imagepicker.ui.ImageCropActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".util.imageedit.IMGEditActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".util.mycamera.MyCameraActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:supportsRtl="true" />
     </application>
 </manifest>

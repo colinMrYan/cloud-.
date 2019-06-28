@@ -17,6 +17,7 @@ import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.IcsFileUtil;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.schedule.calendar.CalendarEvent;
@@ -43,7 +44,6 @@ import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.MailLoginUtils;
 import com.inspur.emmcloud.util.privates.ProfileUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
-import com.inspur.imp.api.ImpActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -224,6 +224,19 @@ public class SchemeHandleActivity extends BaseActivity {
                             case "inspur-ecc-native":
                                 openNativeSchemeByHost(host, uri, getIntent());
                                 break;
+                            case "content":
+                                if (getIntent().getType() != null) {
+                                    switch (getIntent().getType()) {
+                                        case "text/calendar":
+                                            IcsFileUtil.parseIcsFile(SchemeHandleActivity.this, uri);
+                                            break;
+                                        case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                                        case "application/vnd.ms-excel":
+                                            ToastUtils.show(getIntent().getDataString());
+                                            break;
+                                    }
+                                }
+                                break;
                             default:
                                 finish();
                                 break;
@@ -233,7 +246,7 @@ public class SchemeHandleActivity extends BaseActivity {
             }, 1);
 
         } else {
-            ARouter.getInstance().build("/login/main").navigation();
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_MAIN).navigation();
             finish();
         }
     }
@@ -367,7 +380,8 @@ public class SchemeHandleActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", webAppUrl);
                 bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isUriHasTitle);
-                IntentUtils.startActivity(SchemeHandleActivity.this, ImpActivity.class, bundle, true);
+                ARouter.getInstance().build("/web/main").with(bundle).navigation();
+                SchemeHandleActivity.this.finish();
             }
 
             @Override

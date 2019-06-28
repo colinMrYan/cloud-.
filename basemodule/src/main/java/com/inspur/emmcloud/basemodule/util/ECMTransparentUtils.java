@@ -2,11 +2,11 @@ package com.inspur.emmcloud.basemodule.util;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.login.app.AppService;
-import com.inspur.emmcloud.login.communication.CommunicationService;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.app.AppService;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 
 /**
  * Created by yufuchang on 2018/1/19.
@@ -30,13 +30,13 @@ public class ECMTransparentUtils {
             //如果符合条件则等服务器返回再改变桌面角标
             boolean isSocketConnect = false;
             Router router = Router.getInstance();
-            if (router.getService(CommunicationService.class.getSimpleName()) != null) {
-                CommunicationService service = (CommunicationService) router.getService(CommunicationService.class.getSimpleName());
+            if (router.getService(CommunicationService.class) != null) {
+                CommunicationService service = router.getService(CommunicationService.class);
                 service.isSocketConnect();
             }
             if (BaseApplication.getInstance().getIsActive() && !(isSocketConnect && WebServiceRouterManager.getInstance().isV1xVersionChat())) {
-                if (router.getService(AppService.class.getSimpleName()) != null) {
-                    AppService service = (AppService) router.getService(AppService.class.getSimpleName());
+                if (router.getService(AppService.class) != null) {
+                    AppService service = router.getService(AppService.class);
                     service.getAppBadgeCountFromServer();
                 }
             } else {

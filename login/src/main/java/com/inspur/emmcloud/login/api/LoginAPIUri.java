@@ -89,5 +89,14 @@ public class LoginAPIUri {
         return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/check_state";
     }
 
+    /**
+     * 上传设备管理所需token和设备ID
+     *
+     * @return
+     */
+    public static String getUploadMDMInfoUrl() {
+        return WebServiceRouterManager.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/mdm_check";
+    }
+
 
 }

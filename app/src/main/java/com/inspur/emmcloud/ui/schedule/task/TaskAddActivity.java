@@ -18,8 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
@@ -33,16 +33,17 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
-import com.inspur.emmcloud.bean.contact.ContactUser;
-import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.bean.schedule.RemindEvent;
 import com.inspur.emmcloud.bean.schedule.task.Attachment;
 import com.inspur.emmcloud.bean.schedule.task.GetTaskAddResult;
@@ -51,15 +52,14 @@ import com.inspur.emmcloud.bean.schedule.task.Task;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
 import com.inspur.emmcloud.bean.schedule.task.TaskSubject;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
-import com.inspur.imp.plugin.filetransfer.filemanager.FileManagerActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -387,9 +387,9 @@ public class TaskAddActivity extends BaseActivity {
                 startActivityForResult(photoPickerIntent, REQUEST_ALBUM);
                 break;
             case R.id.rl_attachments_others:
-                intent.setClass(this, FileManagerActivity.class);
-                intent.putExtra(FileManagerActivity.EXTRA_MAXIMUM, 1);
-                startActivityForResult(intent, REQUEST_ATTACHMENT);
+                Bundle bundle = new Bundle();
+                bundle.putInt("extra_maximum", 1);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_FILEMANAGER).with(bundle).navigation(TaskAddActivity.this, REQUEST_ATTACHMENT);
                 break;
         }
     }

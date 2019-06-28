@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
+import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.UIMessage;
@@ -58,9 +60,20 @@ public class DisplayMediaImageMsg {
             }
 
         }
+        //判断是否有Preview 图片如果有的话用preview ，否则用原图
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
+        if (msgContentMediaImage.getPreviewHeight() > 0 && msgContentMediaImage.getPreviewWidth() > 0) {
+            h = msgContentMediaImage.getPreviewHeight();
+            w = msgContentMediaImage.getPreviewWidth();
+        }
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
+        if (!ImageDisplayUtils.getInstance().isHaveImage(imageUri) && imageUri.startsWith("http") &&
+                msgContentMediaImage.getPreviewHeight() != 0
+                && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())) {
+            imageUri = imageUri + "&resize=true&w=" + message.getMsgContentMediaImage().getPreviewWidth() +
+                    "&h=" + message.getMsgContentMediaImage().getPreviewHeight();
+        }
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
@@ -98,21 +111,20 @@ public class DisplayMediaImageMsg {
         if (w == 0 || h == 0) {
             return false;
         }
-        int minW = DensityUtil.dip2px(context, 100);
-        int minH = DensityUtil.dip2px(context, 90);
-        int maxW = DensityUtil.dip2px(context, 270);
-        int maxH = DensityUtil.dip2px(context, 232);
+        int minW = DensityUtil.dip2px(context, 60);
+        int minH = DensityUtil.dip2px(context, 60);
+        int maxW = DensityUtil.dip2px(context, 130);
+        int maxH = DensityUtil.dip2px(context, 130);
         LayoutParams params = imageView.getLayoutParams();
         if (w == h) {
-            params.width = minW;
-            params.height = minW;
+            params.width = maxW;
+            params.height = maxH;
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         } else if (h > w) {
-            params.width = minW;
-            params.height = (int) (minW * 1.0 * h / w);
-            if (params.height > maxH) {
-                longImgText.setVisibility(View.VISIBLE);
-                params.height = maxH;
+            params.height = maxH;
+            params.width = (int) (maxH * 1.0 * w / h);
+            if (params.width < minW) {
+                params.width = minW;
             }
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         } else {
@@ -120,12 +132,48 @@ public class DisplayMediaImageMsg {
             params.height = (int) (maxW * 1.0 * h / w);
             if (params.height < minH) {
                 params.height = minH;
-                longImgText.setVisibility(View.VISIBLE);
             }
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         imageView.setLayoutParams(params);
         return true;
+    }
+
+
+    /**
+     * 获取ImageView的大小
+     *
+     * @param context
+     * @param w       // 30~130
+     * @param h       // 30~130
+     * @return
+     */
+    public static LayoutParams getImgViewSize(Context context, int w, int h) {
+        LayoutParams params = new LayoutParams(0, 0);
+        if (w == 0 || h == 0) {
+            return params;
+        }
+        int minW = DensityUtil.dip2px(context, 60);
+        int minH = DensityUtil.dip2px(context, 60);
+        int maxW = DensityUtil.dip2px(context, 260);
+        int maxH = DensityUtil.dip2px(context, 260);
+        if (w == h) {
+            params.width = minW;
+            params.height = minW;
+        } else if (h > w) {
+            params.width = minW;
+            params.height = (int) (minW * 1.0 * h / w);
+            if (params.height > maxH) {
+                params.height = maxH;
+            }
+        } else {
+            params.width = maxW;
+            params.height = (int) (maxW * 1.0 * h / w);
+            if (params.height < minH) {
+                params.height = minH;
+            }
+        }
+        return params;
     }
 
 }

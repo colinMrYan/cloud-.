@@ -2,6 +2,7 @@ package com.inspur.emmcloud.basemodule.api;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.romadaptation.RomInfoUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
@@ -11,14 +12,14 @@ import com.inspur.emmcloud.basemodule.bean.GetUploadPushInfoResult;
 import com.inspur.emmcloud.basemodule.bean.PVCollectModel;
 import com.inspur.emmcloud.basemodule.push.PushManagerUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
-import com.inspur.emmcloud.login.login.LoginService;
-import com.inspur.emmcloud.login.login.OauthCallBack;
-import com.luojilab.component.componentlib.router.Router;
+import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.inspur.emmcloud.componentservice.login.OauthCallBack;
 
 import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
 import java.util.List;
+
 
 /**
  * Created by chenmch on 2019/6/5.
@@ -39,8 +40,8 @@ public class BaseModuleApiService {
 
     private void refreshToken(OauthCallBack oauthCallBack, long requestTime) {
         Router router = Router.getInstance();
-        if (router.getService(LoginService.class.getSimpleName()) != null) {
-            LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+        if (router.getService(LoginService.class) != null) {
+            LoginService service = router.getService(LoginService.class);
             service.refreshToken(oauthCallBack, requestTime);
         }
     }
@@ -99,8 +100,8 @@ public class BaseModuleApiService {
                     }
                 };
                 Router router = Router.getInstance();
-                if (router.getService(LoginService.class.getSimpleName()) != null) {
-                    LoginService service = (LoginService) router.getService(LoginService.class.getSimpleName());
+                if (router.getService(LoginService.class) != null) {
+                    LoginService service = router.getService(LoginService.class);
                     service.refreshToken(oauthCallBack, requestTime);
                 }
             }
