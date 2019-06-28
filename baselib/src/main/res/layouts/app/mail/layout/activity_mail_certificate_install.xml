@@ -250,7 +250,7 @@
 
                             <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/sv_encryption_action"
-                                android:layout_width="31dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
@@ -282,7 +282,7 @@
 
                             <android.support.v7.widget.SwitchCompat
                                 android:id="@+id/sv_signature_action"
-                                android:layout_width="31dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="51dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"

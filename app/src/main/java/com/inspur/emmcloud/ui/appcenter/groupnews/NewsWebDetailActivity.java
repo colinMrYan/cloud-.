@@ -380,6 +380,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
     }
 
+
     /**
      * 带有时区的时间路径,目前是零时区GMT
      * 如果需要改成东八区则GMT+8
@@ -401,6 +402,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 + "/" + day + "/";
         return timePath;
     }
+
 
     /**
      * 打开字体设置，夜间模式设置Dialog
@@ -461,7 +463,6 @@ public class NewsWebDetailActivity extends BaseActivity {
                 reRender();
             }
         });
-
     }
 
     /**

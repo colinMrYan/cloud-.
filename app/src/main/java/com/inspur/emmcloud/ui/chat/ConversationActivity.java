@@ -838,7 +838,6 @@ public class ConversationActivity extends ConversationBaseActivity {
                         if (!originalPicture) {
                             imgPath = previewImgPath;
                         }
-                        //  DisplayMediaImageMsg.getImgViewSize(this,)
                         combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, previewImgPath);
                     }
                 }

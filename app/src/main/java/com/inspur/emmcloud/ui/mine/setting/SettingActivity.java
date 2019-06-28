@@ -71,8 +71,6 @@ public class SettingActivity extends BaseActivity {
     private static final int DATA_CLEAR_SUCCESS = 0;
     @BindView(R.id.switch_view_setting_web_rotate)
     SwitchCompat webRotateSwitch;
-    @BindView(R.id.switch_view_setting_run_background)
-    SwitchCompat runBackgroundSwitch;
     @BindView(R.id.switch_view_setting_voice_2_word)
     SwitchCompat voice2WordSwitch;
     @BindView(R.id.rl_setting_voice_2_word)
@@ -114,9 +112,6 @@ public class SettingActivity extends BaseActivity {
                     if (isExperienceUpgradeFlag != b) {
                         updateUserExperienceUpgradeFlag();
                     }
-                    break;
-                case R.id.switch_view_setting_run_background:
-                    setAppRunBackground(b);
                     break;
                 default:
                     break;
@@ -187,9 +182,6 @@ public class SettingActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         setWebAutoRotateState();
         webRotateSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
-        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
-        runBackgroundSwitch.setChecked(isAppSetRunBackground);
-        runBackgroundSwitch.setOnCheckedChangeListener(onCheckedChangeListener);
         if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
             voice2WordLayout.setVisibility(View.VISIBLE);
             voice2WordSwitch.setChecked(AppUtils.getIsVoiceWordOpen());
@@ -315,21 +307,6 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 设置app是否运行在后台
-     *
-     * @param isAppSetRunBackground
-     */
-    private void setAppRunBackground(boolean isAppSetRunBackground) {
-        PreferencesUtils.putBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, isAppSetRunBackground);
-        Intent intent = new Intent();
-        intent.setClass(SettingActivity.this, BackgroundService.class);
-        if (isAppSetRunBackground) {
-            startService(intent);
-        } else {
-            stopService(intent);
-        }
-    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
