@@ -517,7 +517,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         String url = urlList.get(position); //raw 路径
         if (imgTypeMessageList.size() > 0) {
             MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
-            boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
+            boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(url);//这个是判断有无原图（是否有）
             if ((msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
                 return true;
             } else {
@@ -564,7 +564,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             if (imgTypeMessageList.size() > 0) {
                 LogUtils.LbcDebug("imagList Size >0;  size=" + imgTypeMessageList.size());
                 MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
-                boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
+                boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(url);//这个是判断有无原图（是否有）
                 if (msgContentMediaImage.getPreviewHeight() != 0
                         && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())
                         && !isHaveOriginalImageCatch) {

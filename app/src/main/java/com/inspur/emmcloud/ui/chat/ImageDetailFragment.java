@@ -16,19 +16,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.widget.SmoothImageView;
+import com.inspur.emmcloud.widget.largeimage.LargeImageView;
+import com.inspur.emmcloud.widget.largeimage.factory.FileBitmapDecoderFactory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -56,7 +53,7 @@ import static android.R.attr.path;
  */
 public class ImageDetailFragment extends Fragment {
     private String mImageUrl;
-    private SmoothImageView mImageView;
+    private LargeImageView mImageView;
     private ProgressBar progressBar;
     private PhotoViewAttacher mAttacher;
 
@@ -149,7 +146,7 @@ public class ImageDetailFragment extends Fragment {
         if (isNeedTransformIn) {
             mImageView.transformIn();
         }
-        mImageView.setOnTransformListener(new SmoothImageView.TransformListener() {
+        mImageView.setOnTransformListener(new LargeImageView.TransformListener() {
             @Override
             public void onTransformComplete(int mode) {
                 if (mode == 2) {
@@ -158,29 +155,50 @@ public class ImageDetailFragment extends Fragment {
                 }
             }
         });
-        mAttacher = new PhotoViewAttacher(mImageView);
-        mAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+        mImageView.setOnDoubleClickListener(new LargeImageView.OnDoubleClickListener() {
             @Override
-            public void onPhotoTap(View view, float x, float y) {
-                onOutsidePhotoTap();
-            }
-
-            @Override
-            public void onOutsidePhotoTap() {
+            public boolean onDoubleClick(LargeImageView view, MotionEvent event) {
                 EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
                 EventBus.getDefault().post(eventMessage);
-            }
-        });
-        mAttacher.setOnSingleFlingListener(new PhotoViewAttacher.OnSingleFlingListener() {
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                if (Math.abs(velocityY) > Math.abs(velocityX) && e2.getY() - e1.getY() > DensityUtil.dip2px(getContext(), 30)) {
-                    closeImg();
-                }
                 return false;
             }
         });
-        mAttacher.setMaximumScale(5);
+        mImageView.setCriticalScaleValueHook(new LargeImageView.CriticalScaleValueHook() {
+            @Override
+            public float getMinScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMinScale) {
+                return 1;
+            }
+
+            @Override
+            public float getMaxScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMaxScale) {
+                return 5;
+            }
+        });
+
+
+//        mAttacher = new PhotoViewAttacher(mImageView);
+//        mAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+//            @Override
+//            public void onPhotoTap(View view, float x, float y) {
+//                onOutsidePhotoTap();
+//            }
+//
+//            @Override
+//            public void onOutsidePhotoTap() {
+//                EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
+//                EventBus.getDefault().post(eventMessage);
+//            }
+//        });
+//        mAttacher.setOnSingleFlingListener(new PhotoViewAttacher.OnSingleFlingListener() {
+//            @Override
+//            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//                if (Math.abs(velocityY) > Math.abs(velocityX) && e2.getY() - e1.getY() > DensityUtil.dip2px(getContext(), 30)) {
+//                    closeImg();
+//                }
+//                return false;
+//            }
+//        });
+//        mAttacher.setMaximumScale(5);
         progressBar = v.findViewById(R.id.loading);
         return v;
     }
@@ -207,7 +225,7 @@ public class ImageDetailFragment extends Fragment {
      */
     public void downloadImg() {
 //        mImageView.setDrawingCacheEnabled(false);
-        if (ImageDisplayUtils.getInstance().isHaveImage(mImageUrl)) {
+        if (ImageDisplayUtils.getInstance().isHaveCacheImage(mImageUrl)) {
             File imageFileCatch = DiskCacheUtils.findInCache(mImageUrl, ImageLoader.getInstance().getDiskCache());
             Bitmap bitmap = BitmapFactory.decodeFile(imageFileCatch.getPath());
             saveBitmapFile(bitmap);
@@ -277,7 +295,6 @@ public class ImageDetailFragment extends Fragment {
         super.onStart();
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.default_image)
-
                 .showImageOnFail(R.drawable.default_image)
                 .showImageOnLoading(R.drawable.default_image)
                 // 设置图片的解码类型
@@ -285,55 +302,36 @@ public class ImageDetailFragment extends Fragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
-        ImageLoader.getInstance().displayImage(mImageUrl, mImageView, options,
-                new SimpleImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-                        if (getActivity() != null) {
-                            progressBar.setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view,
-                                                FailReason failReason) {
-                        if (getActivity() != null) {
-                            String message = null;
-                            switch (failReason.getType()) {
-                                case IO_ERROR:
-                                    message = getString(R.string.download_fail);
-                                    break;
-                                case DECODING_ERROR:
-                                    message = getString(R.string.picture_cannot_show);
-                                    break;
-                                case NETWORK_DENIED:
-                                    message = getString(R.string.cannot_download_for_network_exception);
-                                    break;
-                                case OUT_OF_MEMORY:
-                                    message = getString(R.string.cannot_show_for_too_big);
-                                    break;
-                                case UNKNOWN:
-                                    message = getString(R.string.unknown_error);
-                                    break;
-                                default:
-                                    message = getString(R.string.download_fail);
-                                    break;
+        if (!StringUtils.isBlank(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl)) {
+            mImageView.setImage(new FileBitmapDecoderFactory(ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl)));
+        } else {
+            ImageLoader.getInstance().loadImage(mImageUrl, options,
+                    new SimpleImageLoadingListener() {
+                        @Override
+                        public void onLoadingStarted(String imageUri, View view) {
+                            if (getActivity() != null) {
+                                progressBar.setVisibility(View.VISIBLE);
                             }
-//							Toast.makeText(getActivity(), message,
-//									Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
                         }
-                    }
 
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view,
-                                                  Bitmap loadedImage) {
-                        if (getActivity() != null) {
-                            progressBar.setVisibility(View.GONE);
-                            mAttacher.update();
+                        @Override
+                        public void onLoadingFailed(String imageUri, View view,
+                                                    FailReason failReason) {
+                            if (getActivity() != null) {
+                                progressBar.setVisibility(View.GONE);
+                            }
                         }
-                    }
-                });
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view,
+                                                      Bitmap loadedImage) {
+                            if (getActivity() != null) {
+                                progressBar.setVisibility(View.GONE);
+                                mImageView.setImage(loadedImage);
+                            }
+                        }
+                    });
+        }
     }
 
     /**
