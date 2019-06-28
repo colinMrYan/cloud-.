@@ -265,6 +265,14 @@ public class CommunicationUtils {
         contentMediaImage.setRawWidth(msgContentMediaImage.getRawWidth());
         contentMediaImage.setRawSize(msgContentMediaImage.getRawSize());
         contentMediaImage.setRawMedia(filePath);
+        contentMediaImage.setPreviewHeight(msgContentMediaImage.getPreviewHeight());
+        contentMediaImage.setPreviewWidth(msgContentMediaImage.getPreviewWidth());
+        contentMediaImage.setPreviewSize(msgContentMediaImage.getPreviewSize());
+        contentMediaImage.setPreviewMedia(filePath);
+        contentMediaImage.setThumbnailHeight(msgContentMediaImage.getThumbnailHeight());
+        contentMediaImage.setThumbnailWidth(msgContentMediaImage.getThumbnailWidth());
+        contentMediaImage.setThumbnailSize(msgContentMediaImage.getThumbnailSize());
+        contentMediaImage.setThumbnailMedia(filePath);
         contentMediaImage.setTmpId(tracer);
         message.setContent(contentMediaImage.toString());
         return message;

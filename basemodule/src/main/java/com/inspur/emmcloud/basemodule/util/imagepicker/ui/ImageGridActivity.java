@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -75,6 +76,12 @@ public class ImageGridActivity extends ImageBaseActivity implements
         onImageSelected(0, null, false);
         imageDataSource = new ImageDataSource(this, null, this);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
+        orgPictureCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                mBtnPre.setVisibility(b ? View.GONE : View.VISIBLE);
+            }
+        });
         setStatus();
     }
 
