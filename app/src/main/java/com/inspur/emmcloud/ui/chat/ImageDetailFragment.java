@@ -117,7 +117,7 @@ public class ImageDetailFragment extends Fragment {
         isNeedTransformOut = getArguments() != null && getArguments().getBoolean("isNeedTransformOut");
         isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
 
-        boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(mImageUrl);//这个是判断有无原图（是否有）
+        boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(mImageUrl);//这个是判断有无原图（是否有）
 
         rawUrl = mImageUrl;
 
