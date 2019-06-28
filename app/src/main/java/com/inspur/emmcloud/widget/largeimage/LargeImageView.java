@@ -15,37 +15,30 @@ limitations under the License.
  */
 package com.inspur.emmcloud.widget.largeimage;
 
-import android.animation.Animator;
-import android.animation.PropertyValuesHolder;
-import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
+import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.widget.largeimage.factory.BitmapDecoderFactory;
 
@@ -66,7 +59,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
     private final int mMinimumVelocity;
     private final int mMaximumVelocity;
     private final ScaleGestureDetector scaleGestureDetector;
-    //    private final Paint paint;
+    private final Paint paint;
     private final int mBgColor = 0xFF000000;
     private int mDrawableWidth;
     private int mDrawableHeight;
@@ -82,27 +75,15 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
     private AccelerateInterpolator accelerateInterpolator;
     private DecelerateInterpolator decelerateInterpolator;
 
-    private Bitmap oBitmap;
     private Drawable originDrawable;
 
     private boolean isAttachedWindow;
-    private int mOriginalWidth;
-    private int mOriginalHeight;
-    private int mOriginalLocationX;
-    private int mOriginalLocationY;
-    private int mState = STATE_NORMAL;
-    private Matrix mSmoothMatrix;
-    private Bitmap mBitmap;
-    private boolean mTransformStart = false;
-    private Transfrom mTransfrom;
-    private int mBgAlpha = 0;
-    private Paint mPaint;
-    private TransformListener mTransformListener;
     private List<BlockImageLoader.DrawData> drawDatas = new ArrayList<>();
     private Rect imageRect = new Rect();
     private OnClickListener onClickListener;
     private OnLongClickListener onLongClickListener;
     private CriticalScaleValueHook criticalScaleValueHook;
+    private OnFlingDownListe onFlingDownLister;
     private ScaleGestureDetector.OnScaleGestureListener onScaleGestureListener = new ScaleGestureDetector.OnScaleGestureListener() {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
@@ -183,13 +164,27 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
             if (!isEnabled()) {
                 return false;
             }
+            if (getOnFlingDownLister() != null) {
+                if (getScale() == 1 && e1.getPointerCount() == 1 && e2.getPointerCount() == 1) {
+                    if (Math.abs(velocityY) > Math.abs(velocityX) && e2.getY() - e1.getY() > DensityUtil.dip2px(getContext(), 30)) {
+                        getOnFlingDownLister().onFlingDown();
+                        return true;
+                    }
+                }
+
+
+            }
+
+            LogUtils.jasonDebug("getScale()===" + getScale());
+            LogUtils.jasonDebug("MotionEventCompat.getPointerCount(e1)==" + e1.getPointerCount());
+            LogUtils.jasonDebug("MotionEventCompat.getPointerCount(e2)==" + e2.getPointerCount());
+
             fling((int) -velocityX, (int) -velocityY);
             return true;
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            LogUtils.jasonDebug("0000000000");
             if (!isEnabled()) {
                 return false;
             }
@@ -232,7 +227,6 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
 
     public LargeImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
         mScroller = ScrollerCompat.create(getContext(), null);
         scaleHelper = new ScaleHelper();
         setFocusable(true);
@@ -246,9 +240,9 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
 
-//        paint = new Paint();
-//        paint.setColor(Color.GRAY);
-//        paint.setAntiAlias(true);
+        paint = new Paint();
+        paint.setColor(Color.GRAY);
+        paint.setAntiAlias(true);
     }
 
     @Override
@@ -322,7 +316,6 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
      */
     @Override
     public void setImage(Bitmap bm) {
-        mBitmap = bm;
         originDrawable = new BitmapDrawable(getResources(), bm);
         originDrawable.setBounds(0, 0, bm.getWidth(), bm.getHeight());
         setImageDrawable(new BitmapDrawable(getResources(), bm));
@@ -529,61 +522,8 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (getDrawable() == null) {
-            return;
-        }
-        if (mState == STATE_TRANSFORM_IN || mState == STATE_TRANSFORM_OUT) {
-            if (mTransformStart) {
-                initTransform();
-            }
-            if (mTransfrom == null) {
-                super.onDraw(canvas);
-                drawCanvas(canvas);
-                return;
-            }
-            if (mTransformStart) {
-                if (mState == STATE_TRANSFORM_IN) {
-                    mTransfrom.initStartIn();
-                } else {
-                    mTransfrom.initStartOut();
-                }
-            }
-            if (mTransformStart) {
-//                Log.d("SmoothImageView", "mTransfrom.startScale:" + mTransfrom.startScale);
-//                Log.d("SmoothImageView", "mTransfrom.endScale:" + mTransfrom.endScale);
-//                Log.d("SmoothImageView", "mTransfrom.scale:" + mTransfrom.scale);
-//                Log.d("SmoothImageView", "mTransfrom.startRect:" + mTransfrom.startRect.toString());
-//                Log.d("SmoothImageView", "mTransfrom.endRect:" + mTransfrom.endRect.toString());
-//                Log.d("SmoothImageView", "mTransfrom.rect:" + mTransfrom.rect.toString());
-            }
-            mPaint.setAlpha(mBgAlpha);
-            canvas.drawPaint(mPaint);
-            int saveCount = canvas.getSaveCount();
-            canvas.save();
-            getBmpMatrix();
-            Log.d("SmoothImageView", "mTransfrom.rect:" + mTransfrom.rect.toString());
-            canvas.restore();
-            canvas.translate(mTransfrom.rect.left, mTransfrom.rect.top);
-
-            canvas.clipRect(0, 0, mTransfrom.rect.width, mTransfrom.rect.height);
-            canvas.concat(mSmoothMatrix);
-//            Drawable drawable = new BitmapDrawable(getContext().getResources(), mBitmap);
-            Rect bound = mDrawable.copyBounds();
-            Rect newBound = new Rect(0, 0, bound.width(), bound.height());
-            mDrawable.setBounds(newBound);
-            mDrawable.draw(canvas);
-            canvas.restoreToCount(saveCount);
-            if (mTransformStart) {
-                mTransformStart = false;
-                startTransform(mState);
-            }
-        } else {
-            mPaint.setAlpha(255);
-            canvas.drawPaint(mPaint);
-            super.onDraw(canvas);
-            drawCanvas(canvas);
-        }
-
+        super.onDraw(canvas);
+        drawCanvas(canvas);
     }
 
     private void drawCanvas(Canvas canvas) {
@@ -642,7 +582,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                     drawRect.right = (int) (Math.ceil(drawRect.right / imageScale) + mOffsetX) + drawOffsetX;
                     drawRect.bottom = (int) (Math.ceil(drawRect.bottom / imageScale) + mOffsetY) + drawOffsetY;
                     if (i == 0) {
-                        canvas.drawRect(data.imageRect, mPaint);
+                        canvas.drawRect(data.imageRect, paint);
                     } else {
                         drawRect.left += 3;
                         drawRect.top += 3;
@@ -924,236 +864,13 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         this.onDoubleClickListener = onDoubleClickListener;
     }
 
-    private void init() {
-        mSmoothMatrix = new Matrix();
-        mPaint = new Paint();
-        mPaint.setColor(mBgColor);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setAntiAlias(true);
+    public OnFlingDownListe getOnFlingDownLister() {
+        return onFlingDownLister;
     }
 
-    public void setOriginalInfo(int width, int height, int locationX, int locationY) {
-        mOriginalWidth = width;
-        mOriginalHeight = height;
-        mOriginalLocationX = locationX;
-        mOriginalLocationY = locationY;
-//        mOriginalLocationY = mOriginalLocationY - getStatusBarHeight(getContext());
+    public void setOnFlingDownLister(OnFlingDownListe onFlingDownLister) {
+        this.onFlingDownLister = onFlingDownLister;
     }
-
-    public void transformIn() {
-        if (mOriginalLocationX != 0 || mOriginalWidth != 0) {
-            mState = STATE_TRANSFORM_IN;
-            mTransformStart = true;
-            invalidate();
-        }
-
-    }
-
-    public void transformOut() {
-        if (mScale > 1) {
-            setScale(1);
-        }
-
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                if (mState != STATE_TRANSFORM_OUT) {
-                    mState = STATE_TRANSFORM_OUT;
-                    mTransformStart = true;
-                    invalidate();
-                }
-            }
-        });
-
-    }
-
-    private void initTransform() {
-        if (getDrawable() == null) {
-            return;
-        }
-
-        if (getDrawable() instanceof ColorDrawable) return;
-
-        if (mBitmap == null || mBitmap.isRecycled()) {
-            if (getDrawable() instanceof BitmapDrawable) {
-                mBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
-            } else {
-                return;
-            }
-        }
-
-//        if (mTransfrom != null) {
-//            return;
-//        }
-        if (getWidth() == 0 || getHeight() == 0) {
-            return;
-        }
-
-        if (mState == STATE_TRANSFORM_IN) {
-            mTransfrom = new Transfrom();
-            float xSScale = mOriginalWidth / ((float) mBitmap.getWidth());
-            float ySScale = mOriginalHeight / ((float) mBitmap.getHeight());
-            float startScale = xSScale > ySScale ? xSScale : ySScale;
-            mTransfrom.startScale = startScale;
-            float xEScale = getWidth() / ((float) mBitmap.getWidth());
-            float yEScale = getHeight() / ((float) mBitmap.getHeight());
-            float endScale = xEScale < yEScale ? xEScale : yEScale;
-            mTransfrom.endScale = endScale;
-
-            mTransfrom.startRect = new LocationSizeF();
-            mTransfrom.startRect.left = mOriginalLocationX;
-            mTransfrom.startRect.top = mOriginalLocationY;
-            mTransfrom.startRect.width = mOriginalWidth;
-            mTransfrom.startRect.height = mOriginalHeight;
-
-            mTransfrom.endRect = new LocationSizeF();
-            float bitmapEndWidth = mBitmap.getWidth() * mTransfrom.endScale;
-            float bitmapEndHeight = mBitmap.getHeight() * mTransfrom.endScale;
-            mTransfrom.endRect.left = (getWidth() - bitmapEndWidth) / 2;
-            mTransfrom.endRect.top = (getHeight() - bitmapEndHeight) / 2;
-            mTransfrom.endRect.width = bitmapEndWidth;
-            mTransfrom.endRect.height = bitmapEndHeight;
-
-            mTransfrom.rect = new LocationSizeF();
-        } else {
-            mTransfrom = new Transfrom();
-            float xSScale = mOriginalWidth / ((float) mBitmap.getWidth());
-            float ySScale = mOriginalHeight / ((float) mBitmap.getHeight());
-            float startScale = xSScale > ySScale ? xSScale : ySScale;
-            mTransfrom.startScale = startScale;
-            float xEScale = getWidth() / ((float) mBitmap.getWidth());
-            float yEScale = getHeight() / ((float) mBitmap.getHeight());
-            float endScale = xEScale < yEScale ? xEScale : yEScale;
-            mTransfrom.endScale = endScale;
-
-            mTransfrom.startRect = new LocationSizeF();
-            mTransfrom.startRect.left = mOriginalLocationX;
-            mTransfrom.startRect.top = mOriginalLocationY;
-            mTransfrom.startRect.width = mOriginalWidth;
-            mTransfrom.startRect.height = mOriginalHeight;
-
-            mTransfrom.endRect = new LocationSizeF();
-            float bitmapEndWidth = mBitmap.getWidth() * mTransfrom.endScale;
-            float bitmapEndHeight = mBitmap.getHeight() * mTransfrom.endScale;
-            mTransfrom.endRect.left = (getWidth() - bitmapEndWidth) / 2;
-            mTransfrom.endRect.top = (getHeight() - bitmapEndHeight) / 2;
-            mTransfrom.endRect.width = bitmapEndWidth;
-            mTransfrom.endRect.height = bitmapEndHeight;
-
-            mTransfrom.rect = new LocationSizeF();
-        }
-        LogUtils.jasonDebug("mDrawableWidth=" + mDrawableWidth);
-        LogUtils.jasonDebug("mDrawableHeight=" + mDrawableHeight);
-        LogUtils.jasonDebug("mDrawablewidth00=" + mDrawable.getBounds().width());
-        LogUtils.jasonDebug("mDrawableHeight00=" + mDrawable.getBounds().height());
-        LogUtils.jasonDebug("mDrawablegetBounds=" + mDrawable.getBounds());
-
-
-        LogUtils.jasonDebug("mOriginalWidth=" + mOriginalWidth);
-        LogUtils.jasonDebug("mOriginalHeight=" + mOriginalHeight);
-        LogUtils.jasonDebug("mBitmap.getWidth()=" + mBitmap.getWidth());
-        LogUtils.jasonDebug("mBitmap.getHeight()=" + mBitmap.getHeight());
-        LogUtils.jasonDebug("mTransfrom.startScale=" + mTransfrom.startScale);
-
-        LogUtils.jasonDebug("mTransfrom.endScale=" + mTransfrom.endScale);
-        LogUtils.jasonDebug("mTransfrom.endRect=" + mTransfrom.endRect);
-    }
-
-    private void getBmpMatrix() {
-        if (getDrawable() == null) {
-            return;
-        }
-        if (mTransfrom == null) {
-            return;
-        }
-        if (mBitmap == null || mBitmap.isRecycled()) {
-            mBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
-        }
-        mSmoothMatrix.setScale(mTransfrom.scale, mTransfrom.scale);
-//        mSmoothMatrix.postTranslate(-(mTransfrom.scale * mBitmap.getWidth() / 2 - mTransfrom.rect.width / 2),
-//                -(mTransfrom.scale * mBitmap.getHeight() / 2 - mTransfrom.rect.height / 2));
-    }
-
-    private void startTransform(final int state) {
-        if (mTransfrom == null) {
-            return;
-        }
-        ValueAnimator valueAnimator = new ValueAnimator();
-        if (state == STATE_TRANSFORM_IN) {
-            valueAnimator.setDuration(300);
-        } else {
-            valueAnimator.setDuration(300);
-        }
-
-        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-
-
-        if (state == STATE_TRANSFORM_IN) {
-            PropertyValuesHolder scaleHolder = PropertyValuesHolder.ofFloat("scale", mTransfrom.startScale, mTransfrom.endScale);
-            PropertyValuesHolder leftHolder = PropertyValuesHolder.ofFloat("left", mTransfrom.startRect.left, mTransfrom.endRect.left);
-            PropertyValuesHolder topHolder = PropertyValuesHolder.ofFloat("top", mTransfrom.startRect.top, mTransfrom.endRect.top);
-            PropertyValuesHolder widthHolder = PropertyValuesHolder.ofFloat("width", mTransfrom.startRect.width, mTransfrom.endRect.width);
-            PropertyValuesHolder heightHolder = PropertyValuesHolder.ofFloat("height", mTransfrom.startRect.height, mTransfrom.endRect.height);
-            PropertyValuesHolder alphaHolder = PropertyValuesHolder.ofInt("alpha", 0, 255);
-            valueAnimator.setValues(scaleHolder, leftHolder, topHolder, widthHolder, heightHolder, alphaHolder);
-        } else {
-
-            PropertyValuesHolder scaleHolder = PropertyValuesHolder.ofFloat("scale", mTransfrom.endScale, mTransfrom.startScale);
-            PropertyValuesHolder leftHolder = PropertyValuesHolder.ofFloat("left", mTransfrom.endRect.left, mTransfrom.startRect.left);
-            PropertyValuesHolder topHolder = PropertyValuesHolder.ofFloat("top", mTransfrom.endRect.top, mTransfrom.startRect.top);
-            PropertyValuesHolder widthHolder = PropertyValuesHolder.ofFloat("width", mTransfrom.endRect.width, mTransfrom.startRect.width);
-            PropertyValuesHolder heightHolder = PropertyValuesHolder.ofFloat("height", mTransfrom.endRect.height, mTransfrom.startRect.height);
-            PropertyValuesHolder alphaHolder = PropertyValuesHolder.ofInt("alpha", 255, 0);
-            valueAnimator.setValues(scaleHolder, leftHolder, topHolder, widthHolder, heightHolder, alphaHolder);
-        }
-
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public synchronized void onAnimationUpdate(ValueAnimator animation) {
-                mTransfrom.scale = (Float) animation.getAnimatedValue("scale");
-                mTransfrom.rect.left = (Float) animation.getAnimatedValue("left");
-                mTransfrom.rect.top = (Float) animation.getAnimatedValue("top");
-                mTransfrom.rect.width = (Float) animation.getAnimatedValue("width");
-                mTransfrom.rect.height = (Float) animation.getAnimatedValue("height");
-                mBgAlpha = (Integer) animation.getAnimatedValue("alpha");
-                invalidate();
-                ((Activity) getContext()).getWindow().getDecorView().invalidate();
-            }
-        });
-        valueAnimator.addListener(new ValueAnimator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (state == STATE_TRANSFORM_IN) {
-                    mState = STATE_NORMAL;
-                }
-                if (mTransformListener != null) {
-                    mTransformListener.onTransformComplete(state);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        Log.d("SmoothImageView", " valueAnimator.start()==============");
-        valueAnimator.start();
-    }
-
-    public void setOnTransformListener(TransformListener listener) {
-        mTransformListener = listener;
-    }
-
 
     /**
      * Hook临界值
@@ -1190,55 +907,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         boolean onDoubleClick(LargeImageView view, MotionEvent event);
     }
 
-    public interface TransformListener {
-        //mode STATE_TRANSFORM_IN 1 ,STATE_TRANSFORM_OUT 2
-        void onTransformComplete(int mode);// mode 1
+    public interface OnFlingDownListe {
+        void onFlingDown();
     }
-
-    private class Transfrom {
-        float startScale;
-        float endScale;
-        float scale;
-        LocationSizeF startRect;
-        LocationSizeF endRect;
-        LocationSizeF rect;
-
-        void initStartIn() {
-            scale = startScale;
-            try {
-                rect = (LocationSizeF) startRect.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        void initStartOut() {
-            scale = endScale;
-            try {
-                rect = (LocationSizeF) endRect.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    private class LocationSizeF implements Cloneable {
-        float left;
-        float top;
-        float width;
-        float height;
-
-        @Override
-        public String toString() {
-            return "[left:" + left + " top:" + top + " width:" + width + " height:" + height + "]";
-        }
-
-        @Override
-        public Object clone() throws CloneNotSupportedException {
-            return super.clone();
-        }
-
-    }
-
 }

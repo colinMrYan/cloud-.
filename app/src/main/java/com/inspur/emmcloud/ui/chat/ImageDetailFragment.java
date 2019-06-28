@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -30,6 +29,7 @@ import com.inspur.emmcloud.widget.largeimage.factory.FileBitmapDecoderFactory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.assist.ViewScaleType;
 import com.nostra13.universalimageloader.core.imageaware.NonViewAware;
@@ -131,7 +131,7 @@ public class ImageDetailFragment extends Fragment {
         isNeedTransformOut = getArguments() != null && getArguments().getBoolean("isNeedTransformOut");
         isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
 
-        boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(mImageUrl);//这个是判断有无原图（是否有）
+        boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(mImageUrl);//这个是判断有无原图（是否有）
         if (previewHigh != 0
                 && (rawImageHigh != previewHigh)
                 && !isHaveOriginalImageCatch) {
@@ -155,25 +155,17 @@ public class ImageDetailFragment extends Fragment {
                 container, false);
 
         mImageView = v.findViewById(R.id.image);
-        mImageView.setOriginalInfo(locationW, locationH, locationX, locationY);
-        if (isNeedTransformIn) {
-            mImageView.transformIn();
-        }
-        mImageView.setOnTransformListener(new LargeImageView.TransformListener() {
+        mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTransformComplete(int mode) {
-                if (mode == 2) {
-                    getActivity().finish();
-                    getActivity().overridePendingTransition(0, 0);
-                }
-            }
-        });
-        mImageView.setOnDoubleClickListener(new LargeImageView.OnDoubleClickListener() {
-            @Override
-            public boolean onDoubleClick(LargeImageView view, MotionEvent event) {
+            public void onClick(View v) {
                 EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
                 EventBus.getDefault().post(eventMessage);
-                return false;
+            }
+        });
+        mImageView.setOnFlingDownLister(new LargeImageView.OnFlingDownListe() {
+            @Override
+            public void onFlingDown() {
+                closeImg();
             }
         });
         mImageView.setCriticalScaleValueHook(new LargeImageView.CriticalScaleValueHook() {
@@ -187,31 +179,6 @@ public class ImageDetailFragment extends Fragment {
                 return 5;
             }
         });
-
-
-//        mAttacher = new PhotoViewAttacher(mImageView);
-//        mAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-//            @Override
-//            public void onPhotoTap(View view, float x, float y) {
-//                onOutsidePhotoTap();
-//            }
-//
-//            @Override
-//            public void onOutsidePhotoTap() {
-//                EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
-//                EventBus.getDefault().post(eventMessage);
-//            }
-//        });
-//        mAttacher.setOnSingleFlingListener(new PhotoViewAttacher.OnSingleFlingListener() {
-//            @Override
-//            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//                if (Math.abs(velocityY) > Math.abs(velocityX) && e2.getY() - e1.getY() > DensityUtil.dip2px(getContext(), 30)) {
-//                    closeImg();
-//                }
-//                return false;
-//            }
-//        });
-//        mAttacher.setMaximumScale(5);
         progressBar = v.findViewById(R.id.loading);
         return v;
     }
@@ -224,12 +191,8 @@ public class ImageDetailFragment extends Fragment {
         EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_ON_PHOTO_CLOSE);
         EventBus.getDefault().post(eventMessage);
         InputMethodUtils.hide(getActivity());
-        if (isNeedTransformOut && locationW != 0) {
-            mImageView.transformOut();
-        } else {
-            getActivity().finish();
-            getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        }
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     /**
@@ -239,7 +202,7 @@ public class ImageDetailFragment extends Fragment {
     public void downloadImg(DownLoadProgressRefreshListener downLoadProgressRefreshListener) {
         this.downLoadProgressRefreshListener = downLoadProgressRefreshListener;
         String url = StringUtils.isBlank(rawUrl) ? mImageUrl : rawUrl;
-        if (ImageDisplayUtils.getInstance().isHaveImage(url)) {
+        if (ImageDisplayUtils.getInstance().isHaveCacheImage(url)) {
             File imageFileCatch = DiskCacheUtils.findInCache(url, ImageLoader.getInstance().getDiskCache());
             Bitmap bitmap = BitmapFactory.decodeFile(imageFileCatch.getPath());
             saveBitmapToLocalFromImageLoader(bitmap);
@@ -302,6 +265,11 @@ public class ImageDetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        showImageResouce();
+
+    }
+
+    private void showImageResouce() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.default_image)
                 .showImageOnFail(R.drawable.default_image)
@@ -311,14 +279,17 @@ public class ImageDetailFragment extends Fragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
+
         if (!StringUtils.isBlank(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl)) {
-            mImageView.setImage(new FileBitmapDecoderFactory(ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl)));
+            String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
+            mImageView.setImage(new FileBitmapDecoderFactory(path));
         } else {
             ImageLoader.getInstance().loadImage(mImageUrl, options,
                     new SimpleImageLoadingListener() {
                         @Override
                         public void onLoadingStarted(String imageUri, View view) {
                             if (getActivity() != null) {
+                                mImageView.setImage(R.drawable.default_image);
                                 progressBar.setVisibility(View.VISIBLE);
                             }
                         }
@@ -327,6 +298,7 @@ public class ImageDetailFragment extends Fragment {
                         public void onLoadingFailed(String imageUri, View view,
                                                     FailReason failReason) {
                             if (getActivity() != null) {
+                                mImageView.setImage(R.drawable.default_image);
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
@@ -373,13 +345,15 @@ public class ImageDetailFragment extends Fragment {
                 .showImageForEmptyUri(R.drawable.default_image)
                 .showImageOnFail(R.drawable.default_image)
                 .showImageOnLoading(R.drawable.default_image)
+                .imageScaleType(ImageScaleType.NONE)
                 // 设置图片的解码类型
-                .bitmapConfig(Bitmap.Config.RGB_565)
+                .bitmapConfig(Bitmap.Config.ARGB_8888)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
         ImageSize imageSize = new ImageSize(rawImageWide,
                 rawImageHigh);
+
         ImageLoader.getInstance().loadImage(url, imageSize,
                 options, new ImageLoadingListener() {
                     @Override
@@ -395,18 +369,7 @@ public class ImageDetailFragment extends Fragment {
                         downLoadProgressRefreshListener.loadingComplete(imageUri);
                         LogUtils.LbcDebug("下载完成图片更新" + imageUri);
                         if (getActivity() != null) {
-                            DisplayImageOptions options = new DisplayImageOptions.Builder()
-                                    .showImageForEmptyUri(R.drawable.default_image)
-
-                                    .showImageOnFail(R.drawable.default_image)
-                                    .showImageOnLoading(R.drawable.default_image)
-                                    // 设置图片的解码类型
-                                    .bitmapConfig(Bitmap.Config.RGB_565)
-                                    .cacheInMemory(true)
-                                    .cacheOnDisk(true)
-                                    .build();
-                            mAttacher.update();
-                            ImageLoader.getInstance().displayImage(imageUri, mImageView, options);
+                            showImageResouce();
                             if (isSaveImage2Local) {
                                 saveBitmapToLocalFromImageLoader(loadedImage);
                             }
