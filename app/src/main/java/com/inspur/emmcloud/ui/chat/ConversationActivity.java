@@ -1430,14 +1430,8 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void transmitImgMsg(String cid, Message sendMessage) {
         String path = null;
-        JSONObject jsonObject = JSONUtils.getJSONObject(sendMessage.getContent());
-        try {
-            String data = jsonObject.getString("raw");
-            JSONObject jsonPath = JSONUtils.getJSONObject(data);
-            path = jsonPath.getString("media");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        MsgContentMediaImage msgContentMediaImage = sendMessage.getMsgContentMediaImage();
+        path = msgContentMediaImage.getRawMedia();
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new WebService());

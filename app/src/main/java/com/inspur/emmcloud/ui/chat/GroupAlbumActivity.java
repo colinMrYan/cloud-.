@@ -13,12 +13,14 @@ import com.inspur.emmcloud.adapter.GroupAlbumAdapter;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.GroupUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
@@ -113,7 +115,12 @@ public class GroupAlbumActivity extends BaseActivity {
         } else {
             imgTypeMessageList = MessageCacheUtil.getImgTypeMessageList(MyApplication.getInstance(), cid);
             for (Message message : imgTypeMessageList) {
+                MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
                 String url = APIUri.getChatFileResouceUrl(message.getChannel(), message.getMsgContentMediaImage().getRawMedia());
+                if (msgContentMediaImage.getPreviewHeight() != 0 && msgContentMediaImage.getPreviewWidth() != 0) {
+                    LogUtils.LbcDebug("拼写 Preview 路径");
+                    url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
+                }
                 imgUrlList.add(url);
             }
             messageGroupByDayMap = GroupUtils.group(imgTypeMessageList, new ImageGroupByDate(GROUP_TYPE_MESSAGE));
