@@ -55,7 +55,7 @@
 
             <TextView
                 android:id="@+id/tv_original_picture_download_progress"
-                android:layout_width="85dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
@@ -69,7 +69,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="4dp"
                 android:text="查看原图"
-                android:textColor="#A1A1A1"
+                android:textColor="@color/white"
                 android:visibility="gone" />
 
 

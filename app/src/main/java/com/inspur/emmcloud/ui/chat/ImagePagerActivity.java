@@ -26,6 +26,7 @@ import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -460,7 +461,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private void setOriginalImageButtonShow(int position) {
         if (imgTypeMessageList.size() > 0) {
             originalPictureDownLoadTextView.setVisibility(isShowOriginalImageButton(position) ? View.VISIBLE : View.GONE);
-            originalPictureDownLoadTextView.setText("查看原图");
+            long rawImageSize = imgTypeMessageList.get(position).getMsgContentMediaImage().getRawSize();
+            originalPictureDownLoadTextView.setText("查看原图(" + FileUtils.formatFileSize(rawImageSize) + ")");
         }
     }
 
