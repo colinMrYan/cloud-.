@@ -448,14 +448,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         if (imgTypeMessageList.size() > 0) {
             MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
             boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
-            if ((msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
+            if (msgContentMediaImage.getPreviewHeight() != 0 && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
                 return true;
             } else {
                 return false;
             }
-        } else {
-            return false;
         }
+            return false;
     }
 
     private void setOriginalImageButtonShow(int position) {
