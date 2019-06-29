@@ -2,6 +2,7 @@ package com.inspur.emmcloud.basemodule.util.compressor;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +76,61 @@ public class Compressor {
             return ImageUtil.decodeSampledBitmapFromFile(imageFile, maxArea);
         }else {
             return ImageUtil.decodeSampledBitmapFromFile(imageFile, maxWidth, maxHeight);
+        }
+
+    }
+
+    public ResolutionRatio getResolutionRation(File imageFile) {
+        ResolutionRatio resolutionRatio = new ResolutionRatio();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+        int height = options.outHeight;
+        int width = options.outWidth;
+        if (height * width > maxArea) {
+            float ratio = (float) height * width / maxArea;
+            double ratioDouble = (double) ratio;
+            ratioDouble = Math.sqrt(ratioDouble);
+            height = (int) (height / ratioDouble);
+            width = (int) (width / ratioDouble);
+        }
+        resolutionRatio.setHigh(height);
+        resolutionRatio.setWidth(width);
+        return resolutionRatio;
+    }
+
+    public class ResolutionRatio {
+        private int high = 0;
+        private int width = 0;
+        private long size = 0;
+
+        public ResolutionRatio() {
+        }
+
+        public ResolutionRatio(int high, int width) {
+            this.high = high;
+            this.width = width;
+        }
+
+        public int getHigh() {
+            return high;
+        }
+
+        public void setHigh(int high) {
+            this.high = high;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+        public long getSize() {
+            return high * width;
         }
 
     }
