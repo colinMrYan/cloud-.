@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
+
 /**
  * Author: liuk
  * Created at: 15/12/15
@@ -143,7 +145,12 @@ public class SmoothImageView extends ImageView {
         mTransfrom.startRect.top = mOriginalLocationY;
         mTransfrom.startRect.width = mOriginalWidth;
         mTransfrom.startRect.height = mOriginalHeight;
-
+        LogUtils.jasonDebug("mTransfrom.startScale=" + mTransfrom.startScale);
+        LogUtils.jasonDebug("mTransfrom.endScale=" + mTransfrom.endScale);
+        LogUtils.jasonDebug(" mTransfrom.startRect.left=" + mTransfrom.startRect.left);
+        LogUtils.jasonDebug(" mTransfrom.startRect.top=" + mTransfrom.startRect.top);
+        LogUtils.jasonDebug("mTransfrom.startRect.width=" + mTransfrom.startRect.width);
+        LogUtils.jasonDebug("mTransfrom.startRect.height=" + mTransfrom.startRect.height);
         mTransfrom.endRect = new LocationSizeF();
         float bitmapEndWidth = mBitmap.getWidth() * mTransfrom.endScale;
         float bitmapEndHeight = mBitmap.getHeight() * mTransfrom.endScale;
@@ -151,7 +158,10 @@ public class SmoothImageView extends ImageView {
         mTransfrom.endRect.top = (getHeight() - bitmapEndHeight) / 2;
         mTransfrom.endRect.width = bitmapEndWidth;
         mTransfrom.endRect.height = bitmapEndHeight;
-
+        LogUtils.jasonDebug(" mTransfrom.endRect.left=" + mTransfrom.endRect.left);
+        LogUtils.jasonDebug(" mTransfrom.endRect.top=" + mTransfrom.endRect.top);
+        LogUtils.jasonDebug("mTransfrom.endRect.width=" + mTransfrom.endRect.width);
+        LogUtils.jasonDebug("mTransfrom.endRect.height=" + mTransfrom.endRect.height);
         mTransfrom.rect = new LocationSizeF();
     }
 

@@ -37,7 +37,6 @@ public class ImageGridActivity extends ImageBaseActivity implements
     public static final int REQUEST_PERMISSION_CAMERA = 0x02;
     public static final String EXTRA_ENCODING_TYPE = "IMAGE_ENCODING_TYPE";
     public static final String EXTRA_ORIGINAL_PICTURE = "ORIGINAL_PICTURE";
-    public static final String EXTRA_ORIGINAL_IMAGE_STATE_FROM_COMMUNICATION = "ORIGINAL_IMAGE_STATE_FROM_COMMUNICATION";
     protected static final int CUT_IMG_SUCCESS = 1;
     private int encodingType = 0;
     private ImagePicker imagePicker;
@@ -55,7 +54,6 @@ public class ImageGridActivity extends ImageBaseActivity implements
     private List<ImageFolder> mImageFolders; // 所有的图片文件夹
     private ImageGridAdapter mImageGridAdapter; // 图片九宫格展示的适配器
     private ImageDataSource imageDataSource;
-    private int intentFromCommunicationState = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +79,11 @@ public class ImageGridActivity extends ImageBaseActivity implements
         orgPictureCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                mBtnPre.setVisibility(b ? View.GONE : View.VISIBLE);
+//                mBtnPre.setVisibility(b ? View.GONE : View.VISIBLE);
+                isOrigin = b;
             }
         });
-        intentFromCommunicationState = getIntent().getIntExtra(EXTRA_ORIGINAL_IMAGE_STATE_FROM_COMMUNICATION, 0);
-        orgPictureCheckBox.setVisibility(intentFromCommunicationState > 0 ? View.VISIBLE : View.GONE);
+        orgPictureCheckBox.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
         setStatus();
     }
 
@@ -121,6 +119,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         } else if (id == R.id.btn_preview) {
             Intent intent = new Intent(ImageGridActivity.this, ImagePreviewActivity.class);
             intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, imagePicker.getSelectedImages());
+            intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
             startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
         } else if (id == R.id.ibt_back) {
             // 点击返回按钮
@@ -132,7 +131,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         Intent intent = new Intent();
         intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                 imagePicker.getSelectedImages());
-        intent.putExtra(EXTRA_ORIGINAL_PICTURE, orgPictureCheckBox.isChecked());
+        intent.putExtra(EXTRA_ORIGINAL_PICTURE, isOrigin);
         setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 多选不允许裁剪裁剪，返回数据
         finish();
     }
@@ -264,6 +263,9 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 Intent intent = new Intent();
                 intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                         imagePicker.getSelectedImages());
+                isOrigin = data.getBooleanExtra(
+                        ImagePreviewActivity.ISORIGIN, false);
+                intent.putExtra(EXTRA_ORIGINAL_PICTURE, isOrigin);
                 setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 单选不需要裁剪，返回数据
                 finish();
             }
@@ -283,6 +285,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 if (resultCode == ImagePicker.RESULT_CODE_BACK) {
                     isOrigin = data.getBooleanExtra(
                             ImagePreviewActivity.ISORIGIN, false);
+                    orgPictureCheckBox.setChecked(isOrigin);
                 } else {
                     // 从拍照界面返回
                     // 点击 X , 没有选择照片
@@ -290,6 +293,9 @@ public class ImageGridActivity extends ImageBaseActivity implements
                         // 什么都不做
                     } else {
                         // 说明是从裁剪页面过来的数据，直接返回就可以
+                        isOrigin = data.getBooleanExtra(
+                                ImagePreviewActivity.ISORIGIN, false);
+                        data.putExtra(EXTRA_ORIGINAL_PICTURE, isOrigin);
                         setResult(ImagePicker.RESULT_CODE_ITEMS, data);
                         finish();
                     }

@@ -26,7 +26,6 @@ import com.nostra13.universalimageloader.utils.L;
 import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
 
 import java.io.File;
-import java.util.List;
 
 
 public class ImageDisplayUtils {
@@ -52,7 +51,7 @@ public class ImageDisplayUtils {
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
-                .memoryCacheExtraOptions(2600, 2600)
+                .memoryCacheExtraOptions(1280, 1280)
                 .defaultDisplayImageOptions(options)
                 .imageDownloader(imageDownloader)
                 .threadPoolSize(6)
@@ -203,6 +202,7 @@ public class ImageDisplayUtils {
 
     /**
      * 展示固定大小的图片
+     *
      * @param uri
      * @param imageView
      * @param width
@@ -270,14 +270,16 @@ public class ImageDisplayUtils {
         MemoryCacheUtils.removeFromCache(url, ImageLoader.getInstance().getMemoryCache());
     }
 
-    public boolean isHaveImage(String url) {
+    public boolean isHaveCacheImage(String url) {
         File imageFileCatch = DiskCacheUtils.findInCache(url, ImageLoader.getInstance().getDiskCache());
-        List<String> imageCatchs = MemoryCacheUtils.findCacheKeysForImageUri(url, ImageLoader.getInstance().getMemoryCache());
         if (imageFileCatch == null) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
+    public File getCacheImageFile(String url) {
+        File imageFileCatch = DiskCacheUtils.findInCache(url, ImageLoader.getInstance().getDiskCache());
+        return imageFileCatch;
+    }
 }

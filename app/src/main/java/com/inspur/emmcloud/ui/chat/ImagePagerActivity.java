@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -80,6 +81,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private Boolean isNeedTransformIn;
     private boolean isHasTransformIn = false;
     private Dialog commentInputDlg;
+    private View mainView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,6 +120,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     }
 
     private void init() {
+        mainView = findViewById(R.id.main_layout);
+        mainView.setBackgroundColor(Color.parseColor("#000000"));
         initIntentData();
         originalPictureDownLoadTextView = findViewById(R.id.tv_original_picture_download_progress);
         functionLayout = (RelativeLayout) findViewById(R.id.function_layout);
@@ -442,13 +446,12 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
     }
 
-
     private boolean isShowOriginalImageButton(int position) {
         String url = urlList.get(position); //raw 路径
         if (imgTypeMessageList.size() > 0) {
             MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
-            boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
-            if (msgContentMediaImage.getPreviewHeight() != 0 && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
+            boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(url);//这个是判断有无原图（是否有）
+            if (msgContentMediaImage.getPreviewHeight() != 0 &&(msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
                 return true;
             } else {
                 return false;
