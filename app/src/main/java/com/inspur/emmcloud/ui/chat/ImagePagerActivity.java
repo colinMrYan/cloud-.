@@ -453,8 +453,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(url);//这个是判断有无原图（是否有）
             if (msgContentMediaImage.getPreviewHeight() != 0 &&(msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
                 return true;
-            } else {
-                return false;
             }
         }
             return false;
@@ -501,6 +499,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             int rawWidth = msgContentMediaImage != null ? msgContentMediaImage.getRawWidth() : 0;
             int preViewH = msgContentMediaImage != null ? msgContentMediaImage.getPreviewHeight() : 0;
             int preViewW = msgContentMediaImage != null ? msgContentMediaImage.getPreviewWidth() : 0;
+            LogUtils.LbcDebug("rawH" + rawHigh + "rawW" + rawWidth + "preH" + preViewH + "preW" + preViewW);
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
                         isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth);
         }

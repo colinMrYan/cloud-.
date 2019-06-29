@@ -117,15 +117,16 @@ public class ImageDetailFragment extends Fragment {
         isNeedTransformOut = getArguments() != null && getArguments().getBoolean("isNeedTransformOut");
         isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
 
-        boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(mImageUrl);//这个是判断有无原图（是否有）
-
         rawUrl = mImageUrl;
+
+        boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl);//这个是判断有无原图（是否有）
 
         if (previewHigh != 0
                 && (rawImageHigh != previewHigh)
                 && !isHaveOriginalImageCatch) {
             rawUrl = mImageUrl;
             mImageUrl = mImageUrl + "&resize=true&w=" + previewWide + "&h=" + previewHigh;
+            LogUtils.LbcDebug("mImageUrl::" + mImageUrl);
         }
 
         imageLoadingProgressListener = new ImageLoadingProgressListener() {
@@ -273,6 +274,7 @@ public class ImageDetailFragment extends Fragment {
             String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
             mImageView.setImage(new FileBitmapDecoderFactory(path));
         } else {
+            LogUtils.LbcDebug("loadingUrl" + mImageUrl);
             ImageLoader.getInstance().loadImage(mImageUrl, options,
                     new SimpleImageLoadingListener() {
                         @Override
@@ -286,6 +288,7 @@ public class ImageDetailFragment extends Fragment {
                         @Override
                         public void onLoadingFailed(String imageUri, View view,
                                                     FailReason failReason) {
+                            LogUtils.LbcDebug("loadingImageFailed::" + failReason.getCause().getMessage());
                             if (getActivity() != null) {
                                 mImageView.setImage(R.drawable.default_image);
                                 progressBar.setVisibility(View.GONE);
