@@ -137,7 +137,8 @@ public class GroupNewsActivity extends BaseFragmentActivity {
                 loadingDlg.dismiss();
             }
             WebServiceMiddleUtils.hand(GroupNewsActivity.this, error, errorCode);
-            finish();
+//            finish();
+            findViewById(R.id.rl_no_news).setVisibility(View.VISIBLE);
         }
     }
 }

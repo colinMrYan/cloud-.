@@ -22,4 +22,6 @@
     <string name="news_has_instructions_news">您已批示過此新聞！</string>
     <string name="news_has_instructions_known">瞭解了</string>
     <string name="news_please_instruction">請您輸入批示內容 </string>
+    <string name="news_reload">重新加載</string>
+    <string name="news_fail_load_check_net">內容加載失敗，請檢查網絡</string>
 </resources>

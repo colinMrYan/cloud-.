@@ -23,4 +23,6 @@
     <string name="news_has_instructions_news">You have instructed this news!</string>
     <string name="news_has_instructions_known">Understand</string>
     <string name="news_please_instruction">Please enter your instructions </string>
+    <string name="news_reload">Reload</string>
+    <string name="news_fail_load_check_net">Content loading failed, please check the network</string>
 </resources>

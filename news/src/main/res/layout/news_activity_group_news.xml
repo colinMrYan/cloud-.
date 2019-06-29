@@ -51,4 +51,31 @@
             android:background="@color/content_bg" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_no_news"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_header"
+        android:layout_marginTop="113dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_no_news"
+            android:layout_width="132dp"
+            android:layout_height="97dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_no_news" />
+
+        <TextView
+            android:id="@+id/tv_no_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_no_news"
+            android:layout_centerHorizontal="true"
+            android:text="@string/news_fail_load_check_net"
+            android:textColor="#666666"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
 </RelativeLayout>

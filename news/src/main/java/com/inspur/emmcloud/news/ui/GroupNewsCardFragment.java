@@ -66,6 +66,10 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initViews();
+    }
+
+    private void initViews() {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.news_fragment, null);
@@ -83,6 +87,12 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         newsListView.setBackground(new WaterMarkBgSingleLine(getContext(), getMyInfoResult.getCode()));
         getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
         EventBus.getDefault().register(this);
+        rootView.findViewById(R.id.btn_no_news).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
+            }
+        });
     }
 
     @Override
@@ -189,6 +199,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
             GroupNewsCardFragment.this.page = page;
             //处理新闻列表
             handleNewsList(getGroupNewsDetailResult);
+            rootView.findViewById(R.id.rl_no_news).setVisibility(View.GONE);
         }
 
         @Override
@@ -200,6 +211,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
             GroupNewsCardFragment.this.page = (page > 0) ? (page - 1) : page;
             swipeRefreshLayout.setLoading(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            rootView.findViewById(R.id.rl_no_news).setVisibility(View.VISIBLE);
         }
     }
 }
