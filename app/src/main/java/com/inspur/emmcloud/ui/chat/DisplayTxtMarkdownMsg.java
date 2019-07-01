@@ -32,6 +32,7 @@ import com.inspur.emmcloud.util.privates.richtext.callback.DrawableGetter;
 import com.inspur.emmcloud.util.privates.richtext.callback.ImageFixCallback;
 import com.inspur.emmcloud.util.privates.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlClickListener;
+import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlLongClickListener;
 import com.inspur.emmcloud.util.privates.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
@@ -151,6 +152,12 @@ public class DisplayTxtMarkdownMsg {
                         }
                         /**加上这个目的是为了重新刷新该Ui*/
                         return false;
+                    }
+                })
+                .urlLongClick(new OnUrlLongClickListener() {
+                    @Override
+                    public boolean urlLongClick(String url) {
+                        return true;
                     }
                 })
                 .singleLoad(false)

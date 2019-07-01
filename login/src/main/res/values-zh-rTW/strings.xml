@@ -22,6 +22,7 @@
     <string name="login_current_login_enterprise">當前系統：%1$s</string>
     <string name="login_forget_password">忘記密碼？</string>
     <string name="login_fail_limit_remaining">帳號或密碼錯誤，請重新輸入，剩餘%1$d次機會</string>
+    <string name="login_fail_sms_limit_remaining">驗證碼錯誤，請重新輸入，剩餘%1$d次機會</string>
     <string name="login_fail_account_lock_by_min">帳號已被鎖定，請%1$d分鐘後再嘗試</string>
     <string name="login_fail_account_lock_by_second">帳號已被鎖定，請%1$d秒後再次嘗試</string>
 

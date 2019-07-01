@@ -21,6 +21,7 @@
     <string name="login_current_login_enterprise">当前系统：%1$s</string>
     <string name="login_forget_password">忘记密码？</string>
     <string name="login_fail_limit_remaining">账号或密码错误，请重新输入，还剩余%1$d次机会</string>
+    <string name="login_fail_sms_limit_remaining">验证码错误，请重新输入，还剩余%1$d次机会</string>
     <string name="login_fail_account_lock_by_min">账号已被锁定，请%1$d分钟后再试</string>
     <string name="login_fail_account_lock_by_second">账号已被锁定，请%1$d秒后再试</string>
     <string name="device_disabled_cannot_login">您的设备已被禁用，无法使用此设备登录 </string>
