@@ -133,6 +133,11 @@ public class LoginBySmsActivity extends BaseActivity {
             InputMethodUtils.hide(LoginBySmsActivity.this);
 
         } else if (i == R.id.bt_get_captcha) {
+            if (myCountDownTimer != null) {
+                myCountDownTimer.cancel();
+                myCountDownTimer = null;
+            }
+            myCountDownTimer = new MyCountDownTimer(60000, 1000);
             phone = phoneEdit.getText().toString();
             if (StringUtils.isBlank(phone)) {
                 ToastUtils.show(BaseApplication.getInstance(), R.string.login_please_input_phone_num);
