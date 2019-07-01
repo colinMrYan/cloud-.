@@ -134,14 +134,10 @@ public class PopupWindowList {
         }
         mPopView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        if (mPopupWindowWidth == 0) {
-            mPopupWindowWidth = mDeviceWidth / 3;
-        }
-        if (mPopupWindowHeight == 0) {
-            mPopupWindowHeight = mItemData.size() * mPopView.getMeasuredHeight();
-            if (mPopupWindowHeight > mDeviceHeight / 2) {
-                mPopupWindowHeight = mDeviceHeight / 2;
-            }
+        mPopupWindowWidth = mDeviceWidth / 3;
+        mPopupWindowHeight = mItemData.size() * mPopView.getMeasuredHeight();
+        if (mPopupWindowHeight > mDeviceHeight / 2) {
+            mPopupWindowHeight = mDeviceHeight / 2;
         }
         mPopupWindow = new PopupWindow(mPopView, mPopupWindowWidth, mPopupWindowHeight);
         if (mPopAnimStyle != 0) {
