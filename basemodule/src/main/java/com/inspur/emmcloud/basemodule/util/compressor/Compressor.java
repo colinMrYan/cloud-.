@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.inspur.emmcloud.baselib.util.LogUtils;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -90,7 +88,6 @@ public class Compressor {
         BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
         int height = options.outHeight;
         int width = options.outWidth;
-        LogUtils.LbcDebug("原尺寸：：" + height + " ::" + width);
         if (height * width > maxArea) {
             float ratio = (float) height * width / maxArea;
             double ratioDouble = (double) ratio;
@@ -98,7 +95,13 @@ public class Compressor {
             height = (int) (height / ratioDouble);
             width = (int) (width / ratioDouble);
         }
-        LogUtils.LbcDebug("转化后尺寸：：" + height + " ::" + width);
+        if (height > 4095 || width > 4095) {
+            double heightRadio = (double) height / 4095;
+            double widthRadio = (double) width / 4095;
+            double reduceRadio = heightRadio > widthRadio ? heightRadio : widthRadio;
+            height = (int) (height / reduceRadio);
+            width = (int) (width / reduceRadio);
+        }
         resolutionRatio.setHigh(height);
         resolutionRatio.setWidth(width);
         return resolutionRatio;

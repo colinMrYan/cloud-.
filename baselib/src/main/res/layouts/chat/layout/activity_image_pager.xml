@@ -63,12 +63,13 @@
                 android:background="@drawable/bg_original_picture_progress"
                 android:clickable="true"
                 android:gravity="center"
+                android:minWidth="110dp"
                 android:onClick="onClick"
                 android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="4dp"
-                android:text="查看原图"
+                android:text="@string/chat_full_image"
                 android:textColor="@color/white"
                 android:visibility="gone" />
 
