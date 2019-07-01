@@ -1,9 +1,12 @@
 package com.inspur.emmcloud.ui.contact;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -218,6 +221,9 @@ public class UserInfoActivity extends BaseActivity {
             case R.id.ibt_back:
                 finish();
                 break;
+            case R.id.tv_add_system_contact:
+                addSystemContact();
+                break;
             case R.id.iv_user_photo:
                 Intent intent = new Intent(UserInfoActivity.this,
                         ImagePagerV0Activity.class);
@@ -306,6 +312,25 @@ public class UserInfoActivity extends BaseActivity {
                 }
             }).build().show();
         }
+    }
+
+    /**
+     * 添加到系统联系人
+     */
+    @SuppressLint("IntentReset")
+    private void addSystemContact() {
+        Intent intent = new Intent(Intent.ACTION_INSERT,
+                Uri.withAppendedPath(Uri.parse("content://com.android.contacts"), "contacts"));
+        intent.setType("vnd.android.cursor.dir/person");
+        intent.setType("vnd.android.cursor.dir/contact");
+        intent.setType("vnd.android.cursor.dir/raw_contact");
+        intent.putExtra(ContactsContract.Intents.Insert.NAME, contactUser.getName());
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE_ISPRIMARY, true);
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, contactUser.getTel());
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_WORK);
+        intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE, contactUser.getMobile());
+        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, contactUser.getEmail());
+        startActivity(intent);
     }
 
     private void createDirectChannel() {
