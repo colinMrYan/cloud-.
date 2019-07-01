@@ -37,13 +37,12 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     @Override
     public void onActivityStarted(Activity activity) {
         currentActivity = activity;
-        BaseApplication.getInstance().clearNotification();
         if (count == 0) {
             BaseApplication.getInstance().setIsActive(true);
             if (BaseApplication.getInstance().isHaveLogin()) {
                 long appBackgroundTime = PreferencesUtils.getLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
                 //进入后台后重新进入应用需要间隔3分钟以上才弹出二次验证
-                if (System.currentTimeMillis() - appBackgroundTime >= 180000) {
+                if (System.currentTimeMillis() - appBackgroundTime >= 0) {
                     showFaceOrGestureLock();
                 }
                 uploadMDMInfo();
@@ -55,7 +54,6 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             }
         }
         count++;
-
     }
 
 
