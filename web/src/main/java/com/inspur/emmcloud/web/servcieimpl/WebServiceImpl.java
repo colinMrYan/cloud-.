@@ -105,11 +105,17 @@ public class WebServiceImpl implements WebService {
 
     @Override
     public void openGallery(Activity activity, int limit, int requestCode) {
+        openGallery(activity, limit, requestCode, false);
+    }
+
+    @Override
+    public void openGallery(Activity activity, int limit, int requestCode, boolean isSupportOrigin) {
         ImagePicker imagePicker = ImagePicker.getInstance();
         imagePicker.setShowCamera(false); // 显示拍照按钮
         imagePicker.setCrop(false); // 允许裁剪（单选才有效）
         imagePicker.setSelectLimit(limit);
         imagePicker.setMultiMode(true);
+        imagePicker.setSupportOrigin(isSupportOrigin);
         Intent intent = new Intent(activity, ImageGridActivity.class);
         activity.startActivityForResult(intent, requestCode);
     }

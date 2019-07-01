@@ -68,7 +68,7 @@ public class DisplayMediaImageMsg {
             w = msgContentMediaImage.getPreviewWidth();
         }
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w, h);
-        if (!ImageDisplayUtils.getInstance().isHaveImage(imageUri) && imageUri.startsWith("http") &&
+        if (!ImageDisplayUtils.getInstance().isHaveCacheImage(imageUri) && imageUri.startsWith("http") &&
                 msgContentMediaImage.getPreviewHeight() != 0
                 && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())) {
             imageUri = imageUri + "&resize=true&w=" + message.getMsgContentMediaImage().getPreviewWidth() +

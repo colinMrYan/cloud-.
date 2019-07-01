@@ -220,7 +220,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             fileName = msgContentMediaImage.getName();
             fileSize = FileUtils.formatFileSize(msgContentMediaImage.getRawSize());
             String imgPathResult = APIUri.getChatFileResouceUrl(message.getChannel(), msgContentMediaImage.getRawMedia());
-            boolean isHaveOriginalImage = ImageDisplayUtils.getInstance().isHaveImage(imgPathResult);
+            boolean isHaveOriginalImage = ImageDisplayUtils.getInstance().isHaveCacheImage(imgPathResult);
             if (!isHaveOriginalImage) {
                 imgPathResult = imgPathResult + "&resize=true&w=" + message.getMsgContentMediaImage().getPreviewWidth() +
                         "&h=" + message.getMsgContentMediaImage().getPreviewHeight();

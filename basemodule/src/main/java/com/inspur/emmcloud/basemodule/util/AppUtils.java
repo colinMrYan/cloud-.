@@ -555,10 +555,17 @@ public class AppUtils {
      * 调用图库
      */
     public static void openGallery(Activity activity, int limit, int requestCode) {
+        openGallery(activity, limit, requestCode, false);
+    }
+
+    /**
+     * 沟通调用图库
+     */
+    public static void openGallery(Activity activity, int limit, int requestCode, boolean isSupportOrigin) {
         Router router = Router.getInstance();
         if (router.getService(WebService.class) != null) {
             WebService service = router.getService(WebService.class);
-            service.openGallery(activity, limit, requestCode);
+            service.openGallery(activity, limit, requestCode, isSupportOrigin);
         }
     }
 

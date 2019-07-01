@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -43,7 +47,6 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppWebConfig;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
@@ -102,6 +105,36 @@ public class NewsWebDetailActivity extends BaseActivity {
     private WebSettings settings;
     private Map<String, String> webViewHeaders;
     private RelativeLayout loadingLayout;
+
+    public void setSwitchColor(SwitchCompat v) {
+        // thumb color
+        int thumbColor = 0x1A666666;
+
+        // trackColor
+        int trackColor = 0x7E000000;
+
+        // set the thumb color
+        DrawableCompat.setTintList(v.getThumbDrawable(), new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        thumbColor,
+                        trackColor
+                }));
+
+        // set the track color
+        DrawableCompat.setTintList(v.getTrackDrawable(), new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        0x7E000000,
+                        0x1A666666
+                }));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +197,6 @@ public class NewsWebDetailActivity extends BaseActivity {
             (findViewById(R.id.news_close_btn)).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
         }
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -413,31 +445,21 @@ public class NewsWebDetailActivity extends BaseActivity {
             dialog.findViewById(R.id.app_news_instructions_btn).setVisibility(View.GONE);
             (dialog.findViewById(R.id.app_news_share_btn)).setPadding(getIconLeftSize(), 0, 0, 0);
         }
-        smallerBtn = (Button) dialog.findViewById(R.id.app_news_font_normal_btn);
-        normalBtn = (Button) dialog.findViewById(R.id.app_news_font_middle_btn);
-        largerBtn = (Button) dialog.findViewById(R.id.app_news_font_big_btn);
-        largestBtn = (Button) dialog.findViewById(R.id.app_news_font_biggest_btn);
+        smallerBtn = dialog.findViewById(R.id.app_news_font_normal_btn);
+        normalBtn = dialog.findViewById(R.id.app_news_font_middle_btn);
+        largerBtn = dialog.findViewById(R.id.app_news_font_big_btn);
+        largestBtn = dialog.findViewById(R.id.app_news_font_biggest_btn);
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
-        final SwitchView nightModeSwitchBtn = (SwitchView) dialog.findViewById(R.id.app_news_mode_switch);
-        nightModeSwitchBtn.setPaintColorOn(0x7E000000);
-        nightModeSwitchBtn.setPaintCircleBtnColor(0x1A666666);
-        nightModeSwitchBtn.setOpened(model.endsWith(darkMode));
-        nightModeSwitchBtn.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        final SwitchCompat nightModeSwitchBtn = dialog.findViewById(R.id.app_news_mode_switch);
+        setSwitchColor(nightModeSwitchBtn);
+        nightModeSwitchBtn.setChecked(model.endsWith(darkMode));
+        nightModeSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOn(View view) {
-                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", darkMode);
-                setDialogModel(darkMode);
-                setWebViewModel(darkMode);
-                nightModeSwitchBtn.toggleSwitch(true);
-                reRender();
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
-                setDialogModel(lightMode);
-                setWebViewModel(lightMode);
-                nightModeSwitchBtn.toggleSwitch(false);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                String mode = b ? darkMode : lightMode;
+                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", mode);
+                setDialogModel(mode);
+                setWebViewModel(mode);
                 reRender();
             }
         });

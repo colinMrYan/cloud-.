@@ -85,6 +85,7 @@ public class CommunicationSearchContactActivity extends BaseActivity implements 
         ImmersionBar.with(this).statusBarColor(navigationBarColor).navigationBarColor(navigationBarColor).navigationBarDarkIcon(true, 1.0f).statusBarDarkFont(isStatusBarDarkFont, 0.2f).init();
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchEdit.addTextChangedListener(new SearchWatcher());
+        InputMethodUtils.display(this, searchEdit);
         cancelTextView.setOnClickListener(this);
         handMessage();
         initSearchRunnable();

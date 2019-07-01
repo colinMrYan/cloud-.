@@ -140,9 +140,9 @@
                 android:layout_marginLeft="50dp"
                 android:src="@drawable/app_news_mode_day_light" />
 
-            <com.inspur.emmcloud.baselib.widget.SwitchView
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/app_news_mode_switch"
-                android:layout_width="37dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="24dp"

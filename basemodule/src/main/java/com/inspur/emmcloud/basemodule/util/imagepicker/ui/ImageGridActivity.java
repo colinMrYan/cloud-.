@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -75,6 +76,14 @@ public class ImageGridActivity extends ImageBaseActivity implements
         onImageSelected(0, null, false);
         imageDataSource = new ImageDataSource(this, null, this);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
+        orgPictureCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                mBtnPre.setVisibility(b ? View.GONE : View.VISIBLE);
+                isOrigin = b;
+            }
+        });
+        orgPictureCheckBox.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
         setStatus();
     }
 
@@ -110,6 +119,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         } else if (id == R.id.btn_preview) {
             Intent intent = new Intent(ImageGridActivity.this, ImagePreviewActivity.class);
             intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, imagePicker.getSelectedImages());
+            intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
             startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
         } else if (id == R.id.ibt_back) {
             // 点击返回按钮
@@ -121,7 +131,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
         Intent intent = new Intent();
         intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                 imagePicker.getSelectedImages());
-        intent.putExtra(EXTRA_ORIGINAL_PICTURE, orgPictureCheckBox.isChecked());
+        intent.putExtra(EXTRA_ORIGINAL_PICTURE, isOrigin);
         setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 多选不允许裁剪裁剪，返回数据
         finish();
     }
@@ -253,6 +263,9 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 Intent intent = new Intent();
                 intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                         imagePicker.getSelectedImages());
+                isOrigin = data.getBooleanExtra(
+                        ImagePreviewActivity.ISORIGIN, false);
+                intent.putExtra(EXTRA_ORIGINAL_PICTURE, isOrigin);
                 setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 单选不需要裁剪，返回数据
                 finish();
             }
@@ -272,6 +285,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
                 if (resultCode == ImagePicker.RESULT_CODE_BACK) {
                     isOrigin = data.getBooleanExtra(
                             ImagePreviewActivity.ISORIGIN, false);
+                    orgPictureCheckBox.setChecked(isOrigin);
                 } else {
                     // 从拍照界面返回
                     // 点击 X , 没有选择照片
@@ -279,6 +293,9 @@ public class ImageGridActivity extends ImageBaseActivity implements
                         // 什么都不做
                     } else {
                         // 说明是从裁剪页面过来的数据，直接返回就可以
+                        isOrigin = data.getBooleanExtra(
+                                ImagePreviewActivity.ISORIGIN, false);
+                        data.putExtra(EXTRA_ORIGINAL_PICTURE, isOrigin);
                         setResult(ImagePicker.RESULT_CODE_ITEMS, data);
                         finish();
                     }

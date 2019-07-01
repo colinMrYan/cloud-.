@@ -145,6 +145,7 @@ public class PhotoService extends ImpPlugin {
         ImagePicker imagePicker = ImagePicker.getInstance();
         imagePicker.setShowCamera(false); // 显示拍照按钮
         imagePicker.setCrop(false); // 允许裁剪（单选才有效）
+        imagePicker.setSupportOrigin(false);
         if (picTotal < 0 || picTotal > 9) {
             picTotal = 9;
         }

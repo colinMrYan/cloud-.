@@ -10,29 +10,29 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.basemodule.api.APIDownloadCallBack;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.config.MyAppConfig;
-import com.inspur.emmcloud.basemodule.util.DownLoaderUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.InputMethodUtils;
-import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.widget.SmoothImageView;
+import com.inspur.emmcloud.widget.largeimage.LargeImageView;
+import com.inspur.emmcloud.widget.largeimage.factory.FileBitmapDecoderFactory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.assist.ViewScaleType;
+import com.nostra13.universalimageloader.core.imageaware.NonViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -56,13 +56,15 @@ import static android.R.attr.path;
  */
 public class ImageDetailFragment extends Fragment {
     private String mImageUrl;
-    private SmoothImageView mImageView;
+    private LargeImageView mImageView;
     private ProgressBar progressBar;
     private PhotoViewAttacher mAttacher;
 
     private int rawImageHigh = 0;
     private int rawImageWide = 0;
-    private String rawUrl;
+    private int previewHigh = 0;
+    private int previewWide = 0;
+    private String rawUrl = null;
 
     private int locationW, locationH, locationX, locationY;
     private boolean isNeedTransformOut;
@@ -70,33 +72,20 @@ public class ImageDetailFragment extends Fragment {
     private DownLoadProgressRefreshListener downLoadProgressRefreshListener;
     private ImageLoadingProgressListener imageLoadingProgressListener;
 
-    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut) {
+
+    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int preViewH, int preViewW, int rawH, int rawW) {
         final ImageDetailFragment f = new ImageDetailFragment();
 
         final Bundle args = new Bundle();
         args.putString("url", imageUrl);
-        args.putInt("w", w);
-        args.putInt("h", h);
-        args.putInt("x", x);
-        args.putInt("y", y);
-        args.putBoolean("isNeedTransformOut", isNeedTransformOut);
-        args.putBoolean("isNeedTransformIn", isNeedTransformIn);
-        f.setArguments(args);
-        return f;
-    }
-
-    public static ImageDetailFragment newInstance(String imageUrl, int w, int h, int x, int y, boolean isNeedTransformIn, boolean isNeedTransformOut, int rawH, int rawW, String rawUrl) {
-        final ImageDetailFragment f = new ImageDetailFragment();
-
-        final Bundle args = new Bundle();
-        args.putString("url", imageUrl);
-        args.putString("rawUrl", rawUrl);
         args.putInt("w", w);
         args.putInt("h", h);
         args.putInt("x", x);
         args.putInt("y", y);
         args.putInt("rawH", rawH);
         args.putInt("rawW", rawW);
+        args.putInt("preH", preViewH);
+        args.putInt("preW", preViewW);
         args.putBoolean("isNeedTransformOut", isNeedTransformOut);
         args.putBoolean("isNeedTransformIn", isNeedTransformIn);
         f.setArguments(args);
@@ -108,8 +97,6 @@ public class ImageDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageUrl = getArguments() != null ? getArguments().getString("url")
-                : null;
-        rawUrl = getArguments() != null ? getArguments().getString("rawUrl")
                 : null;
         locationH = getArguments() != null ? getArguments().getInt("h")
                 : null;
@@ -123,18 +110,30 @@ public class ImageDetailFragment extends Fragment {
                 : 0;
         rawImageWide = getArguments() != null ? getArguments().getInt("rawW")
                 : 0;
+        previewHigh = getArguments() != null ? getArguments().getInt("preH")
+                : 0;
+        previewWide = getArguments() != null ? getArguments().getInt("preW")
+                : 0;
         isNeedTransformOut = getArguments() != null && getArguments().getBoolean("isNeedTransformOut");
         isNeedTransformIn = getArguments() != null && getArguments().getBoolean("isNeedTransformIn");
+
+        rawUrl = mImageUrl;
+
+        boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl);//这个是判断有无原图（是否有）
+
+        if (previewHigh != 0
+                && (rawImageHigh != previewHigh)
+                && !isHaveOriginalImageCatch) {
+            rawUrl = mImageUrl;
+            mImageUrl = mImageUrl + "&resize=true&w=" + previewWide + "&h=" + previewHigh;
+        }
 
         imageLoadingProgressListener = new ImageLoadingProgressListener() {
             @Override
             public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                LogUtils.LbcDebug("更新大小:::" + current);
                 downLoadProgressRefreshListener.refreshProgress(imageUri, (current * 100) / total);
             }
         };
-
-
     }
 
 
@@ -145,42 +144,30 @@ public class ImageDetailFragment extends Fragment {
                 container, false);
 
         mImageView = v.findViewById(R.id.image);
-        mImageView.setOriginalInfo(locationW, locationH, locationX, locationY);
-        if (isNeedTransformIn) {
-            mImageView.transformIn();
-        }
-        mImageView.setOnTransformListener(new SmoothImageView.TransformListener() {
+        mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTransformComplete(int mode) {
-                if (mode == 2) {
-                    getActivity().finish();
-                    getActivity().overridePendingTransition(0, 0);
-                }
-            }
-        });
-        mAttacher = new PhotoViewAttacher(mImageView);
-        mAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float x, float y) {
-                onOutsidePhotoTap();
-            }
-
-            @Override
-            public void onOutsidePhotoTap() {
+            public void onClick(View v) {
                 EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
                 EventBus.getDefault().post(eventMessage);
             }
         });
-        mAttacher.setOnSingleFlingListener(new PhotoViewAttacher.OnSingleFlingListener() {
+        mImageView.setOnFlingDownLister(new LargeImageView.OnFlingDownListe() {
             @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                if (Math.abs(velocityY) > Math.abs(velocityX) && e2.getY() - e1.getY() > DensityUtil.dip2px(getContext(), 30)) {
-                    closeImg();
-                }
-                return false;
+            public void onFlingDown() {
+                closeImg();
             }
         });
-        mAttacher.setMaximumScale(5);
+        mImageView.setCriticalScaleValueHook(new LargeImageView.CriticalScaleValueHook() {
+            @Override
+            public float getMinScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMinScale) {
+                return 1;
+            }
+
+            @Override
+            public float getMaxScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMaxScale) {
+                return 5;
+            }
+        });
         progressBar = v.findViewById(R.id.loading);
         return v;
     }
@@ -193,26 +180,23 @@ public class ImageDetailFragment extends Fragment {
         EventMessage eventMessage = new EventMessage("", Constant.EVENTBUS_TAG_ON_PHOTO_CLOSE);
         EventBus.getDefault().post(eventMessage);
         InputMethodUtils.hide(getActivity());
-        if (isNeedTransformOut && locationW != 0) {
-            mImageView.transformOut();
-        } else {
-            getActivity().finish();
-            getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        }
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     /**
      * 保存图片
      * 从保存ImageView缓存改为从网络下载 无网络给出提示  190626
      */
-    public void downloadImg() {
-//        mImageView.setDrawingCacheEnabled(false);
-        if (ImageDisplayUtils.getInstance().isHaveImage(mImageUrl)) {
-            File imageFileCatch = DiskCacheUtils.findInCache(mImageUrl, ImageLoader.getInstance().getDiskCache());
+    public void downloadImg(DownLoadProgressRefreshListener downLoadProgressRefreshListener) {
+        this.downLoadProgressRefreshListener = downLoadProgressRefreshListener;
+        String url = StringUtils.isBlank(rawUrl) ? mImageUrl : rawUrl;
+        if (ImageDisplayUtils.getInstance().isHaveCacheImage(url)) {
+            File imageFileCatch = DiskCacheUtils.findInCache(url, ImageLoader.getInstance().getDiskCache());
             Bitmap bitmap = BitmapFactory.decodeFile(imageFileCatch.getPath());
-            saveBitmapFile(bitmap);
+            saveBitmapToLocalFromImageLoader(bitmap);
         } else {
-            downLoadOriginalPicture(true);
+            loadingOriginalPicture(true);
         }
     }
 
@@ -258,26 +242,25 @@ public class ImageDetailFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
             bos.close();
-            ToastUtils.show(getActivity(), getString(R.string.save_success));
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.save_success));
         } catch (IOException e) {
-            ToastUtils.show(getActivity(), getString(R.string.save_fail));
+            ToastUtils.show(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.save_fail));
             e.printStackTrace();
         }
         return savedImagePath;
     }
 
-    public void resetImage(String url) {
-        LogUtils.LbcDebug("图片已经存在");
-        mImageUrl = url;
-        onStart();
-    }
 
     @Override
     public void onStart() {
         super.onStart();
+        showImageResouce();
+
+    }
+
+    private void showImageResouce() {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.default_image)
-
                 .showImageOnFail(R.drawable.default_image)
                 .showImageOnLoading(R.drawable.default_image)
                 // 设置图片的解码类型
@@ -285,55 +268,51 @@ public class ImageDetailFragment extends Fragment {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .build();
-        ImageLoader.getInstance().displayImage(mImageUrl, mImageView, options,
-                new SimpleImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-                        if (getActivity() != null) {
-                            progressBar.setVisibility(View.VISIBLE);
-                        }
-                    }
 
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view,
-                                                FailReason failReason) {
-                        if (getActivity() != null) {
-                            String message = null;
-                            switch (failReason.getType()) {
-                                case IO_ERROR:
-                                    message = getString(R.string.download_fail);
-                                    break;
-                                case DECODING_ERROR:
-                                    message = getString(R.string.picture_cannot_show);
-                                    break;
-                                case NETWORK_DENIED:
-                                    message = getString(R.string.cannot_download_for_network_exception);
-                                    break;
-                                case OUT_OF_MEMORY:
-                                    message = getString(R.string.cannot_show_for_too_big);
-                                    break;
-                                case UNKNOWN:
-                                    message = getString(R.string.unknown_error);
-                                    break;
-                                default:
-                                    message = getString(R.string.download_fail);
-                                    break;
+        if (!StringUtils.isBlank(rawUrl) && ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl)) {
+            String path = ImageDisplayUtils.getInstance().getCacheImageFile(rawUrl).getAbsolutePath();
+            mImageView.setImage(new FileBitmapDecoderFactory(path));
+        } else {
+            ImageLoader.getInstance().loadImage(mImageUrl, options,
+                    new SimpleImageLoadingListener() {
+                        @Override
+                        public void onLoadingStarted(String imageUri, View view) {
+                            if (getActivity() != null) {
+                                mImageView.setImage(R.drawable.default_image);
+                                progressBar.setVisibility(View.VISIBLE);
                             }
-//							Toast.makeText(getActivity(), message,
-//									Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
                         }
-                    }
 
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view,
-                                                  Bitmap loadedImage) {
-                        if (getActivity() != null) {
-                            progressBar.setVisibility(View.GONE);
-                            mAttacher.update();
+                        @Override
+                        public void onLoadingFailed(String imageUri, View view,
+                                                    FailReason failReason) {
+                            if (getActivity() != null) {
+                                mImageView.setImage(R.drawable.default_image);
+                                progressBar.setVisibility(View.GONE);
+                            }
                         }
-                    }
-                });
+
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view,
+                                                      Bitmap loadedImage) {
+                            if (getActivity() != null) {
+                                progressBar.setVisibility(View.GONE);
+                                mImageView.setImage(loadedImage);
+                            }
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (!StringUtils.isBlank(rawUrl)) {
+            ImageSize imageSize = new ImageSize(rawImageWide,
+                    rawImageHigh);
+            NonViewAware imageAware = new NonViewAware(rawUrl, imageSize, ViewScaleType.CROP);
+            ImageLoader.getInstance().cancelDisplayTask(imageAware);
+        }
+        super.onDestroy();
     }
 
     /**
@@ -341,20 +320,21 @@ public class ImageDetailFragment extends Fragment {
      */
     public void loadingImage(DownLoadProgressRefreshListener downLoadProgressRefreshListener) {
         this.downLoadProgressRefreshListener = downLoadProgressRefreshListener;
-        downLoadOriginalPicture(false);
+        loadingOriginalPicture(false);
     }
 
 
     /**
      * ImageView 加载图片
      */
-    private void downLoadOriginalPicture(boolean isSaveImage2Local) {
+    private void loadingOriginalPicture(boolean isSaveImage2Local) {
         String url = rawUrl == null ? mImageUrl : rawUrl;
         LogUtils.LbcDebug("获取到的Url:::" + url);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.default_image)
                 .showImageOnFail(R.drawable.default_image)
                 .showImageOnLoading(R.drawable.default_image)
+                .imageScaleType(ImageScaleType.NONE)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheInMemory(true)
@@ -366,26 +346,26 @@ public class ImageDetailFragment extends Fragment {
                 options, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
-
                     }
 
                     @Override
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
                     }
 
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         downLoadProgressRefreshListener.loadingComplete(imageUri);
                         LogUtils.LbcDebug("下载完成图片更新" + imageUri);
-                        if (isSaveImage2Local) {
-                            saveBitmapToLocalFromImageLoader(loadedImage);
+                        if (getActivity() != null) {
+                            showImageResouce();
+                            if (isSaveImage2Local) {
+                                saveBitmapToLocalFromImageLoader(loadedImage);
+                            }
                         }
                     }
 
                     @Override
                     public void onLoadingCancelled(String imageUri, View view) {
-
                     }
                 }, imageLoadingProgressListener);
 
@@ -397,7 +377,7 @@ public class ImageDetailFragment extends Fragment {
      */
     private void saveBitmapToLocalFromImageLoader(Bitmap bitmap) {
         String savedImagePath = saveBitmapFile(bitmap);
-        refreshGallery(getActivity(), savedImagePath);
+        refreshGallery(BaseApplication.getInstance(), savedImagePath);
     }
 
     public interface DownLoadProgressRefreshListener {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,6 +31,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
     private Button editBtn; // 原图
     private TextView OKText; // 确认图片的选择
     private View bottomBar;
+    private AppCompatCheckBox originCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 
         bottomBar = findViewById(R.id.bottom_bar);
         bottomBar.setVisibility(View.VISIBLE);
-
+        originCheck = findViewById(R.id.cb_origin);
         mCbCheck = (SuperCheckBox) findViewById(R.id.cb_check);
         editBtn = (Button) findViewById(R.id.edit_btn);
         encodingType = getIntent().getIntExtra(EXTRA_ENCODING_TYPE, 0);
@@ -61,7 +63,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
                 );
             }
         });
-
+        originCheck.setVisibility(imagePicker.isSupportOrigin() ? View.VISIBLE : View.GONE);
+        originCheck.setChecked(isOrigin);
         // 初始化当前页面的状态
         onImageSelected(0, null, true);
         ImageItem item = mImageItems.get(mCurrentPosition);
@@ -120,6 +123,12 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
                         mCbCheck.isChecked());
             }
         });
+        originCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isOrigin = b;
+            }
+        });
     }
 
     /**
@@ -145,6 +154,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
             Intent intent = new Intent();
             intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
                     imagePicker.getSelectedImages());
+            intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
             setResult(ImagePicker.RESULT_CODE_ITEMS, intent);
             finish();
         } else if (id == R.id.ibt_back) {

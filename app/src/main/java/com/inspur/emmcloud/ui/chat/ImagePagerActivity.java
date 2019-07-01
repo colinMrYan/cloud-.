@@ -2,7 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,8 +25,10 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -39,11 +41,6 @@ import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
 import com.inspur.emmcloud.widget.HackyViewPager;
 import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -85,7 +82,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     private Boolean isNeedTransformIn;
     private boolean isHasTransformIn = false;
     private Dialog commentInputDlg;
-    private ImageLoadingProgressListener imageLoadingProgressListener;
+    private View mainView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +121,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     }
 
     private void init() {
+        mainView = findViewById(R.id.main_layout);
+        mainView.setBackgroundColor(Color.parseColor("#000000"));
         initIntentData();
         originalPictureDownLoadTextView = findViewById(R.id.tv_original_picture_download_progress);
         functionLayout = (RelativeLayout) findViewById(R.id.function_layout);
@@ -145,22 +144,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG) && pagerPosition == 0) {
             setCommentCount();
         }
-        imageLoadingProgressListener = new ImageLoadingProgressListener() {
-            @Override
-            public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                LogUtils.LbcDebug("更新大小:::" + current);
-                LogUtils.LbcDebug("imageUri" + imageUri + "  " + urlList.get(pagerPosition));
-                if (imageUri.equals(urlList.get(pagerPosition))) {
-                    LogUtils.LbcDebug("pagerPosition:" + pagerPosition);
-                    originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
-                    originalPictureDownLoadTextView.setText("%" + (current * 100) / total);
-                    if (current == total) {
-                        ImageDetailFragment imageDetailFragment = mAdapter.getCurrentFragment();
-                        imageDetailFragment.resetImage(imageUri);
-                    }
-                }
-            }
-        };
 
         downLoadProgressRefreshListener = new ImageDetailFragment.DownLoadProgressRefreshListener() {
             @Override
@@ -196,7 +179,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 mAdapter.getCurrentFragment().closeImg();
                 break;
             case R.id.download_img:
-                mAdapter.getCurrentFragment().downloadImg();
+                originalPictureDownLoadTextView.setText("%0");
+                mAdapter.getCurrentFragment().downloadImg(downLoadProgressRefreshListener);
                 break;
             case R.id.enter_channel_imgs_img:
                 bundle = new Bundle();
@@ -262,55 +246,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         // 设置点击外围解散
         commentInputDlg.setCanceledOnTouchOutside(true);
         commentInputDlg.show();
-    }
-
-    /**
-     * 下载原图
-     */
-    private void downLoadOriginalPicture() {
-        Message message = imgTypeMessageList.get(pagerPosition);
-        LogUtils.LbcDebug("url::::" + urlList.get(pagerPosition));
-        String path = message.getMsgContentMediaImage().getRawMedia();
-        String url = APIUri.getChatFileResouceUrl(message.getChannel(), path);
-        LogUtils.LbcDebug("获取到的Url:::" + url);
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.default_image)
-                .showImageOnFail(R.drawable.default_image)
-                .showImageOnLoading(R.drawable.default_image)
-                // 设置图片的解码类型
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageSize imageSize = new ImageSize(message.getMsgContentMediaImage().getRawWidth(),
-                message.getMsgContentMediaImage().getRawHeight());
-        com.nostra13.universalimageloader.core.ImageLoader.getInstance().loadImage(url, imageSize,
-                options, new ImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-
-                    }
-
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-                    }
-
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        LogUtils.LbcDebug("下载完成图片更新" + imageUri);
-                        if (imageUri.equals(urlList.get(pagerPosition))) {
-                            mAdapter.getItem(pagerPosition);
-                            originalPictureDownLoadTextView.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onLoadingCancelled(String imageUri, View view) {
-
-                    }
-                }, imageLoadingProgressListener);
-
     }
 
     /**
@@ -512,26 +447,23 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
     }
 
-
     private boolean isShowOriginalImageButton(int position) {
         String url = urlList.get(position); //raw 路径
         if (imgTypeMessageList.size() > 0) {
             MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
-            boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
-            if ((msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
+            boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(url);//这个是判断有无原图（是否有）
+            if (msgContentMediaImage.getPreviewHeight() != 0 &&(msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+            return false;
     }
 
     private void setOriginalImageButtonShow(int position) {
         if (imgTypeMessageList.size() > 0) {
             originalPictureDownLoadTextView.setVisibility(isShowOriginalImageButton(position) ? View.VISIBLE : View.GONE);
-            originalPictureDownLoadTextView.setText("查看原图");
+            long rawImageSize = imgTypeMessageList.get(position).getMsgContentMediaImage().getRawSize();
+            originalPictureDownLoadTextView.setText(BaseApplication.getInstance().getString(R.string.chat_full_image) + "(" + FileUtils.formatFileSize(rawImageSize) + ")");
         }
     }
 
@@ -561,21 +493,16 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             } else {
                 isNeedTransformIn = false;
             }
-            if (imgTypeMessageList.size() > 0) {
-                LogUtils.LbcDebug("imagList Size >0;  size=" + imgTypeMessageList.size());
-                MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
-                boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveImage(url);//这个是判断有无原图（是否有）
-                if (msgContentMediaImage.getPreviewHeight() != 0
-                        && (msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight())
-                        && !isHaveOriginalImageCatch) {
-                    url = url + "&resize=true&w=" + msgContentMediaImage.getPreviewWidth() + "&h=" + msgContentMediaImage.getPreviewHeight();
-                    LogUtils.LbcDebug("有原图且无本地原图加载预览图:" + url);
-                }
+
+            MsgContentMediaImage msgContentMediaImage = (imgTypeMessageList.size() > 0) ?
+                    imgTypeMessageList.get(position).getMsgContentMediaImage() : null;
+            int rawHigh = msgContentMediaImage != null ? msgContentMediaImage.getRawHeight() : 0;
+            int rawWidth = msgContentMediaImage != null ? msgContentMediaImage.getRawWidth() : 0;
+            int preViewH = msgContentMediaImage != null ? msgContentMediaImage.getPreviewHeight() : 0;
+            int preViewW = msgContentMediaImage != null ? msgContentMediaImage.getPreviewWidth() : 0;
+            LogUtils.LbcDebug("rawH" + rawHigh + "rawW" + rawWidth + "preH" + preViewH + "preW" + preViewW);
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
-                        isNeedTransformOut, msgContentMediaImage.getRawHeight(), msgContentMediaImage.getRawWidth(), urlList.get(position));
-            } else {
-                return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
-            }
+                        isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth);
         }
 
         @Override
