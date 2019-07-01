@@ -441,7 +441,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
                 backUiMessage = uiMessage;
                 int[] operationsId = getCardLongClickOperations(uiMessage);
-                if (operationsId.length > 0) {
+                if (operationsId.length > 0 && uiMessage.getSendStatus() == 1) {
 //                    showLongClickOperationsDialog(operationsId, ConversationActivity.this, uiMessage);
                     showLongClickDialog(operationsId, uiMessage, view);
                 }
@@ -450,22 +450,25 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
-                CardClickOperation(ConversationActivity.this, view, uiMessage);
+                if (uiMessage.getSendStatus() == 1) {
+                    CardClickOperation(ConversationActivity.this, view, uiMessage);
+                }
             }
 
             @Override
             public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
-                Message message = uiMessage.getMessage();
-                switch (message.getType()) {
-                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        Bundle bundle = new Bundle();
-                        bundle.putString("mid", message.getId());
-                        bundle.putString(EXTRA_CID, message.getChannel());
-                        IntentUtils.startActivity(ConversationActivity.this,
-                                ChannelMessageDetailActivity.class, bundle);
-
-                        break;
+                if (uiMessage.getSendStatus() == 1) {
+                    Message message = uiMessage.getMessage();
+                    switch (message.getType()) {
+                        case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                        case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                            Bundle bundle = new Bundle();
+                            bundle.putString("mid", message.getId());
+                            bundle.putString(EXTRA_CID, message.getChannel());
+                            IntentUtils.startActivity(ConversationActivity.this,
+                                    ChannelMessageDetailActivity.class, bundle);
+                            break;
+                    }
                 }
             }
         });
@@ -1462,7 +1465,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                items = new int[]{R.string.chat_long_click_transmit};
+                items = new int[]{R.string.chat_long_click_transmit, R.string.chat_long_click_reply};
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
@@ -1601,6 +1604,9 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case R.string.chat_long_click_copy_text:
                     copyToClipboard(ConversationActivity.this, content);
                     break;
+                case R.string.chat_long_click_reply:
+                    replyMessage(uiMessage.getMessage());
+                    break;
             }
             mPopupWindowList.hide();
         });
@@ -1676,6 +1682,18 @@ public class ConversationActivity extends ConversationBaseActivity {
         cmb.setPrimaryClip(ClipData.newPlainText(null, content));
         ToastUtils.show(context, R.string.copyed_to_paste_board);
     }
+
+    /**
+     * （图片）回复功能
+     */
+    private void replyMessage(Message message) {
+        Bundle bundle = new Bundle();
+        bundle.putString("mid", message.getId());
+        bundle.putString(EXTRA_CID, message.getChannel());
+        IntentUtils.startActivity(ConversationActivity.this,
+                ChannelMessageDetailActivity.class, bundle);
+    }
+
 
     /**
      * 文本信息添加到日程
