@@ -317,6 +317,8 @@
     <string name="chat_long_click_copy_text">複製文字</string>
     <string name="communication_search">搜索</string>
     <string name="chat_full_image">查看原圖</string>
+    <string name="chat_transmit_message_success">轉發成功</string>
+    <string name="chat_transmit_message_fail">轉發失敗</string>
 
 
     <!-- 會議卡片 -->
@@ -825,6 +827,7 @@
     <string name="do_not_select_yourself">不能選擇自己 </string>
     <string name="contact_exception">數據异常，無法打開 </string>
     <string name="contact_select_limit_warning">已達到最大可選人數</string>
+    <string name="contact_add_system">添加到聯係人</string>
 
     <!-- 會議室部分 -->
     <string name="meeting_room_booking_detail">會議室詳情</string>

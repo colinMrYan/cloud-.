@@ -150,7 +150,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             public void refreshProgress(String url, int progress) {
                 if (imgTypeMessageList.size() > 0 && urlList.get(pagerPosition).equals(url)) {
                     originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
-                    originalPictureDownLoadTextView.setText("%" + progress);
+                    originalPictureDownLoadTextView.setText(progress + "%");
                 }
 
             }
@@ -179,7 +179,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 mAdapter.getCurrentFragment().closeImg();
                 break;
             case R.id.download_img:
-                originalPictureDownLoadTextView.setText("%0");
+                originalPictureDownLoadTextView.setText("0%");
                 mAdapter.getCurrentFragment().downloadImg(downLoadProgressRefreshListener);
                 break;
             case R.id.enter_channel_imgs_img:
@@ -205,7 +205,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             case R.id.tv_original_picture_download_progress:
                 LogUtils.LbcDebug("下载图片");
                 if (imgTypeMessageList.size() > 0) {
-                    originalPictureDownLoadTextView.setText("%0");
+                    originalPictureDownLoadTextView.setText("0%");
                     ImageDetailFragment imageDetailFragment = mAdapter.getCurrentFragment();
                     imageDetailFragment.loadingImage(downLoadProgressRefreshListener);
                 }
