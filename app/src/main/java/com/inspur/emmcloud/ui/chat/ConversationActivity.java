@@ -1769,6 +1769,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     if (!StringUtils.isBlank(path)) {
                         Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
                         WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
+                        ToastUtils.show(R.string.chat_transmit_message_success);
                     }
                 }
             }
