@@ -7,22 +7,44 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/ibt_back"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:elevation="15dp"
-        android:onClick="onClick"
-        android:padding="11dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_back_btn_white" />
+    <RelativeLayout
+        android:id="@+id/ibt_back_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <ImageButton
+            android:id="@+id/ibt_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:elevation="15dp"
+            android:onClick="onClick"
+            android:padding="11dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_back_btn_white" />
+
+        <TextView
+            android:id="@+id/tv_add_system_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="15dp"
+            android:text="@string/contact_add_system"
+            android:textColor="?attr/header_text_color"
+            android:textSize="@dimen/header_function_textsize" />
+
+    </RelativeLayout>
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_user_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ibt_back"
+        android:layout_below="@id/ibt_back_layout"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="-3dp"
