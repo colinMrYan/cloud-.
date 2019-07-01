@@ -42,6 +42,9 @@ import java.util.List;
 @SuppressLint("ValidFragment")
 public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
     private static final String ARG_POSITION = "position";
+    private static final String CATAGORY_ID = "catagoryid";
+    private static final String HAS_EXTRA_PERMISSION = "hasExtraPermission";
+    private static final String GROUP_NEWS = "";
     private View rootView;
     private LoadingDialog loadingDlg;
     private ListView newsListView;
@@ -57,8 +60,8 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
     public GroupNewsCardFragment(int position, String catagoryId, String title, boolean hasExtraPermission) {
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
-        b.putString("catagoryid", catagoryId);
-        b.putBoolean("hasExtraPermission", hasExtraPermission);
+        b.putString(CATAGORY_ID, catagoryId);
+        b.putBoolean(HAS_EXTRA_PERMISSION, hasExtraPermission);
         this.setArguments(b);
         this.pagerTitle = title;
     }
@@ -85,12 +88,12 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
         String myInfo = PreferencesUtils.getString(getContext(), "myInfo", "");
         GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
         newsListView.setBackground(new WaterMarkBgSingleLine(getContext(), getMyInfoResult.getCode()));
-        getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
+        getGroupNewsList(getArguments().getString(CATAGORY_ID), 0, true);
         EventBus.getDefault().register(this);
         rootView.findViewById(R.id.btn_no_news).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
+                getGroupNewsList(getArguments().getString(CATAGORY_ID), 0, true);
             }
         });
     }
@@ -169,12 +172,12 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
 
     @Override
     public void onRefresh() {
-        getGroupNewsList(getArguments().getString("catagoryid"), 0, false);
+        getGroupNewsList(getArguments().getString(CATAGORY_ID), 0, false);
     }
 
     @Override
     public void onLoadMore() {
-        getGroupNewsList(getArguments().getString("catagoryid"), page + 1, false);
+        getGroupNewsList(getArguments().getString(CATAGORY_ID), page + 1, false);
     }
 
     class ListItemOnClickListener implements OnItemClickListener {
@@ -183,7 +186,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
                                 long id) {
             Intent intent = new Intent();
             intent.setClass(getActivity(), NewsWebDetailActivity.class);
-            intent.putExtra("groupNews", groupnNewsList.get(position));
+            intent.putExtra(HAS_EXTRA_PERMISSION, groupnNewsList.get(position));
             startActivity(intent);
         }
     }

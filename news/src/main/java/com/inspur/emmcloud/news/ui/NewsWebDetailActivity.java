@@ -72,6 +72,9 @@ import java.util.TimeZone;
 public class NewsWebDetailActivity extends BaseActivity {
 
     private static final int SHARE_SEARCH_RUEST_CODE = 1;
+    private static final String APP_NEWS_WEBVIEW_MODEL = "app_news_webview_model";
+    private static final String APP_NEWS_TEXT_SIZE = "app_news_text_size";
+    private static final String GROUP_NEWS = "groupNews";
     private static final String darkMode = "#dark_120";
     private static final String lightMode = "#light_120";
     private WebView webView;
@@ -83,7 +86,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private String instruction = "";
     private String originalEditorComment = "";
     private GroupNews groupNews;
-    private Dialog intrcutionDialog;
+    private Dialog instructionDialog;
     private String fakeMessageId;
     private WebSettings settings;
     private Map<String, String> webViewHeaders;
@@ -135,7 +138,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private void initViews() {
         loadingLayout = findViewById(R.id.rl_loading);
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
-        ((TextView) findViewById(R.id.header_text)).setText(((GroupNews) getIntent().getSerializableExtra("groupNews")).getTitle());
+        ((TextView) findViewById(R.id.header_text)).setText(((GroupNews) getIntent().getSerializableExtra(GROUP_NEWS)).getTitle());
         setWebView();
         setWebViewSettings();
         initWebViewGoBackOrClose();
@@ -177,14 +180,14 @@ public class NewsWebDetailActivity extends BaseActivity {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         //初始化WebView字体的大小
-        textSize = PreferencesByUserAndTanentUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
+        textSize = PreferencesByUserAndTanentUtils.getInt(NewsWebDetailActivity.this, APP_NEWS_TEXT_SIZE, MyAppWebConfig.NORMAL);
         webSettings.setTextZoom(textSize);
         // 加载需要显示的网页
         if (!url.startsWith("http")) {
             url = NewsAPIUri.getGroupNewsHtmlUrl(url);
         }
         //修改model在第一次加载时直接带着model而不是加载两次
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, "");
         loadUrlWithHeader(url + (StringUtils.isBlank(model) ? lightMode : model));
         setHeaderModel(model);
     }
@@ -199,7 +202,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         webView.setAnimation(null);
         webView.setNetworkAvailable(true);
         webView.setBackgroundColor(Color.WHITE);
-        final String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        final String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, "");
         webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, (model.equals(darkMode)) ? R.color.app_news_night_color : R.color.white));
         //没有确定这里的影响，暂时不去掉
         webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
@@ -323,7 +326,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        groupNews = (GroupNews) getIntent().getSerializableExtra("groupNews");
+        groupNews = (GroupNews) getIntent().getSerializableExtra(GROUP_NEWS);
         if (groupNews != null) {
             String postTime = groupNews.getCreationDate();
             url = StringUtils.isBlank(groupNews.getUrl()) ? (getNewsTimePathIn(postTime)
@@ -386,7 +389,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
         setFontSizeBtn();
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, "");
         setDialogModel(model);
         dialog.show();
     }
@@ -399,19 +402,19 @@ public class NewsWebDetailActivity extends BaseActivity {
             dialog.findViewById(R.id.app_news_instructions_btn).setVisibility(View.GONE);
             (dialog.findViewById(R.id.app_news_share_btn)).setPadding(getIconLeftSize(), 0, 0, 0);
         }
-        smallerBtn = (Button) dialog.findViewById(R.id.app_news_font_normal_btn);
-        normalBtn = (Button) dialog.findViewById(R.id.app_news_font_middle_btn);
-        largerBtn = (Button) dialog.findViewById(R.id.app_news_font_big_btn);
-        largestBtn = (Button) dialog.findViewById(R.id.app_news_font_biggest_btn);
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
-        final SwitchView nightModeSwitchBtn = (SwitchView) dialog.findViewById(R.id.app_news_mode_switch);
+        smallerBtn = dialog.findViewById(R.id.app_news_font_normal_btn);
+        normalBtn = dialog.findViewById(R.id.app_news_font_middle_btn);
+        largerBtn = dialog.findViewById(R.id.app_news_font_big_btn);
+        largestBtn = dialog.findViewById(R.id.app_news_font_biggest_btn);
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, lightMode);
+        final SwitchView nightModeSwitchBtn = dialog.findViewById(R.id.app_news_mode_switch);
         nightModeSwitchBtn.setPaintColorOn(0x7E000000);
         nightModeSwitchBtn.setPaintCircleBtnColor(0x1A666666);
         nightModeSwitchBtn.setOpened(model.endsWith(darkMode));
         nightModeSwitchBtn.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", darkMode);
+                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, darkMode);
                 setDialogModel(darkMode);
                 setWebViewModel(darkMode);
                 nightModeSwitchBtn.toggleSwitch(true);
@@ -420,7 +423,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
             @Override
             public void toggleToOff(View view) {
-                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, lightMode);
                 setDialogModel(lightMode);
                 setWebViewModel(lightMode);
                 nightModeSwitchBtn.toggleSwitch(false);
@@ -445,11 +448,11 @@ public class NewsWebDetailActivity extends BaseActivity {
         drawableBtn.setColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_btn));
         (dialog.findViewById(R.id.app_news_mode_layout)).setBackground(drawableBtn);
         setDayBtn(model.equals(darkMode) ? 1 : 2);
-        Button shareBtn = (Button) (dialog.findViewById(R.id.app_news_share_btn));
+        Button shareBtn = (dialog.findViewById(R.id.app_news_share_btn));
         shareBtn.setBackground(drawableBtn);
         shareBtn.setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
-        Button instructionsBtn = (Button) dialog.findViewById(R.id.app_news_instructions_btn);
+        Button instructionsBtn = dialog.findViewById(R.id.app_news_instructions_btn);
         instructionsBtn.setBackground(drawableBtn);
         instructionsBtn.setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
@@ -457,7 +460,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_read_line_color));
         ((TextView) dialog.findViewById(R.id.app_news_read_mode_text)).setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color)
                 : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
-        TextView dayOrNightModeText = (TextView) dialog.findViewById(R.id.app_news_mode_night_text);
+        TextView dayOrNightModeText = dialog.findViewById(R.id.app_news_mode_night_text);
         dayOrNightModeText.setText(model.equals(darkMode) ? getString(R.string.news_night_mode_text) : getString(R.string.news_day_mode_text));
         dayOrNightModeText.setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
         ((ImageView) dialog.findViewById(R.id.app_news_mode_sun_img)).setImageResource(model.equals(darkMode) ? R.drawable.app_news_mode_day_light : R.drawable.app_news_mode_day_dark);
@@ -495,7 +498,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void setNewsFontSize(int textZoom) {
         webView.getSettings().setTextZoom(textZoom);
-        PreferencesByUserAndTanentUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
+        PreferencesByUserAndTanentUtils.putInt(NewsWebDetailActivity.this, APP_NEWS_TEXT_SIZE, textZoom);
         textSize = textZoom;
         reRender();
         setFontSizeBtn();
@@ -506,7 +509,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void reRender() {
         //这里为了解决一个改变字体时的bug，很奇怪
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, "");
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
         drawable.setColor(model.endsWith(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn)
@@ -552,8 +555,8 @@ public class NewsWebDetailActivity extends BaseActivity {
             setWebViewModel(darkMode);
             setDialogModel(darkMode);
 
-        } else if (i == R.id.app_news_share_btn) {//                shareNewsToFrinds();
-
+        } else if (i == R.id.app_news_share_btn) {
+            //                shareNewsToFrinds();
         } else if (i == R.id.app_news_instructions_btn) {//批示逻辑
             dialog.dismiss();
             if (!StringUtils.isBlank(groupNews.getApprovedDate())) {
@@ -561,23 +564,19 @@ public class NewsWebDetailActivity extends BaseActivity {
                 if (!StringUtils.isBlank(content)) {
                     instruction = content;
                 }
-                showHasInstruceionDialog();
+                showHasInstructionDialog();
             } else if (groupNews.isEditorCommentCreated() == true) {
                 instruction = groupNews.getOriginalEditorComment();
-                showHasInstruceionDialog();
+                showHasInstructionDialog();
             } else {
                 showInstruceionDialog();
             }
-
         } else if (i == R.id.app_news_font_normal_btn) {
             setNewsFontSize(MyAppWebConfig.SMALLER);
-
         } else if (i == R.id.app_news_font_middle_btn) {
             setNewsFontSize(MyAppWebConfig.NORMAL);
-
         } else if (i == R.id.app_news_font_big_btn) {
             setNewsFontSize(MyAppWebConfig.LARGER);
-
         } else if (i == R.id.app_news_font_biggest_btn) {
             setNewsFontSize(MyAppWebConfig.LARGEST);
         }
@@ -586,34 +585,34 @@ public class NewsWebDetailActivity extends BaseActivity {
     /**
      * 展示已经批示过的新闻
      */
-    private void showHasInstruceionDialog() {
-        final Dialog hasIntrcutionDialog = new Dialog(NewsWebDetailActivity.this,
+    private void showHasInstructionDialog() {
+        final Dialog hasInstructionDialog = new Dialog(NewsWebDetailActivity.this,
                 R.style.transparentFrameWindowStyle);
-        Window window = hasIntrcutionDialog.getWindow();
+        Window window = hasInstructionDialog.getWindow();
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         window.getDecorView().setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this, 20), 0, DensityUtil.dip2px(NewsWebDetailActivity.this, 20), 0);
-        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
+        hasInstructionDialog.setCanceledOnTouchOutside(true);
         View view = getLayoutInflater().inflate(R.layout.news_has_instruction_dialog, null);
-        hasIntrcutionDialog.setContentView(view);
-        final TextView instrcutionText = (TextView) view.findViewById(R.id.news_has_instrcution_text);
-        instrcutionText.setFocusable(false);
-        instrcutionText.setEnabled(false);
+        hasInstructionDialog.setContentView(view);
+        final TextView instructionText = view.findViewById(R.id.news_has_instrcution_text);
+        instructionText.setFocusable(false);
+        instructionText.setEnabled(false);
         instruction = handleInstruction(instruction);
-        instrcutionText.setText(instruction);
-        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        instructionText.setText(instruction);
+        Button okBtn = view.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hasIntrcutionDialog.dismiss();
+                hasInstructionDialog.dismiss();
             }
         });
         WindowManager.LayoutParams wl = window.getAttributes();
         wl.dimAmount = 0.31f;
         wl.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        hasIntrcutionDialog.getWindow().setAttributes(wl);
-        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        hasIntrcutionDialog.show();
+        hasInstructionDialog.getWindow().setAttributes(wl);
+        hasInstructionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        hasInstructionDialog.show();
     }
 
     /**
@@ -632,22 +631,22 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 展示批示
      */
     private void showInstruceionDialog() {
-        intrcutionDialog = new Dialog(NewsWebDetailActivity.this,
+        instructionDialog = new Dialog(NewsWebDetailActivity.this,
                 R.style.transparentFrameWindowStyleForIntrcution);
-        Window window = intrcutionDialog.getWindow();
+        Window window = instructionDialog.getWindow();
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         window.getDecorView().setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this, 20), 0, DensityUtil.dip2px(NewsWebDetailActivity.this, 20), 0);
-        intrcutionDialog.setCanceledOnTouchOutside(true);
+        instructionDialog.setCanceledOnTouchOutside(true);
         View view = getLayoutInflater().inflate(R.layout.news_instruction_dialog, null);
-        intrcutionDialog.setContentView(view);
-        Button cancleBtn = (Button) view.findViewById(R.id.cancel_btn);
-        cancleBtn.setOnClickListener(new View.OnClickListener() {
+        instructionDialog.setContentView(view);
+        Button cancelBtn = view.findViewById(R.id.cancel_btn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intrcutionDialog.dismiss();
+                instructionDialog.dismiss();
             }
         });
-        final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
+        final EditText editText = view.findViewById(R.id.news_instrcution_text);
         editText.setFocusable(true);
         editText.setFocusableInTouchMode(true);
         editText.requestFocus();
@@ -666,9 +665,9 @@ public class NewsWebDetailActivity extends BaseActivity {
         wl.dimAmount = 0.31f;
         wl.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        intrcutionDialog.getWindow().setAttributes(wl);
-        intrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        intrcutionDialog.show();
+        instructionDialog.getWindow().setAttributes(wl);
+        instructionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        instructionDialog.show();
         openSoftKeyboard(editText);
     }
 
@@ -719,14 +718,14 @@ public class NewsWebDetailActivity extends BaseActivity {
     private void setWebViewModel(String model) {
         setHeaderModel(model);
         loadUrlWithHeader(url + model);
-        PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
+        PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, model);
     }
 
     /**
      * 当改变日夜间模式的时候字体按钮对应改变
      */
     private void setFontSizeBtn() {
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, "");
         int lightModeFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_font_color);
         int darkModeFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color);
         int blackFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black);
@@ -915,8 +914,8 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (intrcutionDialog != null && intrcutionDialog.isShowing()) {
-            intrcutionDialog.dismiss();
+        if (instructionDialog != null && instructionDialog.isShowing()) {
+            instructionDialog.dismiss();
             return;
         }
         if (dialog != null && dialog.isShowing()) {
@@ -1069,7 +1068,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            intrcutionDialog.dismiss();
+            instructionDialog.dismiss();
             groupNews.setEditorCommentCreated(true);
             sendInstructionEvent();
             ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_instructions_success_text));
