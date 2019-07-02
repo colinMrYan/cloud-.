@@ -122,7 +122,7 @@ public class ImageDetailFragment extends Fragment {
         boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(rawUrl);//这个是判断有无原图（是否有）
 
         if (previewHigh != 0
-                && (rawImageHigh != previewHigh)
+                && ((rawImageHigh != previewHigh) || (rawImageWide != previewWide))
                 && !isHaveOriginalImageCatch) {
             rawUrl = mImageUrl;
             mImageUrl = mImageUrl + "&resize=true&w=" + previewWide + "&h=" + previewHigh;
