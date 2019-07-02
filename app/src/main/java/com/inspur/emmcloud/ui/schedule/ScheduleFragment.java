@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.schedule;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
+import com.inspur.emmcloud.widget.DragScaleView;
 import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.CalendarLayout;
@@ -101,6 +103,7 @@ public class ScheduleFragment extends BaseFragment implements
     private MyDialog myDialog = null;
     private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
     private View rootView;
+    private RelativeLayout contentLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +151,7 @@ public class ScheduleFragment extends BaseFragment implements
     }
 
     private void initView() {
-
+        contentLayout = rootView.findViewById(R.id.rl_content);
         calendarView = rootView.findViewById(R.id.calendar_view_schedule);
         calendarLayout = rootView.findViewById(R.id.calendar_layout_schedule);
         scheduleDataText = rootView.findViewById(R.id.tv_schedule_date);
@@ -192,6 +195,46 @@ public class ScheduleFragment extends BaseFragment implements
                 calendarView.setIsLunarAndFestivalShow(false);
                 break;
         }
+        contentLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                DragScaleView dragScaleView = new DragScaleView(getActivity());
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(28));
+                params.setMargins(50, 200, 50, 0);
+                dragScaleView.setParentView(eventScrollView);
+                contentLayout.addView(dragScaleView, params);
+
+
+                dragScaleView.setOnMoveListener(new DragScaleView.OnMoveListener() {
+                    @Override
+                    public void moveTo(boolean isTop, final int y) {
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                int scrollOffset = y;
+                                int currentScrollY = eventScrollView.getScrollY();
+                                eventScrollView.scrollBy(0, scrollOffset);
+                                if (y < 0) {//向下滚动
+                                    if (currentScrollY < -y) {
+                                        scrollOffset = -currentScrollY;
+                                    }
+                                } else {
+                                    int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
+                                    if (scrollOffset > maxScrollOffset) {
+                                        scrollOffset = maxScrollOffset;
+                                    }
+
+                                }
+                                dragScaleView.updateLastY(-scrollOffset);
+                            }
+                        });
+
+                    }
+                });
+                return false;
+            }
+        });
 
     }
 

@@ -27,7 +27,7 @@ import java.util.List;
  * Created by chenmch on 2019/3/29.
  */
 
-public class CalendarDayView extends RelativeLayout {
+public class CalendarDayView extends RelativeLayout implements View.OnLongClickListener {
     private static final int TIME_HOUR_HEIGHT = DensityUtil.dip2px(MyApplication.getInstance(), 40);
     private static final int EVENT_GAP = DensityUtil.dip2px(MyApplication.getInstance(), 2);
     private String[] dayHourTimes = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15",
@@ -74,6 +74,11 @@ public class CalendarDayView extends RelativeLayout {
             timeHourLayout.addView(hourLayout);
         }
         currentTimeLineLayout = view.findViewById(R.id.tl_current_time_line);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        return false;
     }
 
     public void setEventList(List<Event> eventList, Calendar selectCalendar) {
