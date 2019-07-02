@@ -514,11 +514,10 @@ public class BaseApplication extends MultiDexApplication {
      * 清除app所有的通知
      */
     public void clearNotification() {
+        NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancelAll();
         if (AppUtils.getIsXiaoMi()) {
             MiPushClient.clearNotification(this);
-        } else {
-            NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.cancelAll();
         }
     }
 
