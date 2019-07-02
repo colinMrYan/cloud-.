@@ -302,13 +302,11 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
             if (errorCode == 400) {
                 LogUtils.jasonDebug("headerLimitRemaining="+headerLimitRemaining);
                 LogUtils.jasonDebug("headerRetryAfter="+headerRetryAfter);
-                if (isSMSLogin) {
-                    ToastUtils.show(activity, R.string.login_code_verification_failure);
-                } else {
                     String code = JSONUtils.getString(error,"code","");
                     if (code.equals("1002") && !StringUtils.isBlank(headerLimitRemaining)){
                         int limitRemaining = Integer.parseInt(headerLimitRemaining);
-                        ToastUtils.show(activity, activity.getString(R.string.login_fail_limit_remaining,limitRemaining));
+                        ToastUtils.show(activity, activity.getString(isSMSLogin ?
+                                R.string.login_fail_sms_limit_remaining : R.string.login_fail_limit_remaining, limitRemaining));
                     }else if(code.equals("1009") && !StringUtils.isBlank(headerRetryAfter)){
                         int retryAfter = Integer.parseInt(headerRetryAfter);
                         if (retryAfter == 0){
@@ -320,12 +318,9 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                         }else {
                             ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_second,retryAfter));
                         }
-                    }
-                    else {
+                    } else {
                         ToastUtils.show(activity, R.string.login_invaliad_account_or_pwd);
                     }
-                }
-
             } else {
                 WebServiceMiddleUtils.hand(activity, error, errorCode);
             }

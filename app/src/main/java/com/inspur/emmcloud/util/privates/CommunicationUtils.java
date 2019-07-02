@@ -9,8 +9,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Email;
@@ -192,7 +192,7 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combinLocalMediaImageMessage(String cid, String localFilePath, String previewImgPath) {
+    public static Message combinLocalMediaImageMessage(String cid, String localFilePath, Compressor.ResolutionRatio resolutionRatio) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
@@ -209,12 +209,11 @@ public class CommunicationUtils {
         int previewImgHight = 0;
         int previewImgWidth = 0;
         long previewFileSize = 0;
-        if (!StringUtils.isBlank(previewImgPath)) {
-            Bitmap previewPictureBitmap = BitmapFactory.decodeFile(previewImgPath);
-            previewImgHight = previewPictureBitmap.getHeight();
-            previewImgWidth = previewPictureBitmap.getWidth();
-            previewFileSize = FileUtils.getFileSize(previewImgPath);
-            previewPictureBitmap.recycle();
+        String previewImgPath = localFilePath;
+        if (resolutionRatio != null) {
+            previewImgHight = resolutionRatio.getHigh();
+            previewImgWidth = resolutionRatio.getWidth();
+            previewFileSize = resolutionRatio.getSize();
         } else {
             previewImgHight = imgHeight;
             previewImgWidth = imgWidth;

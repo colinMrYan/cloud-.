@@ -310,6 +310,9 @@
     <string name="chat_long_click_schedule">Add to Schedule</string>
     <string name="chat_long_click_copy_text">Copy text</string>
     <string name="communication_search">Search</string>
+    <string name="chat_full_image">Full image</string>
+    <string name="chat_transmit_message_success">successfully sent</string>
+    <string name="chat_transmit_message_fail">Failed sent</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -817,6 +820,7 @@
     <string name="do_not_select_yourself">Please do not select yourself</string>
     <string name="contact_exception">Data exception cannot be opened</string>
     <string name="contact_select_limit_warning">The maximum number of optional persons has been reached</string>
+    <string name="contact_add_system">Add to Contacts</string>
 
     <!-- 会议室部分 -->
     <string name="meeting_room_booking_detail">Details on the meeting room</string>

@@ -25,8 +25,10 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
+import com.inspur.emmcloud.basemodule.util.FileUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -148,7 +150,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             public void refreshProgress(String url, int progress) {
                 if (imgTypeMessageList.size() > 0 && urlList.get(pagerPosition).equals(url)) {
                     originalPictureDownLoadTextView.setVisibility(View.VISIBLE);
-                    originalPictureDownLoadTextView.setText("%" + progress);
+                    originalPictureDownLoadTextView.setText(progress + "%");
                 }
 
             }
@@ -177,7 +179,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 mAdapter.getCurrentFragment().closeImg();
                 break;
             case R.id.download_img:
-                originalPictureDownLoadTextView.setText("%0");
+                originalPictureDownLoadTextView.setText("0%");
                 mAdapter.getCurrentFragment().downloadImg(downLoadProgressRefreshListener);
                 break;
             case R.id.enter_channel_imgs_img:
@@ -203,7 +205,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             case R.id.tv_original_picture_download_progress:
                 LogUtils.LbcDebug("下载图片");
                 if (imgTypeMessageList.size() > 0) {
-                    originalPictureDownLoadTextView.setText("%0");
+                    originalPictureDownLoadTextView.setText("0%");
                     ImageDetailFragment imageDetailFragment = mAdapter.getCurrentFragment();
                     imageDetailFragment.loadingImage(downLoadProgressRefreshListener);
                 }
@@ -450,20 +452,18 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         if (imgTypeMessageList.size() > 0) {
             MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
             boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(url);//这个是判断有无原图（是否有）
-            if ((msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
+            if (msgContentMediaImage.getPreviewHeight() != 0 &&(msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+            return false;
     }
 
     private void setOriginalImageButtonShow(int position) {
         if (imgTypeMessageList.size() > 0) {
             originalPictureDownLoadTextView.setVisibility(isShowOriginalImageButton(position) ? View.VISIBLE : View.GONE);
-            originalPictureDownLoadTextView.setText("查看原图");
+            long rawImageSize = imgTypeMessageList.get(position).getMsgContentMediaImage().getRawSize();
+            originalPictureDownLoadTextView.setText(BaseApplication.getInstance().getString(R.string.chat_full_image) + "(" + FileUtils.formatFileSize(rawImageSize) + ")");
         }
     }
 
@@ -500,6 +500,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             int rawWidth = msgContentMediaImage != null ? msgContentMediaImage.getRawWidth() : 0;
             int preViewH = msgContentMediaImage != null ? msgContentMediaImage.getPreviewHeight() : 0;
             int preViewW = msgContentMediaImage != null ? msgContentMediaImage.getPreviewWidth() : 0;
+            LogUtils.LbcDebug("rawH" + rawHigh + "rawW" + rawWidth + "preH" + preViewH + "preW" + preViewW);
                 return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn,
                         isNeedTransformOut, preViewH, preViewW, rawHigh, rawWidth);
         }

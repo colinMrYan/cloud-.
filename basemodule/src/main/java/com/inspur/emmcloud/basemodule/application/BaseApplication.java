@@ -35,6 +35,7 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -515,6 +516,9 @@ public class BaseApplication extends MultiDexApplication {
     public void clearNotification() {
         NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancelAll();
+        if (AppUtils.getIsXiaoMi()) {
+            MiPushClient.clearNotification(this);
+        }
     }
 
     /****************************标记当前正在某个频道中***************************************************/
