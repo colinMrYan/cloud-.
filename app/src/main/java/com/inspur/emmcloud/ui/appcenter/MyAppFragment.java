@@ -274,7 +274,9 @@ public class MyAppFragment extends BaseFragment {
             if (recommendAppWidgetListView == null) {
                 recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
                 (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.VISIBLE);
-                recommendAppWidgetListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+                manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                recommendAppWidgetListView.setLayoutManager(manager);
                 recommendAppWidgetListView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
                 recommendAppWidgetListAdapter = new RecommendAppWidgetListAdapter(getActivity());
                 recommendAppWidgetListView.setAdapter(recommendAppWidgetListAdapter);
