@@ -311,6 +311,8 @@
     <string name="chat_long_click_copy_text">Copy text</string>
     <string name="communication_search">Search</string>
     <string name="chat_full_image">Full image</string>
+    <string name="chat_transmit_message_success">successfully sent</string>
+    <string name="chat_transmit_message_fail">Failed sent</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>

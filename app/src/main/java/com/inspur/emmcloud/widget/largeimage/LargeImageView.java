@@ -165,7 +165,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                 return false;
             }
             if (getOnFlingDownLister() != null) {
-                if (getScale() == 1 && e1.getPointerCount() == 1 && e2.getPointerCount() == 1) {
+                if (getScrollY() <= 0 && getScale() == 1 && e1.getPointerCount() == 1 && e2.getPointerCount() == 1) {
                     if (Math.abs(velocityY) > Math.abs(velocityX) && e2.getY() - e1.getY() > DensityUtil.dip2px(getContext(), 30)) {
                         getOnFlingDownLister().onFlingDown();
                         return true;
