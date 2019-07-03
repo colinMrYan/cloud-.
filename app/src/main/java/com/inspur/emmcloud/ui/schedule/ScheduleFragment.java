@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -104,6 +105,8 @@ public class ScheduleFragment extends BaseFragment implements
     private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
     private View rootView;
     private RelativeLayout contentLayout;
+    private DragScaleView dragScaleView;
+    private float contentLayoutTouchY = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -198,44 +201,77 @@ public class ScheduleFragment extends BaseFragment implements
         contentLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                DragScaleView dragScaleView = new DragScaleView(getActivity());
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(28));
-                params.setMargins(50, 200, 50, 0);
-                dragScaleView.setParentView(eventScrollView);
-                contentLayout.addView(dragScaleView, params);
+                if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
+                    removeEventAddDragScaleView();
+                } else {
+                    showEventAddDragScaleView();
+                }
 
-
-                dragScaleView.setOnMoveListener(new DragScaleView.OnMoveListener() {
-                    @Override
-                    public void moveTo(boolean isTop, final int y) {
-                        new Handler().post(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                int scrollOffset = y;
-                                int currentScrollY = eventScrollView.getScrollY();
-                                eventScrollView.scrollBy(0, scrollOffset);
-                                if (y < 0) {//向下滚动
-                                    if (currentScrollY < -y) {
-                                        scrollOffset = -currentScrollY;
-                                    }
-                                } else {
-                                    int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
-                                    if (scrollOffset > maxScrollOffset) {
-                                        scrollOffset = maxScrollOffset;
-                                    }
-
-                                }
-                                dragScaleView.updateLastY(-scrollOffset);
-                            }
-                        });
-
-                    }
-                });
+                return true;
+            }
+        });
+        contentLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                contentLayoutTouchY = event.getY();
                 return false;
             }
         });
+        contentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeEventAddDragScaleView();
+            }
+        });
 
+    }
+
+    private void removeEventAddDragScaleView() {
+        if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
+            contentLayout.removeView(dragScaleView);
+            dragScaleView = null;
+        }
+    }
+
+
+    /**
+     * 删除添加事件的View
+     */
+    private void showEventAddDragScaleView() {
+        dragScaleView = new DragScaleView(getActivity());
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(28));
+        int dragScaleVie = DensityUtil.dip2px(10);
+        int top = (int) Math.round(contentLayoutTouchY * 1.0 / dragScaleVie) * dragScaleVie;
+        params.setMargins(0, top, DensityUtil.dip2px(50), 0);
+        dragScaleView.setParentView(eventScrollView);
+        contentLayout.addView(dragScaleView, params);
+        dragScaleView.setOnMoveListener(new DragScaleView.OnMoveListener() {
+            @Override
+            public void moveTo(boolean isTop, final int y) {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        int scrollOffset = y;
+                        int currentScrollY = eventScrollView.getScrollY();
+                        eventScrollView.scrollBy(0, scrollOffset);
+                        if (y < 0) {//向下滚动
+                            if (currentScrollY < -y) {
+                                scrollOffset = -currentScrollY;
+                            }
+                        } else {
+                            int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
+                            if (scrollOffset > maxScrollOffset) {
+                                scrollOffset = maxScrollOffset;
+                            }
+
+                        }
+                        dragScaleView.updateLastY(-scrollOffset);
+                    }
+                });
+
+            }
+        });
     }
 
 
@@ -279,6 +315,7 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public void onCalendarSelect(EmmCalendar calendar, boolean isClick) {
+        removeEventAddDragScaleView();
         selectCalendar = Calendar.getInstance();
         selectCalendar.set(calendar.getYear(), calendar.getMonth() - 1, calendar.getDay(), 0, 0, 0);
         selectCalendar.set(Calendar.MILLISECOND, 0);

@@ -111,7 +111,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) currentTimeLineLayout.getLayoutParams();
             Calendar currentCalendar = Calendar.getInstance();
             int marginTop = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
-            params.setMargins(DensityUtil.dip2px(getContext(), 24), marginTop, 0, 0);
+            params.setMargins(DensityUtil.dip2px(getContext(), 44), marginTop, 0, 0);
             currentTimeLineLayout.setLayoutParams(params);
             currentTimeLineLayout.setVisibility(VISIBLE);
         } else {

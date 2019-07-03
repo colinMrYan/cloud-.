@@ -11,11 +11,10 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 
 public class DragScaleView extends View {
-    private static final int RIGHT_TOP = 0x12;
-    private static final int LEFT_BOTTOM = 0x13;
+    private static final int LEFT_TOP = 0x12;
+    private static final int RIGHT_BOTTOM = 0x13;
     private static final int CENTER = 0x19;
     //    protected int screenWidth;
 //    protected int screenHeight;
@@ -36,7 +35,8 @@ public class DragScaleView extends View {
     private int mRadius = 8;
     private int minOffset = DensityUtil.dip2px(10);
     private int circleCenter = DensityUtil.dip2px(15);
-    private int minHeight = DensityUtil.dip2px(getContext(), 28);
+    private int minHeight = DensityUtil.dip2px(28);
+    private int rectLeft = DensityUtil.dip2px(getContext(), 50);
 
     public DragScaleView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -61,37 +61,36 @@ public class DragScaleView extends View {
         int backgroundColor = Color.parseColor("#38C694");
         paint.setColor(backgroundColor);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawRoundRect(new RectF(0, offset, getWidth(), getHeight()
-                - offset), mRadius, mRadius, paint);
+        canvas.drawRoundRect(new RectF(rectLeft, offset, getWidth(), getHeight() - offset),
+                mRadius, mRadius, paint);
         paint.setTextSize(36);//设置字体大小
         paint.setColor(Color.WHITE);
-        canvas.drawText("再次点击新建日程", 20, minHeight - 2 * offset, paint);
+        canvas.drawText("再次点击新建日程", rectLeft + DensityUtil.dip2px(7), minHeight - 2 * offset, paint);
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
         int bigCircleRadius = DensityUtil.dip2px(4);
         int middleCircleRadius = DensityUtil.dip2px(3.5f);
         int smallCircleRadius = DensityUtil.dip2px(2.5f);
-        canvas.drawCircle(getWidth() - circleCenter, offset, bigCircleRadius, paint);
-        paint.setColor(backgroundColor);
-        canvas.drawCircle(getWidth() - circleCenter, offset, middleCircleRadius, paint);
-        paint.setColor(Color.WHITE);
-        canvas.drawCircle(getWidth() - circleCenter, offset, smallCircleRadius, paint);
 
 
-        paint.setColor(Color.WHITE);
-        canvas.drawCircle(circleCenter, getHeight() - offset, bigCircleRadius, paint);
+        canvas.drawCircle(rectLeft + circleCenter, offset, bigCircleRadius, paint);
         paint.setColor(backgroundColor);
-        canvas.drawCircle(circleCenter, getHeight() - offset, middleCircleRadius, paint);
+        canvas.drawCircle(rectLeft + circleCenter, offset, middleCircleRadius, paint);
         paint.setColor(Color.WHITE);
-        canvas.drawCircle(circleCenter, getHeight() - offset, smallCircleRadius, paint);
+        canvas.drawCircle(rectLeft + circleCenter, offset, smallCircleRadius, paint);
+
+        paint.setColor(Color.WHITE);
+        canvas.drawCircle(getWidth() - circleCenter, getHeight() - offset, bigCircleRadius, paint);
+        paint.setColor(backgroundColor);
+        canvas.drawCircle(getWidth() - circleCenter, getHeight() - offset, middleCircleRadius, paint);
+        paint.setColor(Color.WHITE);
+        canvas.drawCircle(getWidth() - circleCenter, getHeight() - offset, smallCircleRadius, paint);
     }
 
     public void setParentView(ScrollView scrollView) {
         this.scrollView = scrollView;
         mParentHeight = scrollView.getHeight();
         mParentContentHeight = scrollView.getChildAt(0).getHeight();
-        LogUtils.jasonDebug("mParentHeight=" + mParentHeight);
-        LogUtils.jasonDebug("mParentContentHeight=" + mParentContentHeight);
     }
 
     public void updateLastY(int diffLastY) {
@@ -100,6 +99,9 @@ public class DragScaleView extends View {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        if ((int) event.getX() < rectLeft) {
+            return false;
+        }
         getParent().requestDisallowInterceptTouchEvent(true);
         int action = event.getAction();
         if (action == MotionEvent.ACTION_DOWN) {
@@ -116,7 +118,7 @@ public class DragScaleView extends View {
 
         if (action == MotionEvent.ACTION_MOVE) {
             int dy = (int) event.getRawY() - lastY;
-            if (Math.abs(dy) < minOffset) {
+            if (Math.abs(dy) < minOffset * 0.8) {
                 return true;
             }
         }
@@ -139,11 +141,12 @@ public class DragScaleView extends View {
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 int dy = (int) event.getRawY() - lastY;
+                dy = (int) Math.round(dy * 1.0 / minOffset) * minOffset;
                 switch (dragDirection) {
-                    case LEFT_BOTTOM: // 左下
+                    case RIGHT_BOTTOM: // 左下
                         bottom(v, dy);
                         break;
-                    case RIGHT_TOP: // 右上
+                    case LEFT_TOP: // 右上
                         top(v, dy);
                         break;
                     case CENTER: // 点击中心-->>移动
@@ -202,8 +205,8 @@ public class DragScaleView extends View {
         oriTop += dy;
 
         //todo
-        if (oriTop < -offset) {
-            oriTop = -offset;
+        if (oriTop < 0) {
+            oriTop = 0;
         }
         if (oriTop > mParentContentHeight - minHeight) {
             oriTop = mParentContentHeight - minHeight;
@@ -276,11 +279,11 @@ public class DragScaleView extends View {
         int right = v.getRight();
         int bottom = v.getBottom();
         int top = v.getTop();
-        if (y < minHeight && right - left - x < minHeight * 3) {
-            return RIGHT_TOP;
+        if (x < minHeight * 3 + rectLeft && y < minHeight) {
+            return LEFT_TOP;
         }
-        if (x < 80 && bottom - top - y < 80) {
-            return LEFT_BOTTOM;
+        if (right - left - x < minHeight * 3 && bottom - top - y < minHeight) {
+            return RIGHT_BOTTOM;
         }
         return CENTER;
     }
