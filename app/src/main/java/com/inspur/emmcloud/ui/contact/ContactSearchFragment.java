@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.contact;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -403,15 +404,21 @@ public class ContactSearchFragment extends ContactSearchBaseFragment {
     private void showRecentChannelOperationDlg(final int position) {
         new CustomDialog.MessageDialogBuilder(getActivity())
                 .setMessage(R.string.if_delect_current_item)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    SearchModel searchModel = commonContactList.get(position);
-                    CommonContactCacheUtils.delectCommonContact(getActivity().getApplicationContext(), searchModel);
-                    commonContactList.remove(position);
-                    secondGroupListAdapter.notifyDataSetChanged();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        SearchModel searchModel = commonContactList.get(position);
+                        CommonContactCacheUtils.delectCommonContact(getActivity().getApplicationContext(), searchModel);
+                        commonContactList.remove(position);
+                        secondGroupListAdapter.notifyDataSetChanged();
+                    }
                 })
                 .show();
 
