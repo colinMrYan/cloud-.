@@ -1099,7 +1099,8 @@ public class APIUri {
      * @return
      */
     private static String getMeetingBaseUrl() {
-        return getECMScheduleUrl() + "/meeting/";
+        //return getECMScheduleUrl() + "/meeting/";
+        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/";
     }
 
     /**

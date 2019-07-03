@@ -78,9 +78,9 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         Building building = locationList.get(groupPosition).getOfficeBuildingList().get(childPosition);
-        Office office = getBuildingOfOffice(building);
-        if (office != null) {
-            deleteOffice(office);
+        //Office office = getBuildingOfOffice(building);
+        if (building != null) {
+            deleteOffice(building);
         } else {
             addOffice(building);
         }
@@ -133,10 +133,10 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     }
 
 
-    private void deleteOffice(Office office) {
+    private void deleteOffice(Building building) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            apiService.deleteMeetingOffice(office);
+            apiService.deleteMeetingOffice(building);
         }
     }
 
@@ -172,11 +172,11 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         }
 
         @Override
-        public void returnDeleteOfficeSuccess(Office office) {
+        public void returnDeleteOfficeSuccess(Building building) {
             isMeetingOfficeChanged = true;
             LoadingDialog.dimissDlg(loadingDlg);
-            officeList.remove(office);
-            officeIdList.remove(office.getId());
+            officeList.remove(building);
+            officeIdList.remove(building.getId());
             PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
             adapter.notifyDataSetChanged();
         }

@@ -860,7 +860,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDeleteOfficeSuccess(Office office) {
+    public void returnDeleteOfficeSuccess(Building building) {
         // TODO Auto-generated method stub
 
     }

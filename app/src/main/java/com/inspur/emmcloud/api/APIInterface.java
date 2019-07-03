@@ -368,7 +368,7 @@ public interface APIInterface {
 
     void returnAddTaskTagFail(String error, int errorCode);
 
-    void returnDeleteOfficeSuccess(Office office);
+    void returnDeleteOfficeSuccess(Building building);
 
     void returnDeleteOfficeFail(String error, int errorCode);
 
