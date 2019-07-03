@@ -221,7 +221,7 @@ public class MeetingDetailActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.iv_meeting_detail_more:
-                showDialog();
+                showOperationDialog();
                 break;
             case R.id.rl_meeting_attendee:
                 startMembersActivity(MEETING_ATTENDEE);
@@ -269,39 +269,32 @@ public class MeetingDetailActivity extends BaseActivity {
         return uidList;
     }
 
-    private void showDialog() {
+    private void showOperationDialog() {
         boolean isShowChangeMeeting = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-                false) && !meeting.getOwner().equals(MyApplication.getInstance().getUid());
-        ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener onSheetItemClickListener = new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-            @Override
-            public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                switch (position) {
-                    case 0:
-                        if (isShowChangeMeeting) {
-                            deleteMeeting(meeting);
-                        } else {
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
-                            IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
-                        }
-                        break;
-                    case 1:
-                        deleteMeeting(meeting);
-                        break;
-                    default:
-                        break;
-                }
-                dialog.dismiss();
-            }
-        };
+                false) || meeting.getOwner().equals(MyApplication.getInstance().getUid());
         if (isShowChangeMeeting) {
-            new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
-                    //    .addItem(getString(R.string.meeting_detail_show_qrcode))
-                    .addItem(getString(R.string.schedule_meeting_cancel))
-                    .setOnSheetItemClickListener(onSheetItemClickListener)
-                    .build()
-                    .show();
-        } else {
+            ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener onSheetItemClickListener = new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                    switch (position) {
+                        case 0:
+                            if (isShowChangeMeeting) {
+                                deleteMeeting(meeting);
+                            } else {
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(EXTRA_MEETING_ENTITY, meeting);
+                                IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAddActivity.class, bundle, true);
+                            }
+                            break;
+                        case 1:
+                            deleteMeeting(meeting);
+                            break;
+                        default:
+                            break;
+                    }
+                    dialog.dismiss();
+                }
+            };
             new ActionSheetDialog.ActionListSheetBuilder(MeetingDetailActivity.this)
                     //    .addItem(getString(R.string.meeting_detail_show_qrcode))
                     .addItem(getString(R.string.schedule_meeting_change))
@@ -309,6 +302,8 @@ public class MeetingDetailActivity extends BaseActivity {
                     .setOnSheetItemClickListener(onSheetItemClickListener)
                     .build()
                     .show();
+        } else {
+
         }
     }
 

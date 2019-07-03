@@ -156,7 +156,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/iv_task_type_arrow"
-                    android:layout_toRightOf="@id/tv_task_type"
                     android:orientation="horizontal">
 
                     <ImageView
