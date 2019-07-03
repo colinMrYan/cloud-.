@@ -327,7 +327,7 @@ public class ImageDetailFragment extends Fragment {
     /**
      * ImageView 加载图片
      */
-    private void loadingOriginalPicture(boolean isSaveImage2Local) {
+    private void loadingOriginalPicture(final boolean isSaveImage2Local) {
         String url = rawUrl == null ? mImageUrl : rawUrl;
         LogUtils.LbcDebug("获取到的Url:::" + url);
         DisplayImageOptions options = new DisplayImageOptions.Builder()

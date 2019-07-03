@@ -7,6 +7,7 @@
 package com.inspur.emmcloud.web.plugin.startapp;
 
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -190,12 +191,18 @@ public class StartAppService extends ImpPlugin {
     private void showInstallDialog(final String appUrl, String appInstallTips) {
         new CustomDialog.MessageDialogBuilder(getActivity())
                 .setMessage(appInstallTips)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    showDownloadDialog(appUrl);
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        showDownloadDialog(appUrl);
+                    }
                 })
                 .show();
     }

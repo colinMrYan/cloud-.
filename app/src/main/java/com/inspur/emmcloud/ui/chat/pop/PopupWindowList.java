@@ -148,9 +148,12 @@ public class PopupWindowList {
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
         if (mContext != null)
             setBackgroundAlpha((Activity) mContext, 0.8f);
-        mPopupWindow.setOnDismissListener(() -> {
-            if (mContext != null) {
-                setBackgroundAlpha((Activity) mContext, 1f);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (mContext != null) {
+                    setBackgroundAlpha((Activity) mContext, 1f);
+                }
             }
         });
 

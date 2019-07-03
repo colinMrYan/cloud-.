@@ -50,8 +50,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 86
-        versionName "3.1.4-beta.1"
+        versionCode 88
+        versionName "4.0.0-beta.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -121,12 +121,6 @@ android {
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
         }
-    }
-
-    //jdk1.8
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
