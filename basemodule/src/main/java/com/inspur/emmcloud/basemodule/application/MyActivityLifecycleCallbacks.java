@@ -102,12 +102,15 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     private void showFaceOrGestureLock() {
         Router router = Router.getInstance();
         if (router.getService(SettingService.class) != null) {
-            SettingService settingService = router.getService(SettingService.class);
+            final SettingService settingService = router.getService(SettingService.class);
             boolean isSetFaceOrGestureLock = settingService.isSetFaceOrGestureLock();
             if (isSetFaceOrGestureLock) {
                 BaseApplication.getInstance().setSafeLock(true);
-                new Handler().postDelayed(() -> {
-                    settingService.showFaceOrGestureLock();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        settingService.showFaceOrGestureLock();
+                    }
                 }, 200);
             }
 

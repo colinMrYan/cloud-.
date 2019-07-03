@@ -19,6 +19,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.bean.chat.MarkDownLink;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
@@ -185,7 +186,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 break;
             case "text/markdown":
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
-                        message, new ArrayList<>());
+                        message, new ArrayList<MarkDownLink>());
                 break;
             case "attachment/file":
                 cardContentView = DisplayRegularFileMsg.getView(context,

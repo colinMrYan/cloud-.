@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -359,12 +360,18 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         // TODO Auto-generated method stub
         new CustomDialog.MessageDialogBuilder(MeetingRoomInfoActivity.this)
                 .setMessage(R.string.meeting_list_cirform)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    deleteMeeting(meeting);
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        deleteMeeting(meeting);
+                    }
                 })
                 .show();
     }

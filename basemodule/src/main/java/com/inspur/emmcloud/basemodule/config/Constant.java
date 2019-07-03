@@ -196,6 +196,7 @@ public class Constant {
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_WEB_FILEMANAGER = "/web/FileManagerActivity";
+    public static final String AROUTER_CLASS_CONTACT_SEARCH = "/contact/contactSearch"; //通讯录选择界面
 
     public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
     public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";

@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -85,12 +86,18 @@ public class EnterpriseSwitchActivity extends BaseActivity {
     private void showSwitchEnterpriseConfirmDlg(final Enterprise enterprise) {
         new CustomDialog.MessageDialogBuilder(EnterpriseSwitchActivity.this)
                 .setMessage(getString(R.string.sure_switch_to, enterprise.getName()))
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    switchToEnterprise(enterprise);
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        switchToEnterprise(enterprise);
+                    }
                 })
                 .show();
     }

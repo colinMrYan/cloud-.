@@ -110,7 +110,7 @@ public class DisplayTxtMarkdownMsg {
     private static void showContentByMarkdown(final Context context, final String content, final TextView textView,
                                               final boolean isMyMsg, final String mid, final List<MarkDownLink> markDownLinks) {
         final int holderWidth = ResolutionUtils.getWidth(context) - DensityUtil.dip2px(MyApplication.getInstance(), 141);
-        List<MarkDownLink> markDownLinkList = markDownLinks;
+        final List<MarkDownLink> markDownLinkList = markDownLinks;
         RichText.initCacheDir(new File(MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
         RichText.from(content)
                 .type(RichType.markdown)
