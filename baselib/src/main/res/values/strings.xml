@@ -833,7 +833,7 @@
     <string name="do_not_select_yourself">不能选择自己</string>
     <string name="contact_exception">数据异常,无法打开</string>
     <string name="contact_select_limit_warning">超过了建议选择人数限制</string>
-    <string name="contact_add_system">添加到联系人</string>
+    <string name="contact_add_system">添加到通讯录</string>
 
     <!-- 会议室部分 -->
     <string name="meeting_room_booking_detail">会议室详情</string>

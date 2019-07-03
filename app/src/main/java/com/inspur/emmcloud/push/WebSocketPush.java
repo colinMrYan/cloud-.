@@ -126,7 +126,7 @@ public class WebSocketPush {
      *
      * @param isForceReconnect 强制重连
      */
-    public void startWebSocket(boolean isForceReconnect) {
+    public void startWebSocket(final boolean isForceReconnect) {
         // TODO Auto-generated method stub
         if (!MyApplication.getInstance().isHaveLogin()) {
             return;

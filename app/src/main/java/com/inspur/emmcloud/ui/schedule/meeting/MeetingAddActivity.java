@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -386,8 +387,11 @@ public class MeetingAddActivity extends BaseActivity {
      */
     private void showTimeInvalidDlg() {
         new CustomDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 }).show();
     }
 

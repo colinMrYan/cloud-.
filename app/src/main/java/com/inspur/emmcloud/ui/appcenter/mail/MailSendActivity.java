@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -309,17 +310,23 @@ public class MailSendActivity extends BaseActivity {
             String mailHint = "该邮件未" + (myCertificate.isSignedMail() ? "" : "加签") + (myCertificate.isEncryptedMail() ? "" : "加密") + "确定发送？";
             new CustomDialog.MessageDialogBuilder(MailSendActivity.this)
                     .setMessage(mailHint)
-                    .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
-                        dialog.dismiss();
-                    })
-                    .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
-                        try {
-                            sendMail();   //发送邮件
-                        } catch (Exception e) {
-                            LogUtils.LbcDebug("Error");
-                            e.printStackTrace();
+                    .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
                         }
-                        dialog.dismiss();
+                    })
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                sendMail();   //发送邮件
+                            } catch (Exception e) {
+                                LogUtils.LbcDebug("Error");
+                                e.printStackTrace();
+                            }
+                            dialog.dismiss();
+                        }
                     }).show();
         } else {
             try {

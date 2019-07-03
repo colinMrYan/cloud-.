@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -188,18 +189,21 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 .addItem(getString(R.string.delete), isOwner)
                 .addItem(getString(R.string.clouddriver_volume_info))
                 .addItem(getString(R.string.rename), isOwner)
-                .setOnSheetItemClickListener((dialog, itemView, position) -> {
-                    String action = (String) itemView.getTag();
-                    if (action.equals(getString(R.string.delete))) {
-                        showVolumeDelWranibgDlg(volume);
-                    } else if (action.equals(getString(R.string.clouddriver_volume_info))) {
-                        Intent intent = new Intent(ShareVolumeActivity.this, ShareVolumeInfoActivity.class);
-                        intent.putExtra("volume", volume);
-                        startActivityForResult(intent, UPDATE_VOLUME_NAME);
-                    } else if (action.equals(getString(R.string.rename))) {
-                        showUpdateShareVolumeNameDlg(volume);
+                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                        String action = (String) itemView.getTag();
+                        if (action.equals(getString(R.string.delete))) {
+                            showVolumeDelWranibgDlg(volume);
+                        } else if (action.equals(getString(R.string.clouddriver_volume_info))) {
+                            Intent intent = new Intent(ShareVolumeActivity.this, ShareVolumeInfoActivity.class);
+                            intent.putExtra("volume", volume);
+                            startActivityForResult(intent, UPDATE_VOLUME_NAME);
+                        } else if (action.equals(getString(R.string.rename))) {
+                            showUpdateShareVolumeNameDlg(volume);
+                        }
+                        dialog.dismiss();
                     }
-                    dialog.dismiss();
                 }).build()
                 .show();
     }
@@ -222,12 +226,18 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     protected void showVolumeDelWranibgDlg(final Volume volume) {
         new CustomDialog.MessageDialogBuilder(ShareVolumeActivity.this)
                 .setMessage(R.string.clouddriver_sure_delete_volume)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    removeShareVolume(volume);
-                    dialog.dismiss();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeShareVolume(volume);
+                        dialog.dismiss();
+                    }
                 })
                 .show();
     }

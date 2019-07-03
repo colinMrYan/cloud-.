@@ -35,7 +35,7 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public void openCamera(Activity activity, String picPath, int requestCode) {
+    public void openCamera(final Activity activity, final String picPath, final int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA,
@@ -65,7 +65,7 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public void openScanCode(Activity activity, int requestCode) {
+    public void openScanCode(final Activity activity, final int requestCode) {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA,
                 new PermissionRequestCallback() {
                     @Override
@@ -85,7 +85,7 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public void openScanCode(Fragment fragment, int requestCode) {
+    public void openScanCode(final Fragment fragment, final int requestCode) {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(fragment.getActivity(), Permissions.CAMERA,
                 new PermissionRequestCallback() {
                     @Override

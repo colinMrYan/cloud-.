@@ -45,12 +45,6 @@ android {
         checkReleaseBuilds false
 //        disable 'MissingTranslation', 'ExtraTranslation'
     }
-
-    //jdk1.8
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     resourcePrefix project.getName()+"_"
 }
 

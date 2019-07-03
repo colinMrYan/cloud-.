@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
@@ -247,12 +248,18 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     private void showQuitGroupWarningDlg() {
         new CustomDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
                 .setMessage(getString(R.string.quit_group_warning_text))
-                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
-                    dialog.dismiss();
-                    quitChannelGroup();
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        quitChannelGroup();
+                    }
                 })
                 .show();
     }
@@ -260,12 +267,18 @@ public class ConversationGroupInfoActivity extends BaseActivity {
     private void showDimissGroupWarningDlg() {
         new CustomDialog.MessageDialogBuilder(ConversationGroupInfoActivity.this)
                 .setMessage(getString(R.string.dismiss_group_warning_text))
-                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
-                    dialog.dismiss();
-                    deleteConversation();
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        deleteConversation();
+                    }
                 })
                 .show();
     }

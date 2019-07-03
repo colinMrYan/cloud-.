@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.login.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -83,15 +84,21 @@ public class LoginMoreActivity extends BaseActivity {
     private void showConfirmClearDialog() {
         new CustomDialog.MessageDialogBuilder(LoginMoreActivity.this)
                 .setMessage(getString(R.string.confirm_clear))
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, "");
-                    PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, Constant.DEFAULT_CLUSTER_ID);
-                    PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
-                    finish();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, "");
+                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, Constant.DEFAULT_CLUSTER_ID);
+                        PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+                        finish();
+                    }
                 })
                 .show();
     }
@@ -126,19 +133,25 @@ public class LoginMoreActivity extends BaseActivity {
         final LoginMoreBean loginMoreBean = new LoginMoreBean(msg);
         new CustomDialog.MessageDialogBuilder(LoginMoreActivity.this)
                 .setMessage(getString(R.string.login_more_scan_find_left) + loginMoreBean.getName() + getString(R.string.login_more_scan_find_right))
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    Intent intent = new Intent();
-                    intent.putExtra("loginEnterprise", loginMoreBean.getName());
-                    setResult(RESULT_OK, intent);
-                    PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl() + "/"));
-                    resetEnterpriseLayout.setVisibility(View.VISIBLE);
-                    PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, loginMoreBean.getName());
-                    PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
-                    finish();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Intent intent = new Intent();
+                        intent.putExtra("loginEnterprise", loginMoreBean.getName());
+                        setResult(RESULT_OK, intent);
+                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_CLOUD_IDM, StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl() + "/"));
+                        resetEnterpriseLayout.setVisibility(View.VISIBLE);
+                        PreferencesUtils.putString(LoginMoreActivity.this, Constant.PREF_LOGIN_ENTERPRISE_NAME, loginMoreBean.getName());
+                        PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
+                        finish();
+                    }
                 })
                 .show();
     }

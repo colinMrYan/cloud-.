@@ -270,7 +270,7 @@ public class MeetingDetailActivity extends BaseActivity {
     }
 
     private void showDialog() {
-        boolean isShowChangeMeeting = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+        final boolean isShowChangeMeeting = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
                 false) && !meeting.getOwner().equals(MyApplication.getInstance().getUid());
         ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener onSheetItemClickListener = new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
             @Override

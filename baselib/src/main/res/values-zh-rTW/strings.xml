@@ -825,7 +825,7 @@
     <string name="do_not_select_yourself">不能選擇自己 </string>
     <string name="contact_exception">數據异常，無法打開 </string>
     <string name="contact_select_limit_warning">已達到最大可選人數</string>
-    <string name="contact_add_system">添加到聯係人</string>
+    <string name="contact_add_system">添加到通訊錄</string>
 
     <!-- 會議室部分 -->
     <string name="meeting_room_booking_detail">會議室詳情</string>
