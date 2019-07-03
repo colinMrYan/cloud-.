@@ -35,9 +35,7 @@ public class GetPathFromUri4kitkat {
      */
     @SuppressLint("NewApi")
     private static String getPath(final Context context, final Uri uri) {
-
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
@@ -45,12 +43,10 @@ public class GetPathFromUri4kitkat {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
-
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/"
                             + split[1];
                 }
-                // TODO handle non-primary volumes
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
@@ -68,7 +64,6 @@ public class GetPathFromUri4kitkat {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
-
                 Uri contentUri = null;
                 if ("image".equals(type)) {
                     contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -77,20 +72,23 @@ public class GetPathFromUri4kitkat {
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
-
                 final String selection = "_id=?";
                 final String[] selectionArgs = new String[]{split[1]};
-
                 return getDataColumn(context, contentUri, selection,
                         selectionArgs);
-            } else if (isSamsungDocument(uri)) {
+            }
+            //特殊机型
+            else if (isSamsungDocument(uri)) {
                 return getSamsungDataColumn(context, uri, null, null);
             }
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            if (isGooglePhotosUri(uri))
+            if (isGooglePhotosUri(uri)) {
                 return uri.getLastPathSegment();
+            } else if (isHuaweiUri(uri)) {
+                return getHuaweiRealPath(uri);
+            }
             return getDataColumn(context, uri, null, null);
         }
         // File
@@ -148,8 +146,9 @@ public class GetPathFromUri4kitkat {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if (cursor != null)
+                if (cursor != null) {
                     cursor.close();
+                }
             }
         } else {
             return uri.getPath();
@@ -161,9 +160,8 @@ public class GetPathFromUri4kitkat {
     public static String getSamsungDataColumn(Context context, Uri uri,
                                               String selection, String[] selectionArgs) {
         Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {column};
-
+//        final String column = "_data";
+//        final String[] projection = {column};
         try {
             cursor = context.getContentResolver().query(uri, null, selection,
                     selectionArgs, null);
@@ -171,10 +169,21 @@ public class GetPathFromUri4kitkat {
                 return cursor.getString(0);
             }
         } finally {
-            if (cursor != null)
+            if (cursor != null) {
                 cursor.close();
+            }
         }
         return null;
+    }
+
+    /**
+     * 获取华为Uri的真实路径
+     *
+     * @param uri
+     * @return
+     */
+    public static String getHuaweiRealPath(Uri uri) {
+        return "/storage/" + uri.toString().split("storage/")[1];
     }
 
     /**
@@ -211,6 +220,10 @@ public class GetPathFromUri4kitkat {
     public static boolean isSamsungDocument(Uri uri) {
         return "com.neusoft.td.android.wo116114.browser.documents".equals(uri
                 .getAuthority());
+    }
+
+    public static boolean isHuaweiUri(Uri uri) {
+        return uri.toString().toLowerCase().contains("huawei");
     }
 
     //获取低版本文件路径的兼容方法
