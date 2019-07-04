@@ -163,7 +163,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 }
             }
         };
-
+        if (pageStartPosition == 0) {
+            setOriginalImageButtonShow(0);
+        }
     }
 
 
@@ -306,6 +308,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 CharSequence text = getString(R.string.meeting_viewpager_indicator, position + 1, mPager.getAdapter().getCount());
                 indicator.setText(text);
                 pagerPosition = position;
+                LogUtils.LbcDebug("选择图片位置::" + pagerPosition);
                 setOriginalImageButtonShow(position);
                 if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
                     setCommentCount();
@@ -352,6 +355,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 urlList.add(url);
             }
             pageStartPosition = imgTypeMessageList.indexOf(currentMsg);
+            LogUtils.LbcDebug("初始化位置选择" + pageStartPosition);
         } else {
             LogUtils.LbcDebug("直接输出Urls");
             urlList = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
@@ -462,6 +466,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
     }
 
     private void setOriginalImageButtonShow(int position) {
+        LogUtils.LbcDebug("imgTypeMessageList.size()" + imgTypeMessageList.size());
         if (imgTypeMessageList.size() > 0) {
             originalPictureDownLoadTextView.setVisibility(isShowOriginalImageButton(position) ? View.VISIBLE : View.GONE);
             long rawImageSize = imgTypeMessageList.get(position).getMsgContentMediaImage().getRawSize();
