@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.contact;
 
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -262,12 +263,18 @@ public class UserInfoActivity extends BaseActivity {
         if (!contactUser.getId().equals(MyApplication.getInstance().getUid())) {
             new CustomDialog.MessageDialogBuilder(UserInfoActivity.this)
                     .setMessage(mobile)
-                    .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                        dialog.dismiss();
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
                     })
-                    .setPositiveButton(R.string.user_call, (dialog, index) -> {
-                        dialog.dismiss();
-                        AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
+                    .setPositiveButton(R.string.user_call, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
+                        }
                     })
                     .show();
         }

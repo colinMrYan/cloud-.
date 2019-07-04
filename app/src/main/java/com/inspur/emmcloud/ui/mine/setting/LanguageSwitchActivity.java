@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class LanguageSwitchActivity extends BaseActivity implements LanguageManager.GetServerLanguageListener{
+public class LanguageSwitchActivity extends BaseActivity implements LanguageManager.GetServerLanguageListener {
 
     public static final String LANGUAGE_CHANGE = "change_language";
     private static final int GET_LANGUAGE_SUCCESS = 3;
@@ -100,31 +101,36 @@ public class LanguageSwitchActivity extends BaseActivity implements LanguageMana
 
         new CustomDialog.MessageDialogBuilder(LanguageSwitchActivity.this)
                 .setMessage(getString(R.string.confirm_modify_language))
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    //清空我的应用统一更新版本信息防止切换语言不刷新列表
-                    ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
-                    Language language = commonLanguageList.get(position);
-                    String languageName = "";
-                    if (position == 0) {
-                        languageName = "followSys";
-                    } else {
-                        languageName = language.getIso();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        //清空我的应用统一更新版本信息防止切换语言不刷新列表
+                        ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
+                        Language language = commonLanguageList.get(position);
+                        String languageName = "";
+                        if (position == 0) {
+                            languageName = "followSys";
+                        } else {
+                            languageName = language.getIso();
+                        }
+                        LanguageManager.getInstance().setCurrentLanguageName(languageName);
+                        LanguageManager.getInstance().setCurrentLanguageJson(language.toString());
+                        LanguageManager.getInstance().setLanguageLocal();
+                        Intent intentLog = new Intent(LanguageSwitchActivity.this,
+                                IndexActivity.class);
+                        intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intentLog.putExtra(LANGUAGE_CHANGE, true);
+                        startActivity(intentLog);
                     }
-                    LanguageManager.getInstance().setCurrentLanguageName(languageName);
-                    LanguageManager.getInstance().setCurrentLanguageJson(language.toString());
-                    LanguageManager.getInstance().setLanguageLocal();
-                    Intent intentLog = new Intent(LanguageSwitchActivity.this,
-                            IndexActivity.class);
-                    intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intentLog.putExtra(LANGUAGE_CHANGE, true);
-                    startActivity(intentLog);
-                    }
-                )
+                })
                 .show();
     }
 

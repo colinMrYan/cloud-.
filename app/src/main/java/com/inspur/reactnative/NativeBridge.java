@@ -1,6 +1,7 @@
 package com.inspur.reactnative;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -158,12 +159,15 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         JSONArray array = JSONUtils.getJSONArray(buttonJson, new JSONArray());
         for (int i = 0; i < array.length(); i++) {
             final AlertButton alertButton = new AlertButton(JSONUtils.getJSONObject(array, i, new JSONObject()));
-            messageDialogBuilder.setPositiveButton(alertButton.getText(), (dialog, index) -> {
-                dialog.dismiss();
-                try {
-                    promise.resolve(alertButton.getCode());
-                } catch (Exception e) {
-                    promise.reject(e);
+            messageDialogBuilder.setPositiveButton(alertButton.getText(), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    try {
+                        promise.resolve(alertButton.getCode());
+                    } catch (Exception e) {
+                        promise.reject(e);
+                    }
                 }
             });
         }

@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -1585,30 +1586,33 @@ public class ConversationActivity extends ConversationBaseActivity {
         mPopupWindowList.setItemData(dataList);
         mPopupWindowList.setModal(true);
         mPopupWindowList.show();
-        mPopupWindowList.setOnItemClickListener((parent, view1, position, id) -> {
-            String content;
-            content = uiMessage2Content(uiMessage);
-            if (StringUtils.isBlank(content)) {
-                content = "";
+        mPopupWindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String content;
+                content = uiMessage2Content(uiMessage);
+                if (StringUtils.isBlank(content)) {
+                    content = "";
+                }
+                switch (operationsId[position]) {
+                    case R.string.chat_long_click_copy:
+                        copyToClipboard(ConversationActivity.this, content);
+                        break;
+                    case R.string.chat_long_click_transmit:
+                        shareMessageToFrinds(ConversationActivity.this);
+                        break;
+                    case R.string.chat_long_click_schedule:
+                        addTextToSchedule(content);
+                        break;
+                    case R.string.chat_long_click_copy_text:
+                        copyToClipboard(ConversationActivity.this, content);
+                        break;
+                    case R.string.chat_long_click_reply:
+                        replyMessage(uiMessage.getMessage());
+                        break;
+                }
+                mPopupWindowList.hide();
             }
-            switch (operationsId[position]) {
-                case R.string.chat_long_click_copy:
-                    copyToClipboard(ConversationActivity.this, content);
-                    break;
-                case R.string.chat_long_click_transmit:
-                    shareMessageToFrinds(ConversationActivity.this);
-                    break;
-                case R.string.chat_long_click_schedule:
-                    addTextToSchedule(content);
-                    break;
-                case R.string.chat_long_click_copy_text:
-                    copyToClipboard(ConversationActivity.this, content);
-                    break;
-                case R.string.chat_long_click_reply:
-                    replyMessage(uiMessage.getMessage());
-                    break;
-            }
-            mPopupWindowList.hide();
         });
 
     }

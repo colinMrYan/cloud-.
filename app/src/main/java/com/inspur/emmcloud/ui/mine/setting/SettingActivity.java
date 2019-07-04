@@ -25,7 +25,6 @@ import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -220,15 +219,21 @@ public class SettingActivity extends BaseActivity {
     private void showNotificationCloseDlg() {
         new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(R.string.notification_switch_cant_recive)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    notificationSwitch.setChecked(true);
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        notificationSwitch.setChecked(true);
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    notificationSwitch.setChecked(false);
-                    PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
-                    switchPush();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        notificationSwitch.setChecked(false);
+                        PreferencesByUserAndTanentUtils.putBoolean(SettingActivity.this, Constant.PUSH_SWITCH_FLAG, false);
+                        switchPush();
+                    }
                 })
                 .show();
     }
@@ -288,7 +293,7 @@ public class SettingActivity extends BaseActivity {
      */
     private void setLanguage() {
         // TODO Auto-generated method stub
-        String languageName = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "language", "");
+        String languageName = LanguageManager.getInstance().getCurrentLanguageName();
         String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
         if (languageJson != null && !languageName.equals("followSys")) {
             Language language = new Language(languageJson);
@@ -304,6 +309,7 @@ public class SettingActivity extends BaseActivity {
             languageFlagImg.setImageResource(id);
         } else {
             languageNameText.setText(getString(R.string.follow_system));
+            languageFlagImg.setImageResource(R.drawable.ic_mine_language_follow_system);
         }
     }
 
@@ -365,13 +371,19 @@ public class SettingActivity extends BaseActivity {
         if (!NotificationSetUtils.isNotificationEnabled(SettingActivity.this)) {
             new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                     .setMessage(getString(R.string.notification_switch_open_setting))
-                    .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                        dialog.dismiss();
-                        notificationSwitch.setChecked(false);
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            notificationSwitch.setChecked(false);
+                        }
                     })
-                    .setPositiveButton(R.string.ok, (dialog, index) -> {
-                        dialog.dismiss();
-                        NotificationSetUtils.openNotificationSetting(SettingActivity.this);
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            NotificationSetUtils.openNotificationSetting(SettingActivity.this);
+                        }
                     })
                     .show();
         }
@@ -383,20 +395,26 @@ public class SettingActivity extends BaseActivity {
     private void showSignoutDlg() {
         new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(R.string.if_confirm_signout)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
-                })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    PushManagerUtils.getInstance().unregisterPushId2Emm();
-                    dialog.dismiss();
-                    boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
-                    if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
-                        loadingDlg.show();
-                        WSAPIService.getInstance().sendAppStatus("REMOVED");
-                    } else {
-                        MyApplication.getInstance().signout();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                     }
-                    stopAppService();
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PushManagerUtils.getInstance().unregisterPushId2Emm();
+                        dialog.dismiss();
+                        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(MyApplication.getInstance(), Constant.APP_TAB_BAR_COMMUNACATE);
+                        if (NetUtils.isNetworkConnected(getApplicationContext(), false) && WebServiceRouterManager.getInstance().isV1xVersionChat() && isCommunicateExist) {
+                            loadingDlg.show();
+                            WSAPIService.getInstance().sendAppStatus("REMOVED");
+                        } else {
+                            MyApplication.getInstance().signout();
+                        }
+                        stopAppService();
+                    }
                 })
                 .show();
     }
@@ -451,33 +469,39 @@ public class SettingActivity extends BaseActivity {
         // TODO Auto-generated method stub
         new CustomDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(getString(R.string.my_setting_tips_quit))
-                .setNegativeButton(getString(R.string.cancel), (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
-                    dialog.dismiss();
-                    DataCleanManager.cleanWebViewCache(SettingActivity.this);
-                    ((MyApplication) getApplicationContext()).deleteAllDb();
-                    String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
-                    String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-                    DataCleanManager.cleanApplicationData(SettingActivity.this,
-                            msgCachePath, imgCachePath);
-                    MyApplication.getInstance().setIsContactReady(false);
-                    //当清除所有缓存的时候清空以db形式存储数据的configVersion
-                    ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
-                    ImageDisplayUtils.getInstance().clearAllCache();
-                    MyAppCacheUtils.clearMyAppList(SettingActivity.this);
-                    //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                        ((MyApplication) getApplicationContext()).deleteAllDb();
+                        String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
+                        String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                        DataCleanManager.cleanApplicationData(SettingActivity.this,
+                                msgCachePath, imgCachePath);
+                        MyApplication.getInstance().setIsContactReady(false);
+                        //当清除所有缓存的时候清空以db形式存储数据的configVersion
+                        ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithClearAllCache();
+                        ImageDisplayUtils.getInstance().clearAllCache();
+                        MyAppCacheUtils.clearMyAppList(SettingActivity.this);
+                        //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
-                    ToastUtils.show(getApplicationContext(),
-                            R.string.data_clear_success);
-                    //((MyApplication) getApplicationContext()).exit();
-                    Intent intent = new Intent(SettingActivity.this,
-                            IndexActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+                        ToastUtils.show(getApplicationContext(),
+                                R.string.data_clear_success);
+                        //((MyApplication) getApplicationContext()).exit();
+                        Intent intent = new Intent(SettingActivity.this,
+                                IndexActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
+                    }
                 })
                 .show();
     }

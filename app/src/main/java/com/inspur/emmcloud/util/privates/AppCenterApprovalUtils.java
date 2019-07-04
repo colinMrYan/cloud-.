@@ -59,7 +59,7 @@ public class AppCenterApprovalUtils {
      */
     private void showPasswordInputDlg() {
         passwordInputDlg = new MyDialog(context,
-                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.appcenter_dialog_input_password, R.style.userhead_dialog_bg);
         passwordInputDlg.setCancelable(false);
         final EditText inputEdit = (EditText) passwordInputDlg.findViewById(R.id.edit);
         inputEdit.setTypeface(Typeface.DEFAULT);
