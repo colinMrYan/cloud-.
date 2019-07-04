@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.baselib.util.ListUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
@@ -78,21 +79,22 @@ public class MessageCacheUtil {
             if (messageList == null || messageList.size() == 0) {
                 return;
             }
+            List<Message> messageOperationList = ListUtils.deepCopyList(messageList);
             //去重操作，防止服务端重复消息覆盖本地消息导致已读未读状态错乱，并防止已经改过时间的消息被服务端覆盖时间
             if (!isUpdate) {
                 List<String> messageIdList = new ArrayList<>();
-                for (Message message : messageList) {
+                for (Message message : messageOperationList) {
                     messageIdList.add(message.getId());
                 }
                 List<Message> existMessageList = DbCacheUtils.getDb(context).selector(Message.class).where("id", "in", messageIdList).findAll();
                 if (existMessageList != null && existMessageList.size() > 0) {
-                    messageList.removeAll(existMessageList);
+                    messageOperationList.removeAll(existMessageList);
                 }
-                if (messageList.size() == 0) {
+                if (messageOperationList.size() == 0) {
                     return;
                 }
             }
-            DbCacheUtils.getDb(context).saveOrUpdate(messageList);
+            DbCacheUtils.getDb(context).saveOrUpdate(messageOperationList);
             MatheSet matheSet = new MatheSet();
             matheSet.setStart(messageList.get(0).getCreationDate());
             matheSet.setEnd((targetMessageCreationDate == null) ? messageList.get(messageList.size() - 1)

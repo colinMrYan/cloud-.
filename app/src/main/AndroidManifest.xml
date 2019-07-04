@@ -748,17 +748,20 @@
             android:screenOrientation="portrait" />
 
         <!-- Mail-->
-        <activity android:name=".ui.appcenter.mail.MailHomeActivity">
+        <activity
+            android:name=".ui.appcenter.mail.MailHomeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.appcenter.mail.MailDetailActivity">
+        <activity
+            android:name=".ui.appcenter.mail.MailDetailActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.appcenter.mail.MailLoginActivity">
+        <activity
+            android:name=".ui.appcenter.mail.MailLoginActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity

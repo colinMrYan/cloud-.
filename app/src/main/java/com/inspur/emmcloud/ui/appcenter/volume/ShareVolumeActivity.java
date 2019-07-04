@@ -144,7 +144,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     protected void showCreateShareVolumeDlg() {
         createShareVolumeDlg = new MyDialog(ShareVolumeActivity.this,
-                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
         createShareVolumeDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createShareVolumeDlg.findViewById(R.id.edit);
         inputEdit.setHint(R.string.clouddriver_input_volume_name);
@@ -249,7 +249,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     private void showUpdateShareVolumeNameDlg(final Volume volume) {
         updateShareVolumeNameDlg = new MyDialog(ShareVolumeActivity.this,
-                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
         updateShareVolumeNameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) updateShareVolumeNameDlg.findViewById(R.id.edit);
         inputEdit.setText(volume.getName());
