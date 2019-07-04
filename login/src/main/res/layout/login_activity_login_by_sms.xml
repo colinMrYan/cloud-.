@@ -97,6 +97,7 @@
                 android:paddingRight="5dp"
                 android:paddingTop="7dp"
                 android:text="@string/login_get_captchas_code"
+                android:textAllCaps="false"
                 android:textColor="#36A5F6"
                 android:textSize="13sp" />
 
