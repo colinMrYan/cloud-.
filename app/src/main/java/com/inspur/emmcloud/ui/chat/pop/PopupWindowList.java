@@ -16,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import com.inspur.emmcloud.basemodule.util.LanguageManager;
+
 import java.util.List;
 
 /**
@@ -134,7 +136,13 @@ public class PopupWindowList {
         }
         mPopView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        mPopupWindowWidth = mDeviceWidth / 3;
+        String languageName = LanguageManager.getInstance().getCurrentLanguageName();
+        if (languageName.equals("en-US")) {
+            mPopupWindowWidth = (int) (mDeviceWidth * 0.45);
+        } else {
+            mPopupWindowWidth = mDeviceWidth / 3;
+        }
+
         mPopupWindowHeight = mItemData.size() * mPopView.getMeasuredHeight();
         if (mPopupWindowHeight > mDeviceHeight / 2) {
             mPopupWindowHeight = mDeviceHeight / 2;
