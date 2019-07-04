@@ -109,41 +109,37 @@ public class DragScaleView extends View {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        return false;
-//        if ((int) event.getX() < rectLeft) {
-//            return false;
-//        }
-//        getParent().requestDisallowInterceptTouchEvent(true);
-//        int action = event.getAction();
-//        if (action == MotionEvent.ACTION_DOWN) {
-//            LogUtils.jasonDebug("MotionEvent.ACTION_DOWN------------");
-//            oriLeft = this.getLeft();
-//            oriRight = this.getRight();
-//            oriTop = this.getTop();
-//            oriBottom = this.getBottom();
-//            lastY = (int) event.getRawY();
-//            lastX = (int) event.getRawX();
-//            dragDirection = getDirection(this, (int) event.getX(),
-//                    (int) event.getY());
-//        }
-//
-//
-//        if (action == MotionEvent.ACTION_MOVE) {
-//            LogUtils.jasonDebug("MotionEvent.ACTION_MOVE------------");
-//            int dy = (int) event.getRawY() - lastY;
-//            if (Math.abs(dy) < minOffset * 0.7) {
-//                return true;
-//            }
-//        }
-//
-//
-//        // 处理拖动事件
-//        delDrag(this, event, action);
-//        invalidate();
-//        if (action == MotionEvent.ACTION_UP) {
-//            return false;
-//        }
-//        return true;
+        if ((int) event.getX() < rectLeft) {
+            return false;
+        }
+        getParent().requestDisallowInterceptTouchEvent(true);
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) {
+            oriLeft = this.getLeft();
+            oriRight = this.getRight();
+            oriTop = this.getTop();
+            oriBottom = this.getBottom();
+            lastY = (int) event.getRawY();
+            lastX = (int) event.getRawX();
+            dragDirection = getDirection(this, (int) event.getX(),
+                    (int) event.getY());
+        }
+
+
+        if (action == MotionEvent.ACTION_MOVE) {
+            int dy = (int) event.getRawY() - lastY;
+            if (Math.abs(dy) < minOffset * 0.7) {
+                super.dispatchTouchEvent(event);
+                return true;
+            }
+        }
+
+
+        // 处理拖动事件
+        delDrag(this, event, action);
+        invalidate();
+        super.dispatchTouchEvent(event);
+        return true;
     }
 
     /**

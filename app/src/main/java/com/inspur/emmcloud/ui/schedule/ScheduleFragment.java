@@ -24,7 +24,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
@@ -239,8 +238,7 @@ public class ScheduleFragment extends BaseFragment implements
             public void onClick(View v) {
                 String eventStartTime = calendarDayView.getDragViewStartTime();
                 String eventEndTime = calendarDayView.getDragViewEndTime();
-                LogUtils.jasonDebug("eventStartTime==" + eventStartTime);
-                LogUtils.jasonDebug("eventEndTime==" + eventEndTime);
+
             }
         });
     }
@@ -588,7 +586,7 @@ public class ScheduleFragment extends BaseFragment implements
     }
 
     @Override
-    public void moveTo(boolean isNeedScroll, int ScrollOffset, int top, int height) {
+    public void moveTo(final boolean isNeedScroll, final int ScrollOffset, final int top, final int height) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
