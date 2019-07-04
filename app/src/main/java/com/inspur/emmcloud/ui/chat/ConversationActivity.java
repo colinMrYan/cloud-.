@@ -900,11 +900,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
         if (index - firstItemPosition >= 0) {
             View view = msgListView.getChildAt(index - firstItemPosition);
-            if (null != msgListView.getChildViewHolder(view)) {
-                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder) msgListView.getChildViewHolder(view);
-                holder.sendStatusLayout.setVisibility(View.INVISIBLE);
+            if (view != null) {
+                view.findViewById(R.id.rl_send_status).setVisibility(View.INVISIBLE);
             }
-
         }
     }
 
