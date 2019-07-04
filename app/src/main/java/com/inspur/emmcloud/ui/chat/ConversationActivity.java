@@ -32,6 +32,7 @@ import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
@@ -177,16 +178,23 @@ public class ConversationActivity extends ConversationBaseActivity {
                         swipeRefreshLayout.setRefreshing(false);
                         break;
                     case REFRESH_PUSH_MESSAGE:
+                        LogUtils.jasonDebug("REFRESH_PUSH_MESSAGE---start---");
                         uiMessageList = (List<UIMessage>) msg.obj;
                         adapter.setMessageList(uiMessageList);
                         adapter.notifyDataSetChanged();
                         msgListView.scrollToPosition(uiMessageList.size() - 1);
                         WSAPIService.getInstance().setChannelMessgeStateRead(cid);
+                        LogUtils.jasonDebug("REFRESH_OFFLINE_MESSAGE---end---");
                         break;
                     case REFRESH_OFFLINE_MESSAGE:
+                        if (adapter == null) {
+                            return;
+                        }
+                        LogUtils.jasonDebug("REFRESH_OFFLINE_MESSAGE---start---");
                         List<Message> offlineMessageList = (List<Message>) msg.obj;
                         Iterator<Message> it = offlineMessageList.iterator();
-
+                        LogUtils.jasonDebug("uiMessageList===00" + uiMessageList.size());
+                        LogUtils.jasonDebug("offlineMessageList0000===" + offlineMessageList.size());
                         if (uiMessageList.size() > 0) {
                             while (it.hasNext()) {
                                 //发送成功的消息去重去重
@@ -203,6 +211,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 }
                             }
                         }
+                        LogUtils.jasonDebug("offlineMessageList11111===" + offlineMessageList.size());
                         if (offlineMessageList.size() > 0) {
                             List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
                             uiMessageList.addAll(offlineUIMessageList);
@@ -1345,15 +1354,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             final List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-            //在这里加一个延时防止UI中的adapter未初始化，消息已经到达，避免在有些情况下会有点击通知导致应用崩溃的问题
-            Handler handlerDelay = new Handler() {
-                @Override
-                public void handleMessage(android.os.Message msg) {
-                    super.handleMessage(msg);
-                    new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
-                }
-            };
-            handlerDelay.sendEmptyMessageDelayed(0, 20);
+            new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
         }
     }
 
