@@ -195,13 +195,13 @@ public class ConversationActivity extends ConversationBaseActivity {
                                 Message offlineMessage = it.next();
                                 if (uiMessageList.contains(new UIMessage(offlineMessage.getId()))) {
                                     it.remove();
-                                    break;
-                                }
-                                //离线消息获取后，更改对应的未发送成功状态的消息
-                                int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
-                                if (index != -1) {
-                                    uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
-                                    it.remove();
+                                } else {
+                                    //离线消息获取后，更改对应的未发送成功状态的消息
+                                    int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
+                                    if (index != -1) {
+                                        uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
+                                        it.remove();
+                                    }
                                 }
                             }
                         }
