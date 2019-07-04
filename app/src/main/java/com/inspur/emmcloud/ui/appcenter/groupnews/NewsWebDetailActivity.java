@@ -230,9 +230,15 @@ public class NewsWebDetailActivity extends BaseActivity {
             url = APIUri.getGroupNewsHtmlUrl(url);
         }
         //修改model在第一次加载时直接带着model而不是加载两次
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        final String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         loadUrlWithHeader(url + (StringUtils.isBlank(model) ? lightMode : model));
-        setHeaderModel(model);
+        //此处添加延时效果是
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setHeaderModel(model);
+            }
+        }, 50);
     }
 
     private void setWebView() {
@@ -744,11 +750,11 @@ public class NewsWebDetailActivity extends BaseActivity {
     /**
      * 改变原生导航栏
      */
-    private void setHeaderModel(String model) {
+    private void setHeaderModel(final String model) {
         boolean isDarkMode = model.equals(darkMode);
-        int color = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
+        int color = ResourceUtils.getResValueOfAttr(NewsWebDetailActivity.this, R.attr.header_bg_color);
         int statusBarColor = isDarkMode ? R.color.app_news_night_color : color;
-        ImmersionBar.with(this).statusBarColor(statusBarColor).init();
+        ImmersionBar.with(NewsWebDetailActivity.this).statusBarColor(statusBarColor).init();
         (findViewById(R.id.rl_header)).setBackgroundColor(ContextCompat.getColor(MyApplication.getInstance(), statusBarColor));
     }
 

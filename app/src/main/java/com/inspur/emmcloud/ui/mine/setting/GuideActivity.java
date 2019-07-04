@@ -42,7 +42,7 @@ public class GuideActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        ImmersionBar.with(this).init();
+        ImmersionBar.with(this).navigationBarColor(android.R.color.white).navigationBarDarkIcon(true, 1.0f).init();
         deleteReactNativeResource();
         initView();
     }

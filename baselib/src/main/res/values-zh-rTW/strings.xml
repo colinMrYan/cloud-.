@@ -319,6 +319,7 @@
     <string name="chat_full_image">查看原圖</string>
     <string name="chat_transmit_message_success">轉發成功</string>
     <string name="chat_transmit_message_fail">轉發失敗</string>
+    <string name="chat_long_click_reply">回复</string>
 
 
     <!-- 會議卡片 -->

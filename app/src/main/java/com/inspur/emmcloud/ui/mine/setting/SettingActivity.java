@@ -25,7 +25,6 @@ import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -294,7 +293,7 @@ public class SettingActivity extends BaseActivity {
      */
     private void setLanguage() {
         // TODO Auto-generated method stub
-        String languageName = PreferencesUtils.getString(MyApplication.getInstance(), MyApplication.getInstance().getTanent() + "language", "");
+        String languageName = LanguageManager.getInstance().getCurrentLanguageName();
         String languageJson = LanguageManager.getInstance().getCurrentLanguageJson();
         if (languageJson != null && !languageName.equals("followSys")) {
             Language language = new Language(languageJson);
@@ -310,6 +309,7 @@ public class SettingActivity extends BaseActivity {
             languageFlagImg.setImageResource(id);
         } else {
             languageNameText.setText(getString(R.string.follow_system));
+            languageFlagImg.setImageResource(R.drawable.ic_mine_language_follow_system);
         }
     }
 

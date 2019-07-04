@@ -184,22 +184,24 @@ public class ConversationActivity extends ConversationBaseActivity {
                         WSAPIService.getInstance().setChannelMessgeStateRead(cid);
                         break;
                     case REFRESH_OFFLINE_MESSAGE:
+                        if (adapter == null) {
+                            return;
+                        }
                         List<Message> offlineMessageList = (List<Message>) msg.obj;
                         Iterator<Message> it = offlineMessageList.iterator();
-
                         if (uiMessageList.size() > 0) {
                             while (it.hasNext()) {
                                 //发送成功的消息去重去重
                                 Message offlineMessage = it.next();
                                 if (uiMessageList.contains(new UIMessage(offlineMessage.getId()))) {
                                     it.remove();
-                                    break;
-                                }
-                                //离线消息获取后，更改对应的未发送成功状态的消息
-                                int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
-                                if (index != -1) {
-                                    uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
-                                    it.remove();
+                                } else {
+                                    //离线消息获取后，更改对应的未发送成功状态的消息
+                                    int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
+                                    if (index != -1) {
+                                        uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
+                                        it.remove();
+                                    }
                                 }
                             }
                         }
@@ -1343,7 +1345,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
-            List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            final List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
         }

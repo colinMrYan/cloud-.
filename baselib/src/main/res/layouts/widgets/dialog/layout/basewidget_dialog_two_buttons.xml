@@ -41,14 +41,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
                 android:layout_marginTop="12dp"
+                android:paddingRight="15dp"
                 android:adjustViewBounds="true"
                 android:fadeScrollbars="false"
                 android:lineSpacingMultiplier="1.1"
                 android:maxHeight="310dp"
                 android:scrollbarSize="4dp"
-                android:scrollbarStyle="insideInset"
+                android:scrollbarStyle="outsideOverlay"
                 android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
                 android:scrollbars="vertical"
                 android:textColor="@color/app_dialog_title_color"
@@ -75,6 +75,7 @@
                     android:gravity="center"
                     android:padding="12dp"
                     android:text="@string/cancel"
+                    android:textAllCaps="false"
                     android:textColor="@color/app_dialog_title_color"
                     android:textSize="@dimen/header_function_textsize" />
 
@@ -93,6 +94,7 @@
                     android:gravity="center"
                     android:padding="12dp"
                     android:text="@string/ok"
+                    android:textAllCaps="false"
                     android:textColor="@color/app_dialog_update_color"
                     android:textSize="@dimen/header_function_textsize" />
             </LinearLayout>

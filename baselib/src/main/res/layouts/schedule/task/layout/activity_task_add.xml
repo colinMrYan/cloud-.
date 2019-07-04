@@ -156,7 +156,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/iv_task_type_arrow"
-                    android:layout_toRightOf="@id/tv_task_type"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -173,6 +172,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="10dp"
+                        android:maxWidth="200dp"
                         android:singleLine="true"
                         android:text="@string/schedule_task_category_no"
                         android:textColor="#888888"

@@ -106,6 +106,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:cacheColorHint="@color/transparent"
+                android:divider="#C8C7CC"
+                android:dividerHeight="0.5px"
                 android:fadingEdge="none"
                 android:listSelector="@color/transparent"
                 android:scrollbars="none"></ListView>
