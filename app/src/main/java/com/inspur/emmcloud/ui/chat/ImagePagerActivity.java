@@ -452,7 +452,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         if (imgTypeMessageList.size() > 0) {
             MsgContentMediaImage msgContentMediaImage = imgTypeMessageList.get(position).getMsgContentMediaImage();
             boolean isHaveOriginalImageCatch = ImageDisplayUtils.getInstance().isHaveCacheImage(url);//这个是判断有无原图（是否有）
-            if (msgContentMediaImage.getPreviewHeight() != 0 &&(msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) && !isHaveOriginalImageCatch) {
+            if (msgContentMediaImage.getPreviewHeight() != 0
+                    && ((msgContentMediaImage.getRawHeight() != msgContentMediaImage.getPreviewHeight()) || (msgContentMediaImage.getRawWidth() != msgContentMediaImage.getPreviewWidth()))
+                    && !isHaveOriginalImageCatch) {
                 return true;
             }
         }
