@@ -344,7 +344,6 @@ public class CheckingNetStateUtils {
         }
     }
 
-
     /**
      * 包含Url  、该Url 的通断状态、Action
      */

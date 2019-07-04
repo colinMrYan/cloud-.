@@ -48,9 +48,9 @@
     <string name="check_update_text">Check New Version</string>
     <string name="app_is_lastest_version">This is the lastest version</string>
     <string name="check_update_fail">Checking new version failed</string>
-    <string name="upgrade">Now</string>
-    <string name="not_upgrade">Later</string>
-    <string name="app_update_remind">Update Remind</string>
+    <string name="upgrade">Update</string>
+    <string name="not_upgrade">Skip</string>
+    <string name="app_update_remind">Update Reminder</string>
     <string name="app_last_version">Last Version</string>
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>
@@ -488,7 +488,7 @@
     <string name="app_commonly_use">Common mode</string>
     <string name="app_commonly_use_close">Common off</string>
     <string name="app_center_more_apps">More Apps</string>
-    <string name="app_input_mail_password">Please Enter the company email password</string>
+    <string name="app_input_mail_password">Please enter the company email password</string>
     <string name="app_need_input_mail_password">Please enter the password when you first use it or your password has been changed</string>
     <string name="app_download">App downloading：</string>
     <string name="app_password_error">Password is wrong, please re-enter</string>

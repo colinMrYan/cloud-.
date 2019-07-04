@@ -32,7 +32,6 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -67,7 +66,6 @@ import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.mine.setting.NetWorkStateDetailActivity;
 import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
@@ -255,17 +253,6 @@ public class CommunicationFragment extends BaseFragment {
                     Conversation conversation = uiConversation.getConversation();
                     String type = conversation.getType();
                     if (type.equals(Conversation.TYPE_CAST) || type.equals(Conversation.TYPE_DIRECT) || type.equals(Conversation.TYPE_GROUP)) {
-                        LogUtils.LbcDebug("1111111111111111");
-                        /********获取*******/
-                        if (type.equals(Conversation.TYPE_GROUP)) {
-
-                        } else if (type.equals(Conversation.TYPE_DIRECT)) {
-                            String uid = CommunicationUtils.getDirctChannelOtherUid(MyApplication.getInstance(), conversation.getName());
-                            String members = conversation.getMembers();
-                            LogUtils.LbcDebug(members + ":::" + uid);
-                        }
-
-
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ConversationBaseActivity.EXTRA_UNREAD_MESSAGE, (Serializable) MessageCacheUtil.getAllUnReadMessage(getActivity(), conversation.getId()));
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
