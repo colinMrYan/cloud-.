@@ -43,6 +43,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.ClientConfigItem;
 import com.inspur.emmcloud.basemodule.bean.GetAllConfigVersionResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -255,19 +256,19 @@ public class MyAppFragment extends BaseFragment {
      */
     private void refreshRecommendAppWidgetView() {
         //判断时间是否点击了叉号，不在显示时间内，或者推荐应用已经过了有效期
-        if (!(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())) ||
+        if (!(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(BaseApplication.getInstance())) ||
                 !MyAppWidgetUtils.isEffective(PreferencesByUserAndTanentUtils.getLong(getContext()
                         , Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE, 0L))) {
             (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
             return;
         }
         //是否是需要刷新的时间，即过了当前小时内appId的显示时间，这是只控制刷新，不控制显示隐藏，MyAPPFragment Destroy时会重置这个时间，使下次进入时不会影响刷新UI
-        boolean isRefreshTime = PreferencesByUserAndTanentUtils.getInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, -1) != MyAppWidgetUtils.getNowHour();
+        boolean isRefreshTime = PreferencesByUserAndTanentUtils.getInt(BaseApplication.getInstance(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, -1) != MyAppWidgetUtils.getNowHour();
         if (!isRefreshTime) {
             return;
         }
         GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils.
-                getString(getActivity(), Constant.PREF_MY_APP_RECOMMEND_DATA, ""));
+                getString(BaseApplication.getInstance(), Constant.PREF_MY_APP_RECOMMEND_DATA, ""));
         List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getRecommendAppWidgetListResult.getRecommendAppWidgetBeanList();
         List<App> appList = MyAppWidgetUtils.getShouldShowAppList(recommendAppWidgetBeanList, appListAdapter.getAppAdapterList());
         if (appList.size() > 0) {
