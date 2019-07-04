@@ -1343,9 +1343,17 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
-            List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            final List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-            new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
+            //在这里加一个延时防止UI中的adapter未初始化，消息已经到达，避免在有些情况下会有点击通知导致应用崩溃的问题
+            Handler handlerDelay = new Handler() {
+                @Override
+                public void handleMessage(android.os.Message msg) {
+                    super.handleMessage(msg);
+                    new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
+                }
+            };
+            handlerDelay.sendEmptyMessageDelayed(0, 20);
         }
     }
 
