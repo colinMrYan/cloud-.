@@ -223,7 +223,7 @@ public class GetPathFromUri4kitkat {
     }
 
     public static boolean isHuaweiUri(Uri uri) {
-        return uri.toString().toLowerCase().contains("huawei");
+        return "com.huawei.hidisk.fileprovider".equals(uri.getAuthority());
     }
 
     //获取低版本文件路径的兼容方法
