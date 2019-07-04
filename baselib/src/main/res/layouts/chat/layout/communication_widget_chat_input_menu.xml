@@ -91,6 +91,7 @@
                     android:background="@drawable/bg_chat_input_send_btn_disable"
                     android:gravity="center"
                     android:text="@string/send"
+                    android:textAllCaps="false"
                     android:textColor="#ffffff"
                     android:textSize="13sp"
                     android:visibility="gone" />

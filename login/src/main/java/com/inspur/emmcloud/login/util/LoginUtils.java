@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -300,8 +299,6 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         // TODO Auto-generated method stub
         try {
             if (errorCode == 400) {
-                LogUtils.jasonDebug("headerLimitRemaining="+headerLimitRemaining);
-                LogUtils.jasonDebug("headerRetryAfter="+headerRetryAfter);
                     String code = JSONUtils.getString(error,"code","");
                     if (code.equals("1002") && !StringUtils.isBlank(headerLimitRemaining)){
                         int limitRemaining = Integer.parseInt(headerLimitRemaining);
