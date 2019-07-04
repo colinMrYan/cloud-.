@@ -184,9 +184,11 @@ public class ConversationActivity extends ConversationBaseActivity {
                         WSAPIService.getInstance().setChannelMessgeStateRead(cid);
                         break;
                     case REFRESH_OFFLINE_MESSAGE:
+                        if (adapter == null) {
+                            return;
+                        }
                         List<Message> offlineMessageList = (List<Message>) msg.obj;
                         Iterator<Message> it = offlineMessageList.iterator();
-
                         if (uiMessageList.size() > 0) {
                             while (it.hasNext()) {
                                 //发送成功的消息去重去重
@@ -1345,15 +1347,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
             final List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
-            //在这里加一个延时防止UI中的adapter未初始化，消息已经到达，避免在有些情况下会有点击通知导致应用崩溃的问题
-            Handler handlerDelay = new Handler() {
-                @Override
-                public void handleMessage(android.os.Message msg) {
-                    super.handleMessage(msg);
-                    new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
-                }
-            };
-            handlerDelay.sendEmptyMessageDelayed(0, 20);
+            new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
         }
     }
 
