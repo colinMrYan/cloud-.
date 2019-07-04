@@ -255,6 +255,9 @@ public class MyAppFragment extends BaseFragment {
      * 每个小时都有可能有变化
      */
     private void refreshRecommendAppWidgetView() {
+        if (getActivity() == null) {
+            return;
+        }
         //判断时间是否点击了叉号，不在显示时间内，或者推荐应用已经过了有效期
         if (!(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(BaseApplication.getInstance())) ||
                 !MyAppWidgetUtils.isEffective(PreferencesByUserAndTanentUtils.getLong(getContext()
