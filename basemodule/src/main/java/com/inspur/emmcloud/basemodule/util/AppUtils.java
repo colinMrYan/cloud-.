@@ -290,6 +290,10 @@ public class AppUtils {
         uniqueId = getUUIDFromSDCardFile(context);
         if (!StringUtils.isBlank(uniqueId)) {
             return uniqueId;
+        } else {
+            if (FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)) {
+                FileUtils.deleteFile(Constant.CONCIG_CLOUD_PLUS_UUID_FILE);
+            }
         }
         // 如果前两个都没有，则生成一个UUID，并存到SharePreference和SD卡文件里
         if (StringUtils.isBlank(uniqueId)) {
