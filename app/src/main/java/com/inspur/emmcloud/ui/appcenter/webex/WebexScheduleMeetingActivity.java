@@ -264,8 +264,11 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
         new CustomDialog.MessageDialogBuilder(WebexScheduleMeetingActivity.this)
                 .setTitle(getString(R.string.webex_start_time_error))
                 .setMessage(getString(R.string.webex_start_time_error_info))
-                .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
-                    dialog.dismiss();
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
                 .show();
     }

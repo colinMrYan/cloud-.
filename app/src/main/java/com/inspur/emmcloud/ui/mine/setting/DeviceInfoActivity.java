@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.mine.setting;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,12 +87,19 @@ public class DeviceInfoActivity extends BaseActivity {
         String warningText = bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext())) ? getString(R.string.device_current_unbind_warning) : getString(R.string.device_other_unbind_warning, bindingDevice.getDeviceModel());
         new CustomDialog.MessageDialogBuilder(DeviceInfoActivity.this)
                 .setMessage(warningText)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    unbindDevice();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        unbindDevice();
+                    }
                 })
                 .show();
     }

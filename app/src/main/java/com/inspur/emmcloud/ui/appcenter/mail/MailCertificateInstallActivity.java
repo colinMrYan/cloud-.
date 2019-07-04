@@ -1,8 +1,9 @@
 package com.inspur.emmcloud.ui.appcenter.mail;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.widget.SwitchCompat;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
 import android.util.Base64;
 import android.view.View;
@@ -164,19 +165,25 @@ public class MailCertificateInstallActivity extends BaseActivity {
 
         builder.setTitle("证书密码：")
                 .setView(editLayout)
-                .setNegativeButton("取消", (dialog, index) -> {
-                    dialog.dismiss();
-                })
-                .setPositiveButton("确定", (dialog, index) -> {
-                    CharSequence text = editText.getText();
-                    String key = text.toString().trim();
-                    if (getCertificate(path, key)) {
-                        certificatePassWord = key;
-                        String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
-                        uploadCertificateFile(mail, path, certificatePassWord);
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                    } else {
-                        ToastUtils.show(getBaseContext(), "密码无效或证书有误，请重试");
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CharSequence text = editText.getText();
+                        String key = text.toString().trim();
+                        if (getCertificate(path, key)) {
+                            certificatePassWord = key;
+                            String mail = ContactUserCacheUtils.getUserMail(MyApplication.getInstance().getUid());
+                            uploadCertificateFile(mail, path, certificatePassWord);
+                            dialog.dismiss();
+                        } else {
+                            ToastUtils.show(getBaseContext(), "密码无效或证书有误，请重试");
+                        }
                     }
                 }).show();
     }

@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.webex;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
@@ -280,13 +281,19 @@ public class WebexMyMeetingActivity extends BaseActivity {
     private void showInstallDialog() {
         new CustomDialog.MessageDialogBuilder(WebexMyMeetingActivity.this)
                 .setMessage(getString(R.string.webex_install_tips))
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
-                    new AppDownloadUtils().showDownloadDialog(WebexMyMeetingActivity.this, downloadUrl);
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        String downloadUrl = PreferencesUtils.getString(MyApplication.getInstance(), Constant.PREF_WEBEX_DOWNLOAD_URL, "");
+                        new AppDownloadUtils().showDownloadDialog(WebexMyMeetingActivity.this, downloadUrl);
+                    }
                 })
                 .show();
     }

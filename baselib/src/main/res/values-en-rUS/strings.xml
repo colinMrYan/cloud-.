@@ -821,7 +821,7 @@
     <string name="do_not_select_yourself">Please do not select yourself</string>
     <string name="contact_exception">Data exception cannot be opened</string>
     <string name="contact_select_limit_warning">The maximum number of optional persons has been reached</string>
-    <string name="contact_add_system">Add to Contacts</string>
+    <string name="contact_add_system">Save to Contacts</string>
 
     <!-- 会议室部分 -->
     <string name="meeting_room_booking_detail">Details on the meeting room</string>

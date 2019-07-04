@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.task;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -281,10 +282,18 @@ public class TaskListFragment extends Fragment {
             if (currentIndex == 0 || currentIndex == 1) {
                 new CustomDialog.MessageDialogBuilder(getActivity())
                         .setMessage(R.string.mession_set_finish)
-                        .setNegativeButton(getString(R.string.cancel), (dialog, index) -> dialog.dismiss())
-                        .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
-                            dialog.dismiss();
-                            deleteTasks(position);
+                        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                deleteTasks(position);
+                            }
                         })
                         .show();
 

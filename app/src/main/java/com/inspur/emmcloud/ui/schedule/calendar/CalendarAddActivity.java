@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -285,8 +286,11 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      */
     private void showEndDateErrorRemindDialog() {
         new CustomDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 }).show();
     }
 
