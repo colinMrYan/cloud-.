@@ -56,6 +56,8 @@ public class UserInfoActivity extends BaseActivity {
     private static final String USER_UID = "uid";
     private static final int USER_INFO_ACTIVITY_REQUEST_CODE = 1;
 
+    @BindView(R.id.tv_add_system_contact)
+    TextView addSysContactTv;
     @BindView(R.id.ll_user_department)
     LinearLayout departmentLayout;
     @BindView(R.id.tv_user_department)
@@ -203,6 +205,7 @@ public class UserInfoActivity extends BaseActivity {
         boolean isNoContactWay = StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr) && StringUtils.isBlank(mail);
         mobileContactInfoLayout.setVisibility(isNoContactWay ? View.GONE : View.VISIBLE);
         mobileStartChatLayout.setVisibility(isNoContactWay ? View.VISIBLE : View.GONE);
+        addSysContactTv.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
         userContactWayLayout.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
     }
 
