@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 
 public class DragScaleView extends View {
     private static final int LEFT_TOP = 0x12;
@@ -33,32 +35,40 @@ public class DragScaleView extends View {
     private int mParentContentHeight;
     private ScrollView scrollView;
     private int mRadius = 8;
-    private int minOffset = DensityUtil.dip2px(10);
+    private float minOffset; //防止个别手机dp转px导致移动错位
     private int circleCenter = DensityUtil.dip2px(15);
     private int minHeight = DensityUtil.dip2px(28);
     private int rectLeft = DensityUtil.dip2px(getContext(), 50);
+    private int scrollOffset = DensityUtil.dip2px(getContext(), 50);
+    private float scale = Resources.getSystem().getDisplayMetrics().density;
 
     public DragScaleView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        minOffset = DensityUtil.dip2px(40) * 1.0f / 4;
     }
 
     public DragScaleView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        minOffset = DensityUtil.dip2px(40) * 1.0f / 4;
     }
 
     public DragScaleView(Context context) {
         super(context);
+        minOffset = DensityUtil.dip2px(40) * 1.0f / 4;
     }
 
     public void setMinHeight(int minHeight) {
         this.minHeight = minHeight;
     }
 
+    public int getOffset() {
+        return offset;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int backgroundColor = Color.parseColor("#38C694");
+        int backgroundColor = Color.parseColor("#36A5F6");
         paint.setColor(backgroundColor);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRoundRect(new RectF(rectLeft, offset, getWidth(), getHeight() - offset),
@@ -99,35 +109,41 @@ public class DragScaleView extends View {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if ((int) event.getX() < rectLeft) {
-            return false;
-        }
-        getParent().requestDisallowInterceptTouchEvent(true);
-        int action = event.getAction();
-        if (action == MotionEvent.ACTION_DOWN) {
-            oriLeft = this.getLeft();
-            oriRight = this.getRight();
-            oriTop = this.getTop();
-            oriBottom = this.getBottom();
-            lastY = (int) event.getRawY();
-            lastX = (int) event.getRawX();
-            dragDirection = getDirection(this, (int) event.getX(),
-                    (int) event.getY());
-        }
-
-
-        if (action == MotionEvent.ACTION_MOVE) {
-            int dy = (int) event.getRawY() - lastY;
-            if (Math.abs(dy) < minOffset * 0.8) {
-                return true;
-            }
-        }
-
-
-        // 处理拖动事件
-        delDrag(this, event, action);
-        invalidate();
-        return true;
+        return false;
+//        if ((int) event.getX() < rectLeft) {
+//            return false;
+//        }
+//        getParent().requestDisallowInterceptTouchEvent(true);
+//        int action = event.getAction();
+//        if (action == MotionEvent.ACTION_DOWN) {
+//            LogUtils.jasonDebug("MotionEvent.ACTION_DOWN------------");
+//            oriLeft = this.getLeft();
+//            oriRight = this.getRight();
+//            oriTop = this.getTop();
+//            oriBottom = this.getBottom();
+//            lastY = (int) event.getRawY();
+//            lastX = (int) event.getRawX();
+//            dragDirection = getDirection(this, (int) event.getX(),
+//                    (int) event.getY());
+//        }
+//
+//
+//        if (action == MotionEvent.ACTION_MOVE) {
+//            LogUtils.jasonDebug("MotionEvent.ACTION_MOVE------------");
+//            int dy = (int) event.getRawY() - lastY;
+//            if (Math.abs(dy) < minOffset * 0.7) {
+//                return true;
+//            }
+//        }
+//
+//
+//        // 处理拖动事件
+//        delDrag(this, event, action);
+//        invalidate();
+//        if (action == MotionEvent.ACTION_UP) {
+//            return false;
+//        }
+//        return true;
     }
 
     /**
@@ -141,7 +157,7 @@ public class DragScaleView extends View {
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 int dy = (int) event.getRawY() - lastY;
-                dy = (int) Math.round(dy * 1.0 / minOffset) * minOffset;
+                dy = (int) (Math.round(dy / minOffset) * minOffset);
                 switch (dragDirection) {
                     case RIGHT_BOTTOM: // 左下
                         bottom(v, dy);
@@ -153,11 +169,17 @@ public class DragScaleView extends View {
                         center(v, dy);
                         break;
                 }
+                if (onMoveListener != null) {
+                    boolean isNeedScroll = (dy < 0 && oriTop < scrollView.getScrollY() + scrollOffset) ||
+                            (dy > 0 && oriBottom > (scrollView.getScrollY() + mParentHeight - scrollOffset));
 
+                    onMoveListener.moveTo(isNeedScroll, dy, oriTop, getHeight() - 2 * offset);
+                }
                 lastX = (int) event.getRawX();
                 lastY = (int) event.getRawY();
                 break;
             case MotionEvent.ACTION_UP:
+                LogUtils.jasonDebug("MotionEvent.ACTION_UP------------");
                 dragDirection = 0;
                 break;
         }
@@ -170,29 +192,23 @@ public class DragScaleView extends View {
      * @param dy
      */
     private void center(View v, int dy) {
+
         int top = v.getTop() + dy;
         int bottom = v.getBottom() + dy;
-        if (top < -offset) {
-            top = -offset;
+        if (top < 0) {
+            top = 0;
             bottom = top + v.getHeight();
         }
-        if (bottom > mParentContentHeight + offset) {
-            bottom = mParentContentHeight + offset;
+        if (bottom > mParentContentHeight) {
+            bottom = mParentContentHeight;
             top = bottom - v.getHeight();
         }
+        //防止个别手机dp转px导致移动错位
+        top = DensityUtil.dip2px(Math.round(top / scale));
+        bottom = DensityUtil.dip2px(Math.round(bottom / scale));
         v.layout(oriLeft, top, oriRight, bottom);
         oriTop = top;
         oriBottom = bottom;
-        if (dy < 0 && oriTop < scrollView.getScrollY() + 50) {
-            if (onMoveListener != null) {
-                onMoveListener.moveTo(true, dy);
-            }
-        }
-        if (dy > 0 && oriBottom > (scrollView.getScrollY() + mParentHeight - 50)) {
-            if (onMoveListener != null) {
-                onMoveListener.moveTo(true, dy);
-            }
-        }
     }
 
     /**
@@ -212,24 +228,13 @@ public class DragScaleView extends View {
             oriTop = mParentContentHeight - minHeight;
         }
 
-        if (oriBottom - oriTop - 2 * offset < minHeight) {
+        if (oriBottom - oriTop < minHeight) {
             oriBottom = oriTop + minHeight;
         }
-
+        //防止个别手机dp转px导致移动错位
+        oriTop = DensityUtil.dip2px(Math.round(oriTop / scale));
+        oriBottom = DensityUtil.dip2px(Math.round(oriBottom / scale));
         v.layout(oriLeft, oriTop, oriRight, oriBottom);
-
-
-        if (dy < 0 && oriTop < scrollView.getScrollY() + 50) {
-            if (onMoveListener != null) {
-                onMoveListener.moveTo(true, dy);
-            }
-        }
-        if (dy > 0 && oriBottom > (scrollView.getScrollY() + mParentHeight - 50)) {
-            if (onMoveListener != null) {
-                onMoveListener.moveTo(true, dy);
-            }
-        }
-
     }
 
     /**
@@ -240,30 +245,20 @@ public class DragScaleView extends View {
      */
     private void bottom(View v, int dy) {
         oriBottom += dy;
-        if (oriBottom > mParentContentHeight + offset) {
-            oriBottom = mParentContentHeight + offset;
+        if (oriBottom > mParentContentHeight) {
+            oriBottom = mParentContentHeight;
         }
 
         if (oriBottom - minHeight < 0) {
             oriBottom = minHeight;
         }
-        if (oriBottom - oriTop - 2 * offset < minHeight) {
+        if (oriBottom - oriTop < minHeight) {
             oriTop = oriBottom - minHeight;
         }
+        //防止个别手机dp转px导致移动错位
+        oriTop = DensityUtil.dip2px(Math.round(oriTop / scale));
+        oriBottom = DensityUtil.dip2px(Math.round(oriBottom / scale));
         v.layout(oriLeft, oriTop, oriRight, oriBottom);
-
-        if (dy < 0 && oriTop < scrollView.getScrollY() + 50) {
-            if (onMoveListener != null) {
-                onMoveListener.moveTo(true, dy);
-            }
-        }
-        if (dy > 0 && oriBottom > (scrollView.getScrollY() + mParentHeight - 50)) {
-            if (onMoveListener != null) {
-                onMoveListener.moveTo(true, dy);
-            }
-        }
-
-
     }
 
     /**
@@ -315,6 +310,6 @@ public class DragScaleView extends View {
     }
 
     public interface OnMoveListener {
-        void moveTo(boolean isTop, int y);
+        void moveTo(boolean isNeedScroll, int ScrollOffset, int top, int height);
     }
 }

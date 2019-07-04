@@ -39,6 +39,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private RelativeLayout currentTimeLineLayout;
     private LinearLayout timeHourLayout;
     private Calendar selectCalendar;
+    private TextView dragViewStartTmeText;
+    private TextView dragViewEndTimeText;
 
     public CalendarDayView(Context context) {
         this(context, null);
@@ -66,6 +68,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private void initTimeHourLayout(View view) {
         eventLayout = view.findViewById(R.id.rl_event);
         timeHourLayout = view.findViewById(R.id.ll_time_hour);
+        dragViewStartTmeText = view.findViewById(R.id.tv_drag_view_start_time);
+        dragViewEndTimeText = view.findViewById(R.id.tv_drag_view_end_time);
         for (int i = 0; i < dayHourTimes.length; i++) {
             View hourLayout = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_view_hour, null, false);
             hourLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, TIME_HOUR_HEIGHT));
@@ -86,6 +90,52 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         this.eventList = eventList;
         initTimeHourRow();
         showEventList();
+    }
+
+    /**
+     * 显示添加日程Event的DragView的时间
+     *
+     * @param top
+     * @param height
+     */
+    public void showDragViewTime(int top, int height) {
+        RelativeLayout.LayoutParams paramsStart = (RelativeLayout.LayoutParams) dragViewStartTmeText.getLayoutParams();
+        paramsStart.setMargins(0, top, 0, 0);
+        dragViewStartTmeText.setLayoutParams(paramsStart);
+        RelativeLayout.LayoutParams paramsEnd = (RelativeLayout.LayoutParams) dragViewEndTimeText.getLayoutParams();
+        paramsEnd.setMargins(0, top + height, 0, 0);
+        dragViewEndTimeText.setLayoutParams(paramsEnd);
+        String startTime = getFormatTime(top);
+        String endTime = getFormatTime(top + height);
+
+        dragViewStartTmeText.setText(startTime);
+        dragViewEndTimeText.setText(endTime);
+        dragViewStartTmeText.setVisibility(View.VISIBLE);
+        dragViewEndTimeText.setVisibility(View.VISIBLE);
+    }
+
+    private String getFormatTime(int offset) {
+        int min = (int) (60 * offset * 1.0 / TIME_HOUR_HEIGHT);
+        int hour = min / 60;
+        min = min % 60;
+        min = min / 15 * 15; //保证分钟数是15倍数
+        return hour + (min > 0 ? ":" + (min < 10 ? "0" + min : min) : "");
+    }
+
+    public String getDragViewStartTime() {
+        return dragViewStartTmeText.getText().toString();
+    }
+
+    public String getDragViewEndTime() {
+        return dragViewEndTimeText.getText().toString();
+    }
+
+    /**
+     * 隐藏添加日程Event的DragView
+     */
+    public void hideDragViewTime() {
+        dragViewStartTmeText.setVisibility(View.GONE);
+        dragViewEndTimeText.setVisibility(View.GONE);
     }
 
     /**
@@ -225,13 +275,13 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 if (event.getIndex() < 0) {
                     event.setIndex(i);
                     int eventWidth = timeHourRow.getEventWidth();
-                    int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * DensityUtil.dip2px(getContext(), 40) / 3600000);
+                    int eventHeight = (int) (event.getDayDurationInMillSeconds(selectCalendar) * TIME_HOUR_HEIGHT / 3600000);
                     int marginLeft = EVENT_GAP * i + eventWidth * i;
                     Calendar startTime = event.getDayEventStartTime(selectCalendar);
                     Calendar dayStartTime = (Calendar) startTime.clone();
                     dayStartTime.set(Calendar.HOUR_OF_DAY, 0);
                     dayStartTime.set(Calendar.MINUTE, 0);
-                    int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * DensityUtil.dip2px(getContext(), 40) / 3600000);
+                    int marginTop = (int) ((startTime.getTimeInMillis() - dayStartTime.getTimeInMillis()) * TIME_HOUR_HEIGHT / 3600000);
                     RelativeLayout.LayoutParams eventLayoutParams = new RelativeLayout.LayoutParams(eventWidth,
                             eventHeight);
                     eventLayoutParams.setMargins(marginLeft, marginTop, 0, 0);

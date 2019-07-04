@@ -24,6 +24,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
@@ -70,8 +71,10 @@ import java.util.Map;
  */
 
 public class ScheduleFragment extends BaseFragment implements
-        CalendarView.OnCalendarSelectListener,
-        CalendarLayout.CalendarExpandListener, View.OnClickListener, CalendarDayView.OnEventClickListener, ScheduleEventListAdapter.OnItemClickLister, AdapterView.OnItemClickListener {
+        CalendarView.OnCalendarSelectListener, CalendarLayout.CalendarExpandListener,
+        View.OnClickListener, CalendarDayView.OnEventClickListener,
+        ScheduleEventListAdapter.OnItemClickLister, View.OnLongClickListener, View.OnTouchListener,
+        AdapterView.OnItemClickListener, DragScaleView.OnMoveListener {
     private static final String PV_COLLECTION_CAL = "calendar";
     private static final String PV_COLLECTION_MISSION = "task";
     private static final String PV_COLLECTION_MEETING = "meeting";
@@ -198,37 +201,19 @@ public class ScheduleFragment extends BaseFragment implements
                 calendarView.setIsLunarAndFestivalShow(false);
                 break;
         }
-        contentLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
-                    removeEventAddDragScaleView();
-                } else {
-                    showEventAddDragScaleView();
-                }
-
-                return true;
-            }
-        });
-        contentLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                contentLayoutTouchY = event.getY();
-                return false;
-            }
-        });
-        contentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeEventAddDragScaleView();
-            }
-        });
+        contentLayout.setOnLongClickListener(this);
+        contentLayout.setOnTouchListener(this);
+        contentLayout.setOnClickListener(this);
 
     }
 
+    /**
+     * 删除日历添加DragView
+     */
     private void removeEventAddDragScaleView() {
         if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
             contentLayout.removeView(dragScaleView);
+            calendarDayView.hideDragViewTime();
             dragScaleView = null;
         }
     }
@@ -237,39 +222,25 @@ public class ScheduleFragment extends BaseFragment implements
     /**
      * 删除添加事件的View
      */
-    private void showEventAddDragScaleView() {
+    private void showEventAddDragView() {
         dragScaleView = new DragScaleView(getActivity());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(28));
-        int dragScaleVie = DensityUtil.dip2px(10);
-        int top = (int) Math.round(contentLayoutTouchY * 1.0 / dragScaleVie) * dragScaleVie;
-        params.setMargins(0, top, DensityUtil.dip2px(50), 0);
+        int dragScaleViewHeight = DensityUtil.dip2px(40) + 2 * dragScaleView.getOffset();
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, dragScaleViewHeight);
+        int halfHourHeight = DensityUtil.dip2px(20);
+        //保证DragScaleView显示在两个整点或两个半点之间
+        int top = (int) Math.round((contentLayoutTouchY - halfHourHeight) * 1.0 / halfHourHeight) * halfHourHeight;
+        params.setMargins(0, top, DensityUtil.dip2px(20), 0);
         dragScaleView.setParentView(eventScrollView);
         contentLayout.addView(dragScaleView, params);
-        dragScaleView.setOnMoveListener(new DragScaleView.OnMoveListener() {
+        calendarDayView.showDragViewTime(top, dragScaleViewHeight - 2 * dragScaleView.getOffset());
+        dragScaleView.setOnMoveListener(this);
+        dragScaleView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void moveTo(boolean isTop, final int y) {
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        int scrollOffset = y;
-                        int currentScrollY = eventScrollView.getScrollY();
-                        eventScrollView.scrollBy(0, scrollOffset);
-                        if (y < 0) {//向下滚动
-                            if (currentScrollY < -y) {
-                                scrollOffset = -currentScrollY;
-                            }
-                        } else {
-                            int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
-                            if (scrollOffset > maxScrollOffset) {
-                                scrollOffset = maxScrollOffset;
-                            }
-
-                        }
-                        dragScaleView.updateLastY(-scrollOffset);
-                    }
-                });
-
+            public void onClick(View v) {
+                String eventStartTime = calendarDayView.getDragViewStartTime();
+                String eventEndTime = calendarDayView.getDragViewEndTime();
+                LogUtils.jasonDebug("eventStartTime==" + eventStartTime);
+                LogUtils.jasonDebug("eventEndTime==" + eventEndTime);
             }
         });
     }
@@ -602,7 +573,60 @@ public class ScheduleFragment extends BaseFragment implements
                 myDialog.dismiss();
                 myDialog = null;
                 break;
+            case R.id.rl_content:
+                removeEventAddDragScaleView();
+                break;
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v.getId() == R.id.rl_content) {
+            contentLayoutTouchY = event.getY();
+        }
+        return false;
+    }
+
+    @Override
+    public void moveTo(boolean isNeedScroll, int ScrollOffset, int top, int height) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isNeedScroll) {
+                    int scrollOffset = ScrollOffset;
+                    int currentScrollY = eventScrollView.getScrollY();
+                    eventScrollView.scrollBy(0, scrollOffset);
+                    if (ScrollOffset < 0) {//向下滚动
+                        if (currentScrollY < -ScrollOffset) {
+                            scrollOffset = -currentScrollY;
+                        }
+                    } else {
+                        int maxScrollOffset = eventScrollView.getChildAt(0).getHeight() - currentScrollY - eventScrollView.getHeight();
+                        if (scrollOffset > maxScrollOffset) {
+                            scrollOffset = maxScrollOffset;
+                        }
+
+                    }
+                    //ScrollView滚动后，DragScaleView也会随之滚动，为了让DragScaleView能够跟随手势
+                    dragScaleView.updateLastY(-scrollOffset);
+                }
+                calendarDayView.showDragViewTime(top, height);
+            }
+        }, 10);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v.getId() == R.id.rl_content) {
+            if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
+                removeEventAddDragScaleView();
+            } else {
+                showEventAddDragView();
+            }
+
+            return true;
+        }
+        return false;
     }
 
     @Override
