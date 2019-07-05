@@ -1767,22 +1767,16 @@ public class ConversationActivity extends ConversationBaseActivity {
         @Override
         public void returnTransmitPictureSuccess(String cid, String description, Message message) {
             if (NetUtils.isNetworkConnected(getApplicationContext())) {
-                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                } else {
                     String path = JSONUtils.getString(description, "path", "");
-                    if (!StringUtils.isBlank(path)) {
                         Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
                         WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
                         ToastUtils.show(R.string.chat_transmit_message_success);
-                    }
-                }
             }
-            super.returnTransmitPictureSuccess(cid, description, message);
         }
 
         @Override
         public void returnTransmitPictureError(String error, int errorCode) {
-            super.returnTransmitPictureError(error, errorCode);
+            ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }
 }
