@@ -56,6 +56,8 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
     public static final String EXTRA_SCHEDULE_CALENDAR_REPEAT_TIME = "schedule_calendar_repeattime";
     public static final String EXTRA_SCHEDULE_CALENDAR_TYPE = "schedule_calendar_type";
     public static final String EXTRA_SCHEDULE_CALENDAR_TYPE_SELECT = "schedule_calendar_type_select";
+    public static final String EXTRA_START_CALENDAR = "extra_start_calendar";
+    public static final String EXTRA_END_CALENDAR = "extra_end_calendar";
     private static final String EXTRA_SELECT_CALENDAR = "extra_select_calendar";
     private static final int REQUEST_CAL_TYPE = 1;
     private static final int REQUEST_REPEAT_TYPE = 2;
@@ -194,19 +196,25 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
      * 创建日程
      */
     private void createCalendar() {
-        Calendar currentCalendar = Calendar.getInstance();
-        if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
-            startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
-        }
-        if (startCalendar == null) {
-            startCalendar = (Calendar) currentCalendar.clone();
-        }
-        startCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
-        startCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
-        startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
-        endCalendar = (Calendar) startCalendar.clone();
-        if (!isAllDay) {
-            endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+        //此参数传过来精确的开始时间和结束时间
+        if (getIntent().hasExtra(EXTRA_START_CALENDAR)) {
+            startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_START_CALENDAR);
+            endCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_CALENDAR);
+        } else {
+            Calendar currentCalendar = Calendar.getInstance();
+            if (getIntent().hasExtra(EXTRA_SELECT_CALENDAR)) {
+                startCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_SELECT_CALENDAR);
+            }
+            if (startCalendar == null) {
+                startCalendar = (Calendar) currentCalendar.clone();
+            }
+            startCalendar.set(Calendar.HOUR_OF_DAY, currentCalendar.get(Calendar.HOUR_OF_DAY));
+            startCalendar.set(Calendar.MINUTE, currentCalendar.get(Calendar.MINUTE));
+            startCalendar = TimeUtils.getNextHalfHourTime(startCalendar);
+            endCalendar = (Calendar) startCalendar.clone();
+            if (!isAllDay) {
+                endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+            }
         }
         scheduleEvent.setOwner(MyApplication.getInstance().getUid());//??默认
         remindEvent.setName(ScheduleAlertTimeActivity.getAlertTimeNameByTime(remindEvent.getAdvanceTimeSpan(), isAllDay));
