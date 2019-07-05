@@ -122,14 +122,29 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         return hour + (min > 0 ? ":" + (min < 10 ? "0" + min : min) : "");
     }
 
-    public String getDragViewStartTime() {
-        return dragViewStartTmeText.getText().toString();
+    public Calendar getDragViewStartTime(Calendar selectCalendar) {
+        String startTime = dragViewStartTmeText.getText().toString();
+        return getDragViewTime(selectCalendar, startTime);
     }
 
-    public String getDragViewEndTime() {
-        return dragViewEndTimeText.getText().toString();
+    public Calendar getDragViewEndTime(Calendar selectCalendar) {
+        String endTime = dragViewEndTimeText.getText().toString();
+        return getDragViewTime(selectCalendar, endTime);
     }
 
+
+    public Calendar getDragViewTime(Calendar selectCalendar, String time) {
+        String[] startTimeArray = time.split(":");
+        int hour = Integer.valueOf(startTimeArray[0]);
+        int min = 0;
+        if (startTimeArray.length > 1) {
+            min = Integer.valueOf(startTimeArray[1]);
+        }
+        Calendar calendar = (Calendar) selectCalendar.clone();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        return calendar;
+    }
     /**
      * 隐藏添加日程Event的DragView
      */

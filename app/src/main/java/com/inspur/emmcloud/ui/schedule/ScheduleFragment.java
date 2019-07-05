@@ -233,12 +233,24 @@ public class ScheduleFragment extends BaseFragment implements
         contentLayout.addView(dragScaleView, params);
         calendarDayView.showDragViewTime(top, dragScaleViewHeight - 2 * dragScaleView.getOffset());
         dragScaleView.setOnMoveListener(this);
+        dragScaleView.getParent().requestDisallowInterceptTouchEvent(true);
+        dragScaleView.setFocusable(true);
+        dragScaleView.setFocusableInTouchMode(true);
+        dragScaleView.requestFocus();
         dragScaleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String eventStartTime = calendarDayView.getDragViewStartTime();
-                String eventEndTime = calendarDayView.getDragViewEndTime();
-
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(CalendarAddActivity.EXTRA_START_CALENDAR, calendarDayView.getDragViewStartTime(selectCalendar));
+                bundle.putSerializable(CalendarAddActivity.EXTRA_END_CALENDAR, calendarDayView.getDragViewEndTime(selectCalendar));
+                IntentUtils.startActivity(getActivity(), CalendarAddActivity.class, bundle);
+                removeEventAddDragScaleView();
+            }
+        });
+        dragScaleView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
             }
         });
     }
