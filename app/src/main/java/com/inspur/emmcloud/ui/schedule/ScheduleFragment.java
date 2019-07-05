@@ -27,6 +27,7 @@ import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -172,6 +173,7 @@ public class ScheduleFragment extends BaseFragment implements
         calendarLayout.setExpandListener(this);
         calendarView.setOnCalendarSelectListener(this);
         calendarViewExpandImg.setOnClickListener(this);
+        scheduleDataText.setOnClickListener(this);
         calendarDayView.setOnEventClickListener(this);
         allDayLayout.setOnClickListener(this);
         calendarLayout.post(new Runnable() {
@@ -536,6 +538,9 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
 
+    /**
+     * 显示说有的全天事件列表
+     */
     private void showAllDayEventListDlg() {
         if (myDialog == null)
             myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
@@ -545,6 +550,25 @@ public class ScheduleFragment extends BaseFragment implements
         myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
         listView.setOnItemClickListener(this);
         myDialog.show();
+    }
+
+    /**
+     * 弹出日期选择框
+     */
+    private void showDateSelectDlg() {
+        DateTimePickerDialog dataTimePickerDialog = new DateTimePickerDialog(getActivity());
+        dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
+            @Override
+            public void positiveListener(Calendar calendar) {
+                calendarView.scrollToCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+            }
+
+            @Override
+            public void negativeListener(Calendar calendar) {
+
+            }
+        });
+        dataTimePickerDialog.showDatePickerDialog(true, selectCalendar);
     }
 
     private void openEvent(Event event) {
@@ -585,6 +609,9 @@ public class ScheduleFragment extends BaseFragment implements
                 break;
             case R.id.rl_content:
                 removeEventAddDragScaleView();
+                break;
+            case R.id.tv_schedule_date:
+                showDateSelectDlg();
                 break;
         }
     }

@@ -14,7 +14,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
@@ -56,8 +55,8 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
-        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "BLUE", "", "", true));
-        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "BLUE", "", "", false));
+        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "ORANGE", "", "", true));
+        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "YELLOW", "", "", false));
         //calendarsList.add(new MyCalendar("task", getApplication().getString(R.string.schedule_calendar_my_task), "BLUE", "", "", false));
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
@@ -111,7 +110,7 @@ public class CalendarSettingActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_CALENDAR) {
             String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-            calendarsList.add(new MyCalendar("exchange", mail, "BLUE", "", "", true));
+            calendarsList.add(new MyCalendar("exchange", mail, "PURPLE", "", "", true));
             calendarAdapter.notifyDataSetChanged();
         }
     }
@@ -144,7 +143,8 @@ public class CalendarSettingActivity extends BaseActivity {
             convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             boolean isHide = MyCalendarOperationCacheUtils.getIsHide(getApplicationContext(), calendar.getId());
             ((SwitchCompat) convertView.findViewById(R.id.switch_view_calendar_state)).setChecked(!isHide);
-            (convertView.findViewById(R.id.iv_calendar_color)).setBackgroundColor(CalendarColorUtils.getColor(BaseApplication.getInstance(), calendar.getColor()));
+            int calendarTypeResId = CalendarColorUtils.getCalendarTypeResId(calendar.getColor());
+            ((ImageView) convertView.findViewById(R.id.iv_calendar_color)).setImageResource(calendarTypeResId);
             ((TextView)convertView.findViewById(R.id.tv_calendar_name)).setText(calendar.getName());
             ((SwitchCompat)(convertView.findViewById(R.id.switch_view_calendar_state))).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
