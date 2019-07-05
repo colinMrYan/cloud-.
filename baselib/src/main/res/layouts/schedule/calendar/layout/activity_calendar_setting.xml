@@ -37,13 +37,14 @@
 
     <ScrollView
         android:id="@+id/sv_view_group"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_header">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_calendar_list_tip"
@@ -61,7 +62,6 @@
                 android:id="@+id/listview_list_calendars"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_calendar_list_tip"
                 android:background="#FFFFFF"
                 android:divider="@color/color_list_divider"
                 android:dividerHeight="0.5px"
@@ -70,7 +70,40 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_below="@+id/listview_list_calendars"
+                android:layout_marginLeft="16dp"
+                android:background="@color/color_list_divider" />
+
+            <LinearLayout
+                android:id="@+id/ll_add_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:onClick="onClick"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/schedule_ic_add_calendar" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="11dp"
+                    android:paddingTop="11dp"
+                    android:text="添加日历"
+                    android:textColor="#36A5F6"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
                 android:layout_marginLeft="16dp"
                 android:background="@color/color_list_divider" />
 
@@ -78,7 +111,6 @@
                 android:id="@+id/tv_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/listview_list_calendars"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:paddingLeft="16dp"
@@ -90,7 +122,6 @@
                 android:id="@+id/rl_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_view"
                 android:background="#FFFFFF"
                 android:onClick="onClick"
                 android:paddingLeft="16dp"
@@ -119,7 +150,6 @@
                 android:id="@+id/v_after_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_below="@id/rl_list_view"
                 android:layout_marginLeft="16dp"
                 android:background="#DDDDDD" />
 
@@ -127,7 +157,6 @@
                 android:id="@+id/rl_day_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/v_after_list_view"
                 android:background="#FFFFFF"
                 android:onClick="onClick"
                 android:paddingLeft="16dp"
@@ -157,9 +186,8 @@
                 android:id="@+id/v_after_day_view"
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
-                android:layout_below="@id/rl_day_view"
                 android:layout_marginLeft="16dp"
                 android:background="#DDDDDD" />
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
 </RelativeLayout>
