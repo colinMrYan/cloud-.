@@ -67,6 +67,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -1422,12 +1423,12 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void transmitTextMsg(String cid, UIMessage uiMessage) {
         String text = uiMessage2Content(uiMessage);
-        if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            } else {
-                Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
-                WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
-            }
+        if (WebSocketPush.getInstance().isSocketConnect()) {
+            Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
+            WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
+            ToastUtils.show(R.string.chat_transmit_message_success);
+        } else {
+            ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }
 
@@ -1766,16 +1767,21 @@ public class ConversationActivity extends ConversationBaseActivity {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnTransmitPictureSuccess(String cid, String description, Message message) {
-            if (NetUtils.isNetworkConnected(getApplicationContext())) {
-                    String path = JSONUtils.getString(description, "path", "");
-                        Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
-                        WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
-                        ToastUtils.show(R.string.chat_transmit_message_success);
+            if (WebSocketPush.getInstance().isSocketConnect()) {
+                String path = JSONUtils.getString(description, "path", "");
+                if (!StringUtils.isBlank(path)) {
+                    Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
+                    WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
+                    ToastUtils.show(R.string.chat_transmit_message_success);
+                }
+            } else {
+                ToastUtils.show(R.string.chat_transmit_message_fail);
             }
         }
 
         @Override
         public void returnTransmitPictureError(String error, int errorCode) {
+            super.returnTransmitPictureError(error, errorCode);
             ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }
