@@ -422,6 +422,7 @@
             android:gravity="center"
             android:onClick="onClick"
             android:text="@string/quit_check"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             app:cus_backgroundColor="#36A5F6"

@@ -68,6 +68,7 @@
                     android:paddingTop="7dp"
                     android:stateListAnimator="@null"
                     android:text="@string/hold_to_talk"
+                    android:textAllCaps="false"
                     android:textColor="#666666"
                     android:textSize="16sp"
                     android:visibility="gone" />
@@ -91,6 +92,7 @@
                     android:background="@drawable/bg_chat_input_send_btn_disable"
                     android:gravity="center"
                     android:text="@string/send"
+                    android:textAllCaps="false"
                     android:textColor="#ffffff"
                     android:textSize="13sp"
                     android:visibility="gone" />

@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.Res;
+import com.inspur.emmcloud.login.api.LoginAPIUri;
 import com.inspur.emmcloud.login.util.MDM.MDM;
 
 public class DeviceRegisterFailDetailActivity extends BaseActivity {
@@ -29,6 +30,10 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
         if (v.getId() == Res.getWidgetID("ibt_back")) {
             onBackPressed();
         } else if (v.getId() == Res.getWidgetID("register_btn")) {
+            Bundle bundle = new Bundle();
+            bundle.putString("appName", getString(Res.getStringID("device_registe")));
+            bundle.putString("function", "mdm");
+            bundle.putString("uri", LoginAPIUri.getDeviceRegisterUrl(this));
             ARouter.getInstance().build("/web/main").with(bundle).navigation();
             finish();
         }

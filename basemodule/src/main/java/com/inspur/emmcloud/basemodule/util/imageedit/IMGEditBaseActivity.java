@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RadioGroup;
 import android.widget.ViewSwitcher;
 
@@ -39,20 +38,22 @@ abstract class IMGEditBaseActivity extends BaseFragmentActivity implements View.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
-        ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black).init();
+
+
+    }
+
+    @Override
+    public void onCreate() {
+//        setNavigationBarColor(android.R.color.black);
         Bitmap bitmap = getBitmap();
         if (bitmap != null) {
             setContentView(R.layout.plugin_camera_image_edit_activity);
+            ImmersionBar.with(this).statusBarColor(R.color.black).navigationBarColor(R.color.black).init();
             initViews();
             mImgView.setImageBitmap(bitmap);
-            onCreated();
         } else finish();
     }
 
-    public void onCreated() {
-
-    }
 
     private void initViews() {
         mImgView = (IMGView) findViewById(R.id.image_canvas);
