@@ -451,6 +451,7 @@
     <string name="schedule_meeting_my_create">我創建的：</string>
     <string name="schedule_meeting_my_take_part_in">我參與的：</string>
     <string name="schedule_meeting_room_booking_detail">會議室詳情</string>
+    <string name="schedule_meeting_attend_reply">參會答復</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
