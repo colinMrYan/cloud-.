@@ -3,6 +3,7 @@ package com.inspur.emmcloud.web.runalone.ui;
 
 import android.content.Intent;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.web.ui.ImpActivity;
@@ -11,6 +12,7 @@ import com.inspur.emmcloud.web.ui.ImpActivity;
  * Created by chenmch on 2019/6/14.
  */
 
+@Route(path = Constant.AROUTER_CLASS_WEB_MAIN_TEST)
 public class WebTestMainActivity extends BaseActivity {
     @Override
     public void onCreate() {

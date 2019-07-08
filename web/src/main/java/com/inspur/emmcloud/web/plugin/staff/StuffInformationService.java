@@ -9,6 +9,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
@@ -81,7 +82,7 @@ public class StuffInformationService extends ImpPlugin {
     private void viewContact(String id) {
         Bundle bundle = new Bundle();
         bundle.putString("uid", id);
-        ARouter.getInstance().build("/contact/userInfo").with(bundle).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_USERINFO).with(bundle).navigation();
     }
 
     @Override

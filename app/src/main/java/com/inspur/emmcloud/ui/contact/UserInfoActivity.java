@@ -24,6 +24,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -50,7 +51,7 @@ import butterknife.ButterKnife;
  * 规范化改造代码
  */
 
-@Route(path = "/contact/userInfo")
+@Route(path = Constant.AROUTER_CLASS_CONTACT_USERINFO)
 public class UserInfoActivity extends BaseActivity {
 
     private static final String USER_UID = "uid";

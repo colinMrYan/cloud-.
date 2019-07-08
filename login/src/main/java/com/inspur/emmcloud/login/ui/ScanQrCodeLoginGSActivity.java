@@ -10,6 +10,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -20,7 +21,7 @@ import com.inspur.emmcloud.login.api.LoginAPIService;
 /**
  * 扫码登录页面
  */
-@Route(path = "/login/qr_code_login_GS")
+@Route(path = Constant.AROUTER_CLASS_LOGIN_GS)
 public class ScanQrCodeLoginGSActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
 

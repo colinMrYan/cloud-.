@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 
@@ -73,7 +74,7 @@ public class HttpUtils {
                     "myInfo", ""), "clusters", 0);
             callback.callbackFail("", -1);
             if (AppUtils.isAppOnForeground(context)) {
-                ARouter.getInstance().build("/setting/ServiceNoPermission").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
             }
 
         }
