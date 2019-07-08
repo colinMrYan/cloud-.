@@ -134,7 +134,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         allDaySwitch.setOnCheckedChangeListener(this);
         allDaySwitch.setChecked(isAllDay);
         inputContentEdit.setText(contentText);
-        titleText.setText(isAddCalendar ? getApplication().getString(R.string.schedule_calendar_add) :
+        titleText.setText(isAddCalendar ? getApplication().getString(R.string.schedule_calendar_create) :
                 getApplication().getString(R.string.schedule_calendar_detail));
         calendarTypeNameText.setText(getApplication().getString(R.string.schedule_calendar_company));
         calendarTypeFlagImage.setImageResource(isAddCalendar ? R.drawable.icon_blue_circle : R.drawable.icon_blue_circle);

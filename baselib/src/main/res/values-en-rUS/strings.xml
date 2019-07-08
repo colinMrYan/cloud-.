@@ -307,7 +307,7 @@
     <string name="chat_conversation_unread_count">%1$d new messages</string>
     <string name="chat_long_click_copy">Copy</string>
     <string name="chat_long_click_transmit">Forward</string>
-    <string name="chat_long_click_schedule">Add to Schedule</string>
+    <string name="chat_long_click_schedule">Add to Calendar</string>
     <string name="chat_long_click_copy_text">Copy text</string>
     <string name="communication_search">Search</string>
     <string name="chat_full_image">Full image</string>
@@ -348,7 +348,7 @@
     <string name="time">Time</string>
     <string name="work_search_hint">Search calendars, tasks</string>
     <string name="work_mession">Task</string>
-    <string name="work_schedule">Schedule</string>
+    <string name="work_schedule">Calendar</string>
     <string name="work_task_mine">Mine</string>
     <string name="work_task_involved">Participant</string>
     <string name="work_task_focused">Attention</string>
@@ -375,7 +375,7 @@
     <string name="schedule_alert_time_before_a_week">1 Week before</string>
     <string name="schedule_calendar_modify">Modify Schedule</string>
     <string name="schedule_calendar_delete">Delete Schedule</string>
-    <string name="schedule_calendar_create">Create Schedule</string>
+    <string name="schedule_calendar_create">New Schedule</string>
     <string name="schedule_calendar_my_schedule">My schedule</string>
     <string name="schedule_calendar_my_meeting">My meeting</string>
     <string name="schedule_calendar_my_task">My task</string>
@@ -407,7 +407,7 @@
     <string name="schedule_task_stop_alert">End Reminder</string>
     <string name="schedule_task_more">More</string>
     <string name="schedule_task_attachment">Attachment</string>
-    <string name="schedule_task_create">Create Task</string>
+    <string name="schedule_task_create">New Task</string>
     <string name="schedule_task_project_manager">Tag manager</string>
     <string name="schedule_task_project_manager_add">OK</string>
     <string name="schedule_task_add_manager">Add Manager</string>
@@ -424,7 +424,7 @@
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
-    <string name="schedule_meeting_room_booking">New Meeting</string>
+    <string name="schedule_meeting_room_booking">Book a Meeting</string>
     <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
     <string name="schedule_meeting_room_booking_detail">Meeting Room Details</string>
@@ -439,7 +439,7 @@
     <string name="schedule_meeting_add_alert_time">Reminder</string>
     <string name="schedule_meeting_history">History Meetings</string>
     <string name="schedule_meeting_search">Search Meeting</string>
-    <string name="schedule_meeting_booking_room">Booking Meeting Room</string>
+    <string name="schedule_meeting_booking_room">Book a Meeting Room</string>
     <string name="schedule_meeting_room_list">Meeting Room List</string>
     <string name="schedule_meeting_in_meeting">Meeting</string>
     <string name="schedule_meeting_be_free">Free</string>
@@ -448,6 +448,7 @@
     <string name="schedule_meeting_cancel">Delete Meeting</string>
     <string name="schedule_meeting_my_create">I created：</string>
     <string name="schedule_meeting_my_take_part_in"> I involved：</string>
+    <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

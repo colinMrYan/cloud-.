@@ -191,16 +191,34 @@ public class Constant {
 
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
+    public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
+    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
 
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
+
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
+    public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
+    public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";
+    public static final String AROUTER_CLASS_LOGIN_BY_SMS = "/login/LoginBySmsActivity";
+
+
     public static final String AROUTER_CLASS_WEB_FILEMANAGER = "/web/FileManagerActivity";
-    public static final String AROUTER_CLASS_CONTACT_SEARCH = "/contact/contactSearch"; //通讯录选择界面
+    public static final String AROUTER_CLASS_WEB_SCANRESULT = "/web/ScanResultActivity";
+    public static final String AROUTER_CLASS_WEB_MAIN = "/web/ImpActivity";
+    public static final String AROUTER_CLASS_WEB_MAIN_TEST = "/web/ScanResultActivity";
+
+    public static final String AROUTER_CLASS_CONTACT_SEARCH = "/contact/ContactSearchActivity"; //通讯录选择界面
+    public static final String AROUTER_CLASS_CONTACT_USERINFO = "/contact/UserInfoActivity";
+
+    public static final String AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION = "/setting/NoPermissionDialogActivity";
+
+    public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
+    public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
+
+    public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
     public static final String AROUTER_CLASS_MAIL_LOGIN = "/mail/login";
 
 
-    public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
-    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
 
 }

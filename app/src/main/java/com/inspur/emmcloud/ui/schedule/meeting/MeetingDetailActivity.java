@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,8 +26,11 @@ import com.inspur.emmcloud.bean.schedule.Location;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.bean.schedule.meeting.ReplyAttendResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -76,7 +80,11 @@ public class MeetingDetailActivity extends BaseActivity {
     RelativeLayout meetingNoteLayout;
     @BindView(R.id.iv_meeting_detail_more)
     ImageView meetingMoreImg;
-
+    @BindView(R.id.tv_meeting_invite)
+    TextView meetingInviteText;
+    @BindView(R.id.tv_meeting_attend_status)
+    TextView attendStatusText;
+    ReplyAttendResult info = new ReplyAttendResult(); //参会答复
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
     private LoadingDialog loadingDlg;
@@ -90,6 +98,7 @@ public class MeetingDetailActivity extends BaseActivity {
         scheduleApiService.setAPIInterface(new WebService());
         meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
         meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
+        info.position = 1;
         getIsMeetingAdmin();
         if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据  来自通知
             getMeetingFromId(meetingId);
@@ -100,7 +109,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_meeting_detail_new;
+        return R.layout.activity_meeting_detail_tmp;
     }
 
     private void initViews() {
@@ -108,6 +117,7 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
         meetingRemindText.setText(getString(R.string.meeting_detail_remind, ScheduleAlertTimeActivity.getAlertTimeNameByTime(meeting.getRemindEventObj().getAdvanceTimeSpan(), meeting.getAllDay())));
 //        meetingDistributionText.setText(meeting.getOwner());
+        meetingInviteText.setText("邀请人：" + meeting.getOwner());
         String locationData = getString(R.string.meeting_detail_location) + new Location(meeting.getLocation()).getBuilding() + " " + new Location(meeting.getLocation()).getDisplayName();
         meetingLocationText.setText(locationData);
         meetingDistributionText.setVisibility(View.VISIBLE);
@@ -232,11 +242,33 @@ public class MeetingDetailActivity extends BaseActivity {
             case R.id.rl_meeting_conference:
                 startMembersActivity(MEETING_CONTACT);
                 break;
-            case R.id.rl_meeting_sign:
+            case R.id.rl_meeting_invite:    //  TODO
+
                 break;
-            case R.id.rl_meeting_summary:
+            case R.id.rl_meeting_attend_status:     //参会答复
+                Intent replyIntent = new Intent(this, MeetingDetailReplyActivity.class);
+                replyIntent.putExtra("OriginReplyData", info);
+                startActivityForResult(replyIntent, 0);
+                break;
+            case R.id.tv_meeting_create_group_chat: //发起群聊  TODO
+                Intent contactIntent = new Intent();
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_TYPE, 2);
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, true);
+                contactIntent.putExtra(ContactSearchFragment.EXTRA_TITLE,
+                        getString(R.string.message_create_group));
+                contactIntent.setClass(this, ContactSearchActivity.class);
+                startActivity(contactIntent);
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == 100) {
+            info = (ReplyAttendResult) data.getSerializableExtra("ReplyResult");
+            attendStatusText.setText(info.content);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void startMembersActivity(int type) {

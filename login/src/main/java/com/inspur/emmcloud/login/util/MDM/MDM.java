@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
@@ -121,7 +122,7 @@ public class MDM extends LoginAPIInterfaceImpl {
         bundle.putString("appName", context.getString(Res.getStringID("device_registe")));
         bundle.putString("function", "mdm");
         bundle.putString("uri", LoginAPIUri.getDeviceRegisterUrl(context));
-        ARouter.getInstance().build("/web/main").with(bundle).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
     }
 
     private void goDeviceRegisterFailDetail() {
