@@ -84,12 +84,11 @@ public class MeetingDetailActivity extends BaseActivity {
     TextView meetingInviteText;
     @BindView(R.id.tv_meeting_attend_status)
     TextView attendStatusText;
-
+    ReplyAttendResult info = new ReplyAttendResult(); //参会答复
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
     private LoadingDialog loadingDlg;
     private String meetingId;   //会议id
-    ReplyAttendResult info = new ReplyAttendResult(); //参会答复
 
     @Override
     public void onCreate() {

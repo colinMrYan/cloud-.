@@ -41,10 +41,10 @@
             android:adjustViewBounds="true"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="13dp"
-            android:paddingTop="17dp"
-            android:paddingRight="16dp"
             android:paddingBottom="17dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="16dp"
+            android:paddingTop="17dp"
             android:scaleType="fitXY"
             android:src="?attr/ic_header_option" />
     </RelativeLayout>
@@ -329,8 +329,8 @@
                 android:id="@+id/tv_meeting_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:layout_marginBottom="30dp"
+                android:layout_marginTop="12dp"
                 android:layout_toRightOf="@+id/iv_note_icon" />
 
             <View
@@ -404,8 +404,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
-                android:drawableRight="@drawable/ic_arrow_right"
                 android:drawablePadding="5dp"
+                android:drawableRight="@drawable/ic_arrow_right"
                 android:text="接受"
                 android:textColor="#888888"
                 android:textSize="16sp" />

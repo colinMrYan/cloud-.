@@ -145,6 +145,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         calendar.set(Calendar.MINUTE, min);
         return calendar;
     }
+
     /**
      * 隐藏添加日程Event的DragView
      */
