@@ -27,6 +27,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_weight="1"
+                android:textAllCaps="false"
                 android:background="@drawable/app_news_dialog_day_button"
                 android:drawableLeft="@drawable/icon_news_instructions"
                 android:drawablePadding="11dp"
@@ -44,6 +45,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_weight="1"
+                android:textAllCaps="false"
                 android:background="@drawable/app_news_dialog_day_button"
                 android:drawableLeft="@drawable/app_news_share_night"
                 android:drawablePadding="11dp"
@@ -93,6 +95,7 @@
                 android:gravity="left|center_vertical"
                 android:onClick="onClick"
                 android:paddingLeft="34dp"
+                android:textAllCaps="false"
                 android:text="@string/news_day_mode_text"
                 android:textColor="#FF999999"
                 android:textSize="@dimen/content_title_textsize"
@@ -111,6 +114,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@null"
+                android:textAllCaps="false"
                 android:drawableLeft="@drawable/app_news_day_night"
                 android:drawablePadding="11dp"
                 android:gravity="left|center_vertical"
@@ -140,9 +144,9 @@
                 android:layout_marginLeft="50dp"
                 android:src="@drawable/app_news_mode_day_light" />
 
-            <com.inspur.emmcloud.baselib.widget.SwitchView
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/app_news_mode_switch"
-                android:layout_width="37dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="24dp"
@@ -202,6 +206,7 @@
                 android:background="@drawable/app_news_dialog_day_button"
                 android:onClick="onClick"
                 android:text="@string/news_font_smaller"
+                android:textAllCaps="false"
                 android:textColor="#FF999999"
                 android:textSize="@dimen/content_title_textsize" />
 
@@ -215,6 +220,7 @@
                 android:background="@drawable/app_news_dialog_day_button"
                 android:onClick="onClick"
                 android:text="@string/news_font_normal"
+                android:textAllCaps="false"
                 android:textSize="@dimen/content_title_textsize" />
 
             <Button
@@ -227,6 +233,7 @@
                 android:background="@drawable/app_news_dialog_day_button"
                 android:onClick="onClick"
                 android:text="@string/news_font_big_text"
+                android:textAllCaps="false"
                 android:textSize="@dimen/content_title_textsize" />
 
             <Button
@@ -239,6 +246,7 @@
                 android:background="@drawable/app_news_dialog_day_button"
                 android:onClick="onClick"
                 android:text="@string/news_font_biggest_text"
+                android:textAllCaps="false"
                 android:textSize="@dimen/content_title_textsize" />
 
 

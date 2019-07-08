@@ -1,9 +1,13 @@
 package com.inspur.emmcloud.ui.contact;
 
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +24,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -46,12 +51,14 @@ import butterknife.ButterKnife;
  * 规范化改造代码
  */
 
-@Route(path = "/contact/userInfo")
+@Route(path = Constant.AROUTER_CLASS_CONTACT_USERINFO)
 public class UserInfoActivity extends BaseActivity {
 
     private static final String USER_UID = "uid";
     private static final int USER_INFO_ACTIVITY_REQUEST_CODE = 1;
 
+    @BindView(R.id.tv_add_system_contact)
+    TextView addSysContactTv;
     @BindView(R.id.ll_user_department)
     LinearLayout departmentLayout;
     @BindView(R.id.tv_user_department)
@@ -199,6 +206,7 @@ public class UserInfoActivity extends BaseActivity {
         boolean isNoContactWay = StringUtils.isBlank(phoneNum) && StringUtils.isBlank(telStr) && StringUtils.isBlank(mail);
         mobileContactInfoLayout.setVisibility(isNoContactWay ? View.GONE : View.VISIBLE);
         mobileStartChatLayout.setVisibility(isNoContactWay ? View.VISIBLE : View.GONE);
+        addSysContactTv.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
         userContactWayLayout.setVisibility(contactUser.getId().equals(MyApplication.getInstance().getUid()) ? View.GONE : View.VISIBLE);
     }
 
@@ -217,6 +225,9 @@ public class UserInfoActivity extends BaseActivity {
                 break;
             case R.id.ibt_back:
                 finish();
+                break;
+            case R.id.tv_add_system_contact:
+                addSystemContact();
                 break;
             case R.id.iv_user_photo:
                 Intent intent = new Intent(UserInfoActivity.this,
@@ -256,12 +267,18 @@ public class UserInfoActivity extends BaseActivity {
         if (!contactUser.getId().equals(MyApplication.getInstance().getUid())) {
             new CustomDialog.MessageDialogBuilder(UserInfoActivity.this)
                     .setMessage(mobile)
-                    .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                        dialog.dismiss();
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
                     })
-                    .setPositiveButton(R.string.user_call, (dialog, index) -> {
-                        dialog.dismiss();
-                        AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
+                    .setPositiveButton(R.string.user_call, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            AppUtils.call(UserInfoActivity.this, mobile, USER_INFO_ACTIVITY_REQUEST_CODE);
+                        }
                     })
                     .show();
         }
@@ -306,6 +323,25 @@ public class UserInfoActivity extends BaseActivity {
                 }
             }).build().show();
         }
+    }
+
+    /**
+     * 添加到系统联系人
+     */
+    @SuppressLint("IntentReset")
+    private void addSystemContact() {
+        Intent intent = new Intent(Intent.ACTION_INSERT,
+                Uri.withAppendedPath(Uri.parse("content://com.android.contacts"), "contacts"));
+        intent.setType("vnd.android.cursor.dir/person");
+        intent.setType("vnd.android.cursor.dir/contact");
+        intent.setType("vnd.android.cursor.dir/raw_contact");
+        intent.putExtra(ContactsContract.Intents.Insert.NAME, contactUser.getName());
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE_ISPRIMARY, true);
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE, contactUser.getTel());
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_WORK);
+        intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE, contactUser.getMobile());
+        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, contactUser.getEmail());
+        startActivity(intent);
     }
 
     private void createDirectChannel() {

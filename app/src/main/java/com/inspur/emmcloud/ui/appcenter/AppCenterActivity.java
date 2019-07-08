@@ -40,6 +40,7 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -311,7 +312,7 @@ public class AppCenterActivity extends BaseActivity {
             if (uri.startsWith("http")) {
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", uri);
-                ARouter.getInstance().build("/web/main").with(bundle).navigation();
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
             } else if (uri.startsWith(APP_CENTER_APP_NAME_PROTOCOL)) {
                 Uri appUri = Uri.parse(uri);
                 String appId = appUri.getPathSegments().get(1);

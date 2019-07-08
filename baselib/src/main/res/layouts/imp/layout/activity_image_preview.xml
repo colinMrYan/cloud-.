@@ -62,9 +62,23 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="@string/edit"
+            android:textAllCaps="false"
             android:textColor="#ffffff"
             android:textSize="16sp" />
 
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cb_origin"
+            style="@style/SuperCheckboxTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:drawablePadding="4dp"
+            android:includeFontPadding="true"
+            android:paddingLeft="8dp"
+            android:text="@string/origin"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
         <com.inspur.emmcloud.basemodule.util.imagepicker.view.SuperCheckBox
             android:id="@+id/cb_check"
             style="@style/SuperCheckboxTheme"

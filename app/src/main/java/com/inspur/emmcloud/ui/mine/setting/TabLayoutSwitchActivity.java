@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
@@ -95,15 +96,21 @@ public class TabLayoutSwitchActivity extends BaseActivity {
         final String selectedTabLayoutName = naviBarModel.getNaviBarPayload().getNaviBarSchemeList().get(selectIndex).getName();
         new CustomDialog.MessageDialogBuilder(this)
                 .setMessage(getString(R.string.mine_tab_layout_switch,getTabLayoutName(selectIndex)))
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    if (!currentTabLayoutName.equals(selectedTabLayoutName)) {
-                        PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, selectedTabLayoutName);
-                        Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!currentTabLayoutName.equals(selectedTabLayoutName)) {
+                            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.APP_TAB_LAYOUT_NAME, selectedTabLayoutName);
+                            Intent intent = new Intent(TabLayoutSwitchActivity.this, IndexActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
                     }
                 })
                 .show();

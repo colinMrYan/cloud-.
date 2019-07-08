@@ -11,7 +11,7 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.web.R;
 
-@Route(path = "/web/main")
+@Route(path = Constant.AROUTER_CLASS_WEB_MAIN)
 public class ImpActivity extends ImpFragmentBaseActivity {
 
     public static final int DO_NOTHING_RESULTCODE = 5;

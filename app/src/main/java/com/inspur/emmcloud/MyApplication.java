@@ -9,6 +9,7 @@ import com.facebook.soloader.SoLoader;
 import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -64,5 +65,10 @@ public class MyApplication extends BaseApplication implements ReactApplication {
     @Override
     public ReactNativeHost getReactNativeHost() {
         return mReactNativeHost;
+    }
+
+    @Override
+    public String getIntentClassRouterAfterLogin() {
+        return Constant.AROUTER_CLASS_APP_INDEX;
     }
 }

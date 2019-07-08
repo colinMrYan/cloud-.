@@ -1736,7 +1736,8 @@ public class ChatAPIService {
      * @param filePath 文件路径
      * @param toCid    channel ID
      */
-    public void transmitFile(String filePath, String fromCid, String toCid, String fileType, Message message) {
+    public void transmitFile(final String filePath, final String fromCid, final String toCid,
+                             final String fileType, final Message message) {
         final String completeUrl = APIUri.getTransmitFileUrl(fromCid, fileType);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);

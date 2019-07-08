@@ -293,8 +293,12 @@ public class MainActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_SAFE_UNLOCK)) {
-            new Handler().post(() -> startApp());
-
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    startApp();
+                }
+            });
         }
     }
 

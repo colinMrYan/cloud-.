@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -66,6 +67,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -183,22 +185,24 @@ public class ConversationActivity extends ConversationBaseActivity {
                         WSAPIService.getInstance().setChannelMessgeStateRead(cid);
                         break;
                     case REFRESH_OFFLINE_MESSAGE:
+                        if (adapter == null) {
+                            return;
+                        }
                         List<Message> offlineMessageList = (List<Message>) msg.obj;
                         Iterator<Message> it = offlineMessageList.iterator();
-
                         if (uiMessageList.size() > 0) {
                             while (it.hasNext()) {
                                 //发送成功的消息去重去重
                                 Message offlineMessage = it.next();
                                 if (uiMessageList.contains(new UIMessage(offlineMessage.getId()))) {
                                     it.remove();
-                                    break;
-                                }
-                                //离线消息获取后，更改对应的未发送成功状态的消息
-                                int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
-                                if (index != -1) {
-                                    uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
-                                    it.remove();
+                                } else {
+                                    //离线消息获取后，更改对应的未发送成功状态的消息
+                                    int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
+                                    if (index != -1) {
+                                        uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
+                                        it.remove();
+                                    }
                                 }
                             }
                         }
@@ -350,7 +354,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 if (duration == 0) {
                     duration = 1;
                 }
-                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration, results, "");
+                combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_MEDIA_VOICE, duration, results, null);
             }
 
             @Override
@@ -441,7 +445,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             public boolean onCardItemLongClick(View view, UIMessage uiMessage) {
                 backUiMessage = uiMessage;
                 int[] operationsId = getCardLongClickOperations(uiMessage);
-                if (operationsId.length > 0) {
+                if (operationsId.length > 0 && uiMessage.getSendStatus() == 1) {
 //                    showLongClickOperationsDialog(operationsId, ConversationActivity.this, uiMessage);
                     showLongClickDialog(operationsId, uiMessage, view);
                 }
@@ -450,22 +454,25 @@ public class ConversationActivity extends ConversationBaseActivity {
 
             @Override
             public void onCardItemClick(View view, UIMessage uiMessage) {
-                CardClickOperation(ConversationActivity.this, view, uiMessage);
+                if (uiMessage.getSendStatus() == 1) {
+                    CardClickOperation(ConversationActivity.this, view, uiMessage);
+                }
             }
 
             @Override
             public void onCardItemLayoutClick(View view, UIMessage uiMessage) {
-                Message message = uiMessage.getMessage();
-                switch (message.getType()) {
-                    case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
-                    case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                        Bundle bundle = new Bundle();
-                        bundle.putString("mid", message.getId());
-                        bundle.putString(EXTRA_CID, message.getChannel());
-                        IntentUtils.startActivity(ConversationActivity.this,
-                                ChannelMessageDetailActivity.class, bundle);
-
-                        break;
+                if (uiMessage.getSendStatus() == 1) {
+                    Message message = uiMessage.getMessage();
+                    switch (message.getType()) {
+                        case Message.MESSAGE_TYPE_FILE_REGULAR_FILE:
+                        case Message.MESSAGE_TYPE_MEDIA_IMAGE:
+                            Bundle bundle = new Bundle();
+                            bundle.putString("mid", message.getId());
+                            bundle.putString(EXTRA_CID, message.getChannel());
+                            IntentUtils.startActivity(ConversationActivity.this,
+                                    ChannelMessageDetailActivity.class, bundle);
+                            break;
+                    }
                 }
             }
         });
@@ -736,7 +743,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 case "file":
                     List<String> pathList = getIntent().getStringArrayListExtra("share_paths");
                     for (String url : pathList) {
-                        combinAndSendMessageWithFile(url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, "");
+                        combinAndSendMessageWithFile(url, type.equals("file") ? Message.MESSAGE_TYPE_FILE_REGULAR_FILE : Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     }
                     break;
                 case "link":
@@ -769,7 +776,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                         ToastUtils.show(MyApplication.getInstance(),
                                 getString(R.string.not_support_upload));
                     } else {
-                        combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, "");
+                        combinAndSendMessageWithFile(filePath, Message.MESSAGE_TYPE_FILE_REGULAR_FILE, null);
                     }
                     break;
                 case REQUEST_CAMERA:
@@ -781,7 +788,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, "");
+                    combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, null);
                     break;
                 case REQUEST_MENTIONS:
                     // @返回
@@ -827,33 +834,35 @@ public class ConversationActivity extends ConversationBaseActivity {
                     Boolean originalPicture = data.getBooleanExtra(ImageGridActivity.EXTRA_ORIGINAL_PICTURE, false);
                     for (int i = 0; i < imageItemList.size(); i++) {
                         String imgPath = imageItemList.get(i).path;
-                        String previewImgPath = imgPath;
-                        try {
-                            File file = new Compressor(ConversationActivity.this).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-                                    .compressToFile(new File(imgPath));
-                            previewImgPath = file.getAbsolutePath();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        Compressor.ResolutionRatio resolutionRatio = null;
+                        Compressor compressor = new Compressor(ConversationActivity.this).setMaxArea(MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE * MyAppConfig.UPLOAD_ORIGIN_IMG_DEFAULT_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+                        if (originalPicture) {
+                            resolutionRatio = compressor.getResolutionRation(new File(imgPath));
+                        } else {
+                            try {
+                                File file = compressor.compressToFile(new File(imgPath));
+                                imgPath = file.getAbsolutePath();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
-                        if (!originalPicture) {
-                            imgPath = previewImgPath;
-                        }
-                        //  DisplayMediaImageMsg.getImgViewSize(this,)
-                        combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, previewImgPath);
+
+                        combinAndSendMessageWithFile(imgPath, Message.MESSAGE_TYPE_MEDIA_IMAGE, resolutionRatio);
                     }
                 }
         }
     }
 
-    private void combinAndSendMessageWithFile(String filePath, String messageType, String compressImgPath) {
-        combinAndSendMessageWithFile(filePath, messageType, 0, compressImgPath);
+
+    private void combinAndSendMessageWithFile(String filePath, String messageType, Compressor.ResolutionRatio resolutionRatio) {
+        combinAndSendMessageWithFile(filePath, messageType, 0, resolutionRatio);
     }
 
-    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, String compressImgPath) {
-        combinAndSendMessageWithFile(filePath, messageType, duration, "", compressImgPath);
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, Compressor.ResolutionRatio resolutionRatio) {
+        combinAndSendMessageWithFile(filePath, messageType, duration, "", resolutionRatio);
     }
 
-    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, String results, String compressImgPath) {
+    private void combinAndSendMessageWithFile(String filePath, String messageType, int duration, String results, Compressor.ResolutionRatio resolutionRatio) {
         File file = new File(filePath);
         if (!file.exists()) {
             if (messageType != Message.MESSAGE_TYPE_MEDIA_VOICE) {
@@ -867,7 +876,7 @@ public class ConversationActivity extends ConversationBaseActivity {
                 fakeMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath, compressImgPath);
+                fakeMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath, resolutionRatio);
                 break;
             case Message.MESSAGE_TYPE_MEDIA_VOICE:
                 fakeMessage = CommunicationUtils.combinLocalMediaVoiceMessage(cid, filePath, duration, results);
@@ -892,11 +901,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
         if (index - firstItemPosition >= 0) {
             View view = msgListView.getChildAt(index - firstItemPosition);
-            if (null != msgListView.getChildViewHolder(view)) {
-                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder) msgListView.getChildViewHolder(view);
-                holder.sendStatusLayout.setVisibility(View.INVISIBLE);
+            if (view != null) {
+                view.findViewById(R.id.rl_send_status).setVisibility(View.INVISIBLE);
             }
-
         }
     }
 
@@ -1337,7 +1344,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
-            List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            final List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
         }
@@ -1416,12 +1423,12 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void transmitTextMsg(String cid, UIMessage uiMessage) {
         String text = uiMessage2Content(uiMessage);
-        if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            } else {
-                Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
-                WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
-            }
+        if (WebSocketPush.getInstance().isSocketConnect()) {
+            Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
+            WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
+            ToastUtils.show(R.string.chat_transmit_message_success);
+        } else {
+            ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }
 
@@ -1430,14 +1437,8 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void transmitImgMsg(String cid, Message sendMessage) {
         String path = null;
-        JSONObject jsonObject = JSONUtils.getJSONObject(sendMessage.getContent());
-        try {
-            String data = jsonObject.getString("raw");
-            JSONObject jsonPath = JSONUtils.getJSONObject(data);
-            path = jsonPath.getString("media");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        MsgContentMediaImage msgContentMediaImage = sendMessage.getMsgContentMediaImage();
+        path = msgContentMediaImage.getRawMedia();
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             ChatAPIService apiService = new ChatAPIService(this);
             apiService.setAPIInterface(new WebService());
@@ -1466,7 +1467,7 @@ public class ConversationActivity extends ConversationBaseActivity {
             case Message.MESSAGE_TYPE_EXTENDED_ACTIONS:
                 break;
             case Message.MESSAGE_TYPE_MEDIA_IMAGE:
-                items = new int[]{R.string.chat_long_click_transmit};
+                items = new int[]{R.string.chat_long_click_transmit, R.string.chat_long_click_reply};
                 break;
             case Message.MESSAGE_TYPE_COMMENT_TEXT_PLAIN:
                 break;
@@ -1586,27 +1587,33 @@ public class ConversationActivity extends ConversationBaseActivity {
         mPopupWindowList.setItemData(dataList);
         mPopupWindowList.setModal(true);
         mPopupWindowList.show();
-        mPopupWindowList.setOnItemClickListener((parent, view1, position, id) -> {
-            String content;
-            content = uiMessage2Content(uiMessage);
-            if (StringUtils.isBlank(content)) {
-                content = "";
+        mPopupWindowList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String content;
+                content = uiMessage2Content(uiMessage);
+                if (StringUtils.isBlank(content)) {
+                    content = "";
+                }
+                switch (operationsId[position]) {
+                    case R.string.chat_long_click_copy:
+                        copyToClipboard(ConversationActivity.this, content);
+                        break;
+                    case R.string.chat_long_click_transmit:
+                        shareMessageToFrinds(ConversationActivity.this);
+                        break;
+                    case R.string.chat_long_click_schedule:
+                        addTextToSchedule(content);
+                        break;
+                    case R.string.chat_long_click_copy_text:
+                        copyToClipboard(ConversationActivity.this, content);
+                        break;
+                    case R.string.chat_long_click_reply:
+                        replyMessage(uiMessage.getMessage());
+                        break;
+                }
+                mPopupWindowList.hide();
             }
-            switch (operationsId[position]) {
-                case R.string.chat_long_click_copy:
-                    copyToClipboard(ConversationActivity.this, content);
-                    break;
-                case R.string.chat_long_click_transmit:
-                    shareMessageToFrinds(ConversationActivity.this);
-                    break;
-                case R.string.chat_long_click_schedule:
-                    addTextToSchedule(content);
-                    break;
-                case R.string.chat_long_click_copy_text:
-                    copyToClipboard(ConversationActivity.this, content);
-                    break;
-            }
-            mPopupWindowList.hide();
         });
 
     }
@@ -1682,6 +1689,18 @@ public class ConversationActivity extends ConversationBaseActivity {
     }
 
     /**
+     * （图片）回复功能
+     */
+    private void replyMessage(Message message) {
+        Bundle bundle = new Bundle();
+        bundle.putString("mid", message.getId());
+        bundle.putString(EXTRA_CID, message.getChannel());
+        IntentUtils.startActivity(ConversationActivity.this,
+                ChannelMessageDetailActivity.class, bundle);
+    }
+
+
+    /**
      * 文本信息添加到日程
      */
     private void addTextToSchedule(String content) {
@@ -1748,22 +1767,20 @@ public class ConversationActivity extends ConversationBaseActivity {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnTransmitPictureSuccess(String cid, String description, Message message) {
-            if (NetUtils.isNetworkConnected(getApplicationContext())) {
-                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                } else {
-                    String path = JSONUtils.getString(description, "path", "");
-                    if (!StringUtils.isBlank(path)) {
-                        Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
-                        WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
-                    }
-                }
+            if (WebSocketPush.getInstance().isSocketConnect()) {
+                String path = JSONUtils.getString(description, "path", "");
+                Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
+                WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
+                ToastUtils.show(R.string.chat_transmit_message_success);
+
+            } else {
+                ToastUtils.show(R.string.chat_transmit_message_fail);
             }
-            super.returnTransmitPictureSuccess(cid, description, message);
         }
 
         @Override
         public void returnTransmitPictureError(String error, int errorCode) {
-            super.returnTransmitPictureError(error, errorCode);
+            ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }
 }

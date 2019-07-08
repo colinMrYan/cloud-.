@@ -93,7 +93,7 @@ public class UriUtils {
         bundle.putInt("is_zoomable", app.getIsZoomable());
         bundle.putString("help_url", app.getHelpUrl());
         bundle.putString("appId", app.getAppID());
-        ARouter.getInstance().build("/web/main").with(bundle).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
 
 
     }
@@ -120,7 +120,7 @@ public class UriUtils {
         bundle.putString("uri", uri);
         bundle.putString("appName", appName);
         bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER,isHaveNavBar);
-        ARouter.getInstance().build("/web/main").with(bundle).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
     }
 
 }

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/schedule_meeting_booking"
+            android:text="@string/schedule_meeting_room_booking"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
 

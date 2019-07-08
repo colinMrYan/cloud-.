@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -194,7 +196,7 @@ public class MeetingAddActivity extends BaseActivity {
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         if (isMeetingEditModel) {
-            titleEdit.setText(title);
+            EditTextUtils.setText(titleEdit, title);
             meetingPositionText.setText(location.getBuilding() + " " + location.getDisplayName());
             notesEdit.setText(note);
             showSelectUser(liaisonLayout, liaisonSearchModelList);
@@ -386,8 +388,11 @@ public class MeetingAddActivity extends BaseActivity {
      */
     private void showTimeInvalidDlg() {
         new CustomDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 }).show();
     }
 

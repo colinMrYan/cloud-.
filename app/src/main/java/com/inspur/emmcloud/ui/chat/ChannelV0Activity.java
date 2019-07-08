@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -421,12 +422,18 @@ public class ChannelV0Activity extends BaseActivity {
     private void showResendMessageDlg(final Msg msg) {
         new CustomDialog.MessageDialogBuilder(ChannelV0Activity.this)
                 .setMessage(R.string.sure_to_resend_message)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    dialog.dismiss();
-                    resendMessage(msg);
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        resendMessage(msg);
+                    }
                 })
                 .show();
     }

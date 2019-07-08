@@ -9,8 +9,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.util.FileUtils;
+import com.inspur.emmcloud.basemodule.util.compressor.Compressor;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.Email;
@@ -24,8 +24,8 @@ import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.ContactOrg;
-import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.componentservice.contact.ContactUser;
+import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
 import com.inspur.emmcloud.util.privates.cache.ContactOrgCacheUtils;
 
 import org.json.JSONObject;
@@ -192,7 +192,7 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combinLocalMediaImageMessage(String cid, String localFilePath, String previewImgPath) {
+    public static Message combinLocalMediaImageMessage(String cid, String localFilePath, Compressor.ResolutionRatio resolutionRatio) {
         String tracer = getTracer();
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
@@ -209,12 +209,11 @@ public class CommunicationUtils {
         int previewImgHight = 0;
         int previewImgWidth = 0;
         long previewFileSize = 0;
-        if (!StringUtils.isBlank(previewImgPath)) {
-            Bitmap previewPictureBitmap = BitmapFactory.decodeFile(previewImgPath);
-            previewImgHight = previewPictureBitmap.getHeight();
-            previewImgWidth = previewPictureBitmap.getWidth();
-            previewFileSize = FileUtils.getFileSize(previewImgPath);
-            previewPictureBitmap.recycle();
+        String previewImgPath = localFilePath;
+        if (resolutionRatio != null) {
+            previewImgHight = resolutionRatio.getHigh();
+            previewImgWidth = resolutionRatio.getWidth();
+            previewFileSize = resolutionRatio.getSize();
         } else {
             previewImgHight = imgHeight;
             previewImgWidth = imgWidth;
@@ -265,6 +264,14 @@ public class CommunicationUtils {
         contentMediaImage.setRawWidth(msgContentMediaImage.getRawWidth());
         contentMediaImage.setRawSize(msgContentMediaImage.getRawSize());
         contentMediaImage.setRawMedia(filePath);
+        contentMediaImage.setPreviewHeight(msgContentMediaImage.getPreviewHeight());
+        contentMediaImage.setPreviewWidth(msgContentMediaImage.getPreviewWidth());
+        contentMediaImage.setPreviewSize(msgContentMediaImage.getPreviewSize());
+        contentMediaImage.setPreviewMedia(filePath);
+        contentMediaImage.setThumbnailHeight(msgContentMediaImage.getThumbnailHeight());
+        contentMediaImage.setThumbnailWidth(msgContentMediaImage.getThumbnailWidth());
+        contentMediaImage.setThumbnailSize(msgContentMediaImage.getThumbnailSize());
+        contentMediaImage.setThumbnailMedia(filePath);
         contentMediaImage.setTmpId(tracer);
         message.setContent(contentMediaImage.toString());
         return message;

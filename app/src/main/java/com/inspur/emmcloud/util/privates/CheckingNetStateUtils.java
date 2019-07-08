@@ -6,11 +6,11 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.telephony.TelephonyManager;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PingNetEntity;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -39,7 +39,6 @@ public class CheckingNetStateUtils {
         @Override
         public void handleMessage(Message msg) {
             PingUrlStateAction pingIdAndData = (PingUrlStateAction) msg.obj;
-            LogUtils.LbcDebug("action:" + pingIdAndData.getAction() + "data" + pingIdAndData.isPingState());
             EventBus.getDefault().post(new SimpleEventMessage(pingIdAndData.getAction(), pingIdAndData));
             super.handleMessage(msg);
         }
@@ -139,32 +138,6 @@ public class CheckingNetStateUtils {
                         Message message = new Message();
                         message.obj = pingUrlStateAction;
                         handler.sendMessage(message);
-                        LogUtils.LbcDebug("Pinf发送网络EventBus事件:" + " Action" + eventBusAction + "URL" + StrUrl[finalI] + "状态" + pingNetEntity.isResult());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-    }
-
-    /**
-     * Ping  网络通断状态检测（用于显示网络状态异常框）
-     */
-    public void CheckNetPingThreadStartForHint(final String[] StrUrl, final int WaiteTime, final String eventBusAction, final Handler handlerHint) {
-        for (int i = 0; i < StrUrl.length; i++) {
-            final int finalI = i;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        PingNetEntity pingNetEntity = new PingNetEntity(StrUrl[finalI], 1, WaiteTime, new StringBuffer());
-                        pingNetEntity = NetUtils.ping(pingNetEntity, (long) WaiteTime);
-                        PingUrlStateAction pingUrlStateAction = new PingUrlStateAction(eventBusAction, StrUrl[finalI], pingNetEntity.isResult());
-                        Message message = new Message();
-                        message.obj = pingUrlStateAction;
-                        handlerHint.sendMessage(message);
-                        LogUtils.LbcDebug("Pinf发送网络EventBus事件:" + " Action" + eventBusAction + "URL" + StrUrl[finalI] + "状态" + pingNetEntity.isResult());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -189,7 +162,6 @@ public class CheckingNetStateUtils {
                         Message message = new Message();
                         message.obj = pingUrlStateAction;
                         handlerHint.sendMessage(message);
-                        LogUtils.LbcDebug("Pinf发送网络EventBus事件:" + " Action" + eventBusAction + "URL" + StrUrl[finalI] + "状态" + pingNetEntity.isResult());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -209,20 +181,6 @@ public class CheckingNetStateUtils {
             apiService.getCloudConnectStateUrl(StrUrl[i]);
         }
     }
-
-    /**
-     * 网络连接状态 如果GPRS连接或者Wifi&&VPN时返回true 否则返回false
-     */
-    public boolean isConnectedNet() {
-        if (NetworkInfo.State.CONNECTED == NetUtils.getNetworkMobileState(context)
-                || NetworkInfo.State.CONNECTING == NetUtils.getNetworkMobileState(context)
-                || (NetworkInfo.State.CONNECTED == NetUtils.getNetworkWifiState(context) && NetUtils.isVpnConnected())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    /***/
 
 
     /**
@@ -268,6 +226,58 @@ public class CheckingNetStateUtils {
     }
 
     /**
+     * 获取网络2G/3G/4G/wifi
+     */
+    public String getNetworksType() {
+        String netWorkType = null;
+        Context context = MyApplication.getInstance();
+        ConnectivityManager conMan = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = conMan.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                netWorkType = "WIFI";
+            } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                String _strSubTypeName = networkInfo.getSubtypeName();
+                // TD-SCDMA   networkType is 17
+                int networkType = networkInfo.getSubtype();
+                switch (networkType) {
+                    case TelephonyManager.NETWORK_TYPE_GPRS:
+                    case TelephonyManager.NETWORK_TYPE_EDGE:
+                    case TelephonyManager.NETWORK_TYPE_CDMA:
+                    case TelephonyManager.NETWORK_TYPE_1xRTT:
+                    case TelephonyManager.NETWORK_TYPE_IDEN: //api<8 : replace by 11
+                        netWorkType = "2G";
+                        break;
+                    case TelephonyManager.NETWORK_TYPE_UMTS:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                    case TelephonyManager.NETWORK_TYPE_HSDPA:
+                    case TelephonyManager.NETWORK_TYPE_HSUPA:
+                    case TelephonyManager.NETWORK_TYPE_HSPA:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_B: //api<9 : replace by 14
+                    case TelephonyManager.NETWORK_TYPE_EHRPD:  //api<11 : replace by 12
+                    case TelephonyManager.NETWORK_TYPE_HSPAP:  //api<13 : replace by 15
+                        netWorkType = "3G";
+                        break;
+                    case TelephonyManager.NETWORK_TYPE_LTE:    //api<11 : replace by 13
+                        netWorkType = "4G";
+                        break;
+                    default:
+                        // http://baike.baidu.com/item/TD-SCDMA 中国移动 联通 电信 三种3G制式
+                        if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
+                            netWorkType = "3G";
+                        } else {
+                            netWorkType = _strSubTypeName;
+                        }
+                        break;
+                }
+            }
+        }
+        return netWorkType;
+    }
+
+    /**
      * Http 检测网路状态 回调
      */
     public class WebHttpService extends APIInterfaceInstance {
@@ -280,7 +290,6 @@ public class CheckingNetStateUtils {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    LogUtils.LbcDebug("http 返回成功" + url);
                     CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction("", url, true);
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingUrlStateAction));
                 }
@@ -296,7 +305,6 @@ public class CheckingNetStateUtils {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    LogUtils.LbcDebug("http 返回失败");
                     CheckingNetStateUtils.PingUrlStateAction pingUrlStateAction = new CheckingNetStateUtils.PingUrlStateAction("", url, false);
                     EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_NET_HTTP_POST_CONNECTION, pingUrlStateAction));
                 }

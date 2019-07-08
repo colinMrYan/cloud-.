@@ -35,7 +35,7 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public void openCamera(Activity activity, String picPath, int requestCode) {
+    public void openCamera(final Activity activity, final String picPath, final int requestCode) {
         // 判断存储卡是否可以用，可用进行存储
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA,
@@ -65,7 +65,7 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public void openScanCode(Activity activity, int requestCode) {
+    public void openScanCode(final Activity activity, final int requestCode) {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(activity, Permissions.CAMERA,
                 new PermissionRequestCallback() {
                     @Override
@@ -85,7 +85,7 @@ public class WebServiceImpl implements WebService {
     }
 
     @Override
-    public void openScanCode(Fragment fragment, int requestCode) {
+    public void openScanCode(final Fragment fragment, final int requestCode) {
         PermissionRequestManagerUtils.getInstance().requestRuntimePermission(fragment.getActivity(), Permissions.CAMERA,
                 new PermissionRequestCallback() {
                     @Override
@@ -105,11 +105,17 @@ public class WebServiceImpl implements WebService {
 
     @Override
     public void openGallery(Activity activity, int limit, int requestCode) {
+        openGallery(activity, limit, requestCode, false);
+    }
+
+    @Override
+    public void openGallery(Activity activity, int limit, int requestCode, boolean isSupportOrigin) {
         ImagePicker imagePicker = ImagePicker.getInstance();
         imagePicker.setShowCamera(false); // 显示拍照按钮
         imagePicker.setCrop(false); // 允许裁剪（单选才有效）
         imagePicker.setSelectLimit(limit);
         imagePicker.setMultiMode(true);
+        imagePicker.setSupportOrigin(isSupportOrigin);
         Intent intent = new Intent(activity, ImageGridActivity.class);
         activity.startActivityForResult(intent, requestCode);
     }

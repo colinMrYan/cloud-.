@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -182,7 +183,12 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
      */
     private void showTimeInvalidDlg() {
         new CustomDialog.MessageDialogBuilder(this).setMessage(R.string.schedule_calendar_time_alert)
-                .setPositiveButton(R.string.ok, (dialog, index) -> dialog.dismiss()).show();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
 

@@ -316,7 +316,12 @@
     <string name="chat_long_click_transmit">转发</string>
     <string name="chat_long_click_schedule">添加到日程</string>
     <string name="chat_long_click_copy_text">复制文字</string>
+    <string name="chat_long_click_reply">回复</string>
+    <string name="chat_full_image">查看原图</string>
     <string name="communication_search">搜索</string>
+    <string name="chat_transmit_message_success">已转发</string>
+    <string name="chat_transmit_message_fail">转发失败</string>
+    <string name="chat_original_picture_download_progress">&#037;%1d</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
@@ -452,6 +457,7 @@
     <string name="schedule_meeting_cancel">取消会议</string>
     <string name="schedule_meeting_my_create">我创建的：</string>
     <string name="schedule_meeting_my_take_part_in">我参与的：</string>
+    <string name="schedule_meeting_attend_reply">参会答复</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
@@ -813,7 +819,7 @@
     <string name="do_not_select_yourself">不能选择自己</string>
     <string name="contact_exception">数据异常,无法打开</string>
     <string name="contact_select_limit_warning">超过了建议选择人数限制</string>
-
+    <string name="contact_add_system">添加到通讯录</string>
 
     <!-- 会议室部分 -->
     <string name="meeting_room_booking_detail">会议室详情</string>

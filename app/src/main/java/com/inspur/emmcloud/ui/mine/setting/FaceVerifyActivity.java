@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -435,7 +436,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 if (isFaceLogin) {
                     Bundle bundle = new Bundle();
                     bundle.putString("token", token);
-                    ARouter.getInstance().build("/login/qr_code_login_GS").with(bundle).navigation();
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_GS).with(bundle).navigation();
                 } else if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 } else if (!isFaceVerityTest) {
@@ -501,40 +502,55 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         if (isFaceSetting || isFaceVerityTest) {
             new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
-                    .setPositiveButton(getString(R.string.ok), (dialog, index) -> {
-                        dialog.dismiss();
-                        finish();
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
                     })
                     .setCancelable(false)
                     .show();
         } else if (CreateGestureActivity.getGestureCodeIsOpenByUser(FaceVerifyActivity.this)) {
             new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
-                    .setNegativeButton(getString(R.string.retry), (dialog, index) -> {
-                        dialog.dismiss();
-                        startTime = System.currentTimeMillis();
-                        delayTotakePicture(1000);
+                    .setNegativeButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            startTime = System.currentTimeMillis();
+                            delayTotakePicture(1000);
+                        }
                     })
-                    .setPositiveButton(R.string.switch_gesture_unlock, (dialog, index) -> {
-                        dialog.dismiss();
-                        Intent intent = new Intent(FaceVerifyActivity.this, GestureLoginActivity.class);
-                        intent.putExtra("gesture_code_change", "login");
-                        startActivity(intent);
-                        finish();
+                    .setPositiveButton(R.string.switch_gesture_unlock, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Intent intent = new Intent(FaceVerifyActivity.this, GestureLoginActivity.class);
+                            intent.putExtra("gesture_code_change", "login");
+                            startActivity(intent);
+                            finish();
+                        }
                     })
                     .setCancelable(false)
                     .show();
         } else {
             new CustomDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
-                    .setNegativeButton(getString(R.string.retry), (dialog, index) -> {
-                        dialog.dismiss();
-                        startTime = System.currentTimeMillis();
-                        delayTotakePicture(1000);
+                    .setNegativeButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            startTime = System.currentTimeMillis();
+                            delayTotakePicture(1000);
+                        }
                     })
-                    .setPositiveButton(R.string.off_face_verify_relogin, (dialog, index) -> {
-                        ((MyApplication) getApplication()).signout();
-                        PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
+                    .setPositiveButton(R.string.off_face_verify_relogin, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ((MyApplication) getApplication()).signout();
+                            PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
+                        }
                     })
                     .setCancelable(false)
                     .show();

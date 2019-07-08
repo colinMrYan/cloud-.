@@ -32,6 +32,7 @@ import com.inspur.emmcloud.util.privates.richtext.callback.DrawableGetter;
 import com.inspur.emmcloud.util.privates.richtext.callback.ImageFixCallback;
 import com.inspur.emmcloud.util.privates.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlClickListener;
+import com.inspur.emmcloud.util.privates.richtext.callback.OnUrlLongClickListener;
 import com.inspur.emmcloud.util.privates.richtext.ig.MyImageDownloader;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
@@ -109,7 +110,7 @@ public class DisplayTxtMarkdownMsg {
     private static void showContentByMarkdown(final Context context, final String content, final TextView textView,
                                               final boolean isMyMsg, final String mid, final List<MarkDownLink> markDownLinks) {
         final int holderWidth = ResolutionUtils.getWidth(context) - DensityUtil.dip2px(MyApplication.getInstance(), 141);
-        List<MarkDownLink> markDownLinkList = markDownLinks;
+        final List<MarkDownLink> markDownLinkList = markDownLinks;
         RichText.initCacheDir(new File(MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH));
         RichText.from(content)
                 .type(RichType.markdown)
@@ -151,6 +152,12 @@ public class DisplayTxtMarkdownMsg {
                         }
                         /**加上这个目的是为了重新刷新该Ui*/
                         return false;
+                    }
+                })
+                .urlLongClick(new OnUrlLongClickListener() {
+                    @Override
+                    public boolean urlLongClick(String url) {
+                        return true;
                     }
                 })
                 .singleLoad(false)

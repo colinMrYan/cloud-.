@@ -3,18 +3,17 @@ package com.inspur.emmcloud.login.util;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
@@ -260,15 +259,15 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
      */
     private void showSelectEnterpriseDlg(final List<Enterprise> enterpriseList) {
         final MyDialog myDialog = new MyDialog(activity, R.layout.login_dialog_select_tanent);
-        final SwitchView switchView = myDialog.findViewById(R.id.auto_select_switch);
-        switchView.setOpened(true);
+        final SwitchCompat switchView = myDialog.findViewById(R.id.auto_select_switch);
+        switchView.setChecked(true);
         MaxHeightListView enterpriseListView = myDialog.findViewById(R.id.enterprise_list);
         enterpriseListView.setMaxHeight(DensityUtil.dip2px(activity, 180));
         enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList));
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                boolean isRemember = switchView.isOpened();
+                boolean isRemember = switchView.isChecked();
                 String enterpriseId = enterpriseList.get(position).getId();
                 PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, isRemember ? enterpriseId : "");
                 PreferencesByUsersUtils.putString(activity, Constant.PREF_CURRENT_ENTERPRISE_ID, enterpriseId);
@@ -300,15 +299,11 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
         // TODO Auto-generated method stub
         try {
             if (errorCode == 400) {
-                LogUtils.jasonDebug("headerLimitRemaining="+headerLimitRemaining);
-                LogUtils.jasonDebug("headerRetryAfter="+headerRetryAfter);
-                if (isSMSLogin) {
-                    ToastUtils.show(activity, R.string.login_code_verification_failure);
-                } else {
                     String code = JSONUtils.getString(error,"code","");
                     if (code.equals("1002") && !StringUtils.isBlank(headerLimitRemaining)){
                         int limitRemaining = Integer.parseInt(headerLimitRemaining);
-                        ToastUtils.show(activity, activity.getString(R.string.login_fail_limit_remaining,limitRemaining));
+                        ToastUtils.show(activity, activity.getString(isSMSLogin ?
+                                R.string.login_fail_sms_limit_remaining : R.string.login_fail_limit_remaining, limitRemaining));
                     }else if(code.equals("1009") && !StringUtils.isBlank(headerRetryAfter)){
                         int retryAfter = Integer.parseInt(headerRetryAfter);
                         if (retryAfter == 0){
@@ -320,12 +315,9 @@ public class LoginUtils extends LoginAPIInterfaceImpl implements LanguageManager
                         }else {
                             ToastUtils.show(activity, activity.getString(R.string.login_fail_account_lock_by_second,retryAfter));
                         }
-                    }
-                    else {
+                    } else {
                         ToastUtils.show(activity, R.string.login_invaliad_account_or_pwd);
                     }
-                }
-
             } else {
                 WebServiceMiddleUtils.hand(activity, error, errorCode);
             }

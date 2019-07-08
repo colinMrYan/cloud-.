@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -92,6 +96,36 @@ public class NewsWebDetailActivity extends BaseActivity {
     private Map<String, String> webViewHeaders;
     private RelativeLayout loadingLayout;
 
+    public void setSwitchColor(SwitchCompat v) {
+        // thumb color
+        int thumbColor = 0x1A666666;
+
+        // trackColor
+        int trackColor = 0x7E000000;
+
+        // set the thumb color
+        DrawableCompat.setTintList(v.getThumbDrawable(), new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        thumbColor,
+                        trackColor
+                }));
+
+        // set the track color
+        DrawableCompat.setTintList(v.getTrackDrawable(), new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        0x7E000000,
+                        0x1A666666
+                }));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,7 +188,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -187,9 +220,15 @@ public class NewsWebDetailActivity extends BaseActivity {
             url = NewsAPIUri.getGroupNewsHtmlUrl(url);
         }
         //修改model在第一次加载时直接带着model而不是加载两次
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, "");
+        final String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         loadUrlWithHeader(url + (StringUtils.isBlank(model) ? lightMode : model));
-        setHeaderModel(model);
+        //此处添加延时效果是
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setHeaderModel(model);
+            }
+        }, 50);
     }
 
     private void setWebView() {
@@ -406,27 +445,17 @@ public class NewsWebDetailActivity extends BaseActivity {
         normalBtn = dialog.findViewById(R.id.app_news_font_middle_btn);
         largerBtn = dialog.findViewById(R.id.app_news_font_big_btn);
         largestBtn = dialog.findViewById(R.id.app_news_font_biggest_btn);
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, lightMode);
-        final SwitchView nightModeSwitchBtn = dialog.findViewById(R.id.app_news_mode_switch);
-        nightModeSwitchBtn.setPaintColorOn(0x7E000000);
-        nightModeSwitchBtn.setPaintCircleBtnColor(0x1A666666);
-        nightModeSwitchBtn.setOpened(model.endsWith(darkMode));
-        nightModeSwitchBtn.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+        final SwitchCompat nightModeSwitchBtn = dialog.findViewById(R.id.app_news_mode_switch);
+        setSwitchColor(nightModeSwitchBtn);
+        nightModeSwitchBtn.setChecked(model.endsWith(darkMode));
+        nightModeSwitchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOn(View view) {
-                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, darkMode);
-                setDialogModel(darkMode);
-                setWebViewModel(darkMode);
-                nightModeSwitchBtn.toggleSwitch(true);
-                reRender();
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, APP_NEWS_WEBVIEW_MODEL, lightMode);
-                setDialogModel(lightMode);
-                setWebViewModel(lightMode);
-                nightModeSwitchBtn.toggleSwitch(false);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                String mode = b ? darkMode : lightMode;
+                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", mode);
+                setDialogModel(mode);
+                setWebViewModel(mode);
                 reRender();
             }
         });
@@ -702,9 +731,9 @@ public class NewsWebDetailActivity extends BaseActivity {
     /**
      * 改变原生导航栏
      */
-    private void setHeaderModel(String model) {
+    private void setHeaderModel(final String model) {
         boolean isDarkMode = model.equals(darkMode);
-        int color = ResourceUtils.getResValueOfAttr(this, R.attr.header_bg_color);
+        int color = ResourceUtils.getResValueOfAttr(NewsWebDetailActivity.this, R.attr.header_bg_color);
         int statusBarColor = isDarkMode ? R.color.app_news_night_color : color;
         ImmersionBar.with(this).statusBarColor(statusBarColor).init();
         (findViewById(R.id.rl_header)).setBackgroundColor(ContextCompat.getColor(BaseApplication.getInstance(), statusBarColor));

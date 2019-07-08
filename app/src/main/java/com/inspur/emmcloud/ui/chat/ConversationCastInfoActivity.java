@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -11,8 +13,6 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
-import com.inspur.emmcloud.baselib.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
@@ -29,7 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ConversationCastInfoActivity extends BaseActivity implements OnStateChangedListener {
+public class ConversationCastInfoActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
     public static final String EXTRA_CID = "cid";
     @BindView(R.id.img_photo)
@@ -41,7 +41,7 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
     @BindView(R.id.support_text)
     TextView supportText;
     @BindView(R.id.sv_stick)
-    SwitchView stickSwitch;
+    SwitchCompat stickSwitch;
     private Conversation conversation;
     private ChatAPIService apiService;
     private LoadingDialog loadingDlg;
@@ -53,8 +53,8 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
         loadingDlg = new LoadingDialog(ConversationCastInfoActivity.this);
         String cid = getIntent().getExtras().getString(EXTRA_CID);
         conversation = ConversationCacheUtils.getConversation(MyApplication.getInstance(), cid);
-        stickSwitch.setOpened(conversation.isStick());
-        stickSwitch.setOnStateChangedListener(this);
+        stickSwitch.setChecked(conversation.isStick());
+        stickSwitch.setOnCheckedChangeListener(this);
         webService = new WebService();
         apiService = new ChatAPIService(this);
         apiService.setAPIInterface(webService);
@@ -83,15 +83,10 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
 
 
     @Override
-    public void toggleToOn(View view) {
-        // TODO Auto-generated method stub
-        setConversationStick();
-    }
-
-    @Override
-    public void toggleToOff(View view) {
-        // TODO Auto-generated method stub
-        setConversationStick();
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (conversation.isStick() != b) {
+            setConversationStick();
+        }
     }
 
     public void onClick(View v) {
@@ -125,7 +120,7 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
             loadingDlg.show();
             apiService.setConversationStick(conversation.getId(), !conversation.isStick());
         } else {
-            stickSwitch.setOpened(conversation.isStick());
+            stickSwitch.setChecked(conversation.isStick());
         }
     }
 
@@ -147,7 +142,7 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
         public void returnSetConversationStickSuccess(String id, boolean isStick) {
             LoadingDialog.dimissDlg(loadingDlg);
             conversation.setStick(isStick);
-            stickSwitch.setOpened(isStick);
+            stickSwitch.setChecked(isStick);
             ConversationCacheUtils.setConversationStick(MyApplication.getInstance(), id, isStick);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_UPDATE_CHANNEL_FOCUS, conversation));
         }
@@ -156,7 +151,7 @@ public class ConversationCastInfoActivity extends BaseActivity implements OnStat
         public void returnSetConversationStickFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(MyApplication.getInstance(), error, errorCode);
-            stickSwitch.setOpened(conversation.isStick());
+            stickSwitch.setChecked(conversation.isStick());
         }
 
     }

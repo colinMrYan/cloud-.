@@ -57,6 +57,7 @@ public class ImagePicker {
     private List<ImageFolder> mImageFolders;      //所有的图片文件夹
     private int mCurrentImageFolderPosition = 0;  //当前选中的文件夹位置 0表示所有图片
     private List<OnImageSelectedListener> mImageSelectedListeners;          // 图片选中的监听回调
+    private boolean isSupportOrigin = false;
 
     private ImagePicker() {
     }
@@ -221,6 +222,14 @@ public class ImagePicker {
 
     public ArrayList<ImageItem> getCurrentImageFolderItems() {
         return mImageFolders.get(mCurrentImageFolderPosition).images;
+    }
+
+    public boolean isSupportOrigin() {
+        return isSupportOrigin;
+    }
+
+    public void setSupportOrigin(boolean supportOrigin) {
+        isSupportOrigin = supportOrigin;
     }
 
     public boolean isSelect(ImageItem item) {

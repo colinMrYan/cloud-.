@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -84,11 +85,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.data_blank_layout)
     LinearLayout dataBlankLayout;
+    String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction; //弹框点击状态
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();//移动的云盘文件列表
     private MyAppAPIService apiServiceBase;
     private Dialog fileRenameDlg, createFolderDlg;
-    String deleteAction, downloadAction, renameAction, moveToAction, copyAction, permissionAction; //弹框点击状态
-
 
     @Override
     public void onCreate() {
@@ -149,10 +149,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(copyAction)
                 .addItem(permissionAction, isVolumeFileDirectory)
                 // .addItem("分享", !isVolumeFileDirectory)
-                .setOnSheetItemClickListener((dialog, itemView, position) -> {
-                    String action = (String) itemView.getTag();
-                    handleItemClick(action, volumeFile);
-                    dialog.dismiss();
+                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                        String action = (String) itemView.getTag();
+                        handleItemClick(action, volumeFile);
+                        dialog.dismiss();
+                    }
                 })
                 .build()
                 .show();
@@ -198,14 +201,20 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected void showFileDelWranibgDlg(final VolumeFile volumeFile) {
         new CustomDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
                 .setMessage(R.string.clouddriver_sure_delete_file)
-                .setNegativeButton(R.string.cancel, (dialog, index) -> {
-                    dialog.dismiss();
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
                 })
-                .setPositiveButton(R.string.ok, (dialog, index) -> {
-                    List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
-                    deleteVolumeFileList.add(volumeFile);
-                    deleteFile(deleteVolumeFileList);
-                    dialog.dismiss();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
+                        deleteVolumeFileList.add(volumeFile);
+                        deleteFile(deleteVolumeFileList);
+                        dialog.dismiss();
+                    }
                 })
                 .show();
     }
@@ -215,7 +224,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showCreateFolderDlg() {
         createFolderDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
         inputEdit.setHint(getString(R.string.clouddriver_input_directory_name));
@@ -266,7 +275,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         final String fileNameNoEx = volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? FileUtils.getFileNameWithoutExtension(fileName) : fileName;
         final String fileExtension = fileName.replace(fileNameNoEx, "");
         fileRenameDlg = new MyDialog(VolumeFileBaseActivity.this,
-                R.layout.appcenter_dialog_approval_password_input, R.style.userhead_dialog_bg);
+                R.layout.volume_dialog_update_name_input, R.style.userhead_dialog_bg);
         fileRenameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) fileRenameDlg.findViewById(R.id.edit);
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});

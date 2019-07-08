@@ -42,7 +42,7 @@ import butterknife.ButterKnife;
 /**
  * 短信登录
  */
-@Route(path = "/login/sms")
+@Route(path = Constant.AROUTER_CLASS_LOGIN_BY_SMS)
 public class LoginBySmsActivity extends BaseActivity {
 
     public static final int MODE_LOGIN = 1;
@@ -133,6 +133,11 @@ public class LoginBySmsActivity extends BaseActivity {
             InputMethodUtils.hide(LoginBySmsActivity.this);
 
         } else if (i == R.id.bt_get_captcha) {
+            if (myCountDownTimer != null) {
+                myCountDownTimer.cancel();
+                myCountDownTimer = null;
+            }
+            myCountDownTimer = new MyCountDownTimer(60000, 1000);
             phone = phoneEdit.getText().toString();
             if (StringUtils.isBlank(phone)) {
                 ToastUtils.show(BaseApplication.getInstance(), R.string.login_please_input_phone_num);
@@ -165,7 +170,7 @@ public class LoginBySmsActivity extends BaseActivity {
         if (!isHasSetShortPassword) {
             IntentUtils.startActivity(LoginBySmsActivity.this, PasswordFirstSettingActivity.class, true);
         } else {
-            ARouter.getInstance().build("/app/index").navigation();
+            ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();
             finish();
         }
     }

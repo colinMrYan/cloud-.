@@ -35,6 +35,7 @@ import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.login.LoginService;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -47,7 +48,7 @@ import java.util.Map;
 /**
  * Application class
  */
-public class BaseApplication extends MultiDexApplication {
+public abstract class BaseApplication extends MultiDexApplication {
     private static final String TAG = "BaseApplication";
     private static boolean isContactReady = false;
     private static BaseApplication instance;
@@ -65,6 +66,7 @@ public class BaseApplication extends MultiDexApplication {
 
     private String currentChannelCid = "";
     private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
+
 
     /**
      * 单例获取application实例
@@ -515,6 +517,9 @@ public class BaseApplication extends MultiDexApplication {
     public void clearNotification() {
         NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancelAll();
+        if (AppUtils.getIsXiaoMi()) {
+            MiPushClient.clearNotification(this);
+        }
     }
 
     /****************************标记当前正在某个频道中***************************************************/
@@ -525,4 +530,8 @@ public class BaseApplication extends MultiDexApplication {
     public void setCurrentChannelCid(String currentChannelCid) {
         this.currentChannelCid = currentChannelCid;
     }
+
+    /*******************设置登录后跳转的路由*************************************/
+
+    public abstract String getIntentClassRouterAfterLogin();
 }

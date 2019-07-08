@@ -12,9 +12,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
 
 import java.util.List;
 
@@ -127,21 +129,27 @@ public class PopupWindowList {
         mPopView.setBackgroundColor(ContextCompat.getColor(mContext, android.R.color.white));
         mPopView.setVerticalScrollBarEnabled(false);
         mPopView.setDivider(null);
-        mPopView.setAdapter(new ArrayAdapter<>(mContext,
-                android.R.layout.simple_list_item_1, mItemData));
+        PopAdapter adapter = new PopAdapter(mContext, mItemData);
+        mPopView.setAdapter(adapter);
         if (mItemClickListener != null) {
             mPopView.setOnItemClickListener(mItemClickListener);
         }
         mPopView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        if (mPopupWindowWidth == 0) {
-            mPopupWindowWidth = mDeviceWidth / 3;
+        mPopupWindowWidth = mDeviceWidth / 3;
+        int maxItemWidth = 0;
+        for (String itemData : mItemData) {
+            View itemLayout = View.inflate(mContext, R.layout.pop_item_layout, null);
+            TextView textView = itemLayout.findViewById(R.id.pop_item_text);
+            textView.setText(itemData);
+            textView.measure(0, 0);
+            maxItemWidth = maxItemWidth > textView.getMeasuredWidth() ? maxItemWidth : textView.getMeasuredWidth();
         }
-        if (mPopupWindowHeight == 0) {
-            mPopupWindowHeight = mItemData.size() * mPopView.getMeasuredHeight();
-            if (mPopupWindowHeight > mDeviceHeight / 2) {
-                mPopupWindowHeight = mDeviceHeight / 2;
-            }
+        maxItemWidth = maxItemWidth > mPopupWindowWidth * 3 / 2 ? mPopupWindowWidth * 3 / 2 : maxItemWidth;
+        mPopupWindowWidth = mPopupWindowWidth > maxItemWidth ? mPopupWindowWidth : maxItemWidth;
+        mPopupWindowHeight = mItemData.size() * mPopView.getMeasuredHeight();
+        if (mPopupWindowHeight > mDeviceHeight / 2) {
+            mPopupWindowHeight = mDeviceHeight / 2;
         }
         mPopupWindow = new PopupWindow(mPopView, mPopupWindowWidth, mPopupWindowHeight);
         if (mPopAnimStyle != 0) {
@@ -151,10 +159,13 @@ public class PopupWindowList {
         mPopupWindow.setFocusable(mModal);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
         if (mContext != null)
-            setBackgroundAlpha((Activity) mContext, 0.5f);
-        mPopupWindow.setOnDismissListener(() -> {
-            if (mContext != null) {
-                setBackgroundAlpha((Activity) mContext, 1f);
+            setBackgroundAlpha((Activity) mContext, 0.8f);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if (mContext != null) {
+                    setBackgroundAlpha((Activity) mContext, 1f);
+                }
             }
         });
 

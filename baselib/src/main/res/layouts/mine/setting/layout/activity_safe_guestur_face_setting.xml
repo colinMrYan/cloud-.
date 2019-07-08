@@ -56,9 +56,9 @@
                 android:textColor="#333333"
                 android:textSize="16sp" />
 
-            <com.inspur.emmcloud.baselib.widget.SwitchView
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switch_view_setting_safe_start_guesture"
-                android:layout_width="37dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -89,9 +89,9 @@
                 android:textColor="#333333"
                 android:textSize="16sp" />
 
-            <com.inspur.emmcloud.baselib.widget.SwitchView
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switch_view_setting_safe_start_face"
-                android:layout_width="37dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -122,6 +122,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/switch_gesture_reset_unlock"
+                android:textColor="#333333"
                 android:textSize="16sp" />
 
             <ImageView
@@ -156,6 +157,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/experience_face_verify"
+                android:textColor="#333333"
                 android:textSize="16sp" />
 
             <ImageView

@@ -141,13 +141,13 @@
 
         <activity
             android:name=".ui.mine.setting.GestureLoginActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.setting.FaceVerifyActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -238,6 +238,7 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:theme="@style/AppTheme_Transparent">
+
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
@@ -360,6 +361,17 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="inspur-ecc-native" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="application/vnd.ms-excel" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                <data android:mimeType="text/calendar" />
             </intent-filter>
 
         </activity>
@@ -642,6 +654,10 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.schedule.meeting.MeetingDetailReplyActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.schedule.meeting.MeetingRoomListActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
@@ -736,17 +752,20 @@
             android:screenOrientation="portrait" />
 
         <!-- Mail-->
-        <activity android:name=".ui.appcenter.mail.MailHomeActivity">
+        <activity
+            android:name=".ui.appcenter.mail.MailHomeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.appcenter.mail.MailDetailActivity">
+        <activity
+            android:name=".ui.appcenter.mail.MailDetailActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.appcenter.mail.MailLoginActivity">
+        <activity
+            android:name=".ui.appcenter.mail.MailLoginActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity

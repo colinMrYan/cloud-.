@@ -290,6 +290,10 @@ public class AppUtils {
         uniqueId = getUUIDFromSDCardFile(context);
         if (!StringUtils.isBlank(uniqueId)) {
             return uniqueId;
+        } else {
+            if (FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)) {
+                FileUtils.deleteFile(Constant.CONCIG_CLOUD_PLUS_UUID_FILE);
+            }
         }
         // 如果前两个都没有，则生成一个UUID，并存到SharePreference和SD卡文件里
         if (StringUtils.isBlank(uniqueId)) {
@@ -555,10 +559,17 @@ public class AppUtils {
      * 调用图库
      */
     public static void openGallery(Activity activity, int limit, int requestCode) {
+        openGallery(activity, limit, requestCode, false);
+    }
+
+    /**
+     * 沟通调用图库
+     */
+    public static void openGallery(Activity activity, int limit, int requestCode, boolean isSupportOrigin) {
         Router router = Router.getInstance();
         if (router.getService(WebService.class) != null) {
             WebService service = router.getService(WebService.class);
-            service.openGallery(activity, limit, requestCode);
+            service.openGallery(activity, limit, requestCode, isSupportOrigin);
         }
     }
 

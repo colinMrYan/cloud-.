@@ -48,9 +48,9 @@
     <string name="check_update_text">Check New Version</string>
     <string name="app_is_lastest_version">This is the lastest version</string>
     <string name="check_update_fail">Checking new version failed</string>
-    <string name="upgrade">Now</string>
-    <string name="not_upgrade">Later</string>
-    <string name="app_update_remind">Update Remind</string>
+    <string name="upgrade">Update</string>
+    <string name="not_upgrade">Skip</string>
+    <string name="app_update_remind">Update Reminder</string>
     <string name="app_last_version">Last Version</string>
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>
@@ -211,7 +211,7 @@
     <!--<string name="login_phone_num_illegal_format">Incorrect phone number format</string>-->
     <!--<string name="login_loading_text">Logging...</string>-->
     <string name="login_please_input_password">Enter a new password</string>
-    <string name="login">Log in</string>
+    <string name="login">Log In</string>
     <!--<string name="login_code_login_text">Verification code to log in</string>-->
     <!--<string name="login_code_verification_failure">Incorrect verification code</string>-->
     <!--<string name="login_sms">Quick Login</string>-->
@@ -307,9 +307,13 @@
     <string name="chat_conversation_unread_count">%1$d new messages</string>
     <string name="chat_long_click_copy">Copy</string>
     <string name="chat_long_click_transmit">Forward</string>
-    <string name="chat_long_click_schedule">Add to Schedule</string>
+    <string name="chat_long_click_schedule">Add to Calendar</string>
     <string name="chat_long_click_copy_text">Copy text</string>
     <string name="communication_search">Search</string>
+    <string name="chat_full_image">Full image</string>
+    <string name="chat_transmit_message_success">successfully sent</string>
+    <string name="chat_transmit_message_fail">Failed sent</string>
+    <string name="chat_long_click_reply">Reply</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -344,7 +348,7 @@
     <string name="time">Time</string>
     <string name="work_search_hint">Search calendars, tasks</string>
     <string name="work_mession">Task</string>
-    <string name="work_schedule">Schedule</string>
+    <string name="work_schedule">Calendar</string>
     <string name="work_task_mine">Mine</string>
     <string name="work_task_involved">Participant</string>
     <string name="work_task_focused">Attention</string>
@@ -353,9 +357,9 @@
     <string name="work_task_end">%1$s End</string>
 
     <!-- 日程 （新）-->
-    <string name="schedule_event_alert">Schedule reminder</string>
-    <string name="schedule_calendar_add">Add schedule</string>
-    <string name="schedule_calendar_detail">Schedule detail</string>
+    <string name="schedule_event_alert">Schedule Reminder</string>
+    <string name="schedule_calendar_add">Add Schedule</string>
+    <string name="schedule_calendar_detail">Schedule Detail</string>
     <string name="schedule_setting_list_view">List view</string>
     <string name="schedule_setting_day_view">Day View</string>
     <string name="schedule_calendar_company">My Schedule</string>
@@ -369,9 +373,9 @@
     <string name="schedule_alert_time_before_one_day">1 day before(9 AM)</string>
     <string name="schedule_alert_time_before_two_day">2 day before(9 AM)</string>
     <string name="schedule_alert_time_before_a_week">1 Week before</string>
-    <string name="schedule_calendar_modify">Modify schedule</string>
-    <string name="schedule_calendar_delete">Delete schedule</string>
-    <string name="schedule_calendar_create">Create schedule</string>
+    <string name="schedule_calendar_modify">Modify Schedule</string>
+    <string name="schedule_calendar_delete">Delete Schedule</string>
+    <string name="schedule_calendar_create">New Schedule</string>
     <string name="schedule_calendar_my_schedule">My schedule</string>
     <string name="schedule_calendar_my_meeting">My meeting</string>
     <string name="schedule_calendar_my_task">My task</string>
@@ -381,33 +385,33 @@
     <string name="schedule_calendar_so_on">... </string>
     <string name="schedule_calendar_schedules">schedules</string>
 
-    <string name="schedule_calendar_no_schedule_today">No schedule</string>
-    <string name="schedule_meeting_no_meeting_today">No meeting</string>
-    <string name="schedule_task_no_task_today">No task</string>
+    <string name="schedule_calendar_no_schedule_today">No Schedule</string>
+    <string name="schedule_meeting_no_meeting_today">No Meeting</string>
+    <string name="schedule_task_no_task_today">No Task</string>
 
 
     <!--任务（新）-->
-    <string name="schedule_task_add">Add task</string>
-    <string name="schedule_task_detail">Task detail</string>
+    <string name="schedule_task_add">Add Task</string>
+    <string name="schedule_task_detail">Task Detail</string>
     <string name="schedule_task_content_hint">Please enter the content</string>
     <string name="schedule_task_priority">Priority</string>
     <string name="schedule_task_category">Category</string>
     <string name="schedule_task_category_no">No</string>
     <string name="schedule_task_manager">Manager</string>
     <string name="schedule_task_participant">Participant</string>
-    <string name="schedule_task_manager_num_0">0 people</string>
-    <string name="schedule_task_participant_num_0">0 people</string>
+    <string name="schedule_task_manager_num_0">0 People</string>
+    <string name="schedule_task_participant_num_0">0 People</string>
     <string name="schedule_task_deadline">Deadline</string>
     <string name="schedule_task_state">State</string>
     <string name="schedule_task_state_active">Ongoing</string>
-    <string name="schedule_task_stop_alert">End reminder</string>
+    <string name="schedule_task_stop_alert">End Reminder</string>
     <string name="schedule_task_more">More</string>
     <string name="schedule_task_attachment">Attachment</string>
-    <string name="schedule_task_create">Create task</string>
+    <string name="schedule_task_create">New Task</string>
     <string name="schedule_task_project_manager">Tag manager</string>
     <string name="schedule_task_project_manager_add">OK</string>
-    <string name="schedule_task_add_manager">Add manager</string>
-    <string name="schedule_task_add_participant">Add participant</string>
+    <string name="schedule_task_add_manager">Add Manager</string>
+    <string name="schedule_task_add_participant">Add Participant</string>
     <string name="schedule_task_label">Tag</string>
     <string name="schedule_task_label_add_hint">Please enter a tag name</string>
     <string name="schedule_task_label_color">Tag Color</string>
@@ -420,30 +424,31 @@
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
-    <string name="schedule_meeting_room_booking">New meeting</string>
+    <string name="schedule_meeting_room_booking">Book a Meeting</string>
     <string name="schedule_meeting_add_content_hint">Please enter the meeting content</string>
     <string name="schedule_meeting_add_location_hint">Please select a meeting place</string>
-    <string name="schedule_meeting_room_booking_detail">Meeting room details</string>
+    <string name="schedule_meeting_room_booking_detail">Meeting Room Details</string>
     <string name="schedule_meeting_add_attendee_title">Attendee</string>
     <string name="schedule_meeting_add_record_holder_title">Recorder</string>
     <string name="schedule_meeting_add_conference_title">Contact</string>
     <string name="schedule_meeting_select_attendee_title">Select attendee</string>
-    <string name="schedule_meeting_booking_detail">Meeting detail</string>
-    <string name="schedule_meeting_select_record_holder_title">Select recorder</string>
-    <string name="schedule_meeting_select_conference_title">Select conference</string>
+    <string name="schedule_meeting_booking_detail">Meeting Detail</string>
+    <string name="schedule_meeting_select_record_holder_title">Select Recorder</string>
+    <string name="schedule_meeting_select_conference_title">Select Conference</string>
     <string name="schedule_meeting_add_note">Note</string>
     <string name="schedule_meeting_add_alert_time">Reminder</string>
-    <string name="schedule_meeting_history">History meetings</string>
-    <string name="schedule_meeting_search">Search meeting</string>
-    <string name="schedule_meeting_booking_room">Booking meeting room</string>
-    <string name="schedule_meeting_room_list">Meeting room list</string>
+    <string name="schedule_meeting_history">History Meetings</string>
+    <string name="schedule_meeting_search">Search Meeting</string>
+    <string name="schedule_meeting_booking_room">Book a Meeting Room</string>
+    <string name="schedule_meeting_room_list">Meeting Room List</string>
     <string name="schedule_meeting_in_meeting">Meeting</string>
     <string name="schedule_meeting_be_free">Free</string>
     <string name="schedule_choose_common_office">Common office locations</string>
-    <string name="schedule_meeting_change">Modify meeting</string>
-    <string name="schedule_meeting_cancel">Delete meeting</string>
+    <string name="schedule_meeting_change">Modify Meeting</string>
+    <string name="schedule_meeting_cancel">Delete Meeting</string>
     <string name="schedule_meeting_my_create">I created：</string>
     <string name="schedule_meeting_my_take_part_in"> I involved：</string>
+    <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -800,6 +805,7 @@
     <string name="do_not_select_yourself">Please do not select yourself</string>
     <string name="contact_exception">Data exception cannot be opened</string>
     <string name="contact_select_limit_warning">The maximum number of optional persons has been reached</string>
+    <string name="contact_add_system">Save to Contacts</string>
 
     <!-- 会议室部分 -->
     <string name="meeting_room_booking_detail">Details on the meeting room</string>
@@ -909,11 +915,11 @@
     <string name="meeting_detail_show_qrcode">Show QrCode</string>
     <string name="meeting_detail_add_participant">Add Participant</string>
     <string name="meeting_detail_before_beginning">Before Beginning</string>
-    <string name="meeting_detail_ten_minutes">Ten minutes before</string>
-    <string name="meeting_detail_twenty_minutes">Twenty minutes before</string>
-    <string name="meeting_detail_thirty_minutes">Thirty minutes before</string>
-    <string name="meeting_detail_one_hour">One hour before</string>
-    <string name="meeting_detail_one_day">One day before</string>
+    <string name="meeting_detail_ten_minutes">Ten Minutes Before</string>
+    <string name="meeting_detail_twenty_minutes">Twenty Minutes Before</string>
+    <string name="meeting_detail_thirty_minutes">Thirty Minutes Before</string>
+    <string name="meeting_detail_one_hour">One Hour Before</string>
+    <string name="meeting_detail_one_day">One Day Before</string>
     <string name="meeting_detail_attendee_num">%1$s et al. %2$d</string>
     <string name="meeting_detail_location">Place:</string>
 
@@ -931,20 +937,20 @@
     <string name="monthly">Every Month</string>
     <string name="weekly">Every Week</string>
     <string name="every_day">Every Day</string>
-    <string name="calendar_when_event_occurs">The event occurs</string>
-    <string name="calendar_five_minite_ago">5 minutes ago</string>
-    <string name="calendar_ten_minite_ago">10 minutes ago</string>
-    <string name="calendar_fifteen_minite_ago">15 minutes ago</string>
-    <string name="calendar_twenty_minite_ago">20 minutes ago</string>
-    <string name="calendar_thirty_minite_ago">30 minutes ago</string>
-    <string name="calendar_one_hour_ago">1 hour ago</string>
-    <string name="calendar_two_hours_ago">2 hour ago</string>
-    <string name="calendar_one_day_ago">One day before</string>
-    <string name="calendar_two_days_ago">Two day before</string>
-    <string name="calendar_a_week_ago">1 week ago</string>
+    <string name="calendar_when_event_occurs">The Event Occurs</string>
+    <string name="calendar_five_minite_ago">5 Minutes Ago</string>
+    <string name="calendar_ten_minite_ago">10 Minutes Ago</string>
+    <string name="calendar_fifteen_minite_ago">15 Minutes Ago</string>
+    <string name="calendar_twenty_minite_ago">20 Minutes Ago</string>
+    <string name="calendar_thirty_minite_ago">30 Minutes Ago</string>
+    <string name="calendar_one_hour_ago">1 Hour Ago</string>
+    <string name="calendar_two_hours_ago">2 Hour Ago</string>
+    <string name="calendar_one_day_ago">One Day Before</string>
+    <string name="calendar_two_days_ago">Two Day Before</string>
+    <string name="calendar_a_week_ago">1 Week Ago</string>
     <string name="calendar_add_calendar">Add Calendars</string>
     <string name="calendar_divide_into_groups">Grouping</string>
-    <string name="calendar_no_alert">No reminder</string>
+    <string name="calendar_no_alert">No Reminder</string>
     <string name="calendar_when_event_finished">Finished</string>
 
     <!-- 通用 -->

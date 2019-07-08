@@ -2,13 +2,14 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.bean.mine.CardPackageBean;
 import com.inspur.emmcloud.interf.OnCardPackageClickListener;
 
@@ -36,26 +37,18 @@ public class CardPackageAdapter extends RecyclerView.Adapter<CardPackageAdapter.
         View view = inflater.inflate(R.layout.card_package_set_item, null);
         CardPackageHold holder = new CardPackageHold(view);
         holder.companyNameText = (TextView) view.findViewById(R.id.tv_card_package_set_item);
-        holder.switchView = (SwitchView) view.findViewById(R.id.switch_card_package_set_item);
+        holder.switchView = view.findViewById(R.id.switch_card_package_set_item);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(final CardPackageHold holder, final int position) {
         holder.companyNameText.setText(cardPackageBeanList.get(position).getCompany());
-        holder.switchView.init();
-        holder.switchView.setOpened(cardPackageBeanList.get(position).getState() == 1);
-        holder.switchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        holder.switchView.setChecked(cardPackageBeanList.get(position).getState() == 1);
+        holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void toggleToOn(View view) {
-                holder.switchView.setOpened(true);
-                changeCardPackageState(CARD_PACKAGE_OPEN, cardPackageBeanList.get(position));
-            }
-
-            @Override
-            public void toggleToOff(View view) {
-                holder.switchView.setOpened(false);
-                changeCardPackageState(CARD_PACKAGE_CLOUSE, cardPackageBeanList.get(position));
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                changeCardPackageState(b ? CARD_PACKAGE_OPEN : CARD_PACKAGE_CLOUSE, cardPackageBeanList.get(position));
             }
         });
     }
@@ -96,7 +89,7 @@ public class CardPackageAdapter extends RecyclerView.Adapter<CardPackageAdapter.
 
     class CardPackageHold extends RecyclerView.ViewHolder {
         TextView companyNameText;
-        SwitchView switchView;
+        SwitchCompat switchView;
 
         public CardPackageHold(View itemView) {
             super(itemView);

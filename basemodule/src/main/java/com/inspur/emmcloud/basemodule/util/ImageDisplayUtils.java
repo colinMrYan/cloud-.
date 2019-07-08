@@ -51,7 +51,7 @@ public class ImageDisplayUtils {
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context)
-                .memoryCacheExtraOptions(2600, 2600)
+                .memoryCacheExtraOptions(1280, 1280)
                 .defaultDisplayImageOptions(options)
                 .imageDownloader(imageDownloader)
                 .threadPoolSize(6)
@@ -202,6 +202,7 @@ public class ImageDisplayUtils {
 
     /**
      * 展示固定大小的图片
+     *
      * @param uri
      * @param imageView
      * @param width
@@ -267,5 +268,18 @@ public class ImageDisplayUtils {
     public void clearCache(String url) {
         DiskCacheUtils.removeFromCache(url, ImageLoader.getInstance().getDiskCache());
         MemoryCacheUtils.removeFromCache(url, ImageLoader.getInstance().getMemoryCache());
+    }
+
+    public boolean isHaveCacheImage(String url) {
+        File imageFileCatch = DiskCacheUtils.findInCache(url, ImageLoader.getInstance().getDiskCache());
+        if (imageFileCatch == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public File getCacheImageFile(String url) {
+        File imageFileCatch = DiskCacheUtils.findInCache(url, ImageLoader.getInstance().getDiskCache());
+        return imageFileCatch;
     }
 }
