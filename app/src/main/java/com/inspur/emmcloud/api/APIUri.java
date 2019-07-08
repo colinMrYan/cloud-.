@@ -1168,7 +1168,7 @@ public class APIUri {
      * @return
      */
     public static String getOfficeUrl() {
-        return getMeetingBaseUrl() + "location/office";
+        return getMeetingBaseUrl() + "Location";
     }
 
     /**
@@ -1177,7 +1177,7 @@ public class APIUri {
      * @return
      */
     public static String addOfficeUrl() {
-        return getMeetingBaseUrl() + "location/office";
+        return getMeetingBaseUrl() + "CommonLocation";
     }
 
     /**

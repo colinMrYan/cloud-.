@@ -293,13 +293,7 @@ public class ScheduleApiService {
         } else {
             baseUrl = baseUrl + "start=" + "&end=";
         }
-//        baseUrl = baseUrl + "&isIdle=" + isFilter;
-//        for (int j = 0; j < officeIdList.size(); j++) {
-//            baseUrl = baseUrl + "&oids=" + officeIdList.get(j);
-//        }
-//        if (officeIdList.size() == 0) {
-//            baseUrl = baseUrl + "&oids=";
-//        }
+
         final String completeUrl = baseUrl;
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -870,7 +864,7 @@ public class ScheduleApiService {
      * @param office
      */
     public void deleteMeetingOffice(final Building office) {
-        final String completeUrl = APIUri.addOfficeUrl() + "?id=" + office.getId();
+        final String completeUrl = APIUri.addOfficeUrl() + "/" + office.getId();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
