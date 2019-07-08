@@ -1780,7 +1780,6 @@ public class ConversationActivity extends ConversationBaseActivity {
 
         @Override
         public void returnTransmitPictureError(String error, int errorCode) {
-            super.returnTransmitPictureError(error, errorCode);
             ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }

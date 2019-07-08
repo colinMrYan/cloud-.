@@ -141,13 +141,13 @@
 
         <activity
             android:name=".ui.mine.setting.GestureLoginActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.setting.FaceVerifyActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -651,6 +651,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.schedule.meeting.MeetingDetailActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingDetailReplyActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity

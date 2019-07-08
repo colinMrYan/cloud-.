@@ -448,6 +448,7 @@
     <string name="schedule_meeting_cancel">Delete Meeting</string>
     <string name="schedule_meeting_my_create">I created：</string>
     <string name="schedule_meeting_my_take_part_in"> I involved：</string>
+    <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

@@ -1,3 +1,4 @@
+
 buildscript {
     repositories {
         maven {
@@ -46,6 +47,10 @@ android {
     buildToolsVersion versions.androidTools
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
+    if (project.hasProperty('devBuild')){
+        splits.abi.enable = false
+        splits.density.enable =false
+    }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
         minSdkVersion versions.minSdk
