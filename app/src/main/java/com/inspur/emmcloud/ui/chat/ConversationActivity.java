@@ -1768,11 +1768,11 @@ public class ConversationActivity extends ConversationBaseActivity {
         @Override
         public void returnTransmitPictureSuccess(String cid, String description, Message message) {
             if (WebSocketPush.getInstance().isSocketConnect()) {
-                    String path = JSONUtils.getString(description, "path", "");
-                        Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
-                        WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
-                        ToastUtils.show(R.string.chat_transmit_message_success);
-                    
+                String path = JSONUtils.getString(description, "path", "");
+                Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
+                WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
+                ToastUtils.show(R.string.chat_transmit_message_success);
+
             } else {
                 ToastUtils.show(R.string.chat_transmit_message_fail);
             }

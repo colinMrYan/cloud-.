@@ -136,13 +136,12 @@ public class PopupWindowList {
         }
         mPopView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        String languageName = LanguageManager.getInstance().getCurrentLanguageName();
-        if (languageName.equals("en-US")) {
-            mPopupWindowWidth = (int) (mDeviceWidth * 0.45);
-        } else {
+        String language = LanguageManager.getInstance().getCurrentAppLanguage();
+        if (language.equals("zh-Hans") || language.equals("zh-hant")) {
             mPopupWindowWidth = mDeviceWidth / 3;
+        } else {
+            mPopupWindowWidth = (int) (mDeviceWidth * 0.45);
         }
-
         mPopupWindowHeight = mItemData.size() * mPopView.getMeasuredHeight();
         if (mPopupWindowHeight > mDeviceHeight / 2) {
             mPopupWindowHeight = mDeviceHeight / 2;
