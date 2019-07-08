@@ -98,6 +98,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/view_space"
+                    android:drawablePadding="6dp"
+                    android:drawableRight="@drawable/basemodule_drop_down_black"
                     android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="10dp"
