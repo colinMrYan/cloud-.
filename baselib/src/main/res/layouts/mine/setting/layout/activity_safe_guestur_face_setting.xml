@@ -122,6 +122,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/switch_gesture_reset_unlock"
+                android:textColor="#333333"
                 android:textSize="16sp" />
 
             <ImageView
@@ -156,6 +157,7 @@
                 android:paddingBottom="11dp"
                 android:paddingTop="11dp"
                 android:text="@string/experience_face_verify"
+                android:textColor="#333333"
                 android:textSize="16sp" />
 
             <ImageView
