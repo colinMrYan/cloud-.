@@ -18,6 +18,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.EditTextUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
@@ -195,7 +196,7 @@ public class MeetingAddActivity extends BaseActivity {
     private void initView() {
         loadingDlg = new LoadingDialog(this);
         if (isMeetingEditModel) {
-            titleEdit.setText(title);
+            EditTextUtils.setText(titleEdit, title);
             meetingPositionText.setText(location.getBuilding() + " " + location.getDisplayName());
             notesEdit.setText(note);
             showSelectUser(liaisonLayout, liaisonSearchModelList);

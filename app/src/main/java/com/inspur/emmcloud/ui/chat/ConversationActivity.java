@@ -67,6 +67,7 @@ import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.ResultCallback;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.chat.pop.PopupWindowList;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
@@ -184,22 +185,24 @@ public class ConversationActivity extends ConversationBaseActivity {
                         WSAPIService.getInstance().setChannelMessgeStateRead(cid);
                         break;
                     case REFRESH_OFFLINE_MESSAGE:
+                        if (adapter == null) {
+                            return;
+                        }
                         List<Message> offlineMessageList = (List<Message>) msg.obj;
                         Iterator<Message> it = offlineMessageList.iterator();
-
                         if (uiMessageList.size() > 0) {
                             while (it.hasNext()) {
                                 //发送成功的消息去重去重
                                 Message offlineMessage = it.next();
                                 if (uiMessageList.contains(new UIMessage(offlineMessage.getId()))) {
                                     it.remove();
-                                    break;
-                                }
-                                //离线消息获取后，更改对应的未发送成功状态的消息
-                                int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
-                                if (index != -1) {
-                                    uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
-                                    it.remove();
+                                } else {
+                                    //离线消息获取后，更改对应的未发送成功状态的消息
+                                    int index = uiMessageList.indexOf((new UIMessage(offlineMessage.getTmpId())));
+                                    if (index != -1) {
+                                        uiMessageList.get(index).setSendStatus(Message.MESSAGE_SEND_SUCCESS);
+                                        it.remove();
+                                    }
                                 }
                             }
                         }
@@ -898,11 +901,9 @@ public class ConversationActivity extends ConversationBaseActivity {
         int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
         if (index - firstItemPosition >= 0) {
             View view = msgListView.getChildAt(index - firstItemPosition);
-            if (null != msgListView.getChildViewHolder(view)) {
-                ChannelMessageAdapter.ViewHolder holder = (ChannelMessageAdapter.ViewHolder) msgListView.getChildViewHolder(view);
-                holder.sendStatusLayout.setVisibility(View.INVISIBLE);
+            if (view != null) {
+                view.findViewById(R.id.rl_send_status).setVisibility(View.INVISIBLE);
             }
-
         }
     }
 
@@ -1343,7 +1344,7 @@ public class ConversationActivity extends ConversationBaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSOfflineMessage(SimpleEventMessage eventMessage) {
         if (eventMessage.getAction().equals(Constant.EVENTBUS_TAG_CURRENT_CHANNEL_OFFLINE_MESSAGE)) {
-            List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
+            final List<Message> offlineMessageList = (List<Message>) eventMessage.getMessageObj();
             WSAPIService.getInstance().setChannelMessgeStateRead(cid);
             new CacheMessageListThread(offlineMessageList, null, REFRESH_OFFLINE_MESSAGE).start();
         }
@@ -1422,12 +1423,12 @@ public class ConversationActivity extends ConversationBaseActivity {
      */
     private void transmitTextMsg(String cid, UIMessage uiMessage) {
         String text = uiMessage2Content(uiMessage);
-        if (!StringUtils.isBlank(text) && NetUtils.isNetworkConnected(getApplicationContext())) {
-            if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            } else {
-                Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
-                WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
-            }
+        if (WebSocketPush.getInstance().isSocketConnect()) {
+            Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(text, cid, null);
+            WSAPIService.getInstance().sendChatTextPlainMsg(localMessage);
+            ToastUtils.show(R.string.chat_transmit_message_success);
+        } else {
+            ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }
 
@@ -1766,23 +1767,22 @@ public class ConversationActivity extends ConversationBaseActivity {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnTransmitPictureSuccess(String cid, String description, Message message) {
-            if (NetUtils.isNetworkConnected(getApplicationContext())) {
-                if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-                } else {
-                    String path = JSONUtils.getString(description, "path", "");
-                    if (!StringUtils.isBlank(path)) {
-                        Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
-                        WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
-                        ToastUtils.show(R.string.chat_transmit_message_success);
-                    }
+            if (WebSocketPush.getInstance().isSocketConnect()) {
+                String path = JSONUtils.getString(description, "path", "");
+                if (!StringUtils.isBlank(path)) {
+                    Message combineMessage = CommunicationUtils.combineTransmitMediaImageMessage(cid, path, message.getMsgContentMediaImage());
+                    WSAPIService.getInstance().sendChatMediaImageMsg(combineMessage);
+                    ToastUtils.show(R.string.chat_transmit_message_success);
                 }
+            } else {
+                ToastUtils.show(R.string.chat_transmit_message_fail);
             }
-            super.returnTransmitPictureSuccess(cid, description, message);
         }
 
         @Override
         public void returnTransmitPictureError(String error, int errorCode) {
             super.returnTransmitPictureError(error, errorCode);
+            ToastUtils.show(R.string.chat_transmit_message_fail);
         }
     }
 }

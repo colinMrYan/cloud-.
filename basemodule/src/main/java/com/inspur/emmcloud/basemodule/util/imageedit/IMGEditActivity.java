@@ -30,10 +30,6 @@ public class IMGEditActivity extends IMGEditBaseActivity {
     public static final String OUT_FILE_PATH = "OUT_FILE_PATH";
     private int encodingType = 0;
 
-    @Override
-    public void onCreate() {
-        setNavigationBarColor(android.R.color.black);
-    }
 
     @Override
     public Bitmap getBitmap() {
