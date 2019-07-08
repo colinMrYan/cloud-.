@@ -368,9 +368,17 @@ public interface APIInterface {
 
     void returnAddTaskTagFail(String error, int errorCode);
 
-    void returnDeleteOfficeSuccess(Building building);
+    void returnDeleteOfficeSuccess(Office office);
 
     void returnDeleteOfficeFail(String error, int errorCode);
+
+    void returnSetMeetingCommonBuildingSuccess(Building building);
+
+    void returnSetMeetingCommonBuildingFail(String error, int errorCode);
+
+    void returnCancelMeetingCommonBuildingSuccess(Building building);
+
+    void returnCancelMeetingCommonBuildingFail(String error, int errorCode);
 
     void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo);
 

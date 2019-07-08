@@ -15,7 +15,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingLocation;
-import com.inspur.emmcloud.bean.schedule.meeting.Office;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +26,10 @@ import java.util.List;
 public class MeetingOfficeAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<MeetingLocation> locationList = new ArrayList<>();
-    private List<Office> officeList = new ArrayList<>();
 
-    public MeetingOfficeAdapter(Context context, List<Office> officeList) {
+
+    public MeetingOfficeAdapter(Context context) {
         this.context = context;
-        this.officeList = officeList;
     }
 
     public void setData(List<MeetingLocation> locationList) {
@@ -100,14 +98,7 @@ public class MeetingOfficeAdapter extends BaseExpandableListAdapter {
         TextView nameText = convertView.findViewById(R.id.tv_name);
         ImageView selectImg = convertView.findViewById(R.id.iv_select);
         nameText.setText(building.getName());
-        boolean isSelect = false;
-        for (Office office : officeList) {
-            if (office.getOfficeBuilding().getId().equals(building.getId())) {
-                isSelect = true;
-                break;
-            }
-        }
-        selectImg.setImageResource(isSelect ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
+        selectImg.setImageResource(building.isFavorite() ? R.drawable.ic_select_yes : R.drawable.ic_select_no);
         return convertView;
     }
 
