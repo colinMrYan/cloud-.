@@ -218,6 +218,8 @@ public class Constant {
 
     public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
 
+    public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
+
 
 
 }

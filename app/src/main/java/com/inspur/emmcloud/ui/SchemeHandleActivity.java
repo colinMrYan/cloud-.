@@ -215,7 +215,7 @@ public class SchemeHandleActivity extends BaseActivity {
                                 break;
                             case "emm":
                                 if (host.equals("news")) {
-                                    ARouter.getInstance().build("/group/news").navigation();
+                                    ARouter.getInstance().build(Constant.AROUTER_CLASS_GROUP_NEWS).navigation();
                                     finish();
 //                                    IntentUtils.startActivity(SchemeHandleActivity.this, GroupNewsActivity.class, true);
                                 } else if (host.equals("volume")) {
@@ -479,7 +479,7 @@ public class SchemeHandleActivity extends BaseActivity {
                 IntentUtils.startActivity(this, TripInfoActivity.class, bundle, true);
                 break;
             case "news.ecc":
-                ARouter.getInstance().build("/group/news").navigation();
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_GROUP_NEWS).navigation();
                 finish();
 //                IntentUtils.startActivity(this, GroupNewsActivity.class, true);
                 break;

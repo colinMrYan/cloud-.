@@ -40,7 +40,6 @@ import com.inspur.emmcloud.baselib.util.ResourceUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
-import com.inspur.emmcloud.baselib.widget.SwitchView;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.EventMessage;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -78,7 +77,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private static final int SHARE_SEARCH_RUEST_CODE = 1;
     private static final String APP_NEWS_WEBVIEW_MODEL = "app_news_webview_model";
     private static final String APP_NEWS_TEXT_SIZE = "app_news_text_size";
-    private static final String GROUP_NEWS = "groupNews";
+    public static final String GROUP_NEWS = "groupNews";
     private static final String darkMode = "#dark_120";
     private static final String lightMode = "#light_120";
     private WebView webView;

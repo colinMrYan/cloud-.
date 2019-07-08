@@ -186,7 +186,7 @@ public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLay
                                 long id) {
             Intent intent = new Intent();
             intent.setClass(getActivity(), NewsWebDetailActivity.class);
-            intent.putExtra(HAS_EXTRA_PERMISSION, groupnNewsList.get(position));
+            intent.putExtra(NewsWebDetailActivity.GROUP_NEWS, groupnNewsList.get(position));
             startActivity(intent);
         }
     }
