@@ -193,7 +193,27 @@ public class CustomMonthView extends MonthView {
                                 calendar.isCurrentMonth() ? (!TextUtils.isEmpty(calendar.getTraditionFestival()) || !TextUtils.isEmpty(calendar.getGregorianFestival())) ? mSolarTermTextPaint :
                                         mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
             }
-
         }
+        if (calendar.getDay() == 9 && calendar.isCurrentMonth()) {
+            canvas.drawText(calendar.getMonth() + "", 550, 580, mMonthViewBackGroundTextPaint);
+        }
+    }
+
+    /**
+     * 背景月份数字的横坐标
+     *
+     * @return
+     */
+    private float getBackgroundX() {
+        return (float) (getWidth() * 0.3);
+    }
+
+    /**
+     * 背景月份数字的纵坐标
+     *
+     * @return
+     */
+    private float getBackgroundY() {
+        return (float) (getHeight() * 0.5);
     }
 }

@@ -97,6 +97,12 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      * 当前日期文本颜色画笔
      */
     protected Paint mCurDayLunarTextPaint = new Paint();
+
+    /**
+     * 当前日期文本颜色画笔
+     */
+    protected Paint mMonthViewBackGroundTextPaint = new Paint();
+
     /**
      * 每一项的高度
      */
@@ -176,6 +182,13 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
 
         mOtherMonthLunarTextPaint.setAntiAlias(true);
         mOtherMonthLunarTextPaint.setTextAlign(Paint.Align.CENTER);
+
+        mMonthViewBackGroundTextPaint.setAntiAlias(true);
+        mMonthViewBackGroundTextPaint.setTextAlign(Paint.Align.CENTER);
+        mMonthViewBackGroundTextPaint.setFakeBoldText(false);
+        mMonthViewBackGroundTextPaint.setColor(Color.parseColor("#36A5F6"));
+        mMonthViewBackGroundTextPaint.setAlpha(50);
+        mMonthViewBackGroundTextPaint.setTextSize(CalendarUtil.dipToPx(context, 220));
 
 
         mSchemeLunarTextPaint.setAntiAlias(true);
