@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 
 /**
  * Created by yufuchang on 2017/7/21.
@@ -49,7 +50,7 @@ public class ScanQrCodeUtils {
             Bundle bundle = new Bundle();
             bundle.putString("uri", result);
             bundle.putString("appName", "    ");
-            ARouter.getInstance().build("/web/main").with(bundle).navigation();
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
         } else {
             showUnKnownMsg(result);
         }
@@ -75,6 +76,6 @@ public class ScanQrCodeUtils {
     private void showUnKnownMsg(String result) {
         Bundle bundle = new Bundle();
         bundle.putString("result", result);
-        ARouter.getInstance().build("/web/scanResult").with(bundle).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_SCANRESULT).with(bundle).navigation();
     }
 }

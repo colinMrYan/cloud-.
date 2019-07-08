@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.Res;
 import com.inspur.emmcloud.login.api.LoginAPIUri;
@@ -34,7 +35,7 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
             bundle.putString("appName", getString(Res.getStringID("device_registe")));
             bundle.putString("function", "mdm");
             bundle.putString("uri", LoginAPIUri.getDeviceRegisterUrl(this));
-            ARouter.getInstance().build("/web/main").with(bundle).navigation();
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
             finish();
         }
     }

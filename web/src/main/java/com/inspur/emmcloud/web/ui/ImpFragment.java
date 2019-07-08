@@ -767,7 +767,7 @@ public class ImpFragment extends ImpBaseFragment {
                 finishActivity();
 
             } else if (i == R.id.refresh_text) {
-                ARouter.getInstance().build("/app/networkDetail").navigation();
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_NETWORK_DETAIL).navigation();
 
             } else if (i == R.id.load_error_layout) {
                 showLoadingDlg(getString(Res.getStringID("@string/loading_text")));

@@ -46,7 +46,7 @@ public class SelectStaffService extends ImpPlugin {
         String id = JSONUtils.getString(paramsObject, "uid", "");
         Bundle bundle = new Bundle();
         bundle.putString("uid", id);
-        ARouter.getInstance().build("/contact/userInfo").with(bundle).navigation();
+        ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_USERINFO).with(bundle).navigation();
 
     }
 
@@ -80,7 +80,7 @@ public class SelectStaffService extends ImpPlugin {
         bundle.putBoolean("isMulti_select", multiSelection != 0);
         bundle.putString("title", getActivity().getString(R.string.adress_list));
         if (getImpCallBackInterface() != null) {
-            getImpCallBackInterface().onStartActivityForResult("/contact/contactSearch", bundle, ImpFragment.SELECT_STAFF_SERVICE_REQUEST);
+            getImpCallBackInterface().onStartActivityForResult(Constant.AROUTER_CLASS_CONTACT_SEARCH, bundle, ImpFragment.SELECT_STAFF_SERVICE_REQUEST);
         }
     }
 

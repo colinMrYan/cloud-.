@@ -436,7 +436,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 if (isFaceLogin) {
                     Bundle bundle = new Bundle();
                     bundle.putString("token", token);
-                    ARouter.getInstance().build("/login/qr_code_login_GS").with(bundle).navigation();
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_GS).with(bundle).navigation();
                 } else if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 } else if (!isFaceVerityTest) {

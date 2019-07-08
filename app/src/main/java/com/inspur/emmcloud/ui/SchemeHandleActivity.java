@@ -380,7 +380,7 @@ public class SchemeHandleActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("uri", webAppUrl);
                 bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, isUriHasTitle);
-                ARouter.getInstance().build("/web/main").with(bundle).navigation();
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
                 SchemeHandleActivity.this.finish();
             }
 
