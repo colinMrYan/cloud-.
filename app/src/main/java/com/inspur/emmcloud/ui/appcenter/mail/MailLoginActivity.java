@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -32,6 +33,8 @@ import butterknife.ButterKnife;
 /**
  * Created by chenmch on 2018/12/28.
  */
+
+@Route(path = Constant.AROUTER_CLASS_MAIL_LOGIN)
 public class MailLoginActivity extends BaseActivity {
 
     @BindView(R.id.et_mail)
@@ -52,7 +55,7 @@ public class MailLoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         loadingDlg = new LoadingDialog(this);
         apiService = new MailApiService(this);
-        apiService.setAPIInterface(new WebServie());
+        apiService.setAPIInterface(new WebService());
         TextWatcher watcher = new TextWatcher();
         mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         if (StringUtils.isBlank(mail)) {
@@ -126,13 +129,19 @@ public class MailLoginActivity extends BaseActivity {
         }
     }
 
-    private class WebServie extends APIInterfaceInstance {
+    private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMailLoginSuccess() {
             LoadingDialog.dimissDlg(loadingDlg);
             PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
             PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
-            IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
+            if (getIntent().getStringExtra("from").equals("schedule_exchange_login")) {
+                setResult(RESULT_OK);
+                finish();
+            } else {
+                IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
+            }
+
         }
 
         @Override
