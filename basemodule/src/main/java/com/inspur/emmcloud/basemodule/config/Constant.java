@@ -155,6 +155,7 @@ public class Constant {
     public static final String WEB_FRAGMENT_APP_NAME = "appName";
     public static final String WEB_FRAGMENT_MENU = "menuList";
     public static final String WEB_FRAGMENT_SHOW_HEADER = "show_webview_header";
+    public static final String Web_STATIC_TITLE = "web_from_index";
 
     public static final String INSPUR_HOST_URL = ".inspur.com";
     public static final String INSPURONLINE_HOST_URL = ".inspuronline.com";

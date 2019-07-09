@@ -101,7 +101,7 @@ public class ImpFragment extends ImpBaseFragment {
     private Adapter dropTitleAdapter;
     private ImpCallBackInterface impCallBackInterface;
     private OnKeyDownListener onKeyDownListener;
-    private boolean isFromIndex = false;
+    private boolean isStaticWebTitle = false;
 
 
     @Override
@@ -146,17 +146,17 @@ public class ImpFragment extends ImpBaseFragment {
             setArguments(new Bundle());
         }
         appName = getArguments().getString(Constant.WEB_FRAGMENT_APP_NAME);
-        isFromIndex = getArguments().getBoolean("web_from_index", false);
-        headerLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("rl_header"));
-        loadingLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("rl_loading"));
-        loadingText = (TextView) rootView.findViewById(Res.getWidgetID("tv_loading"));
-        frameLayout = (FrameLayout) rootView.findViewById(Res.getWidgetID("videoContainer"));
-        loadFailLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("load_error_layout"));
-        webView = (ImpWebView) rootView.findViewById(Res.getWidgetID("webview"));
-        headerText = (TextView) rootView.findViewById(Res.getWidgetID("header_text"));
-        functionLayout = (RelativeLayout) rootView.findViewById(Res.getWidgetID("function_layout"));
-        webFunctionLayout = (LinearLayout) rootView.findViewById(Res.getWidgetID("ll_web_function"));
-        if (isFromIndex) {
+        isStaticWebTitle = getArguments().getBoolean(Constant.Web_STATIC_TITLE, false);
+        headerLayout = rootView.findViewById(Res.getWidgetID("rl_header"));
+        loadingLayout = rootView.findViewById(Res.getWidgetID("rl_loading"));
+        loadingText = rootView.findViewById(Res.getWidgetID("tv_loading"));
+        frameLayout = rootView.findViewById(Res.getWidgetID("videoContainer"));
+        loadFailLayout = rootView.findViewById(Res.getWidgetID("load_error_layout"));
+        webView = rootView.findViewById(Res.getWidgetID("webview"));
+        headerText = rootView.findViewById(Res.getWidgetID("header_text"));
+        functionLayout = rootView.findViewById(Res.getWidgetID("function_layout"));
+        webFunctionLayout = rootView.findViewById(Res.getWidgetID("ll_web_function"));
+        if (isStaticWebTitle) {
             rootView.findViewById(R.id.ibt_back).setVisibility(View.GONE);
             rootView.findViewById(R.id.imp_close_btn).setVisibility(View.GONE);
         }
@@ -173,10 +173,10 @@ public class ImpFragment extends ImpBaseFragment {
         initFragmentViews();
         RelativeLayout.LayoutParams layoutParams =
                 new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(isFromIndex ?
+        layoutParams.addRule(isStaticWebTitle ?
                 (RelativeLayout.ALIGN_PARENT_LEFT | RelativeLayout.CENTER_VERTICAL) : RelativeLayout.CENTER_IN_PARENT);
         headerText.setLayoutParams(layoutParams);
-        if (isFromIndex) {
+        if (isStaticWebTitle) {
             headerText.setPadding(DensityUtil.dip2px(getActivity(), 15), 0, 0, 0);
         } else {
             headerText.setTextSize(17);
@@ -365,7 +365,7 @@ public class ImpFragment extends ImpBaseFragment {
 
             @Override
             public void onSetTitle(String title) {
-                if (StringUtils.isBlank(appName)) {
+                if (!isStaticWebTitle && StringUtils.isBlank(appName)) {
                     setTitle(title);
                 }
             }
@@ -421,7 +421,7 @@ public class ImpFragment extends ImpBaseFragment {
 
             @Override
             public boolean isWebFromIndex() {
-                return isFromIndex;
+                return isStaticWebTitle;
             }
         };
     }
