@@ -35,7 +35,7 @@
                 android:layout_below="@id/tv_name"
                 android:layout_marginTop="4dp"
                 android:drawablePadding="3dp"
-                android:drawableRight="@drawable/ic_mine_my_info_switch_enterprise_white"
+                android:drawableRight="@drawable/basemodule_drop_down_black"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:paddingBottom="10dp"

@@ -48,6 +48,7 @@ public class MyApplication extends BaseApplication implements ReactApplication {
         Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
         Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
         Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
+        Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         Router router = Router.getInstance();
         if (router.getService(CommunicationService.class) != null) {
             CommunicationService service = router.getService(CommunicationService.class);
