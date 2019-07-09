@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ListView
+            android:id="@+id/news_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#dddddd"
+            android:dividerHeight="0.5px" />
+
+
+    </com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_no_news"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="113dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_no_news"
+            android:layout_width="132dp"
+            android:layout_height="97dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_no_news" />
+
+        <TextView
+            android:id="@+id/tv_no_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_no_news"
+            android:layout_centerHorizontal="true"
+            android:text="@string/news_fail_load_check_net"
+            android:textColor="#666666"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_no_news"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/tv_no_news"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/shape_no_news_btn_color"
+            android:paddingLeft="33dp"
+            android:layout_centerHorizontal="true"
+            android:paddingRight="33dp"
+            android:text="@string/news_reload"
+            android:textColor="#41AAF6"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

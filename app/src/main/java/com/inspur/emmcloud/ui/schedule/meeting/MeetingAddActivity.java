@@ -423,7 +423,6 @@ public class MeetingAddActivity extends BaseActivity {
                     meetingPositionText.setText(meetingRoom.getBuilding().getName() + " " + meetingRoom.getName());
                     location = new Location();
                     location.setId(meetingRoom.getId());
-                    LogUtils.LbcDebug("meeting Id"+meetingRoom.getId());
                     location.setBuilding(meetingRoom.getBuilding().getName());
                     location.setDisplayName(meetingRoom.getName());
                     break;
