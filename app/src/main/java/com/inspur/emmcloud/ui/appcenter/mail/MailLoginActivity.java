@@ -123,9 +123,9 @@ public class MailLoginActivity extends BaseActivity {
             } else {
                 usernameTextInputLayout.setError("");
             }
-            boolean isInputValaid = password.length() >= 6 && !StringUtils.isBlank(mail) && FomatUtils.isValiadEmail(mail);
-            loginBtn.setEnabled(isInputValaid);
-            loginBtn.setBackgroundResource(isInputValaid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
+            boolean isInputValid = password.length() >= 6 && !StringUtils.isBlank(mail) && FomatUtils.isValiadEmail(mail);
+            loginBtn.setEnabled(isInputValid);
+            loginBtn.setBackgroundResource(isInputValid ? R.drawable.selector_login_btn : R.drawable.bg_login_btn_unable);
         }
     }
 
@@ -135,7 +135,7 @@ public class MailLoginActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDlg);
             PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
             PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
-            if (getIntent().getStringExtra("from").equals("schedule_exchange_login")) {
+            if (getIntent().getExtras().getString("from", "").equals("schedule_exchange_login")) {
                 setResult(RESULT_OK);
                 finish();
             } else {
