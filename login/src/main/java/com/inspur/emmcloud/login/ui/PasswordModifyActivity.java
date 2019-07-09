@@ -14,6 +14,7 @@ import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.login.R;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * 修改密码
  */
-@Route(path = "/login/password_modify")
+@Route(path = Constant.AROUTER_CLASS_LOGIN_PASSWORD_MODIFY)
 public class PasswordModifyActivity extends BaseActivity implements View.OnTouchListener {
 
     @BindView(R2.id.bt_save)

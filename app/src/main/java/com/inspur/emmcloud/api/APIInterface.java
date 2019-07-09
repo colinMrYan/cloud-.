@@ -19,8 +19,6 @@ import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
@@ -178,13 +176,6 @@ public interface APIInterface {
 
     void returnUploadResImgFail(String error, int errorCode, String fakeMessageId);
 
-    void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
-
-    void returnGroupNewsTitleFail(String error, int errorCode);
-
-    void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult, int page);
-
-    void returnGroupNewsDetailFail(String error, int errorCode, int page);
 
     void returnMeetingRoomListSuccess(GetMeetingRoomListResult getMeetingRoomsResult);
 

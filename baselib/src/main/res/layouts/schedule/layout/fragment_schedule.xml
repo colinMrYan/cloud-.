@@ -98,6 +98,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/view_space"
+                    android:drawablePadding="6dp"
+                    android:drawableRight="@drawable/basemodule_drop_down_black"
                     android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
                     android:paddingTop="10dp"
@@ -182,10 +184,24 @@
                 android:layout_weight="1"
                 android:background="@color/white">
 
-                <com.inspur.emmcloud.widget.calendardayview.CalendarDayView
-                    android:id="@+id/calendar_day_view"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"></com.inspur.emmcloud.widget.calendardayview.CalendarDayView>
+                    android:layout_height="968dp">
+
+                    <com.inspur.emmcloud.widget.calendardayview.CalendarDayView
+                        android:id="@+id/calendar_day_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="968dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"></com.inspur.emmcloud.widget.calendardayview.CalendarDayView>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="968dp"></RelativeLayout>
+                </RelativeLayout>
+
+
             </ScrollView>
 
             <android.support.v7.widget.RecyclerView

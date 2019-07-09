@@ -4,10 +4,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.web.R;
 
-@Route(path = "/web/scanResult")
+@Route(path = Constant.AROUTER_CLASS_WEB_SCANRESULT)
 public class ScanResultActivity extends BaseActivity {
 
     @Override

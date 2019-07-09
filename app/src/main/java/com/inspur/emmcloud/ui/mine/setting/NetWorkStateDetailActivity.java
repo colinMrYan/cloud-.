@@ -33,7 +33,7 @@ import java.net.URL;
  * Created by libaochao on 2018/11/8.
  * try to show the netWork state and details such as net delay/connect State  and so on by PING
  */
-@Route(path = "/app/networkDetail")
+@Route(path = Constant.AROUTER_CLASS_APP_NETWORK_DETAIL)
 public class NetWorkStateDetailActivity extends BaseActivity {
     public static String[] subUrls = {"www.baidu.com", "www.aliyun.com"};
     CheckingNetStateUtils checkingNetStateUtils;
@@ -86,7 +86,6 @@ public class NetWorkStateDetailActivity extends BaseActivity {
         setShowDnsconnctstateUI(true);
         checkingNet();
     }
-
     /**
      * 初始化View
      */
@@ -211,7 +210,7 @@ public class NetWorkStateDetailActivity extends BaseActivity {
      * portal checking
      * 检测小助手不仅要ping状态还有读取返回内容，故以百度为目标网址（有小助手会有网络劫持现象 即反馈302）
      *
-     * @param StrUrl
+     * @param strUrl
      */
     private void sendRequest(String strUrl) {
         final String urlDetail = StringUtils.utf8Encode(strUrl);

@@ -155,7 +155,7 @@ public class DisplayExtendedDecideMsg {
                 Bundle bundle = new Bundle();
                 bundle.putString(DECIDE_URI, optionContent);
                 bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, true);
-                ARouter.getInstance().build("/web/main").with(bundle).navigation();
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_WEB_MAIN).with(bundle).navigation();
 
             } else {
                 Uri uri = Uri.parse(optionContent);
