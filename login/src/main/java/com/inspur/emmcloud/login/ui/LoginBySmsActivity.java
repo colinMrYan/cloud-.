@@ -42,7 +42,7 @@ import butterknife.ButterKnife;
 /**
  * 短信登录
  */
-@Route(path = "/login/sms")
+@Route(path = Constant.AROUTER_CLASS_LOGIN_BY_SMS)
 public class LoginBySmsActivity extends BaseActivity {
 
     public static final int MODE_LOGIN = 1;
@@ -170,7 +170,7 @@ public class LoginBySmsActivity extends BaseActivity {
         if (!isHasSetShortPassword) {
             IntentUtils.startActivity(LoginBySmsActivity.this, PasswordFirstSettingActivity.class, true);
         } else {
-            ARouter.getInstance().build("/app/index").navigation();
+            ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();
             finish();
         }
     }

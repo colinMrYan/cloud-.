@@ -27,7 +27,7 @@ public class CalendarColorUtils {
         return displayColor;
     }
 
-    public static int getColorCircleImage(String color) {
+    public static int getTaskTagResId(String color) {
         int displayColor = -1;
         if (color.equals("ORANGE")) {
             displayColor = R.drawable.icon_orange_circle;
@@ -47,5 +47,23 @@ public class CalendarColorUtils {
             displayColor = R.drawable.icon_blue_circle;
         }
         return displayColor;
+    }
+
+    public static int getCalendarTypeResId(String color) {
+        int resId = -1;
+        if (color.equals("ORANGE")) {
+            resId = R.drawable.schedule_calendar_type_orange;
+        } else if (color.equals("YELLOW")) {
+            resId = R.drawable.schedule_calendar_type_yellow;
+        } else if (color.equals("GREEN")) {
+            resId = R.drawable.schedule_calendar_type_green;
+        } else if (color.equals("PURPLE")) {
+            resId = R.drawable.schedule_calendar_type_purple;
+        } else if (color.equals("BROWN")) {
+            resId = R.drawable.schedule_calendar_type_brown;
+        } else {
+            resId = R.drawable.schedule_calendar_type_red;
+        }
+        return resId;
     }
 }

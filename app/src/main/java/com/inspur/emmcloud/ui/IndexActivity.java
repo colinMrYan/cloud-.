@@ -65,7 +65,7 @@ import java.util.List;
  *
  * @author Administrator
  */
-@Route(path = "/app/index")
+@Route(path = Constant.AROUTER_CLASS_APP_INDEX)
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;

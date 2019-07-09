@@ -23,6 +23,7 @@ import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
 import com.inspur.emmcloud.basemodule.api.BaseModuleApiService;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
@@ -145,13 +146,13 @@ public class MyInfoActivity extends BaseActivity {
                 finishActivity();
                 break;
             case R.id.rl_password_modify:
-                ARouter.getInstance().build("/login/password_modify").navigation();
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_PASSWORD_MODIFY).navigation();
                 break;
             case R.id.rl_password_reset:
                 Bundle bundle = new Bundle();
                 bundle.putInt("extra_mode", 2);
                 bundle.putString("extra_phone", getMyInfoResult.getPhoneNumber());
-                ARouter.getInstance().build("/login/sms").with(bundle).navigation();
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_LOGIN_BY_SMS).with(bundle).navigation();
                 break;
             default:
                 break;

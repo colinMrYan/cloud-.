@@ -48,7 +48,7 @@ import java.util.Map;
 /**
  * Application class
  */
-public class BaseApplication extends MultiDexApplication {
+public abstract class BaseApplication extends MultiDexApplication {
     private static final String TAG = "BaseApplication";
     private static boolean isContactReady = false;
     private static BaseApplication instance;
@@ -66,6 +66,7 @@ public class BaseApplication extends MultiDexApplication {
 
     private String currentChannelCid = "";
     private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
+
 
     /**
      * 单例获取application实例
@@ -529,4 +530,8 @@ public class BaseApplication extends MultiDexApplication {
     public void setCurrentChannelCid(String currentChannelCid) {
         this.currentChannelCid = currentChannelCid;
     }
+
+    /*******************设置登录后跳转的路由*************************************/
+
+    public abstract String getIntentClassRouterAfterLogin();
 }

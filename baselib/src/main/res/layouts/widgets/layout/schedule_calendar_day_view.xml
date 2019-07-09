@@ -3,19 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/ll_time_hour"
+    <RelativeLayout
+        android:id="@+id/rl_time"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ll_time_hour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_drag_view_start_time"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:paddingRight="6dp"
+            android:text="1"
+            android:textColor="#36A5F6"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_drag_view_end_time"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:paddingRight="6dp"
+            android:text="2"
+            android:textColor="#36A5F6"
+            android:textSize="13sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/rl_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ll_time_hour"
-        android:layout_alignTop="@+id/ll_time_hour"
-        android:layout_marginLeft="30dp"></RelativeLayout>
+        android:layout_alignBottom="@+id/rl_time"
+        android:layout_alignTop="@+id/rl_time"
+        android:layout_marginLeft="50dp"></RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/tl_current_time_line"

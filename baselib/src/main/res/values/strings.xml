@@ -319,7 +319,7 @@
     <string name="chat_long_click_reply">回复</string>
     <string name="chat_full_image">查看原图</string>
     <string name="communication_search">搜索</string>
-    <string name="chat_transmit_message_success">已发送</string>
+    <string name="chat_transmit_message_success">已转发</string>
     <string name="chat_transmit_message_fail">转发失败</string>
     <string name="chat_original_picture_download_progress">&#037;%1d</string>
 
@@ -457,6 +457,7 @@
     <string name="schedule_meeting_cancel">取消会议</string>
     <string name="schedule_meeting_my_create">我创建的：</string>
     <string name="schedule_meeting_my_take_part_in">我参与的：</string>
+    <string name="schedule_meeting_attend_reply">参会答复</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
@@ -794,29 +795,12 @@
     <string name="user_new_chat">发起会话</string>
     <string name="user_send_message">发消息</string>
 
-    <!-- 集团新闻 部分 -->
-    <string name="news_group_news">集团新闻</string>
-    <string name="news_group_news_detail">新闻详情</string>
-    <string name="news_share">分享到</string>
-    <string name="news_share_success">分享成功</string>
-    <string name="news_share_fail">分享失败</string>
-    <string name="news_day_mode_text">标准模式</string>
-    <string name="news_night_mode_text">夜间模式</string>
-    <string name="news_share_text">分享</string>
+    <!--Imp插件调整字体大小-->
     <string name="news_font_smaller">小</string>
     <string name="news_font_normal">标准</string>
     <string name="news_font_middle">中</string>
     <string name="news_font_big_text">大</string>
     <string name="news_font_biggest_text">超大</string>
-    <string name="news_font_name_text">字号</string>
-    <string name="news_read_mode">阅读模式</string>
-    <string name="news_instructions_text">批示</string>
-    <string name="news_instructions_success_text">发送成功</string>
-    <string name="news_instructions">批示意见</string>
-    <string name="news_no_news">暂无新闻</string>
-    <string name="news_has_instructions_news">您已批示过此新闻!</string>
-    <string name="news_has_instructions_known">了解了</string>
-    <string name="news_please_instruction">请您输入批示内容</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">审批</string>

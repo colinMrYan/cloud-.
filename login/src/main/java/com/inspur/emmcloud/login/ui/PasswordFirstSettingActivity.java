@@ -80,7 +80,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
             finish();
 
         } else if (i == R.id.bt_skip) {
-            ARouter.getInstance().build("/app/index").navigation();
+            ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();
             finish();
 
         }
@@ -93,7 +93,7 @@ public class PasswordFirstSettingActivity extends BaseActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
                 if (which == -2) {
-                    ARouter.getInstance().build("/app/index").navigation();
+                    ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();
                     finish();
                 }
             }

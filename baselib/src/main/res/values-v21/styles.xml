@@ -11,6 +11,8 @@
         <!--no Action Bar-->
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
 
         <!-- button  init-->
         <item name="CustomButtonStyle">@style/CusButtonBase</item>
