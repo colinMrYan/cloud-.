@@ -188,7 +188,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mMonthViewBackGroundTextPaint.setFakeBoldText(false);
         mMonthViewBackGroundTextPaint.setColor(Color.parseColor("#36A5F6"));
         mMonthViewBackGroundTextPaint.setAlpha(50);
-        mMonthViewBackGroundTextPaint.setTextSize(CalendarUtil.dipToPx(context, 220));
+        mMonthViewBackGroundTextPaint.setTextSize(CalendarUtil.dipToPx(context, 230));
 
 
         mSchemeLunarTextPaint.setAntiAlias(true);

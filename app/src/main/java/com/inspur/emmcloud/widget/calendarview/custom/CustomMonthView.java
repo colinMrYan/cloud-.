@@ -195,7 +195,7 @@ public class CustomMonthView extends MonthView {
             }
         }
         if (calendar.getDay() == 9 && calendar.isCurrentMonth()) {
-            canvas.drawText(calendar.getMonth() + "", 550, 580, mMonthViewBackGroundTextPaint);
+            canvas.drawText(calendar.getMonth() + "", getBackgroundX(), getBackgroundY(), mMonthViewBackGroundTextPaint);
         }
     }
 
@@ -205,8 +205,7 @@ public class CustomMonthView extends MonthView {
      * @return
      */
     private float getBackgroundX() {
-
-        return (float) (getWidth() * 0.3);
+        return (float) (getWidth() * 0.5);
     }
 
     /**
@@ -215,7 +214,6 @@ public class CustomMonthView extends MonthView {
      * @return
      */
     private float getBackgroundY() {
-
-        return (float) (getHeight() * 0.5);
+        return (float) (getHeight() * 0.75);
     }
 }
