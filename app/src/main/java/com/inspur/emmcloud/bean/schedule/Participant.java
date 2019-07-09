@@ -12,9 +12,15 @@ public class Participant {
     public static final String TYPE_COMMON = "common";
     public static final String TYPE_RECORDER = "recorder";
     public static final String TYPE_CONTACT = "contact";
+    public static final String CALENDAR_RESPONSE_TYPE_UNKNOWN = "unknown"; //未知
+    public static final String CALENDAR_RESPONSE_TYPE_TENTATIVE = "tentative";//暂定
+    public static final String CALENDAR_RESPONSE_TYPE_ACCEPT = "accept";//接受
+    public static final String CALENDAR_RESPONSE_TYPE_DECLINE = "decline";//拒绝
     private String id;
     private String name;//name可能有也可能没有会议详情那里显示的时候用的id从通讯录中取的名字
     private String role;//common,普通参与者,recorder, 记录人,contact,联系人
+    private String email;//邮箱
+    private String responseType;//日历返回类型
 
     public Participant() {
 
@@ -24,6 +30,8 @@ public class Participant {
         this.id = JSONUtils.getString(obj, "id", "");
         this.name = JSONUtils.getString(obj, "name", "");
         this.role = JSONUtils.getString(obj, "role", "");
+        this.email = JSONUtils.getString(obj, "email", "");
+        this.responseType = JSONUtils.getString(obj, "responseType", "");
     }
 
     public String getId() {

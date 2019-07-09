@@ -243,7 +243,10 @@ public class MeetingDetailActivity extends BaseActivity {
                 startMembersActivity(MEETING_CONTACT);
                 break;
             case R.id.rl_meeting_invite:    //  TODO
-
+                Intent intent = new Intent(MeetingDetailActivity.this, MeetingAttendeeStateActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("meeting", meeting);
+                startActivity(intent, bundle);
                 break;
             case R.id.rl_meeting_attend_status:     //参会答复
                 Intent replyIntent = new Intent(this, MeetingDetailReplyActivity.class);
