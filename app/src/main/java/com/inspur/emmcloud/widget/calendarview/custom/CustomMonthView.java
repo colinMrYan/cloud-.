@@ -205,6 +205,7 @@ public class CustomMonthView extends MonthView {
      * @return
      */
     private float getBackgroundX() {
+
         return (float) (getWidth() * 0.3);
     }
 
@@ -214,6 +215,7 @@ public class CustomMonthView extends MonthView {
      * @return
      */
     private float getBackgroundY() {
+
         return (float) (getHeight() * 0.5);
     }
 }
