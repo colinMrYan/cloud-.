@@ -158,13 +158,13 @@ public class CustomWeekView extends WeekView {
             }
         }
         if (isSelected) {
-            canvas.drawText(day, cx, mTextBaseLine + top,
+            canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
                     mSelectTextPaint);
             if(isLunarAndFestivalShow()){
                 canvas.drawText(lunar, cx, mTextBaseLine + mItemHeight / 15, mSelectedLunarTextPaint);
             }
         } else if (hasScheme) {
-            canvas.drawText(day, cx, mTextBaseLine + top,
+            canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
                     calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
             if(isLunarAndFestivalShow()){
                 Paint currentMonthPaint = null;
@@ -179,7 +179,7 @@ public class CustomWeekView extends WeekView {
             }
 
         } else {
-            canvas.drawText(day, cx, mTextBaseLine + top,
+            canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
                     calendar.isCurrentDay() ? mCurDayTextPaint :
                             calendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
             if(isLunarAndFestivalShow()){
