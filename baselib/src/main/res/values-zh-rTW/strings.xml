@@ -788,30 +788,12 @@
     <string name="user_new_chat">發起會話</string>
     <string name="user_send_message">發消息</string>
 
-    <!-- 集團新聞 部分 -->
-    <string name="news_group_news">集團新聞</string>
-    <string name="news_group_news_detail">新聞詳情</string>
-    <string name="news_share">分享到</string>
-    <string name="news_share_success">分享成功</string>
-    <string name="news_share_fail">分享失敗</string>
-    <string name="news_day_mode_text">標準模式 </string>
-    <string name="news_night_mode_text">夜間模式 </string>
-    <string name="news_share_text">分享</string>
+    <!--Imp插件调整字体大小-->
     <string name="news_font_smaller">小</string>
     <string name="news_font_normal">標準</string>
     <string name="news_font_big_text">大</string>
     <string name="news_font_middle">中</string>
     <string name="news_font_biggest_text">超大</string>
-    <string name="news_font_name_text">字體</string>
-    <string name="news_read_mode">閱讀模式</string>
-    <string name="news_instructions_text">批示</string>
-    <string name="news_instructions">批示意見</string>
-    <string name="news_instructions_success_text">發送成功</string>
-    <string name="news_no_news">暫無新聞</string>
-    <string name="news_has_instructions_news">您已批示過此新聞！</string>
-    <string name="news_has_instructions_known">瞭解了</string>
-    <string name="news_please_instruction">請您輸入批示內容 </string>
-
     <!-- 審批頁面 -->
     <string name="onekey_approval_text">審批</string>
 

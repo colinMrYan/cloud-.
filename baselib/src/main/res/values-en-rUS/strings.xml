@@ -781,29 +781,12 @@
     <string name="user_worker_num">NO.</string>
     <string name="user_new_chat">Messages</string>
     <string name="user_send_message">Messages</string>
-
-    <!-- 集团新闻 部分 -->
-    <string name="news_group_news">Group News</string>
-    <string name="news_group_news_detail">News Details</string>
-    <string name="news_share">Share to</string>
-    <string name="news_share_success">Sharing Successfully</string>
-    <string name="news_share_fail">Sharing unsuccessfully</string>
-    <string name="news_day_mode_text">Standard</string>
-    <string name="news_night_mode_text">Night</string>
-    <string name="news_share_text">Share</string>
+    <!--Imp插件调整字体大小-->
     <string name="news_font_smaller">Small</string>
     <string name="news_font_normal">Normal</string>
     <string name="news_font_middle">Middle</string>
     <string name="news_font_big_text">Large</string>
     <string name="news_font_biggest_text">Extra</string>
-    <string name="news_font_name_text">Font Size</string>
-    <string name="news_read_mode">Reading Mode</string>
-    <string name="news_instructions_text">instruction</string>
-    <string name="news_instructions">Directive opinion</string>
-    <string name="news_instructions_success_text">Sending Successfully</string>
-    <string name="news_has_instructions_news">You have instructed this news!</string>
-    <string name="news_has_instructions_known">Understand</string>
-    <string name="news_please_instruction">Please enter your instructions </string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">Approval</string>

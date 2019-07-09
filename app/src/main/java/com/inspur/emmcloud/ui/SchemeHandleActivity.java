@@ -26,7 +26,6 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
-import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
@@ -217,7 +216,9 @@ public class SchemeHandleActivity extends BaseActivity {
                                 break;
                             case "emm":
                                 if (host.equals("news")) {
-                                    IntentUtils.startActivity(SchemeHandleActivity.this, GroupNewsActivity.class, true);
+                                    ARouter.getInstance().build(Constant.AROUTER_CLASS_GROUP_NEWS).navigation();
+                                    finish();
+//                                    IntentUtils.startActivity(SchemeHandleActivity.this, GroupNewsActivity.class, true);
                                 } else if (host.equals("volume")) {
                                     IntentUtils.startActivity(SchemeHandleActivity.this, VolumeHomePageActivity.class, true);
                                 }
@@ -491,7 +492,9 @@ public class SchemeHandleActivity extends BaseActivity {
                 IntentUtils.startActivity(this, TripInfoActivity.class, bundle, true);
                 break;
             case "news.ecc":
-                IntentUtils.startActivity(this, GroupNewsActivity.class, true);
+                ARouter.getInstance().build(Constant.AROUTER_CLASS_GROUP_NEWS).navigation();
+                finish();
+//                IntentUtils.startActivity(this, GroupNewsActivity.class, true);
                 break;
             case "document":
                 IntentUtils.startActivity(this, DocumentActivity.class, true);
