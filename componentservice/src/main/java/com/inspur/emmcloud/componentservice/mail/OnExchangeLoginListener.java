@@ -7,5 +7,5 @@ package com.inspur.emmcloud.componentservice.mail;
 public interface OnExchangeLoginListener {
     void onMailLoginSuccess();
 
-    void onMailLoginFail();
+    void onMailLoginFail(String error, int errorCode);
 }

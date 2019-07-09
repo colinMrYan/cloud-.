@@ -42,7 +42,7 @@ public class ExchangeLoginUtils {
     public void login() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false) && !StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
             loadingDlg = new LoadingDialog(activity);
-            loadingDlg.show();
+            loadingDlg.show(isShowLoadingDlg);
             String key = EncryptUtils.stringToMD5(exchangeAccount);
             try {
                 exchangePassword = EncryptUtils.encode(exchangePassword, key, Constant.MAIL_ENCRYPT_IV, Base64.NO_WRAP);
@@ -53,7 +53,7 @@ public class ExchangeLoginUtils {
             apiService.setAPIInterface(new WebService());
             apiService.loginMail(exchangeAccount, exchangePassword);
         } else {
-            callbackLoginFail();
+            callbackLoginFail("", -1);
         }
     }
 
@@ -66,12 +66,12 @@ public class ExchangeLoginUtils {
         }
     }
 
-    private void callbackLoginFail() {
+    private void callbackLoginFail(String error, int errorCode) {
         if (isShowLoadingDlg) {
             LoadingDialog.dimissDlg(loadingDlg);
         }
         if (onExchangeLoginListener != null) {
-            onExchangeLoginListener.onMailLoginFail();
+            onExchangeLoginListener.onMailLoginFail(error, errorCode);
         }
     }
 
@@ -116,7 +116,7 @@ public class ExchangeLoginUtils {
 
         @Override
         public void returnMailLoginFail(String error, int errorCode) {
-            callbackLoginFail();
+            callbackLoginFail(error, errorCode);
 
         }
     }

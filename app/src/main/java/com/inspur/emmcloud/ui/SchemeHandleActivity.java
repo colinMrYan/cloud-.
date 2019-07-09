@@ -26,6 +26,8 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
+import com.inspur.emmcloud.ui.appcenter.mail.MailHomeActivity;
+import com.inspur.emmcloud.ui.appcenter.mail.MailLoginActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.appcenter.webex.WebexMyMeetingActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
@@ -452,12 +454,12 @@ public class SchemeHandleActivity extends BaseActivity {
                         .setOnExchageLoginListener(new OnExchangeLoginListener() {
                             @Override
                             public void onMailLoginSuccess() {
-                                // IntentUtils.startActivity(SchemeHandleActivity.this, MailHomeActivity.class, true);
+                                IntentUtils.startActivity(SchemeHandleActivity.this, MailHomeActivity.class, true);
                             }
 
                             @Override
-                            public void onMailLoginFail() {
-                                //   IntentUtils.startActivity(SchemeHandleActivity.this, MailLoginActivity.class, true);
+                            public void onMailLoginFail(String error, int errorCode) {
+                                IntentUtils.startActivity(SchemeHandleActivity.this, MailLoginActivity.class, true);
                             }
                         }).build().login();
                 break;

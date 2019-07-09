@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.appcenter.mail;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,20 +10,18 @@ import android.widget.EditText;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MailApiService;
 import com.inspur.emmcloud.baselib.util.EditTextUtils;
-import com.inspur.emmcloud.baselib.util.EncryptUtils;
 import com.inspur.emmcloud.baselib.util.FomatUtils;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ClearEditText;
-import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
+import com.inspur.emmcloud.util.privates.ExchangeLoginUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import butterknife.BindView;
@@ -45,17 +42,12 @@ public class MailLoginActivity extends BaseActivity {
     Button loginBtn;
     @BindView(R.id.text_input_layout_username)
     TextInputLayout usernameTextInputLayout;
-    private LoadingDialog loadingDlg;
-    private MailApiService apiService;
     private String mail = "";
     private String password = "";
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        loadingDlg = new LoadingDialog(this);
-        apiService = new MailApiService(this);
-        apiService.setAPIInterface(new WebService());
         TextWatcher watcher = new TextWatcher();
         mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
         if (StringUtils.isBlank(mail)) {
@@ -89,16 +81,29 @@ public class MailLoginActivity extends BaseActivity {
         }
     }
 
-    private void login(String mail, String password) {
+    private void login(final String mail, final String password) {
         if (NetUtils.isNetworkConnected(this)) {
-            String key = EncryptUtils.stringToMD5(mail);
-            try {
-                password = EncryptUtils.encode(password, key, Constant.MAIL_ENCRYPT_IV, Base64.NO_WRAP);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            loadingDlg.show();
-            apiService.loginMail(mail, password);
+            new ExchangeLoginUtils.Builder(this)
+                    .setShowLoadingDlg(true)
+                    .setExchangeLoginAccount(mail, password)
+                    .setOnExchageLoginListener(new OnExchangeLoginListener() {
+                        @Override
+                        public void onMailLoginSuccess() {
+                            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
+                            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
+                            if (getIntent().hasExtra("from") && getIntent().getExtras().getString("from").equals("schedule_exchange_login")) {
+                                setResult(RESULT_OK);
+                                finish();
+                            } else {
+                                IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
+                            }
+                        }
+
+                        @Override
+                        public void onMailLoginFail(String error, int errorCode) {
+                            WebServiceMiddleUtils.hand(MailLoginActivity.this, error, errorCode);
+                        }
+                    }).build().login();
 
         }
     }
@@ -129,25 +134,4 @@ public class MailLoginActivity extends BaseActivity {
         }
     }
 
-    private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnMailLoginSuccess() {
-            LoadingDialog.dimissDlg(loadingDlg);
-            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, mail);
-            PreferencesByUsersUtils.putString(MyApplication.getInstance(), Constant.PREF_MAIL_PASSWORD, password);
-            if (getIntent().getExtras().getString("from", "").equals("schedule_exchange_login")) {
-                setResult(RESULT_OK);
-                finish();
-            } else {
-                IntentUtils.startActivity(MailLoginActivity.this, MailHomeActivity.class, true);
-            }
-
-        }
-
-        @Override
-        public void returnMailLoginFail(String error, int errorCode) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MailLoginActivity.this, error, errorCode);
-        }
-    }
 }

@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.componentservice.mail;
 
+import android.app.Activity;
+
 import com.inspur.emmcloud.componentservice.CoreService;
 
 /**
@@ -7,8 +9,10 @@ import com.inspur.emmcloud.componentservice.CoreService;
  */
 
 public interface MailService extends CoreService {
-    String getExchageMailAccount();
+    String getExchangeMailAccount();
 
-    String getExchageMailPassword();
+    String getExchangeMailPassword();
+
+    void exchangeLogin(Activity activity, OnExchangeLoginListener onExchangeLoginListener);
 
 }
