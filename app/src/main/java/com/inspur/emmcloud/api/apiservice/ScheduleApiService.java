@@ -293,13 +293,7 @@ public class ScheduleApiService {
         } else {
             baseUrl = baseUrl + "start=" + "&end=";
         }
-        baseUrl = baseUrl + "&isIdle=" + isFilter;
-        for (int j = 0; j < officeIdList.size(); j++) {
-            baseUrl = baseUrl + "&oids=" + officeIdList.get(j);
-        }
-        if (officeIdList.size() == 0) {
-            baseUrl = baseUrl + "&oids=";
-        }
+
         final String completeUrl = baseUrl;
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -333,6 +327,132 @@ public class ScheduleApiService {
             }
         });
     }
+
+
+    /**
+     * 获取会议室列表
+     */
+    public void getMeetingRoomList() {
+        String baseUrl = APIUri.getMeetingRoomsUrl();
+        final String completeUrl = baseUrl;
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getMeetingRoomList();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingRoomListSuccess(new GetMeetingRoomListResult(new String(arg0)));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnMeetingRoomListFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 设置群聊id
+     *
+     * @param calendarId 日程id
+     * @param chatId     群组id
+     */
+    public void setCalendarBindChat(final String calendarId, final String chatId) {
+        String baseUrl = APIUri.getSetCalendarBindChatUrl();
+        final String completeUrl = baseUrl;
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        setCalendarBindChat(calendarId, chatId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnSetCalendarChatBindSuccess(calendarId, chatId);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnSetCalendarChatBindFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取群组ID*/
+    /**
+     * 设置群聊id
+     *
+     * @param calendarId 日程id
+     */
+    public void getCalendarBindChat(final String calendarId) {
+        String baseUrl = APIUri.getSetCalendarBindChatUrl();
+        final String completeUrl = baseUrl;
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getCalendarBindChat(calendarId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnGetCalendarChatBindSuccess(calendarId, arg0.toString());
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnGetCalendarChatBindFail(error, responseCode);
+            }
+        });
+    }
+
 
     /**
      * 获取我的任务
@@ -772,7 +892,7 @@ public class ScheduleApiService {
      * 获取园区
      */
     public void getMeetingLocation() {
-        final String completeUrl = APIUri.getLoctionUrl();
+        final String completeUrl = APIUri.getLocationUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -870,7 +990,7 @@ public class ScheduleApiService {
      * @param office
      */
     public void deleteMeetingOffice(final Office office) {
-        final String completeUrl = APIUri.addOfficeUrl() + "?id=" + office.getId();
+        final String completeUrl = APIUri.addOfficeUrl() + "/" + office.getId();
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
 
@@ -904,6 +1024,97 @@ public class ScheduleApiService {
             }
         });
 
+    }
+
+
+    /**
+     * 设置常用会议点点
+     */
+    public void setMeetingCommonBuilding(final Building building) {
+        final String completeUrl = APIUri.addOfficeUrl();
+        RequestParams params = MyApplication.getInstance()
+                .getHttpRequestParams(completeUrl);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", building.getId());
+            jsonObject.put("name", building.getName());
+            params.setBodyContent(jsonObject.toString());
+            params.setAsJsonContent(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        addMeetingOffice(building);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.LbcDebug("returnSetMeetingCommonBuildingSuccess::" + arg0.toString());
+                apiInterface.returnSetMeetingCommonBuildingSuccess(building);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnSetMeetingCommonBuildingFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 取消会议常用地点
+     */
+    public void cancelMeetingCommonBuilding(final Building building) {
+        final String completeUrl = APIUri.addOfficeUrl() + "/" + building.getId();
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.DELETE, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        cancelMeetingCommonBuilding(building);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(
+                        oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.LbcDebug("returnCancelMeetingCommonBuildingSuccess::" + arg0.toString());
+                apiInterface.returnCancelMeetingCommonBuildingSuccess(building);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnCancelMeetingCommonBuildingFail(error, responseCode);
+            }
+        });
     }
 
     /**

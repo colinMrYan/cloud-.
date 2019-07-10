@@ -15,6 +15,7 @@ import java.io.Serializable;
 public class Building implements Serializable {
     private String id = "";
     private String name = "";
+    private boolean isFavorite = false;
     private MeetingLocation location;
 
     public Building() {
@@ -24,6 +25,7 @@ public class Building implements Serializable {
     public Building(JSONObject obj) {
         id = JSONUtils.getString(obj, "id", "");
         name = JSONUtils.getString(obj, "name", "");
+        isFavorite = JSONUtils.getBoolean(obj, "isFavorite", false);
         JSONObject officeLocationObj = JSONUtils.getJSONObject(obj, "location", new JSONObject());
         location = new MeetingLocation(officeLocationObj);
     }
@@ -50,5 +52,13 @@ public class Building implements Serializable {
 
     public void setLocation(MeetingLocation location) {
         this.location = location;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

@@ -103,7 +103,7 @@ public class ScheduleMeetingRoomAdapter extends BaseExpandableListAdapter {
         View dividerView = convertView.findViewById(R.id.view_divider);
         dividerView.setVisibility(isLastChild ? View.GONE : View.VISIBLE);
         nameText.setText(meetingRoom.getName());
-        peopleNumText.setText(meetingRoom.getGalleryful() + "");
+        peopleNumText.setText(meetingRoom.getCapacity() + "");
         boolean isInMeeting = meetingRoom.getLight().equals("RED");
         statusText.setText(isInMeeting ? context.getResources().getString(R.string.schedule_meeting_in_meeting) :
                 context.getResources().getString(R.string.schedule_meeting_be_free));
