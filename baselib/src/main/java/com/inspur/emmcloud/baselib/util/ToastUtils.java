@@ -1,13 +1,16 @@
 package com.inspur.emmcloud.baselib.util;
 
+import android.app.Application;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.toast.style.ToastBlackStyle;
 import com.inspur.baselib.R;
 
 /**
@@ -16,6 +19,12 @@ import com.inspur.baselib.R;
  * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2013-12-9
  */
 public class ToastUtils {
+
+    public static void init(Application application) {
+        com.hjq.toast.ToastUtils.init(application, new ToastBlackStyle());
+        com.hjq.toast.ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+        com.hjq.toast.ToastUtils.setView(com.inspur.emmcloud.baselib.util.ToastUtils.createTextView(application));
+    }
 
     private ToastUtils() {
         throw new AssertionError();

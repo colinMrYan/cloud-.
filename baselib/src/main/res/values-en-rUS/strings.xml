@@ -197,6 +197,8 @@
     <string name="no_this_knowledge">No this knowledge</string>
     <string name="comment">Comment</string>
     <string name="write_comment">Comment</string>
+
+    <string name="news_font_name_text">Font Size</string>
     <!-- 新添加部分 -->
 
     <!--&lt;!&ndash; 登录部分 &ndash;&gt;-->

@@ -13,6 +13,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -52,6 +54,7 @@ public class MeetingDetailActivity extends BaseActivity {
     private static final int MEETING_ATTENDEE = 0;
     private static final int MEETING_RECORD_HOLDER = 1;
     private static final int MEETING_CONTACT = 2;
+    private static final int MEETING_INVITE = 3;
     @BindView(R.id.tv_meeting_title)
     TextView meetingTitleText;
     @BindView(R.id.tv_meeting_time)
@@ -226,6 +229,13 @@ public class MeetingDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
+        Bundle bundle = new Bundle();
+        if (meeting != null) {
+            LogUtils.LbcDebug("meeting" + JSONUtils.toJSONString(meeting));
+        } else {
+            LogUtils.LbcDebug("meeting == null");
+        }
+        bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
         switch (v.getId()) {
             case R.id.ibt_back:
                 finish();
@@ -234,16 +244,17 @@ public class MeetingDetailActivity extends BaseActivity {
                 showOperationDialog();
                 break;
             case R.id.rl_meeting_attendee:
-                startMembersActivity(MEETING_ATTENDEE);
+                if (meeting != null)
+                    IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAttendeeStateActivity.class, bundle);
                 break;
             case R.id.rl_meeting_record_holder:
-                startMembersActivity(MEETING_RECORD_HOLDER);
                 break;
             case R.id.rl_meeting_conference:
-                startMembersActivity(MEETING_CONTACT);
+                if (meeting != null)
+                    IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAttendeeStateActivity.class, bundle);
                 break;
             case R.id.rl_meeting_invite:    //  TODO
-
+                startMembersActivity(MEETING_INVITE);
                 break;
             case R.id.rl_meeting_attend_status:     //参会答复
                 Intent replyIntent = new Intent(this, MeetingDetailReplyActivity.class);
@@ -272,7 +283,7 @@ public class MeetingDetailActivity extends BaseActivity {
     }
 
     private void startMembersActivity(int type) {
-        List<String> uidList;
+        List<String> uidList = new ArrayList<>();
         switch (type) {
             case MEETING_ATTENDEE:
                 uidList = getUidList(meeting.getCommonParticipantList());
@@ -283,8 +294,11 @@ public class MeetingDetailActivity extends BaseActivity {
             case MEETING_CONTACT:
                 uidList = getUidList(meeting.getRoleParticipantList());
                 break;
+            case MEETING_INVITE:
+                uidList.add(meeting.getOwner());
+                break;
             default:
-                uidList = new ArrayList<>();
+                break;
         }
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("uidList", (ArrayList<String>) uidList);

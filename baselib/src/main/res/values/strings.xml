@@ -206,6 +206,8 @@
     <string name="comment">评论</string>
     <string name="write_comment">写评论</string>
 
+    <string name="news_font_name_text">字号</string>
+
 
     <!--&lt;!&ndash; 登录部分 &ndash;&gt;-->
     <!--<string name="login_invaliad_account_or_pwd">用户名或密码错误</string>-->
