@@ -3,10 +3,12 @@ package com.inspur.emmcloud.widget.calendardayview;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -157,11 +160,11 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     /**
      * 每次打开日视图需要滚动到当前时间前一个小时
      */
-    public int getScrollOffset(){
+    public int getScrollOffset() {
         Calendar currentCalendar = Calendar.getInstance();
-        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) -1+ currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
-        if(offset<0){
-            offset =0;
+        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) - 1 + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+        if (offset < 0) {
+            offset = 0;
         }
         return offset;
     }
@@ -311,7 +314,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private void setEventLayout(final Event event, RelativeLayout.LayoutParams eventLayoutParams) {
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
         eventView.setBackgroundResource(R.drawable.ic_schedule_calendar_view_event_bg);
-        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(),24)){
+        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 24)) {
             ImageView eventImg = eventView.findViewById(R.id.iv_event);
             TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
             TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
@@ -327,12 +330,32 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         eventView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onEventClickListener != null) {
-                    onEventClickListener.onEventClick(event);
+                if (!(onEventClickListener != null && onEventClickListener.onEventClick(event))) {
+                    showEventDetailPop(view);
                 }
-
             }
         });
+    }
+
+    private void showEventDetailPop(View view) {
+        View contentView = LayoutInflater.from(getContext())
+                .inflate(R.layout.schedule_pop_calendarview_event_detail, null);
+        BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
+        bubbleLayout.setArrowPosition(eventLayout.getWidth() / 2 - DensityUtil.dip2px(7));
+        PopupWindow popupWindow = new PopupWindow(contentView,
+                eventLayout.getWidth() - DensityUtil.dip2px(20),
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(
+                R.drawable.pop_window_view_tran));
+        // 设置好参数之后再show
+        popupWindow.showAsDropDown(view);
     }
 
     public void setOnEventClickListener(OnEventClickListener onEventClickListener) {
@@ -340,6 +363,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     }
 
     public interface OnEventClickListener {
-        void onEventClick(Event event);
+        boolean onEventClick(Event event);
     }
 }

@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ScrollView;
 
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 
 public class DragScaleView extends View {
     private static final int LEFT_TOP = 0x12;
@@ -175,7 +174,6 @@ public class DragScaleView extends View {
                 lastY = (int) event.getRawY();
                 break;
             case MotionEvent.ACTION_UP:
-                LogUtils.jasonDebug("MotionEvent.ACTION_UP------------");
                 dragDirection = 0;
                 break;
         }

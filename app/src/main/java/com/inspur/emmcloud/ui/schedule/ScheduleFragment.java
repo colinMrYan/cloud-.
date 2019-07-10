@@ -202,28 +202,30 @@ public class ScheduleFragment extends BaseFragment implements
                 calendarView.setIsLunarAndFestivalShow(false);
                 break;
         }
-        contentLayout.setOnLongClickListener(this);
-        contentLayout.setOnTouchListener(this);
-        contentLayout.setOnClickListener(this);
+        calendarDayView.setOnTouchListener(this);
+        calendarDayView.setOnLongClickListener(this);
+        calendarDayView.setOnClickListener(this);
 
     }
 
     /**
      * 删除日历添加DragView
      */
-    private void removeEventAddDragScaleView() {
+    private boolean removeEventAddDragScaleView() {
         if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
             contentLayout.removeView(dragScaleView);
             calendarDayView.hideDragViewTime();
             dragScaleView = null;
+            return true;
         }
+        return false;
     }
 
 
     /**
      * 删除添加事件的View
      */
-    private void showEventAddDragView() {
+    private void showScheduleEventAddDragView() {
         dragScaleView = new DragScaleView(getActivity());
         int dragScaleViewHeight = DensityUtil.dip2px(40) + 2 * dragScaleView.getOffset();
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, dragScaleViewHeight);
@@ -599,7 +601,7 @@ public class ScheduleFragment extends BaseFragment implements
                 if (allDayEventList.size() > 1) {
                     showAllDayEventListDlg();
                 } else {
-                    onEventClick(allDayEventList.get(0));
+                    openEvent(allDayEventList.get(0));
                 }
 
                 break;
@@ -607,7 +609,7 @@ public class ScheduleFragment extends BaseFragment implements
                 myDialog.dismiss();
                 myDialog = null;
                 break;
-            case R.id.rl_content:
+            case R.id.calendar_day_view:
                 removeEventAddDragScaleView();
                 break;
             case R.id.tv_schedule_date:
@@ -618,7 +620,7 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (v.getId() == R.id.rl_content) {
+        if (v.getId() == R.id.calendar_day_view) {
             contentLayoutTouchY = event.getY();
         }
         return false;
@@ -654,11 +656,11 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public boolean onLongClick(View v) {
-        if (v.getId() == R.id.rl_content) {
+        if (v.getId() == R.id.calendar_day_view) {
             if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
                 removeEventAddDragScaleView();
             } else {
-                showEventAddDragView();
+                showScheduleEventAddDragView();
             }
 
             return true;
@@ -668,19 +670,19 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public void onItemClick(View view, int position, Event event) {
-        onEventClick(event);
+        openEvent(event);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        onEventClick(allDayEventList.get(position));
+        openEvent(allDayEventList.get(position));
         if (myDialog != null)
             myDialog.dismiss();
     }
 
     @Override
-    public void onEventClick(Event event) {
-        openEvent(event);
+    public boolean onEventClick(Event event) {
+        return removeEventAddDragScaleView();
     }
 
     @Override
