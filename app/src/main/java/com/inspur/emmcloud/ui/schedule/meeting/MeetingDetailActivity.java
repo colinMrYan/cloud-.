@@ -248,6 +248,7 @@ public class MeetingDetailActivity extends BaseActivity {
                     IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAttendeeStateActivity.class, bundle);
                 break;
             case R.id.rl_meeting_record_holder:
+                IntentUtils.startActivity(MeetingDetailActivity.this, MeetingAttendeeStateActivity.class, bundle);
                 break;
             case R.id.rl_meeting_conference:
                 if (meeting != null)

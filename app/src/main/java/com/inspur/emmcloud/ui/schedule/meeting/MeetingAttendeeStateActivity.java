@@ -81,8 +81,6 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_save111:
-                break;
             case R.id.ibt_back:
                 finish();
                 break;
@@ -105,7 +103,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
                 participant.setName(contactUser.getName());
                 participant.setEmail(contactUser.getEmail());
             } else {
-                participant.setId(meeting.getOwner());
+                participant.setId("");
                 participant.setName(meeting.getOwner());
                 participant.setEmail(meeting.getOwner());
             }
@@ -126,6 +124,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         for (int m = 0; m < participantList.size(); m++) {
             if (participantList.get(m).getId().equals(meeting.getOwner())) {
                 participantList.remove(m);
+                m = m - 1;
             } else {
                 if (participantList.get(m).getResponseType().equals(Participant.CALENDAR_RESPONSE_TYPE_ACCEPT)) {
                     meetingAcceptAttendees.getMeetingAttendeesList().add(participantList.get(m));
@@ -159,11 +158,13 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
     @Override
     public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-        Bundle bundle = new Bundle();
         String uid = meetingAttendeesList.get(i).getMeetingAttendeesList().get(i1).getId();
-        bundle.putString("uid", uid);
-        IntentUtils.startActivity(MeetingAttendeeStateActivity.this, UserInfoActivity.class, bundle);
-        return true;
+        if (!StringUtils.isBlank(uid)) {
+            Bundle bundle = new Bundle();
+            bundle.putString("uid", uid);
+            IntentUtils.startActivity(MeetingAttendeeStateActivity.this, UserInfoActivity.class, bundle);
+        }
+        return false;
     }
 
 
@@ -247,7 +248,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
         @Override
         public boolean isChildSelectable(int i, int i1) {
-            return false;
+            return true;
         }
     }
 
