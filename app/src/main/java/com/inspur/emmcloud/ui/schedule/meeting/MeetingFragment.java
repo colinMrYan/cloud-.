@@ -42,8 +42,6 @@ import java.util.List;
 public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayout.OnRefreshListener
         , MySwipeRefreshLayout.OnLoadListener, ScheduleMeetingListAdapter.OnItemClickLister {
 
-    private static String EXTRA_IS_HISTORY_MEETING = "is_history_meeting";
-
     private MySwipeRefreshLayout swipeRefreshLayout;
     private ListView meetingListView;
     private ClearEditText searchEdit;
@@ -64,7 +62,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         super.onCreate(savedInstanceState);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_schedule_meeting, null);
         if (getArguments() != null) {
-            isHistoryMeeting = getArguments().getBoolean(EXTRA_IS_HISTORY_MEETING, false);
+            isHistoryMeeting = getArguments().getBoolean(Constant.EXTRA_IS_HISTORY_MEETING, false);
         }
         EventBus.getDefault().register(this);
         swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
@@ -143,6 +141,7 @@ public class MeetingFragment extends BaseFragment implements MySwipeRefreshLayou
         Meeting meeting = uiMeetingList.get(position);
         Bundle bundle = new Bundle();
         bundle.putSerializable(MeetingDetailActivity.EXTRA_MEETING_ENTITY, meeting);
+        bundle.putBoolean(Constant.EXTRA_IS_HISTORY_MEETING, isHistoryMeeting);
         IntentUtils.startActivity(getActivity(), MeetingDetailActivity.class, bundle);
     }
 
