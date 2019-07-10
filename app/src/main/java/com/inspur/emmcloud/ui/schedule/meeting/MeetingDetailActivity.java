@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule.meeting;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,9 +14,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -102,7 +103,6 @@ public class MeetingDetailActivity extends BaseActivity {
     RelativeLayout attendStatusLayout;
     @BindView(R.id.tv_meeting_attend_status)
     TextView attendStatusText;
-    ReplyAttendResult info = new ReplyAttendResult(); //参会答复
     private Meeting meeting;
     private ScheduleApiService scheduleApiService;
     private LoadingDialog loadingDlg;
@@ -134,6 +134,7 @@ public class MeetingDetailActivity extends BaseActivity {
         return R.layout.activity_meeting_detail_tmp;
     }
 
+    @SuppressLint("StringFormatInvalid")
     private void initViews() {
         meetingTitleText.setText(meeting.getTitle());
         meetingTimeText.setText(getString(R.string.meeting_detail_time, getMeetingTime()));
@@ -351,9 +352,6 @@ public class MeetingDetailActivity extends BaseActivity {
                 break;
             case MEETING_CONTACT:
                 uidList = getUidList(meeting.getRoleParticipantList());
-                break;
-            case MEETING_INVITE:
-                uidList.add(meeting.getOwner());
                 break;
             case MEETING_INVITE:
                 uidList.add(meeting.getOwner());
