@@ -29,9 +29,9 @@ public class MeetingRoom implements Serializable {
     }
 
     public MeetingRoom(JSONObject obj) {
-        id = JSONUtils.getString(obj, "id", ""); //
-        name = JSONUtils.getString(obj, "name", ""); //
-        admin = JSONUtils.getString(obj, "admin", ""); //
+        id = JSONUtils.getString(obj, "id", "");
+        name = JSONUtils.getString(obj, "name", "");
+        admin = JSONUtils.getString(obj, "admin", "");
         capacity = JSONUtils.getInt(obj, "capacity", -1);
         maxAhead = JSONUtils.getInt(obj, "maxAhead", 0);
         maxDuration = JSONUtils.getString(obj, "maxDuration", "");

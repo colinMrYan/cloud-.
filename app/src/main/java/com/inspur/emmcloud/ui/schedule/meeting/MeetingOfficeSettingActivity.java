@@ -40,7 +40,6 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
     private MeetingOfficeAdapter adapter;
     private boolean isMeetingOfficeChanged = false;
 
-
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
