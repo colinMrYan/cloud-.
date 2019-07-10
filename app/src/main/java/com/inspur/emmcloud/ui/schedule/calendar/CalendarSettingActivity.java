@@ -1,11 +1,13 @@
 package com.inspur.emmcloud.ui.schedule.calendar;
 
+import android.content.Intent;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -14,6 +16,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
@@ -33,12 +36,15 @@ import butterknife.ButterKnife;
 public class CalendarSettingActivity extends BaseActivity {
     public static final String SHOW_TYPE_LIST = "show_type_list";
     public static final String SHOW_TYPE_DAY_VIEW = "show_type_day_view";
+    private final int REQUEST_ADD_CALENDAR = 1;
     @BindView(R.id.listview_list_calendars)
     ScrollViewWithListView calendarsListView;
     @BindView(R.id.iv_list_view_select)
     ImageView listSelectImageView;
     @BindView(R.id.iv_day_view_select)
     ImageView daySelectImageView;
+    @BindView(R.id.ll_add_calendar)
+    LinearLayout addCalendarLayout;
     private List<MyCalendar> calendarsList = new ArrayList<>();
     private CalendarAdapter calendarAdapter;
 
@@ -49,8 +55,8 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
-        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "BLUE", "", "", true));
-        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "BLUE", "", "", false));
+        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "ORANGE", "", "", true));
+        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "YELLOW", "", "", false));
         //calendarsList.add(new MyCalendar("task", getApplication().getString(R.string.schedule_calendar_my_task), "BLUE", "", "", false));
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
@@ -82,6 +88,10 @@ public class CalendarSettingActivity extends BaseActivity {
                             Constant.PREF_CALENDAR_EVENT_SHOW_TYPE, SHOW_TYPE_DAY_VIEW);
                 }
                 break;
+            case R.id.ll_add_calendar:
+                Intent intent = new Intent(CalendarSettingActivity.this, CalendarAccountSelectActivity.class);
+                startActivityForResult(intent, REQUEST_ADD_CALENDAR);
+                break;
             default:
                 break;
         }
@@ -95,6 +105,15 @@ public class CalendarSettingActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_CALENDAR) {
+            String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
+            calendarsList.add(new MyCalendar("exchange", mail, "PURPLE", "", "", true));
+            calendarAdapter.notifyDataSetChanged();
+        }
+    }
 
     /***/
     private class CalendarAdapter extends BaseAdapter {
@@ -124,7 +143,8 @@ public class CalendarSettingActivity extends BaseActivity {
             convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             boolean isHide = MyCalendarOperationCacheUtils.getIsHide(getApplicationContext(), calendar.getId());
             ((SwitchCompat) convertView.findViewById(R.id.switch_view_calendar_state)).setChecked(!isHide);
-            ((View)convertView.findViewById(R.id.iv_calendar_color_hint)).setBackgroundResource(CalendarColorUtils.getColorCircleImage(calendar.getColor()));
+            int calendarTypeResId = CalendarColorUtils.getCalendarTypeResId(calendar.getColor());
+            ((ImageView) convertView.findViewById(R.id.iv_calendar_color)).setImageResource(calendarTypeResId);
             ((TextView)convertView.findViewById(R.id.tv_calendar_name)).setText(calendar.getName());
             ((SwitchCompat)(convertView.findViewById(R.id.switch_view_calendar_state))).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
