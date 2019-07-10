@@ -12,7 +12,7 @@ public class MeetingRoom implements Serializable {
 
     private String id;
     private String name;
-    private int galleryful;
+    private int capacity;
     private String admin;
     private String light;
     private String shortName = "";
@@ -21,15 +21,18 @@ public class MeetingRoom implements Serializable {
     private ArrayList<String> equipmentList = new ArrayList<>();
     private ArrayList<Integer> busyDegreeList = new ArrayList<>();
     private Building building;
+    private long creationTime = 0;
+    private long lastTime = 0;
+    private int state = 0;
 
     public MeetingRoom() {
     }
 
     public MeetingRoom(JSONObject obj) {
-        id = JSONUtils.getString(obj, "id", "");
-        name = JSONUtils.getString(obj, "name", "");
-        admin = JSONUtils.getString(obj, "admin", "");
-        galleryful = JSONUtils.getInt(obj, "galleryful", -1);
+        id = JSONUtils.getString(obj, "id", ""); //
+        name = JSONUtils.getString(obj, "name", ""); //
+        admin = JSONUtils.getString(obj, "admin", ""); //
+        capacity = JSONUtils.getInt(obj, "capacity", -1);
         maxAhead = JSONUtils.getInt(obj, "maxAhead", 0);
         maxDuration = JSONUtils.getString(obj, "maxDuration", "");
         light = JSONUtils.getString(obj, "light", "");
@@ -43,7 +46,10 @@ public class MeetingRoom implements Serializable {
             }
 
         }
-        shortName = JSONUtils.getString(obj, "shortname", "");
+        shortName = JSONUtils.getString(obj, "shortName", "");
+        creationTime = JSONUtils.getLong(obj, "creationTime", 0);
+        lastTime = JSONUtils.getLong(obj, "lastTime", 0);
+        state = JSONUtils.getInt(obj, "state", 0);
         JSONObject buildingObj = JSONUtils.getJSONObject(obj, "building", new JSONObject());
         building = new Building(buildingObj);
     }
@@ -62,14 +68,6 @@ public class MeetingRoom implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getGalleryful() {
-        return galleryful;
-    }
-
-    public void setGalleryful(int galleryful) {
-        this.galleryful = galleryful;
     }
 
     public String getAdmin() {
@@ -134,5 +132,37 @@ public class MeetingRoom implements Serializable {
 
     public void setBuilding(Building building) {
         this.building = building;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public long getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(long lastTime) {
+        this.lastTime = lastTime;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

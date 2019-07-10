@@ -18,12 +18,18 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.GetMeetingRoomListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoom;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingRoomArea;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,6 +77,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         endTimeCalendar = (Calendar) getIntent().getSerializableExtra(EXTRA_END_TIME);
         setMeetingTime();
         onRefresh();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -211,6 +218,22 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiverSimpleEventMessage(SimpleEventMessage eventMessage) {
+        switch (eventMessage.getAction()) {
+            case Constant.EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED:
+                getMeetingRoomList();
+                break;
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
     private void setMeetingOffice() {
         Intent intent = new Intent(this, MeetingOfficeSettingActivity.class);
         startActivityForResult(intent, REQUEST_MEETING_OFFICE_SETTING);
@@ -239,6 +262,8 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
         @Override
         public void returnMeetingRoomListSuccess(GetMeetingRoomListResult getMeetingRoomListResult) {
             swipeRefreshLayout.setRefreshing(false);
+            meetingRoomAreaList.clear();
+            meetingRoomAdapter.setData(meetingRoomAreaList);
             meetingRoomAreaList = getMeetingRoomListResult.getMeetingRoomAreaList();
             meetingRoomAdapter.setData(meetingRoomAreaList);
             for (int i=0;i<meetingRoomAreaList.size();i++){

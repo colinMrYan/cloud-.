@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.bean.schedule;
 
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +9,18 @@ import java.util.List;
 
 public class MeetingAttendees {
     final public static String MEETING_ATTENDEES_INVITE = "meeting_attendees_invite";
-    final public static String MEETING_ATTENDEES_ACCEPT = "meeting_attendees_accept";
-    final public static String MEETING_ATTENDEES_DENY = "meeting_attendees_deny";
-    final public static String MEETING_ATTENDEES_NO_ACTION = "meeting_attendees_no_action";
 
-    private String type = MEETING_ATTENDEES_NO_ACTION;
+    private String type = Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN;
     private String name = "";
-    private List<SearchModel> meetingAttendeesList = new ArrayList<>();
+    private List<Participant> meetingAttendeesList = new ArrayList<>();
+
+    public MeetingAttendees() {
+    }
+
+    public MeetingAttendees(String type) {
+        this.type = type;
+        name = getNameByType();
+    }
 
     public String getType() {
         return type;
@@ -36,11 +39,11 @@ public class MeetingAttendees {
         this.name = name;
     }
 
-    public List<SearchModel> getMeetingAttendeesList() {
+    public List<Participant> getMeetingAttendeesList() {
         return meetingAttendeesList;
     }
 
-    public void setMeetingAttendeesList(List<SearchModel> meetingAttendeesList) {
+    public void setMeetingAttendeesList(List<Participant> meetingAttendeesList) {
         this.meetingAttendeesList = meetingAttendeesList;
     }
 
@@ -50,13 +53,13 @@ public class MeetingAttendees {
             case MEETING_ATTENDEES_INVITE:
                 name = "邀请者";
                 break;
-            case MEETING_ATTENDEES_ACCEPT:
+            case Participant.CALENDAR_RESPONSE_TYPE_ACCEPT:
                 name = "同意";
                 break;
-            case MEETING_ATTENDEES_DENY:
+            case Participant.CALENDAR_RESPONSE_TYPE_DECLINE:
                 name = "拒绝";
                 break;
-            case MEETING_ATTENDEES_NO_ACTION:
+            case Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN:
                 name = "无响应";
                 break;
             default:

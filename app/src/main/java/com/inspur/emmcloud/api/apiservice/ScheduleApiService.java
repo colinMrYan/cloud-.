@@ -369,6 +369,92 @@ public class ScheduleApiService {
     }
 
     /**
+     * 设置群聊id
+     *
+     * @param calendarId 日程id
+     * @param chatId     群组id
+     */
+    public void setCalendarBindChat(final String calendarId, final String chatId) {
+        String baseUrl = APIUri.getSetCalendarBindChatUrl();
+        final String completeUrl = baseUrl;
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        setCalendarBindChat(calendarId, chatId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnSetCalendarChatBindSuccess(calendarId, chatId);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnSetCalendarChatBindFail(error, responseCode);
+            }
+        });
+    }
+
+    /**
+     * 获取群组ID*/
+    /**
+     * 设置群聊id
+     *
+     * @param calendarId 日程id
+     */
+    public void getCalendarBindChat(final String calendarId) {
+        String baseUrl = APIUri.getSetCalendarBindChatUrl();
+        final String completeUrl = baseUrl;
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getCalendarBindChat(calendarId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                // TODO Auto-generated method stub
+                apiInterface.returnGetCalendarChatBindSuccess(calendarId, arg0.toString());
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                // TODO Auto-generated method stub
+                apiInterface.returnGetCalendarChatBindFail(error, responseCode);
+            }
+        });
+    }
+
+
+    /**
      * 获取我的任务
      *
      * @param orderBy
@@ -806,7 +892,7 @@ public class ScheduleApiService {
      * 获取园区
      */
     public void getMeetingLocation() {
-        final String completeUrl = APIUri.getLoctionUrl();
+        final String completeUrl = APIUri.getLocationUrl();
         RequestParams params = MyApplication.getInstance()
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {

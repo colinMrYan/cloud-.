@@ -1825,4 +1825,24 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnTransmitPictureError(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnSetCalendarChatBindSuccess(String calendarId, String chatId) {
+
+    }
+
+    @Override
+    public void returnSetCalendarChatBindFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetCalendarChatBindSuccess(String calendar, String cid) {
+
+    }
+
+    @Override
+    public void returnGetCalendarChatBindFail(String error, int errorCode) {
+
+    }
 }

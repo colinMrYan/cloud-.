@@ -806,4 +806,12 @@ public interface APIInterface {
 
     void returnTransmitPictureError(String error, int errorCode);
 
+    void returnSetCalendarChatBindSuccess(String calendarId, String chatId);
+
+    void returnSetCalendarChatBindFail(String error, int errorCode);
+
+    void returnGetCalendarChatBindSuccess(String calendarId, String cid);
+
+    void returnGetCalendarChatBindFail(String error, int errorCode);
+
 }

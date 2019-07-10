@@ -9,12 +9,16 @@ import com.inspur.emmcloud.adapter.MeetingOfficeAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingLocation;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,7 @@ import butterknife.ButterKnife;
  */
 
 public class MeetingOfficeSettingActivity extends BaseActivity implements ExpandableListView.OnChildClickListener {
+
     @BindView(R.id.expandable_listView)
     ExpandableListView expandableListView;
     private LoadingDialog loadingDlg;
@@ -142,6 +147,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         public void returnCancelMeetingCommonBuildingSuccess(Building building) {
             LoadingDialog.dimissDlg(loadingDlg);
             changeBuildingIsFavoriteState(building);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED, null));
             adapter.notifyDataSetChanged();
         }
 
@@ -155,6 +161,7 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         public void returnSetMeetingCommonBuildingSuccess(Building building) {
             LoadingDialog.dimissDlg(loadingDlg);
             changeBuildingIsFavoriteState(building);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED, null));
             adapter.notifyDataSetChanged();
         }
 

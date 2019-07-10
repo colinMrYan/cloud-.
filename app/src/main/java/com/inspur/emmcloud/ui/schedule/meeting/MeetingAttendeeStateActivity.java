@@ -20,13 +20,16 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
-import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.schedule.MeetingAttendees;
+import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +43,6 @@ import butterknife.ButterKnife;
 
 public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, ExpandableListView.OnChildClickListener {
 
-    private static final int REQUEST_SELECT_ATTENDEE = 1;
-    private static final int REQUEST_SELECT_RECORDER = 2;
-    private static final int REQUEST_SELECT_LIAISON = 3;
-    private static final int REQUEST_SELECT_MEETING_ROOM = 4;
-    private static final int REQUEST_SET_REMIND_EVENT = 5;
-
     @BindView(R.id.expandable_list_view)
     ExpandableListView expandableListView;
     @BindView(R.id.swipe_refresh_layout)
@@ -57,8 +54,10 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY); //来自列表
         initData();
         initView();
+
     }
 
 
@@ -77,7 +76,6 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     }
 
     private void initData() {
-        meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY); //来自列表
         divideAttendeeGroup();
     }
 
@@ -92,11 +90,54 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     }
 
     private void divideAttendeeGroup() {
-        MeetingAttendees meetingInvite = new MeetingAttendees();
-        MeetingAttendees meetingAcceptAttendees = new MeetingAttendees();
-        MeetingAttendees meetingDenyAttendees = new MeetingAttendees();
-        MeetingAttendees meetingNoActionAttendees = new MeetingAttendees();
-        //  SearchModel inviter = ContactUserCacheUtils.getContactUserByUid(meeting.getOwner());
+        meetingAttendeesList.clear();
+        MeetingAttendees meetingInvite = new MeetingAttendees(MeetingAttendees.MEETING_ATTENDEES_INVITE);
+        MeetingAttendees meetingAcceptAttendees = new MeetingAttendees(Participant.CALENDAR_RESPONSE_TYPE_ACCEPT);
+        MeetingAttendees meetingDenyAttendees = new MeetingAttendees(Participant.CALENDAR_RESPONSE_TYPE_DECLINE);
+        MeetingAttendees meetingNoActionAttendees = new MeetingAttendees(Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN);
+
+        //考虑Owner ID无法查询的情况
+        Participant participant = new Participant();
+        if (!StringUtils.isBlank(meeting.getOwner())) {
+            ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(meeting.getOwner());
+            if (contactUser != null) {
+                participant.setId(contactUser.getId());
+                participant.setName(contactUser.getName());
+                participant.setEmail(contactUser.getEmail());
+            } else {
+                participant.setId(meeting.getOwner());
+                participant.setName(meeting.getOwner());
+                participant.setEmail(meeting.getOwner());
+            }
+            meetingInvite.getMeetingAttendeesList().add(participant);
+        }
+        //其他人员放在无响应里去重+转化
+        List<Participant> participantList = meeting.getAllParticipantList();
+        //费时算法
+        for (int i = 0; i < participantList.size(); i++) {
+            Participant currentParticipant = participantList.get(i);
+            for (int j = i + 1; j < participantList.size(); j++) {
+                if (currentParticipant.getId().equals(participantList.get(j).getId())) {
+                    participantList.remove(j);
+                }
+            }
+        }
+        //清除Owner, 并组装
+        for (int m = 0; m < participantList.size(); m++) {
+            if (participantList.get(m).getId().equals(meeting.getOwner())) {
+                participantList.remove(m);
+            } else {
+                if (participantList.get(m).getResponseType().equals(Participant.CALENDAR_RESPONSE_TYPE_ACCEPT)) {
+                    meetingAcceptAttendees.getMeetingAttendeesList().add(participantList.get(m));
+                } else if (participantList.get(m).getResponseType().equals(Participant.CALENDAR_RESPONSE_TYPE_DECLINE)) {
+                    meetingDenyAttendees.getMeetingAttendeesList().add(participantList.get(m));
+                } else {
+                    meetingNoActionAttendees.getMeetingAttendeesList().add(participantList.get(m));
+                }
+            }
+        }
+
+        //根据当前的个数将相应的组添加到Adapter用的数组内
         if (meetingInvite.getMeetingAttendeesList().size() > 0) {
             meetingAttendeesList.add(meetingInvite);
         }
@@ -129,36 +170,6 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == RESULT_OK) {
-//            List<SearchModel> searchModelList = (List<SearchModel>) data.getExtras().getSerializable("selectMemList");
-//            MeetingAttendees meetingAttendees1 = new MeetingAttendees();
-//            meetingAttendees1.setType(MeetingAttendees.MEETING_ATTENDEES_INVITE);
-//            MeetingAttendees meetingAttendees2 = new MeetingAttendees();
-//            meetingAttendees2.setType(MeetingAttendees.MEETING_ATTENDEES_ACCEPT);
-//            MeetingAttendees meetingAttendees3 = new MeetingAttendees();
-//            meetingAttendees3.setType(MeetingAttendees.MEETING_ATTENDEES_DENY);
-//            MeetingAttendees meetingAttendees4 = new MeetingAttendees();
-//            meetingAttendees4.setType(MeetingAttendees.MEETING_ATTENDEES_NO_ACTION);
-//            for (int i = 0; i < searchModelList.size(); i++) {
-//                if (i >= 0 && i < 1) {
-//                    meetingAttendees1.getMeetingAttendeesList().add(searchModelList.get(i));
-//                } else if (i >= 1 && i < 3) {
-//                    meetingAttendees2.getMeetingAttendeesList().add(searchModelList.get(i));
-//                } else if (i >= 3 && i < 5) {
-//                    meetingAttendees3.getMeetingAttendeesList().add(searchModelList.get(i));
-//                } else if (i >= 5 && i < 7) {
-//                    meetingAttendees4.getMeetingAttendeesList().add(searchModelList.get(i));
-//                } else {
-//
-//                }
-//            }
-//            meetingAttendeesList.add(meetingAttendees1);
-//            meetingAttendeesList.add(meetingAttendees2);
-//            meetingAttendeesList.add(meetingAttendees3);
-//            meetingAttendeesList.add(meetingAttendees4);
-//            meetingAttendeeStateAdapter.notifyDataSetChanged();
-//
-//        }
     }
 
     public class MeetingAttendeeStateAdapter extends BaseExpandableListAdapter {
@@ -221,14 +232,14 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
         @Override
         public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-            SearchModel searchModel = meetingAttendeesList.get(i).getMeetingAttendeesList().get(i1);
+            Participant participant = meetingAttendeesList.get(i).getMeetingAttendeesList().get(i1);
             view = LayoutInflater.from(context).inflate(R.layout.meeting_attendees_expandale_child_item, null);
             TextView attendeeNameText = view.findViewById(R.id.tv_attendee_name);
             ImageView attendeeHeadImage = view.findViewById(R.id.iv_attendee_head);
             View dividerView = view.findViewById(R.id.view_divider);
             dividerView.setVisibility(View.VISIBLE);
-            attendeeNameText.setText(searchModel.getName());
-            final String uid = searchModel.getId();
+            attendeeNameText.setText(participant.getName());
+            final String uid = participant.getId();
             String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
             ImageDisplayUtils.getInstance().displayRoundedImage(attendeeHeadImage, photoUrl, R.drawable.icon_person_default, context, 15);
             return view;

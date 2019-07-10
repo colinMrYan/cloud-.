@@ -31,7 +31,11 @@ public class Participant {
         this.name = JSONUtils.getString(obj, "name", "");
         this.role = JSONUtils.getString(obj, "role", "");
         this.email = JSONUtils.getString(obj, "email", "");
-        this.responseType = JSONUtils.getString(obj, "responseType", "");
+        this.responseType = JSONUtils.getString(obj, "responseType", CALENDAR_RESPONSE_TYPE_UNKNOWN);
+    }
+
+    public static String getTypeCommon() {
+        return TYPE_COMMON;
     }
 
     public String getId() {
@@ -56,6 +60,22 @@ public class Participant {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getResponseType() {
+        return responseType;
+    }
+
+    public void setResponseType(String responseType) {
+        this.responseType = responseType;
     }
 
     public JSONObject toJSONObject() {

@@ -42,7 +42,8 @@
             android:paddingRight="15dp"
             android:text="@string/ok"
             android:textColor="?attr/header_text_color"
-            android:textSize="@dimen/header_function_textsize" />
+            android:textSize="@dimen/header_function_textsize"
+            android:visibility="gone" />
 
 
     </RelativeLayout>
@@ -51,7 +52,8 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_header">
+        android:layout_below="@id/rl_header"
+        android:clickable="false">
 
         <ExpandableListView
             android:id="@+id/expandable_list_view"
