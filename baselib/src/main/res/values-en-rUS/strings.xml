@@ -910,6 +910,8 @@
     <string name="meeting_detail_attendee">Attendee:%1$s</string>
     <string name="meeting_detail_record_holder">Recorder:%1$s</string>
     <string name="meeting_detail_conference">Contact:%1$s</string>
+    <string name="meeting_detail_record_title">Recorder</string>
+    <string name="meeting_detail_conference_title">Contact</string>
     <string name="meeting_detail_note">Note:%1$s</string>
     <string name="meeting_detail_sign">Meeting Sign</string>
     <string name="meeting_detail_summary">十 Add Summary</string>

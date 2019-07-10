@@ -908,6 +908,8 @@
     <string name="meeting_detail_attendee">参会人:%1$s</string>
     <string name="meeting_detail_record_holder">会议记录人:%1$s</string>
     <string name="meeting_detail_conference">会议联络人:%1$s</string>
+    <string name="meeting_detail_record_title">会议记录人</string>
+    <string name="meeting_detail_conference_title">会议联络人 </string>
     <string name="meeting_detail_note">着装要求:%1$s</string>
     <string name="meeting_detail_sign">会议签到</string>
     <string name="meeting_detail_summary">十 添加会议摘要</string>

@@ -237,6 +237,17 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
             view = LayoutInflater.from(context).inflate(R.layout.meeting_attendees_expandale_child_item, null);
             TextView attendeeNameText = view.findViewById(R.id.tv_attendee_name);
             ImageView attendeeHeadImage = view.findViewById(R.id.iv_attendee_head);
+            TextView attendeeType = view.findViewById(R.id.tv_attendee_type);
+            if (participant.getRole().equals(Participant.TYPE_CONTACT)) {
+                attendeeType.setText(R.string.meeting_detail_record_title);
+                attendeeType.setVisibility(View.VISIBLE);
+            } else if (participant.getRole().equals(Participant.TYPE_RECORDER)) {
+                attendeeType.setText(R.string.meeting_detail_record_title);
+                attendeeType.setVisibility(View.VISIBLE);
+            } else {
+                attendeeType.setVisibility(View.GONE);
+            }
+
             View dividerView = view.findViewById(R.id.view_divider);
             dividerView.setVisibility(View.VISIBLE);
             attendeeNameText.setText(participant.getName());
