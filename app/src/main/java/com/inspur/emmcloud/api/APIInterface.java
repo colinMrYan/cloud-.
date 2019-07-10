@@ -363,6 +363,14 @@ public interface APIInterface {
 
     void returnDeleteOfficeFail(String error, int errorCode);
 
+    void returnSetMeetingCommonBuildingSuccess(Building building);
+
+    void returnSetMeetingCommonBuildingFail(String error, int errorCode);
+
+    void returnCancelMeetingCommonBuildingSuccess(Building building);
+
+    void returnCancelMeetingCommonBuildingFail(String error, int errorCode);
+
     void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo);
 
     void returnKnowledgeListFail(String error, int errorCode);
@@ -797,5 +805,13 @@ public interface APIInterface {
     void returnTransmitPictureSuccess(String cid, String description, Message message);
 
     void returnTransmitPictureError(String error, int errorCode);
+
+    void returnSetCalendarChatBindSuccess(String calendarId, String chatId);
+
+    void returnSetCalendarChatBindFail(String error, int errorCode);
+
+    void returnGetCalendarChatBindSuccess(String calendarId, String cid);
+
+    void returnGetCalendarChatBindFail(String error, int errorCode);
 
 }
