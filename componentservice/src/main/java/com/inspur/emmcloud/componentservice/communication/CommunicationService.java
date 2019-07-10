@@ -11,11 +11,13 @@ public interface CommunicationService extends CoreService {
 
     void webSocketSignout();
 
-    void closeWebsocket();
+    void closeWebSocket();
 
     void sendAppStatus();
 
     void stopPush();
 
     boolean isSocketConnect();
+
+    void shareExtendedLinksToConversation(String poster, String title, String subTitle, String url, ShareToConversationListener listener);
 }

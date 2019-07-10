@@ -1,9 +1,10 @@
 package com.inspur.emmcloud.widget.calendardayview;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,8 +16,12 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.ArrayList;
@@ -330,39 +335,160 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         eventView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!(onEventClickListener != null && onEventClickListener.onEventClick(event))) {
-                    showEventDetailPop(view);
+                if (!(onEventClickListener != null && onEventClickListener.onRemoveEventAddDragScaleView())) {
+                    showEventDetailPop(view, event);
                 }
             }
         });
     }
 
-    private void showEventDetailPop(View view) {
+    private void showEventDetailPop(View view, final Event event) {
+        int popViewGap = DensityUtil.dip2px(10);
         View contentView = LayoutInflater.from(getContext())
                 .inflate(R.layout.schedule_pop_calendarview_event_detail, null);
+        contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
         bubbleLayout.setArrowPosition(eventLayout.getWidth() / 2 - DensityUtil.dip2px(7));
-        PopupWindow popupWindow = new PopupWindow(contentView,
-                eventLayout.getWidth() - DensityUtil.dip2px(20),
+        final RelativeLayout operationLayout = contentView.findViewById(R.id.rl_operation);
+        final PopupWindow popupWindow = new PopupWindow(contentView,
+                eventLayout.getWidth() - DensityUtil.dip2px(30),
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setTouchable(true);
-        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+        contentView.findViewById(R.id.iv_close).setOnClickListener(new OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
+            public void onClick(View v) {
+                operationLayout.setVisibility(INVISIBLE);
             }
         });
+        contentView.findViewById(R.id.iv_menu).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                operationLayout.setVisibility(VISIBLE);
+            }
+        });
+        contentView.findViewById(R.id.bt_detail).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onEventClickListener != null) {
+                    onEventClickListener.onShowEventDetail(event);
+                }
+                popupWindow.dismiss();
+            }
+        });
+        contentView.findViewById(R.id.ll_delete).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onEventClickListener != null) {
+                    onEventClickListener.onDeleteEvent(event);
+                }
+                popupWindow.dismiss();
+            }
+        });
+        contentView.findViewById(R.id.ll_share).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onEventClickListener != null) {
+                    onEventClickListener.onShareEvent(event);
+                }
+                popupWindow.dismiss();
+            }
+        });
+        TextView calendarNameText = contentView.findViewById(R.id.tv_calendar_name);
+        ImageView calendarTypeImg = contentView.findViewById(R.id.iv_calendar_type);
+        TextView eventTitleText = contentView.findViewById(R.id.tv_event_title);
+        TextView eventTimeText = contentView.findViewById(R.id.tv_event_time);
+        calendarNameText.setText(getCalendarName(event));
+        int resId = getCalendarTypeImgResId(event);
+        if (resId != -1) {
+            calendarTypeImg.setImageResource(resId);
+        }
+        eventTitleText.setText(event.getEventTitle());
+        String date = TimeUtils.calendar2FormatString(getContext(), selectCalendar, TimeUtils.FORMAT_MONTH_DAY);
+        String week = TimeUtils.getWeekDay(getContext(), selectCalendar);
+        String startTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+        String endTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+        eventTimeText.setText(date + " " + week + " " + startTime + " - " + endTime);
+        popupWindow.setTouchable(true);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
-        // 设置好参数之后再show
-        popupWindow.showAsDropDown(view);
+
+        int mDeviceHeight = ResolutionUtils.getHeight(getContext());
+        Rect location = locateView(view);
+        if (location != null) {
+            int y;
+            //view中心点Y坐标
+            int yMiddle = location.top + view.getHeight() / 2;
+            if (yMiddle > mDeviceHeight / 2) {
+                bubbleLayout.setArrowDirection(ArrowDirection.BOTTOM);
+                // popupWindow.showAsDropDown(view,DensityUtil.dip2px(15),-view.getHeight()-popViewGap-popupWindow.getContentView().getMeasuredHeight());
+                popupWindow.showAtLocation(eventLayout, Gravity.NO_GRAVITY, location.left + DensityUtil.dip2px(15), location.top - popViewGap - popupWindow.getContentView().getMeasuredHeight());
+            } else {
+//                popupWindow.showAsDropDown(view,DensityUtil.dip2px(15),popViewGap);
+                popupWindow.showAtLocation(eventLayout, Gravity.NO_GRAVITY, location.left + DensityUtil.dip2px(15), location.bottom + popViewGap);
+            }
+
+        }
+
     }
+
+    public Rect locateView(View v) {
+        if (v == null) return null;
+        int[] loc_int = new int[2];
+        try {
+            v.getLocationOnScreen(loc_int);
+        } catch (NullPointerException npe) {
+            //Happens when the view doesn't exist on screen anymore.
+            return null;
+        }
+        Rect location = new Rect();
+        location.left = loc_int[0];
+        location.top = loc_int[1];
+        location.right = location.left + v.getWidth();
+        location.bottom = location.top + v.getHeight();
+        return location;
+    }
+
+    private String getCalendarName(Event event) {
+        String calendarName = "";
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                calendarName = getContext().getString(R.string.schedule_calendar_my_schedule);
+                break;
+            case Schedule.TYPE_MEETING:
+                calendarName = getContext().getString(R.string.schedule_calendar_my_meeting);
+                break;
+            default:
+                break;
+        }
+        return calendarName;
+    }
+
+    private int getCalendarTypeImgResId(Event event) {
+        int resId = -1;
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                CalendarColorUtils.getCalendarTypeResId("ORANGE");
+                break;
+            case Schedule.TYPE_MEETING:
+                CalendarColorUtils.getCalendarTypeResId("BLUE");
+                break;
+            default:
+                break;
+        }
+        return resId;
+    }
+
 
     public void setOnEventClickListener(OnEventClickListener onEventClickListener) {
         this.onEventClickListener = onEventClickListener;
     }
 
     public interface OnEventClickListener {
-        boolean onEventClick(Event event);
+        void onShowEventDetail(Event event);
+
+        boolean onRemoveEventAddDragScaleView();
+
+        void onDeleteEvent(Event event);
+
+        void onShareEvent(Event event);
     }
 }

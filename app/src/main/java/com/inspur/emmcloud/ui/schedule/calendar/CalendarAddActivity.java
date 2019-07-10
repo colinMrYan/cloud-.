@@ -630,7 +630,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
         }
 
         @Override
-        public void returnDeleteScheduleSuccess() {
+        public void returnDeleteScheduleSuccess(String scheduleId) {
             LoadingDialog.dimissDlg(loadingDlg);
             EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_CALENDAR_CHANGED, null));
             finish();

@@ -757,7 +757,7 @@ public interface APIInterface {
 
     void returnUpdateScheduleFail(String error, int errorCode);
 
-    void returnDeleteScheduleSuccess();
+    void returnDeleteScheduleSuccess(String scheduleId);
 
     void returnDeleteScheduleFail(String error, int errorCode);
 

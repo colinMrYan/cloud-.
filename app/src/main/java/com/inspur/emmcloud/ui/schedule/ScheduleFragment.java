@@ -28,12 +28,15 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
@@ -110,6 +113,7 @@ public class ScheduleFragment extends BaseFragment implements
     private RelativeLayout contentLayout;
     private DragScaleView dragScaleView;
     private float contentLayoutTouchY = -1;
+    private LoadingDialog loadingDlg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,6 +161,7 @@ public class ScheduleFragment extends BaseFragment implements
     }
 
     private void initView() {
+        loadingDlg = new LoadingDialog(getActivity());
         contentLayout = rootView.findViewById(R.id.rl_content);
         calendarView = rootView.findViewById(R.id.calendar_view_schedule);
         calendarLayout = rootView.findViewById(R.id.calendar_layout_schedule);
@@ -681,8 +686,23 @@ public class ScheduleFragment extends BaseFragment implements
     }
 
     @Override
-    public boolean onEventClick(Event event) {
+    public void onShowEventDetail(Event event) {
+        openEvent(event);
+    }
+
+    @Override
+    public boolean onRemoveEventAddDragScaleView() {
         return removeEventAddDragScaleView();
+    }
+
+    @Override
+    public void onDeleteEvent(Event event) {
+        deleteScheduleEvent(event);
+    }
+
+    @Override
+    public void onShareEvent(Event event) {
+
     }
 
     @Override
@@ -713,6 +733,21 @@ public class ScheduleFragment extends BaseFragment implements
             apiService.getHolidayData(year);
         }
     }
+
+    private void deleteScheduleEvent(Event event) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
+                apiService.deleteSchedule(event.getEventId());
+            } else {
+                Meeting meeting = new Meeting();
+                meeting.setId(event.getEventId());
+                apiService.deleteMeeting(meeting);
+            }
+
+        }
+    }
+
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -753,6 +788,30 @@ public class ScheduleFragment extends BaseFragment implements
             HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), getHolidayDataResult.getYear(), getHolidayDataResult.getHolidayList());
         }
 
+        @Override
+        public void returnDeleteMeetingSuccess(Meeting meeting) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            MeetingCacheUtils.removeMeeting(BaseApplication.getInstance(), meeting.getId());
+            showCalendarEvent(true);
+        }
+
+        @Override
+        public void returnDeleteMeetingFail(String error, int errorCode) {
+            returnDeleteScheduleFail(error, errorCode);
+        }
+
+        @Override
+        public void returnDeleteScheduleSuccess(String scheduleId) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
+            showCalendarEvent(true);
+        }
+
+        @Override
+        public void returnDeleteScheduleFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode);
+        }
 
     }
 }

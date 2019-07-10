@@ -225,8 +225,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.LbcDebug("数据显示：：：" + arg0.toString());
-                apiInterface.returnDeleteScheduleSuccess();
+                apiInterface.returnDeleteScheduleSuccess(scheduleId);
             }
 
             @Override

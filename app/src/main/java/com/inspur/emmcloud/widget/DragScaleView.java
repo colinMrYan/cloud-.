@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 
 public class DragScaleView extends View {
@@ -74,7 +75,7 @@ public class DragScaleView extends View {
                 mRadius, mRadius, paint);
         paint.setTextSize(36);//设置字体大小
         paint.setColor(Color.WHITE);
-        canvas.drawText("再次点击新建日程", rectLeft + DensityUtil.dip2px(7), minHeight - 2 * offset, paint);
+        canvas.drawText(getContext().getString(R.string.schedule_click_to_add_schedule), rectLeft + DensityUtil.dip2px(7), minHeight - 2 * offset, paint);
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
         int bigCircleRadius = DensityUtil.dip2px(4);

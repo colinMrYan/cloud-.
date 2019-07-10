@@ -393,10 +393,10 @@
     <string name="schedule_calendar_pm">下午</string>
     <string name="schedule_calendar_so_on"> 等</string>
     <string name="schedule_calendar_schedules">项日程</string>
-
     <string name="schedule_calendar_no_schedule_today">暂无日程安排</string>
     <string name="schedule_meeting_no_meeting_today">暂无会议安排</string>
     <string name="schedule_task_no_task_today">暂无任务安排</string>
+    <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
 
     <!--任务（新）-->
     <string name="schedule_task_add">添加任务</string>

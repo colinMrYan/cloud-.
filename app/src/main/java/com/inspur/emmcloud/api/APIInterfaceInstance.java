@@ -1697,7 +1697,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDeleteScheduleSuccess() {
+    public void returnDeleteScheduleSuccess(String scheduleId) {
 
     }
 

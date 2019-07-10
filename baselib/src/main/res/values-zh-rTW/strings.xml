@@ -400,6 +400,7 @@
     <string name="schedule_calendar_no_schedule_today">暫無日程安排</string>
     <string name="schedule_meeting_no_meeting_today">暂无會議安排</string>
     <string name="schedule_task_no_task_today">暂无任務安排</string>
+    <string name="schedule_click_to_add_schedule">再次点击新建日程</string>
 
     <!--任务-->
     <string name="schedule_task_add">添加任務</string>

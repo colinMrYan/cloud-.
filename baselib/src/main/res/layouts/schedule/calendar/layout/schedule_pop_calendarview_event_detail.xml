@@ -4,12 +4,13 @@
     android:id="@+id/bubble_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="10dp"
     app:bl_arrowDirection="top"
     app:bl_arrowHeight="10dp"
     app:bl_arrowWidth="14dp"
     app:bl_bubbleColor="@color/white"
     app:bl_cornersRadius="6dp"
-    app:bl_strokeColor="#AAAAAA"
+    app:bl_strokeColor="#bbbbbb"
     app:bl_strokeWidth="1px">
 
     <RelativeLayout
@@ -54,9 +55,8 @@
                     android:layout_toRightOf="@id/iv_calendar_type"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="我的日程"
                     android:textColor="#333333"
-                    android:textSize="15sp" />
+                    android:textSize="14sp" />
             </RelativeLayout>
 
             <LinearLayout
@@ -71,7 +71,7 @@
                     android:src="@drawable/ic_schedule_event_meeing" />
 
                 <TextView
-                    android:id="@+id/tv_event_name"
+                    android:id="@+id/tv_event_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -79,7 +79,6 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="今飞凯达微积分时代峻峰卡死点击"
                     android:textColor="#333333"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -87,7 +86,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="4dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -118,10 +117,10 @@
                 android:background="@null"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
-                android:padding="10dp"
+                android:padding="8dp"
                 android:text="@string/detail"
                 android:textColor="#36A5F6"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <RelativeLayout
@@ -131,55 +130,71 @@
             android:layout_alignBottom="@id/ll_event_detail"
             android:layout_alignTop="@id/ll_event_detail"
             android:background="#f0ffffff"
-            android:gravity="center">
+            android:visibility="invisible">
 
-            <LinearLayout
-                android:id="@+id/ll_delete"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:padding="11dp"
+                android:src="@drawable/ic_recommend_close" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:gravity="center">
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_webex_meeting_delete"
-                    android:tint="#36A5F6" />
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/ll_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/delete"
-                    android:textColor="#36A5F6"
-                    android:textSize="16sp" />
-            </LinearLayout>
+                    android:layout_centerVertical="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/ll_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="50dp"
-                android:layout_toRightOf="@id/ll_delete"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_webex_meeting_delete"
+                        android:tint="#36A5F6" />
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_webex_meeting_share"
-                    android:tint="#36A5F6" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/delete"
+                        android:textColor="#36A5F6"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/ll_share"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/share"
-                    android:textColor="#36A5F6"
-                    android:textSize="16sp" />
-            </LinearLayout>
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:layout_toRightOf="@id/ll_delete"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_webex_meeting_share"
+                        android:tint="#36A5F6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/share"
+                        android:textColor="#36A5F6"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
         </RelativeLayout>
     </RelativeLayout>
 
