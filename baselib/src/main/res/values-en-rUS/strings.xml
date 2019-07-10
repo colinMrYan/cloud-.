@@ -449,6 +449,10 @@
     <string name="schedule_meeting_my_create">I created：</string>
     <string name="schedule_meeting_my_take_part_in"> I involved：</string>
     <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
+    <string name="schedule_meeting_attend_or_not">Attend Or Not</string>
+    <string name="schedule_meeting_attend_ignore">Ignore</string>
+    <string name="schedule_meeting_attend_accept">Accept</string>
+    <string name="schedule_meeting_attend_reject">Reject</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -922,6 +926,7 @@
     <string name="meeting_detail_time">Time：%1$s</string>
     <string name="meeting_detail_remind">Remind：%1$s</string>
     <string name="meeting_detail_create">%1$s Create</string>
+    <string name="meeting_detail_inviter">Inviter:%1$s</string>
     <string name="meeting_detail_attendee">Attendee:%1$s</string>
     <string name="meeting_detail_record_holder">Recorder:%1$s</string>
     <string name="meeting_detail_conference">Contact:%1$s</string>

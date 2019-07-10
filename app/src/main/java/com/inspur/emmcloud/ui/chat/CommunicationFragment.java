@@ -711,10 +711,7 @@ public class CommunicationFragment extends BaseFragment {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
                         IntentUtils.startActivity(getActivity(), ConversationActivity.class, bundle);
-                        sortConversationList();
-                        List<Conversation> conversationList = new ArrayList<>();
-                        conversationList.add(conversation);
-                        createGroupIcon(conversationList);
+                        notifyConversationChange(conversation);
                     }
 
                     @Override
@@ -722,6 +719,14 @@ public class CommunicationFragment extends BaseFragment {
 
                     }
                 });
+    }
+
+    //同步聊天消息  实时更新界面
+    private void notifyConversationChange(Conversation conversation) {
+        sortConversationList();
+        List<Conversation> conversationList = new ArrayList<>();
+        conversationList.add(conversation);
+        createGroupIcon(conversationList);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -765,6 +770,10 @@ public class CommunicationFragment extends BaseFragment {
                     conversationAdapter.setData(displayUIConversationList);
                     conversationAdapter.notifyRealItemRemoved(index);
                 }
+                break;
+            case Constant.EVENTBUS_TAG_CHAT_CHANGE:
+                conversation = (Conversation) eventMessage.getMessageObj();
+                notifyConversationChange(conversation);
                 break;
         }
     }

@@ -122,6 +122,7 @@ public class Constant {
     public static final String EVENTBUS_TASK_ORDER_CHANGE = "task_order_change";
     public static final String EVENTBUS_TAG_SELECT_CALENDAR_CHANGED = "tag_select_calendar_changed";
     public static final String EVENTBUS_TAG_SAFE_UNLOCK = "tag_safe_unlock";//二次认证（刷脸、手势认证通过）
+    public static final String EVENTBUS_TAG_CHAT_CHANGE = "tag_chat_change"; //会议详情发起群聊后，通知聊天界面同步
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
@@ -200,5 +201,5 @@ public class Constant {
 
     public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
     public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
-
+    public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
 }
