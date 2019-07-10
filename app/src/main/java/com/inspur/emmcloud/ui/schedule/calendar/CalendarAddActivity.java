@@ -500,7 +500,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     myCalendar = (MyCalendar) data.getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_TYPE);
                     calendarTypeLayout.setVisibility(View.VISIBLE);
                     calendarTypeNameText.setText(myCalendar.getName());
-                    calendarTypeFlagImage.setImageResource(CalendarColorUtils.getTaskTagResId(myCalendar.getColor()));
+                    calendarTypeFlagImage.setImageResource(CalendarColorUtils.getCalendarTypeResId(myCalendar.getColor()));
                     calenderTypeTipLayout.setVisibility(View.VISIBLE);
                     break;
                 case REQUEST_CAL_ALERT_TIME:

@@ -522,7 +522,6 @@ public class MeetingAddActivity extends BaseActivity {
         meeting.setEndTime(endTimeCalendar.getTimeInMillis());
         meeting.setNote(note);
         meeting.setLocation(location.toJSONObject().toString());
-        LogUtils.LbcDebug("location "+location.toJSONObject().toString());
         JSONArray array = new JSONArray();
         try {
             for (SearchModel searchModel : attendeeSearchModelList) {

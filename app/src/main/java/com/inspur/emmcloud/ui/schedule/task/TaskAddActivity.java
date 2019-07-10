@@ -433,19 +433,19 @@ public class TaskAddActivity extends BaseActivity {
         if (taskColorTagList.size() == 1) {
             singleTagLayout.setVisibility(View.VISIBLE);
             tagsLayout.setVisibility(View.GONE);
-            taskTypeTapImage.setImageResource(CalendarColorUtils.getTaskTagResId(taskColorTagList.get(0).getColor()));
+            taskTypeTapImage.setImageResource(CalendarColorUtils.getCalendarTypeResId(taskColorTagList.get(0).getColor()));
             taskTypeNameText.setText(taskColorTagList.get(0).getTitle());
         } else if (taskColorTagList.size() > 1) {
             singleTagLayout.setVisibility(View.GONE);
             tagsLayout.setVisibility(View.VISIBLE);
-            int widthAndHigh = DensityUtil.dip2px(this, 8);
+            int widthAndHigh = DensityUtil.dip2px(this, 14);
             tagsLayout.removeAllViews();
             for (int i = 0; i < taskColorTagList.size(); i++) {
                 ImageView view = new ImageView(this);
                 int rightPaddingPixNum = DensityUtil.dip2px(this, 5);
                 view.setPadding(rightPaddingPixNum, 0, 0, 0);
                 view.setLayoutParams(new ViewGroup.LayoutParams(widthAndHigh + rightPaddingPixNum, widthAndHigh));
-                view.setImageResource(CalendarColorUtils.getTaskTagResId(taskColorTagList.get(i).getColor()));
+                view.setImageResource(CalendarColorUtils.getCalendarTypeResId(taskColorTagList.get(i).getColor()));
                 tagsLayout.addView(view);
             }
         }

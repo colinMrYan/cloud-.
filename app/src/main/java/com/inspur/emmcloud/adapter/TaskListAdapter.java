@@ -65,10 +65,10 @@ public class TaskListAdapter extends BaseAdapter {
             deadLineText.setVisibility(View.GONE);
         }
         if (task.getTags().size() > 0) {
-            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getTaskTagResId(task.getTags().get(0).getColor()));
+            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getCalendarTypeResId(task.getTags().get(0).getColor()));
         } else {
             // 如果没有tag，显示默认tag
-            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getTaskTagResId("BLUE"));
+            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getCalendarTypeResId("BLUE"));
         }
         convertView.findViewById(R.id.iv_task_level).setVisibility(task.getPriority() == 2 ? View.VISIBLE : View.GONE);
         return convertView;
