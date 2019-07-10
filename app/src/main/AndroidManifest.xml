@@ -667,6 +667,10 @@
             android:name=".ui.schedule.meeting.MeetingOfficeSettingActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingAttendeeStateActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.schedule.calendar.CalendarAddActivity"

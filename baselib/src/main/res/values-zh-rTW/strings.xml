@@ -205,6 +205,8 @@
     <string name="comment">評論</string>
     <string name="write_comment">寫評論</string>
 
+    <string name="news_font_name_text">字體</string>
+
     <!--&lt;!&ndash; 登錄部分 &ndash;&gt;-->
     <!--<string name="login_invaliad_account_or_pwd">用戶名或密碼錯誤</string>-->
     <!--<string name="login_captchas_login">短信登錄 </string>-->

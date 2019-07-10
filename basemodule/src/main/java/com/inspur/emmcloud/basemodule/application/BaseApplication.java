@@ -5,20 +5,18 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
-import android.view.Gravity;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.github.zafarkhaja.semver.Version;
-import com.hjq.toast.ToastUtils;
-import com.hjq.toast.style.ToastBlackStyle;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -119,9 +117,7 @@ public abstract class BaseApplication extends MultiDexApplication {
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
-        ToastUtils.init(this, new ToastBlackStyle());
-        ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
-        ToastUtils.setView(com.inspur.emmcloud.baselib.util.ToastUtils.createTextView(this));
+        ToastUtils.init(this);
     }
 
     /**************************************登出逻辑相关********************************************************/
