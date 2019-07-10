@@ -2,9 +2,6 @@
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">集团新闻</string>
     <string name="news_group_news_detail">新闻详情</string>
-    <string name="news_share">分享到</string>
-    <string name="news_share_success">分享成功</string>
-    <string name="news_share_fail">分享失败</string>
     <string name="news_day_mode_text">标准模式</string>
     <string name="news_night_mode_text">夜间模式</string>
     <string name="news_share_text">分享</string>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
 
     <string name="app_name">云+</string>
     <string name="app_name_zhihuichengjian">智慧城建</string>
@@ -207,6 +207,9 @@
     <string name="write_comment">写评论</string>
 
     <string name="news_font_name_text">字号</string>
+    <string name="news_share">分享到</string>
+    <string name="news_share_success">分享成功</string>
+    <string name="news_share_fail">分享失败</string>
 
 
     <!--&lt;!&ndash; 登录部分 &ndash;&gt;-->
