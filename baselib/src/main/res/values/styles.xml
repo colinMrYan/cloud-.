@@ -13,6 +13,8 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="colorAccent">#36A5F6</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
 
         <!-- button  init-->
         <item name="CustomButtonStyle">@style/CusButtonBase</item>
@@ -73,7 +75,7 @@
         <item name="mine_my_info_card_enterprise_color">#666666</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
         <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
-        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_black</item>
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
 
@@ -112,7 +114,7 @@
         <item name="mine_my_info_card_enterprise_color">#666666</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_white</item>
         <item name="mine_my_info_menu_tint_color">@color/header_text_black</item>
-        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_white</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_black</item>
         <item name="schedule_tab_text_color_normal">@color/msg_content_color</item>
         <item name="schedule_tab_text_color_select">@color/header_text_black</item>
     </style>
@@ -150,7 +152,7 @@
         <item name="mine_my_info_card_enterprise_color">@android:color/white</item>
         <item name="mine_my_info_card_bg">@drawable/ic_mine_card_my_info_bg_blue</item>
         <item name="mine_my_info_menu_tint_color">@android:color/white</item>
-        <item name="mine_my_info_switch_enterprise">@drawable/ic_mine_my_info_switch_enterprise_blue</item>
+        <item name="mine_my_info_switch_enterprise">@drawable/basemodule_drop_down_white</item>
         <item name="schedule_tab_text_color_normal">@color/schedule_tab_text_normal_blue</item>
         <item name="schedule_tab_text_color_select">@android:color/white</item>
     </style>

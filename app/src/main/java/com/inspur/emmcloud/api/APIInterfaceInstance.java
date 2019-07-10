@@ -20,8 +20,6 @@ import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
@@ -100,6 +98,10 @@ import java.util.List;
 public class APIInterfaceInstance implements APIInterface {
 
 
+    public APIInterfaceInstance() {
+        super();
+    }
+
     @Override
     public void returnUploadExceptionSuccess(List<AppException> appExceptionList) {
 
@@ -153,7 +155,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
     }
 
-
     @Override
     public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
     }
@@ -205,7 +206,6 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnCheckCloudPluseConnectionError(String error, int responseCode, String url) {
 
     }
-
 
     @Override
     public void returnUploadMyHeadSuccess(
@@ -311,32 +311,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadResImgFail(String error, int errorCode, String fakeMessageId) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnGroupNewsTitleSuccess(
-            GetNewsTitleResult getNewsTitleResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnGroupNewsTitleFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnGroupNewsDetailSuccess(
-            GetGroupNewsDetailResult getGroupNewsDetailResult, int page) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnGroupNewsDetailFail(String error, int errorCode, int page) {
         // TODO Auto-generated method stub
 
     }
@@ -454,7 +428,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
 
     }
-
 
     @Override
     public void returnTripSuccess(Trip trip) {
@@ -725,7 +698,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
     @Override
     public void returnAddAttachMentSuccess(Attachment attachment) {
         // TODO Auto-generated method stub
@@ -774,7 +746,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
     @Override
     public void returnDndSuccess() {
         // TODO Auto-generated method stub
@@ -786,7 +757,6 @@ public class APIInterfaceInstance implements APIInterface {
         // TODO Auto-generated method stub
 
     }
-
 
     @Override
     public void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity) {
@@ -868,6 +838,26 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnDeleteOfficeFail(String error, int errorCode) {
         // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void returnSetMeetingCommonBuildingSuccess(Building building) {
+
+    }
+
+    @Override
+    public void returnSetMeetingCommonBuildingFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnCancelMeetingCommonBuildingSuccess(Building building) {
+
+    }
+
+    @Override
+    public void returnCancelMeetingCommonBuildingFail(String error, int errorCode) {
 
     }
 
@@ -1833,6 +1823,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnTransmitPictureError(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnSetCalendarChatBindSuccess(String calendarId, String chatId) {
+
+    }
+
+    @Override
+    public void returnSetCalendarChatBindFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetCalendarChatBindSuccess(String calendar, String cid) {
+
+    }
+
+    @Override
+    public void returnGetCalendarChatBindFail(String error, int errorCode) {
 
     }
 }

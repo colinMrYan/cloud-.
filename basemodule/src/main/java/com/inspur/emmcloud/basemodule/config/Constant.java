@@ -123,6 +123,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_SELECT_CALENDAR_CHANGED = "tag_select_calendar_changed";
     public static final String EVENTBUS_TAG_SAFE_UNLOCK = "tag_safe_unlock";//二次认证（刷脸、手势认证通过）
     public static final String EVENTBUS_TAG_CHAT_CHANGE = "tag_chat_change"; //会议详情发起群聊后，通知聊天界面同步
+    public static final String EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED = "tag_schedule_meeting_common_office_changed";
 
     public static final String SERVICE_VERSION_CHAT_V0 = "v0";
     public static final String SERVICE_VERSION_CHAT_V1 = "v1";
@@ -192,14 +193,36 @@ public class Constant {
 
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
-
-
-    public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
-    public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
-    public static final String AROUTER_CLASS_WEB_FILEMANAGER = "/web/FileManagerActivity";
-    public static final String AROUTER_CLASS_CONTACT_SEARCH = "/contact/contactSearch"; //通讯录选择界面
-
     public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
     public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
+
+    public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
+
+    public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
+    public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
+    public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";
+    public static final String AROUTER_CLASS_LOGIN_BY_SMS = "/login/LoginBySmsActivity";
+
+
+    public static final String AROUTER_CLASS_WEB_FILEMANAGER = "/web/FileManagerActivity";
+    public static final String AROUTER_CLASS_WEB_SCANRESULT = "/web/ScanResultActivity";
+    public static final String AROUTER_CLASS_WEB_MAIN = "/web/ImpActivity";
+    public static final String AROUTER_CLASS_WEB_MAIN_TEST = "/web/ScanResultActivity";
+
+    public static final String AROUTER_CLASS_CONTACT_SEARCH = "/contact/ContactSearchActivity"; //通讯录选择界面
+    public static final String AROUTER_CLASS_CONTACT_USERINFO = "/contact/UserInfoActivity";
+
+    public static final String AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION = "/setting/NoPermissionDialogActivity";
+
+    public static final String AROUTER_CLASS_APP_INDEX = "/app/IndexActivity";
+    public static final String AROUTER_CLASS_APP_NETWORK_DETAIL = "/app/NetWorkStateDetailActivity";
+
+    public static final String AROUTER_CLASS_AROUTER_DEGRADE = "/aRouter/degrade";
+    public static final String AROUTER_CLASS_MAIL_LOGIN = "/mail/login";
+
+    public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
+
+
+
 }

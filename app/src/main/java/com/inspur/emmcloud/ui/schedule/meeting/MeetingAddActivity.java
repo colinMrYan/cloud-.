@@ -423,7 +423,6 @@ public class MeetingAddActivity extends BaseActivity {
                     meetingPositionText.setText(meetingRoom.getBuilding().getName() + " " + meetingRoom.getName());
                     location = new Location();
                     location.setId(meetingRoom.getId());
-                    LogUtils.LbcDebug("meeting Id"+meetingRoom.getId());
                     location.setBuilding(meetingRoom.getBuilding().getName());
                     location.setDisplayName(meetingRoom.getName());
                     break;
@@ -531,12 +530,14 @@ public class MeetingAddActivity extends BaseActivity {
                 obj.put("id", searchModel.getId());
                 obj.put("name", searchModel.getName());
                 obj.put("role", Participant.TYPE_COMMON);
+                obj.put("email", searchModel.getEmail());
                 array.put(obj);
             }
             for (SearchModel searchModel : recorderSearchModelList) {
                 JSONObject obj = new JSONObject();
                 obj.put("id", searchModel.getId());
                 obj.put("name", searchModel.getName());
+                obj.put("email", searchModel.getEmail());
                 obj.put("role", Participant.TYPE_RECORDER);
                 array.put(obj);
             }
@@ -544,6 +545,7 @@ public class MeetingAddActivity extends BaseActivity {
                 JSONObject obj = new JSONObject();
                 obj.put("id", searchModel.getId());
                 obj.put("name", searchModel.getName());
+                obj.put("email", searchModel.getEmail());
                 obj.put("role", Participant.TYPE_CONTACT);
                 array.put(obj);
             }

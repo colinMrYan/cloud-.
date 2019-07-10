@@ -90,8 +90,8 @@ public class MoreFragment extends BaseFragment {
             mineLayoutItemGroupList = mainTabProperty.getMineLayoutItemGroupList();
         }
         if (mineLayoutItemGroupList.size() == 0) {
-            MineLayoutItemGroup mineLayoutItemGroupPersonnalInfo = new MineLayoutItemGroup();
-            mineLayoutItemGroupPersonnalInfo.getMineLayoutItemList()
+            MineLayoutItemGroup mineLayoutItemGroupPersonalInfo = new MineLayoutItemGroup();
+            mineLayoutItemGroupPersonalInfo.getMineLayoutItemList()
                     .add(new MineLayoutItem("my_personalInfo_function", "", "", ""));
             MineLayoutItemGroup mineLayoutItemGroupSetting = new MineLayoutItemGroup();
             mineLayoutItemGroupSetting.getMineLayoutItemList().add(new MineLayoutItem("my_setting_function",
@@ -102,7 +102,7 @@ public class MoreFragment extends BaseFragment {
             MineLayoutItemGroup mineLayoutItemGroupAboutUs = new MineLayoutItemGroup();
             mineLayoutItemGroupAboutUs.getMineLayoutItemList().add(new MineLayoutItem("my_aboutUs_function",
                     "personcenter_aboutus", "", getString(R.string.about_text)));
-            mineLayoutItemGroupList.add(mineLayoutItemGroupPersonnalInfo);
+            mineLayoutItemGroupList.add(mineLayoutItemGroupPersonalInfo);
             mineLayoutItemGroupList.add(mineLayoutItemGroupSetting);
             mineLayoutItemGroupList.add(mineLayoutItemGroupCardbox);
             mineLayoutItemGroupList.add(mineLayoutItemGroupAboutUs);

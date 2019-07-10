@@ -191,7 +191,7 @@ public class LoginActivity extends BaseActivity {
         if (!isHasSetShortPassword) {
             IntentUtils.startActivity(LoginActivity.this, PasswordFirstSettingActivity.class, true);
         } else {
-            ARouter.getInstance().build("/app/index").navigation();
+            ARouter.getInstance().build(BaseApplication.getInstance().getIntentClassRouterAfterLogin()).navigation();
             finish();
         }
     }

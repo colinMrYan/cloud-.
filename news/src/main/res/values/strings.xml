@@ -1,0 +1,26 @@
+<resources>
+    <!-- 集团新闻 部分 -->
+    <string name="news_group_news">集团新闻</string>
+    <string name="news_group_news_detail">新闻详情</string>
+    <string name="news_share">分享到</string>
+    <string name="news_share_success">分享成功</string>
+    <string name="news_share_fail">分享失败</string>
+    <string name="news_day_mode_text">标准模式</string>
+    <string name="news_night_mode_text">夜间模式</string>
+    <string name="news_share_text">分享</string>
+    <string name="news_font_smaller">小</string>
+    <string name="news_font_normal">标准</string>
+    <string name="news_font_middle">中</string>
+    <string name="news_font_big_text">大</string>
+    <string name="news_font_biggest_text">超大</string>
+    <string name="news_read_mode">阅读模式</string>
+    <string name="news_instructions_text">批示</string>
+    <string name="news_instructions_success_text">发送成功</string>
+    <string name="news_instructions">批示意见</string>
+    <string name="news_no_news">暂无新闻</string>
+    <string name="news_has_instructions_news">您已批示过此新闻!</string>
+    <string name="news_has_instructions_known">了解了</string>
+    <string name="news_please_instruction">请您输入批示内容</string>
+    <string name="news_reload">重新加载</string>
+    <string name="news_fail_load_check_net">内容加载失败，请检查网络</string>
+</resources>

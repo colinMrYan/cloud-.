@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection">
+
     <application
         android:name=".MyApplication"
         android:allowBackup="false"
@@ -23,6 +24,7 @@
                 android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -141,13 +143,13 @@
 
         <activity
             android:name=".ui.mine.setting.GestureLoginActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.setting.FaceVerifyActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
@@ -665,6 +667,10 @@
             android:name=".ui.schedule.meeting.MeetingOfficeSettingActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.meeting.MeetingAttendeeStateActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.schedule.calendar.CalendarAddActivity"
@@ -682,6 +688,11 @@
             android:name=".ui.schedule.calendar.CalendarSettingActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.schedule.calendar.CalendarAccountSelectActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.schedule.task.TaskAddActivity"
             android:resizeableActivity="true"
@@ -755,18 +766,15 @@
         <activity
             android:name=".ui.appcenter.mail.MailHomeActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.mail.MailDetailActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.mail.MailLoginActivity"
             android:resizeableActivity="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.appcenter.mail.MailCertificateInstallActivity"
@@ -863,10 +871,6 @@
             android:excludeFromRecents="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.UMDefault" />
-
-
-
-
 
 
     </application>

@@ -1121,7 +1121,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingRoomsUrl() {
-        return getMeetingBaseUrl() + "room";
+        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "room";
     }
 
     /**
@@ -1167,7 +1167,7 @@ public class APIUri {
      * @return
      */
     public static String getOfficeUrl() {
-        return getMeetingBaseUrl() + "location/office";
+        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "Location";
     }
 
     /**
@@ -1176,7 +1176,7 @@ public class APIUri {
      * @return
      */
     public static String addOfficeUrl() {
-        return getMeetingBaseUrl() + "location/office";
+        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "CommonLocation";
     }
 
     /**
@@ -1194,7 +1194,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingIsAdminUrl() {
-        return getMeetingBaseUrl() + "is_admin?";
+        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "is_admin";
     }
 
     /**
@@ -1205,6 +1205,31 @@ public class APIUri {
     public static String getLoctionUrl() {
         return getMeetingBaseUrl() + "location";
     }
+
+    /**
+     * 获取园区
+     *
+     * @return
+     */
+    public static String getLocationUrl() {
+        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "Location";
+    }
+
+
+    /**
+     * 设置日程的聊天组
+     */
+    public static String getSetCalendarBindChatUrl() {
+        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.1/calendar/Chat/Bind";
+    }
+
+    /**
+     * 获取对应日程的聊天组
+     */
+    public static String getCalendarBindChatUrl(String calendarId) {
+        return "https:/id/emm.inspur.com/schedule-ext/api/schedule/v6.1/calendar/Chat/" + calendarId;
+    }
+
 
     /**********************日历接口**********************/
     /**

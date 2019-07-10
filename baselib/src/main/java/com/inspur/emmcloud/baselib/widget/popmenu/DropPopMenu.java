@@ -3,9 +3,11 @@ package com.inspur.emmcloud.baselib.widget.popmenu;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -349,9 +351,13 @@ public class DropPopMenu {
     }
 
     public float getTextWidth(String text, int textSize) {
-        int digitAndLetterCount = getDigitLetterCount(text);
-        int chLength = text.length() - digitAndLetterCount;
-        return chLength * textSize + digitAndLetterCount * textSize * 2 / 3;
+        TextView textView = new TextView(mContext);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        Paint paint = textView.getPaint();
+        return paint.measureText(text);
+//        int digitAndLetterCount = getDigitLetterCount(text);
+//        int chLength = text.length() - digitAndLetterCount;
+//        return chLength * textSize + digitAndLetterCount * textSize * 2 / 3;
     }
 
     private int getDigitLetterCount(String text) {

@@ -19,8 +19,6 @@ import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailDetailResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailFolderResult;
 import com.inspur.emmcloud.bean.appcenter.mail.GetMailListResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
@@ -178,13 +176,6 @@ public interface APIInterface {
 
     void returnUploadResImgFail(String error, int errorCode, String fakeMessageId);
 
-    void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
-
-    void returnGroupNewsTitleFail(String error, int errorCode);
-
-    void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult, int page);
-
-    void returnGroupNewsDetailFail(String error, int errorCode, int page);
 
     void returnMeetingRoomListSuccess(GetMeetingRoomListResult getMeetingRoomsResult);
 
@@ -371,6 +362,14 @@ public interface APIInterface {
     void returnDeleteOfficeSuccess(Office office);
 
     void returnDeleteOfficeFail(String error, int errorCode);
+
+    void returnSetMeetingCommonBuildingSuccess(Building building);
+
+    void returnSetMeetingCommonBuildingFail(String error, int errorCode);
+
+    void returnCancelMeetingCommonBuildingSuccess(Building building);
+
+    void returnCancelMeetingCommonBuildingFail(String error, int errorCode);
 
     void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo);
 
@@ -806,5 +805,13 @@ public interface APIInterface {
     void returnTransmitPictureSuccess(String cid, String description, Message message);
 
     void returnTransmitPictureError(String error, int errorCode);
+
+    void returnSetCalendarChatBindSuccess(String calendarId, String chatId);
+
+    void returnSetCalendarChatBindFail(String error, int errorCode);
+
+    void returnGetCalendarChatBindSuccess(String calendarId, String cid);
+
+    void returnGetCalendarChatBindFail(String error, int errorCode);
 
 }

@@ -5,20 +5,18 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
-import android.view.Gravity;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.github.zafarkhaja.semver.Version;
-import com.hjq.toast.ToastUtils;
-import com.hjq.toast.style.ToastBlackStyle;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.basemodule.bean.Enterprise;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
@@ -48,7 +46,7 @@ import java.util.Map;
 /**
  * Application class
  */
-public class BaseApplication extends MultiDexApplication {
+public abstract class BaseApplication extends MultiDexApplication {
     private static final String TAG = "BaseApplication";
     private static boolean isContactReady = false;
     private static BaseApplication instance;
@@ -66,6 +64,7 @@ public class BaseApplication extends MultiDexApplication {
 
     private String currentChannelCid = "";
     private boolean isSafeLock = false;//是否正处于安全锁定中（正处于二次认证解锁页面）
+
 
     /**
      * 单例获取application实例
@@ -118,9 +117,7 @@ public class BaseApplication extends MultiDexApplication {
         refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
-        ToastUtils.init(this, new ToastBlackStyle());
-        ToastUtils.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
-        ToastUtils.setView(com.inspur.emmcloud.baselib.util.ToastUtils.createTextView(this));
+        ToastUtils.init(this);
     }
 
     /**************************************登出逻辑相关********************************************************/
@@ -529,4 +526,8 @@ public class BaseApplication extends MultiDexApplication {
     public void setCurrentChannelCid(String currentChannelCid) {
         this.currentChannelCid = currentChannelCid;
     }
+
+    /*******************设置登录后跳转的路由*************************************/
+
+    public abstract String getIntentClassRouterAfterLogin();
 }

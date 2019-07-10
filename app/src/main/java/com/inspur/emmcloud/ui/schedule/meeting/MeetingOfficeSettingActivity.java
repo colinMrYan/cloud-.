@@ -8,18 +8,17 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MeetingOfficeAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
-import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
-import com.inspur.emmcloud.bean.schedule.meeting.GetOfficeListResult;
 import com.inspur.emmcloud.bean.schedule.meeting.MeetingLocation;
-import com.inspur.emmcloud.bean.schedule.meeting.Office;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,22 +31,19 @@ import butterknife.ButterKnife;
  */
 
 public class MeetingOfficeSettingActivity extends BaseActivity implements ExpandableListView.OnChildClickListener {
+
     @BindView(R.id.expandable_listView)
     ExpandableListView expandableListView;
     private LoadingDialog loadingDlg;
     private ScheduleApiService apiService;
     private List<MeetingLocation> locationList = new ArrayList<>();
     private MeetingOfficeAdapter adapter;
-    private List<Office> officeList = new ArrayList<>();
-    private List<String> officeIdList = new ArrayList<>();
     private boolean isMeetingOfficeChanged = false;
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
-        getMyMeetingOfficeIdList();
         initView();
-        getOfficeList();
         getMeetingLocation();
     }
 
@@ -62,40 +58,22 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         expandableListView.setVerticalScrollBarEnabled(false);
         expandableListView.setHeaderDividersEnabled(false);
         expandableListView.setOnChildClickListener(this);
-        adapter = new MeetingOfficeAdapter(this, officeList);
+        adapter = new MeetingOfficeAdapter(this);
         expandableListView.setAdapter(adapter);
         apiService = new ScheduleApiService(this);
         apiService.setAPIInterface(new WebService());
     }
 
-    private void getMyMeetingOfficeIdList() {
-        String officeIdListJson = PreferencesByUserAndTanentUtils.getString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, null);
-        if (officeIdListJson != null) {
-            officeIdList = JSONUtils.JSONArray2List(officeIdListJson, new ArrayList<String>());
-        }
-    }
-
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         Building building = locationList.get(groupPosition).getOfficeBuildingList().get(childPosition);
-        Office office = getBuildingOfOffice(building);
-        if (office != null) {
-            deleteOffice(office);
+        if (building.isFavorite() == true) {
+            cancelCommonBuilding(building);
         } else {
-            addOffice(building);
+            setCommonBuilding(building);
         }
         return false;
     }
-
-    private Office getBuildingOfOffice(Building building) {
-        for (Office office : officeList) {
-            if (office.getOfficeBuilding().getId().equals(building.getId())) {
-                return office;
-            }
-        }
-        return null;
-    }
-
 
     public void onClick(View view) {
         if (view.getId() == R.id.ibt_back) {
@@ -111,12 +89,6 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         finish();
     }
 
-    private void getOfficeList() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-            loadingDlg.show();
-            apiService.getOfficeList();
-        }
-    }
 
     private void getMeetingLocation() {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
@@ -125,18 +97,33 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         }
     }
 
-    private void addOffice(Building building) {
+    /**
+     * 设置常用地点
+     */
+    private void setCommonBuilding(Building building) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             loadingDlg.show();
-            apiService.addMeetingOffice(building);
+            apiService.setMeetingCommonBuilding(building);
         }
     }
 
-
-    private void deleteOffice(Office office) {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+    /**
+     * 取消常用地点
+     **/
+    private void cancelCommonBuilding(Building building) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
             loadingDlg.show();
-            apiService.deleteMeetingOffice(office);
+            apiService.cancelMeetingCommonBuilding(building);
+        }
+    }
+
+    private void changeBuildingIsFavoriteState(Building building) {
+        for (int i = 0; i < locationList.size(); i++) {
+            for (int j = 0; j < locationList.get(i).getOfficeBuildingList().size(); j++) {
+                if (locationList.get(i).getOfficeBuildingList().get(j).getId().equals(building.getId())) {
+                    locationList.get(i).getOfficeBuildingList().get(j).setFavorite(!building.isFavorite());
+                }
+            }
         }
     }
 
@@ -156,50 +143,31 @@ public class MeetingOfficeSettingActivity extends BaseActivity implements Expand
         }
 
         @Override
-        public void returnAddMeetingOfficeSuccess(Office office, Building building) {
-            isMeetingOfficeChanged = true;
+        public void returnCancelMeetingCommonBuildingSuccess(Building building) {
             LoadingDialog.dimissDlg(loadingDlg);
-            officeIdList.add(office.getId());
-            officeList.add(office);
-            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
+            changeBuildingIsFavoriteState(building);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED, null));
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        public void returnAddMeetingOfficeFail(String error, int errorCode) {
+        public void returnCancelMeetingCommonBuildingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MeetingOfficeSettingActivity.this, error, errorCode);
-        }
+            super.returnCancelMeetingCommonBuildingFail(error, errorCode);
+    }
 
         @Override
-        public void returnDeleteOfficeSuccess(Office office) {
-            isMeetingOfficeChanged = true;
+        public void returnSetMeetingCommonBuildingSuccess(Building building) {
             LoadingDialog.dimissDlg(loadingDlg);
-            officeList.remove(office);
-            officeIdList.remove(office.getId());
-            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
+            changeBuildingIsFavoriteState(building);
+            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_SCHEDULE_MEETING_COMMON_OFFICE_CHANGED, null));
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        public void returnDeleteOfficeFail(String error, int errorCode) {
+        public void returnSetMeetingCommonBuildingFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(MeetingOfficeSettingActivity.this, error, errorCode);
-        }
-
-        @Override
-        public void returnOfficeListResultSuccess(GetOfficeListResult getOfficeListResult) {
-            officeList.clear();
-            officeList.addAll(getOfficeListResult.getOfficeList());
-            officeIdList = getOfficeListResult.getOfficeIdList();
-            PreferencesByUserAndTanentUtils.putString(MyApplication.getInstance(), Constant.PREF_MEETING_OFFICE_ID_LIST, JSONUtils.toJSONString(officeIdList));
-            adapter.notifyDataSetChanged();
-        }
-
-
-        @Override
-        public void returnOfficeListResultFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(MeetingOfficeSettingActivity.this, error, errorCode);
+            super.returnSetMeetingCommonBuildingFail(error, errorCode);
         }
     }
 }
