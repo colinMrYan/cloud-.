@@ -35,7 +35,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="16px"
             android:textColor="#888888"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <View

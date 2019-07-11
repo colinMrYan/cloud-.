@@ -50,6 +50,8 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     MeetingAttendeeStateAdapter meetingAttendeeStateAdapter;
     Meeting meeting;
     private List<MeetingAttendees> meetingAttendeesList = new ArrayList<>();
+    private List<Participant> recordParticipants = new ArrayList<>();
+    private List<Participant> contactParticipants = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -76,6 +78,8 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     }
 
     private void initData() {
+        recordParticipants = meeting.getRecorderParticipantList();
+        contactParticipants = meeting.getRoleParticipantList();
         divideAttendeeGroup();
     }
 
@@ -102,16 +106,17 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
                 participant.setId(contactUser.getId());
                 participant.setName(contactUser.getName());
                 participant.setEmail(contactUser.getEmail());
+                participant.setRole(Participant.TYPE_INVITE);
             } else {
                 participant.setId("");
                 participant.setName(meeting.getOwner());
                 participant.setEmail(meeting.getOwner());
+                participant.setRole(Participant.TYPE_INVITE);
             }
             meetingInvite.getMeetingAttendeesList().add(participant);
         }
         //其他人员放在无响应里去重+转化
         List<Participant> participantList = meeting.getAllParticipantList();
-        //费时算法
         for (int i = 0; i < participantList.size(); i++) {
             Participant currentParticipant = participantList.get(i);
             for (int j = i + 1; j < participantList.size(); j++) {
@@ -135,7 +140,6 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
                 }
             }
         }
-
         //根据当前的个数将相应的组添加到Adapter用的数组内
         if (meetingInvite.getMeetingAttendeesList().size() > 0) {
             meetingAttendeesList.add(meetingInvite);
@@ -238,22 +242,24 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
             TextView attendeeNameText = view.findViewById(R.id.tv_attendee_name);
             ImageView attendeeHeadImage = view.findViewById(R.id.iv_attendee_head);
             TextView attendeeType = view.findViewById(R.id.tv_attendee_type);
-            if (participant.getRole().equals(Participant.TYPE_CONTACT)) {
-                attendeeType.setText(R.string.meeting_detail_record_title);
-                attendeeType.setVisibility(View.VISIBLE);
-            } else if (participant.getRole().equals(Participant.TYPE_RECORDER)) {
-                attendeeType.setText(R.string.meeting_detail_record_title);
-                attendeeType.setVisibility(View.VISIBLE);
-            } else {
-                attendeeType.setVisibility(View.GONE);
-            }
-
             View dividerView = view.findViewById(R.id.view_divider);
             dividerView.setVisibility(View.VISIBLE);
             attendeeNameText.setText(participant.getName());
             final String uid = participant.getId();
             String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), uid);
             ImageDisplayUtils.getInstance().displayRoundedImage(attendeeHeadImage, photoUrl, R.drawable.icon_person_default, context, 15);
+            for (int num = 0; num < recordParticipants.size(); num++) {
+                if (participant.getId().equals(recordParticipants.get(num).getId()) && participant.getName().equals(recordParticipants.get(num).getName())) {
+                    attendeeType.setText(R.string.meeting_detail_record_title);
+                    attendeeType.setVisibility(View.VISIBLE);
+                }
+            }
+            for (int num = 0; num < contactParticipants.size(); num++) {
+                if (participant.getId().equals(contactParticipants.get(num).getId()) && participant.getName().equals(contactParticipants.get(num).getName())) {
+                    attendeeType.setText(R.string.meeting_detail_conference_title);
+                    attendeeType.setVisibility(View.VISIBLE);
+                }
+            }
             return view;
         }
 
