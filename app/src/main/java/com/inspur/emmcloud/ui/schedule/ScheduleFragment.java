@@ -798,6 +798,11 @@ public class ScheduleFragment extends BaseFragment implements
     }
 
     @Override
+    public void onGroupChat(Event event) {
+        ToastUtils.show("发起群聊");
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);

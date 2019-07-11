@@ -1121,7 +1121,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingRoomsUrl() {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + "room";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/room";
     }
 
     /**

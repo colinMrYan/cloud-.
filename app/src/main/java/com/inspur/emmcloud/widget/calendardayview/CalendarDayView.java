@@ -397,6 +397,15 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 popupWindow.dismiss();
             }
         });
+        contentView.findViewById(R.id.ll_group_chat).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onEventClickListener != null) {
+                    onEventClickListener.onGroupChat(event);
+                }
+                popupWindow.dismiss();
+            }
+        });
         //V0环境不显示分享按钮
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             shareLayout.setVisibility(View.GONE);
@@ -511,5 +520,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         void onDeleteEvent(Event event);
 
         void onShareEvent(Event event);
+
+        void onGroupChat(Event event);
     }
 }
