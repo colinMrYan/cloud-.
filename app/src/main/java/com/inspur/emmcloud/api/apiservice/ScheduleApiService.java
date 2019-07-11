@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.api.apiservice;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
@@ -379,7 +380,10 @@ public class ScheduleApiService {
         String baseUrl = APIUri.getSetCalendarBindChatUrl();
         final String completeUrl = baseUrl;
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
+        params.addParameter("calendarId", calendarId);
+        params.addParameter("chatId", chatId);
+        params.setAsJsonContent(true);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -400,12 +404,14 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
+                Log.d("zhang", "setCalendarBindChat callbackSuccess: -------");
                 apiInterface.returnSetCalendarChatBindSuccess(calendarId, chatId);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
+                Log.d("zhang", "setCalendarBindChat callbackFail: -------");
                 apiInterface.returnSetCalendarChatBindFail(error, responseCode);
             }
         });
@@ -419,7 +425,7 @@ public class ScheduleApiService {
      * @param calendarId 日程id
      */
     public void getCalendarBindChat(final String calendarId) {
-        String baseUrl = APIUri.getSetCalendarBindChatUrl();
+        String baseUrl = APIUri.getCalendarBindChatUrl(calendarId);
         final String completeUrl = baseUrl;
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
         HttpUtils.request(context, CloudHttpMethod.GET, params, new BaseModuleAPICallback(context, completeUrl) {
@@ -443,7 +449,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnGetCalendarChatBindSuccess(calendarId, arg0.toString());
+                apiInterface.returnGetCalendarChatBindSuccess(calendarId, new String(arg0));
             }
 
             @Override
@@ -454,6 +460,42 @@ public class ScheduleApiService {
         });
     }
 
+    /**
+     * 会议详情页  参会状态
+     * type：1、同意  2、拒绝  3、暂定
+     */
+    public void setMeetingAttendStatus(final String meetingId, final int type) {
+        final String completeUrl = APIUri.getMeetingAttendStatusUrl(type);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
+        params.addParameter("meetingId", meetingId);
+        HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(byte[] arg0) {
+                apiInterface.returnAttendMeetingStatusSuccess(new String(arg0), type);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnAttendMeetingStatusFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        setMeetingAttendStatus(meetingId, type);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                refreshToken(oauthCallBack, requestTime);
+            }
+        });
+    }
 
     /**
      * 获取我的任务

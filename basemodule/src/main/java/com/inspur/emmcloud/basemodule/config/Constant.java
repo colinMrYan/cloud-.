@@ -225,6 +225,10 @@ public class Constant {
 
     public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
 
+    //参会状态
+    public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
+    public static final int ATTEND_MEETING_STATUS_REJECT = 2;
+    public static final int ATTEND_MEETING_STATUS_TENTATIVE = 3;
 
 
 }

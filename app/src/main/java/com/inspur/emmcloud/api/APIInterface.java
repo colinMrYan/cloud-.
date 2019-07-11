@@ -819,4 +819,8 @@ public interface APIInterface {
 
     void returnGetCalendarChatBindFail(String error, int errorCode);
 
+    void returnAttendMeetingStatusSuccess(String result, int type);
+
+    void returnAttendMeetingStatusFail(String error, int errorCode);
+
 }

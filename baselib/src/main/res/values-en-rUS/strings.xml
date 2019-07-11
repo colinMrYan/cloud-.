@@ -430,7 +430,8 @@
     <string name="schedule_meeting_my_take_part_in"> I involved：</string>
     <string name="schedule_meeting_attend_reply">Reply Attend Meeting</string>
     <string name="schedule_meeting_attend_or_not">Attend Or Not</string>
-    <string name="schedule_meeting_attend_ignore">Ignore</string>
+    <string name="schedule_meeting_attend_unknown">Unknown</string>
+    <string name="schedule_meeting_attend_ignore">Tentative</string>
     <string name="schedule_meeting_attend_accept">Accept</string>
     <string name="schedule_meeting_attend_reject">Reject</string>
 
