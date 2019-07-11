@@ -6,11 +6,13 @@ import com.inspur.emmcloud.componentservice.app.AppService;
 import com.inspur.emmcloud.componentservice.appcenter.AppcenterService;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.contact.ContactService;
+import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.componentservice.setting.SettingService;
 import com.inspur.emmcloud.servcieimpl.AppServiceImpl;
 import com.inspur.emmcloud.servcieimpl.AppcenterServiceImpl;
 import com.inspur.emmcloud.servcieimpl.CommunicationServiceImpl;
 import com.inspur.emmcloud.servcieimpl.ContactServiceImpl;
+import com.inspur.emmcloud.servcieimpl.MailServiceImpl;
 import com.inspur.emmcloud.servcieimpl.SettingServiceImpl;
 
 /**
@@ -27,6 +29,7 @@ public class AppApplike implements IApplicationLike {
         router.addService(AppService.class, new AppServiceImpl());
         router.addService(CommunicationService.class, new CommunicationServiceImpl());
         router.addService(ContactService.class, new ContactServiceImpl());
+        router.addService(MailService.class, new MailServiceImpl());
     }
 
     @Override

@@ -324,13 +324,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
 
     private void setEventLayout(final Event event, RelativeLayout.LayoutParams eventLayoutParams) {
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
-        final Drawable drawableNormal = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg));
-        //eventView.setBackgroundResource(R.drawable.ic_schedule_calendar_view_event_bg);
-        final CustomRoundButtonDrawable drawableSelected = new CustomRoundButtonDrawable();
-        ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
-        drawableSelected.setBgData(colorStateList);
-        drawableSelected.setCornerRadius(DensityUtil.dip2px(2));
-        drawableSelected.setIsRadiusAdjustBounds(false);
+        final Drawable drawableNormal = getEventbgNormalDrawable(event);
+        final CustomRoundButtonDrawable drawableSelected = getEventBgSelectDrawable(event);
         eventView.setBackground(drawableNormal);
         if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 24)) {
             ImageView eventImg = eventView.findViewById(R.id.iv_event);
@@ -356,6 +351,10 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     }
 
     private void showEventDetailPop(final View view, final Event event, final Drawable drawableNormal, final CustomRoundButtonDrawable drawableSelected) {
+        final TextView eventTitleEvent = view.findViewById(R.id.tv_event_title);
+        final TextView eventSubtitleEvent = view.findViewById(R.id.tv_event_subtitle);
+        eventTitleEvent.setTextColor(Color.parseColor("#ffffff"));
+        eventSubtitleEvent.setTextColor(Color.parseColor("#ffffff"));
         int popViewGap = DensityUtil.dip2px(10);
         View contentView = LayoutInflater.from(getContext())
                 .inflate(R.layout.schedule_pop_calendarview_event_detail, null);
@@ -408,6 +407,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                     onEventClickListener.onShareEvent(event);
                 }
                 popupWindow.dismiss();
+
             }
         });
         TextView calendarNameText = contentView.findViewById(R.id.tv_calendar_name);
@@ -432,6 +432,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             @Override
             public void onDismiss() {
                 view.setBackground(drawableNormal);
+                eventTitleEvent.setTextColor(Color.parseColor("#333333"));
+                eventSubtitleEvent.setTextColor(Color.parseColor("#333333"));
             }
         });
         int mDeviceHeight = ResolutionUtils.getHeight(getContext());
@@ -472,7 +474,12 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         String calendarName = "";
         switch (event.getEventType()) {
             case Schedule.TYPE_CALENDAR:
-                calendarName = getContext().getString(R.string.schedule_calendar_my_schedule);
+                if (event.getCalendarType().equals("default")) {
+                    calendarName = getContext().getString(R.string.schedule_calendar_my_schedule);
+                } else {
+                    calendarName = "Exchange";
+                }
+
                 break;
             case Schedule.TYPE_MEETING:
                 calendarName = getContext().getString(R.string.schedule_calendar_my_meeting);
@@ -483,14 +490,66 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         return calendarName;
     }
 
+    private Drawable getEventbgNormalDrawable(Event event) {
+        Drawable drawable = null;
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                if (event.getCalendarType().equals("default")) {
+                    drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
+                } else {
+                    drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_yellow));
+                }
+
+                break;
+            case Schedule.TYPE_MEETING:
+                drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_blue));
+                break;
+            default:
+                drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
+                break;
+        }
+        return drawable;
+
+    }
+
+    private CustomRoundButtonDrawable getEventBgSelectDrawable(Event event) {
+        CustomRoundButtonDrawable drawableSelected = new CustomRoundButtonDrawable();
+        ColorStateList colorStateList = null;
+
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                if (event.getCalendarType().equals("default")) {
+                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
+                } else {
+                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FFCC07"));
+                }
+
+                break;
+            case Schedule.TYPE_MEETING:
+                colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
+                break;
+            default:
+                colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
+                break;
+        }
+        drawableSelected.setBgData(colorStateList);
+        drawableSelected.setCornerRadius(DensityUtil.dip2px(2));
+        drawableSelected.setIsRadiusAdjustBounds(false);
+        return drawableSelected;
+    }
+
     private int getCalendarTypeImgResId(Event event) {
         int resId = -1;
         switch (event.getEventType()) {
             case Schedule.TYPE_CALENDAR:
-                CalendarColorUtils.getCalendarTypeResId("ORANGE");
+                if (event.getCalendarType().equals("default")) {
+                    resId = CalendarColorUtils.getCalendarTypeResId("ORANGE");
+                } else {
+                    resId = CalendarColorUtils.getCalendarTypeResId("YELLOW");
+                }
                 break;
             case Schedule.TYPE_MEETING:
-                CalendarColorUtils.getCalendarTypeResId("BLUE");
+                resId = CalendarColorUtils.getCalendarTypeResId("BLUE");
                 break;
             default:
                 break;

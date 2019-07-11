@@ -68,4 +68,16 @@ public class CalendarColorUtils {
         }
         return resId;
     }
+
+    public static int getCalendarDayViewEventBgResId(String color) {
+        int resId = -1;
+        if (color.equals("ORANGE")) {
+            resId = R.drawable.ic_schedule_calendar_view_event_bg_orange;
+        } else if (color.equals("PURPLE")) {
+            resId = R.drawable.ic_schedule_calendar_view_event_bg_purple;
+        } else if (color.equals("BLUE")) {
+            resId = R.drawable.ic_schedule_calendar_view_event_bg_blue;
+        }
+        return resId;
+    }
 }
