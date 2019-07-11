@@ -207,7 +207,7 @@ public class TaskTagAddActivity extends BaseActivity  {
                 colorTagHolder = (ColorTagHolder) view.getTag();
             }
             colorTagHolder.colorNameText.setText(tagColorBeans.get(i).getContent());
-            colorTagHolder.colorFlagImage.setImageResource(CalendarColorUtils.getTaskTagResId(tagColorBeans.get(i).getColor()));
+            colorTagHolder.colorFlagImage.setImageResource(CalendarColorUtils.getCalendarTypeResId(tagColorBeans.get(i).getColor()));
             colorTagHolder.colorSelectImage.setVisibility(i == selectIndex ? View.VISIBLE : View.GONE);
             return view;
         }

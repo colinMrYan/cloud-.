@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
 
     <string name="app_name">雲+</string>
     <string name="app_name_zhihuichengjian">智慧城建</string>
@@ -206,6 +206,9 @@
     <string name="write_comment">寫評論</string>
 
     <string name="news_font_name_text">字體</string>
+    <string name="news_share">分享到</string>
+    <string name="news_share_success">分享成功</string>
+    <string name="news_share_fail">分享失敗</string>
 
     <!--&lt;!&ndash; 登錄部分 &ndash;&gt;-->
     <!--<string name="login_invaliad_account_or_pwd">用戶名或密碼錯誤</string>-->
@@ -455,6 +458,10 @@
     <string name="schedule_meeting_my_take_part_in">我參與的：</string>
     <string name="schedule_meeting_room_booking_detail">會議室詳情</string>
     <string name="schedule_meeting_attend_reply">參會答復</string>
+    <string name="schedule_meeting_attend_or_not">是否參會</string>
+    <string name="schedule_meeting_attend_ignore">忽略</string>
+    <string name="schedule_meeting_attend_accept">接受</string>
+    <string name="schedule_meeting_attend_reject">拒絕</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
@@ -913,9 +920,12 @@
     <string name="meeting_detail_time">時間：%1$s</string>
     <string name="meeting_detail_remind">提醒：%1$s</string>
     <string name="meeting_detail_create">%1$s 創建</string>
+    <string name="meeting_detail_inviter">邀請人:%1$s</string>
     <string name="meeting_detail_attendee">參會人:%1$s</string>
     <string name="meeting_detail_record_holder">會議記錄人:%1$s</string>
     <string name="meeting_detail_conference">會議聯絡人:%1$s</string>
+    <string name="meeting_detail_record_title">會議記錄人</string>
+    <string name="meeting_detail_conference_title">會議聯絡人</string>
     <string name="meeting_detail_note">著裝要求:%1$s</string>
     <string name="meeting_detail_sign">會議簽到</string>
     <string name="meeting_detail_summary">十 添加會議摘要</string>
