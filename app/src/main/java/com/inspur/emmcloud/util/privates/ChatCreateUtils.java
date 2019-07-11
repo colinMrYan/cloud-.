@@ -18,17 +18,30 @@ import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.schedule.Participant;
+import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
+import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * com.inspur.emmcloud.util.privates.ChatCreateUtils create at 2016年11月29日 下午7:44:41
@@ -41,6 +54,7 @@ public class ChatCreateUtils {
     private boolean isShowErrorAlert = true;
     JSONArray peopleArray;
     private ScheduleApiService scheduleApiService;
+    ICreateGroupChatListener iCreateGroupChatListener;
 
     public void createDirectChannel(Activity context, String uid,
                                     OnCreateDirectChannelListener onCreateDirectChannelListener) {
@@ -132,14 +146,20 @@ public class ChatCreateUtils {
         void createGroupChannelFail();
     }
 
-    public void startGroupChat(Activity context, String scheduleId, JSONArray groupArray) {
-        startGroupChat(context, scheduleId, "", groupArray);
-    }
+    /**
+     * 发起群聊  入口
+     *
+     * @param scheduleId  会议ID
+     * @param chatGroupId CID 群聊ID
+     * @param listener    成功失败回调
+     */
+    public void startGroupChat(Activity context, String scheduleId, String chatGroupId, ICreateGroupChatListener listener) {
+        this.iCreateGroupChatListener = listener;
 
-    public void startGroupChat(Activity context, String scheduleId, String chatGroupId, JSONArray groupArray) {
         scheduleApiService = new ScheduleApiService(context);
         scheduleApiService.setAPIInterface(new WebService());
-        peopleArray = groupArray;
+        Meeting meeting = MeetingCacheUtils.getDBMeetingById(context, scheduleId);
+        peopleArray = getPeopleArray(meeting);
 
         if (StringUtils.isBlank(chatGroupId)) {
             scheduleApiService.getCalendarBindChat(scheduleId);
@@ -150,6 +170,54 @@ public class ChatCreateUtils {
                 IntentUtils.startActivity(context, ConversationActivity.class, bundle);
             }
         }
+    }
+
+    private JSONArray getPeopleArray(Meeting meeting) {
+        List<Participant> totalList = deleteRepeatData(meeting.getAllParticipantList(), meeting.getOwner());
+        JSONArray peopleArray = new JSONArray();
+        for (Participant participant : totalList) {
+            JSONObject json = new JSONObject();
+            try {
+                if (!participant.getId().equals(BaseApplication.getInstance().getUid())) {
+                    json.put("pid", participant.getId());
+                    json.put("name", participant.getName());
+                    peopleArray.put(json);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return peopleArray;
+    }
+
+    //list去重
+    private List<Participant> deleteRepeatData(List<Participant> list, String owner) {
+        //把创建人加入到群聊
+        if (!StringUtils.isBlank(owner)) {
+            Participant ownerParticipant = new Participant();
+            ownerParticipant.setId(owner);
+            String ownerName = ContactUserCacheUtils.getUserName(owner);
+            ownerParticipant.setName(ownerName);
+            list.add(ownerParticipant);
+        }
+        Set<Participant> set = new TreeSet<>(new Comparator<Participant>() {
+            @Override
+            public int compare(Participant o1, Participant o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+        set.addAll(list);
+        List<Participant> result = new ArrayList<>(set);
+        Collections.reverse(result);
+
+        return result;
+    }
+
+    public interface ICreateGroupChatListener {
+        void createSuccess();
+
+        void createFail();
     }
 
     private class WebService extends APIInterfaceInstance {
@@ -216,6 +284,9 @@ public class ChatCreateUtils {
                 new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, new ConversationCreateUtils.OnCreateGroupConversationListener() {
                     @Override
                     public void createGroupConversationSuccess(Conversation conversation) {
+                        if (iCreateGroupChatListener != null) {
+                            iCreateGroupChatListener.createSuccess();  //创建成功回调
+                        }
                         scheduleApiService.setCalendarBindChat(calendar, conversation.getId());
                         if (TabAndAppExistUtils.isTabExist(context, Constant.APP_TAB_BAR_COMMUNACATE)) {
                             Bundle bundle = new Bundle();
@@ -228,6 +299,9 @@ public class ChatCreateUtils {
 
                     @Override
                     public void createGroupConversationFail() {
+                        if (iCreateGroupChatListener != null) {
+                            iCreateGroupChatListener.createFail();  //创建失败回调
+                        }
                     }
                 });
             } else {
@@ -243,6 +317,13 @@ public class ChatCreateUtils {
         @Override
         public void returnSetCalendarChatBindSuccess(String calendarId, String chatId) {
 
+        }
+
+        @Override
+        public void returnSetCalendarChatBindFail(String error, int errorCode) {
+            if (iCreateGroupChatListener != null) {
+                iCreateGroupChatListener.createFail();  //创建失败回调
+            }
         }
     }
 }
