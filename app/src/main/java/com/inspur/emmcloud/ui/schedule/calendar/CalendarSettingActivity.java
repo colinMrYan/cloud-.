@@ -77,8 +77,8 @@ public class CalendarSettingActivity extends BaseActivity {
                 MailService service = router.getService(MailService.class);
                 String exchangeAccount = service.getExchangeMailAccount();
                 String exchangePassword = service.getExchangeMailPassword();
-                if (StringUtils.isBlank(exchangeAccount) && StringUtils.isBlank(exchangePassword)) {
-                    calendarsList.add(new MyCalendar("exchange", exchangeAccount, "PURPLE", "", "", true));
+                if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
+                    calendarsList.add(new MyCalendar("exchange", exchangeAccount, "YELLOW", "", "", true));
                     calendarAdapter.notifyDataSetChanged();
                 }
             }
@@ -134,7 +134,7 @@ public class CalendarSettingActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_ADD_CALENDAR) {
             String mail = PreferencesByUsersUtils.getString(MyApplication.getInstance(), Constant.PREF_MAIL_ACCOUNT, "");
-            calendarsList.add(new MyCalendar("exchange", mail, "PURPLE", "", "", true));
+            calendarsList.add(new MyCalendar("exchange", mail, "YELLOW", "", "", true));
             calendarAdapter.notifyDataSetChanged();
         }
     }

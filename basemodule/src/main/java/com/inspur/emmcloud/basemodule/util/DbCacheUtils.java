@@ -207,6 +207,7 @@ public class DbCacheUtils {
             db.dropDb();
             PreferencesByUserAndTanentUtils.putLong(BaseApplication.getInstance(), Constant.PREF_CONTACT_USER_LASTQUERYTIME, 0);
             PreferencesByUserAndTanentUtils.putLong(BaseApplication.getInstance(), Constant.PREF_CONTACT_ORG_LASTQUERYTIME, 0);
+            PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_BASIC_DATA_VERSION, "0");
             closeDb(context);
         } catch (Exception e) {
             // TODO: handle exception

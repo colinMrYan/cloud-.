@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/tv_all_day"
-                        android:background="@drawable/ic_schedule_calendar_view_event_bg"
+                        android:background="@drawable/ic_schedule_calendar_view_event_bg_blue"
                         android:paddingBottom="6dp"
                         android:paddingTop="6dp">
 
