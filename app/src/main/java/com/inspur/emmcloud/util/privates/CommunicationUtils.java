@@ -357,6 +357,7 @@ public class CommunicationUtils {
         message.setTo("");
         message.setState("");
         message.setCreationDate(System.currentTimeMillis());
+        message.setRead(Message.MESSAGE_READ);
         return message;
     }
 

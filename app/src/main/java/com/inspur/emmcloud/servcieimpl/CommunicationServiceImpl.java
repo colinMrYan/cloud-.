@@ -56,4 +56,12 @@ public class CommunicationServiceImpl implements CommunicationService {
         ShareToConversationBlankActivity.startActivity(BaseApplication.getInstance(), intent, listener);
     }
 
+    @Override
+    public void shareTxtPlainToConversation(String content, ShareToConversationListener listener) {
+        Intent intent = new Intent();
+        intent.putExtra("type", Message.MESSAGE_TYPE_TEXT_PLAIN);
+        intent.putExtra("content", content);
+        intent.setClass(BaseApplication.getInstance(), ShareToConversationBlankActivity.class);
+        ShareToConversationBlankActivity.startActivity(BaseApplication.getInstance(), intent, listener);
+    }
 }

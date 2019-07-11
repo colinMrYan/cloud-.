@@ -140,11 +140,12 @@
                 android:padding="11dp"
                 android:src="@drawable/ic_recommend_close" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/ll_delete"
@@ -175,7 +176,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="50dp"
-                    android:layout_toRightOf="@id/ll_delete"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -193,7 +193,7 @@
                         android:textColor="#36A5F6"
                         android:textSize="16sp" />
                 </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
 
         </RelativeLayout>
     </RelativeLayout>

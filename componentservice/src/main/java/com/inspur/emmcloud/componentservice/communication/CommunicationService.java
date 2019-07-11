@@ -20,4 +20,6 @@ public interface CommunicationService extends CoreService {
     boolean isSocketConnect();
 
     void shareExtendedLinksToConversation(String poster, String title, String subTitle, String url, ShareToConversationListener listener);
+
+    void shareTxtPlainToConversation(String content, ShareToConversationListener listener);
 }

@@ -12,13 +12,18 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.componentservice.mail.MailService;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 
@@ -57,9 +62,28 @@ public class CalendarSettingActivity extends BaseActivity {
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
         calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "ORANGE", "", "", true));
         calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "BLUE", "", "", false));
-        //calendarsList.add(new MyCalendar("task", getApplication().getString(R.string.schedule_calendar_my_task), "BLUE", "", "", false));
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
+        setAddCalendarLayoutVisible();
+
+    }
+
+    private void setAddCalendarLayoutVisible() {
+        boolean isEnableExchange = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
+        addCalendarLayout.setVisibility(isEnableExchange ? View.VISIBLE : View.GONE);
+        if (isEnableExchange) {
+            Router router = Router.getInstance();
+            if (router.getService(MailService.class) != null) {
+                MailService service = router.getService(MailService.class);
+                String exchangeAccount = service.getExchangeMailAccount();
+                String exchangePassword = service.getExchangeMailPassword();
+                if (StringUtils.isBlank(exchangeAccount) && StringUtils.isBlank(exchangePassword)) {
+                    calendarsList.add(new MyCalendar("exchange", exchangeAccount, "PURPLE", "", "", true));
+                    calendarAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+
     }
 
     @Override

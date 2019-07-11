@@ -44,7 +44,7 @@ public class ShareLinkActivity extends BaseActivity {
         if (!StringUtils.isBlank(shareLink)) {
             shareLinkToFriends();
         } else {
-            ToastUtils.show(ShareLinkActivity.this, getString(R.string.news_share_fail));
+            ToastUtils.show(ShareLinkActivity.this, getString(R.string.baselib_share_fail));
             finish();
         }
     }
@@ -62,7 +62,7 @@ public class ShareLinkActivity extends BaseActivity {
         intent.putExtra("select_content", 0);
         intent.putExtra("isMulti_select", false);
         intent.putExtra("isContainMe", true);
-        intent.putExtra("title", getString(R.string.news_share));
+        intent.putExtra("title", getString(R.string.baselib_share_to));
         intent.setClass(getApplicationContext(),
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_LINK);
@@ -96,7 +96,7 @@ public class ShareLinkActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtils.show(MyApplication.getInstance(), getString(R.string.news_share_fail));
+                ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
                 finish();
             }
         } else {
