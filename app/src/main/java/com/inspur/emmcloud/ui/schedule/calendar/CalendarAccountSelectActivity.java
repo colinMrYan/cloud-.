@@ -51,6 +51,12 @@ public class CalendarAccountSelectActivity extends BaseActivity {
         }
     }
 
+    public void onClick(View v) {
+        if (v.getId() == R.id.ibt_back) {
+            finish();
+        }
+    }
+
     @Override
     public int getLayoutResId() {
         return R.layout.schedule_activity_calendar_account_select;

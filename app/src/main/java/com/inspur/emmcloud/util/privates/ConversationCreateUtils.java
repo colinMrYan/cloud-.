@@ -30,11 +30,18 @@ public class ConversationCreateUtils {
     private OnCreateDirectConversationListener onCreateDirectConversationListener;
     private OnCreateGroupConversationListener onCreateGroupConversationListener;
     private LoadingDialog loadingDlg;
+    private boolean isShowErrorAlert = true;
 
     public void createDirectConversation(Activity context, String uid,
                                          OnCreateDirectConversationListener onCreateDirectConversationListener) {
+        createDirectConversation(context, uid, onCreateDirectConversationListener, true);
+    }
+
+    public void createDirectConversation(Activity context, String uid,
+                                         OnCreateDirectConversationListener onCreateDirectConversationListener, boolean isShowErrorAlert) {
         this.context = context;
         this.onCreateDirectConversationListener = onCreateDirectConversationListener;
+        this.isShowErrorAlert = isShowErrorAlert;
         loadingDlg = new LoadingDialog(context);
         loadingDlg.show();
         ChatAPIService apiService = new ChatAPIService(context);
@@ -124,7 +131,9 @@ public class ConversationCreateUtils {
         @Override
         public void returnCreateDirectConversationFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(context, error, errorCode);
+            if (isShowErrorAlert) {
+                WebServiceMiddleUtils.hand(context, error, errorCode);
+            }
             if (onCreateDirectConversationListener != null) {
                 onCreateDirectConversationListener.createDirectConversationFail();
             }
@@ -142,7 +151,9 @@ public class ConversationCreateUtils {
         @Override
         public void returnCreateGroupConversationFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
-            WebServiceMiddleUtils.hand(context, error, errorCode);
+            if (isShowErrorAlert) {
+                WebServiceMiddleUtils.hand(context, error, errorCode);
+            }
             if (onCreateGroupConversationListener != null) {
                 onCreateGroupConversationListener.createGroupConversationFail();
             }

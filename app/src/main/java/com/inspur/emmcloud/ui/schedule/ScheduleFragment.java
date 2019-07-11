@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.schedule;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,30 +17,42 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ScheduleAllDayEventListAdapter;
 import com.inspur.emmcloud.adapter.ScheduleEventListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
+import com.inspur.emmcloud.baselib.widget.dialogs.CustomDialog;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragment;
 import com.inspur.emmcloud.basemodule.util.LanguageManager;
 import com.inspur.emmcloud.basemodule.util.NetUtils;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.Holiday;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
+import com.inspur.emmcloud.componentservice.mail.MailService;
+import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
@@ -110,6 +123,7 @@ public class ScheduleFragment extends BaseFragment implements
     private RelativeLayout contentLayout;
     private DragScaleView dragScaleView;
     private float contentLayoutTouchY = -1;
+    private LoadingDialog loadingDlg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,8 +136,8 @@ public class ScheduleFragment extends BaseFragment implements
         pageEndCalendar = TimeUtils.getDayEndCalendar(Calendar.getInstance());
         yearHolidayListMap = HolidayCacheUtils.getYearHolidayListMap(MyApplication.getInstance());
         initView();
-        getHolidayData(selectCalendar.get(Calendar.YEAR));
-
+        getScheduleBasicData(selectCalendar.get(Calendar.YEAR));
+        checkExchangeLogin();
     }
 
 
@@ -157,6 +171,7 @@ public class ScheduleFragment extends BaseFragment implements
     }
 
     private void initView() {
+        loadingDlg = new LoadingDialog(getActivity());
         contentLayout = rootView.findViewById(R.id.rl_content);
         calendarView = rootView.findViewById(R.id.calendar_view_schedule);
         calendarLayout = rootView.findViewById(R.id.calendar_layout_schedule);
@@ -202,28 +217,31 @@ public class ScheduleFragment extends BaseFragment implements
                 calendarView.setIsLunarAndFestivalShow(false);
                 break;
         }
-        contentLayout.setOnLongClickListener(this);
-        contentLayout.setOnTouchListener(this);
-        contentLayout.setOnClickListener(this);
+        calendarDayView.setOnTouchListener(this);
+        calendarDayView.setOnLongClickListener(this);
+        calendarDayView.setOnClickListener(this);
 
     }
 
     /**
      * 删除日历添加DragView
      */
-    private void removeEventAddDragScaleView() {
+    private boolean removeEventAddDragScaleView() {
         if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
             contentLayout.removeView(dragScaleView);
             calendarDayView.hideDragViewTime();
             dragScaleView = null;
+            return true;
         }
+        return false;
     }
+
 
 
     /**
      * 删除添加事件的View
      */
-    private void showEventAddDragView() {
+    private void showScheduleEventAddDragView() {
         dragScaleView = new DragScaleView(getActivity());
         int dragScaleViewHeight = DensityUtil.dip2px(40) + 2 * dragScaleView.getOffset();
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, dragScaleViewHeight);
@@ -493,12 +511,12 @@ public class ScheduleFragment extends BaseFragment implements
         List<Holiday> holidayList = yearHolidayListMap.get(startYear);
         if (holidayList == null) {
             holidayList = new ArrayList<>();
-            getHolidayData(startYear);
+            getScheduleBasicData(startYear);
         }
         if (startYear != endYear) {
             List<Holiday> endYearHolidayList = yearHolidayListMap.get(endYear);
             if (endYearHolidayList == null) {
-                getHolidayData(endYear);
+                getScheduleBasicData(endYear);
             } else {
                 holidayList.addAll(endYearHolidayList);
             }
@@ -589,6 +607,60 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
 
+
+    /**
+     * 检查Exchange邮箱登录
+     */
+    private void checkExchangeLogin() {
+        if (PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false)) {
+            Router router = Router.getInstance();
+            if (router.getService(MailService.class) != null) {
+                MailService service = router.getService(MailService.class);
+                String exchangeAccount = service.getExchangeMailAccount();
+                String exchangePassword = service.getExchangeMailPassword();
+                if (StringUtils.isBlank(exchangeAccount) && StringUtils.isBlank(exchangePassword)) {
+                    service.exchangeLogin(getActivity(), new OnExchangeLoginListener() {
+                        @Override
+                        public void onMailLoginSuccess() {
+
+                        }
+
+                        @Override
+                        public void onMailLoginFail(String error, int errorCode) {
+                            showExchangeLoginFailDlg();
+                        }
+                    });
+                }
+            }
+        }
+
+    }
+
+
+    /**
+     * 弹出注销提示框
+     */
+    private void showExchangeLoginFailDlg() {
+        new CustomDialog.MessageDialogBuilder(getActivity())
+                .setMessage(R.string.if_confirm_signout)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("from", "schedule_exchange_login");
+                        ARouter.getInstance().build(Constant.AROUTER_CLASS_MAIL_LOGIN).with(bundle).navigation(getActivity());
+                    }
+                })
+                .show();
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -599,7 +671,7 @@ public class ScheduleFragment extends BaseFragment implements
                 if (allDayEventList.size() > 1) {
                     showAllDayEventListDlg();
                 } else {
-                    onEventClick(allDayEventList.get(0));
+                    openEvent(allDayEventList.get(0));
                 }
 
                 break;
@@ -607,7 +679,7 @@ public class ScheduleFragment extends BaseFragment implements
                 myDialog.dismiss();
                 myDialog = null;
                 break;
-            case R.id.rl_content:
+            case R.id.calendar_day_view:
                 removeEventAddDragScaleView();
                 break;
             case R.id.tv_schedule_date:
@@ -618,7 +690,7 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (v.getId() == R.id.rl_content) {
+        if (v.getId() == R.id.calendar_day_view) {
             contentLayoutTouchY = event.getY();
         }
         return false;
@@ -654,11 +726,11 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public boolean onLongClick(View v) {
-        if (v.getId() == R.id.rl_content) {
+        if (v.getId() == R.id.calendar_day_view) {
             if (dragScaleView != null && dragScaleView.getVisibility() == View.VISIBLE) {
                 removeEventAddDragScaleView();
             } else {
-                showEventAddDragView();
+                showScheduleEventAddDragView();
             }
 
             return true;
@@ -668,19 +740,61 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public void onItemClick(View view, int position, Event event) {
-        onEventClick(event);
+        openEvent(event);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        onEventClick(allDayEventList.get(position));
+        openEvent(allDayEventList.get(position));
         if (myDialog != null)
             myDialog.dismiss();
     }
 
     @Override
-    public void onEventClick(Event event) {
+    public void onShowEventDetail(Event event) {
         openEvent(event);
+    }
+
+    @Override
+    public boolean onRemoveEventAddDragScaleView() {
+        return removeEventAddDragScaleView();
+    }
+
+    @Override
+    public void onDeleteEvent(Event event) {
+        deleteScheduleEvent(event);
+    }
+
+    @Override
+    public void onShareEvent(Event event) {
+        String startTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(), event.getEventStartTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
+        String endTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(), event.getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
+        StringBuilder builder = new StringBuilder();
+        builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_meeting_topic) : getString(R.string.schedule_meeting_topic));
+        builder.append(" : ").append(event.getEventTitle()).append("\n")
+                .append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
+                .append(getString(R.string.meeting_end_time)).append(" : ").append(endTime);
+        Router router = Router.getInstance();
+        if (router.getService(CommunicationService.class) != null) {
+            CommunicationService service = router.getService(CommunicationService.class);
+            service.shareTxtPlainToConversation(builder.toString(), new ShareToConversationListener() {
+                @Override
+                public void shareSuccess(String cid) {
+                    ToastUtils.show(R.string.baselib_share_success);
+                }
+
+                @Override
+                public void shareFail() {
+                    ToastUtils.show(R.string.baselib_share_fail);
+                }
+
+                @Override
+                public void shareCancel() {
+
+                }
+            });
+        }
+
     }
 
     @Override
@@ -706,11 +820,28 @@ public class ScheduleFragment extends BaseFragment implements
         }
     }
 
-    private void getHolidayData(int year) {
+    private void getScheduleBasicData(int year) {
         if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            apiService.getHolidayData(year);
+            String version = PreferencesByUserAndTanentUtils.getString(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_BASIC_DATA_VERSION, "0");
+            apiService.getScheduleBasicData(year, version);
         }
     }
+
+
+    private void deleteScheduleEvent(Event event) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            loadingDlg.show();
+            if (event.getEventType().equals(Schedule.TYPE_CALENDAR)) {
+                apiService.deleteSchedule(event.getEventId());
+            } else {
+                Meeting meeting = new Meeting();
+                meeting.setId(event.getEventId());
+                apiService.deleteMeeting(meeting);
+            }
+
+        }
+    }
+
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -742,15 +873,56 @@ public class ScheduleFragment extends BaseFragment implements
 
         }
 
+
         @Override
-        public void returnHolidayDataSuccess(GetHolidayDataResult getHolidayDataResult) {
-            yearHolidayListMap.put(getHolidayDataResult.getYear(), getHolidayDataResult.getHolidayList());
-            if (pageStartCalendar.get(Calendar.YEAR) == getHolidayDataResult.getYear() || pageEndCalendar.get(Calendar.YEAR) == getHolidayDataResult.getYear()) {
-                showCalendarEvent(true);
-            }
-            HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), getHolidayDataResult.getYear(), getHolidayDataResult.getHolidayList());
+        public void returnDeleteMeetingSuccess(Meeting meeting) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            MeetingCacheUtils.removeMeeting(BaseApplication.getInstance(), meeting.getId());
+            showCalendarEvent(true);
         }
 
+        @Override
+        public void returnDeleteMeetingFail(String error, int errorCode) {
+            returnDeleteScheduleFail(error, errorCode);
+        }
 
+        @Override
+        public void returnDeleteScheduleSuccess(String scheduleId) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            ScheduleCacheUtils.removeSchedule(BaseApplication.getInstance(), scheduleId);
+            showCalendarEvent(true);
+        }
+
+        @Override
+        public void returnDeleteScheduleFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(BaseApplication.getInstance(), error, errorCode);
+        }
+
+        @Override
+        public void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult) {
+            PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_BASIC_DATA_VERSION, getScheduleBasicDataResult.getVersion());
+            if (getScheduleBasicDataResult.getCommand().equals("FORWARD")) {
+                boolean isEnableExchangePrevious = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
+                PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, getScheduleBasicDataResult.isEnableExchange());
+                //当检测到突然开启Exchange日历功能时，进行Exchange登录检查
+                if (getScheduleBasicDataResult.isEnableExchange() && !isEnableExchangePrevious) {
+                    checkExchangeLogin();
+                }
+                List<Holiday> holidayList = getScheduleBasicDataResult.getHolidayList();
+                if (holidayList.size() > 0) {
+                    int year = holidayList.get(0).getYear();
+                    yearHolidayListMap.put(year, holidayList);
+                    if (pageStartCalendar.get(Calendar.YEAR) == year || pageEndCalendar.get(Calendar.YEAR) == year) {
+                        showCalendarEvent(true);
+                    }
+                    HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), year, holidayList);
+                }
+            }
+        }
+
+        @Override
+        public void returnScheduleBasicDataFail(String error, int errorCode) {
+        }
     }
 }

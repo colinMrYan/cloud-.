@@ -74,10 +74,10 @@ import java.util.TimeZone;
 
 public class NewsWebDetailActivity extends BaseActivity {
 
+    public static final String GROUP_NEWS = "groupNews";
     private static final int SHARE_SEARCH_RUEST_CODE = 1;
     private static final String APP_NEWS_WEBVIEW_MODEL = "app_news_webview_model";
     private static final String APP_NEWS_TEXT_SIZE = "app_news_text_size";
-    public static final String GROUP_NEWS = "groupNews";
     private static final String darkMode = "#dark_120";
     private static final String lightMode = "#light_120";
     private WebView webView;
@@ -918,7 +918,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 弹出分享失败toast
      */
     private void showShareFailToast() {
-        ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_fail));
+        ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.baselib_share_fail));
     }
 
     /**
@@ -981,7 +981,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             if (fakeMessageId != null && String.valueOf(eventMessage.getId()).equals(fakeMessageId)) {
                 if (eventMessage.getStatus() == 200) {
-                    ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_success));
+                    ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.baselib_share_success));
                 } else {
                     showShareFailToast();
                 }
@@ -1080,7 +1080,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_share_success));
+            ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.baselib_share_success));
         }
 
         @Override

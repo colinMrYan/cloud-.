@@ -24,7 +24,6 @@
                 android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -234,6 +233,11 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.chat.ShareToConversationBlankActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:theme="@style/AppTheme_Transparent" />
 
         <activity
             android:name=".ui.SchemeHandleActivity"
