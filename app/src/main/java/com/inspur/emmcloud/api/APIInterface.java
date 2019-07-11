@@ -70,6 +70,7 @@ import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
@@ -378,6 +379,10 @@ public interface APIInterface {
     void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin);
 
     void returnIsMeetingAdminFail(String error, int errorCode);
+
+    void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult);
+
+    void returnScheduleBasicDataFail(String error, int errorCode);
 
 
 
@@ -757,7 +762,7 @@ public interface APIInterface {
 
     void returnUpdateScheduleFail(String error, int errorCode);
 
-    void returnDeleteScheduleSuccess();
+    void returnDeleteScheduleSuccess(String scheduleId);
 
     void returnDeleteScheduleFail(String error, int errorCode);
 

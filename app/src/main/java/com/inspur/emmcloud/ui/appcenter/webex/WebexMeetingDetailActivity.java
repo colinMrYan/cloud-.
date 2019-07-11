@@ -22,6 +22,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.api.apiservice.WebexAPIService;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
@@ -46,8 +47,8 @@ import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.system.EventMessage;
-import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
+import com.inspur.emmcloud.componentservice.communication.CommunicationService;
+import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
 import com.inspur.emmcloud.ui.mine.setting.RecommendAppActivity;
 import com.inspur.emmcloud.util.privates.AppDownloadUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
@@ -72,7 +73,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -325,25 +325,33 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         PlatformConfig.setWeixin("wx4eb8727ea9c26495", "56a0426315f1d0985a1cc1e75e96130d");
         PlatformConfig.setQQZone("1105561850", "1kaw4r1c37SUupFL");
         final CustomShareListener mShareListener = new CustomShareListener(WebexMeetingDetailActivity.this);
-        new ShareAction(WebexMeetingDetailActivity.this)
+        ShareAction shareAction = new ShareAction(WebexMeetingDetailActivity.this)
                 .setDisplayList(SHARE_MEDIA.EMAIL, SHARE_MEDIA.SMS)
-                .addButton(getString(R.string.webex_internal_share), "app_name", "ic_launcher", "ic_launcher")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                         if (share_media == null) {
                             if (snsPlatform.mKeyword.equals("app_name")) {
-                                Intent intent = new Intent();
-                                intent.putExtra(ContactSearchFragment.EXTRA_TYPE, 0);
-                                intent.putExtra(ContactSearchFragment.EXTRA_MULTI_SELECT, false);
-                                ArrayList<String> uidList = new ArrayList<>();
-                                uidList.add(MyApplication.getInstance().getUid());
-                                intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-                                intent.putExtra(ContactSearchFragment.EXTRA_CONTAIN_ME, false);
-                                intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.news_share));
-                                intent.setClass(WebexMeetingDetailActivity.this,
-                                        ContactSearchActivity.class);
-                                startActivityForResult(intent, REQUEST_SELECT_CONTACT);
+                                Router router = Router.getInstance();
+                                if (router.getService(CommunicationService.class) != null) {
+                                    CommunicationService service = router.getService(CommunicationService.class);
+                                    service.shareTxtPlainToConversation(shareContent, new ShareToConversationListener() {
+                                        @Override
+                                        public void shareSuccess(String cid) {
+                                            ToastUtils.show(R.string.baselib_share_success);
+                                        }
+
+                                        @Override
+                                        public void shareFail() {
+                                            ToastUtils.show(R.string.baselib_share_fail);
+                                        }
+
+                                        @Override
+                                        public void shareCancel() {
+
+                                        }
+                                    });
+                                }
                             }
                         } else {
                             new ShareAction(WebexMeetingDetailActivity.this).withText(shareContent)
@@ -352,9 +360,11 @@ public class WebexMeetingDetailActivity extends BaseActivity {
                                     .share();
                         }
                     }
-                })
-                .open();
-
+                });
+        if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            shareAction = shareAction.addButton(getString(R.string.webex_internal_share), "app_name", "ic_launcher", "ic_launcher");
+        }
+        shareAction.open();
     }
 
     @OnLongClick(R.id.ll_meeting_content)
@@ -429,7 +439,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
                         @Override
                         public void createDirectChannelFail() {
-                            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
+                            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.baselib_share_fail);
                         }
                     });
         }
@@ -447,9 +457,9 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             if (fakeMessageId != null && String.valueOf(eventMessage.getId()).equals(fakeMessageId)) {
                 if (eventMessage.getStatus() == 200) {
-                    ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_success);
+                    ToastUtils.show(WebexMeetingDetailActivity.this, R.string.baselib_share_success);
                 } else {
-                    ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
+                    ToastUtils.show(WebexMeetingDetailActivity.this, R.string.baselib_share_fail);
                 }
             }
         }
@@ -525,7 +535,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            ToastUtils.show(mActivity.get(), R.string.news_share_fail);
+            ToastUtils.show(mActivity.get(), R.string.baselib_share_fail);
         }
 
         @Override
@@ -580,13 +590,13 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId) {
             LoadingDialog.dimissDlg(loadingDialog);
-            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_success);
+            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.baselib_share_success);
         }
 
         @Override
         public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.news_share_fail);
+            ToastUtils.show(WebexMeetingDetailActivity.this, R.string.baselib_share_fail);
         }
     }
 }

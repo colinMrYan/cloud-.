@@ -1,20 +1,34 @@
 package com.inspur.emmcloud.widget.calendardayview;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.ResolutionUtils;
+import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
+import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.widget.bubble.ArrowDirection;
+import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -157,11 +171,11 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     /**
      * 每次打开日视图需要滚动到当前时间前一个小时
      */
-    public int getScrollOffset(){
+    public int getScrollOffset() {
         Calendar currentCalendar = Calendar.getInstance();
-        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) -1+ currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
-        if(offset<0){
-            offset =0;
+        int offset = (int) ((currentCalendar.get(Calendar.HOUR_OF_DAY) - 1 + currentCalendar.get(Calendar.MINUTE) / 60.0f) * TIME_HOUR_HEIGHT - DensityUtil.dip2px(MyApplication.getInstance(), 3));
+        if (offset < 0) {
+            offset = 0;
         }
         return offset;
     }
@@ -310,8 +324,10 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
 
     private void setEventLayout(final Event event, RelativeLayout.LayoutParams eventLayoutParams) {
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
-        eventView.setBackgroundResource(R.drawable.ic_schedule_calendar_view_event_bg);
-        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(),24)){
+        final Drawable drawableNormal = getEventbgNormalDrawable(event);
+        final CustomRoundButtonDrawable drawableSelected = getEventBgSelectDrawable(event);
+        eventView.setBackground(drawableNormal);
+        if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 24)) {
             ImageView eventImg = eventView.findViewById(R.id.iv_event);
             TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
             TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
@@ -327,19 +343,232 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         eventView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (onEventClickListener != null) {
-                    onEventClickListener.onEventClick(event);
+                if (!(onEventClickListener != null && onEventClickListener.onRemoveEventAddDragScaleView())) {
+                    showEventDetailPop(view, event, drawableNormal, drawableSelected);
                 }
-
             }
         });
     }
+
+    private void showEventDetailPop(final View view, final Event event, final Drawable drawableNormal, final CustomRoundButtonDrawable drawableSelected) {
+        final TextView eventTitleEvent = view.findViewById(R.id.tv_event_title);
+        final TextView eventSubtitleEvent = view.findViewById(R.id.tv_event_subtitle);
+        eventTitleEvent.setTextColor(Color.parseColor("#ffffff"));
+        eventSubtitleEvent.setTextColor(Color.parseColor("#ffffff"));
+        int popViewGap = DensityUtil.dip2px(10);
+        View contentView = LayoutInflater.from(getContext())
+                .inflate(R.layout.schedule_pop_calendarview_event_detail, null);
+        contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
+        bubbleLayout.setArrowPosition(eventLayout.getWidth() / 2 - DensityUtil.dip2px(7));
+        final RelativeLayout operationLayout = contentView.findViewById(R.id.rl_operation);
+        final PopupWindow popupWindow = new PopupWindow(contentView,
+                eventLayout.getWidth() - DensityUtil.dip2px(30),
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        LinearLayout shareLayout = contentView.findViewById(R.id.ll_share);
+        contentView.findViewById(R.id.iv_close).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                operationLayout.setVisibility(INVISIBLE);
+            }
+        });
+        contentView.findViewById(R.id.iv_menu).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                operationLayout.setVisibility(VISIBLE);
+            }
+        });
+        contentView.findViewById(R.id.bt_detail).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onEventClickListener != null) {
+                    onEventClickListener.onShowEventDetail(event);
+                }
+                popupWindow.dismiss();
+            }
+        });
+        contentView.findViewById(R.id.ll_delete).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onEventClickListener != null) {
+                    onEventClickListener.onDeleteEvent(event);
+                }
+                popupWindow.dismiss();
+            }
+        });
+        //V0环境不显示分享按钮
+        if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
+            shareLayout.setVisibility(View.GONE);
+        }
+        shareLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onEventClickListener != null) {
+                    onEventClickListener.onShareEvent(event);
+                }
+                popupWindow.dismiss();
+
+            }
+        });
+        TextView calendarNameText = contentView.findViewById(R.id.tv_calendar_name);
+        ImageView calendarTypeImg = contentView.findViewById(R.id.iv_calendar_type);
+        TextView eventTitleText = contentView.findViewById(R.id.tv_event_title);
+        TextView eventTimeText = contentView.findViewById(R.id.tv_event_time);
+        calendarNameText.setText(getCalendarName(event));
+        int resId = getCalendarTypeImgResId(event);
+        if (resId != -1) {
+            calendarTypeImg.setImageResource(resId);
+        }
+        eventTitleText.setText(event.getEventTitle());
+        String date = TimeUtils.calendar2FormatString(getContext(), selectCalendar, TimeUtils.FORMAT_MONTH_DAY);
+        String week = TimeUtils.getWeekDay(getContext(), selectCalendar);
+        String startTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+        String endTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
+        eventTimeText.setText(date + " " + week + " " + startTime + " - " + endTime);
+        popupWindow.setTouchable(true);
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(
+                R.drawable.pop_window_view_tran));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                view.setBackground(drawableNormal);
+                eventTitleEvent.setTextColor(Color.parseColor("#333333"));
+                eventSubtitleEvent.setTextColor(Color.parseColor("#333333"));
+            }
+        });
+        int mDeviceHeight = ResolutionUtils.getHeight(getContext());
+        Rect location = locateView(view);
+        if (location != null) {
+            int y;
+            //view中心点Y坐标
+            int yMiddle = location.top + view.getHeight() / 2;
+            if (yMiddle > mDeviceHeight / 2) {
+                bubbleLayout.setArrowDirection(ArrowDirection.BOTTOM);
+                popupWindow.showAtLocation(eventLayout, Gravity.NO_GRAVITY, location.left + DensityUtil.dip2px(15), location.top - popViewGap - popupWindow.getContentView().getMeasuredHeight());
+            } else {
+                popupWindow.showAtLocation(eventLayout, Gravity.NO_GRAVITY, location.left + DensityUtil.dip2px(15), location.bottom + popViewGap);
+            }
+
+        }
+        view.setBackground(drawableSelected);
+    }
+
+    public Rect locateView(View v) {
+        if (v == null) return null;
+        int[] loc_int = new int[2];
+        try {
+            v.getLocationOnScreen(loc_int);
+        } catch (NullPointerException npe) {
+            //Happens when the view doesn't exist on screen anymore.
+            return null;
+        }
+        Rect location = new Rect();
+        location.left = loc_int[0];
+        location.top = loc_int[1];
+        location.right = location.left + v.getWidth();
+        location.bottom = location.top + v.getHeight();
+        return location;
+    }
+
+    private String getCalendarName(Event event) {
+        String calendarName = "";
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                if (event.getCalendarType().equals("default")) {
+                    calendarName = getContext().getString(R.string.schedule_calendar_my_schedule);
+                } else {
+                    calendarName = "Exchange";
+                }
+
+                break;
+            case Schedule.TYPE_MEETING:
+                calendarName = getContext().getString(R.string.schedule_calendar_my_meeting);
+                break;
+            default:
+                break;
+        }
+        return calendarName;
+    }
+
+    private Drawable getEventbgNormalDrawable(Event event) {
+        Drawable drawable = null;
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                if (event.getCalendarType().equals("default")) {
+                    drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
+                } else {
+                    drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_yellow));
+                }
+
+                break;
+            case Schedule.TYPE_MEETING:
+                drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_blue));
+                break;
+            default:
+                drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
+                break;
+        }
+        return drawable;
+
+    }
+
+    private CustomRoundButtonDrawable getEventBgSelectDrawable(Event event) {
+        CustomRoundButtonDrawable drawableSelected = new CustomRoundButtonDrawable();
+        ColorStateList colorStateList = null;
+
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                if (event.getCalendarType().equals("default")) {
+                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
+                } else {
+                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FFCC07"));
+                }
+
+                break;
+            case Schedule.TYPE_MEETING:
+                colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
+                break;
+            default:
+                colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
+                break;
+        }
+        drawableSelected.setBgData(colorStateList);
+        drawableSelected.setCornerRadius(DensityUtil.dip2px(2));
+        drawableSelected.setIsRadiusAdjustBounds(false);
+        return drawableSelected;
+    }
+
+    private int getCalendarTypeImgResId(Event event) {
+        int resId = -1;
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                if (event.getCalendarType().equals("default")) {
+                    resId = CalendarColorUtils.getCalendarTypeResId("ORANGE");
+                } else {
+                    resId = CalendarColorUtils.getCalendarTypeResId("YELLOW");
+                }
+                break;
+            case Schedule.TYPE_MEETING:
+                resId = CalendarColorUtils.getCalendarTypeResId("BLUE");
+                break;
+            default:
+                break;
+        }
+        return resId;
+    }
+
 
     public void setOnEventClickListener(OnEventClickListener onEventClickListener) {
         this.onEventClickListener = onEventClickListener;
     }
 
     public interface OnEventClickListener {
-        void onEventClick(Event event);
+        void onShowEventDetail(Event event);
+
+        boolean onRemoveEventAddDragScaleView();
+
+        void onDeleteEvent(Event event);
+
+        void onShareEvent(Event event);
     }
 }

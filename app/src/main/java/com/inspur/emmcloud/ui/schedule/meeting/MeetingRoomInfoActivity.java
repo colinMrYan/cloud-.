@@ -83,7 +83,6 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     public void onCreate() {
         ButterKnife.bind(this);
         meetingRoom = (MeetingRoom) getIntent().getExtras().getSerializable(EXTRA_MEETING_ROOM);
-        meetingRoom.setMaxAhead(2);
         initView();
         getMeetingListByMeetingRoom();
         EventBus.getDefault().register(this);

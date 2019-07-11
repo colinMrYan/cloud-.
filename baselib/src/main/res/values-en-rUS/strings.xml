@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="app_name">Cloud+</string>
     <string name="app_name_beiqi">Cloud+</string>
     <string name="app_name_chinatower">ChinaTower</string>
@@ -199,36 +199,12 @@
     <string name="write_comment">Comment</string>
 
     <string name="news_font_name_text">Font Size</string>
-    <!-- 新添加部分 -->
-
-    <!--&lt;!&ndash; 登录部分 &ndash;&gt;-->
-    <!--<string name="login_invaliad_account_or_pwd">Invalid account or password</string>-->
-    <!--<string name="login_captchas_login">Quick Login</string>-->
-    <!--<string name="login_by_account">Log in Via password</string>-->
-    <!--<string name="login_find_password">Retrieve password</string>-->
-    <!--<string name="login_get_captchas_code">Get Code</string>-->
-    <!--<string name="login_captchas_sent">Verification code has been sent to the phone：</string>-->
-    <!--<string name="login_please_input_captchas">Enter code</string>-->
-    <!--<string name="login_please_input_phone_num">Enter phone number</string>-->
-    <!--<string name="login_phone_num_illegal_format">Incorrect phone number format</string>-->
-    <!--<string name="login_loading_text">Logging...</string>-->
+    <string name="baselib_share_to">Share to</string>
+    <string name="baselib_share_success">Sharing Successfully</string>
+    <string name="baselib_share_fail">Sharing unsuccessfully</string>
     <string name="login_please_input_password">Enter a new password</string>
     <string name="login">Log In</string>
-    <!--<string name="login_code_login_text">Verification code to log in</string>-->
-    <!--<string name="login_code_verification_failure">Incorrect verification code</string>-->
-    <!--<string name="login_sms">Quick Login</string>-->
-    <!--<string name="login_captchas_getcode_success">Code has been sent successfully</string>-->
-    <!--<string name="login_your_contact">Your contact</string>-->
-    <!--<string name="login_authorization_expired">Re-login based on security audit policy</string>-->
-    <!--<string name="login_cant_login_with_sms">Your account is not allowed to log on with SMS</string>-->
     <string name="login_user_not_bound_enterprise">The current user is not bound to the enterprise, please contact the administrator!</string>
-    <!--<string name="recover">Retry</string>-->
-    <!--<string name="login_tv_welcome">Hello，\nwelcome to %1$s</string>-->
-    <!--<string name="login_current_login_enterprise">Current system：%1$s</string>-->
-    <!--<string name="login_forget_password">Forgot Password</string>-->
-    <!--<string name="login_fail_limit_remaining">Incorrect account or password, re-enter and have %1$d chances left</string>-->
-    <!--<string name="login_fail_account_lock_by_min">The account has been locked, try again after %1$d minutes</string>-->
-    <!--<string name="login_fail_account_lock_by_second">The account has been locked, try again after %1$d seconds</string>-->
 
     <!-- 消息部分 -->
     <string name="login_group_album">Images</string>
@@ -378,8 +354,8 @@
     <string name="schedule_calendar_modify">Modify Schedule</string>
     <string name="schedule_calendar_delete">Delete Schedule</string>
     <string name="schedule_calendar_create">New Schedule</string>
-    <string name="schedule_calendar_my_schedule">My schedule</string>
-    <string name="schedule_calendar_my_meeting">My meeting</string>
+    <string name="schedule_calendar_my_schedule">My Schedule</string>
+    <string name="schedule_calendar_my_meeting">My Meeting</string>
     <string name="schedule_calendar_my_task">My task</string>
     <string name="schedule_calendar_all_day">All day</string>
     <string name="schedule_calendar_am">AM</string>
@@ -423,6 +399,8 @@
     <string name="schedule_task_title_is_length">Task title up to 64 characters</string>
     <string name="schedule_task_a_person">person</string>
     <string name="schedule_task_tag_name_length">Tag name up to 64 characters</string>
+    <string name="schedule_click_to_add_schedule">Click to Add Schedule</string>
+    <string name="schedule_exchange_login_fail">Exchange account login failed, re-login?</string>
 
     <!--会议（新）-->
     <string name="schedule_meeting_booking">Book Meeting</string>
@@ -815,6 +793,8 @@
     <string name="contact_add_system">Save to Contacts</string>
 
     <!-- 会议室部分 -->
+    <string name="schedule_meeting_topic">Meeting</string>
+    <string name="schedule_title">Schedule</string>
     <string name="meeting_room_booking_detail">Details on the meeting room</string>
     <string name="meeting_room_booking_topic">Enter topic</string>
     <string name="meeting_room_booking_choosing_room">Select location</string>
@@ -823,8 +803,8 @@
     <string name="meeting_choosing_date">Select time</string>
     <string name="meeting_from">From</string>
     <string name="meeting_to">To</string>
-    <string name="meeting_start_time">Start Time</string>
-    <string name="meeting_end_time">End Time</string>
+    <string name="meeting_start_time">From</string>
+    <string name="meeting_end_time">To</string>
     <string name="meeting_room_booking_notice_edit">Enter notes</string>
     <string name="meeting_booking_detail">Details of the meeting</string>
     <string name="meeting_booking_no_time">Time is empty, please select period</string>
@@ -892,6 +872,11 @@
     <string name="meeting_room_booked">Time has been booked, please choose again</string>
     <string name="meeting_room_ilegal_time">Time is illegal, please check</string>
     <string name="meeting_room_time_late">Start time cannot be earlier than the current time</string>
+    <string name="meeting_detail_attendee_accept">Accept</string>
+    <string name="meeting_detail_attendee_decline">Decline</string>
+    <string name="meeting_detail_attendee_unknown">Unknown</string>
+    <string name="meeting_detail_attendee_tentative">Tentative</string>
+    <string name="meeting_detail_invite">Inviter</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">Departmental information loss</string>
@@ -916,6 +901,8 @@
     <string name="meeting_detail_attendee">Attendee:%1$s</string>
     <string name="meeting_detail_record_holder">Recorder:%1$s</string>
     <string name="meeting_detail_conference">Contact:%1$s</string>
+    <string name="meeting_detail_record_title">Recorder</string>
+    <string name="meeting_detail_conference_title">Contact</string>
     <string name="meeting_detail_note">Note:%1$s</string>
     <string name="meeting_detail_sign">Meeting Sign</string>
     <string name="meeting_detail_summary">十 Add Summary</string>

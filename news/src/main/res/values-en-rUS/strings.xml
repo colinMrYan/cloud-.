@@ -3,9 +3,6 @@
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">Group News</string>
     <string name="news_group_news_detail">News Details</string>
-    <string name="news_share">Share to</string>
-    <string name="news_share_success">Sharing Successfully</string>
-    <string name="news_share_fail">Sharing unsuccessfully</string>
     <string name="news_day_mode_text">Standard</string>
     <string name="news_night_mode_text">Night</string>
     <string name="news_share_text">Share</string>

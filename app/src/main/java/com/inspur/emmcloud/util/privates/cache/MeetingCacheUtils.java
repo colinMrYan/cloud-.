@@ -37,6 +37,16 @@ public class MeetingCacheUtils {
 
     }
 
+    public static void removeMeeting(Context context, String meetingId) {
+        try {
+            DbCacheUtils.getDb(context).deleteById(Meeting.class, meetingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public static List<Meeting> getMeetingList(final Context context, Calendar startTime, Calendar endTime) {
         List<Meeting> meetingList = null;
         try {

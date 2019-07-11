@@ -38,11 +38,23 @@ public class ChatCreateUtils {
     private OnCreateDirectChannelListener onCreateDirectChannelListener;
     private OnCreateGroupChannelListener onCreateGroupChannelListener;
     private LoadingDialog loadingDlg;
+    private boolean isShowErrorAlert = true;
     JSONArray peopleArray;
     private ScheduleApiService scheduleApiService;
 
     public void createDirectChannel(Activity context, String uid,
                                     OnCreateDirectChannelListener onCreateDirectChannelListener) {
+        this.context = context;
+        this.onCreateDirectChannelListener = onCreateDirectChannelListener;
+        loadingDlg = new LoadingDialog(context);
+        loadingDlg.show();
+        ChatAPIService apiService = new ChatAPIService(context);
+        apiService.setAPIInterface(new WebService());
+        apiService.createDirectChannel(uid);
+    }
+
+    public void createDirectChannel(Activity context, String uid,
+                                    OnCreateDirectChannelListener onCreateDirectChannelListener, boolean isShowErrorAlert) {
         this.context = context;
         this.onCreateDirectChannelListener = onCreateDirectChannelListener;
         loadingDlg = new LoadingDialog(context);
@@ -162,7 +174,9 @@ public class ChatCreateUtils {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            WebServiceMiddleUtils.hand(context, error, errorCode);
+            if (isShowErrorAlert) {
+                WebServiceMiddleUtils.hand(context, error, errorCode);
+            }
             if (onCreateDirectChannelListener != null) {
                 onCreateDirectChannelListener.createDirectChannelFail();
             }
@@ -188,7 +202,9 @@ public class ChatCreateUtils {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            WebServiceMiddleUtils.hand(context, error, errorCode);
+            if (isShowErrorAlert) {
+                WebServiceMiddleUtils.hand(context, error, errorCode);
+            }
             if (onCreateGroupChannelListener != null) {
                 onCreateGroupChannelListener.createGroupChannelFail();
             }

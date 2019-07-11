@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
 
     <string name="app_name">雲+</string>
     <string name="app_name_zhihuichengjian">智慧城建</string>
@@ -206,36 +206,12 @@
     <string name="write_comment">寫評論</string>
 
     <string name="news_font_name_text">字體</string>
-
-    <!--&lt;!&ndash; 登錄部分 &ndash;&gt;-->
-    <!--<string name="login_invaliad_account_or_pwd">用戶名或密碼錯誤</string>-->
-    <!--<string name="login_captchas_login">短信登錄 </string>-->
-    <!--<string name="login_by_account">帳號密碼登錄</string>-->
-    <!--<string name="login_find_password">找回密碼</string>-->
-    <!--<string name="login_get_captchas_code">獲取驗證碼</string>-->
-    <!--<string name="login_captchas_sent"> 驗證碼已發送到手機：</string>-->
-    <!--<string name="login_please_input_captchas">請輸入驗證碼</string>-->
-    <!--<string name="login_please_input_phone_num">請輸入手機號碼</string>-->
-    <!--<string name="login_phone_num_illegal_format">手機號碼格式不正確</string>-->
-    <!--<string name="login_loading_text">登錄中...</string>-->
+    <string name="baselib_share_to">分享到</string>
+    <string name="baselib_share_success">分享成功</string>
+    <string name="baselib_share_fail">分享失敗</string>
     <string name="login_please_input_password"> 請輸入密碼</string>
     <string name="login">登錄</string>
-    <!--<string name="login_captchas_getcode_success">驗證碼發送成功</string>-->
-    <!--<string name="login_code_verification_failure">驗證碼校驗失敗</string>-->
-    <!--<string name="login_sms">短信登錄</string>-->
-    <!--<string name="login_your_contact"> 您的聯繫方式</string>-->
-    <!--<string name="login_authorization_expired">基於安全審計策略，需要重新驗證使用者資訊</string>-->
-    <!--<string name="login_cant_login_with_sms">您的賬號不允許使用短信登錄</string>-->
     <string name="login_user_not_bound_enterprise">當前用戶未綁定企業，請聯繫管理員！</string>
-    <!--<string name="captchas">驗證碼</string>-->
-    <!--<string name="recover">重新獲取</string>-->
-    <!--<string name="login_tv_welcome">你好，\n歡迎使用%1$s</string>-->
-    <!--<string name="login_current_login_enterprise">當前系統：%1$s</string>-->
-    <!--<string name="login_forget_password">忘記密碼？</string>-->
-    <!--<string name="login_fail_limit_remaining">帳號或密碼錯誤，請重新輸入，剩餘%1$d次機會</string>-->
-    <!--<string name="login_fail_account_lock_by_min">帳號已被鎖定，請%1$d分鐘後再嘗試</string>-->
-    <!--<string name="login_fail_account_lock_by_second">帳號已被鎖定，請%1$d秒後再次嘗試</string>-->
-
 
     <!-- 消息部分 -->
     <string name="login_group_album"> 群相冊</string>
@@ -400,6 +376,8 @@
     <string name="schedule_calendar_no_schedule_today">暫無日程安排</string>
     <string name="schedule_meeting_no_meeting_today">暂无會議安排</string>
     <string name="schedule_task_no_task_today">暂无任務安排</string>
+    <string name="schedule_click_to_add_schedule">再次點擊新建日程</string>
+    <string name="schedule_exchange_login_fail">Exchange帳戶登入失敗，是否重新登入？</string>
 
     <!--任务-->
     <string name="schedule_task_add">添加任務</string>
@@ -821,6 +799,8 @@
     <string name="contact_add_system">添加到通訊錄</string>
 
     <!-- 會議室部分 -->
+    <string name="schedule_meeting_topic">會議主題</string>
+    <string name="schedule_title">日期主題</string>
     <string name="meeting_room_booking_detail">會議室詳情</string>
     <string name="meeting_room_booking_topic">請輸入會議主題</string>
     <string name="meeting_room_booking_choosing_room">請選擇會議室</string>
@@ -921,6 +901,8 @@
     <string name="meeting_detail_attendee">參會人:%1$s</string>
     <string name="meeting_detail_record_holder">會議記錄人:%1$s</string>
     <string name="meeting_detail_conference">會議聯絡人:%1$s</string>
+    <string name="meeting_detail_record_title">會議記錄人</string>
+    <string name="meeting_detail_conference_title">會議聯絡人</string>
     <string name="meeting_detail_note">著裝要求:%1$s</string>
     <string name="meeting_detail_sign">會議簽到</string>
     <string name="meeting_detail_summary">十 添加會議摘要</string>
@@ -933,6 +915,11 @@
     <string name="meeting_detail_thirty_minutes">提前30分鐘</string>
     <string name="meeting_detail_one_hour">提前一個小時</string>
     <string name="meeting_detail_location">會議地點:</string>
+    <string name="meeting_detail_attendee_accept">接收</string>
+    <string name="meeting_detail_attendee_decline">拒絕</string>
+    <string name="meeting_detail_attendee_unknown">無響應</string>
+    <string name="meeting_detail_attendee_tentative">暫定</string>
+    <string name="meeting_detail_invite">邀請者</string>
 
 
     <!-- 日曆 -->

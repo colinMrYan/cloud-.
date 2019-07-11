@@ -25,8 +25,9 @@ public class Event {
     private int index = -1;
     private boolean isAllDay = false;
     private Object eventObj;
+    private String calendarType;
 
-    public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj) {
+    public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj, String calendarType) {
         this.eventId = eventId;
         this.eventType = eventType;
         this.eventTitle = eventTitle;
@@ -34,6 +35,7 @@ public class Event {
         this.eventStartTime = eventStartTime;
         this.eventEndTime = eventEndTime;
         this.eventObj = eventObj;
+        this.calendarType = calendarType;
     }
 
     public static List<Event> removeEventByType(List<Event> eventList, String eventType) {
@@ -122,6 +124,14 @@ public class Event {
         return eventEndTime;
     }
 
+    public String getCalendarType() {
+        return calendarType;
+    }
+
+    public void setCalendarType(String calendarType) {
+        this.calendarType = calendarType;
+    }
+
     public long getDayDurationInMillSeconds(Calendar selectCalendar) {
 
         return getDayEventEndTime(selectCalendar).getTimeInMillis() - getDayEventStartTime(selectCalendar).getTimeInMillis();
@@ -153,6 +163,18 @@ public class Event {
             eventIconResId = R.drawable.ic_schedule_event_task;
         }
         return eventIconResId;
+    }
+
+    public int getEventColorResId() {
+        int eventColorIconResId = -1;
+        if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
+            eventColorIconResId = R.drawable.schedule_calendar_type_orange;
+        } else if (getEventType().equals(Schedule.TYPE_MEETING)) {
+            eventColorIconResId = R.drawable.schedule_calendar_type_yellow;
+        } else {
+            eventColorIconResId = R.drawable.schedule_calendar_type_purple;
+        }
+        return eventColorIconResId;
     }
 
     public String getShowEventSubTitle(Context context, Calendar selectCalendar) {

@@ -37,6 +37,14 @@ public class ScheduleCacheUtils {
 
     }
 
+    public static void removeSchedule(Context context, String scheduleId) {
+        try {
+            DbCacheUtils.getDb(context).deleteById(Schedule.class, scheduleId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     public static List<Schedule> getScheduleList(Context context, Calendar startTime, Calendar endTime) {
         List<Schedule> scheduleList = null;
         try {

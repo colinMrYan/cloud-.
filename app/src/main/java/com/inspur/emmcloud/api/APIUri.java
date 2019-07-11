@@ -1684,6 +1684,11 @@ public class APIUri {
         return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/HolidayData/";
     }
 
+    public static String getScheduleBasicDataUrl() {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Basicdata";
+    }
+
+
     /**
      * 获取删除工作中的tags
      */
