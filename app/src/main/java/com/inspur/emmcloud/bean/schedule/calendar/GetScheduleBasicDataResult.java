@@ -20,13 +20,13 @@ public class GetScheduleBasicDataResult {
 
     public GetScheduleBasicDataResult(String response) {
         JSONObject object = JSONUtils.getJSONObject(response);
-        isEnableExchange = JSONUtils.getBoolean(object, "enableExchange", false);
         command = JSONUtils.getString(object, "command", "STANDBY");
         if (command.equals("FORWARD")) {
             JSONArray array = JSONUtils.getJSONArray(object, "holiday", new JSONArray());
             for (int i = 0; i < array.length(); i++) {
                 holidayList.add(new Holiday(JSONUtils.getJSONObject(array, i, new JSONObject())));
             }
+            isEnableExchange = JSONUtils.getBoolean(object, "enableExchange", false);
         }
         this.version = JSONUtils.getString(object, "version", "0");
     }

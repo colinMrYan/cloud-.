@@ -901,24 +901,24 @@ public class ScheduleFragment extends BaseFragment implements
 
         @Override
         public void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult) {
-            boolean isEnableExchangePrevious = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
-            PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, getScheduleBasicDataResult.isEnableExchange());
             PreferencesByUserAndTanentUtils.putString(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_BASIC_DATA_VERSION, getScheduleBasicDataResult.getVersion());
-            //当检测到突然开启Exchange日历功能时，进行Exchange登录检查
-            if (getScheduleBasicDataResult.isEnableExchange() && !isEnableExchangePrevious) {
-                checkExchangeLogin();
-            }
-            List<Holiday> holidayList = getScheduleBasicDataResult.getHolidayList();
-            if (holidayList.size() > 0) {
-                int year = holidayList.get(0).getYear();
-                yearHolidayListMap.put(year, holidayList);
-                if (pageStartCalendar.get(Calendar.YEAR) == year || pageEndCalendar.get(Calendar.YEAR) == year) {
-                    showCalendarEvent(true);
+            if (getScheduleBasicDataResult.getCommand().equals("FORWARD")) {
+                boolean isEnableExchangePrevious = PreferencesByUserAndTanentUtils.getBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, false);
+                PreferencesByUserAndTanentUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_SCHEDULE_ENABLE_EXCHANGE, getScheduleBasicDataResult.isEnableExchange());
+                //当检测到突然开启Exchange日历功能时，进行Exchange登录检查
+                if (getScheduleBasicDataResult.isEnableExchange() && !isEnableExchangePrevious) {
+                    checkExchangeLogin();
                 }
-                HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), year, holidayList);
+                List<Holiday> holidayList = getScheduleBasicDataResult.getHolidayList();
+                if (holidayList.size() > 0) {
+                    int year = holidayList.get(0).getYear();
+                    yearHolidayListMap.put(year, holidayList);
+                    if (pageStartCalendar.get(Calendar.YEAR) == year || pageEndCalendar.get(Calendar.YEAR) == year) {
+                        showCalendarEvent(true);
+                    }
+                    HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), year, holidayList);
+                }
             }
-
-
         }
 
         @Override
