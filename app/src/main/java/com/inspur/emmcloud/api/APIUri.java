@@ -1167,7 +1167,7 @@ public class APIUri {
      * @return
      */
     public static String getOfficeUrl() {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + "Location";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Location";
     }
 
     /**
@@ -1176,7 +1176,7 @@ public class APIUri {
      * @return
      */
     public static String addOfficeUrl() {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + "CommonLocation";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/CommonLocation";
     }
 
     /**
@@ -1194,7 +1194,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingIsAdminUrl() {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + "is_admin";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/is_admin";
     }
 
     /**
@@ -1213,7 +1213,7 @@ public class APIUri {
      */
     public static String getLocationUrl() {
 
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + "Location";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Location";
     }
 
 
