@@ -25,8 +25,9 @@ public class Event {
     private int index = -1;
     private boolean isAllDay = false;
     private Object eventObj;
+    private String calendarType;
 
-    public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj) {
+    public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj, String calendarType) {
         this.eventId = eventId;
         this.eventType = eventType;
         this.eventTitle = eventTitle;
@@ -34,6 +35,7 @@ public class Event {
         this.eventStartTime = eventStartTime;
         this.eventEndTime = eventEndTime;
         this.eventObj = eventObj;
+        this.calendarType = calendarType;
     }
 
     public static List<Event> removeEventByType(List<Event> eventList, String eventType) {
@@ -120,6 +122,14 @@ public class Event {
             return TimeUtils.getDayEndCalendar(selectCalendar);
         }
         return eventEndTime;
+    }
+
+    public String getCalendarType() {
+        return calendarType;
+    }
+
+    public void setCalendarType(String calendarType) {
+        this.calendarType = calendarType;
     }
 
     public long getDayDurationInMillSeconds(Calendar selectCalendar) {

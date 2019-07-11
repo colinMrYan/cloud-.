@@ -1665,7 +1665,7 @@ public class APIUri {
     }
 
     public static String getScheduleBasicDataUrl() {
-        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Basicdata?";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Basicdata";
     }
 
 
