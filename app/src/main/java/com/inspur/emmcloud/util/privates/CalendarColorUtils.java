@@ -61,8 +61,10 @@ public class CalendarColorUtils {
             resId = R.drawable.schedule_calendar_type_purple;
         } else if (color.equals("BROWN")) {
             resId = R.drawable.schedule_calendar_type_brown;
-        } else {
+        } else if (color.equals("PINK")) {
             resId = R.drawable.schedule_calendar_type_red;
+        } else if (color.equals("BLUE")) {
+            resId = R.drawable.schedule_calendar_type_blue;
         }
         return resId;
     }

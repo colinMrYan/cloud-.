@@ -37,8 +37,9 @@ public class MeetingDetailReplyActivity extends BaseActivity {
 
     private void init() {
         ReplyAttendResult originData = (ReplyAttendResult) getIntent().getSerializableExtra("OriginReplyData");
-        String[] contents = new String[]{"忽略", "接受", "拒绝"};
-        for (int i = 0; i < 3; i++) {
+        String[] contents = new String[]{getString(R.string.schedule_meeting_attend_ignore),
+                getString(R.string.schedule_meeting_attend_accept), getString(R.string.schedule_meeting_attend_reject)};
+        for (int i = 0; i < contents.length; i++) {
             ReplyAttendResult info = new ReplyAttendResult();
             info.position = i;
             info.content = contents[i];
