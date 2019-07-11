@@ -69,6 +69,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     }
 
     private void initView() {
+        swipeRefreshLayout.setOnRefreshListener(this);
         expandableListView.setGroupIndicator(null);
         expandableListView.setVerticalScrollBarEnabled(false);
         expandableListView.setHeaderDividersEnabled(false);
@@ -157,6 +158,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
     @Override
     public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
         meetingAttendeeStateAdapter.notifyDataSetChanged();
     }
 

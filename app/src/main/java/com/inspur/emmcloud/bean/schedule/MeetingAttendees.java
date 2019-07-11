@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.bean.schedule;
 
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,16 +54,16 @@ public class MeetingAttendees {
         String name = "";
         switch (type) {
             case MEETING_ATTENDEES_INVITE:
-                name = "邀请者";
+                name = BaseApplication.getInstance().getString(R.string.meeting_detail_invite);
                 break;
             case Participant.CALENDAR_RESPONSE_TYPE_ACCEPT:
-                name = "同意";
+                name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_accept);
                 break;
             case Participant.CALENDAR_RESPONSE_TYPE_DECLINE:
-                name = "拒绝";
+                name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_decline);
                 break;
             case Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN:
-                name = "无响应";
+                name = BaseApplication.getInstance().getString(R.string.meeting_detail_attendee_unknown);
                 break;
             default:
                 break;
