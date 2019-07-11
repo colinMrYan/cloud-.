@@ -8,16 +8,25 @@ package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.ui.chat.ConversationActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -29,6 +38,8 @@ public class ChatCreateUtils {
     private OnCreateDirectChannelListener onCreateDirectChannelListener;
     private OnCreateGroupChannelListener onCreateGroupChannelListener;
     private LoadingDialog loadingDlg;
+    JSONArray peopleArray;
+    private ScheduleApiService scheduleApiService;
 
     public void createDirectChannel(Activity context, String uid,
                                     OnCreateDirectChannelListener onCreateDirectChannelListener) {
@@ -109,6 +120,26 @@ public class ChatCreateUtils {
         void createGroupChannelFail();
     }
 
+    public void startGroupChat(Activity context, String scheduleId, JSONArray groupArray) {
+        startGroupChat(context, scheduleId, "", groupArray);
+    }
+
+    public void startGroupChat(Activity context, String scheduleId, String chatGroupId, JSONArray groupArray) {
+        scheduleApiService = new ScheduleApiService(context);
+        scheduleApiService.setAPIInterface(new WebService());
+        peopleArray = groupArray;
+
+        if (StringUtils.isBlank(chatGroupId)) {
+            scheduleApiService.getCalendarBindChat(scheduleId);
+        } else {
+            if (TabAndAppExistUtils.isTabExist(context, Constant.APP_TAB_BAR_COMMUNACATE)) {
+                Bundle bundle = new Bundle();
+                bundle.putString(ConversationActivity.EXTRA_CID, chatGroupId);
+                IntentUtils.startActivity(context, ConversationActivity.class, bundle);
+            }
+        }
+    }
+
     private class WebService extends APIInterfaceInstance {
 
         @Override
@@ -163,5 +194,39 @@ public class ChatCreateUtils {
             }
         }
 
+        @Override
+        public void returnGetCalendarChatBindSuccess(final String calendar, String cid) {
+            if (StringUtils.isBlank(cid)) { //新建群聊
+                new ConversationCreateUtils().createGroupConversation((Activity) context, peopleArray, new ConversationCreateUtils.OnCreateGroupConversationListener() {
+                    @Override
+                    public void createGroupConversationSuccess(Conversation conversation) {
+                        scheduleApiService.setCalendarBindChat(calendar, conversation.getId());
+                        if (TabAndAppExistUtils.isTabExist(context, Constant.APP_TAB_BAR_COMMUNACATE)) {
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(ConversationActivity.EXTRA_CONVERSATION, conversation);
+                            IntentUtils.startActivity((Activity) context, ConversationActivity.class, bundle);
+                            //创建群聊成功后  通知消息界面刷新界面数据（群组头像等）
+                            EventBus.getDefault().post(new SimpleEventMessage(Constant.EVENTBUS_TAG_CHAT_CHANGE, conversation));
+                        }
+                    }
+
+                    @Override
+                    public void createGroupConversationFail() {
+                    }
+                });
+            } else {
+                if (TabAndAppExistUtils.isTabExist(context, Constant.APP_TAB_BAR_COMMUNACATE)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ConversationActivity.EXTRA_CID, cid);
+                    IntentUtils.startActivity((Activity) context, ConversationActivity.class, bundle);
+                }
+            }
+        }
+
+        //获取群聊cid
+        @Override
+        public void returnSetCalendarChatBindSuccess(String calendarId, String chatId) {
+
+        }
     }
 }

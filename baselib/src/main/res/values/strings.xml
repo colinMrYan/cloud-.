@@ -461,6 +461,7 @@
     <string name="schedule_meeting_my_take_part_in">我参与的：</string>
     <string name="schedule_meeting_attend_reply">参会答复</string>
     <string name="schedule_meeting_attend_or_not">是否参会</string>
+    <string name="schedule_meeting_attend_unknown">未知</string>
     <string name="schedule_meeting_attend_ignore">忽略</string>
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_reject">拒绝</string>

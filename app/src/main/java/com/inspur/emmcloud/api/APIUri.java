@@ -6,6 +6,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
@@ -1220,14 +1221,33 @@ public class APIUri {
      * 设置日程的聊天组
      */
     public static String getSetCalendarBindChatUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.1/calendar/Chat/Bind";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Chat/Bind";
     }
 
     /**
      * 获取对应日程的聊天组
      */
     public static String getCalendarBindChatUrl(String calendarId) {
-        return "https:/id/emm.inspur.com/schedule-ext/api/schedule/v6.1/calendar/Chat/" + calendarId;
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Chat/" + calendarId;
+    }
+
+    /**
+     * 会议详情参会状态
+     */
+    public static String getMeetingAttendStatusUrl(int type) {
+        String status = "";
+        switch (Constant.ATTEND_MEETING_STATUS_ACCEPT) {
+            case Constant.ATTEND_MEETING_STATUS_ACCEPT:
+                status = "Accept";
+                break;
+            case Constant.ATTEND_MEETING_STATUS_REJECT:
+                status = "Decline";
+                break;
+            case Constant.ATTEND_MEETING_STATUS_TENTATIVE:
+                status = "Tentative";
+                break;
+        }
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + status + "/";
     }
 
 

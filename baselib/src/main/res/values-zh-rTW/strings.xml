@@ -455,6 +455,7 @@
     <string name="schedule_meeting_room_booking_detail">會議室詳情</string>
     <string name="schedule_meeting_attend_reply">參會答復</string>
     <string name="schedule_meeting_attend_or_not">是否參會</string>
+    <string name="schedule_meeting_attend_unknown">未知</string>
     <string name="schedule_meeting_attend_ignore">忽略</string>
     <string name="schedule_meeting_attend_accept">接受</string>
     <string name="schedule_meeting_attend_reject">拒絕</string>
