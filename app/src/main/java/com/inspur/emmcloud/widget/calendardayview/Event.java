@@ -155,6 +155,18 @@ public class Event {
         return eventIconResId;
     }
 
+    public int getEventColorResId() {
+        int eventColorIconResId = -1;
+        if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
+            eventColorIconResId = R.drawable.schedule_calendar_type_orange;
+        } else if (getEventType().equals(Schedule.TYPE_MEETING)) {
+            eventColorIconResId = R.drawable.schedule_calendar_type_yellow;
+        } else {
+            eventColorIconResId = R.drawable.schedule_calendar_type_purple;
+        }
+        return eventColorIconResId;
+    }
+
     public String getShowEventSubTitle(Context context, Calendar selectCalendar) {
         String showEventSubTitle = "";
         if (getEventType().equals(Schedule.TYPE_MEETING)) {
