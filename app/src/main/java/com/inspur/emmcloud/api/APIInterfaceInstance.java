@@ -1856,4 +1856,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnScheduleBasicDataFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnAttendMeetingStatusSuccess(String result, int type) {
+
+    }
+
+    @Override
+    public void returnAttendMeetingStatusFail(String error, int errorCode) {
+
+    }
 }
