@@ -56,6 +56,7 @@ import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
@@ -799,7 +800,16 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public void onGroupChat(Event event) {
-        ToastUtils.show("发起群聊");
+        (new ChatCreateUtils()).startGroupChat(getActivity(), event.getEventId(), "", new ChatCreateUtils.ICreateGroupChatListener() {
+            @Override
+            public void createSuccess() {
+            }
+
+            @Override
+            public void createFail() {
+                ToastUtils.show(R.string.meeting_group_chat_fail);
+            }
+        });
     }
 
     @Override

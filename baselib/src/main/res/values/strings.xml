@@ -918,6 +918,7 @@
     <string name="meeting_detail_attendee_decline">拒绝</string>
     <string name="meeting_detail_attendee_unknown">无响应</string>
     <string name="meeting_detail_attendee_tentative">暂定</string>
+    <string name="meeting_group_chat_fail">发起会议群聊失败</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">部门信息缺失</string>
