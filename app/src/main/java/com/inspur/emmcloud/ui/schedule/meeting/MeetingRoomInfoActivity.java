@@ -77,6 +77,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
     private List<View> viewList = new ArrayList<>();
     private List<Meeting> allMeetingList = new ArrayList<>();
     private Calendar currentCalendar = Calendar.getInstance();
+    private int currentPagerIndex = 0;
 
     @Override
     public void onCreate() {
@@ -99,7 +100,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         meetingRoomNameText.setText(meetingRoom.getName());
         meetingRoomFloorText.setText(meetingRoom.getBuilding().getName());
-        peopleNumText.setText(meetingRoom.getGalleryful() + "");
+        peopleNumText.setText(meetingRoom.getCapacity() + "");
         showMeetingRoomEquipment(equipmentLayout, meetingRoom.getEquipmentList());
         initTabLayout();
     }
@@ -116,6 +117,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 int position = tab.getPosition();
                 if (viewPager != null) {
                     viewPager.setCurrentItem(position);
+                    currentPagerIndex = position;
                 }
             }
 
@@ -272,6 +274,7 @@ public class MeetingRoomInfoActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 if (tabLayout != null) {
                     tabLayout.getTabAt(arg0).select();
+                    currentPagerIndex = arg0;
                 }
             }
 
@@ -287,8 +290,9 @@ public class MeetingRoomInfoActivity extends BaseActivity {
 
             }
         });
-        viewPager.setCurrentItem(0);
-        tabLayout.getTabAt(0).select();
+        currentPagerIndex = viewList.size() > currentPagerIndex ? currentPagerIndex : 0;//防止极特殊情况
+        viewPager.setCurrentItem(currentPagerIndex);
+        tabLayout.getTabAt(currentPagerIndex).select();
     }
 
 

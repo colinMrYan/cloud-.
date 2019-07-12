@@ -61,8 +61,22 @@ public class CalendarColorUtils {
             resId = R.drawable.schedule_calendar_type_purple;
         } else if (color.equals("BROWN")) {
             resId = R.drawable.schedule_calendar_type_brown;
-        } else {
+        } else if (color.equals("PINK")) {
             resId = R.drawable.schedule_calendar_type_red;
+        } else if (color.equals("BLUE")) {
+            resId = R.drawable.schedule_calendar_type_blue;
+        }
+        return resId;
+    }
+
+    public static int getCalendarDayViewEventBgResId(String color) {
+        int resId = -1;
+        if (color.equals("ORANGE")) {
+            resId = R.drawable.ic_schedule_calendar_view_event_bg_orange;
+        } else if (color.equals("PURPLE")) {
+            resId = R.drawable.ic_schedule_calendar_view_event_bg_purple;
+        } else if (color.equals("BLUE")) {
+            resId = R.drawable.ic_schedule_calendar_view_event_bg_blue;
         }
         return resId;
     }

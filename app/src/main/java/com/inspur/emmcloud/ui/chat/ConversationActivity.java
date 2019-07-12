@@ -1077,19 +1077,10 @@ public class ConversationActivity extends ConversationBaseActivity {
      * @param status
      */
     private void addLocalMessage(Message message, int status) {
-
         setConversationUnhide();
-
-        //存储发送中状态
-        if (status == Message.MESSAGE_SEND_ING) {
-            MessageCacheUtil.saveMessage(ConversationActivity.this, message);
-            notifyCommucationFragmentMessageSendStatus();
-        }
-        message.setRead(Message.MESSAGE_READ);
-        UIMessage UIMessage = new UIMessage(message);
         setMessageSendStatusAndSendTime(message, status);
         //本地添加的消息设置为正在发送状态
-        UIMessage.setSendStatus(status);
+        UIMessage UIMessage = new UIMessage(message);
         uiMessageList.add(UIMessage);
         adapter.setMessageList(uiMessageList);
         adapter.notifyItemInserted(uiMessageList.size() - 1);
@@ -1107,8 +1098,6 @@ public class ConversationActivity extends ConversationBaseActivity {
     private void setMessageSendStatusAndSendTime(Message message, int status) {
         //发送中，无网,发送消息失败
         message.setSendStatus(status);
-        message.setRead(Message.MESSAGE_READ);
-        message.setCreationDate(System.currentTimeMillis());
         MessageCacheUtil.saveMessage(ConversationActivity.this, message);
         notifyCommucationFragmentMessageSendStatus();
     }
@@ -1720,7 +1709,7 @@ public class ConversationActivity extends ConversationBaseActivity {
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(MyApplication.getInstance().getUid());
         intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.news_share));
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, context.getString(R.string.baselib_share_to));
         intent.setClass(context,
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_SEARCH_RUEST_CODE);

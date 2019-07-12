@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.ui.BaseFragmentActivity;
 
 import butterknife.ButterKnife;
@@ -12,8 +13,6 @@ import butterknife.ButterKnife;
  * Created by yufuchang on 2019/4/22.
  */
 public class MeetingHistoryActivity extends BaseFragmentActivity {
-
-    private static String EXTRA_IS_HISTORY_MEETING="is_history_meeting";
 
     private MeetingFragment meetingFragment;
 
@@ -24,7 +23,7 @@ public class MeetingHistoryActivity extends BaseFragmentActivity {
         setStatus();
         meetingFragment = new MeetingFragment();
         Intent intent=new Intent();
-        intent.putExtra(EXTRA_IS_HISTORY_MEETING,true);
+        intent.putExtra(Constant.EXTRA_IS_HISTORY_MEETING, true);
         meetingFragment.setArguments(intent.getExtras());
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_meeting_history_container, meetingFragment).commitAllowingStateLoss();
     }

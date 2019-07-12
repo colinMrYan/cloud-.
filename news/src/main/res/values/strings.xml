@@ -2,9 +2,6 @@
     <!-- 集团新闻 部分 -->
     <string name="news_group_news">集团新闻</string>
     <string name="news_group_news_detail">新闻详情</string>
-    <string name="news_share">分享到</string>
-    <string name="news_share_success">分享成功</string>
-    <string name="news_share_fail">分享失败</string>
     <string name="news_day_mode_text">标准模式</string>
     <string name="news_night_mode_text">夜间模式</string>
     <string name="news_share_text">分享</string>
@@ -13,7 +10,6 @@
     <string name="news_font_middle">中</string>
     <string name="news_font_big_text">大</string>
     <string name="news_font_biggest_text">超大</string>
-    <string name="news_font_name_text">字号</string>
     <string name="news_read_mode">阅读模式</string>
     <string name="news_instructions_text">批示</string>
     <string name="news_instructions_success_text">发送成功</string>

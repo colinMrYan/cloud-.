@@ -162,13 +162,13 @@ public class CustomMonthView extends MonthView {
         }
 
         if (isSelected) {
-            canvas.drawText(day, cx, mTextBaseLine + top,
+            canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
                     mSelectTextPaint);
             if(isLunarAndFestivalShow()){
                 canvas.drawText(lunar, cx, mTextBaseLine + y + mItemHeight / 15, mSelectedLunarTextPaint);
             }
         } else if (hasScheme) {
-            canvas.drawText(day, cx, mTextBaseLine + top,
+            canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
                     calendar.isCurrentDay() ? mCurDayTextPaint :
                             calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
             if(isLunarAndFestivalShow()){
@@ -184,7 +184,7 @@ public class CustomMonthView extends MonthView {
             }
 
         } else {
-            canvas.drawText(day, cx, mTextBaseLine + top,
+            canvas.drawText(day, cx, mTextBaseLine + top + (isLunarAndFestivalShow() ? 0 : mRadius / 2),
                     calendar.isCurrentDay() ? mCurDayTextPaint :
                             calendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
             if(isLunarAndFestivalShow()){

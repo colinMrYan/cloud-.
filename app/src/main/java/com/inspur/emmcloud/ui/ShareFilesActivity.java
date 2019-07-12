@@ -189,7 +189,7 @@ public class ShareFilesActivity extends BaseActivity {
         ArrayList<String> uidList = new ArrayList<>();
         uidList.add(MyApplication.getInstance().getUid());
         intent.putStringArrayListExtra(ContactSearchFragment.EXTRA_EXCLUDE_SELECT, uidList);
-        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.news_share));
+        intent.putExtra(ContactSearchFragment.EXTRA_TITLE, getString(R.string.baselib_share_to));
         intent.setClass(getApplicationContext(),
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
@@ -223,7 +223,7 @@ public class ShareFilesActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                ToastUtils.show(MyApplication.getInstance(), getString(R.string.news_share_fail));
+                ToastUtils.show(MyApplication.getInstance(), getString(R.string.baselib_share_fail));
             }
         }
     }

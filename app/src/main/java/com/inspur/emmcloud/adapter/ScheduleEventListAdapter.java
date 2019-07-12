@@ -78,6 +78,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
             endTime = "截止";
         }
         holder.eventImg.setImageResource(event.getEventIconResId());
+        holder.eventColorImage.setImageResource(event.getEventColorResId());
         holder.eventStartTimeText.setText(startTime);
         holder.eventEndTimeText.setText(endTime);
     }
@@ -99,6 +100,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
         private TextView eventEndTimeText;
         private TextView eventTileText;
         private TextView eventPositionText;
+        private ImageView eventColorImage;
 
         public ViewHolder(View convertView) {
             super(convertView);
@@ -108,6 +110,7 @@ public class ScheduleEventListAdapter extends RecyclerView.Adapter<ScheduleEvent
             eventEndTimeText = convertView.findViewById(R.id.tv_event_end_time);
             eventTileText = convertView.findViewById(R.id.tv_event_title);
             eventPositionText = convertView.findViewById(R.id.tv_event_position);
+            eventColorImage = convertView.findViewById(R.id.iv_event_color);
 
 
         }

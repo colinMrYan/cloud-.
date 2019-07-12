@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.PinyinUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.bean.SearchModel;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.chat.Conversation;
@@ -106,6 +107,20 @@ public class ConversationCacheUtils {
             // TODO: handle exception
             e.printStackTrace();
         }
+    }
+
+    public static Conversation getDirectConversationToUser(Context context, String uid) {
+        Conversation conversation = null;
+        String tile1 = uid + "-" + BaseApplication.getInstance().getUid();
+        String tile2 = BaseApplication.getInstance().getUid() + "-" + uid;
+        try {
+            conversation = DbCacheUtils.getDb(context).selector(Conversation.class).where("type", "=", Conversation.TYPE_DIRECT)
+                    .and(WhereBuilder.b("name", "=", tile1).or("name", "=", tile2)).findFirst();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return conversation;
     }
 
     /**

@@ -176,7 +176,7 @@ public class TaskTagsManageActivity extends BaseActivity {
             } else {
                 manageTagsHolder = (ManageTagsHolder) view.getTag();
             }
-            int colorId = CalendarColorUtils.getTaskTagResId(allTags.get(i).getColor());
+            int colorId = CalendarColorUtils.getCalendarTypeResId(allTags.get(i).getColor());
             manageTagsHolder.tagNameText.setText(allTags.get(i).getTitle());
             manageTagsHolder.tagFlagImage.setImageResource(colorId);
             manageTagsHolder.tagSelectImage.setVisibility(View.GONE);

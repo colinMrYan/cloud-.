@@ -268,8 +268,8 @@
 
             <ImageView
                 android:id="@+id/iv_calendar_type_flag"
-                android:layout_width="18dp"
-                android:layout_height="8dp"
+                android:layout_width="24dp"
+                android:layout_height="14dp"
                 android:layout_centerVertical="true"
                 android:paddingRight="10dp"
                 android:src="@drawable/icon_blue_circle" />

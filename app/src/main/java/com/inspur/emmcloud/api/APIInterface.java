@@ -70,6 +70,7 @@ import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
@@ -363,6 +364,14 @@ public interface APIInterface {
 
     void returnDeleteOfficeFail(String error, int errorCode);
 
+    void returnSetMeetingCommonBuildingSuccess(Building building);
+
+    void returnSetMeetingCommonBuildingFail(String error, int errorCode);
+
+    void returnCancelMeetingCommonBuildingSuccess(Building building);
+
+    void returnCancelMeetingCommonBuildingFail(String error, int errorCode);
+
     void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo);
 
     void returnKnowledgeListFail(String error, int errorCode);
@@ -370,6 +379,10 @@ public interface APIInterface {
     void returnIsMeetingAdminSuccess(GetIsMeetingAdminResult getIsAdmin);
 
     void returnIsMeetingAdminFail(String error, int errorCode);
+
+    void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult);
+
+    void returnScheduleBasicDataFail(String error, int errorCode);
 
 
 
@@ -749,7 +762,7 @@ public interface APIInterface {
 
     void returnUpdateScheduleFail(String error, int errorCode);
 
-    void returnDeleteScheduleSuccess();
+    void returnDeleteScheduleSuccess(String scheduleId);
 
     void returnDeleteScheduleFail(String error, int errorCode);
 
@@ -797,5 +810,17 @@ public interface APIInterface {
     void returnTransmitPictureSuccess(String cid, String description, Message message);
 
     void returnTransmitPictureError(String error, int errorCode);
+
+    void returnSetCalendarChatBindSuccess(String calendarId, String chatId);
+
+    void returnSetCalendarChatBindFail(String error, int errorCode);
+
+    void returnGetCalendarChatBindSuccess(String calendarId, String cid);
+
+    void returnGetCalendarChatBindFail(String error, int errorCode);
+
+    void returnAttendMeetingStatusSuccess(String result, int type);
+
+    void returnAttendMeetingStatusFail(String error, int errorCode);
 
 }

@@ -10,6 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
+import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.bean.schedule.meeting.ReplyAttendResult;
 
@@ -22,7 +25,10 @@ import butterknife.ButterKnife;
 public class MeetingDetailReplyActivity extends BaseActivity {
     @BindView(R.id.lv_meeting_reply)
     ListView listView;
+    private String meetingId;
     private List<ReplyAttendResult> dataList = new ArrayList<>();
+    private LoadingDialog loadingDlg;
+    private ScheduleApiService scheduleApiService;
 
     @Override
     public int getLayoutResId() {
@@ -32,13 +38,19 @@ public class MeetingDetailReplyActivity extends BaseActivity {
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
+        loadingDlg = new LoadingDialog(this);
+        scheduleApiService = new ScheduleApiService(this);
+        scheduleApiService.setAPIInterface(new WebService());
+
         init();
     }
 
     private void init() {
         ReplyAttendResult originData = (ReplyAttendResult) getIntent().getSerializableExtra("OriginReplyData");
-        String[] contents = new String[]{"忽略", "接受", "拒绝"};
-        for (int i = 0; i < 3; i++) {
+        meetingId = getIntent().getStringExtra("meetingId");
+        String[] contents = new String[]{getString(R.string.schedule_meeting_attend_unknown), getString(R.string.schedule_meeting_attend_ignore),
+                getString(R.string.schedule_meeting_attend_accept), getString(R.string.schedule_meeting_attend_reject)};
+        for (int i = 0; i < contents.length; i++) {
             ReplyAttendResult info = new ReplyAttendResult();
             info.position = i;
             info.content = contents[i];
@@ -58,11 +70,8 @@ public class MeetingDetailReplyActivity extends BaseActivity {
                 }
                 dataList.get(position).isSelect = true;
                 adapter.notifyDataSetChanged();
-                Intent intent = new Intent();
-                intent.putExtra("AttendReplyStatus", dataList.get(position).content);
-                intent.putExtra("ReplyResult", dataList.get(position));
-                setResult(100, intent);
-                finish();
+
+                scheduleApiService.setMeetingAttendStatus(meetingId, position);
             }
         });
     }
@@ -109,6 +118,28 @@ public class MeetingDetailReplyActivity extends BaseActivity {
             convertView.findViewById(R.id.iv_meeting_reply_selected).setVisibility(info.isSelect ? View.VISIBLE : View.INVISIBLE);
 
             return convertView;
+        }
+    }
+
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnAttendMeetingStatusSuccess(String result, int type) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+
+            Intent intent = new Intent();
+            intent.putExtra("AttendReplyStatus", dataList.get(type).content);
+            intent.putExtra("ReplyResult", dataList.get(type));
+            setResult(100, intent);
+            finish();
+        }
+
+        @Override
+        public void returnAttendMeetingStatusFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
         }
     }
 }
