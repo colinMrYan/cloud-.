@@ -35,7 +35,7 @@ import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
 
@@ -500,7 +500,7 @@ public class CalendarAddActivity extends BaseActivity implements CompoundButton.
                     myCalendar = (MyCalendar) data.getSerializableExtra(EXTRA_SCHEDULE_CALENDAR_TYPE);
                     calendarTypeLayout.setVisibility(View.VISIBLE);
                     calendarTypeNameText.setText(myCalendar.getName());
-                    calendarTypeFlagImage.setImageResource(CalendarColorUtils.getCalendarTypeResId(myCalendar.getColor()));
+                    calendarTypeFlagImage.setImageResource(CalendarUtils.getCalendarTypeResId(myCalendar.getColor()));
                     calenderTypeTipLayout.setVisibility(View.VISIBLE);
                     break;
                 case REQUEST_CAL_ALERT_TIME:

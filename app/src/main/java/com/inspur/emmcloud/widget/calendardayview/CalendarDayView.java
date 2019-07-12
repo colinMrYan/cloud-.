@@ -1,11 +1,9 @@
 package com.inspur.emmcloud.widget.calendardayview;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,7 +24,7 @@ import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
 
@@ -322,10 +320,10 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         }
     }
 
-    private void setEventLayout(final Event event, RelativeLayout.LayoutParams eventLayoutParams) {
+    private void setEventLayout(final Event event, final RelativeLayout.LayoutParams eventLayoutParams) {
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
-        final Drawable drawableNormal = getEventbgNormalDrawable(event);
-        final CustomRoundButtonDrawable drawableSelected = getEventBgSelectDrawable(event);
+        final Drawable drawableNormal = CalendarUtils.getEventBgNormalDrawable(event);
+        final CustomRoundButtonDrawable drawableSelected = CalendarUtils.getEventBgSelectDrawable(event);
         eventView.setBackground(drawableNormal);
         if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 24)) {
             ImageView eventImg = eventView.findViewById(R.id.iv_event);
@@ -346,6 +344,15 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 if (!(onEventClickListener != null && onEventClickListener.onRemoveEventAddDragScaleView())) {
                     showEventDetailPop(view, event, drawableNormal, drawableSelected);
                 }
+            }
+        });
+        eventView.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (onEventClickListener != null) {
+                    onEventClickListener.onEventTimeUpdate(event, eventLayoutParams.topMargin, eventLayoutParams.height);
+                }
+                return true;
             }
         });
     }
@@ -391,7 +398,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             @Override
             public void onClick(View v) {
                 if (onEventClickListener != null) {
-                    onEventClickListener.onDeleteEvent(event);
+                    onEventClickListener.onEventDelete(event);
                 }
                 popupWindow.dismiss();
             }
@@ -404,7 +411,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             @Override
             public void onClick(View v) {
                 if (onEventClickListener != null) {
-                    onEventClickListener.onShareEvent(event);
+                    onEventClickListener.onEventShare(event);
                 }
                 popupWindow.dismiss();
 
@@ -414,8 +421,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         ImageView calendarTypeImg = contentView.findViewById(R.id.iv_calendar_type);
         TextView eventTitleText = contentView.findViewById(R.id.tv_event_title);
         TextView eventTimeText = contentView.findViewById(R.id.tv_event_time);
-        calendarNameText.setText(getCalendarName(event));
-        int resId = getCalendarTypeImgResId(event);
+        calendarNameText.setText(CalendarUtils.getCalendarName(event));
+        int resId = CalendarUtils.getCalendarTypeImgResId(event);
         if (resId != -1) {
             calendarTypeImg.setImageResource(resId);
         }
@@ -470,92 +477,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         return location;
     }
 
-    private String getCalendarName(Event event) {
-        String calendarName = "";
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-                if (event.getCalendarType().equals("default")) {
-                    calendarName = getContext().getString(R.string.schedule_calendar_my_schedule);
-                } else {
-                    calendarName = "Exchange";
-                }
-
-                break;
-            case Schedule.TYPE_MEETING:
-                calendarName = getContext().getString(R.string.schedule_calendar_my_meeting);
-                break;
-            default:
-                break;
-        }
-        return calendarName;
-    }
-
-    private Drawable getEventbgNormalDrawable(Event event) {
-        Drawable drawable = null;
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-                if (event.getCalendarType().equals("default")) {
-                    drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
-                } else {
-                    drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_yellow));
-                }
-
-                break;
-            case Schedule.TYPE_MEETING:
-                drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_blue));
-                break;
-            default:
-                drawable = ContextCompat.getDrawable(getContext(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
-                break;
-        }
-        return drawable;
-
-    }
-
-    private CustomRoundButtonDrawable getEventBgSelectDrawable(Event event) {
-        CustomRoundButtonDrawable drawableSelected = new CustomRoundButtonDrawable();
-        ColorStateList colorStateList = null;
-
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-                if (event.getCalendarType().equals("default")) {
-                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
-                } else {
-                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FFCC07"));
-                }
-
-                break;
-            case Schedule.TYPE_MEETING:
-                colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
-                break;
-            default:
-                colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
-                break;
-        }
-        drawableSelected.setBgData(colorStateList);
-        drawableSelected.setCornerRadius(DensityUtil.dip2px(2));
-        drawableSelected.setIsRadiusAdjustBounds(false);
-        return drawableSelected;
-    }
-
-    private int getCalendarTypeImgResId(Event event) {
-        int resId = -1;
-        switch (event.getEventType()) {
-            case Schedule.TYPE_CALENDAR:
-                if (event.getCalendarType().equals("default")) {
-                    resId = CalendarColorUtils.getCalendarTypeResId("ORANGE");
-                } else {
-                    resId = CalendarColorUtils.getCalendarTypeResId("YELLOW");
-                }
-                break;
-            case Schedule.TYPE_MEETING:
-                resId = CalendarColorUtils.getCalendarTypeResId("BLUE");
-                break;
-            default:
-                break;
-        }
-        return resId;
-    }
 
 
     public void setOnEventClickListener(OnEventClickListener onEventClickListener) {
@@ -565,10 +486,12 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     public interface OnEventClickListener {
         void onShowEventDetail(Event event);
 
+        void onEventTimeUpdate(Event event, int top, int height);
+
         boolean onRemoveEventAddDragScaleView();
 
-        void onDeleteEvent(Event event);
+        void onEventDelete(Event event);
 
-        void onShareEvent(Event event);
+        void onEventShare(Event event);
     }
 }

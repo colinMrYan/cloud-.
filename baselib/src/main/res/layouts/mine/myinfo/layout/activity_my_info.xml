@@ -317,6 +317,7 @@
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
                     android:text="@string/modify_password"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -353,6 +354,7 @@
                     android:paddingLeft="16dp"
                     android:paddingTop="11dp"
                     android:text="@string/modify_reset_password"
+                    android:textColor="#333333"
                     android:textSize="16sp" />
 
                 <ImageView
