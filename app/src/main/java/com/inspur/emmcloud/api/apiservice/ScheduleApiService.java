@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.api.apiservice;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterface;
@@ -404,14 +403,12 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                Log.d("zhang", "setCalendarBindChat callbackSuccess: -------");
                 apiInterface.returnSetCalendarChatBindSuccess(calendarId, chatId);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                Log.d("zhang", "setCalendarBindChat callbackFail: -------");
                 apiInterface.returnSetCalendarChatBindFail(error, responseCode);
             }
         });
@@ -462,16 +459,14 @@ public class ScheduleApiService {
 
     /**
      * 会议详情页  参会状态
-     * type：1、同意  2、拒绝  3、暂定
      */
-    public void setMeetingAttendStatus(final String meetingId, final int type) {
-        final String completeUrl = APIUri.getMeetingAttendStatusUrl(type);
+    public void setMeetingAttendStatus(final String meetingId, final String responseType) {
+        final String completeUrl = APIUri.getMeetingAttendStatusUrl(responseType) + meetingId;
         RequestParams params = MyApplication.getInstance().getHttpRequestParams(completeUrl);
-        params.addParameter("meetingId", meetingId);
         HttpUtils.request(context, CloudHttpMethod.POST, params, new BaseModuleAPICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(byte[] arg0) {
-                apiInterface.returnAttendMeetingStatusSuccess(new String(arg0), type);
+                apiInterface.returnAttendMeetingStatusSuccess(new String(arg0), responseType);
             }
 
             @Override
@@ -484,7 +479,7 @@ public class ScheduleApiService {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        setMeetingAttendStatus(meetingId, type);
+                        setMeetingAttendStatus(meetingId, responseType);
                     }
 
                     @Override

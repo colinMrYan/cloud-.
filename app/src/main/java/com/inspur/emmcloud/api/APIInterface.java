@@ -210,9 +210,9 @@ public interface APIInterface {
 
     void returnCreateSingleChannelSuccess(GetCreateSingleChannelResult getCreatSingleChannelResult);
 
-    void returnCreatSingleChannelFail(String error, int errorCode);
+    void returnCreateSingleChannelFail(String error, int errorCode);
 
-    void returnCreatChannelGroupSuccess(ChannelGroup channelGroup);
+    void returnCreateChannelGroupSuccess(ChannelGroup channelGroup);
 
     void returnCreateChannelGroupFail(String error, int errorCode);
 
@@ -819,7 +819,7 @@ public interface APIInterface {
 
     void returnGetCalendarChatBindFail(String error, int errorCode);
 
-    void returnAttendMeetingStatusSuccess(String result, int type);
+    void returnAttendMeetingStatusSuccess(String result, String responseType);
 
     void returnAttendMeetingStatusFail(String error, int errorCode);
 
