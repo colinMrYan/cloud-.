@@ -23,6 +23,9 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
@@ -361,23 +364,12 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
         bubbleLayout.setArrowPosition(eventLayout.getWidth() / 2 - DensityUtil.dip2px(7));
-        final RelativeLayout operationLayout = contentView.findViewById(R.id.rl_operation);
         final PopupWindow popupWindow = new PopupWindow(contentView,
                 eventLayout.getWidth() - DensityUtil.dip2px(30),
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        LinearLayout shareLayout = contentView.findViewById(R.id.ll_share);
-        contentView.findViewById(R.id.iv_close).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                operationLayout.setVisibility(INVISIBLE);
-            }
-        });
-        contentView.findViewById(R.id.iv_menu).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                operationLayout.setVisibility(VISIBLE);
-            }
-        });
+        ImageView shareImage = contentView.findViewById(R.id.iv_share);
+        ImageView deleteImage = contentView.findViewById(R.id.iv_delete);
+        ImageView groupChatImage = contentView.findViewById(R.id.iv_group_chat);
         contentView.findViewById(R.id.bt_detail).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -387,17 +379,24 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 popupWindow.dismiss();
             }
         });
-        contentView.findViewById(R.id.ll_delete).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onEventClickListener != null) {
-                    onEventClickListener.onDeleteEvent(event);
+        if (PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                false) || event.getOwner().equals(BaseApplication.getInstance().getUid())) {
+            deleteImage.setVisibility(View.VISIBLE);
+            contentView.findViewById(R.id.iv_delete).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onEventClickListener != null) {
+                        onEventClickListener.onDeleteEvent(event);
+                    }
+                    popupWindow.dismiss();
                 }
-                popupWindow.dismiss();
-            }
-        });
+            });
+        } else {
+            deleteImage.setVisibility(View.GONE);
+        }
         if (event.getEventType().equals(Schedule.TYPE_MEETING)) {
-            contentView.findViewById(R.id.ll_group_chat).setOnClickListener(new OnClickListener() {
+            groupChatImage.setVisibility(View.VISIBLE);
+            contentView.findViewById(R.id.iv_group_chat).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (onEventClickListener != null) {
@@ -406,13 +405,16 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                     popupWindow.dismiss();
                 }
             });
+        } else {
+            groupChatImage.setVisibility(View.GONE);
         }
+
 
         //V0环境不显示分享按钮
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            shareLayout.setVisibility(View.GONE);
+            shareImage.setVisibility(View.GONE);
         }
-        shareLayout.setOnClickListener(new OnClickListener() {
+        shareImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onEventClickListener != null) {
