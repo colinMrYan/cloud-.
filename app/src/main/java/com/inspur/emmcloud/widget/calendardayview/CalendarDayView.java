@@ -379,7 +379,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 popupWindow.dismiss();
             }
         });
-
+        //删除
         if (PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
                 false) || event.getOwner().equals(BaseApplication.getInstance().getUid())) {
             deleteImage.setVisibility(View.VISIBLE);
@@ -395,7 +395,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         } else {
             deleteImage.setVisibility(View.GONE);
         }
-
+        //发起群聊
         if (event.getEventType().equals(Schedule.TYPE_MEETING)) {
             groupChatImage.setVisibility(View.VISIBLE);
             contentView.findViewById(R.id.iv_group_chat).setOnClickListener(new OnClickListener() {
@@ -410,8 +410,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         } else {
             groupChatImage.setVisibility(View.GONE);
         }
-
-
         //V0环境不显示分享按钮
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
             shareImage.setVisibility(View.GONE);
