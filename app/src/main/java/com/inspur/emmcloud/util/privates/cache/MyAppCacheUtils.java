@@ -168,4 +168,14 @@ public class MyAppCacheUtils {
         }
     }
 
+    /**
+     * 清除应用缓存
+     *
+     * @param context
+     * @return
+     */
+    public static boolean clearMyAppList(Context context) {
+        return PreferencesByUserAndTanentUtils.putString(context, Constant.APP_MYAPP_LIST_FROM_NET, "");
+    }
+
 }
