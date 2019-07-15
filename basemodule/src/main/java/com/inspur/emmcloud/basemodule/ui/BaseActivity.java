@@ -31,10 +31,12 @@ public abstract class BaseActivity extends Activity {
     protected final int STATUS_WHITE_DARK_FONT = 3;
     protected final int STATUS_TRANSPARENT = 4;
     protected final int STATUS_NO_SET = 5;
+    private int statusType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
+        statusType = getStatusType();
         setTheme();
         super.onCreate(savedInstanceState);
         int layoutResId = getLayoutResId();
@@ -42,7 +44,7 @@ public abstract class BaseActivity extends Activity {
             setContentView(layoutResId);
         }
         checkNecessaryPermission();
-        setStatus(getStatusType());
+        setStatus();
     }
 
     private void checkNecessaryPermission() {
@@ -120,18 +122,18 @@ public abstract class BaseActivity extends Activity {
         int currentThemeNo = PreferencesUtils.getInt(BaseApplication.getInstance(), Constant.PREF_APP_THEME, 0);
         switch (currentThemeNo) {
             case 1:
-                setTheme(R.style.AppTheme_1);
+                setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_1 : R.style.AppTheme_1);
                 break;
             case 2:
-                setTheme(R.style.AppTheme_2);
+                setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_2 : R.style.AppTheme_2);
                 break;
             default:
-                setTheme(R.style.AppTheme_0);
+                setTheme(statusType == STATUS_TRANSPARENT ? R.style.AppTheme_Transparent_0 : R.style.AppTheme_0);
                 break;
         }
     }
 
-    private void setStatus(int statusType) {
+    private void setStatus() {
         int navigationBarColor = android.R.color.white;
         boolean isStatusBarDarkFont = ResourceUtils.getBoolenOfAttr(this, R.attr.status_bar_dark_font);
         switch (statusType) {
