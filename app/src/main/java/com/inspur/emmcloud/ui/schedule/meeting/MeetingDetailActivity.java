@@ -188,22 +188,28 @@ public class MeetingDetailActivity extends BaseActivity {
         if (BaseApplication.getInstance().getUid().equals(meeting.getOwner())) {
             relatedPersonFlag = true;
         }
+        boolean isMeetingAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN, false);
 
-        if (relatedPersonFlag) {
+        if (relatedPersonFlag || isMeetingAdmin) {
             meetingMoreImg.setVisibility(View.VISIBLE);
             attendStatusLayout.setVisibility(isHistoryMeeting ? View.GONE : View.VISIBLE);
 
-            if (WebServiceRouterManager.getInstance().isV1xVersionChat()) {
+            //管理员不显示发起群聊 (创建者跟参会人)
+            if (relatedPersonFlag && WebServiceRouterManager.getInstance().isV1xVersionChat()) {
                 moreTextList.add(getString(R.string.message_create_group)); //发起群聊
             }
 
-            final boolean isShowChangeMeeting = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-                    false) && !meeting.getOwner().equals(MyApplication.getInstance().getUid());
-            if (!isHistoryMeeting) {
-                if (isShowChangeMeeting) {
+            //管理员 并且不是创建者 (管理员只能删除会议  创建者可以删除和修改会议)
+            final boolean isShowChangeMeeting = isMeetingAdmin && !meeting.getOwner().equals(MyApplication.getInstance().getUid());
+
+            //仅有管理员跟创建者有此逻辑
+            if (isMeetingAdmin || meeting.getOwner().equals(MyApplication.getInstance().getUid())) {
+                if (isShowChangeMeeting) {   //仅是管理员
                     moreTextList.add(getString(R.string.schedule_meeting_cancel));
-                } else {
-                    moreTextList.add(getString(R.string.schedule_meeting_change));
+                } else {    //创建者 or 创建者同时管理员
+                    if (!isHistoryMeeting) {
+                        moreTextList.add(getString(R.string.schedule_meeting_change));
+                    }
                     moreTextList.add(getString(R.string.schedule_meeting_cancel));
                 }
             }
