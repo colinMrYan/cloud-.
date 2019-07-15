@@ -771,7 +771,7 @@ public class ScheduleFragment extends BaseFragment implements
         String startTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(), event.getEventStartTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         String endTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(), event.getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         StringBuilder builder = new StringBuilder();
-        builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_meeting_topic) : getString(R.string.schedule_meeting_topic));
+        builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_title) : getString(R.string.schedule_meeting_topic));
         builder.append(" : ").append(event.getEventTitle()).append("\n")
                 .append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
                 .append(getString(R.string.meeting_end_time)).append(" : ").append(endTime);
