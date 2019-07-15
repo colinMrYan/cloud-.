@@ -18,12 +18,14 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
+import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.bean.schedule.MeetingAttendees;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
@@ -52,14 +54,13 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
     private List<MeetingAttendees> meetingAttendeesList = new ArrayList<>();
     private List<Participant> recordParticipants = new ArrayList<>();
     private List<Participant> contactParticipants = new ArrayList<>();
+    private ScheduleApiService apiService;
 
     @Override
     public void onCreate() {
         ButterKnife.bind(this);
         meeting = (Meeting) getIntent().getSerializableExtra(MeetingDetailActivity.EXTRA_MEETING_ENTITY); //来自列表
-        initData();
-        initView();
-
+        init();
     }
 
 
@@ -68,7 +69,13 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         return R.layout.activity_meeting_attendee_state;
     }
 
-    private void initView() {
+    private void getMeetingData() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            apiService.getMeetingDataFromId(meeting.getId());
+        }
+    }
+
+    private void init() {
         swipeRefreshLayout.setOnRefreshListener(this);
         expandableListView.setGroupIndicator(null);
         expandableListView.setVerticalScrollBarEnabled(false);
@@ -76,12 +83,12 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         expandableListView.setOnChildClickListener(this);
         meetingAttendeeStateAdapter = new MeetingAttendeeStateAdapter(this);
         expandableListView.setAdapter(meetingAttendeeStateAdapter);
-    }
-
-    private void initData() {
         recordParticipants = meeting.getRecorderParticipantList();
         contactParticipants = meeting.getRoleParticipantList();
         divideAttendeeGroup();
+        apiService = new ScheduleApiService(this);
+        apiService.setAPIInterface(new WebService());
+        getMeetingData();
     }
 
     public void onClick(View v) {
@@ -92,12 +99,14 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         }
     }
 
+    //数据分组
     private void divideAttendeeGroup() {
         meetingAttendeesList.clear();
         MeetingAttendees meetingInvite = new MeetingAttendees(MeetingAttendees.MEETING_ATTENDEES_INVITE);
         MeetingAttendees meetingAcceptAttendees = new MeetingAttendees(Participant.CALENDAR_RESPONSE_TYPE_ACCEPT);
         MeetingAttendees meetingDenyAttendees = new MeetingAttendees(Participant.CALENDAR_RESPONSE_TYPE_DECLINE);
         MeetingAttendees meetingNoActionAttendees = new MeetingAttendees(Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN);
+        MeetingAttendees meetingTentativeAttendees = new MeetingAttendees(Participant.CALENDAR_RESPONSE_TYPE_TENTATIVE);
 
         //考虑Owner ID无法查询的情况
         Participant participant = new Participant();
@@ -136,6 +145,8 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
                     meetingAcceptAttendees.getMeetingAttendeesList().add(participantList.get(m));
                 } else if (participantList.get(m).getResponseType().equals(Participant.CALENDAR_RESPONSE_TYPE_DECLINE)) {
                     meetingDenyAttendees.getMeetingAttendeesList().add(participantList.get(m));
+                } else if (participantList.get(m).getResponseType().equals(Participant.CALENDAR_RESPONSE_TYPE_TENTATIVE)) {
+                    meetingTentativeAttendees.getMeetingAttendeesList().add(participantList.get(m));
                 } else {
                     meetingNoActionAttendees.getMeetingAttendeesList().add(participantList.get(m));
                 }
@@ -151,15 +162,18 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
         if (meetingDenyAttendees.getMeetingAttendeesList().size() > 0) {
             meetingAttendeesList.add(meetingDenyAttendees);
         }
+        if (meetingTentativeAttendees.getMeetingAttendeesList().size() > 0) {
+            meetingAttendeesList.add(meetingTentativeAttendees);
+        }
         if (meetingNoActionAttendees.getMeetingAttendeesList().size() > 0) {
             meetingAttendeesList.add(meetingNoActionAttendees);
         }
+        meetingAttendeeStateAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
-        meetingAttendeeStateAdapter.notifyDataSetChanged();
+        getMeetingData();
     }
 
     @Override
@@ -258,7 +272,7 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
             }
             for (int num = 0; num < contactParticipants.size(); num++) {
                 if (participant.getId().equals(contactParticipants.get(num).getId()) && participant.getName().equals(contactParticipants.get(num).getName())) {
-                    attendeeType.setText(R.string.meeting_detail_conference_title);
+                    attendeeType.setText(attendeeType.getText() + " " + MyApplication.getInstance().getString(R.string.meeting_detail_conference_title));
                     attendeeType.setVisibility(View.VISIBLE);
                 }
             }
@@ -274,7 +288,18 @@ public class MeetingAttendeeStateActivity extends BaseActivity implements SwipeR
 
     //更新个人信息状态
     class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnMeetingDataFromIdSuccess(Meeting newMeeting) {
+            swipeRefreshLayout.setRefreshing(false);
+            meeting = newMeeting;
+            divideAttendeeGroup();
+        }
 
+        @Override
+        public void returnMeetingDataFromIdFail(String error, int errorCode) {
+            swipeRefreshLayout.setRefreshing(false);
+            super.returnMeetingDataFromIdFail(error, errorCode);
+        }
     }
 
 }

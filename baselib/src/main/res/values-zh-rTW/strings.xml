@@ -920,6 +920,7 @@
     <string name="meeting_detail_attendee_unknown">無響應</string>
     <string name="meeting_detail_attendee_tentative">暫定</string>
     <string name="meeting_detail_invite">邀請者</string>
+    <string name="meeting_group_chat_fail">發起會議群聊失敗</string>
 
 
     <!-- 日曆 -->

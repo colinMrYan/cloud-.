@@ -877,6 +877,7 @@
     <string name="meeting_detail_attendee_unknown">Unknown</string>
     <string name="meeting_detail_attendee_tentative">Tentative</string>
     <string name="meeting_detail_invite">Inviter</string>
+    <string name="meeting_group_chat_fail">Meeting chat fail</string>
 
     <!-- 会议预定错误提示 -->
     <string name="meeting_user_profile_broken">Departmental information loss</string>
