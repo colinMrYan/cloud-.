@@ -38,7 +38,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
-import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -120,7 +119,7 @@ public class MyAppFragment extends BaseFragment {
     private DataSetObserver dataSetObserver;
     private View netExceptionView;
     private boolean haveHeader = false;
-    private boolean hasRequestBadgeNum = false;
+    //    private boolean hasRequestBadgeNum = false;
     private MyOnClickListener myOnClickListener;
     private LinearLayout commonlyUseLayout;
 
@@ -168,10 +167,8 @@ public class MyAppFragment extends BaseFragment {
         if (ClientConfigUpdateUtils.getInstance().isItemNeedUpdate(ClientConfigItem.CLIENT_CONFIG_MY_APP)) {
             getMyApp();
         }
-        hasRequestBadgeNum = false;
-        if (!StringUtils.isBlank(MyAppCacheUtils.getMyAppListJson(getActivity()))) {
+        if (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() > 0) {
             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
-            hasRequestBadgeNum = true;
         }
         refreshRecommendAppWidgetView();
         checkingNetStateUtils.getNetStateResult(5);
@@ -329,7 +326,7 @@ public class MyAppFragment extends BaseFragment {
     private void refreshAppListView() {
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
         List<AppGroupBean> appGroupFromNetList = MyAppCacheUtils.getMyAppListFromNet(getContext());
-        if (appGroupList.size() > 0 && (appGroupList.size() != appGroupFromNetList.size()) && !getNeedCommonlyUseApp()) {
+        if (appGroupList.size() > 0 && (appGroupList.size() != appGroupFromNetList.size()) && !MyAppCacheUtils.getNeedCommonlyUseApp()) {
             appGroupList.remove(0);
         }
         if (appListAdapter != null) {
@@ -461,7 +458,7 @@ public class MyAppFragment extends BaseFragment {
     private void saveOrChangeCommonlyUseAppList(App app, List<AppGroupBean> appAdapterList) {
         List<AppCommonlyUse> appCommonlyUseAddCountList = addClickCount(app);
         calculateAppWeight(appCommonlyUseAddCountList);
-        if (getNeedCommonlyUseApp()) {
+        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
             showCommonlyUseApps(app, appAdapterList);
         }
     }
@@ -551,7 +548,7 @@ public class MyAppFragment extends BaseFragment {
                                       App app) {
         List<App> commonlyAppItemList = appAdapterList.get(0)
                 .getAppItemList();
-        if (getNeedCommonlyUseApp() && (commonlyAppItemList.indexOf(app) != -1)) {
+        if (MyAppCacheUtils.getNeedCommonlyUseApp() && (commonlyAppItemList.indexOf(app) != -1)) {
             commonlyAppItemList.remove(app);
             List<App> appList = AppCacheUtils.getCommonlyUseNeedShowList(getActivity());
             appAdapterList.get(0)
@@ -697,29 +694,6 @@ public class MyAppFragment extends BaseFragment {
     }
 
     /**
-     * 存储是否需要显示常用app
-     *
-     * @param isNeedCommonlyUseApp
-     */
-    private void saveNeedCommonlyUseApp(boolean isNeedCommonlyUseApp) {
-        String userId = ((MyApplication) getActivity().getApplication()).getUid();
-        PreferencesUtils.putBoolean(getActivity(), MyApplication.getInstance().getTanent()
-                        + userId + "needCommonlyUseApp",
-                isNeedCommonlyUseApp);
-    }
-
-    /**
-     * 获取是否需要显示常用app
-     *
-     * @return
-     */
-    private boolean getNeedCommonlyUseApp() {
-        String userId = MyApplication.getInstance().getUid();
-        return PreferencesUtils.getBoolean(getActivity(), MyApplication.getInstance().getTanent()
-                + userId + "needCommonlyUseApp", true);
-    }
-
-    /**
      * 存储App顺序
      *
      * @param changeId
@@ -775,49 +749,13 @@ public class MyAppFragment extends BaseFragment {
      * @param appGroupList
      */
     private void handCommonlyUseAppData(List<AppGroupBean> appGroupList, boolean isNeedRefresh) {
-        List<AppCommonlyUse> appCommonlyUseList =
-                AppCacheUtils.getCommonlyUseList(getActivity());//这里换成获取所有
-        if (appCommonlyUseList.size() > 0 && getNeedCommonlyUseApp()) {
-            AppGroupBean appGroupBean = new AppGroupBean();
-            appGroupBean.setCategoryID("commonly");
-            appGroupBean.setCategoryName(getString(R.string.commoly_use_app));
-            List<App> myCommonlyUseAppList = new ArrayList<App>();
-            for (int i = 0; i < appGroupList.size(); i++) {
-                List<App> appItemList = appGroupList.get(i).getAppItemList();
-                int appGroupSize = appItemList.size();
-                for (int j = 0; j < appGroupSize; j++) {
-                    App app = appItemList.get(j);
-                    AppCommonlyUse appCommonlyUse = new AppCommonlyUse();
-                    appCommonlyUse.setAppID(app.getAppID());
-                    int index = appCommonlyUseList.indexOf(appCommonlyUse);
-                    int allreadHas = myCommonlyUseAppList.indexOf(app);
-                    if (index != -1 && allreadHas == -1) {
-                        AppCommonlyUse appCommonlyUseTemp = appCommonlyUseList.get(index);
-                        app.setWeight(appCommonlyUseTemp.getWeight());
-                        myCommonlyUseAppList.add(app);
-                    }
-                }
-            }
-            //先排序再取前四个
-            Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
-            if (myCommonlyUseAppList.size() > 8) {
-                myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 8);
-            }
-            //取完前四个再排序一次
-            Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
-            //需要调试常用应用权重时解开
-//            for (int i = 0; i < myCommonlyUseAppList.size(); i++) {
-//                LogUtils.YfcDebug("app名称：" + myCommonlyUseAppList.get(i).getAppName() + "常用应用的权重" + myCommonlyUseAppList.get(i).getWeight());
-//            }
-            if (myCommonlyUseAppList.size() > 0) {
-                appGroupBean.setAppItemList(myCommonlyUseAppList);
-                appGroupList.add(0, appGroupBean);
-                saveNeedCommonlyUseApp(true);
-            }
+        AppGroupBean appGroupBean = MyAppCacheUtils.getCommonlyUserAppGroup();
+        if (appGroupBean != null) {
+            appGroupList.add(0, appGroupBean);
+            MyAppCacheUtils.saveNeedCommonlyUseApp(true);
         }
         if (isNeedRefresh) {
             appListAdapter.notifyDataSetChanged();
-            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
         }
     }
 
@@ -841,8 +779,8 @@ public class MyAppFragment extends BaseFragment {
         if (popupWindow != null && commonlyUseLayout != null) {
             ImageView imageView = commonlyUseLayout.findViewById(R.id.iv_app_commonly_use);
             TextView textView = commonlyUseLayout.findViewById(R.id.tv_app_commonly_use);
-            imageView.setImageResource(getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close);
-            textView.setText(getNeedCommonlyUseApp() ? R.string.app_commonly_use_close : R.string.app_commonly_use);
+            imageView.setImageResource(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.drawable.ic_commonly_use_open : R.drawable.ic_commonly_use_close);
+            textView.setText(MyAppCacheUtils.getNeedCommonlyUseApp() ? R.string.app_commonly_use_close : R.string.app_commonly_use);
         }
     }
 
@@ -859,7 +797,7 @@ public class MyAppFragment extends BaseFragment {
      * @return
      */
     private boolean getIsCommonlyUseGroupInList(int listPosition) {
-        return (listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0;
+        return (listPosition == 0) && MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0;
     }
 
     /**
@@ -940,9 +878,8 @@ public class MyAppFragment extends BaseFragment {
                             }
 
                         }
-                        if (getNeedCommonlyUseApp()) {
+                        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
                             saveOrChangeCommonlyUseAppList(app, appAdapterList);
-                            MyAppCacheUtils.saveMyAppList(getContext(), appAdapterList);
                         }
                     }
                 }
@@ -972,7 +909,7 @@ public class MyAppFragment extends BaseFragment {
                             new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
-                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
+//                            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
                         }
                     });
             if (canEdit) {
@@ -1045,27 +982,6 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
-    /**
-     * 应用排序接口，比较权重，用于展示APP
-     */
-    public class SortCommonlyUseAppClass implements Comparator {
-        public int compare(Object arg0, Object arg1) {
-            App appItemA = (App) arg0;
-            App appItemB = (App) arg1;
-            double appSortA = appItemA.getWeight();
-            double appSortB = appItemB.getWeight();
-            if (appSortA == 0 || appSortB == 0) {
-                return -1;
-            }
-            if (appSortA > appSortB) {
-                return -1;
-            } else if (appSortA < appSortB) {
-                return 1;
-            } else {
-                return -1;
-            }
-        }
-    }
 
     /**
      * 常用应用排序接口，比较权重，用于存储常用app
@@ -1120,16 +1036,16 @@ public class MyAppFragment extends BaseFragment {
                     if (popupWindow != null) {
                         popupWindow.dismiss();
                     }
-                    if (!getNeedCommonlyUseApp()) {
-                        saveNeedCommonlyUseApp(true);
+                    if (!MyAppCacheUtils.getNeedCommonlyUseApp()) {
+                        MyAppCacheUtils.saveNeedCommonlyUseApp(true);
                         handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
                         setCommonlyUseIconAndText();
                     } else {
-                        if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                        if (MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
                             appListAdapter.getAppAdapterList().remove(0);
                             appListAdapter.notifyDataSetChanged();
                         }
-                        saveNeedCommonlyUseApp(false);
+                        MyAppCacheUtils.saveNeedCommonlyUseApp(false);
                         setCommonlyUseIconAndText();
                     }
                     break;
@@ -1151,9 +1067,10 @@ public class MyAppFragment extends BaseFragment {
         @Override
         protected List<AppGroupBean> doInBackground(GetAppGroupResult... params) {
             try {
+                MyAppCacheUtils.saveMyAppListFromNet(getActivity(), (params[0])
+                        .getAppGroupBeanList());
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
-                MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
                 ClientConfigUpdateUtils.getInstance().saveItemLocalVersion(ClientConfigItem.CLIENT_CONFIG_MY_APP, clientConfigMyAppVersion);
                 return appGroupList;
             } catch (Exception e) {
@@ -1166,7 +1083,7 @@ public class MyAppFragment extends BaseFragment {
         @Override
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
-            if (!hasRequestBadgeNum) {
+            if (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() > 0) {
                 new AppBadgeUtils(MyApplication.getInstance()).getAppBadgeCountFromServer();
             }
             appListAdapter.setAppAdapterList(appGroupList);

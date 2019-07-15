@@ -2,13 +2,20 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -18,43 +25,94 @@ import java.util.List;
 public class MyAppCacheUtils {
 
     /**
-     * 保存应用列表数据
-     *
-     * @param context
-     * @param appGroupList
-     */
-    public static void saveMyAppList(Context context, List<AppGroupBean> appGroupList) {
-        String appListJson = JSONUtils.toJSONString(appGroupList);
-        if (!appListJson.equals("null") && !StringUtils.isBlank(appListJson)) {
-            PreferencesByUserAndTanentUtils.putString(context, Constant.APP_MYAPP_LIST_IN_CACHE, appListJson);
-        }
-    }
-
-    /**
-     * 获取常用应用数据，字符串形式
-     *
-     * @param context
-     */
-    public static String getMyAppListJson(Context context) {
-        return PreferencesByUserAndTanentUtils.getString(context, Constant.APP_MYAPP_LIST_IN_CACHE, "");
-    }
-
-    /**
      * 获取应用列表
      *
      * @param context
      * @return
      */
     public static List<AppGroupBean> getMyAppList(Context context) {
-        String appListJson = PreferencesByUserAndTanentUtils.getString(context, Constant.APP_MYAPP_LIST_IN_CACHE, "");
-        List<AppGroupBean> appGroupList = null;
-        if (!StringUtils.isBlank(appListJson)) {
-            appGroupList = JSONUtils.parseArray(appListJson, AppGroupBean.class);
+        List<AppGroupBean> appGroupList = getMyAppListFromNet(context);
+        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
+            AppGroupBean appGroupBean = getCommonlyUserAppGroup();
+            if (appGroupBean != null && appGroupList != null) {
+                appGroupList.add(0, appGroupBean);
+            }
         }
         if (appGroupList == null) {
             appGroupList = new ArrayList<>();
         }
         return appGroupList;
+    }
+
+    /**
+     * 获取常用应用组
+     *
+     * @return
+     */
+    public static AppGroupBean getCommonlyUserAppGroup() {
+        AppGroupBean appGroupBean = new AppGroupBean();
+        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppListFromNet(MyApplication.getInstance());
+        List<AppCommonlyUse> appCommonlyUseList =
+                AppCacheUtils.getCommonlyUseList(MyApplication.getInstance());//这里换成获取所有
+        if (appCommonlyUseList.size() > 0) {
+            appGroupBean.setCategoryID("commonly");
+            appGroupBean.setCategoryName(MyApplication.getInstance().getString(R.string.commoly_use_app));
+            List<App> myCommonlyUseAppList = new ArrayList<App>();
+            for (int i = 0; i < appGroupList.size(); i++) {
+                List<App> appItemList = appGroupList.get(i).getAppItemList();
+                int appGroupSize = appItemList.size();
+                for (int j = 0; j < appGroupSize; j++) {
+                    App app = appItemList.get(j);
+                    AppCommonlyUse appCommonlyUse = new AppCommonlyUse();
+                    appCommonlyUse.setAppID(app.getAppID());
+                    int index = appCommonlyUseList.indexOf(appCommonlyUse);
+                    int allreadHas = myCommonlyUseAppList.indexOf(app);
+                    if (index != -1 && allreadHas == -1) {
+                        AppCommonlyUse appCommonlyUseTemp = appCommonlyUseList.get(index);
+                        app.setWeight(appCommonlyUseTemp.getWeight());
+                        myCommonlyUseAppList.add(app);
+                    }
+                }
+            }
+            //先排序再取前四个
+            Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
+            if (myCommonlyUseAppList.size() > 8) {
+                myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 8);
+            }
+            //取完前四个再排序一次
+            Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
+            //需要调试常用应用权重时解开
+//            for (int i = 0; i < myCommonlyUseAppList.size(); i++) {
+//                LogUtils.YfcDebug("app名称：" + myCommonlyUseAppList.get(i).getAppName() + "常用应用的权重" + myCommonlyUseAppList.get(i).getWeight());
+//            }
+            if (myCommonlyUseAppList.size() > 0) {
+                appGroupBean.setAppItemList(myCommonlyUseAppList);
+            }
+        }
+        return appGroupBean.getAppItemList().size() > 0 ? appGroupBean : null;
+    }
+
+    /**
+     * 存储是否需要显示常用app
+     *
+     * @param isNeedCommonlyUseApp
+     */
+    public static void saveNeedCommonlyUseApp(boolean isNeedCommonlyUseApp) {
+        String userId = MyApplication.getInstance().getUid();
+        PreferencesUtils.putBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
+                        + userId + "needCommonlyUseApp",
+                isNeedCommonlyUseApp);
+    }
+
+    /**
+     * 获取是否需要显示常用app
+     *
+     * @return
+     */
+    public static boolean getNeedCommonlyUseApp() {
+        String userId = MyApplication.getInstance().getUid();
+        return PreferencesUtils.getBoolean(MyApplication.getInstance(), MyApplication.getInstance().getTanent()
+                + userId + "needCommonlyUseApp", true);
     }
 
     /**
@@ -67,7 +125,6 @@ public class MyAppCacheUtils {
         String appListJson = JSONUtils.toJSONString(appGroupList);
         if (!appListJson.equals("null") && !StringUtils.isBlank(appListJson)) {
             PreferencesByUserAndTanentUtils.putString(context, Constant.APP_MYAPP_LIST_FROM_NET, appListJson);
-            PreferencesByUserAndTanentUtils.putString(context, Constant.APP_MYAPP_LIST_IN_CACHE, appListJson);
         }
     }
 
@@ -90,13 +147,25 @@ public class MyAppCacheUtils {
     }
 
     /**
-     * 清除常用应用缓存
-     *
-     * @param context
-     * @return
+     * 应用排序接口，比较权重，用于展示APP
      */
-    public static boolean clearMyAppList(Context context) {
-        return PreferencesByUserAndTanentUtils.putString(context, Constant.APP_MYAPP_LIST_IN_CACHE, "");
+    public static class SortCommonlyUseAppClass implements Comparator {
+        public int compare(Object arg0, Object arg1) {
+            App appItemA = (App) arg0;
+            App appItemB = (App) arg1;
+            double appSortA = appItemA.getWeight();
+            double appSortB = appItemB.getWeight();
+            if (appSortA == 0 || appSortB == 0) {
+                return -1;
+            }
+            if (appSortA > appSortB) {
+                return -1;
+            } else if (appSortA < appSortB) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
     }
 
 }
