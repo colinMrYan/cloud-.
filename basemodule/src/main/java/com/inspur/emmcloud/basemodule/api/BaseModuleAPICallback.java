@@ -81,7 +81,10 @@ public abstract class BaseModuleAPICallback implements CommonCallback<byte[]> {
                 callbackTokenExpire(requestTime);
             } else {
                 callbackFail(error, responseCode);
-                AppExceptionCacheUtils.saveAppException(BaseApplication.getInstance(), errorLevel, url, error, responseCode);
+                //网络异常检测出现301不记录日志
+                if (!(responseCode == 301 && url.startsWith("http://www.inspuronline.com/#/auth"))) {
+                    AppExceptionCacheUtils.saveAppException(BaseApplication.getInstance(), errorLevel, url, error, responseCode);
+                }
             }
         } catch (Exception e) {
             // TODO: handle exception

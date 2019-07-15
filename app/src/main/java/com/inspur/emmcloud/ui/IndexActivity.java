@@ -76,11 +76,11 @@ public class IndexActivity extends IndexBaseActivity {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         initAppEnvironment();
         initView();
         getInitData();
         startService();
-        EventBus.getDefault().register(this);
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
