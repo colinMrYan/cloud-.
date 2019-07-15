@@ -215,7 +215,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                 MailService service = router.getService(MailService.class);
                 String exchangeAccount = service.getExchangeMailAccount();
                 String exchangePassword = service.getExchangeMailPassword();
-                if (StringUtils.isBlank(exchangeAccount) && StringUtils.isBlank(exchangePassword)) {
+                if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
                     service.exchangeLogin(getActivity(), new OnExchangeLoginListener() {
                         @Override
                         public void onMailLoginSuccess() {
@@ -304,7 +304,7 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
      */
     private void showExchangeLoginFailDlg() {
         new CustomDialog.MessageDialogBuilder(getActivity())
-                .setMessage(R.string.if_confirm_signout)
+                .setMessage(R.string.schedule_exchange_login_fail)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
