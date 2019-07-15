@@ -32,6 +32,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
 import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -68,6 +69,7 @@ import com.inspur.emmcloud.util.privates.AppTabUtils;
 import com.inspur.emmcloud.util.privates.CheckingNetStateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationGroupIconUtils;
+import com.inspur.emmcloud.util.privates.CustomProtocol;
 import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.ConversationCacheUtils;
@@ -87,6 +89,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.socket.client.Socket;
 
@@ -300,6 +304,31 @@ public class CommunicationFragment extends BaseFragment {
             }
         });
         conversionRecycleView.setAdapter(conversationAdapter);
+    }
+
+
+    /**
+     * 判定是
+     *
+     * @param receivedMsg
+     * @return
+     */
+    private CustomProtocol getCommandMessageProtocol(Message receivedMsg) {
+        String msgBody = receivedMsg.getContent();
+        Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
+        Matcher matcher = pattern.matcher(msgBody);
+        while (matcher.find()) {
+            String pattenString = matcher.group();
+            int indexBegin = pattenString.indexOf("(");
+            int indexEnd = pattenString.indexOf(")");
+            pattenString = pattenString.substring(indexBegin + 1, indexEnd);
+            LogUtils.YfcDebug("patternString:" + pattenString);
+            CustomProtocol customProtocol = new CustomProtocol(pattenString);
+            if (customProtocol.getProtocol().equals("ecc-cmd") && customProtocol.getParamMap().get("cmd").equals("join")) {
+                return customProtocol;
+            }
+        }
+        return null;
     }
 
     /**
@@ -781,9 +810,24 @@ public class CommunicationFragment extends BaseFragment {
     //接收到websocket发过来的消息，在channel里正常收发消息触发此方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
+        LogUtils.YfcDebug("1111111111111");
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
+            LogUtils.YfcDebug("222222222222222");
             if (eventMessage.getStatus() == EventMessage.RESULT_OK) {
                 String content = eventMessage.getContent();
+                LogUtils.YfcDebug("消息内容：" + content);
+
+                //消息拦截逻辑，以后应当拦截命令消息，此时注释掉，以后解开注意判空
+                CustomProtocol customProtocol = getCommandMessageProtocol(new Message(JSONUtils.getJSONObject(content)));
+                if (customProtocol != null) {
+                    LogUtils.YfcDebug("");
+//                    MsgReadCreationDateCacheUtils.saveMessageReadCreationDate(getActivity(),receivedMsg.getCid(),receivedMsg.getTime());
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), ChannelVoiceCommunicationActivity.class);
+                    intent.putExtra("channelId", customProtocol.getParamMap().get("id"));
+                    intent.putExtra(ChannelVoiceCommunicationActivity.VOICE_COMMUNICATION_STATE, ChannelVoiceCommunicationActivity.INVITEE_LAYOUT_STATE);
+                    startActivity(intent);
+                }
                 JSONObject contentObj = JSONUtils.getJSONObject(content);
                 Message receivedWSMessage = new Message(contentObj);
                 //验重处理

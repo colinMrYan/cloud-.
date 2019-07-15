@@ -422,6 +422,9 @@ public class ECMChatInputMenu extends LinearLayout {
                     case 4:
                         isInputVoiceEnable = controlValue.equals("1");
                         break;
+                    case 5:
+                        isVoiceCallEnable = controlValue.endsWith("1");
+                        break;
                 }
             }
             if (isChannelTypeService) {
@@ -449,6 +452,8 @@ public class ECMChatInputMenu extends LinearLayout {
             if (canMentions) {
                 inputTypeBeanList.add(new InputTypeBean(functionIconArray[4], functionNameArray[4], functionActionArray[4]));
             }
+
+            inputTypeBeanList.add(new InputTypeBean(functionIconArray[5], functionNameArray[5], functionActionArray[5]));
 
             if (inputTypeBeanList.size() > 0) {
                 addBtn.setVisibility(VISIBLE);

@@ -160,6 +160,7 @@ public class VoiceCommunicationUtils {
         if (mRtcEngine != null) {
             mRtcEngine.enableAudioVolumeIndication(1000, 3);
         }
+//        mRtcEngine.registerLocalUserAccount(context.getString(R.string.agora_app_id),"12345");
     }
 
     /**

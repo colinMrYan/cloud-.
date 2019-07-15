@@ -270,7 +270,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         muteImg.setClickable(state == COMMUNICATION_LAYOUT_STATE);
 
         //启用悬浮窗打开这里
-        packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
+//        packUpImg.setVisibility(state == COMMUNICATION_LAYOUT_STATE ? View.VISIBLE : View.GONE);
 
         communicationStateTv.setText(state == INVITER_LAYOUT_STATE ? getString(R.string.voice_communication_dialog) : (state == INVITEE_LAYOUT_STATE ? getString(R.string.voice_communication_waitting_answer) : (state == COMMUNICATION_LAYOUT_STATE ? getString(R.string.voice_communicaiton_watting_talking) : "")));
         if (state == COMMUNICATION_LAYOUT_STATE) {
@@ -471,6 +471,21 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
             case R.id.img_voice_communication_pack_up:
                 saveCommunicationData();
 //                createCommunicationService();
+
+//                final WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+//                final WindowManager.LayoutParams   params = new WindowManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){//6.0
+//                    params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+//                }else {
+//                    params.type =  WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+//                }
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(BaseApplication.getInstance(), ResolutionUtils.getWidth(MyApplication.getInstance()), Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
+//                        finish();
+//                    }
+//                },200);
                 SuspensionWindowManagerUtils.getInstance().showCommunicationSmallWindow(this, ResolutionUtils.getWidth(this), Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.getText().toString())));
                 finish();
                 break;
@@ -490,6 +505,16 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
         voiceCommunicationUtils.setInviteeInfoBean(inviteeInfoBean);
         voiceCommunicationUtils.setUserCount(userCount);
     }
+
+//    /**
+//     * 创建通话小窗口
+//     */
+//    public void createCommunicationService(){
+//        Intent intent = new Intent(this,VoiceHoldService.class);
+//        intent.putExtra(VOICE_TIME, Long.parseLong(TimeUtils.getChronometerSeconds(communicationTimeChronometer.get)));
+//        intent.putExtra(SCREEN_SIZE, ResolutionUtils.getWidth(this));
+//        startService(intent);
+//    }
 
     /**
      * 修改Image选中状态和textView属性
