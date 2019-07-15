@@ -26,6 +26,7 @@ public class Event {
     private boolean isAllDay = false;
     private Object eventObj;
     private String calendarType;
+    private String owner = "";
 
     public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj, String calendarType) {
         this.eventId = eventId;
@@ -36,6 +37,19 @@ public class Event {
         this.eventEndTime = eventEndTime;
         this.eventObj = eventObj;
         this.calendarType = calendarType;
+    }
+
+    public Event(String eventId, String eventType, String eventTitle, String eventSubTitle, Calendar eventStartTime, Calendar eventEndTime, Object eventObj, String calendarType, String owner) {
+        this.eventId = eventId;
+        this.eventType = eventType;
+        this.eventTitle = eventTitle;
+        this.eventSubTitle = eventSubTitle;
+        this.eventStartTime = eventStartTime;
+        this.eventEndTime = eventEndTime;
+        this.eventObj = eventObj;
+        this.calendarType = calendarType;
+        this.owner = owner;
+
     }
 
     public static List<Event> removeEventByType(List<Event> eventList, String eventType) {
@@ -130,6 +144,14 @@ public class Event {
 
     public void setCalendarType(String calendarType) {
         this.calendarType = calendarType;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public long getDayDurationInMillSeconds(Calendar selectCalendar) {

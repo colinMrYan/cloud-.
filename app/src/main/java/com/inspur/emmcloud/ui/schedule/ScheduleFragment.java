@@ -56,6 +56,7 @@ import com.inspur.emmcloud.componentservice.mail.OnExchangeLoginListener;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ScheduleAlertUtils;
 import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
@@ -770,7 +771,7 @@ public class ScheduleFragment extends BaseFragment implements
         String startTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(), event.getEventStartTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         String endTime = TimeUtils.calendar2FormatString(MyApplication.getInstance(), event.getEventEndTime(), TimeUtils.FORMAT_MONTH_DAY_HOUR_MINUTE);
         StringBuilder builder = new StringBuilder();
-        builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_meeting_topic) : getString(R.string.schedule_meeting_topic));
+        builder.append(event.eventType.endsWith(Schedule.TYPE_CALENDAR) ? getString(R.string.schedule_title) : getString(R.string.schedule_meeting_topic));
         builder.append(" : ").append(event.getEventTitle()).append("\n")
                 .append(getString(R.string.meeting_start_time)).append(" : ").append(startTime).append("\n")
                 .append(getString(R.string.meeting_end_time)).append(" : ").append(endTime);
@@ -795,6 +796,20 @@ public class ScheduleFragment extends BaseFragment implements
             });
         }
 
+    }
+
+    @Override
+    public void onGroupChat(Event event) {
+        (new ChatCreateUtils()).startGroupChat(getActivity(), (Meeting) (event.getEventObj()), "", new ChatCreateUtils.ICreateGroupChatListener() {
+            @Override
+            public void createSuccess() {
+            }
+
+            @Override
+            public void createFail() {
+                ToastUtils.show(R.string.meeting_group_chat_fail);
+            }
+        });
     }
 
     @Override
