@@ -329,7 +329,7 @@ public class MyAppFragment extends BaseFragment {
     private void refreshAppListView() {
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
         List<AppGroupBean> appGroupFromNetList = MyAppCacheUtils.getMyAppListFromNet(getContext());
-        if ((appGroupList.size() != appGroupFromNetList.size()) && !getNeedCommonlyUseApp()) {
+        if (appGroupList.size() > 0 && (appGroupList.size() != appGroupFromNetList.size()) && !getNeedCommonlyUseApp()) {
             appGroupList.remove(0);
         }
         if (appListAdapter != null) {
