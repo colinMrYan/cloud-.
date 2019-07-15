@@ -72,7 +72,6 @@ import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -801,7 +800,7 @@ public class ScheduleFragment extends BaseFragment implements
 
     @Override
     public void onGroupChat(Event event) {
-        (new ChatCreateUtils()).startGroupChat(getActivity(), new Meeting((JSONObject) event.getEventObj()), "", new ChatCreateUtils.ICreateGroupChatListener() {
+        (new ChatCreateUtils()).startGroupChat(getActivity(), (Meeting) (event.getEventObj()), "", new ChatCreateUtils.ICreateGroupChatListener() {
             @Override
             public void createSuccess() {
             }
