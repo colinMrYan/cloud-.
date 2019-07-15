@@ -749,10 +749,12 @@ public class MyAppFragment extends BaseFragment {
      * @param appGroupList
      */
     private void handCommonlyUseAppData(List<AppGroupBean> appGroupList, boolean isNeedRefresh) {
-        AppGroupBean appGroupBean = MyAppCacheUtils.getCommonlyUserAppGroup();
-        if (appGroupBean != null) {
-            appGroupList.add(0, appGroupBean);
-            MyAppCacheUtils.saveNeedCommonlyUseApp(true);
+        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
+            AppGroupBean appGroupBean = MyAppCacheUtils.getCommonlyUserAppGroup();
+            if (appGroupBean != null) {
+                appGroupList.add(0, appGroupBean);
+                MyAppCacheUtils.saveNeedCommonlyUseApp(true);
+            }
         }
         if (isNeedRefresh) {
             appListAdapter.notifyDataSetChanged();
