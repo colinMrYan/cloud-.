@@ -381,7 +381,9 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         });
         //删除
         if (PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-                false) || event.getOwner().equals(BaseApplication.getInstance().getUid())) {
+                false) || (event.getOwner().equals(BaseApplication.getInstance().getUid()) && event.getEventType().equals(Schedule.TYPE_MEETING)
+                && event.getEventEndTime().after(Calendar.getInstance())) ||
+                (event.getOwner().equals(BaseApplication.getInstance().getUid()) && event.getEventType().equals(Schedule.TYPE_CALENDAR))) {
             deleteImage.setVisibility(View.VISIBLE);
             contentView.findViewById(R.id.iv_delete).setOnClickListener(new OnClickListener() {
                 @Override
@@ -429,6 +431,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         TextView eventTitleText = contentView.findViewById(R.id.tv_event_title);
         TextView eventTimeText = contentView.findViewById(R.id.tv_event_time);
         calendarNameText.setText(getCalendarName(event));
+        calendarNameText.setTextColor(event.getEventType().equals(Schedule.TYPE_CALENDAR) ?
+                getContext().getResources().getColor(R.color.cal_orange) : getContext().getResources().getColor(R.color.cal_blue));
         int resId = getCalendarTypeImgResId(event);
         if (resId != -1) {
             calendarTypeImg.setImageResource(resId);
