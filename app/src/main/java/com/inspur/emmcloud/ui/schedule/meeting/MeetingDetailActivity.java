@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -39,6 +38,7 @@ import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ConversationCreateUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
@@ -124,7 +124,7 @@ public class MeetingDetailActivity extends BaseActivity {
         meetingId = getIntent().getStringExtra(Constant.SCHEDULE_QUERY); //来自通知
         meeting = (Meeting) getIntent().getSerializableExtra(EXTRA_MEETING_ENTITY); //来自列表
         isHistoryMeeting = getIntent().getBooleanExtra(Constant.EXTRA_IS_HISTORY_MEETING, false);
-        info.position = 1;
+        info.responseType = Participant.CALENDAR_RESPONSE_TYPE_UNKNOWN; //默认参会状态未知
         getIsMeetingAdmin();
         if (!TextUtils.isEmpty(meetingId)) {    //id不为空是从网络获取数据  来自通知
             getMeetingFromId(meetingId);
@@ -180,6 +180,7 @@ public class MeetingDetailActivity extends BaseActivity {
         List<Participant> list = meeting.getAllParticipantList();
         for (Participant item : list) {
             if (BaseApplication.getInstance().getUid().equals(item.getId())) {
+                info.responseType = item.getResponseType();
                 relatedPersonFlag = true;
             }
         }
@@ -448,7 +449,18 @@ public class MeetingDetailActivity extends BaseActivity {
                 } else if (tag.equals(getString(R.string.schedule_meeting_cancel))) {
                     deleteMeeting(meeting);
                 } else if (tag.equals(getString(R.string.message_create_group))) {
-                    startGroupChat();
+//                    startGroupChat();
+                    new ChatCreateUtils().startGroupChat(MeetingDetailActivity.this, meeting, chatGroupId, new ChatCreateUtils.ICreateGroupChatListener() {
+                        @Override
+                        public void createSuccess() {
+                            ToastUtils.show("发起群聊成功");
+                        }
+
+                        @Override
+                        public void createFail() {
+                            ToastUtils.show("发起群聊失败");
+                        }
+                    });
                 }
                 dialog.dismiss();
             }
@@ -553,7 +565,6 @@ public class MeetingDetailActivity extends BaseActivity {
         //获取群聊cid
         @Override
         public void returnSetCalendarChatBindSuccess(String calendarId, String chatId) {
-            Log.d("zhang", "returnSetCalendarChatBindSuccess: ");
         }
     }
 }
