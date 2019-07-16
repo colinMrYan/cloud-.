@@ -118,6 +118,8 @@ public abstract class BaseApplication extends MultiDexApplication {
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
         ToastUtils.init(this);
+        //置为0，调起解锁界面 (强杀进程后)
+        PreferencesUtils.putLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
     }
 
     /**************************************登出逻辑相关********************************************************/
