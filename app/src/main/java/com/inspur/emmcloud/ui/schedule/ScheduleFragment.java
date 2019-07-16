@@ -24,7 +24,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
-import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
+import com.inspur.emmcloud.baselib.widget.DatePickerSpinnerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
 import com.inspur.emmcloud.baselib.widget.dialogs.MyDialog;
@@ -382,9 +382,9 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     /**
      * 弹出日期选择框
      */
-    private void showDateSelectDlg() {
-        DateTimePickerDialog dataTimePickerDialog = new DateTimePickerDialog(getActivity());
-        dataTimePickerDialog.setDataTimePickerDialogListener(new DateTimePickerDialog.TimePickerDialogInterface() {
+    private void showDateSpinnerDlg() {
+        DatePickerSpinnerDialog datePickerSpinnerDialog = new DatePickerSpinnerDialog(getActivity());
+        datePickerSpinnerDialog.setDataTimePickerDialogListener(new DatePickerSpinnerDialog.DatePickerDialogInterface() {
             @Override
             public void positiveListener(Calendar calendar) {
                 calendarView.scrollToCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
@@ -395,7 +395,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
 
             }
         });
-        dataTimePickerDialog.showDatePickerDialog(true, selectCalendar);
+        datePickerSpinnerDialog.showDatePickerDialog();
     }
 
     private void openEvent(Event event) {
@@ -439,7 +439,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
                 removeEventAddDragScaleView();
                 break;
             case R.id.tv_schedule_date:
-                showDateSelectDlg();
+                showDateSpinnerDlg();
                 break;
         }
     }
