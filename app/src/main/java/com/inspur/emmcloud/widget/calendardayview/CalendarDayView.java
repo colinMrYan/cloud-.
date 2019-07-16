@@ -371,7 +371,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
         bubbleLayout.setArrowPosition(eventLayout.getWidth() / 2 - DensityUtil.dip2px(7));
-        final RelativeLayout operationLayout = contentView.findViewById(R.id.rl_operation);
         final PopupWindow popupWindow = new PopupWindow(contentView,
                 eventLayout.getWidth() - DensityUtil.dip2px(30),
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -397,7 +396,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 @Override
                 public void onClick(View v) {
                     if (onEventClickListener != null) {
-                        onEventClickListener.onDeleteEvent(event);
+                        onEventClickListener.onEventDelete(event);
                     }
                     popupWindow.dismiss();
                 }
@@ -438,10 +437,10 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         ImageView calendarTypeImg = contentView.findViewById(R.id.iv_calendar_type);
         TextView eventTitleText = contentView.findViewById(R.id.tv_event_title);
         TextView eventTimeText = contentView.findViewById(R.id.tv_event_time);
-        calendarNameText.setText(getCalendarName(event));
+        calendarNameText.setText(CalendarUtils.getCalendarName(event));
         calendarNameText.setTextColor(event.getEventType().equals(Schedule.TYPE_CALENDAR) ?
                 getContext().getResources().getColor(R.color.cal_orange) : getContext().getResources().getColor(R.color.cal_blue));
-        int resId = getCalendarTypeImgResId(event);
+        int resId = CalendarUtils.getCalendarTypeImgResId(event);
         if (resId != -1) {
             calendarTypeImg.setImageResource(resId);
         }
@@ -465,7 +464,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         int mDeviceHeight = ResolutionUtils.getHeight(getContext());
         Rect location = locateView(view);
         if (location != null) {
-            int y;
             //view中心点Y坐标
             int yMiddle = location.top + view.getHeight() / 2;
             if (yMiddle > mDeviceHeight / 2) {
@@ -512,7 +510,6 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         void onEventDelete(Event event);
 
         void onEventShare(Event event);
-        void onShareEvent(Event event);
 
         void onGroupChat(Event event);
     }
