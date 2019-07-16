@@ -31,6 +31,7 @@ import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
+import com.inspur.emmcloud.baselib.widget.DatePickerSpinnerDialog;
 import com.inspur.emmcloud.baselib.widget.DateTimePickerDialog;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
 import com.inspur.emmcloud.baselib.widget.MaxHeightListView;
@@ -684,7 +685,9 @@ public class ScheduleFragment extends BaseFragment implements
                 removeEventAddDragScaleView();
                 break;
             case R.id.tv_schedule_date:
-                showDateSelectDlg();
+                DatePickerSpinnerDialog datePickerSpinnerDialog = new DatePickerSpinnerDialog(getContext());
+                datePickerSpinnerDialog.showTimePickerDialog();
+                // showDateSelectDlg();
                 break;
         }
     }
