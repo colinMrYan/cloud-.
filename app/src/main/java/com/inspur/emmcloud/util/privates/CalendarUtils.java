@@ -79,13 +79,15 @@ public class CalendarUtils {
     }
 
     public static int getCalendarDayViewEventBgResId(String color) {
-        int resId = -1;
+        int resId = R.drawable.ic_schedule_calendar_view_event_bg_blue;
         if (color.equals("ORANGE")) {
             resId = R.drawable.ic_schedule_calendar_view_event_bg_orange;
         } else if (color.equals("PURPLE")) {
             resId = R.drawable.ic_schedule_calendar_view_event_bg_purple;
         } else if (color.equals("BLUE")) {
             resId = R.drawable.ic_schedule_calendar_view_event_bg_blue;
+        } else if (color.equals("GREEN")) {
+            resId = R.drawable.ic_schedule_calendar_view_event_bg_green;
         }
         return resId;
     }
@@ -116,17 +118,17 @@ public class CalendarUtils {
         switch (event.getEventType()) {
             case Schedule.TYPE_CALENDAR:
                 if (event.getCalendarType().equals("default")) {
-                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
+                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_blue));
                 } else {
-                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_yellow));
+                    drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_green));
                 }
 
                 break;
             case Schedule.TYPE_MEETING:
-                drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_blue));
+                drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
                 break;
             default:
-                drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_orange));
+                drawable = ContextCompat.getDrawable(BaseApplication.getInstance(), (R.drawable.ic_schedule_calendar_view_event_bg_blue));
                 break;
         }
         return drawable;
@@ -140,17 +142,17 @@ public class CalendarUtils {
         switch (event.getEventType()) {
             case Schedule.TYPE_CALENDAR:
                 if (event.getCalendarType().equals("default")) {
-                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
+                    colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
                 } else {
-                    colorStateList = ColorStateList.valueOf(Color.parseColor("#FFCC07"));
+                    colorStateList = ColorStateList.valueOf(Color.parseColor("#7ED321"));
                 }
 
                 break;
             case Schedule.TYPE_MEETING:
-                colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
+                colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
                 break;
             default:
-                colorStateList = ColorStateList.valueOf(Color.parseColor("#FF8603"));
+                colorStateList = ColorStateList.valueOf(Color.parseColor("#36A5F6"));
                 break;
         }
         drawableSelected.setBgData(colorStateList);
@@ -164,13 +166,13 @@ public class CalendarUtils {
         switch (event.getEventType()) {
             case Schedule.TYPE_CALENDAR:
                 if (event.getCalendarType().equals("default")) {
-                    resId = CalendarUtils.getCalendarTypeResId("ORANGE");
+                    resId = CalendarUtils.getCalendarTypeResId("BLUE");
                 } else {
-                    resId = CalendarUtils.getCalendarTypeResId("YELLOW");
+                    resId = CalendarUtils.getCalendarTypeResId("GREEN");
                 }
                 break;
             case Schedule.TYPE_MEETING:
-                resId = CalendarUtils.getCalendarTypeResId("BLUE");
+                resId = CalendarUtils.getCalendarTypeResId("ORANGE");
                 break;
             default:
                 break;
@@ -178,4 +180,23 @@ public class CalendarUtils {
         return resId;
     }
 
+    public static int getCalendarTypeColor(Event event) {
+        Integer color = null;
+        switch (event.getEventType()) {
+            case Schedule.TYPE_CALENDAR:
+                if (event.getCalendarType().equals("default")) {
+                    color = Color.parseColor("#36A5F6");
+                } else {
+                    color = Color.parseColor("#7ED321");
+                }
+                break;
+            case Schedule.TYPE_MEETING:
+                color = Color.parseColor("#FF8603");
+                break;
+            default:
+                color = Color.parseColor("#36A5F6");
+                break;
+        }
+        return color;
+    }
 }

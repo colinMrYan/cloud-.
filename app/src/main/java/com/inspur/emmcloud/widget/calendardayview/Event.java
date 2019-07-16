@@ -3,8 +3,12 @@ package com.inspur.emmcloud.widget.calendardayview;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 
 import java.util.Calendar;
@@ -138,6 +142,31 @@ public class Event {
         return eventEndTime;
     }
 
+    public boolean canDelete() {
+        if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
+            return true;
+        }
+        if (getEventType().equals(Schedule.TYPE_MEETING)) {
+            boolean isAdmin = PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                    false);
+            if (isAdmin || (getOwner().equals(BaseApplication.getInstance().getUid()) && getEventEndTime().after(Calendar.getInstance()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canModify() {
+        boolean isOwner = getOwner().equals(BaseApplication.getInstance().getUid());
+        if (getEventType().equals(Schedule.TYPE_CALENDAR) && isOwner) {
+            return true;
+        }
+        if (getEventType().equals(Schedule.TYPE_MEETING) && isOwner && getEventEndTime().after(Calendar.getInstance())) {
+            return true;
+        }
+        return false;
+    }
+
     public String getCalendarType() {
         return calendarType;
     }
@@ -175,14 +204,14 @@ public class Event {
         isAllDay = allDay;
     }
 
-    public int getEventIconResId() {
+    public int getEventIconResId(boolean isSelect) {
         int eventIconResId = -1;
         if (getEventType().equals(Schedule.TYPE_CALENDAR)) {
-            eventIconResId = R.drawable.ic_schedule_event_calendar;
+            eventIconResId = isSelect ? R.drawable.ic_schedule_event_calendar_select : R.drawable.ic_schedule_event_calendar_normal;
         } else if (getEventType().equals(Schedule.TYPE_MEETING)) {
-            eventIconResId = R.drawable.ic_schedule_event_meeing;
+            eventIconResId = isSelect ? R.drawable.ic_schedule_event_meeting_select : R.drawable.ic_schedule_event_meeting_normal;
         } else {
-            eventIconResId = R.drawable.ic_schedule_event_task;
+            eventIconResId = isSelect ? R.drawable.ic_schedule_event_task_select : R.drawable.ic_schedule_event_task_normal;
         }
         return eventIconResId;
     }
