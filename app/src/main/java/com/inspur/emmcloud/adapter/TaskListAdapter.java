@@ -12,7 +12,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.bean.schedule.task.Task;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 
 import java.util.ArrayList;
 
@@ -65,10 +65,10 @@ public class TaskListAdapter extends BaseAdapter {
             deadLineText.setVisibility(View.GONE);
         }
         if (task.getTags().size() > 0) {
-            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getCalendarTypeResId(task.getTags().get(0).getColor()));
+            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarUtils.getCalendarTypeResId(task.getTags().get(0).getColor()));
         } else {
             // 如果没有tag，显示默认tag
-            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarColorUtils.getCalendarTypeResId("BLUE"));
+            ((ImageView) convertView.findViewById(R.id.iv_task_color)).setImageResource(CalendarUtils.getCalendarTypeResId("BLUE"));
         }
         convertView.findViewById(R.id.iv_task_level).setVisibility(task.getPriority() == 2 ? View.VISIBLE : View.GONE);
         return convertView;

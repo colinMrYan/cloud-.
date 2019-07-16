@@ -195,12 +195,9 @@ public class Constant {
 
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
-    public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
-    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
-
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
     public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";
@@ -229,6 +226,7 @@ public class Constant {
     public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
     public static final int ATTEND_MEETING_STATUS_REJECT = 2;
     public static final int ATTEND_MEETING_STATUS_TENTATIVE = 3;
+    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
 
 
 }

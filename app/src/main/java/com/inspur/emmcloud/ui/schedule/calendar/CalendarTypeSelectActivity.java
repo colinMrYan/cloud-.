@@ -16,7 +16,7 @@ import com.inspur.emmcloud.api.apiservice.ScheduleApiService;
 import com.inspur.emmcloud.basemodule.ui.BaseActivity;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
 
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class CalendarTypeSelectActivity extends BaseActivity {
             }
             textView.setText(calendar.getName());
             View colorView = convertView.findViewById(R.id.v_calendar_color);
-            int color = CalendarColorUtils.getColor(CalendarTypeSelectActivity.this, calendar.getColor());
+            int color = CalendarUtils.getColor(CalendarTypeSelectActivity.this, calendar.getColor());
             colorView.setBackgroundColor(color);
             return convertView;
         }
