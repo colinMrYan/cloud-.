@@ -51,22 +51,6 @@ public class FileSafeCode {
         return DigestUtils.md5Hex(target);
     }
 
-    /***
-     * 计算SHA1码
-     *
-     * @return String 适用于上G大的文件
-     * @throws NoSuchAlgorithmException
-     */
-    public static String getSha1(File file) throws OutOfMemoryError,
-            IOException, NoSuchAlgorithmException {
-        messagedigest = MessageDigest.getInstance("SHA-1");
-        FileInputStream in = new FileInputStream(file);
-        FileChannel ch = in.getChannel();
-        MappedByteBuffer byteBuffer = ch.map(FileChannel.MapMode.READ_ONLY, 0,
-                file.length());
-        messagedigest.update(byteBuffer);
-        return bufferToHex(messagedigest.digest());
-    }
 
     /**
      * 获取文件CRC32码

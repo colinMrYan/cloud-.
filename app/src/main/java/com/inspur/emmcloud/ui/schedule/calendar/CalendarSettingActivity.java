@@ -24,7 +24,7 @@ import com.inspur.emmcloud.basemodule.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.bean.schedule.MyCalendar;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.mail.MailService;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -167,7 +167,7 @@ public class CalendarSettingActivity extends BaseActivity {
             convertView = View.inflate(CalendarSettingActivity.this, R.layout.schedule_calendar_setting_mycalendars, null);
             boolean isHide = MyCalendarOperationCacheUtils.getIsHide(getApplicationContext(), calendar.getId());
             ((SwitchCompat) convertView.findViewById(R.id.switch_view_calendar_state)).setChecked(!isHide);
-            int calendarTypeResId = CalendarColorUtils.getCalendarTypeResId(calendar.getColor());
+            int calendarTypeResId = CalendarUtils.getCalendarTypeResId(calendar.getColor());
             ((ImageView) convertView.findViewById(R.id.iv_calendar_color)).setImageResource(calendarTypeResId);
             ((TextView)convertView.findViewById(R.id.tv_calendar_name)).setText(calendar.getName());
             ((SwitchCompat)(convertView.findViewById(R.id.switch_view_calendar_state))).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
