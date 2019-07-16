@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.widget.CustomLoadingView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
 import com.inspur.emmcloud.bean.chat.Message;
@@ -74,6 +75,7 @@ public class DisplayMediaImageMsg {
             imageUri = imageUri + "&resize=true&w=" + message.getMsgContentMediaImage().getPreviewWidth() +
                     "&h=" + message.getMsgContentMediaImage().getPreviewHeight();
         }
+        LogUtils.LbcDebug("DisplayImgUri::" + imageUri + "::::size:" + "getRawHeight()" + msgContentMediaImage.getRawHeight() + "getPreviewHeight()" + msgContentMediaImage.getPreviewHeight());
         ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {

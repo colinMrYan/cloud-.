@@ -413,13 +413,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCreatSingleChannelFail(String error, int errorCode) {
+    public void returnCreateSingleChannelFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnCreatChannelGroupSuccess(ChannelGroup channelGroup) {
+    public void returnCreateChannelGroupSuccess(ChannelGroup channelGroup) {
         // TODO Auto-generated method stub
 
     }
@@ -1858,7 +1858,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnAttendMeetingStatusSuccess(String result, int type) {
+    public void returnAttendMeetingStatusSuccess(String result, String responseType) {
 
     }
 

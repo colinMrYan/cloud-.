@@ -6,7 +6,6 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
-import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
@@ -1122,7 +1121,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingRoomsUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "room";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/room";
     }
 
     /**
@@ -1168,7 +1167,7 @@ public class APIUri {
      * @return
      */
     public static String getOfficeUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "Location";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Location";
     }
 
     /**
@@ -1177,7 +1176,7 @@ public class APIUri {
      * @return
      */
     public static String addOfficeUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "CommonLocation";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/CommonLocation";
     }
 
     /**
@@ -1195,7 +1194,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingIsAdminUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "is_admin";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/is_admin";
     }
 
     /**
@@ -1213,7 +1212,7 @@ public class APIUri {
      * @return
      */
     public static String getLocationUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "Location";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Location";
     }
 
 
@@ -1234,20 +1233,8 @@ public class APIUri {
     /**
      * 会议详情参会状态
      */
-    public static String getMeetingAttendStatusUrl(int type) {
-        String status = "";
-        switch (Constant.ATTEND_MEETING_STATUS_ACCEPT) {
-            case Constant.ATTEND_MEETING_STATUS_ACCEPT:
-                status = "Accept";
-                break;
-            case Constant.ATTEND_MEETING_STATUS_REJECT:
-                status = "Decline";
-                break;
-            case Constant.ATTEND_MEETING_STATUS_TENTATIVE:
-                status = "Tentative";
-                break;
-        }
-        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + status + "/";
+    public static String getMeetingAttendStatusUrl(String responseType) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + responseType + "/";
     }
 
 

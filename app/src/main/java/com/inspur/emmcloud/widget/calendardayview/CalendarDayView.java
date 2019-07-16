@@ -21,6 +21,9 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
+import com.inspur.emmcloud.basemodule.config.Constant;
+import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
@@ -372,19 +375,9 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         final PopupWindow popupWindow = new PopupWindow(contentView,
                 eventLayout.getWidth() - DensityUtil.dip2px(30),
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        LinearLayout shareLayout = contentView.findViewById(R.id.ll_share);
-        contentView.findViewById(R.id.iv_close).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                operationLayout.setVisibility(INVISIBLE);
-            }
-        });
-        contentView.findViewById(R.id.iv_menu).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                operationLayout.setVisibility(VISIBLE);
-            }
-        });
+        ImageView shareImage = contentView.findViewById(R.id.iv_share);
+        ImageView deleteImage = contentView.findViewById(R.id.iv_delete);
+        ImageView groupChatImage = contentView.findViewById(R.id.iv_group_chat);
         contentView.findViewById(R.id.bt_detail).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -394,20 +387,44 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
                 popupWindow.dismiss();
             }
         });
-        contentView.findViewById(R.id.ll_delete).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onEventClickListener != null) {
-                    onEventClickListener.onEventDelete(event);
+        //删除
+        if (PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
+                false) || (event.getOwner().equals(BaseApplication.getInstance().getUid()) && event.getEventType().equals(Schedule.TYPE_MEETING)
+                && event.getEventEndTime().after(Calendar.getInstance())) ||
+                (event.getOwner().equals(BaseApplication.getInstance().getUid()) && event.getEventType().equals(Schedule.TYPE_CALENDAR))) {
+            deleteImage.setVisibility(View.VISIBLE);
+            contentView.findViewById(R.id.iv_delete).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onEventClickListener != null) {
+                        onEventClickListener.onDeleteEvent(event);
+                    }
+                    popupWindow.dismiss();
                 }
-                popupWindow.dismiss();
-            }
-        });
+            });
+        } else {
+            deleteImage.setVisibility(View.GONE);
+        }
+        //发起群聊
+        if (event.getEventType().equals(Schedule.TYPE_MEETING)) {
+            groupChatImage.setVisibility(View.VISIBLE);
+            contentView.findViewById(R.id.iv_group_chat).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onEventClickListener != null) {
+                        onEventClickListener.onGroupChat(event);
+                    }
+                    popupWindow.dismiss();
+                }
+            });
+        } else {
+            groupChatImage.setVisibility(View.GONE);
+        }
         //V0环境不显示分享按钮
         if (WebServiceRouterManager.getInstance().isV0VersionChat()) {
-            shareLayout.setVisibility(View.GONE);
+            shareImage.setVisibility(View.GONE);
         }
-        shareLayout.setOnClickListener(new OnClickListener() {
+        shareImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onEventClickListener != null) {
@@ -421,8 +438,10 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         ImageView calendarTypeImg = contentView.findViewById(R.id.iv_calendar_type);
         TextView eventTitleText = contentView.findViewById(R.id.tv_event_title);
         TextView eventTimeText = contentView.findViewById(R.id.tv_event_time);
-        calendarNameText.setText(CalendarUtils.getCalendarName(event));
-        int resId = CalendarUtils.getCalendarTypeImgResId(event);
+        calendarNameText.setText(getCalendarName(event));
+        calendarNameText.setTextColor(event.getEventType().equals(Schedule.TYPE_CALENDAR) ?
+                getContext().getResources().getColor(R.color.cal_orange) : getContext().getResources().getColor(R.color.cal_blue));
+        int resId = getCalendarTypeImgResId(event);
         if (resId != -1) {
             calendarTypeImg.setImageResource(resId);
         }
@@ -493,5 +512,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         void onEventDelete(Event event);
 
         void onEventShare(Event event);
+        void onShareEvent(Event event);
+
+        void onGroupChat(Event event);
     }
 }
