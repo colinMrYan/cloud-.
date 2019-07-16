@@ -16,6 +16,8 @@ import com.inspur.emmcloud.adapter.VoiceCommunicationMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
@@ -548,6 +550,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
     private void setInviterInfo(GetVoiceCommunicationResult getVoiceCommunicationResult) {
         VoiceCommunicationJoinChannelInfoBean infoBean = getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList().get(0);
         ImageDisplayUtils.getInstance().displayImage(userHeadImg, infoBean.getHeadImageUrl(), R.drawable.icon_person_default);
+//        ImageDisplayUtils.getInstance().displayImage(userHeadImg, APIUri.getUserIconUrl(this,infoBean.getUserId()), R.drawable.icon_person_default);
         userNameTv.setText(infoBean.getUserName());
     }
 
@@ -578,6 +581,7 @@ public class ChannelVoiceCommunicationActivity extends BaseActivity {
                         getVoiceCommunicationResult.getChannelId(), voiceCommunicationJoinChannelInfoBean.getUserId(), voiceCommunicationJoinChannelInfoBean.getAgoraUid());
             }
             voiceCommunicationMemberList.addAll(getVoiceCommunicationResult.getVoiceCommunicationJoinChannelInfoBeanList());
+            LogUtils.YfcDebug("成员信息：" + JSONUtils.toJSONString(voiceCommunicationMemberList));
         }
 
         @Override
