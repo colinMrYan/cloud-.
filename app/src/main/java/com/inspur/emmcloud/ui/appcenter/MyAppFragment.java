@@ -38,6 +38,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -130,9 +131,27 @@ public class MyAppFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
+        copyData();
         initViews();
         registerReceiver();
         EventBus.getDefault().register(this);
+    }
+
+    /**
+     * 如果存在旧数据读取旧数据，转存并清除旧数据（3.1.3升级4.0.1发现的问题）
+     */
+    private void copyData() {
+        if (PreferencesByUserAndTanentUtils.isKeyExist(getActivity(), "my_app_list")) {
+            String myAppList = PreferencesByUserAndTanentUtils.getString(getActivity(), "my_app_list");
+            if (!StringUtils.isBlank(myAppList)) {
+                List<AppGroupBean> appGroupList = JSONUtils.parseArray(myAppList, AppGroupBean.class);
+                if (appGroupList.size() > 0 && appGroupList.get(0).getCategoryID().equals("commonly")) {
+                    appGroupList.remove(0);
+                    MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
+                    PreferencesByUserAndTanentUtils.putString(getActivity(), "my_app_list", "");
+                }
+            }
+        }
     }
 
     @Override
