@@ -17,8 +17,10 @@ public class GetScheduleBasicDataResult {
     private List<Holiday> holidayList = new ArrayList<>();
     private String command;
     private String version;
+    private int year;
 
-    public GetScheduleBasicDataResult(String response) {
+    public GetScheduleBasicDataResult(String response, int year) {
+        this.year = year;
         JSONObject object = JSONUtils.getJSONObject(response);
         command = JSONUtils.getString(object, "command", "STANDBY");
         if (command.equals("FORWARD")) {
@@ -62,5 +64,13 @@ public class GetScheduleBasicDataResult {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 }
