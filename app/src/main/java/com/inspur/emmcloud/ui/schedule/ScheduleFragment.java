@@ -89,7 +89,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
     private MyDialog myDialog = null;
-    private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
     private LoadingDialog loadingDlg;
 
     @Override

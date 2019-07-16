@@ -356,14 +356,12 @@ public class ScheduleBaseFragment extends BaseLayoutFragment implements View.OnL
                     checkExchangeLogin();
                 }
                 List<Holiday> holidayList = getScheduleBasicDataResult.getHolidayList();
-                if (holidayList.size() > 0) {
-                    int year = holidayList.get(0).getYear();
+                int year = getScheduleBasicDataResult.getYear();
                     yearHolidayListMap.put(year, holidayList);
-                    if (pageStartCalendar.get(Calendar.YEAR) == year || pageEndCalendar.get(Calendar.YEAR) == year) {
-                        showCalendarEvent(true);
-                    }
-                    HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), year, holidayList);
+                if (pageStartCalendar.get(Calendar.YEAR) == year || pageEndCalendar.get(Calendar.YEAR) == year) {
+                    showCalendarEvent(true);
                 }
+                HolidayCacheUtils.saveHolidayList(MyApplication.getInstance(), getScheduleBasicDataResult.getYear(), holidayList);
             }
         }
 

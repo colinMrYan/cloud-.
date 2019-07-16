@@ -2087,7 +2087,7 @@ public class ScheduleApiService {
             @Override
             public void callbackSuccess(byte[] arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnScheduleBasicDataSuccess(new GetScheduleBasicDataResult(new String(arg0)));
+                apiInterface.returnScheduleBasicDataSuccess(new GetScheduleBasicDataResult(new String(arg0), year));
             }
 
             @Override
