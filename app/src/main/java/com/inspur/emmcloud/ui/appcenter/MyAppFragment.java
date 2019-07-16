@@ -115,11 +115,9 @@ public class MyAppFragment extends BaseFragment {
     private Map<String, Integer> appStoreBadgeMap = new HashMap<>();
     private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
-    private int appListSizeExceptCommonlyUse = 0;
     private DataSetObserver dataSetObserver;
     private View netExceptionView;
     private boolean haveHeader = false;
-    //    private boolean hasRequestBadgeNum = false;
     private MyOnClickListener myOnClickListener;
     private LinearLayout commonlyUseLayout;
 
@@ -471,7 +469,7 @@ public class MyAppFragment extends BaseFragment {
      */
     private void showCommonlyUseApps(App app,
                                      List<AppGroupBean> appAdapterList) {
-        if (AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0 && appAdapterList.size() > appListSizeExceptCommonlyUse) {
+        if (getNeedRemoveCommonlyUseGroup()) {
             //如果已经有了常用app则需要先移除掉第一组
             appAdapterList.remove(0);
             handCommonlyUseAppData(appAdapterList, true);
@@ -1007,6 +1005,15 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 判断是否需要移除常用应用分组
+     *
+     * @return
+     */
+    private boolean getNeedRemoveCommonlyUseGroup() {
+        return MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0;
+    }
+
     class MyOnClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
@@ -1043,7 +1050,7 @@ public class MyAppFragment extends BaseFragment {
                         handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
                         setCommonlyUseIconAndText();
                     } else {
-                        if (MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                        if (getNeedRemoveCommonlyUseGroup()) {
                             appListAdapter.getAppAdapterList().remove(0);
                             appListAdapter.notifyDataSetChanged();
                         }
@@ -1094,14 +1101,13 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
-
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
             swipeRefreshLayout.setRefreshing(false);
             myAppSaveTask = new MyAppSaveTask(clientConfigMyAppVersion);
             myAppSaveTask.execute(getAppGroupResult);
-            appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
+//            appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
         }
 
         @Override
