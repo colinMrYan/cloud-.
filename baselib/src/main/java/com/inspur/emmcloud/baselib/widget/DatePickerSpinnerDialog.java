@@ -26,6 +26,7 @@ public class DatePickerSpinnerDialog {
     private DatePicker datePicker;
     private DatePickerDialogInterface datePickerDialogInterface;
     private Calendar calendar;
+
     public DatePickerSpinnerDialog(Context context) {
         this.context = context;
         calendar = Calendar.getInstance();
@@ -52,6 +53,9 @@ public class DatePickerSpinnerDialog {
         return inflate;
     }
 
+    /**
+     * 展示Dialog
+     */
     public void showDatePickerDialog() {
         View view = initPicker();
         initPickerTimeDialog(view);
@@ -59,7 +63,8 @@ public class DatePickerSpinnerDialog {
         alertDialog.show();
     }
 
-
+    /**
+     * 初始化Dialog*/
     private void initPickerTimeDialog(View view) {
         alertDialog = new AlertDialog.Builder(context, R.style.DateTimeAlertDialog);
         alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -139,5 +144,4 @@ public class DatePickerSpinnerDialog {
 
         public void negativeListener(Calendar calendar);
     }
-
 }
