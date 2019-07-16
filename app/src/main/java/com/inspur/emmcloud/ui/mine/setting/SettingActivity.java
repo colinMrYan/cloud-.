@@ -53,6 +53,7 @@ import com.inspur.emmcloud.ui.chat.DisplayMediaVoiceMsg;
 import com.inspur.emmcloud.util.privates.AppBadgeUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
+import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 
@@ -348,6 +349,9 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.clear_cache_layout:
                 showClearCacheDlg();
+                break;
+            case R.id.rl_setting_self_start:
+                UriUtils.openUrl(this, "http://www.baidu.com");
                 break;
             case R.id.rl_setting_account_safe:
                 IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
