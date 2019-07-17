@@ -365,7 +365,7 @@ public class ImpFragment extends ImpBaseFragment {
 
             @Override
             public void onSetTitle(String title) {
-                if (!isStaticWebTitle && StringUtils.isBlank(appName)) {
+                if (!isStaticWebTitle) {
                     setTitle(title);
                 }
             }
