@@ -406,7 +406,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 } else {
                     bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, false);
                 }
-                bundle.putBoolean("web_from_index", true);
+                bundle.putBoolean(Constant.Web_STATIC_TITLE, true);
             }
             bundle.putString(Constant.APP_WEB_URI, tabBean.getMainTabResult().getUri());
             bundle.putString(Constant.WEB_FRAGMENT_APP_NAME, tabBean.getTabName());
