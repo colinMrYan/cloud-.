@@ -41,7 +41,7 @@ public class Meeting extends Schedule {
                 if (meetingEndTime.after(dayEndCalendar)) {
                     meetingEndTime = dayEndCalendar;
                 }
-                Event event = new Event(meeting.getId(), Schedule.TYPE_MEETING, meeting.getTitle(), meeting.getScheduleLocationObj().getDisplayName(), meetingStartTime, meetingEndTime, meeting);
+                Event event = new Event(meeting.getId(), Schedule.TYPE_MEETING, meeting.getTitle(), meeting.getScheduleLocationObj().getDisplayName(), meetingStartTime, meetingEndTime, meeting, meeting.getType(), meeting.getOwner());
                 event.setAllDay(meeting.getAllDay());
                 eventList.add(event);
             }

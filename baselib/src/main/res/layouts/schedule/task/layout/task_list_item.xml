@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/iv_task_color"
-            android:layout_width="8dp"
-            android:layout_height="10dp"
+            android:layout_width="14dp"
+            android:layout_height="16dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"

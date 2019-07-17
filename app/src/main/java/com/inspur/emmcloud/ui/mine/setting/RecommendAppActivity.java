@@ -120,12 +120,12 @@ public class RecommendAppActivity extends BaseActivity {
 
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            ToastUtils.show(mActivity.get(), R.string.news_share_success);
+            ToastUtils.show(mActivity.get(), R.string.baselib_share_success);
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            ToastUtils.show(mActivity.get(), R.string.news_share_fail);
+            ToastUtils.show(mActivity.get(), R.string.baselib_share_fail);
             if (t != null) {
                 LogUtils.jasonDebug("throw:" + t.getMessage());
             }

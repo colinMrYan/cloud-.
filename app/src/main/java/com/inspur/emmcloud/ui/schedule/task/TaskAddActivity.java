@@ -57,7 +57,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchFragment;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.schedule.ScheduleAlertTimeActivity;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -433,19 +433,19 @@ public class TaskAddActivity extends BaseActivity {
         if (taskColorTagList.size() == 1) {
             singleTagLayout.setVisibility(View.VISIBLE);
             tagsLayout.setVisibility(View.GONE);
-            taskTypeTapImage.setImageResource(CalendarColorUtils.getTaskTagResId(taskColorTagList.get(0).getColor()));
+            taskTypeTapImage.setImageResource(CalendarUtils.getCalendarTypeResId(taskColorTagList.get(0).getColor()));
             taskTypeNameText.setText(taskColorTagList.get(0).getTitle());
         } else if (taskColorTagList.size() > 1) {
             singleTagLayout.setVisibility(View.GONE);
             tagsLayout.setVisibility(View.VISIBLE);
-            int widthAndHigh = DensityUtil.dip2px(this, 8);
+            int widthAndHigh = DensityUtil.dip2px(this, 14);
             tagsLayout.removeAllViews();
             for (int i = 0; i < taskColorTagList.size(); i++) {
                 ImageView view = new ImageView(this);
                 int rightPaddingPixNum = DensityUtil.dip2px(this, 5);
                 view.setPadding(rightPaddingPixNum, 0, 0, 0);
                 view.setLayoutParams(new ViewGroup.LayoutParams(widthAndHigh + rightPaddingPixNum, widthAndHigh));
-                view.setImageResource(CalendarColorUtils.getTaskTagResId(taskColorTagList.get(i).getColor()));
+                view.setImageResource(CalendarUtils.getCalendarTypeResId(taskColorTagList.get(i).getColor()));
                 tagsLayout.addView(view);
             }
         }

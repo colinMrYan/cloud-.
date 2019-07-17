@@ -32,7 +32,7 @@ public class ECMTransparentUtils {
             Router router = Router.getInstance();
             if (router.getService(CommunicationService.class) != null) {
                 CommunicationService service = router.getService(CommunicationService.class);
-                service.isSocketConnect();
+                isSocketConnect = service.isSocketConnect();
             }
             if (BaseApplication.getInstance().getIsActive() && !(isSocketConnect && WebServiceRouterManager.getInstance().isV1xVersionChat())) {
                 if (router.getService(AppService.class) != null) {

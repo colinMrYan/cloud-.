@@ -25,7 +25,7 @@ import com.inspur.emmcloud.basemodule.util.NetUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.bean.schedule.task.TagColorBean;
 import com.inspur.emmcloud.bean.schedule.task.TaskColorTag;
-import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,7 +207,7 @@ public class TaskTagAddActivity extends BaseActivity  {
                 colorTagHolder = (ColorTagHolder) view.getTag();
             }
             colorTagHolder.colorNameText.setText(tagColorBeans.get(i).getContent());
-            colorTagHolder.colorFlagImage.setImageResource(CalendarColorUtils.getTaskTagResId(tagColorBeans.get(i).getColor()));
+            colorTagHolder.colorFlagImage.setImageResource(CalendarUtils.getCalendarTypeResId(tagColorBeans.get(i).getColor()));
             colorTagHolder.colorSelectImage.setVisibility(i == selectIndex ? View.VISIBLE : View.GONE);
             return view;
         }

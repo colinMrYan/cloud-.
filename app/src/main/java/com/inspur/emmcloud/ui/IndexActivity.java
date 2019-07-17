@@ -15,6 +15,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.NotificationSetUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.widget.LoadingDialog;
@@ -76,11 +77,11 @@ public class IndexActivity extends IndexBaseActivity {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         initAppEnvironment();
         initView();
         getInitData();
         startService();
-        EventBus.getDefault().register(this);
     }
 
     private void getNaviTabData(String naviTabSaveConfigVersion) {
@@ -101,11 +102,11 @@ public class IndexActivity extends IndexBaseActivity {
         MyApplication.getInstance().clearUserPhotoMap();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (NotificationSetUtils.isNotificationEnabled(this) &&
-                    (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true))) {
+                    (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true))) {
                 PushManagerUtils.getInstance().startPush();
             }
         } else {
-            if (PreferencesByUserAndTanentUtils.putBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true)) {
+            if (PreferencesByUserAndTanentUtils.getBoolean(IndexActivity.this, Constant.PUSH_SWITCH_FLAG, true)) {
                 PushManagerUtils.getInstance().startPush();
             }
         }
@@ -181,9 +182,11 @@ public class IndexActivity extends IndexBaseActivity {
      * 打开位置收集服务
      */
     private void startLocationService() {
+        LogUtils.jasonDebug("0000000000000000");
         new AppConfigUtils(IndexActivity.this, new CommonCallBack() {
             @Override
             public void execute() {
+                LogUtils.jasonDebug("111111111111111");
                 Intent intent = new Intent();
                 intent.setClass(IndexActivity.this, LocationService.class);
                 startService(intent);
@@ -271,7 +274,7 @@ public class IndexActivity extends IndexBaseActivity {
                             getContactOrg();
                         }
                         WebSocketPush.getInstance().startWebSocket();// 启动webSocket推送
-//                        batteryWhiteListRemind(IndexActivity.this);
+                        batteryWhiteListRemind(IndexActivity.this);
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {

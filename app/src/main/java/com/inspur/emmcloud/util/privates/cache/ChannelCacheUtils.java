@@ -5,6 +5,7 @@ import android.content.Context;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
 import com.inspur.emmcloud.bean.chat.Channel;
 
@@ -59,6 +60,20 @@ public class ChannelCacheUtils {
             // TODO: handle exception
             e.printStackTrace();
         }
+    }
+
+    public static Channel getDirectChannelToUser(Context context, String uid) {
+        Channel channel = null;
+        String tile1 = uid + "-" + BaseApplication.getInstance().getUid();
+        String tile2 = BaseApplication.getInstance().getUid() + "-" + uid;
+        try {
+            channel = DbCacheUtils.getDb(context).selector(Channel.class).where("type", "=", "DIRECT")
+                    .and(WhereBuilder.b("title", "=", tile1).or("title", "=", tile2)).findFirst();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return channel;
     }
 
     /**

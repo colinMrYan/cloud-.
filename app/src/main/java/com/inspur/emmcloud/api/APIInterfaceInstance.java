@@ -71,6 +71,7 @@ import com.inspur.emmcloud.bean.schedule.GetScheduleListResult;
 import com.inspur.emmcloud.bean.schedule.Schedule;
 import com.inspur.emmcloud.bean.schedule.calendar.GetHolidayDataResult;
 import com.inspur.emmcloud.bean.schedule.calendar.GetMyCalendarResult;
+import com.inspur.emmcloud.bean.schedule.calendar.GetScheduleBasicDataResult;
 import com.inspur.emmcloud.bean.schedule.meeting.Building;
 import com.inspur.emmcloud.bean.schedule.meeting.GetIsMeetingAdminResult;
 import com.inspur.emmcloud.bean.schedule.meeting.GetLocationResult;
@@ -412,13 +413,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnCreatSingleChannelFail(String error, int errorCode) {
+    public void returnCreateSingleChannelFail(String error, int errorCode) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnCreatChannelGroupSuccess(ChannelGroup channelGroup) {
+    public void returnCreateChannelGroupSuccess(ChannelGroup channelGroup) {
         // TODO Auto-generated method stub
 
     }
@@ -1697,7 +1698,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDeleteScheduleSuccess() {
+    public void returnDeleteScheduleSuccess(String scheduleId) {
 
     }
 
@@ -1843,6 +1844,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnGetCalendarChatBindFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnScheduleBasicDataSuccess(GetScheduleBasicDataResult getScheduleBasicDataResult) {
+
+    }
+
+    @Override
+    public void returnScheduleBasicDataFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnAttendMeetingStatusSuccess(String result, String responseType) {
+
+    }
+
+    @Override
+    public void returnAttendMeetingStatusFail(String error, int errorCode) {
 
     }
 }

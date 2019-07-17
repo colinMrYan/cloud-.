@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_event_detail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
@@ -7,40 +8,133 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp">
 
         <ImageView
-            android:id="@+id/iv_event"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            android:id="@+id/iv_calendar_type"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true" />
 
         <TextView
-            android:id="@+id/tv_event_title"
+            android:id="@+id/tv_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:background="@null"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="12dp"
+            android:text="@string/detail"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_calendar_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@id/iv_event"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/tv_detail"
+            android:layout_toRightOf="@id/iv_calendar_type"
             android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="#333333"
+            android:maxLines="1"
             android:textSize="15sp" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_event_position"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#888888"
-        android:textSize="13sp" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp">
 
-    <View
+        <ImageView
+            android:id="@+id/iv_event_title"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_schedule_event_title"
+            android:tint="#888888" />
+
+        <TextView
+            android:id="@+id/tv_event_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#888888"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0.5px"
-        android:layout_below="@id/ll_content"
-        android:layout_marginTop="11dp"
-        android:background="@color/color_list_divider"
-        android:visibility="invisible"></View>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_schedule_event_time"
+            android:tint="#888888" />
+
+        <TextView
+            android:id="@+id/tv_event_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#888888"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#F8F9FB"
+        android:gravity="center_vertical|right"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <ImageView
+            android:id="@+id/iv_group_chat"
+            android:layout_width="20dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_schedule_event_chat" />
+
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="20dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_schedule_event_share" />
+
+        <ImageView
+            android:id="@+id/iv_delete"
+            android:layout_width="20dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_schedule_event_delete" />
+    </LinearLayout>
+
 </LinearLayout>
+

@@ -72,6 +72,8 @@ public class Constant {
     public static final String PREF_CURRENT_LANGUAGE_NAME = "current_language_name";
     public static final String PREF_IS_CONTACT_READY = "isContactReady";
     public static final String PREF_APP_BACKGROUND_TIME = "app_background_time";
+    public static final String PREF_SCHEDULE_ENABLE_EXCHANGE = "schedule_enable_exchange";
+    public static final String PREF_SCHEDULE_BASIC_DATA_VERSION = "schedule_basic_data_version";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -194,12 +196,9 @@ public class Constant {
 
 
     public static final String SMS_LOGIN_START_TIME = "sms_login_start_time";
-    public static final String APP_MYAPP_LIST_IN_CACHE = "my_app_list";
-    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
     public static final String EXTRA_IS_HISTORY_MEETING = "is_history_meeting"; //来源  历史会议
 
     public static final String AROUTER_CLASS_COMMUNICATION_MEMBER = "/communication/MembersActivity";
-
     public static final String AROUTER_CLASS_LOGIN_MAIN = "/login/LoginActivity";
     public static final String AROUTER_CLASS_LOGIN_PASSWORD_MODIFY = "/login/PasswordModifyActivity";
     public static final String AROUTER_CLASS_LOGIN_GS = "/login/ScanQrCodeLoginGSActivity";
@@ -224,6 +223,11 @@ public class Constant {
 
     public static final String AROUTER_CLASS_GROUP_NEWS = "/group/news";
 
+    //参会状态
+    public static final int ATTEND_MEETING_STATUS_ACCEPT = 1;
+    public static final int ATTEND_MEETING_STATUS_REJECT = 2;
+    public static final int ATTEND_MEETING_STATUS_TENTATIVE = 3;
+    public static final String APP_MYAPP_LIST_FROM_NET = "my_app_list_from_net";
 
 
 }

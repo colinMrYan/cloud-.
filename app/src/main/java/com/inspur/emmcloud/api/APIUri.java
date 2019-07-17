@@ -1121,7 +1121,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingRoomsUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "room";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/room";
     }
 
     /**
@@ -1167,7 +1167,7 @@ public class APIUri {
      * @return
      */
     public static String getOfficeUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "Location";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Location";
     }
 
     /**
@@ -1176,7 +1176,7 @@ public class APIUri {
      * @return
      */
     public static String addOfficeUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "CommonLocation";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/CommonLocation";
     }
 
     /**
@@ -1194,7 +1194,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingIsAdminUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "is_admin";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/is_admin";
     }
 
     /**
@@ -1212,7 +1212,7 @@ public class APIUri {
      * @return
      */
     public static String getLocationUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.0/meeting/" + "Location";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/Location";
     }
 
 
@@ -1220,14 +1220,21 @@ public class APIUri {
      * 设置日程的聊天组
      */
     public static String getSetCalendarBindChatUrl() {
-        return "https://emm.inspur.com/schedule-ext/api/schedule/v6.1/calendar/Chat/Bind";
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Chat/Bind";
     }
 
     /**
      * 获取对应日程的聊天组
      */
     public static String getCalendarBindChatUrl(String calendarId) {
-        return "https:/id/emm.inspur.com/schedule-ext/api/schedule/v6.1/calendar/Chat/" + calendarId;
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Chat/" + calendarId;
+    }
+
+    /**
+     * 会议详情参会状态
+     */
+    public static String getMeetingAttendStatusUrl(String responseType) {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/meeting/" + responseType + "/";
     }
 
 
@@ -1663,6 +1670,11 @@ public class APIUri {
     public static String getHolidayDataUrl() {
         return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/HolidayData/";
     }
+
+    public static String getScheduleBasicDataUrl() {
+        return getScheduleBaseUrl() + "api/schedule/v6.0/calendar/Basicdata";
+    }
+
 
     /**
      * 获取删除工作中的tags

@@ -6,23 +6,25 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
-import com.inspur.emmcloud.baselib.util.LogUtils;
 
 public class DragScaleView extends View {
     private static final int LEFT_TOP = 0x12;
     private static final int RIGHT_BOTTOM = 0x13;
     private static final int CENTER = 0x19;
+    private final int textSize = DensityUtil.sp2px(13);
     //    protected int screenWidth;
 //    protected int screenHeight;
     protected int lastX;
     protected int lastY;
-    protected Paint paint = new Paint();
+    protected TextPaint paint = new TextPaint();
     private int oriLeft;
     private int oriRight;
     private int oriTop;
@@ -30,7 +32,6 @@ public class DragScaleView extends View {
     private int dragDirection;
     private int offset = DensityUtil.dip2px(4);
     private OnMoveListener onMoveListener;
-
     private int mParentHeight;
     private int mParentContentHeight;
     private ScrollView scrollView;
@@ -41,6 +42,8 @@ public class DragScaleView extends View {
     private int rectLeft = DensityUtil.dip2px(getContext(), 50);
     private int scrollOffset = DensityUtil.dip2px(getContext(), 50);
     private float scale = Resources.getSystem().getDisplayMetrics().density;
+    private String content = getContext().getString(R.string.schedule_click_to_add_schedule);
+    private boolean isEventModify = false;
 
     public DragScaleView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -65,6 +68,11 @@ public class DragScaleView extends View {
         return offset;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+        isEventModify = true;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -73,9 +81,11 @@ public class DragScaleView extends View {
         paint.setStyle(Paint.Style.FILL);
         canvas.drawRoundRect(new RectF(rectLeft, offset, getWidth(), getHeight() - offset),
                 mRadius, mRadius, paint);
-        paint.setTextSize(36);//设置字体大小
+        paint.setTextSize(textSize);//设置字体大小
         paint.setColor(Color.WHITE);
-        canvas.drawText("再次点击新建日程", rectLeft + DensityUtil.dip2px(7), minHeight - 2 * offset, paint);
+        canvas.drawText(content, rectLeft + DensityUtil.dip2px(7), minHeight - 2 * offset, paint);
+//        StaticLayout layout = new StaticLayout(content,paint,getWidth()-rectLeft-DensityUtil.dip2px(14), Layout.Alignment.ALIGN_NORMAL,1.0F,0.0F,true);
+//        layout.draw(canvas);
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
         int bigCircleRadius = DensityUtil.dip2px(4);
@@ -175,7 +185,6 @@ public class DragScaleView extends View {
                 lastY = (int) event.getRawY();
                 break;
             case MotionEvent.ACTION_UP:
-                LogUtils.jasonDebug("MotionEvent.ACTION_UP------------");
                 dragDirection = 0;
                 break;
         }
@@ -287,6 +296,11 @@ public class DragScaleView extends View {
     public int getCutWidth() {
         return getWidth() - 2 * offset;
     }
+
+    public boolean isEventModify() {
+        return isEventModify;
+    }
+
 
     /**
      * 获取截取高度
