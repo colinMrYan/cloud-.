@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
+import android.telephony.TelephonyManager;
 
 import com.inspur.emmcloud.web.plugin.ImpPlugin;
 
@@ -115,38 +116,54 @@ public class NetworkService extends ImpPlugin {
         return type;
     }
 
-    private String getType(NetworkInfo info) {
-        if (info != null) {
-            String type = info.getTypeName();
 
-            if (type.toLowerCase().equals(WIFI)) {
-                return TYPE_WIFI;
-            } else if (type.toLowerCase().equals(MOBILE)) {
-                type = info.getSubtypeName();
-                if (type.toLowerCase().equals(GSM) ||
-                        type.toLowerCase().equals(GPRS) ||
-                        type.toLowerCase().equals(EDGE)) {
-                    return TYPE_2G;
-                } else if (type.toLowerCase().startsWith(CDMA) ||
-                        type.toLowerCase().equals(UMTS) ||
-                        type.toLowerCase().equals(ONEXRTT) ||
-                        type.toLowerCase().equals(EHRPD) ||
-                        type.toLowerCase().equals(HSUPA) ||
-                        type.toLowerCase().equals(HSDPA) ||
-                        type.toLowerCase().equals(HSPA)) {
-                    return TYPE_3G;
-                } else if (type.toLowerCase().equals(LTE) ||
-                        type.toLowerCase().equals(UMB) ||
-                        type.toLowerCase().equals(HSPA_PLUS)) {
-                    return TYPE_4G;
+    /**
+     * 获取网络2G/3G/4G/wifi
+     */
+    public String getType(NetworkInfo networkInfo) {
+        String netWorkType = null;
+        if (networkInfo != null && networkInfo.isConnected()) {
+            if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                netWorkType = TYPE_WIFI;
+            } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                String _strSubTypeName = networkInfo.getSubtypeName();
+                // TD-SCDMA   networkType is 17
+                int networkType = networkInfo.getSubtype();
+                switch (networkType) {
+                    case TelephonyManager.NETWORK_TYPE_GPRS:
+                    case TelephonyManager.NETWORK_TYPE_EDGE:
+                    case TelephonyManager.NETWORK_TYPE_CDMA:
+                    case TelephonyManager.NETWORK_TYPE_1xRTT:
+                    case TelephonyManager.NETWORK_TYPE_IDEN: //api<8 : replace by 11
+                        netWorkType = TYPE_2G;
+                        break;
+                    case TelephonyManager.NETWORK_TYPE_UMTS:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                    case TelephonyManager.NETWORK_TYPE_HSDPA:
+                    case TelephonyManager.NETWORK_TYPE_HSUPA:
+                    case TelephonyManager.NETWORK_TYPE_HSPA:
+                    case TelephonyManager.NETWORK_TYPE_EVDO_B: //api<9 : replace by 14
+                    case TelephonyManager.NETWORK_TYPE_EHRPD:  //api<11 : replace by 12
+                    case TelephonyManager.NETWORK_TYPE_HSPAP:  //api<13 : replace by 15
+                        netWorkType = TYPE_3G;
+                        break;
+                    case TelephonyManager.NETWORK_TYPE_LTE:    //api<11 : replace by 13
+                        netWorkType = TYPE_4G;
+                        break;
+                    default:
+                        // http://baike.baidu.com/item/TD-SCDMA 中国移动 联通 电信 三种3G制式
+                        if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
+                            netWorkType = "3G";
+                        } else {
+                            netWorkType = "移动网络";
+                        }
+                        break;
                 }
             }
-        } else {
-            return TYPE_NONE;
         }
-        return TYPE_UNKNOWN;
+        return netWorkType;
     }
-
 
     /**
      * 获得系统传入的总流量
