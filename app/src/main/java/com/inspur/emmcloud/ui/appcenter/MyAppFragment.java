@@ -143,15 +143,14 @@ public class MyAppFragment extends BaseFragment {
             String myAppList = PreferencesByUserAndTanentUtils.getString(getActivity(), "my_app_list");
             if (!StringUtils.isBlank(myAppList)) {
                 List<AppGroupBean> appGroupList = JSONUtils.parseArray(myAppList, AppGroupBean.class);
-                if (appGroupList.size() > 0 && appGroupList.get(0).getCategoryID().equals("commonly")) {
-                    appGroupList.remove(0);
+                if (appGroupList.size() > 0) {
+                    if (appGroupList.get(0).getCategoryID().equals("commonly")) {
+                        appGroupList.remove(0);
+                    }
                     MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
-                    PreferencesByUserAndTanentUtils.putString(getActivity(), "my_app_list", "");
-                } else if (appGroupList.size() > 0) {
-                    MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
-                    PreferencesByUserAndTanentUtils.putString(getActivity(), "my_app_list", "");
                 }
             }
+            PreferencesByUserAndTanentUtils.clearDataByKey(getActivity(), "my_app_list");
         }
     }
 
