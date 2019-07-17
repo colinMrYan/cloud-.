@@ -147,6 +147,9 @@ public class MyAppFragment extends BaseFragment {
                     appGroupList.remove(0);
                     MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
                     PreferencesByUserAndTanentUtils.putString(getActivity(), "my_app_list", "");
+                } else if (appGroupList.size() > 0) {
+                    MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
+                    PreferencesByUserAndTanentUtils.putString(getActivity(), "my_app_list", "");
                 }
             }
         }
@@ -1030,7 +1033,8 @@ public class MyAppFragment extends BaseFragment {
      * @return
      */
     private boolean getNeedRemoveCommonlyUseGroup() {
-        return MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0;
+        return MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0
+                && (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() != appListAdapter.getCount());
     }
 
     class MyOnClickListener implements OnClickListener {
