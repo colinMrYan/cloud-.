@@ -75,7 +75,7 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
     private ProgressBar downloadProgressBar;
     private TextView percentText;
 
-    private upGradeNotificationUtils notificationUtils;
+    private UpgradeNotificationUtils notificationUtils;
 
     //isManualCheck 是否在关于中手动检查更新
     public NotificationUpgradeUtils(Context context, Handler handler, boolean isManualCheck) {
@@ -216,7 +216,7 @@ public class NotificationUpgradeUtils extends APIInterfaceInstance {
                 dialog.dismiss();
                 if (context != null) {
                     if (null == notificationUtils) {
-                        notificationUtils = new upGradeNotificationUtils(context, 10000);
+                        notificationUtils = new UpgradeNotificationUtils(context, 10000);
                     }
                     // 下载文件
                     downloadApk();
