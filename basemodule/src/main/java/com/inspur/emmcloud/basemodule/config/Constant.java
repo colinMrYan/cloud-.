@@ -67,6 +67,7 @@ public class Constant {
     public static final String PREF_CALENDAR_EVENT_SHOW_TYPE = "calendar_event_show_type";
     public static final String PREF_MEETING_OFFICE_ID_LIST = "meeting_office_id_list";
     public static final String PREF_IS_MEETING_ADMIN = "is_meeting_admin";
+    public static final String PREF_LANGUAGE_CURRENT_LOCAL = "language_current_local";
     public static final String PREF_SERVER_SUPPORT_LANGUAGE = "server_support_language";
     public static final String PREF_CURRENT_LANGUAGE = "current_language";
     public static final String PREF_CURRENT_LANGUAGE_NAME = "current_language_name";
