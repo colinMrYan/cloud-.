@@ -56,6 +56,7 @@ public class upGradeNotificationUtils {
             builder.setShowWhen(true);
         }
         builder.setDefaults(Notification.DEFAULT_LIGHTS);//消息提示模式
+        builder.setOnlyAlertOnce(true);
         notificationManager.notify(notificationId, builder.build());
     }
 
