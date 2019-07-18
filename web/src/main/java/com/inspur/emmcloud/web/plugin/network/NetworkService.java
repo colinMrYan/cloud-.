@@ -156,7 +156,7 @@ public class NetworkService extends ImpPlugin {
                         if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
                             netWorkType = "3G";
                         } else {
-                            netWorkType = "移动网络";
+                            netWorkType = "Mobile Networks";
                         }
                         break;
                 }
@@ -164,6 +164,41 @@ public class NetworkService extends ImpPlugin {
         }
         return netWorkType;
     }
+
+
+//    private String getType(NetworkInfo info) {
+//        if (info != null) {
+//            String type = info.getTypeName();
+//
+//            if (type.toLowerCase().equals(WIFI)) {
+//                return TYPE_WIFI;
+//            } else if (type.toLowerCase().equals(MOBILE)) {
+//                type = info.getSubtypeName();
+//                if (type.toLowerCase().equals(GSM) ||
+//                        type.toLowerCase().equals(GPRS) ||
+//                        type.toLowerCase().equals(EDGE)) {
+//                    return TYPE_2G;
+//                } else if (type.toLowerCase().startsWith(CDMA) ||
+//                        type.toLowerCase().equals(UMTS) ||
+//                        type.toLowerCase().equals(ONEXRTT) ||
+//                        type.toLowerCase().equals(EHRPD) ||
+//                        type.toLowerCase().equals(HSUPA) ||
+//                        type.toLowerCase().equals(HSDPA) ||
+//                        type.toLowerCase().equals(HSPA)) {
+//                    return TYPE_3G;
+//                } else if (type.toLowerCase().equals(LTE) ||
+//                        type.toLowerCase().equals(UMB) ||
+//                        type.toLowerCase().equals(HSPA_PLUS)) {
+//                    return TYPE_4G;
+//                }
+//            }
+//        } else {
+//            return TYPE_NONE;
+//        }
+//        return TYPE_UNKNOWN;
+//    }
+
+
 
     /**
      * 获得系统传入的总流量
