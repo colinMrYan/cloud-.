@@ -45,24 +45,27 @@ public class AppExceptionCacheUtils {
      * @param errorCode
      */
     public static void saveAppClusterException(final Context context, int errorLevel, String url, String error, int errorCode) {
-        List<AppException> appExceptionList = getAppExceptionList(context);
-        Iterator<AppException> appExceptionIterator = appExceptionList.iterator();
-        while (appExceptionIterator.hasNext()) {
-            AppException appException = appExceptionIterator.next();
-            if (appException.getErrorInfo().equals("clusters")) {
-                appException.setHappenTime(System.currentTimeMillis());
-                appException.setAppVersion(AppUtils.getVersion(context));
-                appException.setErrorCode(errorCode);
-                appException.setErrorInfo(error);
-                appException.setErrorLevel(errorLevel);
-                appException.setErrorUrl(url);
-                try {
-                    DbCacheUtils.getDb(context).saveOrUpdate(appException);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if (!AppUtils.isApkDebugable(context)) {
+            List<AppException> appExceptionList = getAppExceptionList(context);
+            Iterator<AppException> appExceptionIterator = appExceptionList.iterator();
+            while (appExceptionIterator.hasNext()) {
+                AppException appException = appExceptionIterator.next();
+                if (appException.getErrorInfo().equals("clusters")) {
+                    appException.setHappenTime(System.currentTimeMillis());
+                    appException.setAppVersion(AppUtils.getVersion(context));
+                    appException.setErrorCode(errorCode);
+                    appException.setErrorInfo(error);
+                    appException.setErrorLevel(errorLevel);
+                    appException.setErrorUrl(url);
+                    try {
+                        DbCacheUtils.getDb(context).saveOrUpdate(appException);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
+
     }
 
     /**

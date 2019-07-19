@@ -81,7 +81,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private ScheduleEventListAdapter scheduleEventListAdapter;
     private Boolean isEventShowTypeList;
     private ScheduleApiService apiService;
-
     private List<Event> eventList = new ArrayList<>();
     private List<Event> allDayEventList = new ArrayList<>();
     private Calendar newDataStartCalendar = null;

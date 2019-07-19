@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.componentservice.login.LoginService;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -57,6 +60,10 @@ public class HttpUtils {
         }
     }
 
+    public static void request(CloudHttpMethod cloudHttpMethod, RequestParams params, BaseModuleAPICallback callback) {
+        request(BaseApplication.getInstance().getApplicationContext(), cloudHttpMethod, params, callback);
+    }
+
     /**
      * 分发的请求
      *
@@ -74,7 +81,15 @@ public class HttpUtils {
                     "myInfo", ""), "clusters", 0);
             callback.callbackFail("", -1);
             if (AppUtils.isAppOnForeground(context)) {
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
+                if (!BaseApplication.getInstance().isHaveLogin()) {
+                    Router router = Router.getInstance();
+                    if (router.getService(LoginService.class) != null) {
+                        LoginService service = router.getService(LoginService.class);
+                        service.logout(context);
+                    }
+                } else {
+                    ARouter.getInstance().build(Constant.AROUTER_CLASS_SETTING_SERVICE_NO_PERMISSION).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).navigation();
+                }
             }
 
         }
