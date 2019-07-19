@@ -67,7 +67,7 @@ public class LoginServiceImpl extends LoginAPIInterfaceImpl implements LoginServ
 
     @Override
     public void uploadMDMInfo() {
-        if (!NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
+        if (NetUtils.isNetworkConnected(BaseApplication.getInstance())) {
             LoginAPIService appAPIService = new LoginAPIService(BaseApplication.getInstance());
             appAPIService.setAPIInterface(this);
             appAPIService.uploadMDMInfo();
