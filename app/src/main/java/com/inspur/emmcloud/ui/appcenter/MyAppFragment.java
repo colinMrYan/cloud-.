@@ -38,6 +38,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.IntentUtils;
+import com.inspur.emmcloud.baselib.util.JSONUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.util.ToastUtils;
@@ -115,11 +116,9 @@ public class MyAppFragment extends BaseFragment {
     private Map<String, Integer> appStoreBadgeMap = new HashMap<>();
     private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
-    private int appListSizeExceptCommonlyUse = 0;
     private DataSetObserver dataSetObserver;
     private View netExceptionView;
     private boolean haveHeader = false;
-    //    private boolean hasRequestBadgeNum = false;
     private MyOnClickListener myOnClickListener;
     private LinearLayout commonlyUseLayout;
 
@@ -130,9 +129,29 @@ public class MyAppFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         checkingNetStateUtils = new CheckingNetStateUtils(getContext(), NetUtils.pingUrls, NetUtils.httpUrls);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
+        copyData();
         initViews();
         registerReceiver();
         EventBus.getDefault().register(this);
+    }
+
+    /**
+     * 如果存在旧数据读取旧数据，转存并清除旧数据（3.1.3升级4.0.1发现的问题）
+     */
+    private void copyData() {
+        if (PreferencesByUserAndTanentUtils.isKeyExist(getActivity(), "my_app_list")) {
+            String myAppList = PreferencesByUserAndTanentUtils.getString(getActivity(), "my_app_list");
+            if (!StringUtils.isBlank(myAppList)) {
+                List<AppGroupBean> appGroupList = JSONUtils.parseArray(myAppList, AppGroupBean.class);
+                if (appGroupList.size() > 0) {
+                    if (appGroupList.get(0).getCategoryID().equals("commonly")) {
+                        appGroupList.remove(0);
+                    }
+                    MyAppCacheUtils.saveMyAppListFromNet(getActivity(), appGroupList);
+                }
+            }
+            PreferencesByUserAndTanentUtils.clearDataByKey(getActivity(), "my_app_list");
+        }
     }
 
     @Override
@@ -471,7 +490,7 @@ public class MyAppFragment extends BaseFragment {
      */
     private void showCommonlyUseApps(App app,
                                      List<AppGroupBean> appAdapterList) {
-        if (AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0 && appAdapterList.size() > appListSizeExceptCommonlyUse) {
+        if (getNeedRemoveCommonlyUseGroup()) {
             //如果已经有了常用app则需要先移除掉第一组
             appAdapterList.remove(0);
             handCommonlyUseAppData(appAdapterList, true);
@@ -749,10 +768,12 @@ public class MyAppFragment extends BaseFragment {
      * @param appGroupList
      */
     private void handCommonlyUseAppData(List<AppGroupBean> appGroupList, boolean isNeedRefresh) {
-        AppGroupBean appGroupBean = MyAppCacheUtils.getCommonlyUserAppGroup();
-        if (appGroupBean != null) {
-            appGroupList.add(0, appGroupBean);
-            MyAppCacheUtils.saveNeedCommonlyUseApp(true);
+        if (MyAppCacheUtils.getNeedCommonlyUseApp()) {
+            AppGroupBean appGroupBean = MyAppCacheUtils.getCommonlyUserAppGroup();
+            if (appGroupBean != null) {
+                appGroupList.add(0, appGroupBean);
+                MyAppCacheUtils.saveNeedCommonlyUseApp(true);
+            }
         }
         if (isNeedRefresh) {
             appListAdapter.notifyDataSetChanged();
@@ -1005,6 +1026,16 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 判断是否需要移除常用应用分组
+     *
+     * @return
+     */
+    private boolean getNeedRemoveCommonlyUseGroup() {
+        return MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0
+                && (MyAppCacheUtils.getMyAppListFromNet(getActivity()).size() != appListAdapter.getCount());
+    }
+
     class MyOnClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
@@ -1041,7 +1072,7 @@ public class MyAppFragment extends BaseFragment {
                         handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
                         setCommonlyUseIconAndText();
                     } else {
-                        if (MyAppCacheUtils.getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+                        if (getNeedRemoveCommonlyUseGroup()) {
                             appListAdapter.getAppAdapterList().remove(0);
                             appListAdapter.notifyDataSetChanged();
                         }
@@ -1092,14 +1123,13 @@ public class MyAppFragment extends BaseFragment {
         }
     }
 
-
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult, String clientConfigMyAppVersion) {
             swipeRefreshLayout.setRefreshing(false);
             myAppSaveTask = new MyAppSaveTask(clientConfigMyAppVersion);
             myAppSaveTask.execute(getAppGroupResult);
-            appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
+//            appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
         }
 
         @Override
