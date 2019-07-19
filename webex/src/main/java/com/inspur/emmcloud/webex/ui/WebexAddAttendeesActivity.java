@@ -3,6 +3,7 @@ package com.inspur.emmcloud.webex.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,13 +91,14 @@ public class WebexAddAttendeesActivity extends BaseActivity {
             startActivityForResult(intent, REQUEST_ADD_EXTERNAL_ATTENDEES);
 
         } else if (i == R.id.rl_add_internal_attendees) {
-            intent.putExtra("title", 2);
-            intent.putExtra("isMulti_select", true);
-            intent.putExtra("isContainMe", true);
-            intent.putExtra("hasSearchResult", getString(R.string.meeting_invating_members));
-            intent.putExtra("select_limit", 20 - getExternalAttendeeList().size());
-            intent.putExtra("hasSearchResult", (Serializable) getInternalAttendeesSearchModelLsit());
-            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).navigation(this, REQUEST_ADD_INTERNAL_ATTENDEES);
+            Bundle bundle = new Bundle();
+            bundle.putInt("select_content", 2);
+            bundle.putBoolean("isMulti_select", true);
+            bundle.putBoolean("isContainMe", true);
+            bundle.putString("title", getString(R.string.meeting_invating_members));
+            bundle.putInt("select_limit", 20 - getExternalAttendeeList().size());
+            bundle.putSerializable("hasSearchResult", (Serializable) getInternalAttendeesSearchModelLsit());
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).with(bundle).navigation(this, REQUEST_ADD_INTERNAL_ATTENDEES);
 
         }
     }
