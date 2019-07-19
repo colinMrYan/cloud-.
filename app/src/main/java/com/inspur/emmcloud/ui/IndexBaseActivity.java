@@ -51,6 +51,7 @@ import com.inspur.emmcloud.bean.system.badge.BadgeBodyModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarModel;
 import com.inspur.emmcloud.bean.system.navibar.NaviBarScheme;
 import com.inspur.emmcloud.broadcastreceiver.NetworkChangeReceiver;
+import com.inspur.emmcloud.broadcastreceiver.ScreenBroadcastReceiver;
 import com.inspur.emmcloud.componentservice.web.WebService;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
@@ -108,6 +109,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         setStatus();
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         registerNetWorkListenerAccordingSysLevel();
+        registerScreenReceiver();
         initTabs();
     }
 
@@ -133,6 +135,14 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
         // connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         // connectivityManager.registerNetworkCallback(request, networkCallback);
         // }
+    }
+
+    private void registerScreenReceiver() {
+        ScreenBroadcastReceiver screenBroadcastReceiver = new ScreenBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        getApplicationContext().registerReceiver(screenBroadcastReceiver, filter);
     }
 
     /**
@@ -406,7 +416,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements OnTabChan
                 } else {
                     bundle.putBoolean(Constant.WEB_FRAGMENT_SHOW_HEADER, false);
                 }
-                bundle.putBoolean("web_from_index", true);
+                bundle.putBoolean(Constant.Web_STATIC_TITLE, true);
             }
             bundle.putString(Constant.APP_WEB_URI, tabBean.getMainTabResult().getUri());
             bundle.putString(Constant.WEB_FRAGMENT_APP_NAME, tabBean.getTabName());

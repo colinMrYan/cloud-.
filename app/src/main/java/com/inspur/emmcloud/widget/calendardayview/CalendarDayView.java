@@ -21,12 +21,10 @@ import com.inspur.emmcloud.baselib.util.DensityUtil;
 import com.inspur.emmcloud.baselib.util.ResolutionUtils;
 import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.roundbutton.CustomRoundButtonDrawable;
-import com.inspur.emmcloud.basemodule.application.BaseApplication;
-import com.inspur.emmcloud.basemodule.config.Constant;
-import com.inspur.emmcloud.basemodule.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.schedule.Schedule;
+import com.inspur.emmcloud.interf.ScheduleEventListener;
 import com.inspur.emmcloud.util.privates.CalendarUtils;
 import com.inspur.emmcloud.widget.bubble.ArrowDirection;
 import com.inspur.emmcloud.widget.bubble.BubbleLayout;
@@ -50,7 +48,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private List<TimeHourRow> timeHourRowList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private RelativeLayout eventLayout;
-    private OnEventClickListener onEventClickListener;
+    private ScheduleEventListener onEventClickListener;
     private RelativeLayout currentTimeLineLayout;
     private LinearLayout timeHourLayout;
     private Calendar selectCalendar;
@@ -326,13 +324,12 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     private void setEventLayout(final Event event, final RelativeLayout.LayoutParams eventLayoutParams) {
         View eventView = LayoutInflater.from(getContext()).inflate(R.layout.schedule_calendar_day_event_view, null);
         final Drawable drawableNormal = CalendarUtils.getEventBgNormalDrawable(event);
-        final CustomRoundButtonDrawable drawableSelected = CalendarUtils.getEventBgSelectDrawable(event);
         eventView.setBackground(drawableNormal);
         if (eventLayoutParams.height >= DensityUtil.dip2px(MyApplication.getInstance(), 24)) {
             ImageView eventImg = eventView.findViewById(R.id.iv_event);
             TextView eventTitleEvent = eventView.findViewById(R.id.tv_event_title);
             TextView eventSubtitleEvent = eventView.findViewById(R.id.tv_event_subtitle);
-            eventImg.setImageResource(event.getEventIconResId());
+            eventImg.setImageResource(event.getEventIconResId(false));
             eventTitleEvent.setText(event.getEventTitle());
             String subTitle = event.getShowEventSubTitle(getContext(), selectCalendar);
             if (event.getEventType().equals(Schedule.TYPE_TASK)) {
@@ -345,14 +342,14 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             @Override
             public void onClick(View view) {
                 if (!(onEventClickListener != null && onEventClickListener.onRemoveEventAddDragScaleView())) {
-                    showEventDetailPop(view, event, drawableNormal, drawableSelected);
+                    showEventDetailPop(view, event, drawableNormal, eventLayoutParams.leftMargin);
                 }
             }
         });
         eventView.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (onEventClickListener != null) {
+                if (onEventClickListener != null && event.canModify()) {
                     onEventClickListener.onEventTimeUpdate(event, eventLayoutParams.topMargin, eventLayoutParams.height);
                 }
                 return true;
@@ -360,24 +357,27 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
         });
     }
 
-    private void showEventDetailPop(final View view, final Event event, final Drawable drawableNormal, final CustomRoundButtonDrawable drawableSelected) {
-        final TextView eventTitleEvent = view.findViewById(R.id.tv_event_title);
-        final TextView eventSubtitleEvent = view.findViewById(R.id.tv_event_subtitle);
-        eventTitleEvent.setTextColor(Color.parseColor("#ffffff"));
-        eventSubtitleEvent.setTextColor(Color.parseColor("#ffffff"));
+    private void showEventDetailPop(final View view, final Event event, final Drawable drawableNormal, int marginLeft) {
+        CustomRoundButtonDrawable drawableSelected = CalendarUtils.getEventBgSelectDrawable(event);
+        final TextView eventTitleText = view.findViewById(R.id.tv_event_title);
+        final TextView eventSubtitleText = view.findViewById(R.id.tv_event_subtitle);
+        final ImageView eventImg = view.findViewById(R.id.iv_event);
+        eventImg.setImageResource(event.getEventIconResId(true));
+        eventTitleText.setTextColor(Color.parseColor("#ffffff"));
+        eventSubtitleText.setTextColor(Color.parseColor("#ffffff"));
         int popViewGap = DensityUtil.dip2px(10);
         View contentView = LayoutInflater.from(getContext())
                 .inflate(R.layout.schedule_pop_calendarview_event_detail, null);
         contentView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         BubbleLayout bubbleLayout = contentView.findViewById(R.id.bubble_layout);
-        bubbleLayout.setArrowPosition(eventLayout.getWidth() / 2 - DensityUtil.dip2px(7));
+        bubbleLayout.setArrowPosition(marginLeft + view.getWidth() / 2 - DensityUtil.dip2px(22));
         final PopupWindow popupWindow = new PopupWindow(contentView,
                 eventLayout.getWidth() - DensityUtil.dip2px(30),
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
         ImageView shareImage = contentView.findViewById(R.id.iv_share);
         ImageView deleteImage = contentView.findViewById(R.id.iv_delete);
         ImageView groupChatImage = contentView.findViewById(R.id.iv_group_chat);
-        contentView.findViewById(R.id.bt_detail).setOnClickListener(new OnClickListener() {
+        contentView.findViewById(R.id.tv_detail).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onEventClickListener != null) {
@@ -387,10 +387,7 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             }
         });
         //删除
-        if (PreferencesByUserAndTanentUtils.getBoolean(MyApplication.getInstance(), Constant.PREF_IS_MEETING_ADMIN,
-                false) || (event.getOwner().equals(BaseApplication.getInstance().getUid()) && event.getEventType().equals(Schedule.TYPE_MEETING)
-                && event.getEventEndTime().after(Calendar.getInstance())) ||
-                (event.getOwner().equals(BaseApplication.getInstance().getUid()) && event.getEventType().equals(Schedule.TYPE_CALENDAR))) {
+        if (event.canDelete()) {
             deleteImage.setVisibility(View.VISIBLE);
             contentView.findViewById(R.id.iv_delete).setOnClickListener(new OnClickListener() {
                 @Override
@@ -433,32 +430,34 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
 
             }
         });
-        TextView calendarNameText = contentView.findViewById(R.id.tv_calendar_name);
-        ImageView calendarTypeImg = contentView.findViewById(R.id.iv_calendar_type);
-        TextView eventTitleText = contentView.findViewById(R.id.tv_event_title);
-        TextView eventTimeText = contentView.findViewById(R.id.tv_event_time);
-        calendarNameText.setText(CalendarUtils.getCalendarName(event));
-        calendarNameText.setTextColor(event.getEventType().equals(Schedule.TYPE_CALENDAR) ?
-                getContext().getResources().getColor(R.color.cal_orange) : getContext().getResources().getColor(R.color.cal_blue));
+        TextView popCalendarNameText = contentView.findViewById(R.id.tv_calendar_name);
+        ImageView popCalendarTypeImg = contentView.findViewById(R.id.iv_calendar_type);
+        TextView popEventTitleText = contentView.findViewById(R.id.tv_event_title);
+        TextView popEventTimeText = contentView.findViewById(R.id.tv_event_time);
+        ImageView popEventTitleImg = contentView.findViewById(R.id.iv_event_title);
+        popEventTitleImg.setImageResource(event.getEventIconResId(false));
+        popCalendarNameText.setText(CalendarUtils.getCalendarName(event));
+        popCalendarNameText.setTextColor(CalendarUtils.getCalendarTypeColor(event));
         int resId = CalendarUtils.getCalendarTypeImgResId(event);
         if (resId != -1) {
-            calendarTypeImg.setImageResource(resId);
+            popCalendarTypeImg.setImageResource(resId);
         }
-        eventTitleText.setText(event.getEventTitle());
+        popEventTitleText.setText(event.getEventTitle());
         String date = TimeUtils.calendar2FormatString(getContext(), selectCalendar, TimeUtils.FORMAT_MONTH_DAY);
         String week = TimeUtils.getWeekDay(getContext(), selectCalendar);
         String startTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventStartTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
         String endTime = TimeUtils.calendar2FormatString(getContext(), event.getDayEventEndTime(selectCalendar), TimeUtils.FORMAT_HOUR_MINUTE);
-        eventTimeText.setText(date + " " + week + " " + startTime + " - " + endTime);
+        popEventTimeText.setText(date + " " + week + " " + startTime + " - " + endTime);
         popupWindow.setTouchable(true);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
+                eventImg.setImageResource(event.getEventIconResId(false));
                 view.setBackground(drawableNormal);
-                eventTitleEvent.setTextColor(Color.parseColor("#333333"));
-                eventSubtitleEvent.setTextColor(Color.parseColor("#333333"));
+                eventTitleText.setTextColor(Color.parseColor("#333333"));
+                eventSubtitleText.setTextColor(Color.parseColor("#333333"));
             }
         });
         int mDeviceHeight = ResolutionUtils.getHeight(getContext());
@@ -468,9 +467,9 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
             int yMiddle = location.top + view.getHeight() / 2;
             if (yMiddle > mDeviceHeight / 2) {
                 bubbleLayout.setArrowDirection(ArrowDirection.BOTTOM);
-                popupWindow.showAtLocation(eventLayout, Gravity.NO_GRAVITY, location.left + DensityUtil.dip2px(15), location.top - popViewGap - popupWindow.getContentView().getMeasuredHeight());
+                popupWindow.showAtLocation(eventLayout, Gravity.NO_GRAVITY, (int) eventLayout.getX() + DensityUtil.dip2px(15), location.top - popViewGap - popupWindow.getContentView().getMeasuredHeight());
             } else {
-                popupWindow.showAtLocation(eventLayout, Gravity.NO_GRAVITY, location.left + DensityUtil.dip2px(15), location.bottom + popViewGap);
+                popupWindow.showAtLocation(eventLayout, Gravity.NO_GRAVITY, (int) eventLayout.getX() + DensityUtil.dip2px(15), location.bottom + popViewGap);
             }
 
         }
@@ -495,22 +494,8 @@ public class CalendarDayView extends RelativeLayout implements View.OnLongClickL
     }
 
 
-
-    public void setOnEventClickListener(OnEventClickListener onEventClickListener) {
+    public void setOnEventClickListener(ScheduleEventListener onEventClickListener) {
         this.onEventClickListener = onEventClickListener;
     }
 
-    public interface OnEventClickListener {
-        void onShowEventDetail(Event event);
-
-        void onEventTimeUpdate(Event event, int top, int height);
-
-        boolean onRemoveEventAddDragScaleView();
-
-        void onEventDelete(Event event);
-
-        void onEventShare(Event event);
-
-        void onGroupChat(Event event);
-    }
 }

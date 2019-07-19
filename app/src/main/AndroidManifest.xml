@@ -369,7 +369,8 @@
                 <data android:scheme="inspur-ecc-native" />
             </intent-filter>
 
-            <intent-filter>
+            <!--ics文件识别 excel-->
+            <!--<intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -378,7 +379,7 @@
                 <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
                 <data android:mimeType="text/calendar" />
-            </intent-filter>
+            </intent-filter>-->
 
         </activity>
         <activity
@@ -810,11 +811,11 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
 
-            <!--屏幕点亮和熄灭-->
-            <intent-filter>
+            <!--屏幕点亮和熄灭   此种方式删除  采用动态注册-->
+            <!--<intent-filter>
                 <action android:name="android.intent.action.ACTION_SCREEN_OFF" />
                 <action android:name="android.intent.action.ACTION_SCREEN_ON" />
-            </intent-filter>
+            </intent-filter>-->
 
             <!--屏幕解锁-->
             <intent-filter>

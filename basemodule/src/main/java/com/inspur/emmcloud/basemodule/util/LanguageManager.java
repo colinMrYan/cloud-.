@@ -14,6 +14,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
 
+import com.inspur.emmcloud.baselib.util.LogUtils;
 import com.inspur.emmcloud.baselib.util.PreferencesUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
 import com.inspur.emmcloud.basemodule.api.BaseModuleAPIInterfaceInstance;
@@ -180,6 +181,8 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
      * 设置语言Local
      */
     public void setLanguageLocal() {
+        String currentLocal = Resources.getSystem().getConfiguration().locale.toString();
+        PreferencesUtils.putString(BaseApplication.getInstance(), Constant.PREF_LANGUAGE_CURRENT_LOCAL, currentLocal);
         Configuration config = BaseApplication.getInstance().getResources().getConfiguration();
         String languageJson = getCurrentLanguageJson();
         if (languageJson != null) {
@@ -187,21 +190,36 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
             // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
             if (languageName.equals("followSys")) {
                 List<Language> commonLanguageList = getCommonLanguageList(null);
-
                 boolean isContainDefault = false;
+                LogUtils.jasonDebug("Resources.getSystem().getConfiguration().locale.getCountry())=" + Resources.getSystem().getConfiguration().locale.toString());
+
+                if (currentLocal.contains("zh_CN")) {
+                    currentLocal = "zh-CN";
+                } else if (currentLocal.contains("Hant") || currentLocal.contains("zh_TW") || currentLocal.contains("zh_HK")) {
+                    currentLocal = "zh-Hant";
+                } else if (currentLocal.contains("en_")) {
+                    currentLocal = "en-US";
+                } else {
+                    currentLocal = Resources.getSystem().getConfiguration().locale.getCountry();
+                }
+                LogUtils.jasonDebug("localSyStemLanguage==" + currentLocal);
                 for (int i = 0; i < commonLanguageList.size(); i++) {
                     Language commonLanguage = commonLanguageList.get(i);
-                    if (commonLanguage.getIso().contains(
-                            Resources.getSystem().getConfiguration().locale.getCountry())) {
+                    LogUtils.jasonDebug("commonLanguage.getIso()==" + commonLanguage.getIso());
+                    if (commonLanguage.getIso().contains(currentLocal)) {
                         setCurrentLanguageJson(commonLanguage.toString());
                         languageJson = commonLanguage.toString();
                         isContainDefault = true;
+                        LogUtils.jasonDebug("languageJson==" + languageJson);
                         break;
                     }
                 }
+                LogUtils.jasonDebug("isContainDefault==" + isContainDefault);
                 if (!isContainDefault) {
                     setCurrentLanguageJson(commonLanguageList.get(0).toString());
                     languageJson = commonLanguageList.get(0).toString();
+                    LogUtils.jasonDebug("commonLanguageList.get(0).toString()==" + commonLanguageList.get(0).toString());
+                    LogUtils.jasonDebug("languageJson==" + languageJson);
                 }
             }
             PreferencesUtils.putString(BaseApplication.getInstance(), Constant.PREF_LAST_LANGUAGE, languageJson);
@@ -216,6 +234,8 @@ public class LanguageManager extends BaseModuleAPIInterfaceInstance {
                 // TODO: handle exception
                 e.printStackTrace();
             }
+            LogUtils.jasonDebug("country==" + country);
+            LogUtils.jasonDebug("variant==" + variant);
             Locale locale = new Locale(country, variant);
             Locale.setDefault(locale);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

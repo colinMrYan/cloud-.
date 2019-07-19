@@ -41,8 +41,8 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
             BaseApplication.getInstance().setIsActive(true);
             if (BaseApplication.getInstance().isHaveLogin()) {
                 long appBackgroundTime = PreferencesUtils.getLong(BaseApplication.getInstance(), Constant.PREF_APP_BACKGROUND_TIME, 0L);
-                //进入后台后重新进入应用需要间隔3分钟以上才弹出二次验证
-                if (System.currentTimeMillis() - appBackgroundTime >= 0) {
+                //进入后台后重新进入应用需要间隔1分钟以上才弹出二次验证
+                if (System.currentTimeMillis() - appBackgroundTime >= 60 * 1000) {
                     showFaceOrGestureLock();
                 }
                 uploadMDMInfo();

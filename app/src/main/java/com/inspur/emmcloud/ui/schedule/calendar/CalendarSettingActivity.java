@@ -60,8 +60,8 @@ public class CalendarSettingActivity extends BaseActivity {
         boolean isListView = viewDisplayType.equals(SHOW_TYPE_LIST);
         listSelectImageView.setVisibility(isListView ? View.VISIBLE : View.GONE);
         daySelectImageView.setVisibility(isListView ? View.GONE : View.VISIBLE);
-        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "ORANGE", "", "", true));
-        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "BLUE", "", "", false));
+        calendarsList.add(new MyCalendar("schedule", getApplication().getString(R.string.schedule_calendar_my_schedule), "BLUE", "", "", true));
+        calendarsList.add(new MyCalendar("meeting", getApplication().getString(R.string.schedule_calendar_my_meeting), "ORANGE", "", "", false));
         calendarAdapter = new CalendarAdapter();
         calendarsListView.setAdapter(calendarAdapter);
         setAddCalendarLayoutVisible();
@@ -78,7 +78,7 @@ public class CalendarSettingActivity extends BaseActivity {
                 String exchangeAccount = service.getExchangeMailAccount();
                 String exchangePassword = service.getExchangeMailPassword();
                 if (!StringUtils.isBlank(exchangeAccount) && !StringUtils.isBlank(exchangePassword)) {
-                    calendarsList.add(new MyCalendar("exchange", exchangeAccount, "YELLOW", "", "", true));
+                    calendarsList.add(new MyCalendar("exchange", exchangeAccount, "GREEN", "", "", true));
                     calendarAdapter.notifyDataSetChanged();
                 }
             }

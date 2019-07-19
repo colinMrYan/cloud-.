@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,6 +39,7 @@ import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
 import com.inspur.emmcloud.componentservice.communication.CommunicationService;
 import com.inspur.emmcloud.componentservice.communication.ShareToConversationListener;
+import com.inspur.emmcloud.interf.ScheduleEventListener;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarAddActivity;
 import com.inspur.emmcloud.ui.schedule.calendar.CalendarSettingActivity;
 import com.inspur.emmcloud.ui.schedule.meeting.MeetingDetailActivity;
@@ -50,7 +50,6 @@ import com.inspur.emmcloud.util.privates.cache.HolidayCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MeetingCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ScheduleCacheUtils;
-import com.inspur.emmcloud.widget.calendardayview.CalendarDayView;
 import com.inspur.emmcloud.widget.calendardayview.Event;
 import com.inspur.emmcloud.widget.calendarview.EmmCalendar;
 
@@ -70,9 +69,8 @@ import java.util.Map;
  */
 
 public class ScheduleFragment extends ScheduleBaseFragment implements
-        View.OnClickListener, CalendarDayView.OnEventClickListener,
-        ScheduleEventListAdapter.OnItemClickLister,
-        AdapterView.OnItemClickListener {
+        View.OnClickListener, ScheduleEventListener,
+        ScheduleEventListAdapter.OnItemClickLister {
     private TextView scheduleSumText;
     private RecyclerView eventRecyclerView;
     private LinearLayout scheduleListDefaultLayout;
@@ -83,13 +81,11 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     private ScheduleEventListAdapter scheduleEventListAdapter;
     private Boolean isEventShowTypeList;
     private ScheduleApiService apiService;
-
     private List<Event> eventList = new ArrayList<>();
     private List<Event> allDayEventList = new ArrayList<>();
     private Calendar newDataStartCalendar = null;
     private Calendar newDataEndCalendar = null;
     private MyDialog myDialog = null;
-    private Map<Integer, List<Holiday>> yearHolidayListMap = new HashMap<>();
     private LoadingDialog loadingDlg;
 
     @Override
@@ -241,7 +237,7 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             if (allDayEventList.size() > 0) {
                 Event event = allDayEventList.get(0);
                 allDayLayout.setVisibility(View.VISIBLE);
-                eventAllDayImg.setImageResource(event.getEventIconResId());
+                eventAllDayImg.setImageResource(event.getEventIconResId(false));
                 eventAllDayLayout.setBackground(CalendarUtils.getEventBgNormalDrawable(event));
                 String eventTitle = event.getEventTitle();
                 if (allDayEventList.size() > 1) {
@@ -373,9 +369,10 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
             myDialog = new MyDialog(getActivity(), R.layout.schedule_all_day_event_pop);
         MaxHeightListView listView = myDialog.findViewById(R.id.lv_all_day_event);
         listView.setMaxHeight(DensityUtil.dip2px(MyApplication.getInstance(), 300));
-        listView.setAdapter(new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList));
+        ScheduleAllDayEventListAdapter adapter = new ScheduleAllDayEventListAdapter(getActivity(), allDayEventList, selectCalendar);
+        adapter.setOnEventClickListener(this);
+        listView.setAdapter(adapter);
         myDialog.findViewById(R.id.iv_close).setOnClickListener(this);
-        listView.setOnItemClickListener(this);
         myDialog.show();
     }
 
@@ -451,13 +448,6 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        openEvent(allDayEventList.get(position));
-        if (myDialog != null)
-            myDialog.dismiss();
-    }
-
-    @Override
     public void onShowEventDetail(Event event) {
         openEvent(event);
     }
@@ -470,6 +460,12 @@ public class ScheduleFragment extends ScheduleBaseFragment implements
     @Override
     public void onEventDelete(Event event) {
         deleteScheduleEvent(event);
+    }
+
+    @Override
+    public void dismissAllDayEventDlg() {
+        myDialog.dismiss();
+        myDialog = null;
     }
 
     @Override
