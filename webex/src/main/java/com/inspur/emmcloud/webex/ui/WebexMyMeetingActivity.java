@@ -103,7 +103,7 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_webex_my_meeting;
+        return R.layout.webex_activity_my_meeting;
     }
 
     private void initData() {
@@ -304,18 +304,17 @@ public class WebexMyMeetingActivity extends BaseActivity {
 
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.iv_add_meeting:
-                Intent intent = new Intent(this, WebexScheduleMeetingActivity.class);
-                startActivityForResult(intent, REQUEST_SCHEDULE_WEBEX_MEETING);
-                break;
-            case R.id.iv_schedule_ok:
-                maskLayout.setVisibility(View.GONE);
-                PreferencesUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_WEBEX_FIRST_ENTER, false);
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.iv_add_meeting) {
+            Intent intent = new Intent(this, WebexScheduleMeetingActivity.class);
+            startActivityForResult(intent, REQUEST_SCHEDULE_WEBEX_MEETING);
+
+        } else if (i == R.id.iv_schedule_ok) {
+            maskLayout.setVisibility(View.GONE);
+            PreferencesUtils.putBoolean(BaseApplication.getInstance(), Constant.PREF_WEBEX_FIRST_ENTER, false);
 
         }
     }

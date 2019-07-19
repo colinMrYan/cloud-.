@@ -124,7 +124,7 @@ public class MailLoginActivity extends BaseActivity {
             String mail = mailEdit.getText().toString();
             String password = passwordEdit.getText().toString();
             if (!StringUtils.isBlank(mail) && !FomatUtils.isValiadEmail(mail)) {
-                usernameTextInputLayout.setError(getString(R.string.webex_input_correct_invitee_emails));
+                usernameTextInputLayout.setError(getString(R.string.input_correct_emails));
             } else {
                 usernameTextInputLayout.setError("");
             }

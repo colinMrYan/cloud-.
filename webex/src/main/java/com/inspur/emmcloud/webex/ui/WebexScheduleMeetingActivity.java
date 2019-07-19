@@ -117,7 +117,7 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_webex_schedule_meeting;
+        return R.layout.webex_activity_schedule_meeting;
     }
 
     /**
@@ -190,75 +190,75 @@ public class WebexScheduleMeetingActivity extends BaseActivity {
 
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_start:
-                String confName = titleEdit.getText().toString().trim();
-                if (StringUtils.isBlank(confName)) {
-                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_enter_meeting_name);
-                    return;
-                }
-                String meetingPassword = passwordEdit.getText().toString();
-                if (StringUtils.isBlank(meetingPassword)) {
-                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_enter_meeting_password);
-                    return;
-                }
-                if (meetingPassword.length() < 6 || meetingPassword.length() > 10) {
-                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_length_error);
-                    return;
-                }
+        int i = v.getId();
+        if (i == R.id.tv_start) {
+            String confName = titleEdit.getText().toString().trim();
+            if (StringUtils.isBlank(confName)) {
+                ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_enter_meeting_name);
+                return;
+            }
+            String meetingPassword = passwordEdit.getText().toString();
+            if (StringUtils.isBlank(meetingPassword)) {
+                ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_enter_meeting_password);
+                return;
+            }
+            if (meetingPassword.length() < 6 || meetingPassword.length() > 10) {
+                ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_length_error);
+                return;
+            }
 
-                if (!FomatUtils.isLetterOrDigits(meetingPassword)) {
-                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_invalid);
-                    return;
-                }
+            if (!FomatUtils.isLetterOrDigits(meetingPassword)) {
+                ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_password_invalid);
+                return;
+            }
 
-                if (startCalendar.before(Calendar.getInstance())) {
-                    showStartDateErrorDlg();
-                    return;
-                }
-                int duration = durationHourSumMin[durationHourChoiceIndex] + durationMinSumMin[durationMinChoiceIndex];
-                if (duration == 0) {
-                    ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_set_duration_correct);
-                    return;
-                }
-                webexMeeting = new WebexMeeting();
-                webexMeeting.setConfName(confName);
-                webexMeeting.setWebexAttendeesList(webexAttendeesList);
-                webexMeeting.setDuration(duration);
-                webexMeeting.setMeetingPassword(meetingPassword);
-                webexMeeting.setStartDateCalendar(startCalendar);
-                scheduleMeeting();
-                break;
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_start_date:
-                showDatePickerDlg();
-                break;
-            case R.id.tv_start_time:
-                showTimePickerDlg();
-                break;
-            case R.id.tv_duration_hour:
-                showDurationHourChoiceDialog();
-                break;
-            case R.id.tv_duration_min:
-                showDurationMinChoiceDialog();
-                break;
-            case R.id.rl_invite:
-                Intent intent = new Intent(WebexScheduleMeetingActivity.this, WebexAddAttendeesActivity.class);
-                intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
-                startActivityForResult(intent, REQUEST_ADD_ATTENDEES);
-                break;
-            case R.id.iv_password_visible:
-                if (passwordEdit.getTransformationMethod() instanceof HideReturnsTransformationMethod) {
-                    passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    passwordVisibleImg.setImageResource(R.drawable.icon_no_see_pw);
-                } else {
-                    passwordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    passwordVisibleImg.setImageResource(R.drawable.icon_see_pw);
-                }
-                passwordEdit.setSelection(passwordEdit.getText().toString().length());
-                break;
+            if (startCalendar.before(Calendar.getInstance())) {
+                showStartDateErrorDlg();
+                return;
+            }
+            int duration = durationHourSumMin[durationHourChoiceIndex] + durationMinSumMin[durationMinChoiceIndex];
+            if (duration == 0) {
+                ToastUtils.show(WebexScheduleMeetingActivity.this, R.string.webex_set_duration_correct);
+                return;
+            }
+            webexMeeting = new WebexMeeting();
+            webexMeeting.setConfName(confName);
+            webexMeeting.setWebexAttendeesList(webexAttendeesList);
+            webexMeeting.setDuration(duration);
+            webexMeeting.setMeetingPassword(meetingPassword);
+            webexMeeting.setStartDateCalendar(startCalendar);
+            scheduleMeeting();
+
+        } else if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.tv_start_date) {
+            showDatePickerDlg();
+
+        } else if (i == R.id.tv_start_time) {
+            showTimePickerDlg();
+
+        } else if (i == R.id.tv_duration_hour) {
+            showDurationHourChoiceDialog();
+
+        } else if (i == R.id.tv_duration_min) {
+            showDurationMinChoiceDialog();
+
+        } else if (i == R.id.rl_invite) {
+            Intent intent = new Intent(WebexScheduleMeetingActivity.this, WebexAddAttendeesActivity.class);
+            intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
+            startActivityForResult(intent, REQUEST_ADD_ATTENDEES);
+
+        } else if (i == R.id.iv_password_visible) {
+            if (passwordEdit.getTransformationMethod() instanceof HideReturnsTransformationMethod) {
+                passwordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                passwordVisibleImg.setImageResource(R.drawable.icon_no_see_pw);
+            } else {
+                passwordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                passwordVisibleImg.setImageResource(R.drawable.icon_see_pw);
+            }
+            passwordEdit.setSelection(passwordEdit.getText().toString().length());
+
         }
     }
 

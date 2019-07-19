@@ -122,7 +122,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_webex_detail;
+        return R.layout.webex_activity_detail;
     }
 
     private void showWebexMeetingDetial() {
@@ -233,41 +233,39 @@ public class WebexMeetingDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.bt_function:
-                if (AppUtils.isAppInstalled(BaseApplication.getInstance(), webexAppPackageName)) {
-                    if (!isMeetingEnd()) {
-                        if (isOwner) {
-                            getWebexTK();
-                        } else {
-                            joinWebexMeeting();
-                        }
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.bt_function) {
+            if (AppUtils.isAppInstalled(BaseApplication.getInstance(), webexAppPackageName)) {
+                if (!isMeetingEnd()) {
+                    if (isOwner) {
+                        getWebexTK();
                     } else {
-                        functionBtn.setEnabled(false);
-                        functionBtn.setTextColor(Color.parseColor("#999999"));
-                        functionBtn.setBackground(ContextCompat.getDrawable(BaseApplication.getInstance(), R.drawable.shape_webex_buttion_add_disable));
-                        ToastUtils.show(WebexMeetingDetailActivity.this, R.string.webex_meeting_ended);
+                        joinWebexMeeting();
                     }
                 } else {
-                    showInstallDialog();
+                    functionBtn.setEnabled(false);
+                    functionBtn.setTextColor(Color.parseColor("#999999"));
+                    functionBtn.setBackground(ContextCompat.getDrawable(BaseApplication.getInstance(), R.drawable.shape_webex_buttion_add_disable));
+                    ToastUtils.show(WebexMeetingDetailActivity.this, R.string.webex_meeting_ended);
                 }
-                break;
+            } else {
+                showInstallDialog();
+            }
 
-            case R.id.option_img:
-                showOptionMenuPop(v);
-                break;
+        } else if (i == R.id.option_img) {
+            showOptionMenuPop(v);
 
         }
     }
 
     private void showOptionMenuPop(View view) {
         List<MenuItem> menuItemList = new ArrayList<>();
-        menuItemList.add(new MenuItem(R.drawable.ic_webex_meeting_attendees, 1, getString(R.string.webex_participant)));
-        menuItemList.add(new MenuItem(R.drawable.ic_webex_meeting_share, 2, getString(R.string.share)));
-        menuItemList.add(new MenuItem(R.drawable.ic_webex_meeting_delete, 3, getString(R.string.delete)));
+        menuItemList.add(new MenuItem(R.drawable.webex_meeting_attendees, 1, getString(R.string.webex_participant)));
+        menuItemList.add(new MenuItem(R.drawable.webex_meeting_share, 2, getString(R.string.share)));
+        menuItemList.add(new MenuItem(R.drawable.webex_meeting_delete, 3, getString(R.string.delete)));
         DropPopMenu dropPopMenu = new DropPopMenu(WebexMeetingDetailActivity.this);
         dropPopMenu.setOnItemClickListener(new DropPopMenu.OnItemClickListener() {
 
@@ -346,7 +344,7 @@ public class WebexMeetingDetailActivity extends BaseActivity {
         shareAction.open();
     }
 
-    @OnLongClick(R.id.ll_meeting_content)
+    @OnLongClick(R2.id.ll_meeting_content)
     public boolean onLongClick() {
         String content = webexMeeting.getConfName() + "\n" + getString(R.string.webex_time) + timeText.getText().toString() + "\n"
                 + getString(R.string.webex_meeting_code) + meetingIdText.getText().toString() + "\n"

@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/schedule_meeting"
+            android:text="@string/webex_schedule_meeting"
             android:textColor="?attr/header_text_color"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -213,7 +213,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
                 android:paddingTop="10dp"
-                android:text="@string/duration_time"
+                android:text="@string/webex_duration_time"
                 android:textColor="#203b4f"
                 android:textSize="17sp" />
 

@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="@string/my_meeting"
+                android:text="@string/webex_my_meeting"
                 android:textColor="?attr/header_text_color"
                 android:textSize="@dimen/header_textsize" />
 
@@ -48,7 +48,7 @@
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_webex_meeing_add"
+                android:src="@drawable/webex_meeing_add"
                 android:tint="?attr/header_text_color" />
         </RelativeLayout>
 

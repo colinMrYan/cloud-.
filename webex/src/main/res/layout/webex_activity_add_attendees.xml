@@ -92,7 +92,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ic_webex_add_attendees" />
+                        android:src="@drawable/webex_add_attendees" />
 
                     <TextView
                         android:id="@+id/tv_add_internal_attendees"
@@ -126,7 +126,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dp"
                         android:scaleType="fitXY"
-                        android:src="@drawable/ic_webex_add_attendees" />
+                        android:src="@drawable/webex_add_attendees" />
 
                     <TextView
                         android:id="@+id/tv_add_external_attendees"

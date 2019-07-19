@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.webex.R;
 import com.inspur.emmcloud.webex.api.WebexAPIUri;
 import com.inspur.emmcloud.webex.bean.WebexAttendees;
 
@@ -46,7 +46,7 @@ public class WebexAttendeesAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         WebexAttendees webexAttendees = webexAttendeesList.get(position);
-        convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_attendees, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.webex_item_view_attendees, null);
         TextView emailText = (TextView) convertView.findViewById(R.id.tv_email);
         TextView personTypeText = (TextView) convertView.findViewById(R.id.tv_persion_type);
         TextView typeText = (TextView) convertView.findViewById(R.id.tv_type);

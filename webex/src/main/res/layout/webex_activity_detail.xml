@@ -62,7 +62,7 @@
                 android:paddingLeft="13dp"
                 android:paddingRight="8dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_webex_meeting_delete"
+                android:src="@drawable/webex_meeting_delete"
                 android:visibility="gone" />
 
             <ImageView
@@ -75,7 +75,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="12dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_webex_meeting_share" />
+                android:src="@drawable/webex_meeting_share" />
         </RelativeLayout>
 
 

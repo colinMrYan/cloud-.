@@ -1,12 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="6dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="6dp"
-    tools:context=".MainActivity">
+    android:paddingTop="6dp">
 
     <TextView
         android:id="@+id/tv_date"

@@ -37,14 +37,14 @@ public class WebexAttendeesActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_webex_attendees;
+        return R.layout.webex_activity_attendees;
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
         }
     }
 

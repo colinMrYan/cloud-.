@@ -14,7 +14,7 @@ import com.inspur.emmcloud.baselib.util.TimeUtils;
 import com.inspur.emmcloud.baselib.widget.CircleTextImageView;
 import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.util.ImageDisplayUtils;
-import com.inspur.emmcloud.login.R;
+import com.inspur.emmcloud.webex.R;
 import com.inspur.emmcloud.webex.api.WebexAPIUri;
 import com.inspur.emmcloud.webex.bean.WebexMeeting;
 
@@ -90,7 +90,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
         Calendar calendar = webexMeetingList.get(0).getStartDateCalendar();
         ExpandableListView expandableListView = (ExpandableListView) parent;
         expandableListView.expandGroup(groupPosition);
-        convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_group, null);
+        convertView = LayoutInflater.from(context).inflate(R.layout.webex_item_view_meeting_group, null);
         TextView todayText = (TextView) convertView.findViewById(R.id.tv_today);
         TextView dateText = (TextView) convertView.findViewById(R.id.tv_date);
         String timeDate = TimeUtils.calendar2FormatString(context, calendar, TimeUtils.FORMAT_YEAR_MONTH_DAY);
@@ -110,7 +110,7 @@ public class WebexMeetingAdapter extends BaseExpandableListAdapter {
                              ViewGroup parent) {
         ExpandViewHolder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_view_webex_meeting_child, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.webex_item_view_meeting_child, null);
             holder = new ExpandViewHolder();
             holder.photoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_photo);
             holder.timeText = (TextView) convertView

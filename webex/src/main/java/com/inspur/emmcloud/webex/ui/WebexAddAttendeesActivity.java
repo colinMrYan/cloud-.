@@ -69,35 +69,35 @@ public class WebexAddAttendeesActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_webex_add_attendees;
+        return R.layout.webex_activity_add_attendees;
     }
 
     @Nullable
     public void onClick(View v) {
         Intent intent = new Intent();
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_complete:
-                intent.putExtra(EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-                break;
-            case R.id.rl_add_external_attendees:
-                intent.setClass(WebexAddAttendeesActivity.this, WebexAddExternalAttendeesActivity.class);
-                intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
-                startActivityForResult(intent, REQUEST_ADD_EXTERNAL_ATTENDEES);
-                break;
-            case R.id.rl_add_internal_attendees:
-                intent.putExtra("title", 2);
-                intent.putExtra("isMulti_select", true);
-                intent.putExtra("isContainMe", true);
-                intent.putExtra("hasSearchResult", getString(R.string.meeting_invating_members));
-                intent.putExtra("select_limit", 20 - getExternalAttendeeList().size());
-                intent.putExtra("hasSearchResult", (Serializable) getInternalAttendeesSearchModelLsit());
-                ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).navigation(this, REQUEST_ADD_INTERNAL_ATTENDEES);
-                break;
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
+
+        } else if (i == R.id.tv_complete) {
+            intent.putExtra(EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+
+        } else if (i == R.id.rl_add_external_attendees) {
+            intent.setClass(WebexAddAttendeesActivity.this, WebexAddExternalAttendeesActivity.class);
+            intent.putExtra(WebexAddAttendeesActivity.EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
+            startActivityForResult(intent, REQUEST_ADD_EXTERNAL_ATTENDEES);
+
+        } else if (i == R.id.rl_add_internal_attendees) {
+            intent.putExtra("title", 2);
+            intent.putExtra("isMulti_select", true);
+            intent.putExtra("isContainMe", true);
+            intent.putExtra("hasSearchResult", getString(R.string.meeting_invating_members));
+            intent.putExtra("select_limit", 20 - getExternalAttendeeList().size());
+            intent.putExtra("hasSearchResult", (Serializable) getInternalAttendeesSearchModelLsit());
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_CONTACT_SEARCH).navigation(this, REQUEST_ADD_INTERNAL_ATTENDEES);
+
         }
     }
 
@@ -204,7 +204,7 @@ public class WebexAddAttendeesActivity extends BaseActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             WebexAttendees webexAttendees = webexAttendeesList.get(position);
-            convertView = LayoutInflater.from(WebexAddAttendeesActivity.this).inflate(R.layout.item_view_webex_add_attendees, null);
+            convertView = LayoutInflater.from(WebexAddAttendeesActivity.this).inflate(R.layout.webex_item_view_add_attendees, null);
             TextView emailText = (TextView) convertView.findViewById(R.id.tv_attendees);
             ImageView deleteImg = (ImageView) convertView.findViewById(R.id.iv_delete);
             CircleTextImageView photoImg = (CircleTextImageView) convertView.findViewById(R.id.iv_photo);

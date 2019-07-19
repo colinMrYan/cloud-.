@@ -73,27 +73,26 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_webex_add_external_attendees;
+        return R.layout.webex_activity_add_external_attendees;
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ibt_back:
-                finish();
-                break;
-            case R.id.tv_complete:
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-                break;
-            case R.id.bt_add_attendees:
-                String email = addAttendeesEdit.getText().toString();
-                if (addAttendees(email)) {
-                    addAttendeesEdit.setText("");
-                }
+        int i = v.getId();
+        if (i == R.id.ibt_back) {
+            finish();
 
-                break;
+        } else if (i == R.id.tv_complete) {
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_ATTENDEES_LIST, (Serializable) webexAttendeesList);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+
+        } else if (i == R.id.bt_add_attendees) {
+            String email = addAttendeesEdit.getText().toString();
+            if (addAttendees(email)) {
+                addAttendeesEdit.setText("");
+            }
+
 
         }
     }
@@ -119,7 +118,7 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
             return false;
         }
         if (!FomatUtils.isValiadEmail(email)) {
-            ToastUtils.show(this, R.string.webex_input_correct_invitee_emails);
+            ToastUtils.show(this, R.string.input_correct_emails);
             return false;
         }
 
@@ -160,7 +159,7 @@ public class WebexAddExternalAttendeesActivity extends BaseActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             WebexAttendees webexAttendees = externalWebexAttendeesList.get(position);
-            convertView = LayoutInflater.from(WebexAddExternalAttendeesActivity.this).inflate(R.layout.item_view_webex_add_attendees, null);
+            convertView = LayoutInflater.from(WebexAddExternalAttendeesActivity.this).inflate(R.layout.webex_item_view_add_attendees, null);
             TextView emailText = (TextView) convertView.findViewById(R.id.tv_attendees);
             ImageView deleteImg = (ImageView) convertView.findViewById(R.id.iv_delete);
             emailText.setText(webexAttendees.getEmail());
