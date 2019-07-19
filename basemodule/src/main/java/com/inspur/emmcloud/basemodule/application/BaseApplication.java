@@ -90,6 +90,10 @@ public abstract class BaseApplication extends MultiDexApplication {
 
     private void init() {
         // TODO Auto-generated method stub
+        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
+        Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
+        Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
+        Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         instance = this;
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());

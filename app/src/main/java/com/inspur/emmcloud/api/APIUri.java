@@ -6,6 +6,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.baselib.util.ImageUtils;
 import com.inspur.emmcloud.baselib.util.StringUtils;
+import com.inspur.emmcloud.basemodule.application.BaseApplication;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.WebServiceRouterManager;
 import com.inspur.emmcloud.bean.chat.Robot;
@@ -193,9 +194,9 @@ public class APIUri {
         if (StringUtils.isBlank(uid) || uid.equals("null"))
             return null;
         String headImgUrl = null;
-        boolean isCacheUserPhotoUrl = MyApplication.getInstance().isKeysContainUid(uid);
+        boolean isCacheUserPhotoUrl = BaseApplication.getInstance().isKeysContainUid(uid);
         if (isCacheUserPhotoUrl) {
-            headImgUrl = MyApplication.getInstance().getUserPhotoUrl(uid);
+            headImgUrl = BaseApplication.getInstance().getUserPhotoUrl(uid);
         } else {
             ContactUser contactUser = ContactUserCacheUtils.getContactUserByUid(uid);
             if (contactUser != null) {
@@ -205,7 +206,7 @@ public class APIUri {
                     if (!StringUtils.isBlank(lastQueryTime) && (!lastQueryTime.equals("null"))) {
                         headImgUrl = headImgUrl + "?" + lastQueryTime;
                     }
-                    MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+                    BaseApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
                 } else {
                     String name = contactUser.getName();
                     if (!StringUtils.isBlank(name)) {
@@ -225,8 +226,8 @@ public class APIUri {
                     }
                 }
             }
-            if (MyApplication.getInstance().getIsContactReady() && headImgUrl == null) {
-                MyApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
+            if (BaseApplication.getInstance().getIsContactReady() && headImgUrl == null) {
+                BaseApplication.getInstance().setUsesrPhotoUrl(uid, headImgUrl);
             }
         }
         return headImgUrl;
@@ -981,62 +982,7 @@ public class APIUri {
     public static String getVolumeFileGroupUrl(String volumeId) {
         return getUrlBaseVolume() + "/" + volumeId + "/file/group/privilege";
     }
-    /**************************Webex********************************************/
 
-    /**
-     * 获取webex会议列表
-     *
-     * @return
-     */
-    public static String getWebexMeetingListUrl() {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex";
-    }
-
-    /**
-     * 预定会议
-     *
-     * @return
-     */
-    public static String getScheduleWebexMeetingUrl() {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex/v2";
-    }
-
-    /**
-     * 获取webex头像地址
-     *
-     * @param email
-     * @return
-     */
-    public static String getWebexPhotoUrl(String email) {
-        return getEMMBaseUrl() + "img/userhead/" + email;
-    }
-
-    /**
-     * 获取webex会议
-     *
-     * @return
-     */
-    public static String getWebexMeetingUrl(String meetingID) {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex/SessionInfo/" + meetingID;
-    }
-
-    /**
-     * 删除webex会议
-     *
-     * @return
-     */
-    public static String getRemoveWebexMeetingUrl(String meetingID) {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex/remove/" + meetingID;
-    }
-
-    /**
-     * 获取webex会议TK
-     *
-     * @return
-     */
-    public static String getWebexTK() {
-        return getEMMBaseUrl() + "api/mam/v6.0/webex/gettk";
-    }
 
     /**************************Mail********************************************/
     public static String getMailBaseUrl() {

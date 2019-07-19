@@ -29,10 +29,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionRe
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.appcenter.webex.GetScheduleWebexMeetingSuccess;
-import com.inspur.emmcloud.bean.appcenter.webex.GetWebexMeetingListResult;
-import com.inspur.emmcloud.bean.appcenter.webex.GetWebexTKResult;
-import com.inspur.emmcloud.bean.appcenter.webex.WebexMeeting;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.Conversation;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
@@ -1493,46 +1489,6 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnDelConversationGroupMemberFail(String error, int errorCode) {
 
-    }
-
-    @Override
-    public void returnWebexMeetingListSuccess(GetWebexMeetingListResult getWebexMeetingListResult) {
-    }
-
-    @Override
-    public void returnWebexMeetingListFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnScheduleWebexMeetingSuccess(GetScheduleWebexMeetingSuccess getScheduleWebexMeetingSuccess) {
-    }
-
-    @Override
-    public void returnScheduleWebexMeetingFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnWebexMeetingSuccess(WebexMeeting webexMeeting) {
-    }
-
-    @Override
-    public void returnWebexMeetingFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnWebexTKSuccess(GetWebexTKResult getWebexTKResult) {
-    }
-
-    @Override
-    public void returnWebexTKFail(String error, int errorCode) {
-    }
-
-    @Override
-    public void returnRemoveWebexMeetingSuccess() {
-    }
-
-    @Override
-    public void returnRemoveWebexMeetingFail(String error, int errorCode) {
     }
 
     @Override
