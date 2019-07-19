@@ -16,7 +16,7 @@ import com.inspur.emmcloud.basemodule.util.AppUtils;
  * Created by libaochao on 2019/3/18.
  */
 
-public class upGradeNotificationUtils {
+public class UpgradeNotificationUtils {
     NotificationManager notificationManager;
     private NotificationChannel mChannel;
     private Context context;
@@ -25,7 +25,7 @@ public class upGradeNotificationUtils {
     private String NotificationChannelId = "NotificationChannelId";
     private String NotificationChannelName = "NotificationChannelName";
 
-    public upGradeNotificationUtils(Context context, int id) {
+    public UpgradeNotificationUtils(Context context, int id) {
         this.context = context;
         notificationId = id;
 
@@ -56,6 +56,7 @@ public class upGradeNotificationUtils {
             builder.setShowWhen(true);
         }
         builder.setDefaults(Notification.DEFAULT_LIGHTS);//消息提示模式
+        builder.setOnlyAlertOnce(true);
         notificationManager.notify(notificationId, builder.build());
     }
 
