@@ -67,6 +67,7 @@ public class Constant {
     public static final String PREF_CALENDAR_EVENT_SHOW_TYPE = "calendar_event_show_type";
     public static final String PREF_MEETING_OFFICE_ID_LIST = "meeting_office_id_list";
     public static final String PREF_IS_MEETING_ADMIN = "is_meeting_admin";
+    public static final String PREF_LANGUAGE_CURRENT_LOCAL = "language_current_local";
     public static final String PREF_SERVER_SUPPORT_LANGUAGE = "server_support_language";
     public static final String PREF_CURRENT_LANGUAGE = "current_language";
     public static final String PREF_CURRENT_LANGUAGE_NAME = "current_language_name";
@@ -159,6 +160,7 @@ public class Constant {
     public static final String WEB_FRAGMENT_APP_NAME = "appName";
     public static final String WEB_FRAGMENT_MENU = "menuList";
     public static final String WEB_FRAGMENT_SHOW_HEADER = "show_webview_header";
+    public static final String Web_STATIC_TITLE = "web_from_index";
 
     public static final String INSPUR_HOST_URL = ".inspur.com";
     public static final String INSPURONLINE_HOST_URL = ".inspuronline.com";

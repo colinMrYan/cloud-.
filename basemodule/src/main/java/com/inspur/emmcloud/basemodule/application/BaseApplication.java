@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.basemodule.bean.GetMyInfoResult;
 import com.inspur.emmcloud.basemodule.config.Constant;
 import com.inspur.emmcloud.basemodule.config.MyAppConfig;
 import com.inspur.emmcloud.basemodule.util.AppUtils;
+import com.inspur.emmcloud.basemodule.util.ClientConfigUpdateUtils;
 import com.inspur.emmcloud.basemodule.util.CrashHandler;
 import com.inspur.emmcloud.basemodule.util.CustomImageDownloader;
 import com.inspur.emmcloud.basemodule.util.DbCacheUtils;
@@ -88,6 +90,10 @@ public abstract class BaseApplication extends MultiDexApplication {
     private void init() {
         // TODO Auto-generated method stub
         instance = this;
+        Router.registerComponent("com.inspur.emmcloud.applike.AppApplike");
+        Router.registerComponent("com.inspur.emmcloud.login.applike.LoginAppLike");
+        Router.registerComponent("com.inspur.emmcloud.web.applike.WebAppLike");
+        Router.registerComponent("com.inspur.emmcloud.news.applike.NewsAppLike");
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getInstance());
         x.Ext.init(BaseApplication.this);
@@ -392,8 +398,14 @@ public abstract class BaseApplication extends MultiDexApplication {
     @Override
     public void onConfigurationChanged(Configuration config) {
         // TODO Auto-generated method stub
+        String previousLocal = PreferencesUtils.getString(BaseApplication.getInstance(), Constant.PREF_LANGUAGE_CURRENT_LOCAL, "");
         if (config != null) {
             super.onConfigurationChanged(config);
+            String currentLocal = Resources.getSystem().getConfiguration().locale.toString();
+            if (!previousLocal.equals(currentLocal)) {
+                //清空我的应用统一更新版本信息防止切换语言不刷新列表
+                ClientConfigUpdateUtils.getInstance().clearDbDataConfigWithMyApp();
+            }
         }
         LanguageManager.getInstance().setLanguageLocal();
     }
