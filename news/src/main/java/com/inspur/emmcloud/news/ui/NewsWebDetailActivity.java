@@ -22,6 +22,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -29,9 +31,11 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.gyf.barlibrary.ImmersionBar;
 import com.inspur.emmcloud.baselib.router.Router;
 import com.inspur.emmcloud.baselib.util.DensityUtil;
@@ -86,6 +90,8 @@ public class NewsWebDetailActivity extends BaseActivity {
     private Dialog dialog;
     private int textSize;
     private Button smallerBtn, normalBtn, largerBtn, largestBtn;
+    private LinearLayout loadErrorLayout;
+    private RelativeLayout webContentLayout;
     private String instruction = "";
     private String originalEditorComment = "";
     private GroupNews groupNews;
@@ -169,6 +175,8 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
+        loadErrorLayout = findViewById(R.id.load_error_layout);
+        webContentLayout = findViewById(R.id.rl_web_content);
         loadingLayout = findViewById(R.id.rl_loading);
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
         ((TextView) findViewById(R.id.header_text)).setText(((GroupNews) getIntent().getSerializableExtra(GROUP_NEWS)).getTitle());
@@ -278,7 +286,22 @@ public class NewsWebDetailActivity extends BaseActivity {
                 return false;
             }
 
-//            @Override
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                webContentLayout.setVisibility(View.GONE);
+                loadErrorLayout.setVisibility(View.VISIBLE);
+            }
+
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                super.onReceivedError(view, errorCode, description, failingUrl);
+                webContentLayout.setVisibility(View.GONE);
+                loadErrorLayout.setVisibility(View.VISIBLE);
+            }
+
+            //            @Override
 //            public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
 //                super.doUpdateVisitedHistory(view, url, isReload);
 //                view.clearHistory();
@@ -607,6 +630,14 @@ public class NewsWebDetailActivity extends BaseActivity {
             setNewsFontSize(MyAppWebConfig.LARGER);
         } else if (i == R.id.app_news_font_biggest_btn) {
             setNewsFontSize(MyAppWebConfig.LARGEST);
+        } else if (i == R.id.load_error_layout) {
+            if (NetUtils.isNetworkConnected(this)) {
+                webView.reload();
+                webContentLayout.setVisibility(View.VISIBLE);
+                loadErrorLayout.setVisibility(View.GONE);
+            }
+        } else if (i == R.id.refresh_text) {
+            ARouter.getInstance().build(Constant.AROUTER_CLASS_APP_NETWORK_DETAIL).navigation();
         }
     }
 
