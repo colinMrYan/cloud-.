@@ -27,6 +27,7 @@ import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.schedule.Participant;
 import com.inspur.emmcloud.bean.schedule.meeting.Meeting;
 import com.inspur.emmcloud.bean.system.SimpleEventMessage;
+import com.inspur.emmcloud.componentservice.contact.ContactUser;
 import com.inspur.emmcloud.ui.chat.ConversationActivity;
 import com.inspur.emmcloud.util.privates.cache.ContactUserCacheUtils;
 
@@ -154,7 +155,7 @@ public class ChatCreateUtils {
      *
      * @param meeting  会议对象
      * @param chatGroupId CID 群聊ID
-     * @param listener    成功失败回调
+     * @param listener    成功失败回调 可以传null
      */
     public void startGroupChat(Activity context, Meeting meeting, String chatGroupId, ICreateGroupChatListener listener) {
         this.context = context;
@@ -207,6 +208,13 @@ public class ChatCreateUtils {
             String ownerName = ContactUserCacheUtils.getUserName(owner);
             ownerParticipant.setName(ownerName);
             list.add(ownerParticipant);
+        }
+        //去除通讯录中不存在的人(外部联系人)
+        for (Participant item : list) {
+            ContactUser user = ContactUserCacheUtils.getContactUserByUid(item.getId());
+            if (user == null) {
+                list.remove(item);
+            }
         }
         Set<Participant> set = new TreeSet<>(new Comparator<Participant>() {
             @Override

@@ -60,6 +60,10 @@ public class HttpUtils {
         }
     }
 
+    public static void request(CloudHttpMethod cloudHttpMethod, RequestParams params, BaseModuleAPICallback callback) {
+        request(BaseApplication.getInstance().getApplicationContext(), cloudHttpMethod, params, callback);
+    }
+
     /**
      * 分发的请求
      *
